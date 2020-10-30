@@ -1,0 +1,10 @@
+.nav-treeview {
+    padding-left: 20px;
+}
+
+/* [class*='sidebar-dark-'] .nav-treeview>.nav-item>.nav-link.active,
+[class*='sidebar-dark-'] .nav-treeview>.nav-item>.nav-link.active:hover,
+[class*='sidebar-dark-'] .nav-treeview>.nav-item>.nav-link.active:focus {
+  background-color: transparent !important;
+  color: white !important;
+} */

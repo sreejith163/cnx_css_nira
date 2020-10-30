@@ -1,0 +1,31 @@
+  .operating-hours tr {
+    background-color: white !important;
+  }
+
+  .operating-hours tr th,
+  .operating-hours tr td {
+    padding: 0.5em;
+    font-size: 15px;
+    vertical-align: middle;
+  }
+
+  .operating-hours-title {
+    font-size: 18px;
+  }
+
+  .expand-icon {
+    color: #007bff;
+  }
+
+  .search-option-title {
+    font-weight: 500;
+  }
+
+  .breadcrumb-item.active {
+    color: inherit;
+    font-weight: bold;
+  }
+
+  .breadcrumb {
+    background-color: inherit;
+  }

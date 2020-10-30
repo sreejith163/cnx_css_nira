@@ -1,0 +1,94 @@
+.m-t-20 {
+  margin-top: 20px;
+}
+
+.float-r {
+  float: right;
+}
+
+label:not(.form-check-label):not(.custom-file-label) {
+  font-weight: 400;
+}
+
+.operating-hours tr th,
+.operating-hours tr td {
+  font-size: 15px;
+  vertical-align: middle;
+}
+
+.operating-hours-accordian {
+  .card-header {
+    padding: 0px 7px !important;
+  }
+
+  .btn-link {
+    font-weight: inherit;
+    color: inherit;
+    font-size: inherit;
+
+    &:hover {
+      color: inherit;
+    }
+  }
+}
+
+.seperator {
+  border-top: 1px dashed #dadada;
+  margin-top: 10px;
+}
+
+
+.open-hours tr th,
+.open-hours tr td {
+  font-size: 15px;
+}
+
+.open-hours {
+  .form-control {
+    height: calc(2rem + 2px);
+    border: none;
+  }
+
+  tr {
+    th {
+      padding: .5em;
+    }
+
+    td {
+      padding: 0px;
+      vertical-align: middle;
+
+      &.days {
+        padding: 0px .5em;
+        height: calc(2rem + 2px);
+      }
+    }
+  }
+}
+
+.modal-style {
+  height: calc(75vh);
+  overflow: auto;
+}
+
+.operating-hours {
+  .form-control {
+    height: calc(2rem + 2px);
+    border: none;
+  }
+
+  tr {
+    th {
+      padding: .5em;
+    }
+
+    td {
+      padding: 0px;
+
+      &.days {
+        padding: 0px .5em;
+        height: calc(2rem + 2px);
+      }
+    }
+  }
+}

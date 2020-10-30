@@ -1,0 +1,58 @@
+.slider-img {
+  background: url('../../../../../assets/images/photo1.png');
+  background-size: cover;
+  height: 100%;
+}
+
+.login-container {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.login-page {
+  padding: 40px;
+}
+
+.logo {
+  max-width: 300px;
+}
+
+.bg-item {
+  height: calc(100vh - 80px);
+  width: 100%;
+  background-size: cover !important;
+  background-position: top center !important;
+  background-repeat: no-repeat !important;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.left-section h2 {
+  max-width: 400px;
+}
+
+.left-section .btn {
+  background-color: #00b386;
+  border: 1px solid #00b386;
+  border-radius: 0px;
+  padding: 0px;
+  font-size: 25px;
+  color: white;
+  max-width: 300px;
+  width: 100%;
+}
+
+.small-logo {
+  width: 25%;
+  height: 40%;
+}
+
+.logo-margin {
+  margin-top: -70px;
+}

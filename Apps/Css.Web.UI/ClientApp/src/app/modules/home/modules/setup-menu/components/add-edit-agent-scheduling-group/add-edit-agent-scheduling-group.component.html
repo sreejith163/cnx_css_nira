@@ -1,0 +1,257 @@
+<div class="modal-dialog w-1000 add-edit-modal" role="document">
+  <div class="modal-content">
+    <div class="modal-header header-color">
+      <h6 class="modal-title w-100 font-weight-bold header">
+        <p>{{title}} {{ 'Agent Scheduling Groups' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
+      </h6>
+      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body mx-3 modal-style">
+      <form [formGroup]="schedulingGroupForm">
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Client Name' | translation: 'lbl_add_edit_client_name' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <select class="form-control"
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('clientName')}"
+                formControlName="clientName">
+                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}
+                </option>
+                <option *ngFor="let x of clientNamesList" [value]="x.clientName">{{x.clientName}}</option>
+              </select>
+              <div *ngIf="hasFormControlValidationError('clientName')" class="valid-error">
+                {{ 'Client Name is required' | translation: 'lbl_add_edit_client_name_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'LOB Group Name' | translation: 'lbl_add_edit_lob_group_name' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <select class="form-control"
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('clientLOBGroupName')}"
+                formControlName="clientLOBGroupName">
+                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}
+                </option>
+                <option *ngFor="let x of clientLOBNames" [value]="x.clientLOBName">{{x.clientLOBName}}</option>
+              </select>
+              <div *ngIf="hasFormControlValidationError('clientLOBGroupName')" class="valid-error">
+                {{ 'Client LOB Name is required' | translation: 'lbl_add_edit_client_lob_name_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Skill Group Name' | translation: 'lbl_add_edit_skill_group_name' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <select class="form-control"
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('skillGroup')}"
+                formControlName="skillGroup">
+                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}
+                </option>
+                <option *ngFor="let x of skillGroupList" [value]="x.skillGroup">{{x.skillGroup}}</option>
+              </select>
+              <div *ngIf="hasFormControlValidationError('skillGroup')" class="valid-error">
+                {{ 'Skill Group Name is required' | translation: 'lbl_add_edit_skill_group_name_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Skill Tag Name' | translation: 'lbl_add_edit_skill_tag_name' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <select class="form-control"
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('skillTag')}"
+                formControlName="skillTag">
+                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}
+                </option>
+                <option *ngFor="let x of skillTagList" [value]="x.skillTag">{{x.skillTag}}</option>
+              </select>
+              <div *ngIf="hasFormControlValidationError('skillTag')" class="valid-error">
+                {{ 'Skill Tag Name is required' | translation: 'lbl_add_edit_skill_tag_name_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Agent Scheduling Group Name' | translation: 'lbl_add_edit_agent_scheduling_group_name' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" class="form-control" formControlName="schedulingGroupName">
+              <div *ngIf="hasFormControlValidationError('schedulingGroupName')" class="valid-error">
+                {{ 'Agent Scheduling Group Name is required' | translation: 'lbl_add_edit_agent_scheduling_group_name_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'First day of week' | translation: 'lbl_add_edit_first_day_of_week' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <div class="form-group">
+                <ng-container *ngFor="let day of weekDays">
+                  <div class="form-group clearfix margin-b-05-rem">
+                    <div class="icheck-primary d-inline">
+                      <input type="radio" id="{{ 'radio_lob_group_' + getWeekDay(day) }}" name="firstDayOfWeek" [value]="day"
+                        formControlName="firstDayOfWeek" (change)="changeOperatingHoursDays(day)">
+                      <label for="{{ 'radio_lob_group_' + getWeekDay(day) }}">
+                        {{ getWeekDay(day) | translation: getTranslationIdForWeek(day) : translationValues }}
+                      </label>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+              <div *ngIf="hasFormControlValidationError('firstDayOfWeek')" class="valid-error">
+                {{ 'First day of week is required' | translation: 'lbl_add_edit_first_day_of_week_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Time zone for reporting' | translation: 'lbl_add_edit_time_zone_for_reporting' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <select class="form-control"
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('timeZoneForReporting')}"
+                formControlName="timeZoneForReporting">
+                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}
+                </option>
+                <option value="" *ngFor="let x of timeZoneList" [value]="x.timeZoneName">{{x.timeZoneName}}</option>
+              </select>
+              <div *ngIf="hasFormControlValidationError('timeZoneForReporting')" class="valid-error">
+                {{ 'Time zone for reporting is required' | translation: 'lbl_add_edit_time_zone_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20 operating-hours-accordian">
+          <ngb-accordion #acc="ngbAccordion" activeIds="operatingHours">
+            <ngb-panel id="operatingHours">
+              <ng-template ngbPanelHeader let-opened="opened">
+                <button ngbPanelToggle class="d-flex w-100
+                              align-items-center justify-content-between btn btn-link p-0">
+                  <label
+                    class="text-bold">{{ 'Operating hours of scheduling group' | translation: 'lbl_operation_hours_of_scheduling_group' : translationValues }}</label>
+                  <i class="fas" [ngClass]="opened ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
+              </ng-template>
+              <ng-template ngbPanelContent>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="w-100 open-hours table-bordered expanding-table">
+                      <thead>
+                        <tr>
+                          <th>{{ 'Day' | translation: 'lbl_day' : translationValues }}</th>
+                          <th>{{ 'Open' | translation: 'lbl_open' : translationValues }}<span class="required">*</span>
+                          </th>
+                          <th>{{ 'From' | translation: 'lbl_from' : translationValues }}</th>
+                          <th>{{ 'To' | translation: 'lbl_to' : translationValues }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container formArrayName="operatingHours">
+                          <tr *ngFor="let details of operatingHours.controls index as i">
+                            <ng-container [formGroupName]="i">
+                              <td class="text-bold days">{{ getWeekDay(details.value.day) }}</td>
+                              <td>
+                                <select class="form-control" (change)="onOptionTypeChange(i)"
+                                  [ngClass]="{'valid-border-error' : hasOpenHoursValidationError('open', i)}"
+                                  formControlName="open">
+                                  <option value="">Select</option>
+                                  <option *ngFor="let x of openTypes" [value]="x.open">{{x.open}}</option>
+                                </select>
+                                <span *ngIf="formSubmitted && operatingHours.controls[i].get('open').errors?.required"
+                                  class="valid-error">
+                                  {{ 'Please select open type' | translation: 'lbl_add_edit_open_type_required_validation_message' : translationValues }}
+                                </span>
+                              </td>
+                              <td>
+                                <select class="form-control"
+                                  [ngClass]="{'valid-border-error' : hasOpenHoursValidationError('from', i)}"
+                                  [attr.disabled]="((operatingHours.controls[i].value.open == '' || operatingHours.controls[i].value.open !== 'Open Partial Day') ? '' : null)"
+                                  formControlName="from">
+                                  <option *ngFor="let x of openTime" [value]="x">{{x}}</option>
+                                </select>
+                                <span *ngIf="formSubmitted && operatingHours.controls[i].errors?.rangeError"
+                                  class="valid-error">
+                                  {{ 'Enter a valid time range' | translation: 'lbl_add_edit_time_range_invalid_validation_message' : translationValues }}
+                                </span>
+                                <span *ngIf="hasOpenHoursValidationError('to', i)" class="valid-error">
+                                  {{ 'Time range is required' | translation: 'lbl_add_edit_time_range_required_validation_message' : translationValues }}
+                                </span>
+                              </td>
+                              <td>
+                                <select class="form-control"
+                                  [attr.disabled]="((operatingHours.controls[i].value.open == '' || operatingHours.controls[i].value.open !== 'Open Partial Day') ? '' : null)"
+                                  [ngClass]="{'valid-border-error' : hasOpenHoursValidationError('to', i)}"
+                                  formControlName="to">
+                                  <option *ngFor="let x of openTime" [value]="x" [disabled]="disableTime">{{x}}</option>
+                                </select>
+                                <span *ngIf="formSubmitted && operatingHours.controls[i].errors?.rangeError"
+                                  class="valid-error">
+                                  {{ 'Enter a valid time range' | translation: 'lbl_add_edit_time_range_invalid_validation_message' : translationValues }}
+                                </span>
+                                <span *ngIf="hasOpenHoursValidationError('to', i)" class="valid-error">
+                                  {{ 'Time range is required' | translation: 'lbl_add_edit_time_range_required_validation_message' : translationValues }}
+                                </span>
+                              </td>
+                            </ng-container>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </ngb-panel>
+          </ngb-accordion>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-center header-color">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-10"></div>
+          <div class="col-md-2">
+            <button class="btn btn-primary float-r" data-dismiss="modal" (click)="save()" id="btn_save">
+              <i class="fa fa-save padding-5"></i>{{ 'Save' | translation: 'btn_save' : translationValues }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

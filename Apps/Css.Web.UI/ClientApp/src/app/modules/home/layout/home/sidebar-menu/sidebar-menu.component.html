@@ -1,0 +1,178 @@
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <a routerLink="/home" class="brand-link">
+        <img src="assets//images/css-icon.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+            style="opacity: .8" />
+        <span class="brand-text font-weight-light">Concentrix</span>
+    </a>
+    <div class="sidebar">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex flex-column">
+            <div class="image">
+                <img src="assets/images/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image" />
+            </div>
+            <div class="info user-info">
+                <a class="d-block">{{ loggedUser?.displayName }}</a>
+                <a class="d-block">System Administrator</a>
+            </div>
+        </div>
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="dashboard" routerLinkActive="active">
+                        <i class="nav-icon fas fa-home"></i>
+                        <p>
+                            Home
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a class="nav-link"
+                        [ngClass]="{'active': sysAdmin1.isActive || sysAdmin2.isActive || sysAdmin3.isActive || sysAdmin4.isActive }">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            System Admin
+                            <i class="fas fa-angle-right right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="system-admin/scheduling-codes" routerLinkActive="active"
+                                #sysAdmin1="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Scheduling Codes</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="system-admin/permissions" routerLinkActive="active"
+                                #sysAdmin2="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Permissions</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="system-admin/agent-categories" routerLinkActive="active"
+                                #sysAdmin3="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Agent Categories</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="system-admin/transalations" routerLinkActive="active"
+                                #sysAdmin4="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Translation</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a class="nav-link"
+                        [ngClass]="{'active': setUpMenu1.isActive || setUpMenu2.isActive || setUpMenu3.isActive || setUpMenu4.isActive || setUpMenu5.isActive }">
+                        <i class="nav-icon fas fa-cog"></i>
+                        <p>
+                            Setup Menu
+                            <i class="fas fa-angle-right right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="setup-menu/client-name" routerLinkActive="active"
+                                #setUpMenu1="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Client Name</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="setup-menu/client-lob-group" routerLinkActive="active"
+                                #setUpMenu2="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Client LOB Group</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="setup-menu/skill-groups" routerLinkActive="active"
+                                #setUpMenu3="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Skill Groups</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="setup-menu/skill-tags" routerLinkActive="active"
+                                #setUpMenu4="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Skill Tags</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="setup-menu/agent-scheduling-group" routerLinkActive="active"
+                                #setUpMenu5="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Agent Scheduling Group</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a class="nav-link"
+                        [ngClass]="{'active': schMenu1.isActive || schMenu2.isActive || schMenu3.isActive || schMenu4.isActive || schMenu5.isActive || schMenu6.isActive || schMenu7.isActive }">
+                        <i class="nav-icon far fa-calendar-alt"></i>
+                        <p>
+                            Scheduling Menu
+                            <i class="fas fa-angle-right right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="scheduling-menu/agent-admin" routerLinkActive="active"
+                                #schMenu1="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Agent Admin</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="scheduling-menu/scheduling-grid" routerLinkActive="active"
+                                #schMenu2="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Scheduling Grid</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="scheduling-menu/scheduling-functions"
+                                routerLinkActive="active" #schMenu3="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>All Scheduling Functions</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="scheduling-menu/import-data" routerLinkActive="active"
+                                #schMenu4="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Import Data Option</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="scheduling-menu/forecast-screen" routerLinkActive="active"
+                                #schMenu5="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Forecast Screen</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="scheduling-menu/adjust-schedule-screen"
+                                routerLinkActive="active" #schMenu6="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Adjust Schedule Screen</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="scheduling-menu/view-o/u-screen" routerLinkActive="active"
+                                #schMenu7="routerLinkActive">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>View O/U Screen</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>

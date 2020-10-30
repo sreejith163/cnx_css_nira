@@ -1,0 +1,32 @@
+<div class="login-page">
+  <div class="login-container row">
+    <div class="col-md-6 left-section">
+      <img class="logo small-logo" src="assets/images/logo.png" alt="">
+      <br>
+      <div class="col-md-12 left-section align-items-center justify-content-center logo-margin">
+        <h2 class="text-center">Welcome to</h2>
+        <img class="logo" src="assets/images/css-logo.png" alt="">
+        <button type="button" class="btn" (click)="login()">Login</button>
+      </div>
+    </div>
+    <div class="col-md-6 px-0">
+      <ngb-carousel [showNavigationArrows]="false">
+        <ng-template ngbSlide>
+          <div class="picsum-img-wrapper">
+            <div class="bg-item" style="background: url('assets/images/slider-image1.png');"></div>
+          </div>
+        </ng-template>
+        <ng-template ngbSlide>
+          <div class="picsum-img-wrapper">
+            <div class="bg-item" style="background: url('assets/images/slider-image2.png');"></div>
+          </div>
+        </ng-template>
+        <ng-template ngbSlide>
+          <div class="picsum-img-wrapper">
+            <div class="bg-item" style="background: url('assets/images/slider-image3.png');"></div>
+          </div>
+        </ng-template>
+      </ngb-carousel>
+    </div>
+  </div>
+</div>

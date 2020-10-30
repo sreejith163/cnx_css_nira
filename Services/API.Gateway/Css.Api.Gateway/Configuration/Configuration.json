@@ -1,0 +1,29 @@
+﻿{
+  "ReRoutes": [
+    {
+      "DownStreamPathTemplate": "/api/{version}/{everything}",
+      "DownStreamScheme": "http",
+      "DownStreamHostAndPorts": [
+        {
+          "Host": "cnx.serviceone.api",
+          "Port": 80
+        }
+      ],
+      "UpStreamPathTemplate": "/api/{version}/so/{everything}",
+      "UpStreamHttpMethod": [ "GET", "POST", "PUT" ]
+    },
+    {
+      "DownStreamPathTemplate": "/api/{version}/{everything}",
+      "DownStreamScheme": "http",
+      "DownStreamHostAndPorts": [
+        {
+          "Host": "cnx.useraccessmanagement.api",
+          "Port": 80
+        }
+      ],
+      "UpStreamPathTemplate": "/api/{version}/uam/{everything}",
+      "UpStreamHttpMethod": [ "GET", "POST" ]
+    }
+  ],
+  "GlobalConfiguration": {}
+}

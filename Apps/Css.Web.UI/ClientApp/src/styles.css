@@ -1,0 +1,276 @@
+/* You can add global styles to this file, and also import other style files */
+
+.pointer {
+  cursor: pointer;
+}
+
+table {
+  margin: auto;
+  border-collapse: collapse;
+  overflow: auto;
+  width: fit-content;
+  max-width: 100%;
+  height: fit-content;
+  max-height: calc(50vh);
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, .1);
+}
+
+td,
+th {
+  border: solid rgb(200, 200, 200) 1px;
+  padding: .5rem;
+  color: #666363;
+}
+
+th {
+  border-top: none;
+  white-space: nowrap;
+}
+
+td {
+  white-space: nowrap;
+  border-bottom: none;
+  color: rgb(20, 20, 20);
+}
+
+.table-fixed thead th {
+  position: sticky;
+  top: -1px;
+  background: #f3f3f3;
+}
+
+td:first-of-type,
+th:first-of-type {
+  border-left: none;
+}
+
+td:last-of-type,
+th:last-of-type {
+  border-right: none;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: white !important;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+  background-color: #fafafa !important;
+}
+
+.table thead th.sortable-field {
+  cursor: pointer;
+}
+
+.table thead th.sortable-field>i {
+  color: #b6b2ac;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.valid-error {
+  color: #dc3545;
+  font-size: 12px;
+  padding: 2px;
+}
+
+.valid-border-error {
+  border-color: #dc3545;
+  padding-right: 2.25rem;
+}
+
+.required {
+  color: red;
+}
+
+.padding-5 {
+  padding: 5px;
+}
+
+.m-r-15 {
+  margin-right: 15px !important;
+}
+
+.m-t-20 {
+  margin-top: 20px;
+}
+
+.add-edit-modal .modal-header .close {
+  margin-top: -12px;
+}
+
+.add-edit-modal .modal-body {
+  position: relative;
+  padding: 0px;
+}
+
+.add-edit-modal .modal-footer {
+  padding: 15px;
+  text-align: right;
+  border-top: 0;
+}
+
+@media (min-width: 576px) {
+  .add-edit-modal.modal-dialog {
+    max-width: 1000px;
+    margin: 1.75rem auto;
+  }
+}
+
+.add-edit-modal.modal-dialog {
+  margin-top: auto;
+  margin-bottom: auto;
+  max-width: 1000px !important;
+}
+
+.modal.show .add-edit-modal.modal-dialog {
+  -webkit-transform: none;
+  transform: none;
+  max-width: 1000px !important;
+}
+
+.w-1000 {
+  max-width: 1000px !important;
+}
+
+.add-edit-modal button:focus {
+  outline: none;
+}
+
+.add-edit-modal .modal-header {
+  padding: 10px;
+  height: 50px;
+}
+
+.container-fluid>div>div>h2 {
+  margin-bottom: -7px !important;
+  padding-left: 13px !important;
+}
+
+.m-l-r-10 {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+}
+
+.container-fluid,
+.container-sm,
+.container-md,
+.container-lg,
+.container-xl {
+  padding-right: 20.5px !important;
+  ;
+  padding-left: 20.5px !important;
+  ;
+}
+
+.form-control:disabled {
+  background-color: #f6f6f69e !important;
+}
+
+.padding-t-24 {
+  padding-top: 24px !important;
+}
+
+.width-5-p {
+  width: 5%;
+}
+
+.width-10-p {
+  width: 10%;
+}
+
+.width-12-p {
+  width: 12%;
+}
+
+.width-13-p {
+  width: 13%;
+}
+
+.width-14-p {
+  width: 14%;
+}
+
+.width-15-p {
+  width: 15%;
+}
+
+.width-16-p {
+  width: 16%;
+}
+
+.width-18-p {
+  width: 18%;
+}
+
+.width-22-p {
+  width: 22%;
+}
+
+.width-25-p {
+  width: 25%;
+}
+
+.width-30-p {
+  width: 30%;
+}
+
+.width-31-p {
+  width: 31%;
+}
+
+.width-36-p {
+  width: 36%;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.d-inline {
+  display: inline !important;
+}
+
+.margin-b-05-rem {
+  margin-bottom: 0.5rem !important;
+}
+
+.border-style-none {
+  border-style: none;
+}
+
+.no-scroll {
+  overflow: hidden;
+  max-height: none;
+}
+
+.expanding-table {
+  display: table;
+}
+
+.expanding-table thead th {
+  border: none !important;
+}
+
+.expanding-table tbody td {
+  border: 1px solid #ebebeb !important;
+}
+
+.user-select-none {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.pagination {
+  height: calc(1.5em + .75rem + 0px) !important;
+  font-size: 0.9rem !important;
+}
+
+sup {
+  font-weight: 500 !important;
+  left: -8px !important;
+  top: -15px !important;
+}

@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+
+  css.web.ui:
+    image: ${DOCKER_REGISTRY:-cnx}/css.web.ui:${PLATFORM:-linux}-${TAG:-latest} 
+    container_name: css.web.ui
+    build:
+      context: .
+      dockerfile: Apps/Css.Web.UI/Dockerfile
+
+  css.api.gateway:
+    image: ${DOCKER_REGISTRY:-cnx}/css.api.gateway:${PLATFORM:-linux}-${TAG:-latest}
+    container_name: css.api.gateway
+    build:
+      context: .
+      dockerfile: Services/API.Gateway/Css.Api.Gateway/Dockerfile
+
+  css.api.scheduling:
+    image: ${DOCKER_REGISTRY:-cnx}/css.api.scheduling:${PLATFORM:-linux}-${TAG:-latest}
+    container_name: css.api.scheduling
+    build:
+      context: .
+      dockerfile: Services/API.Scheduling/Css.Api.Scheduling/Dockerfile
+
+
+  css.api.auth:
+    image: ${DOCKER_REGISTRY:-cnx}/css.api.auth:${PLATFORM:-linux}-${TAG:-latest}
+    container_name: css.api.auth
+    build:
+      context: .
+      dockerfile: Services/API.Identity/Css.Api.Auth/Dockerfile
+
+
+  css.api.adminops:
+    image: ${DOCKER_REGISTRY:-cnx}/css.api.adminops:${PLATFORM:-linux}-${TAG:-latest}
+    container_name: css.api.adminops
+    build:
+      context: .
+      dockerfile: Services/API.AdminOps/Css.Api.AdminOps/Dockerfile
+

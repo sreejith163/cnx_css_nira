@@ -1,0 +1,12 @@
+label {
+  font-weight: 100;
+}
+
+.breadcrumb-item.active {
+  color: inherit;
+  font-weight: bold;
+}
+
+.breadcrumb {
+  background-color: inherit;
+}

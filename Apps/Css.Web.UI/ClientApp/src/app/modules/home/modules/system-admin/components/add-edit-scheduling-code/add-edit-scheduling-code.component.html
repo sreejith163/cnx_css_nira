@@ -1,0 +1,122 @@
+<div class="modal-dialog w-1000 add-edit-modal" role="document">
+  <div class="modal-content">
+    <div class="modal-header header-color">
+      <h6 class="modal-title w-100 font-weight-bold header">
+        <p>{{ title }} {{ 'Scheduling Code' | translation: 'lbl_add_edit_page_title' : translationValues }}
+        </p>
+      </h6>
+      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body mx-3 modal-style">
+      <form [formGroup]="schedulingCodeForm">
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Description' | translation: 'lbl_add_edit_description' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" class="form-control" formControlName="description" />
+              <div *ngIf=" hasFormControlValidationError('description')" class="valid-error">
+                {{ 'Description is required' | translation: 'lbl_add_edit_description_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Priority #' | translation: 'lbl_add_edit_priority_no' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" class="form-control" formControlName="priorityNo" (keypress)="isNumberKey($event)"
+                onpaste="return false;" />
+              <div *ngIf="hasFormControlValidationError('priorityNo')" class="valid-error">
+                {{ 'Priority # is required' | translation: 'lbl_add_edit_priority_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Type of Codes' | translation: 'lbl_add_edit_code_type' : translationValues }}</label>
+            </div>
+            <div class="col-md-8 grid">
+              <div class="form-group clearfix margin-b-05-rem" *ngFor="let data of codeList; let i = index">
+                <div class="icheck-primary d-inline">
+                  <input type="checkbox" id="{{ data.id }}" [value]="data.value"
+                    [checked]="hasValueSelected(data.value)" (change)="onCheckboxChange($event)">
+                  <label for="{{ data.id }}">
+                    {{ data.value }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Schedule Icon' | translation: 'lbl_add_edit_icon' : translationValues }}
+                <span class="required"></span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="container">
+                    <div class="card" id="my-card">
+                      <div class="card-header">
+                        <h3 class="card-title">
+                          <ng-container *ngIf="scheduleIcon?.length; else noIcon">
+                            <i class="icon-style icon">{{ unifiedToNative(scheduleIcon) }}</i>
+                          </ng-container>
+                          <ng-template #noIcon>
+                            {{ 'Select Icon' | translation: 'lbl_add_edit_default_icon' : translationValues }}
+                          </ng-template>
+                        </h3>
+                        <div class="card-tools">
+                          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body icon-div">
+                        <div class="icon-inner">
+                          <ng-container *ngFor="let icon of iconData">
+                            <i class="icon-style icon" [ngClass]="{'icon-active': scheduleIcon === icon.unified}"
+                              (click)="onIconSelect(icon.unified)">
+                              {{ unifiedToNative(icon.unified) }}</i>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-center header-color">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-10"></div>
+          <div class="col-md-2">
+            <button class="btn btn-primary float-r" data-dismiss="modal" (click)="save()" id="btn_save">
+              <i class="fa fa-save padding-5"></i>{{ 'Save' | translation: 'btn_save' : translationValues }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
