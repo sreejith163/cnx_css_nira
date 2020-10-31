@@ -1,4 +1,4 @@
-﻿using Css.Api.Core.Common.Utilities.Interfaces;
+﻿using Css.Api.Core.Utilities.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Repository.Interface;

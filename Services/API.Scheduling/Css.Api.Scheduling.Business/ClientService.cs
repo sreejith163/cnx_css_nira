@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Css.Api.Core.Common.Models.DTO.Responses;
+using Css.Api.Core.Models.DTO.Responses;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Requests.Client;

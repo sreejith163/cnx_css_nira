@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Css.Api.Core.Common.Models.Domain
+namespace Css.Api.Core.Models.Domain
 {
     public class PagedList<T> : List<T>
     {

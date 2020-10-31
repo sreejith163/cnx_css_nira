@@ -1,4 +1,4 @@
-﻿using Css.Api.Core.Common.Models.DTO.Requests;
+﻿using Css.Api.Core.Models.DTO.Requests;
 
 namespace Css.Api.Scheduling.Models.DTO.Requests.Client
 {

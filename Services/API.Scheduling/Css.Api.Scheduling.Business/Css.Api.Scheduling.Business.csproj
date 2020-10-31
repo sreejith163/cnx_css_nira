@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\API.Core\Css.Api.Core.Common.Models\Css.Api.Core.Common.csproj" />
+    <ProjectReference Include="..\..\API.Core\Css.Api.Core.Models\Css.Api.Core.Models.csproj" />
     <ProjectReference Include="..\Css.Api.Scheduling.Models\Css.Api.Scheduling.Models.csproj" />
     <ProjectReference Include="..\Css.Api.Scheduling.Repository\Css.Api.Scheduling.Repository.csproj" />
   </ItemGroup>

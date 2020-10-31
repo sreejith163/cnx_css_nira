@@ -1,4 +1,4 @@
-﻿namespace Css.Api.Core.Common.Models.DTO.Requests
+﻿namespace Css.Api.Core.Models.DTO.Requests
 {
     public class QueryStringParameters
     {

@@ -1,4 +1,4 @@
-﻿using Css.Api.Core.Common.Models.Domain;
+﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Requests.Client;
 using Microsoft.AspNetCore.Mvc;

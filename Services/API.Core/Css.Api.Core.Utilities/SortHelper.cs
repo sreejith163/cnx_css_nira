@@ -1,11 +1,11 @@
-﻿using Css.Api.Core.Common.Utilities.Interfaces;
+﻿using Css.Api.Core.Utilities.Interfaces;
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Text;
 
-namespace Css.Api.Core.Common.Utilities
+namespace Css.Api.Core.Utilities
 {
 	/// <summary>
 	/// Implementaion for sorting the data based on provided keywords

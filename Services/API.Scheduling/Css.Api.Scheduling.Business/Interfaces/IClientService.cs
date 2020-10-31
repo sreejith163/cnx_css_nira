@@ -1,4 +1,4 @@
-﻿using Css.Api.Core.Common.Models.DTO.Responses;
+﻿using Css.Api.Core.Models.DTO.Responses;
 using Css.Api.Scheduling.Models.DTO.Requests.Client;
 using System.Threading.Tasks;
 

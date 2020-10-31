@@ -1,7 +1,7 @@
-﻿using Css.Api.Core.Common.Models.Domain;
+﻿using Css.Api.Core.Models.Domain;
 using System.Collections.Generic;
 
-namespace Css.Api.Core.Common.Utilities.Interfaces
+namespace Css.Api.Core.Utilities.Interfaces
 {
     /// <summary>
     /// Interface for shaping the data based on provided keywords

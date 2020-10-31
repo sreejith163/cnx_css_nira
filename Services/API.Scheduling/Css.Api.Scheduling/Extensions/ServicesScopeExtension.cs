@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Css.Api.Core.Common.Utilities;
-using Css.Api.Core.Common.Utilities.Interfaces;
+using Css.Api.Core.Utilities;
+using Css.Api.Core.Utilities.Interfaces;
 using Css.Api.Scheduling.Business;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;

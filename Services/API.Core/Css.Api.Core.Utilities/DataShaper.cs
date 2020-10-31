@@ -1,11 +1,11 @@
-﻿using Css.Api.Core.Common.Models.Domain;
-using Css.Api.Core.Common.Utilities.Interfaces;
+﻿using Css.Api.Core.Models.Domain;
+using Css.Api.Core.Utilities.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Css.Api.Core.Common.Utilities
+namespace Css.Api.Core.Utilities
 {
 	/// <summary>
 	/// Implementaion for shaping the data based on provided keywords

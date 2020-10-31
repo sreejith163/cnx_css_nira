@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Css.Api.Core.Common.Utilities.Interfaces
+namespace Css.Api.Core.Utilities.Interfaces
 {
     /// <summary>
     /// Interface for sorting the data based on provided keywords

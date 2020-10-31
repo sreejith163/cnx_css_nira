@@ -6,7 +6,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace Css.Api.Core.Common.Models.Domain
+namespace Css.Api.Core.Models.Domain
 {
     public class Entity : DynamicObject, IXmlSerializable, IDictionary<string, object>
     {

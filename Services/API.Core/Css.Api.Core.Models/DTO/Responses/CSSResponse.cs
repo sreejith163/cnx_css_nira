@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Css.Api.Core.Common.Models.DTO.Responses
+namespace Css.Api.Core.Models.DTO.Responses
 {
     public class CSSResponse
     {
