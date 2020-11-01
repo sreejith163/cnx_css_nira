@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\Response\Client\" />
     <Folder Include="DTO\Response\SchedulingCode\" />
   </ItemGroup>
 
