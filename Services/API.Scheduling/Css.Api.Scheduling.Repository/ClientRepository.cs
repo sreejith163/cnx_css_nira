@@ -3,11 +3,9 @@ using Css.Api.Core.Utilities.Interfaces;
 using Css.Api.Core.DataAccess.Repository;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Requests.Client;
-using Css.Api.Scheduling.Models.DTO.Responses.Client;
 using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,12 +16,12 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>
         /// The sort helper
         /// </summary>
-        private readonly ISortHelper<Client> sortHelper;
+        private readonly ISortHelper<Client> _sortHelper;
 
         /// <summary>
         /// The data shaper
         /// </summary>
-        private readonly IDataShaper<Client> dataShaper;
+        private readonly IDataShaper<Client> _dataShaper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientRepository" /> class.
@@ -37,8 +35,8 @@ namespace Css.Api.Scheduling.Repository
             IDataShaper<Client> dataShaper)
             : base(repositoryContext)
         {
-            this.sortHelper = sortHelper;
-            this.dataShaper = dataShaper;
+            _sortHelper = sortHelper;
+            _dataShaper = dataShaper;
         }
 
         /// <summary>
@@ -50,22 +48,10 @@ namespace Css.Api.Scheduling.Repository
         {
             var clients = FindByCondition(x => x.IsDeleted == false);
             SearchByName(ref clients, clientParameters.SearchKeyword);
-            var sortedClients = sortHelper.ApplySort(clients, clientParameters.OrderBy);
-            var shapedClients = dataShaper.ShapeData(sortedClients, clientParameters.Fields);
+            var sortedClients = _sortHelper.ApplySort(clients, clientParameters.OrderBy);
+            var shapedClients = _dataShaper.ShapeData(sortedClients, clientParameters.Fields);
 
             return await PagedList<Entity>.ToPagedList(shapedClients, clientParameters.PageNumber, clientParameters.PageSize);
-        }
-
-        /// <summary>
-        /// Gets the client names.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IEnumerable<ClientNameResponse>> GetClientNames()
-        {
-            var clients = FindByCondition(x => x.IsDeleted == false);
-            var mappedClients = clients.Select(cl => new ClientNameResponse() { id = cl.Id, Name = cl.Name });
-
-            return await mappedClients.ToListAsync();
         }
 
         /// <summary>
@@ -118,7 +104,7 @@ namespace Css.Api.Scheduling.Repository
             if (string.IsNullOrEmpty(clientName))
                 return;
 
-            clients = clients.Where(o => o.Name.ToLowerInvariant().Contains(clientName.Trim().ToLowerInvariant()));
+            clients = clients.Where(o => o.Name.ToLower().Contains(clientName.Trim().ToLower()));
         }
     }
 }

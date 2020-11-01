@@ -41,8 +41,13 @@ namespace Css.Api.Scheduling.Extensions
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddTransient<ISortHelper<Client>, SortHelper<Client>>();
+            services.AddTransient<ISortHelper<SchedulingCode>, SortHelper<SchedulingCode>>();
+
             services.AddTransient<IDataShaper<Client>, DataShaper<Client>>();
+            services.AddTransient<IDataShaper<SchedulingCode>, DataShaper<SchedulingCode>>();
+
             services.AddTransient<IClientService, ClientService>();
+            services.AddTransient<ISchedulingCodeService, SchedulingCodeService>();
 
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 

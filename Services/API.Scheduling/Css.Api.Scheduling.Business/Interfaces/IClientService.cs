@@ -14,12 +14,6 @@ namespace Css.Api.Scheduling.Business.Interfaces
         Task<CSSResponse> GetClients(ClientQueryParameters clientParameters);
 
         /// <summary>
-        /// Gets the client names.
-        /// </summary>
-        /// <returns></returns>
-        Task<CSSResponse> GetClientNames();
-
-        /// <summary>
         /// Gets the client.
         /// </summary>
         /// <param name="clientIdDetails">The client identifier details.</param>

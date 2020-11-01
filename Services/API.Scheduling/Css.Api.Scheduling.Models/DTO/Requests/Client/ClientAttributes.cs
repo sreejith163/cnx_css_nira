@@ -5,6 +5,6 @@
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
-        public string name { get; set; }
+        public string Name { get; set; }
     }
 }

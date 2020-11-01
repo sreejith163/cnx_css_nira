@@ -1,6 +1,8 @@
-﻿namespace Css.Api.Scheduling.Models.DTO.Requests.Client
+﻿using Css.Api.Scheduling.Models.DTO.Requests.Client;
+
+namespace Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode
 {
-    public class CreateClient: ClientAttributes
+    public class CreateSchedulingCode: SchedulingCodeAttributes
     {
         /// <summary>
         /// Gets or sets the ref Id.

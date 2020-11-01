@@ -13,6 +13,11 @@ namespace Css.Api.Scheduling.Repository.Interface
         IClientRepository Clients { get; }
 
         /// <summary>
+        /// Gets the scheduling codes.
+        /// </summary>
+        ISchedulingCodeRepository SchedulingCodes { get; }
+
+        /// <summary>
         /// Saves the asynchronous.
         /// </summary>
         /// <returns></returns>

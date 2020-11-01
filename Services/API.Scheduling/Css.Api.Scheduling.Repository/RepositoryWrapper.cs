@@ -11,22 +11,37 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>
         /// Gets or sets the repository context.
         /// </summary>
-        private SchedulingContext repositoryContext { get; set; }
+        private SchedulingContext _repositoryContext { get; set; }
 
         /// <summary>
         /// Gets or sets the clients.
         /// </summary>
-        private IClientRepository clientRepository { get; set; }
+        private IClientRepository _clientRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scheduling codes repository.
+        /// </summary>
+        private ISchedulingCodeRepository _schedulingCodesRepository { get; set; }
 
         /// <summary>
         /// The clients sort helper
         /// </summary>
-        private readonly ISortHelper<Client> clientsSortHelper;
+        private readonly ISortHelper<Client> _clientsSortHelper;
+
+        /// <summary>
+        /// The scheduling codes sort helper
+        /// </summary>
+        private readonly ISortHelper<SchedulingCode> _schedulingCodesSortHelper;
 
         /// <summary>
         /// The clients data shaper
         /// </summary>
-        private readonly IDataShaper<Client> clientsDataShaper;
+        private readonly IDataShaper<Client> _clientsDataShaper;
+
+        /// <summary>
+        /// The scheduling codes data shaper
+        /// </summary>
+        private readonly IDataShaper<SchedulingCode> _schedulingCodesDataShaper;
 
         /// <summary>
         /// Gets the stroies.
@@ -35,11 +50,26 @@ namespace Css.Api.Scheduling.Repository
         {
             get
             {
-                if (clientRepository == null)
+                if (_clientRepository == null)
                 {
-                    clientRepository = new ClientRepository(repositoryContext, clientsSortHelper, clientsDataShaper);
+                    _clientRepository = new ClientRepository(_repositoryContext, _clientsSortHelper, _clientsDataShaper);
                 }
-                return clientRepository;
+                return _clientRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the scheduling codes.
+        /// </summary>
+        public ISchedulingCodeRepository SchedulingCodes
+        {
+            get
+            {
+                if (_schedulingCodesRepository == null)
+                {
+                    _schedulingCodesRepository = new SchedulingCodeRepository(_repositoryContext, _schedulingCodesSortHelper, _schedulingCodesDataShaper);
+                }
+                return _schedulingCodesRepository;
             }
         }
 
@@ -48,15 +78,21 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="repositoryContext">The repository context.</param>
         /// <param name="clientsSortHelper">The clients sort helper.</param>
+        /// <param name="schedulingCodesSortHelper">The scheduling codes sort helper.</param>
         /// <param name="clientsDataShaper">The clients data shaper.</param>
+        /// <param name="schedulingCodesDataShaper">The scheduling codes data shaper.</param>
         public RepositoryWrapper(
             SchedulingContext repositoryContext,
             ISortHelper<Client> clientsSortHelper,
-            IDataShaper<Client> clientsDataShaper)
+            ISortHelper<SchedulingCode> schedulingCodesSortHelper,
+            IDataShaper<Client> clientsDataShaper,
+            IDataShaper<SchedulingCode> schedulingCodesDataShaper)
         {
-            this.repositoryContext = repositoryContext;
-            this.clientsSortHelper = clientsSortHelper;
-            this.clientsDataShaper = clientsDataShaper;
+            _repositoryContext = repositoryContext;
+            _clientsSortHelper = clientsSortHelper;
+            _schedulingCodesSortHelper = schedulingCodesSortHelper;
+            _clientsDataShaper = clientsDataShaper;
+            _schedulingCodesDataShaper = schedulingCodesDataShaper;
         }
 
         /// <summary>
@@ -65,7 +101,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<bool> SaveAsync()
         {
-            return await repositoryContext.SaveChangesAsync() >= 0;
+            return await _repositoryContext.SaveChangesAsync() >= 0;
         }
     }
 }

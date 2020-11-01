@@ -28,12 +28,6 @@
             <param name="clientParameters">The client parameters.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.ClientsController.GetClientNames">
-            <summary>
-            Gets the client names.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:Css.Api.Scheduling.Controllers.ClientsController.GetClient(System.Int32)">
             <summary>
             Gets the client.
@@ -61,6 +55,59 @@
             Updates the client.
             </summary>
             <param name="clientId">The client identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Scheduling.Controllers.SchedulingCodesController">
+            <summary>
+            Controller for handling the schedulingCode resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.SchedulingCodesController._schedulingCodeService">
+            <summary>
+            The scheduling code service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.#ctor(Css.Api.Scheduling.Business.Interfaces.ISchedulingCodeService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.SchedulingCodesController" /> class.
+            </summary>
+            <param name="schedulingCodeService">The scheduling code service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.GetSchedulingCodes(Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode.SchedulingCodeQueryParameters)">
+            <summary>
+            Gets the scheduling codes.
+            </summary>
+            <param name="schedulingCodeParameters">The scheduling code parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.GetSchedulingCode(System.Int32)">
+            <summary>
+            Gets the scheduling code.
+            </summary>
+            <param name="schedulingCodeId">The scheduling code identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.CreateSchedulingCode(Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode.CreateSchedulingCode)">
+            <summary>
+            Creates the scheduling code.
+            </summary>
+            <param name="schedulingCodeDetails">The scheduling code details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.UpdateSchedulingCode(System.Int32,Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode.UpdateSchedulingCode)">
+            <summary>
+            Updates the scheduling code.
+            </summary>
+            <param name="schedulingCodeId">The scheduling code identifier.</param>
+            <param name="schedulingCodeDetails">The scheduling code details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.DeleteSchedulingCode(System.Int32)">
+            <summary>
+            Deletes the scheduling code.
+            </summary>
+            <param name="schedulingCodeId">The scheduling code identifier.</param>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Scheduling.Extensions.CustomMVCConfigurationExtension">
@@ -247,16 +294,6 @@
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Client.AddClientValidator"/> class.
             </summary>
         </member>
-        <member name="T:Css.Api.Scheduling.Validators.Client.ClientIdDetailsValidator">
-            <summary>
-            Validator for handling the validation of client id object
-            </summary>
-        </member>
-        <member name="M:Css.Api.Scheduling.Validators.Client.ClientIdDetailsValidator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Client.ClientIdDetailsValidator"/> class.
-            </summary>
-        </member>
         <member name="T:Css.Api.Scheduling.Validators.Client.UpdateClientValidator">
             <summary>
             Validator for handling the validation of update client object
@@ -265,6 +302,26 @@
         <member name="M:Css.Api.Scheduling.Validators.Client.UpdateClientValidator.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Client.UpdateClientValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.SchedulingCode.AddSchedulingCodeValidator">
+            <summary>
+            Validator for handling the validation of add scheduling code object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.SchedulingCode.AddSchedulingCodeValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.SchedulingCode.AddSchedulingCodeValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.SchedulingCode.UpdateSchedulingCodeValidator">
+            <summary>
+            Validator for handling the validation of update scheduling code object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.SchedulingCode.UpdateSchedulingCodeValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.SchedulingCode.UpdateSchedulingCodeValidator" /> class.
             </summary>
         </member>
     </members>

@@ -49,17 +49,6 @@ namespace Css.Api.Scheduling.Controllers
         }
 
         /// <summary>
-        /// Gets the client names.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("names")]
-        public async Task<IActionResult> GetClientNames()
-        {
-            var result = await _clientService.GetClientNames();
-            return StatusCode((int)result.Code, result.Value);
-        }
-
-        /// <summary>
         /// Gets the client.
         /// </summary>
         /// <param name="clientId">The client identifier.</param>

@@ -11,10 +11,5 @@ namespace Css.Api.Scheduling.Models.DTO.Requests.Client
         {
             OrderBy = "CreatedDate";
         }
-
-        /// <summary>
-        /// Gets or sets the client identifier.
-        /// </summary>
-        public int? ClientId { get; set; }
     }
 }
