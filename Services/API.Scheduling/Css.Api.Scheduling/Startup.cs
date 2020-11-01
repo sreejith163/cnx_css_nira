@@ -1,3 +1,4 @@
+using Css.Api.Core.Utilities.Filters;
 using Css.Api.Scheduling.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
@@ -75,6 +76,7 @@ namespace Css.Api.Scheduling
             });
 
             app.ConfigureCustomExceptionMiddleware();
+            app.UseMiddleware<SerilogPropertyContext>();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

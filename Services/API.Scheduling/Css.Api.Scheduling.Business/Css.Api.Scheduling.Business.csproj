@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog" Version="2.9.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\API.Core\Css.Api.Core.Models\Css.Api.Core.Models.csproj" />
     <ProjectReference Include="..\Css.Api.Scheduling.Models\Css.Api.Scheduling.Models.csproj" />
     <ProjectReference Include="..\Css.Api.Scheduling.Repository\Css.Api.Scheduling.Repository.csproj" />

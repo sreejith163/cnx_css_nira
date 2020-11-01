@@ -32,6 +32,8 @@ namespace Css.Api.Scheduling.Extensions
         {
             //Configure logger
             Log.Logger = new LoggerConfiguration()
+                .Enrich.WithThreadId()
+                .Enrich.FromLogContext()
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
 
