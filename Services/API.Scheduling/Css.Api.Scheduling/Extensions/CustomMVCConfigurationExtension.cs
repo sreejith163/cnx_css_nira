@@ -24,6 +24,9 @@ namespace Css.Api.Scheduling.Extensions
                     .AllowCredentials());
             });
 
+            services.AddMvc().AddNewtonsoftJson();
+            services.AddMvcCore().AddApiExplorer();
+
             return services;
         }
     }
