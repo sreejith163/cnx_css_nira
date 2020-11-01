@@ -117,10 +117,25 @@ namespace Css.Api.Core.Utilities
 			foreach (var property in requiredProperties)
 			{
 				var objectPropertyValue = property.GetValue(entity);
-				shapedObject.TryAdd(property.Name, objectPropertyValue);
+				shapedObject.TryAdd(ToCamelCaseString(property.Name), objectPropertyValue);
 			}
 
 			return shapedObject;
+		}
+
+        /// <summary>
+        /// Converts to camelcasestring.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns></returns>
+        private string ToCamelCaseString(string str)
+		{
+			if (!string.IsNullOrEmpty(str))
+			{
+				return char.ToLowerInvariant(str[0]) + str.Substring(1);
+			}
+
+			return str;
 		}
 	}
 }
