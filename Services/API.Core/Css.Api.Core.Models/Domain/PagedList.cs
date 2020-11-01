@@ -63,14 +63,14 @@ namespace Css.Api.Core.Models.Domain
         public static string ToJson(object value)
         {
             var results = value as PagedList<Entity>;
-            var metadata = new
+            var metadata = new Paging
             {
-                results.TotalCount,
-                results.PageSize,
-                results.CurrentPage,
-                results.TotalPages,
-                results.HasNext,
-                results.HasPrevious
+                TotalCount = results.TotalCount,
+                PageSize = results.PageSize,
+                CurrentPage = results.CurrentPage,
+                TotalPages = results.TotalPages,
+                HasNext = results.HasNext,
+                HasPrevious = results.HasPrevious
             };
 
             return JsonConvert.SerializeObject(metadata);
