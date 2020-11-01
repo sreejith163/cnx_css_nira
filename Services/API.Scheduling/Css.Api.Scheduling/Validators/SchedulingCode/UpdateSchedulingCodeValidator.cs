@@ -1,4 +1,4 @@
-﻿using Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode;
+﻿using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using FluentValidation;
 
 namespace Css.Api.Scheduling.Validators.SchedulingCode

@@ -1,4 +1,4 @@
-﻿namespace Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode
+﻿namespace Css.Api.Scheduling.Models.DTO.Request.SchedulingCode
 {
     public class SchedulingCodeIdDetails
     {

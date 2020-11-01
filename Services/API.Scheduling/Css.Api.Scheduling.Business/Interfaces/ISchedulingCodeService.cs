@@ -1,5 +1,5 @@
-﻿using Css.Api.Core.Models.DTO.Responses;
-using Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode;
+﻿using Css.Api.Core.Models.DTO.Response;
+using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Business.Interfaces

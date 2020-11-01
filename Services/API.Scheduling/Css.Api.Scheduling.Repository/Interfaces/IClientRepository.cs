@@ -1,6 +1,6 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Scheduling.Models.Domain;
-using Css.Api.Scheduling.Models.DTO.Requests.Client;
+using Css.Api.Scheduling.Models.DTO.Request.Client;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository.Interface

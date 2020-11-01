@@ -1,7 +1,7 @@
 ﻿using Css.Api.Scheduling.Models.Domain;
 using System.Collections.Generic;
 
-namespace Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode
+namespace Css.Api.Scheduling.Models.DTO.Request.SchedulingCode
 {
     public class SchedulingCodeAttributes
     {

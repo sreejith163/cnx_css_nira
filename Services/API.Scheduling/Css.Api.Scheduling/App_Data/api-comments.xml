@@ -21,7 +21,7 @@
             </summary>
             <param name="clientService">The client service.</param>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.ClientsController.GetClients(Css.Api.Scheduling.Models.DTO.Requests.Client.ClientQueryParameters)">
+        <member name="M:Css.Api.Scheduling.Controllers.ClientsController.GetClients(Css.Api.Scheduling.Models.DTO.Request.Client.ClientQueryParameters)">
             <summary>
             Gets the clients.
             </summary>
@@ -35,14 +35,14 @@
             <param name="clientId">The client identifier.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.ClientsController.CreateClient(Css.Api.Scheduling.Models.DTO.Requests.Client.CreateClient)">
+        <member name="M:Css.Api.Scheduling.Controllers.ClientsController.CreateClient(Css.Api.Scheduling.Models.DTO.Request.Client.CreateClient)">
             <summary>
             Creates the client.
             </summary>
             <param name="clientDetails">The client details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.ClientsController.UpdateClient(System.Int32,Css.Api.Scheduling.Models.DTO.Requests.Client.UpdateClient)">
+        <member name="M:Css.Api.Scheduling.Controllers.ClientsController.UpdateClient(System.Int32,Css.Api.Scheduling.Models.DTO.Request.Client.UpdateClient)">
             <summary>
             Updates the client.
             </summary>
@@ -74,7 +74,7 @@
             </summary>
             <param name="schedulingCodeService">The scheduling code service.</param>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.GetSchedulingCodes(Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode.SchedulingCodeQueryParameters)">
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.GetSchedulingCodes(Css.Api.Scheduling.Models.DTO.Request.SchedulingCode.SchedulingCodeQueryParameters)">
             <summary>
             Gets the scheduling codes.
             </summary>
@@ -88,14 +88,14 @@
             <param name="schedulingCodeId">The scheduling code identifier.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.CreateSchedulingCode(Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode.CreateSchedulingCode)">
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.CreateSchedulingCode(Css.Api.Scheduling.Models.DTO.Request.SchedulingCode.CreateSchedulingCode)">
             <summary>
             Creates the scheduling code.
             </summary>
             <param name="schedulingCodeDetails">The scheduling code details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.UpdateSchedulingCode(System.Int32,Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode.UpdateSchedulingCode)">
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodesController.UpdateSchedulingCode(System.Int32,Css.Api.Scheduling.Models.DTO.Request.SchedulingCode.UpdateSchedulingCode)">
             <summary>
             Updates the scheduling code.
             </summary>

@@ -7,7 +7,7 @@ using Css.Api.Scheduling.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode;
+using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 
 namespace Css.Api.Scheduling.Repository
 {

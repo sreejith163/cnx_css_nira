@@ -1,4 +1,4 @@
-﻿namespace Css.Api.Scheduling.Models.DTO.Requests.Client
+﻿namespace Css.Api.Scheduling.Models.DTO.Request.Client
 {
     public class ClientAttributes
     {

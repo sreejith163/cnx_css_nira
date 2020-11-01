@@ -1,6 +1,6 @@
-﻿using Css.Api.Scheduling.Models.DTO.Requests.Client;
+﻿using Css.Api.Scheduling.Models.DTO.Request.Client;
 
-namespace Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode
+namespace Css.Api.Scheduling.Models.DTO.Request.SchedulingCode
 {
     public class UpdateSchedulingCode : ClientAttributes
     {

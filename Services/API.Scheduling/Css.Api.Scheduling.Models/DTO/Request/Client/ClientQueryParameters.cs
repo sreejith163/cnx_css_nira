@@ -1,6 +1,6 @@
-﻿using Css.Api.Core.Models.DTO.Requests;
+﻿using Css.Api.Core.Models.DTO.Request;
 
-namespace Css.Api.Scheduling.Models.DTO.Requests.Client
+namespace Css.Api.Scheduling.Models.DTO.Request.Client
 {
     public class ClientQueryParameters: QueryStringParameters
     {

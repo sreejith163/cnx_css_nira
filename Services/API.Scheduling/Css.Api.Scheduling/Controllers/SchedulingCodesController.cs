@@ -1,6 +1,6 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Scheduling.Business.Interfaces;
-using Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode;
+using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;

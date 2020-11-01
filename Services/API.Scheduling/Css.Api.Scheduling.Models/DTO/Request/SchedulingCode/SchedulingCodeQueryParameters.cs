@@ -1,6 +1,6 @@
-﻿using Css.Api.Core.Models.DTO.Requests;
+﻿using Css.Api.Core.Models.DTO.Request;
 
-namespace Css.Api.Scheduling.Models.DTO.Requests.SchedulingCode
+namespace Css.Api.Scheduling.Models.DTO.Request.SchedulingCode
 {
     public class SchedulingCodeQueryParameters: QueryStringParameters
     {
