@@ -12,8 +12,4 @@
     <ProjectReference Include="..\..\API.Core\Css.Api.Core.Models\Css.Api.Core.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTO\Responses\Client\" />
-  </ItemGroup>
-
 </Project>
