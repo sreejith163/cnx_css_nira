@@ -4,6 +4,52 @@
         <name>Css.Api.Scheduling</name>
     </assembly>
     <members>
+        <member name="T:Css.Api.Scheduling.Controllers.ClientLOBGroupsController">
+            <summary>Controller for handling Client LOB group resource</summary>
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.ClientLOBGroupsController._clientLOBGroupService">
+            <summary>The client lob group service</summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ClientLOBGroupsController.#ctor(Css.Api.Scheduling.Business.Interfaces.IClientLOBGroupService)">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.ClientLOBGroupsController" /> class.</summary>
+            <param name="clientLOBGroupService">The client lob group service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ClientLOBGroupsController.GetClientLOBGroups(Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup.ClientLOBGroupQueryParameter)">
+            <summary>Gets the client lob groups.</summary>
+            <param name="clientLOBQueryParameters">The client lob query parameters.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ClientLOBGroupsController.GetClientLOBGroup(System.Int32)">
+            <summary>Gets the client lob group.</summary>
+            <param name="clientLOBGroupId">The client lob group identifier.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ClientLOBGroupsController.CreateClientLOBGroup(Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup.CreateClientLOBGroup)">
+            <summary>Creates the client lob group.</summary>
+            <param name="clientLOBGroupDetails">The client lob group details.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ClientLOBGroupsController.UpdateClientLOBGroup(System.Int32,Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup.UpdateClientLOBGroup)">
+            <summary>Updates the client lob group.</summary>
+            <param name="clientLOBGroupId">The client lob group identifier.</param>
+            <param name="clientLOBGroupDetails">The client lob group details.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ClientLOBGroupsController.DeleteClientLOBGroup(System.Int32)">
+            <summary>Deletes the client lob group.</summary>
+            <param name="clientLOBGroupId">The client lob group identifier.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.ClientsController">
             <summary>
             Controller for handling the client resource
@@ -283,6 +329,18 @@
             </summary>
             <param name="app">The application.</param>
             <param name="env">The env.</param>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.ClientLOBGroup.AddClientLOBGroupValidator">
+            <summary>Validator for handling the validation of add client lob group object</summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.ClientLOBGroup.AddClientLOBGroupValidator.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.ClientLOBGroup.AddClientLOBGroupValidator" /> class.</summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.ClientLOBGroup.UpdateClientLOBGroupValidator">
+            <summary>Validator for handling the validation of update client lob group object</summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.ClientLOBGroup.UpdateClientLOBGroupValidator.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.ClientLOBGroup.UpdateClientLOBGroupValidator" /> class.</summary>
         </member>
         <member name="T:Css.Api.Scheduling.Validators.Client.AddClientValidator">
             <summary>

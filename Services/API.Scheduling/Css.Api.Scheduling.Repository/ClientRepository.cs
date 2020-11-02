@@ -4,7 +4,7 @@ using Css.Api.Core.DataAccess.Repository;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Repository.DatabaseContext;
-using Css.Api.Scheduling.Repository.Interface;
+using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;

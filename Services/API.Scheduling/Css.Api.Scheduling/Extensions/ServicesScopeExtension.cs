@@ -3,9 +3,8 @@ using Css.Api.Core.Utilities;
 using Css.Api.Core.Utilities.Interfaces;
 using Css.Api.Scheduling.Business;
 using Css.Api.Scheduling.Business.Interfaces;
-using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Repository;
-using Css.Api.Scheduling.Repository.Interface;
+using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,13 +41,11 @@ namespace Css.Api.Scheduling.Extensions
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddTransient<ISortHelper<Client>, SortHelper<Client>>();
-            services.AddTransient<ISortHelper<SchedulingCode>, SortHelper<SchedulingCode>>();
-
-            services.AddTransient<IDataShaper<Client>, DataShaper<Client>>();
-            services.AddTransient<IDataShaper<SchedulingCode>, DataShaper<SchedulingCode>>();
+            services.AddScoped(typeof(ISortHelper<>), typeof(SortHelper<>));
+            services.AddScoped(typeof(IDataShaper<>), typeof(DataShaper<>));
 
             services.AddTransient<IClientService, ClientService>();
+            services.AddTransient<IClientLOBGroupService, ClientLOBGroupService>();
             services.AddTransient<ISchedulingCodeService, SchedulingCodeService>();
 
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();

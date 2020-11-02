@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using Css.Api.Scheduling.Repository.Interfaces;
+using System.Threading.Tasks;
 
-namespace Css.Api.Scheduling.Repository.Interface
+namespace Css.Api.Scheduling.Repository.Interfaces
 {
     /// <summary>
     /// Interface for repository wrapper
@@ -11,6 +12,11 @@ namespace Css.Api.Scheduling.Repository.Interface
         /// Gets the clients.
         /// </summary>
         IClientRepository Clients { get; }
+
+        /// <summary>
+        /// Gets the client lob groups.
+        /// </summary>
+        IClientLOBGroupRepository ClientLOBGroups { get; }
 
         /// <summary>
         /// Gets the scheduling codes.

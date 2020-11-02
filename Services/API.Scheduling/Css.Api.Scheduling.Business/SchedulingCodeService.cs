@@ -3,7 +3,7 @@ using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
-using Css.Api.Scheduling.Repository.Interface;
+using Css.Api.Scheduling.Repository.Interfaces;
 using System.Net;
 using System.Threading.Tasks;
 
