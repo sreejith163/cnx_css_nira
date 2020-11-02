@@ -61,7 +61,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<SchedulingCode> GetSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails)
         {
-            var schedulingCode = await FindByCondition(x => x.Id == schedulingCodeIdDetails.SchedulingCodeId && x.IsDeleted == false).SingleOrDefaultAsync();
+            var schedulingCode = FindByCondition(x => x.Id == schedulingCodeIdDetails.SchedulingCodeId && x.IsDeleted == false).SingleOrDefault();
             return await Task.FromResult(schedulingCode);
         }
 
