@@ -5,6 +5,11 @@ namespace Css.Api.Scheduling.Models.Domain
 {
     public partial class SchedulingCode
     {
+        public SchedulingCode()
+        {
+            SchedulingTypeCode = new HashSet<SchedulingTypeCode>();
+        }
+
         public int Id { get; set; }
         public int RefId { get; set; }
         public string Description { get; set; }
@@ -18,5 +23,6 @@ namespace Css.Api.Scheduling.Models.Domain
         public bool IsDeleted { get; set; }
 
         public virtual SchedulingCodeIcon Icon { get; set; }
+        public virtual ICollection<SchedulingTypeCode> SchedulingTypeCode { get; set; }
     }
 }

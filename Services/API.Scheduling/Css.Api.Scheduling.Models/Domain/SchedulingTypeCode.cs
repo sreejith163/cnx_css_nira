@@ -9,6 +9,7 @@ namespace Css.Api.Scheduling.Models.Domain
         public int SchedulingCodeId { get; set; }
         public int SchedulingCodeTypeId { get; set; }
 
+        public virtual SchedulingCode SchedulingCode { get; set; }
         public virtual SchedulingCodeType SchedulingCodeType { get; set; }
     }
 }
