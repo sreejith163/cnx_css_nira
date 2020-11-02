@@ -61,7 +61,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<Client> GetClient(ClientIdDetails clientIdDetails)
         {
-            return await FindByCondition(x => x.Id == clientIdDetails.ClientId && x.IsDeleted == false).SingleOrDefaultAsync();
+            var client = FindByCondition(x => x.Id == clientIdDetails.ClientId && x.IsDeleted == false).SingleOrDefault();
+            return await Task.FromResult(client);
         }
 
         /// <summary>

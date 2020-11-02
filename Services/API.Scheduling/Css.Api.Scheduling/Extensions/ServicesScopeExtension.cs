@@ -38,6 +38,7 @@ namespace Css.Api.Scheduling.Extensions
 
             services.AddSingleton(Log.Logger);
             services.AddSingleton(HostingEnvironment);
+            services.AddSingleton(configuration);
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

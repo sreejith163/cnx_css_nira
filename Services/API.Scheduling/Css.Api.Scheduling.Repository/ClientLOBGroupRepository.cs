@@ -63,7 +63,8 @@ namespace Css.Api.Scheduling.Repository
         /// </returns>
         public async Task<ClientLobGroup> GetClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupIdDetails)
         {
-            return await FindByCondition(x => x.Id == clientLOBGroupIdDetails.ClientLOBGroupId && x.IsDeleted == false).SingleOrDefaultAsync();
+            var clientLOBGroup = await FindByCondition(x => x.Id == clientLOBGroupIdDetails.ClientLOBGroupId && x.IsDeleted == false).SingleOrDefaultAsync();
+            return await Task.FromResult(clientLOBGroup);
         }
 
         /// <summary>

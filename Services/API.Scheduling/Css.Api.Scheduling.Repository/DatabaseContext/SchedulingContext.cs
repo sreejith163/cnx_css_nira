@@ -1,17 +1,31 @@
 ﻿using Css.Api.Scheduling.Models.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Css.Api.Scheduling.Repository.DatabaseContext
 {
     public partial class SchedulingContext : DbContext
     {
-        public SchedulingContext()
-        {
-        }
+        /// <summary>
+        /// The configuration
+        /// </summary>
+        private readonly IConfiguration _configuration;
 
-        public SchedulingContext(DbContextOptions<SchedulingContext> options)
-            : base(options)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SchedulingContext"/> class.
+        /// </summary>
+        public SchedulingContext() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SchedulingContext" /> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="configuration">The configuration.</param>
+        public SchedulingContext(
+                    DbContextOptions<SchedulingContext> options, IConfiguration configuration)
+                    : base(options)
         {
+            _configuration = configuration;
         }
 
         public virtual DbSet<AgentAdmin> AgentAdmin { get; set; }
@@ -43,7 +57,7 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySQL("server=localhost;user id=root;password=root;persistsecurityinfo=True;database=css");
+                optionsBuilder.UseMySQL(_configuration.GetConnectionString("Database"));
             }
         }
 
