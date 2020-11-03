@@ -3,6 +3,7 @@ using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
+using Css.Api.Scheduling.Models.DTO.Response.Client;
 using Css.Api.Scheduling.Repository.Interfaces;
 using System.Net;
 using System.Threading.Tasks;
@@ -56,7 +57,8 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            return new CSSResponse(client, HttpStatusCode.OK);
+            var mappedClient = _mapper.Map<ClientDTO>(client);
+            return new CSSResponse(mappedClient, HttpStatusCode.OK);
         }
 
         /// <summary>

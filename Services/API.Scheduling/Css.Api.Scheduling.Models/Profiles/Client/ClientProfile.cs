@@ -1,4 +1,5 @@
 ﻿using Css.Api.Scheduling.Models.DTO.Request.Client;
+using Css.Api.Scheduling.Models.DTO.Response.Client;
 using System;
 
 namespace Css.Api.Scheduling.Models.Profiles.Client
@@ -11,9 +12,15 @@ namespace Css.Api.Scheduling.Models.Profiles.Client
         public ClientProfile()
         {
             CreateMap<CreateClient, Domain.Client>()
-                .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow)).ReverseMap();
+                .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
+                .ReverseMap();
+
             CreateMap<UpdateClient, Domain.Client>()
-                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow)).ReverseMap().ReverseMap();
+                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
+                .ReverseMap();
+
+            CreateMap<Domain.Client, ClientDTO>()
+                .ReverseMap();
         }
     }
 }

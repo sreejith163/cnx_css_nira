@@ -1,4 +1,5 @@
 ﻿using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
+using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using System;
 
 namespace Css.Api.Scheduling.Models.Profiles.ClientLOBGroup
@@ -9,9 +10,15 @@ namespace Css.Api.Scheduling.Models.Profiles.ClientLOBGroup
         public ClientLOBGroupProfile()
         {
             CreateMap<CreateClientLOBGroup, Domain.ClientLobGroup>()
-                .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow)).ReverseMap();
+                .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
+                .ReverseMap();
+
             CreateMap<UpdateClientLOBGroup, Domain.ClientLobGroup>()
-                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow)).ReverseMap().ReverseMap();
+                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
+                .ReverseMap();
+
+            CreateMap<Domain.ClientLobGroup, ClientLOBGroupDTO>()
+                .ReverseMap();
         }
     }
 }

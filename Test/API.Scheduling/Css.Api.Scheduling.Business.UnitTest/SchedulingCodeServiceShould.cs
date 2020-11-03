@@ -5,6 +5,9 @@ using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Business.UnitTest.Mock;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
+using Css.Api.Scheduling.Models.DTO.Response.Client;
+using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
+using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using Css.Api.Scheduling.Models.Profiles.SchedulingCode;
 using Css.Api.Scheduling.Repository;
 using Css.Api.Scheduling.Repository.DatabaseContext;
@@ -52,19 +55,19 @@ namespace Css.Api.Scheduling.Business.UnitTest
 
             mapper = new Mapper(mapperConfig);
 
-            var clientSortHelper = new SortHelper<Client>();
-            var clientLObGroupSortHelper = new SortHelper<ClientLobGroup>();
-            var clientSchedulingCodeSortHelper = new SortHelper<SchedulingCode>();
+            var clientSortHelper = new SortHelper<ClientDTO>();
+            var clientLObGroupSortHelper = new SortHelper<ClientLOBGroupDTO>();
+            var clientSchedulingCodeSortHelper = new SortHelper<SchedulingCodeDTO>();
 
-            var clientDataShaperHelper = new DataShaper<Client>();
-            var clientLObGroupDataShaperHelper = new DataShaper<ClientLobGroup>();
-            var clientSchedulingCodeDataShaperHelper = new DataShaper<SchedulingCode>();
+            var clientDataShaperHelper = new DataShaper<ClientDTO>();
+            var clientLObGroupDataShaperHelper = new DataShaper<ClientLOBGroupDTO>();
+            var clientSchedulingCodeDataShaperHelper = new DataShaper<SchedulingCodeDTO>();
 
             mockSchedulingContext = MockInit.IntializeMockData(true);
 
             SetSchedulingCodeAsCurrentDbContext();
 
-            repositoryWrapper = new RepositoryWrapper(mockSchedulingContext.Object, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
+            repositoryWrapper = new RepositoryWrapper(mockSchedulingContext.Object, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
                                                       clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);
 
             schedulingCodeService = new SchedulingCodeService(repositoryWrapper, mapper);

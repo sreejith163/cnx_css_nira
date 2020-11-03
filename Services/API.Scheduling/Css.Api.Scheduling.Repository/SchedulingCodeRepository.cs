@@ -8,33 +8,44 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
+using AutoMapper;
+using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
+using AutoMapper.QueryableExtensions;
 
 namespace Css.Api.Scheduling.Repository
 {
     public class SchedulingCodeRepository : GenericRepository<SchedulingCode>, ISchedulingCodeRepository
     {
         /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// The sort helper
         /// </summary>
-        private readonly ISortHelper<SchedulingCode> _sortHelper;
+        private readonly ISortHelper<SchedulingCodeDTO> _sortHelper;
 
         /// <summary>
         /// The data shaper
         /// </summary>
-        private readonly IDataShaper<SchedulingCode> _dataShaper;
+        private readonly IDataShaper<SchedulingCodeDTO> _dataShaper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SchedulingCodeRepository" /> class.
         /// </summary>
         /// <param name="repositoryContext">The repository context.</param>
+        /// <param name="mapper">The mapper.</param>
         /// <param name="sortHelper">The sort helper.</param>
         /// <param name="dataShaper">The data shaper.</param>
         public SchedulingCodeRepository(
             SchedulingContext repositoryContext,
-            ISortHelper<SchedulingCode> sortHelper,
-            IDataShaper<SchedulingCode> dataShaper)
+            IMapper mapper,
+            ISortHelper<SchedulingCodeDTO> sortHelper,
+            IDataShaper<SchedulingCodeDTO> dataShaper)
             : base(repositoryContext)
         {
+            _mapper = mapper;
             _sortHelper = sortHelper;
             _dataShaper = dataShaper;
         }
@@ -47,12 +58,25 @@ namespace Css.Api.Scheduling.Repository
         public async Task<PagedList<Entity>> GetSchedulingCodes(SchedulingCodeQueryParameters schedulingCodeParameters)
         {
             var schedulingCodes = FindByCondition(x => x.IsDeleted == false);
-            SearchByName(schedulingCodes, schedulingCodeParameters.SearchKeyword);
-            schedulingCodes = schedulingCodes.Include(x => x.Icon).Include(x => x.SchedulingTypeCode);
-            var sortedSchedulingCodes = _sortHelper.ApplySort(schedulingCodes, schedulingCodeParameters.OrderBy);
+
+            var filteredSchedulingCodes = SearchByName(schedulingCodes, schedulingCodeParameters.SearchKeyword);
+
+            var pagedSchedulingCodes = filteredSchedulingCodes
+                .Skip((schedulingCodeParameters.PageNumber - 1) * schedulingCodeParameters.PageSize)
+                .Take(schedulingCodeParameters.PageSize)
+                .Include(x => x.Icon).Include(x => x.SchedulingTypeCode)
+                .ThenInclude(x => x.SchedulingCodeType)
+                .ToList();
+
+            var mappedSchedulingCodes = pagedSchedulingCodes
+                .AsQueryable()
+                .ProjectTo<SchedulingCodeDTO>(_mapper.ConfigurationProvider);
+
+            var sortedSchedulingCodes = _sortHelper.ApplySort(mappedSchedulingCodes, schedulingCodeParameters.OrderBy);
             var shapedSchedulingCodes = _dataShaper.ShapeData(sortedSchedulingCodes, schedulingCodeParameters.Fields);
 
-            return await PagedList<Entity>.ToPagedList(shapedSchedulingCodes, schedulingCodeParameters.PageNumber, schedulingCodeParameters.PageSize);
+            return await PagedList<Entity>
+                .ToPagedList(shapedSchedulingCodes, schedulingCodes.Count(), schedulingCodeParameters.PageNumber, schedulingCodeParameters.PageSize);
         }
 
         /// <summary>
@@ -65,6 +89,7 @@ namespace Css.Api.Scheduling.Repository
             var schedulingCode = FindByCondition(x => x.Id == schedulingCodeIdDetails.SchedulingCodeId && x.IsDeleted == false)
                 .Include(x => x.Icon)
                 .Include(x => x.SchedulingTypeCode)
+                .ThenInclude(x => x.SchedulingCodeType)
                 .SingleOrDefault();
 
             return await Task.FromResult(schedulingCode);
@@ -102,15 +127,12 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="schedulingCodes">The scheduling codes.</param>
         /// <param name="schedulingCodeName">Name of the scheduling code.</param>
-        private void SearchByName(IQueryable<SchedulingCode> schedulingCodes, string schedulingCodeName)
+        private IQueryable<SchedulingCode> SearchByName(IQueryable<SchedulingCode> schedulingCodes, string schedulingCodeName)
         {
             if (!schedulingCodes.Any() || string.IsNullOrWhiteSpace(schedulingCodeName))
-                return;
+                return schedulingCodes;
 
-            if (string.IsNullOrEmpty(schedulingCodeName))
-                return;
-
-            schedulingCodes = schedulingCodes.Where(o => o.Description.ToLower().Contains(schedulingCodeName.Trim().ToLower()));
+            return schedulingCodes.Where(o => o.Description.ToLower().Contains(schedulingCodeName.Trim().ToLower()));
         }
     }
 }

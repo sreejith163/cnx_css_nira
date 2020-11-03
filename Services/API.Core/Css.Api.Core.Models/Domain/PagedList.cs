@@ -79,16 +79,14 @@ namespace Css.Api.Core.Models.Domain
         /// <summary>
         /// Converts to pagedlist.
         /// </summary>
-        /// <param name="source">The source.</param>
+        /// <param name="items">The items.</param>
+        /// <param name="count">The count.</param>
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <returns></returns>
-        public static async Task<PagedList<T>> ToPagedList(IEnumerable<T> source, int pageNumber, int pageSize)
+        public static async Task<PagedList<T>> ToPagedList(IEnumerable<T> source, int count, int pageNumber, int pageSize)
         {
-            var count = source.Count();
-            var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
-            return await Task.FromResult(new PagedList<T>(items, count, pageNumber, pageSize));
+            return await Task.FromResult(new PagedList<T>(source.ToList(), count, pageNumber, pageSize));
         }
     }
 }

@@ -3,6 +3,7 @@ using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
+using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Scheduling.Repository.Interfaces;
 using System.Net;
 using System.Threading.Tasks;
@@ -61,7 +62,8 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            return new CSSResponse(clientLOBGroup, HttpStatusCode.OK);
+            var mappedClientLOBGroup = _mapper.Map<ClientLOBGroupDTO>(clientLOBGroup);
+            return new CSSResponse(mappedClientLOBGroup, HttpStatusCode.OK);
         }
 
         /// <summary>
