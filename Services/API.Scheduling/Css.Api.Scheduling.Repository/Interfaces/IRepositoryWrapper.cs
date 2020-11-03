@@ -28,6 +28,11 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         ISchedulingCodeIconRepository SchedulingCodeIcons { get; }
 
         /// <summary>
+        /// Gets the scheduling code types.
+        /// </summary>
+        ISchedulingCodeTypeRepository SchedulingCodeTypes { get; }
+
+        /// <summary>
         /// Saves the asynchronous.
         /// </summary>
         /// <returns></returns>

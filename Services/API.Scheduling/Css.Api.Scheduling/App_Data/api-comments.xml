@@ -105,24 +105,24 @@
         </member>
         <member name="T:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController">
             <summary>
-            Controller for handling the schedulingCode resource
+            Controller for handling the scheduling code icons resource
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="F:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController._schedulingCodeIconService">
+        <member name="F:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController._schedulingCodeTypeService">
             <summary>
-            The scheduling code icon service
+            The scheduling code type service
             </summary>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController.#ctor(Css.Api.Scheduling.Business.Interfaces.ISchedulingCodeIconService)">
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController.#ctor(Css.Api.Scheduling.Business.Interfaces.ISchedulingCodeTypeService)">
             <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController" /> class.
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController"/> class.
             </summary>
-            <param name="schedulingCodeIconService">The scheduling code icon service.</param>
+            <param name="schedulingCodeTypeService">The scheduling code type service.</param>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController.GetSchedulingCodes">
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController.GetSchedulingCodeTypes">
             <summary>
-            Gets the scheduling codes.
+            Gets the scheduling code types.
             </summary>
             <returns></returns>
         </member>
@@ -177,6 +177,29 @@
             Deletes the scheduling code.
             </summary>
             <param name="schedulingCodeId">The scheduling code identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Scheduling.Controllers.SchedulingCodeTypesController">
+            <summary>
+            Controller for handling the scheduling code types resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.SchedulingCodeTypesController._schedulingCodeIconService">
+            <summary>
+            The scheduling code icon service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodeTypesController.#ctor(Css.Api.Scheduling.Business.Interfaces.ISchedulingCodeIconService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController" /> class.
+            </summary>
+            <param name="schedulingCodeIconService">The scheduling code icon service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodeTypesController.GetSchedulingCodes">
+            <summary>
+            Gets the scheduling codes.
+            </summary>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Scheduling.Extensions.CustomMVCConfigurationExtension">

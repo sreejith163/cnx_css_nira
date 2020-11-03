@@ -42,6 +42,11 @@ namespace Css.Api.Scheduling.Repository
         private ISchedulingCodeIconRepository _schedulingCodeIconsRepository { get; set; }
 
         /// <summary>
+        /// Gets or sets the scheduling code types repository.
+        /// </summary>
+        private ISchedulingCodeTypeRepository _schedulingCodeTypesRepository { get; set; }
+
+        /// <summary>
         /// The clients sort helper
         /// </summary>
         private readonly ISortHelper<ClientDTO> _clientsSortHelper;
@@ -128,6 +133,21 @@ namespace Css.Api.Scheduling.Repository
                     _schedulingCodeIconsRepository = new SchedulingCodeIconRepository(_repositoryContext, _mapper);
                 }
                 return _schedulingCodeIconsRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the scheduling code types.
+        /// </summary>
+        public ISchedulingCodeTypeRepository SchedulingCodeTypes
+        {
+            get
+            {
+                if (_schedulingCodeTypesRepository == null)
+                {
+                    _schedulingCodeTypesRepository = new SchedulingCodeTypeRepository(_repositoryContext, _mapper);
+                }
+                return _schedulingCodeTypesRepository;
             }
         }
 

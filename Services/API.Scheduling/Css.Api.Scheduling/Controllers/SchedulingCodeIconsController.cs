@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Css.Api.Scheduling.Controllers
 {
     /// <summary>
-    /// Controller for handling the schedulingCode resource
+    /// Controller for handling the scheduling code icons resource
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Produces("application/json")]
@@ -15,27 +15,27 @@ namespace Css.Api.Scheduling.Controllers
     public class SchedulingCodeIconsController : ControllerBase
     {
         /// <summary>
-        /// The scheduling code icon service
+        /// The scheduling code type service
         /// </summary>
-        private readonly ISchedulingCodeIconService _schedulingCodeIconService;
+        private readonly ISchedulingCodeTypeService _schedulingCodeTypeService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SchedulingCodeIconsController" /> class.
+        /// Initializes a new instance of the <see cref="SchedulingCodeIconsController"/> class.
         /// </summary>
-        /// <param name="schedulingCodeIconService">The scheduling code icon service.</param>
-        public SchedulingCodeIconsController(ISchedulingCodeIconService schedulingCodeIconService)
+        /// <param name="schedulingCodeTypeService">The scheduling code type service.</param>
+        public SchedulingCodeIconsController(ISchedulingCodeTypeService schedulingCodeTypeService)
         {
-            _schedulingCodeIconService = schedulingCodeIconService;
+            _schedulingCodeTypeService = schedulingCodeTypeService;
         }
 
         /// <summary>
-        /// Gets the scheduling codes.
+        /// Gets the scheduling code types.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetSchedulingCodes()
+        public async Task<IActionResult> GetSchedulingCodeTypes()
         {
-            var result = await _schedulingCodeIconService.GetSchedulingCodeIcons();
+            var result = await _schedulingCodeTypeService.GetSchedulingCodeTypes();
             return StatusCode((int)result.Code, result.Value);
         }
     }

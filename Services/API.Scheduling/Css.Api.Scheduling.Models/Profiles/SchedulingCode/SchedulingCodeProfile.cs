@@ -1,5 +1,4 @@
-﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.Scheduling.Models.Domain;
+﻿using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using System;
@@ -26,11 +25,6 @@ namespace Css.Api.Scheduling.Models.Profiles.SchedulingCode
                 .ReverseMap();
 
             CreateMap<Domain.SchedulingCode, SchedulingCodeDTO>()
-                .ReverseMap();
-
-            CreateMap<SchedulingTypeCode, KeyValue>()
-                .ForMember(x => x.Id, opt => opt.MapFrom(o => o.SchedulingCodeType.Id))
-                .ForMember(x => x.Value, opt => opt.MapFrom(o => o.SchedulingCodeType.Value))
                 .ReverseMap();
         }
     }
