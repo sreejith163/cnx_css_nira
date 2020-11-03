@@ -47,7 +47,8 @@ namespace Css.Api.Scheduling.Repository
         public async Task<PagedList<Entity>> GetSchedulingCodes(SchedulingCodeQueryParameters schedulingCodeParameters)
         {
             var schedulingCodes = FindByCondition(x => x.IsDeleted == false);
-            SearchByName(ref schedulingCodes, schedulingCodeParameters.SearchKeyword);
+            SearchByName(schedulingCodes, schedulingCodeParameters.SearchKeyword);
+            schedulingCodes = schedulingCodes.Include(x => x.Icon).Include(x => x.SchedulingTypeCode);
             var sortedSchedulingCodes = _sortHelper.ApplySort(schedulingCodes, schedulingCodeParameters.OrderBy);
             var shapedSchedulingCodes = _dataShaper.ShapeData(sortedSchedulingCodes, schedulingCodeParameters.Fields);
 
@@ -61,7 +62,11 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<SchedulingCode> GetSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails)
         {
-            var schedulingCode = FindByCondition(x => x.Id == schedulingCodeIdDetails.SchedulingCodeId && x.IsDeleted == false).SingleOrDefault();
+            var schedulingCode = FindByCondition(x => x.Id == schedulingCodeIdDetails.SchedulingCodeId && x.IsDeleted == false)
+                .Include(x => x.Icon)
+                .Include(x => x.SchedulingTypeCode)
+                .SingleOrDefault();
+
             return await Task.FromResult(schedulingCode);
         }
 
@@ -97,7 +102,7 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="schedulingCodes">The scheduling codes.</param>
         /// <param name="schedulingCodeName">Name of the scheduling code.</param>
-        private void SearchByName(ref IQueryable<SchedulingCode> schedulingCodes, string schedulingCodeName)
+        private void SearchByName(IQueryable<SchedulingCode> schedulingCodes, string schedulingCodeName)
         {
             if (!schedulingCodes.Any() || string.IsNullOrWhiteSpace(schedulingCodeName))
                 return;

@@ -17,7 +17,7 @@ namespace Css.Api.Scheduling.Validators.SchedulingCode
             RuleFor(x => x.Description).NotEmpty();
             RuleFor(x => x.Priority).NotEmpty();
             RuleFor(x => x.CodeTypes).NotEmpty();
-            RuleFor(x => x.Icon).NotEmpty();
+            RuleFor(x => x.IconId).NotEmpty();
             RuleFor(x => x.CreatedBy).NotEmpty();
         }
     }

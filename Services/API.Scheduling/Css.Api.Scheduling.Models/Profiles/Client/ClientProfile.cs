@@ -3,15 +3,17 @@ using System;
 
 namespace Css.Api.Scheduling.Models.Profiles.Client
 {
-    public class CreateClientProfile : AutoMapper.Profile
+    public class ClientProfile : AutoMapper.Profile
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateClientProfile"/> class.
+        /// Initializes a new instance of the <see cref="ClientProfile"/> class.
         /// </summary>
-        public CreateClientProfile()
+        public ClientProfile()
         {
             CreateMap<CreateClient, Domain.Client>()
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow)).ReverseMap();
+            CreateMap<UpdateClient, Domain.Client>()
+                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow)).ReverseMap().ReverseMap();
         }
     }
 }

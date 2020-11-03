@@ -18,7 +18,6 @@ using Xunit;
 
 namespace Css.Api.Scheduling.Business.UnitTest
 {
-
     public class SchedulingCodeServiceShould
     {
         /// <summary>
@@ -46,13 +45,9 @@ namespace Css.Api.Scheduling.Business.UnitTest
         /// </summary>
         public SchedulingCodeServiceShould()
         {
-            var createSchedulingCodeProfile = new CreateSchedulingCodeProfile();
-            var updateSchedulingCodeProfile = new UpdateSchedulingCodeProfile();
-
             var mapperConfig = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(createSchedulingCodeProfile);
-                cfg.AddProfile(updateSchedulingCodeProfile);
+                cfg.AddProfile(new SchedulingCodeProfile());
             });
 
             mapper = new Mapper(mapperConfig);
@@ -79,18 +74,17 @@ namespace Css.Api.Scheduling.Business.UnitTest
         /// Creates the scheduling code.
         /// </summary>
         /// <param name="schedulingCode">The scheduling code.</param>
-        [Theory]
-        [InlineData(null)]
-        public async void CreateSchedulingCode(CreateSchedulingCode schedulingCode)
+        [Fact]
+        public async void CreateSchedulingCode()
         {
-            schedulingCode = new CreateSchedulingCode()
+            CreateSchedulingCode schedulingCode = new CreateSchedulingCode()
             {
                 RefId = 4,
-                CodeTypes = new List<SchedulingCodeType>(),
+                CodeTypes = new List<int>(),
                 Priority = 4,
                 CreatedBy = "admin",
                 Description = "test",
-                Icon = "test"
+                IconId = 1
             };
             var result = await schedulingCodeService.CreateSchedulingCode(schedulingCode);
 
@@ -105,12 +99,15 @@ namespace Css.Api.Scheduling.Business.UnitTest
         /// </summary>
         /// <param name="schedulingCode">The scheduling code.</param>
         [Theory]
-        [InlineData(0, null)]
-        public async void UpdateSchedulingCode(int schedulingCodeId, UpdateSchedulingCode schedulingCode)
+        [InlineData(0)]
+        public async void UpdateSchedulingCode(int schedulingCodeId)
         {
-            schedulingCode = new UpdateSchedulingCode()
+            var schedulingCode = new UpdateSchedulingCode()
             {
-                Name = "F",
+                Priority = 4,
+                Description = "test",
+                IconId = 2,
+                CodeTypes = new List<int>(),
                 ModifiedBy = "admin"
             };
             var result = await schedulingCodeService.UpdateSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId }, schedulingCode);
@@ -180,7 +177,7 @@ namespace Css.Api.Scheduling.Business.UnitTest
         /// <summary>
         /// Sets the client.
         /// </summary>
-        public void SetSchedulingCodeAsCurrentDbContext()
+        private void SetSchedulingCodeAsCurrentDbContext()
         {
             var mockClient = new Mock<DbSet<SchedulingCode>>();
             mockClient.As<IQueryable<SchedulingCode>>().Setup(m => m.Provider).Returns(MockDataContext.schedulingCodesDB.Provider);

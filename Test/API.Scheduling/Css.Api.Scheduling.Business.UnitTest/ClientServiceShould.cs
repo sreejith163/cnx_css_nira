@@ -44,13 +44,9 @@ namespace Css.Api.Scheduling.Business.UnitTest
         /// </summary>
         public ClientServiceShould()
         {
-            var createClientProfile = new CreateClientProfile();
-            var updateClientProfile = new UpdateClientProfile();
-
             var mapperConfig = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(createClientProfile);
-                cfg.AddProfile(updateClientProfile);
+                cfg.AddProfile(new ClientProfile());
             });
 
             mapper = new Mapper(mapperConfig);
@@ -76,12 +72,10 @@ namespace Css.Api.Scheduling.Business.UnitTest
         /// <summary>
         /// Creates the client.
         /// </summary>
-        /// <param name="clientDetails">The client details.</param>
-        [Theory]
-        [InlineData(null)]
-        public async void CreateClient(CreateClient clientDetails)
+        [Fact]
+        public async void CreateClient()
         {
-            clientDetails = new CreateClient()
+            CreateClient clientDetails = new CreateClient()
             {
                 RefId = 4,
                 CreatedBy = "admin",
@@ -167,12 +161,12 @@ namespace Css.Api.Scheduling.Business.UnitTest
         /// <summary>
         /// Creates the scheduling code.
         /// </summary>
-        /// <param name="schedulingCode">The scheduling code.</param>
+        /// <param name="clientId">The client identifier.</param>
         [Theory]
-        [InlineData(0, null)]
-        public async void UpdateSchedulingCode(int clientId, UpdateClient updateClient)
+        [InlineData(0)]
+        public async void UpdateSchedulingCode(int clientId)
         {
-            updateClient = new UpdateClient()
+            UpdateClient updateClient = new UpdateClient()
             {
                 
             };

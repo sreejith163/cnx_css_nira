@@ -71,7 +71,7 @@ namespace Css.Api.Scheduling.Business
 
             await _repository.SaveAsync();
 
-            return new CSSResponse(clientRequest, HttpStatusCode.Created);
+            return new CSSResponse(new ClientIdDetails { ClientId = clientRequest.Id }, HttpStatusCode.Created);
         }
 
         /// <summary>

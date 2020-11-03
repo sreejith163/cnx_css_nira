@@ -74,6 +74,11 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
 
         public static IQueryable<SchedulingCodeIcon> schedulingCodeIconsDB = new List<SchedulingCodeIcon>()
         {
+            new SchedulingCodeIcon { Id = 1, Value = "1F30D", Description = "Earth Globe Europe-Africa" },
+            new SchedulingCodeIcon { Id = 1, Value = "1F347", Description = "Grapes" },
+            new SchedulingCodeIcon { Id = 1, Value = "1F383", Description = "Jack-O-Lantern" },
+            new SchedulingCodeIcon { Id = 1, Value = "1F3C1", Description = "Chequered Flag" },
+            new SchedulingCodeIcon { Id = 1, Value = "1F3E7", Description = "Automated Teller Machine" }
         }.AsQueryable();
 
         public static IQueryable<OperationHourOpenType> operationHourOpenTypesDB = new List<OperationHourOpenType>()

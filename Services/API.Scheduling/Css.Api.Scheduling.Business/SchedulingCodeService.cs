@@ -4,6 +4,7 @@ using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using Css.Api.Scheduling.Repository.Interfaces;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -67,11 +68,16 @@ namespace Css.Api.Scheduling.Business
         public async Task<CSSResponse> CreateSchedulingCode(CreateSchedulingCode schedulingCodeDetails)
         {
             var schedulingCodeRequest = _mapper.Map<SchedulingCode>(schedulingCodeDetails);
+            foreach (var codeType in schedulingCodeDetails?.CodeTypes)
+            {
+                schedulingCodeRequest.SchedulingTypeCode.Add(new SchedulingTypeCode { SchedulingCodeTypeId = codeType });
+            }
+
             _repository.SchedulingCodes.CreateSchedulingCode(schedulingCodeRequest);
 
             await _repository.SaveAsync();
 
-            return new CSSResponse(schedulingCodeRequest, HttpStatusCode.Created);
+            return new CSSResponse(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeRequest.Id }, HttpStatusCode.Created);
         }
 
         /// <summary>
@@ -89,6 +95,12 @@ namespace Css.Api.Scheduling.Business
             }
 
             var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);
+            schedulingCodeRequest.SchedulingTypeCode = new List<SchedulingTypeCode>();
+            foreach (var codeType in schedulingCodeDetails?.CodeTypes)
+            {
+                schedulingCodeRequest.SchedulingTypeCode.Add(new SchedulingTypeCode { SchedulingCodeTypeId = codeType });
+            }
+
             _repository.SchedulingCodes.UpdateSchedulingCode(schedulingCodeRequest);
 
             await _repository.SaveAsync();

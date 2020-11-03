@@ -1,5 +1,4 @@
-﻿using Css.Api.Scheduling.Models.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.SchedulingCode
 {
@@ -18,11 +17,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.SchedulingCode
         /// <summary>
         /// Gets or sets the code types.
         /// </summary>
-        public List<SchedulingCodeType> CodeTypes { get; set; }
+        public List<int> CodeTypes { get; set; }
 
         /// <summary>
         /// Gets or sets the icon.
         /// </summary>
-        public string Icon { get; set; }
+        public int IconId { get; set; }
     }
 }
