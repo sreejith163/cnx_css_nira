@@ -64,7 +64,7 @@ namespace Css.Api.Core.DataAccess.Repository
         /// <summary>
         /// Updates the range.
         /// </summary>
-        /// <param name="entity">The entity.</param>
+        /// <param name="entities">The entities.</param>
         public void UpdateRange(IEnumerable<T> entities)
         {
             RepositoryContext.Set<T>().UpdateRange(entities);
@@ -77,6 +77,15 @@ namespace Css.Api.Core.DataAccess.Repository
         public void Delete(T entity)
         {
             RepositoryContext.Set<T>().Remove(entity);
+        }
+
+        /// <summary>
+        /// Deletes the range.
+        /// </summary>
+        /// <param name="entities">The entities.</param>
+        public void DeleteRange(IEnumerable<T> entities)
+        {
+            RepositoryContext.Set<T>().RemoveRange(entities);
         }
     }
 }

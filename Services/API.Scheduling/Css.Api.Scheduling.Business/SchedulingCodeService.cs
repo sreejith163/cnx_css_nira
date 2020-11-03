@@ -6,6 +6,7 @@ using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using Css.Api.Scheduling.Repository.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -97,7 +98,8 @@ namespace Css.Api.Scheduling.Business
             }
 
             var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);
-            schedulingCodeRequest.SchedulingTypeCode = new List<SchedulingTypeCode>();
+
+            _repository.SchedulingTypeCodes.RemoveSchedulingTypeCodes(schedulingCode.SchedulingTypeCode.ToList());
 
             foreach (var codeType in schedulingCodeDetails?.CodeTypes)
             {
