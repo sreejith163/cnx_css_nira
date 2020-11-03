@@ -109,16 +109,16 @@
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="F:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController._schedulingCodeTypeService">
+        <member name="F:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController._schedulingCodeIconsService">
             <summary>
             The scheduling code type service
             </summary>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController.#ctor(Css.Api.Scheduling.Business.Interfaces.ISchedulingCodeTypeService)">
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController.#ctor(Css.Api.Scheduling.Business.Interfaces.ISchedulingCodeIconService)">
             <summary>
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController"/> class.
             </summary>
-            <param name="schedulingCodeTypeService">The scheduling code type service.</param>
+            <param name="schedulingCodeIconsService">The scheduling code icons service.</param>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController.GetSchedulingCodeTypes">
             <summary>

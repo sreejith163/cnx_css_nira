@@ -33,6 +33,11 @@ namespace Css.Api.Scheduling.Models.Profiles.SchedulingCode
                 .ForMember(x => x.Value, opt => opt.MapFrom(o => o.Value))
                 .ReverseMap();
 
+            CreateMap<SchedulingTypeCode, KeyValue>()
+               .ForMember(x => x.Id, opt => opt.MapFrom(o => o.SchedulingCodeType.Id))
+               .ForMember(x => x.Value, opt => opt.MapFrom(o => o.SchedulingCodeType.Value))
+               .ReverseMap();
+
             CreateMap<SchedulingCodeType, KeyValue>()
                 .ForMember(x => x.Id, opt => opt.MapFrom(o => o.Id))
                 .ForMember(x => x.Value, opt => opt.MapFrom(o => o.Value))

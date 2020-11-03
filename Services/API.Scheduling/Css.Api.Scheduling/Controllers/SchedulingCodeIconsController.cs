@@ -17,15 +17,15 @@ namespace Css.Api.Scheduling.Controllers
         /// <summary>
         /// The scheduling code type service
         /// </summary>
-        private readonly ISchedulingCodeTypeService _schedulingCodeTypeService;
+        private readonly ISchedulingCodeIconService _schedulingCodeIconsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SchedulingCodeIconsController"/> class.
         /// </summary>
-        /// <param name="schedulingCodeTypeService">The scheduling code type service.</param>
-        public SchedulingCodeIconsController(ISchedulingCodeTypeService schedulingCodeTypeService)
+        /// <param name="schedulingCodeIconsService">The scheduling code icons service.</param>
+        public SchedulingCodeIconsController(ISchedulingCodeIconService schedulingCodeIconsService)
         {
-            _schedulingCodeTypeService = schedulingCodeTypeService;
+            _schedulingCodeIconsService = schedulingCodeIconsService;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Css.Api.Scheduling.Controllers
         [HttpGet]
         public async Task<IActionResult> GetSchedulingCodeTypes()
         {
-            var result = await _schedulingCodeTypeService.GetSchedulingCodeTypes();
+            var result = await _schedulingCodeIconsService.GetSchedulingCodeIcons();
             return StatusCode((int)result.Code, result.Value);
         }
     }
