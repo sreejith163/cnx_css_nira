@@ -1,22 +1,22 @@
-﻿using AutoMapper;
-using Css.Api.Core.Models.Domain;
+﻿using Moq;
+using Xunit;
+using System.Net;
+using AutoMapper;
+using System.Linq;
 using Css.Api.Core.Utilities;
-using Css.Api.Scheduling.Business.Interfaces;
-using Css.Api.Scheduling.Business.UnitTest.Mock;
+using Css.Api.Core.Models.Domain;
+using Microsoft.EntityFrameworkCore;
+using Css.Api.Scheduling.Repository;
 using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Business.Interfaces;
+using Css.Api.Scheduling.Repository.Interfaces;
+using Css.Api.Scheduling.Models.Profiles.Client;
+using Css.Api.Scheduling.Business.UnitTest.Mock;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
+using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Models.DTO.Response.Client;
 using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
-using Css.Api.Scheduling.Models.Profiles.Client;
-using Css.Api.Scheduling.Repository;
-using Css.Api.Scheduling.Repository.DatabaseContext;
-using Css.Api.Scheduling.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using System.Linq;
-using System.Net;
-using Xunit;
 
 namespace Css.Api.Scheduling.Business.UnitTest
 {
@@ -72,6 +72,8 @@ namespace Css.Api.Scheduling.Business.UnitTest
             clientService = new ClientService(repositoryWrapper, mapper);
         }
 
+        #region CreateClient
+
         /// <summary>
         /// Creates the client.
         /// </summary>
@@ -88,9 +90,13 @@ namespace Css.Api.Scheduling.Business.UnitTest
 
             Assert.NotNull(result);
             Assert.NotNull(result.Value);
-            Assert.IsType<Client>(result.Value);
+            Assert.IsType<ClientIdDetails>(result.Value);
             Assert.Equal(HttpStatusCode.Created, result.Code);
         }
+
+        #endregion
+
+        #region GetClient
 
         /// <summary>
         /// Gets the client.
@@ -105,7 +111,7 @@ namespace Css.Api.Scheduling.Business.UnitTest
 
             Assert.NotNull(result);
             Assert.NotNull(result.Value);
-            Assert.IsType<Client>(result.Value);
+            Assert.IsType<ClientDTO>(result.Value);
             Assert.Equal(HttpStatusCode.OK, result.Code);
         }
 
@@ -115,12 +121,18 @@ namespace Css.Api.Scheduling.Business.UnitTest
         /// <param name="clientId">The client identifier.</param>
         [Theory]
         [InlineData(100)]
-        public async void GetClientWithNoFound(int clientId)
+        public async void GetClientWithNotFound(int clientId)
         {
             var result = await clientService.GetClient(new ClientIdDetails { ClientId = clientId });
 
+            Assert.NotNull(result);
+            Assert.Null(result.Value);
             Assert.Equal(HttpStatusCode.NotFound, result.Code);
         }
+
+        #endregion
+
+        #region DeleteClient
 
         /// <summary>
         /// Deletes the client.
@@ -134,10 +146,28 @@ namespace Css.Api.Scheduling.Business.UnitTest
             var result = await clientService.DeleteClient(new ClientIdDetails { ClientId = clientId });
 
             Assert.NotNull(result);
-            Assert.NotNull(result.Value);
-            Assert.IsType<string>(result.Value);
-            Assert.Equal(HttpStatusCode.OK, result.Code);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NoContent, result.Code);
         }
+
+        /// <summary>
+        /// Deletes the client with not found.
+        /// </summary>
+        /// <param name="clientId">The client identifier.</param>
+        [Theory]
+        [InlineData(100)]
+        public async void DeleteClientWithNotFound(int clientId)
+        {
+            var result = await clientService.DeleteClient(new ClientIdDetails { ClientId = clientId });
+
+            Assert.NotNull(result);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        #endregion
+
+        #region GetClients
 
         /// <summary>
         /// Gets the clients.
@@ -161,25 +191,54 @@ namespace Css.Api.Scheduling.Business.UnitTest
             Assert.Equal(HttpStatusCode.OK, result.Code);
         }
 
+        #endregion
+
+        #region UpdateClient
+
         /// <summary>
         /// Creates the scheduling code.
         /// </summary>
-        /// <param name="clientId">The client identifier.</param>
+        /// <param name="schedulingCode">The scheduling code.</param>
         [Theory]
-        [InlineData(0)]
+        [InlineData(1)]
         public async void UpdateSchedulingCode(int clientId)
         {
             UpdateClient updateClient = new UpdateClient()
             {
-                
+                Name = "X",
+                ModifiedBy = "admin1"
             };
             var result = await clientService.UpdateClient(new ClientIdDetails { ClientId = clientId }, updateClient);
 
             Assert.NotNull(result);
-            Assert.NotNull(result.Value);
-            Assert.IsType<string>(result.Value);
-            Assert.Equal(HttpStatusCode.BadRequest, result.Code);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NoContent, result.Code);
         }
+
+        /// <summary>
+        /// Updates the scheduling code with not found.
+        /// </summary>
+        /// <param name="clientId">The client identifier.</param>
+        /// <param name="updateClient">The update client.</param>
+        [Theory]
+        [InlineData(100)]
+        public async void UpdateSchedulingCodeWithNotFound(int clientId)
+        {
+            UpdateClient updateClient = new UpdateClient()
+            {
+                Name = "X",
+                ModifiedBy = "admin1"
+            };
+            var result = await clientService.UpdateClient(new ClientIdDetails { ClientId = clientId }, updateClient);
+
+            Assert.NotNull(result);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        #endregion
+
+        #region PrivateMethods
 
         /// <summary>
         /// Sets the client.
@@ -194,5 +253,7 @@ namespace Css.Api.Scheduling.Business.UnitTest
 
             mockSchedulingContext.Setup(x => x.Set<Client>()).Returns(mockClient.Object);
         }
+
+        #endregion
     }
 }

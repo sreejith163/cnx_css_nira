@@ -1,26 +1,27 @@
-﻿using AutoMapper;
-using Css.Api.Core.Models.Domain;
+﻿using Moq;
+using Xunit;
+using System.Net;
+using AutoMapper;
+using System.Linq;
 using Css.Api.Core.Utilities;
-using Css.Api.Scheduling.Business.Interfaces;
-using Css.Api.Scheduling.Business.UnitTest.Mock;
+using Css.Api.Core.Models.Domain;
+using System.Collections.Generic;
+using Css.Api.Scheduling.Repository;
+using Microsoft.EntityFrameworkCore;
 using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Business.Interfaces;
+using Css.Api.Scheduling.Repository.Interfaces;
+using Css.Api.Scheduling.Business.UnitTest.Mock;
+using Css.Api.Scheduling.Repository.DatabaseContext;
+using Css.Api.Scheduling.Models.Profiles.SchedulingCode;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using Css.Api.Scheduling.Models.DTO.Response.Client;
-using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
-using Css.Api.Scheduling.Models.Profiles.SchedulingCode;
-using Css.Api.Scheduling.Repository;
-using Css.Api.Scheduling.Repository.DatabaseContext;
-using Css.Api.Scheduling.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using Xunit;
+using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 
 namespace Css.Api.Scheduling.Business.UnitTest
 {
+
     public class SchedulingCodeServiceShould
     {
         /// <summary>
@@ -73,6 +74,8 @@ namespace Css.Api.Scheduling.Business.UnitTest
             schedulingCodeService = new SchedulingCodeService(repositoryWrapper, mapper);
         }
 
+        #region CreateSchedulingCode
+
         /// <summary>
         /// Creates the scheduling code.
         /// </summary>
@@ -93,19 +96,23 @@ namespace Css.Api.Scheduling.Business.UnitTest
 
             Assert.NotNull(result);
             Assert.NotNull(result.Value);
-            Assert.IsType<string>(result.Value);
-            Assert.Equal(HttpStatusCode.BadRequest, result.Code);
+            Assert.IsType<SchedulingCodeIdDetails>(result.Value);
+            Assert.Equal(HttpStatusCode.Created, result.Code);
         }
+
+        #endregion
+
+        #region UpdateSchedulingCode
 
         /// <summary>
         /// Creates the scheduling code.
         /// </summary>
         /// <param name="schedulingCode">The scheduling code.</param>
         [Theory]
-        [InlineData(0)]
+        [InlineData(1)]
         public async void UpdateSchedulingCode(int schedulingCodeId)
         {
-            var schedulingCode = new UpdateSchedulingCode()
+            UpdateSchedulingCode schedulingCode = new UpdateSchedulingCode()
             {
                 Priority = 4,
                 Description = "test",
@@ -116,10 +123,37 @@ namespace Css.Api.Scheduling.Business.UnitTest
             var result = await schedulingCodeService.UpdateSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId }, schedulingCode);
 
             Assert.NotNull(result);
-            Assert.NotNull(result.Value);
-            Assert.IsType<string>(result.Value);
-            Assert.Equal(HttpStatusCode.BadRequest, result.Code);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NoContent, result.Code);
         }
+
+        /// <summary>
+        /// Updates the scheduling code with not found.
+        /// </summary>
+        /// <param name="schedulingCodeId">The scheduling code identifier.</param>
+        /// <param name="schedulingCode">The scheduling code.</param>
+        [Theory]
+        [InlineData(100)]
+        public async void UpdateSchedulingCodeWithNotFound(int schedulingCodeId)
+        {
+            UpdateSchedulingCode schedulingCode = new UpdateSchedulingCode()
+            {
+                Priority = 4,
+                Description = "test",
+                IconId = 2,
+                CodeTypes = new List<int>(),
+                ModifiedBy = "admin"
+            };
+            var result = await schedulingCodeService.UpdateSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId }, schedulingCode);
+
+            Assert.NotNull(result);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        #endregion
+
+        #region GetSchedulingCode
 
         /// <summary>
         /// Gets the scheduling code.
@@ -134,9 +168,28 @@ namespace Css.Api.Scheduling.Business.UnitTest
 
             Assert.NotNull(result);
             Assert.NotNull(result.Value);
-            Assert.IsType<Client>(result.Value);
+            Assert.IsType<SchedulingCodeDTO>(result.Value);
             Assert.Equal(HttpStatusCode.OK, result.Code);
         }
+
+        /// <summary>
+        /// Gets the scheduling code with not found.
+        /// </summary>
+        /// <param name="schedulingCodeId">The scheduling code identifier.</param>
+        [Theory]
+        [InlineData(100)]
+        public async void GetSchedulingCodeWithNotFound(int schedulingCodeId)
+        {
+            var result = await schedulingCodeService.GetSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId });
+
+            Assert.NotNull(result);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        #endregion
+
+        #region DeleteSceduleCode
 
         /// <summary>
         /// Deletes the scheduling code.
@@ -150,10 +203,28 @@ namespace Css.Api.Scheduling.Business.UnitTest
             var result = await schedulingCodeService.DeleteSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId });
 
             Assert.NotNull(result);
-            Assert.NotNull(result.Value);
-            Assert.IsType<string>(result.Value);
-            Assert.Equal(HttpStatusCode.OK, result.Code);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NoContent, result.Code);
         }
+
+        /// <summary>
+        /// Deletes the scheduling code.
+        /// </summary>
+        /// <param name="schedulingCodeId">The scheduling code identifier.</param>
+        [Theory]
+        [InlineData(100)]
+        public async void DeleteSchedulingCodeWithNotFound(int schedulingCodeId)
+        {
+            var result = await schedulingCodeService.DeleteSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId });
+
+            Assert.NotNull(result);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        #endregion
+
+        #region GetSchedulingCodes
 
         /// <summary>
         /// Gets the scheduling codes.
@@ -177,6 +248,10 @@ namespace Css.Api.Scheduling.Business.UnitTest
             Assert.Equal(HttpStatusCode.OK, result.Code);
         }
 
+        #endregion
+
+        #region PrivateMethods
+
         /// <summary>
         /// Sets the client.
         /// </summary>
@@ -190,5 +265,7 @@ namespace Css.Api.Scheduling.Business.UnitTest
 
             mockSchedulingContext.Setup(x => x.Set<SchedulingCode>()).Returns(mockClient.Object);
         }
+
+        #endregion
     }
 }

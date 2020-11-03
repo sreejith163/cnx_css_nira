@@ -8,13 +8,16 @@ using System.Linq;
 
 namespace Css.Api.Scheduling.Business.UnitTest.Mock
 {
+    /// <summary>
+    /// MockDataContext
+    /// </summary>
     public class MockDataContext
     {
         public static IQueryable<Client> clientsDB = new List<Client>()
         {
-                new Client { Id=1,RefId=1,Name="A",CreatedBy="Admin",CreatedDate=DateTime.Now,ModifiedBy="",ModifiedDate=DateTime.Now,IsDeleted=false },
-                new Client { Id=2,RefId=2,Name="B",CreatedBy="Admin",CreatedDate=DateTime.Now,ModifiedBy="",ModifiedDate=DateTime.Now,IsDeleted=false },
-                new Client { Id=3,RefId=3,Name="C",CreatedBy="Admin",CreatedDate=DateTime.Now,ModifiedBy="",ModifiedDate=DateTime.Now,IsDeleted=false }
+            new Client { Id=1,RefId=1,Name="A",CreatedBy="Admin",CreatedDate=DateTime.Now,ModifiedBy="",ModifiedDate=DateTime.Now,IsDeleted=false },
+            new Client { Id=2,RefId=2,Name="B",CreatedBy="Admin",CreatedDate=DateTime.Now,ModifiedBy="",ModifiedDate=DateTime.Now,IsDeleted=false },
+            new Client { Id=3,RefId=3,Name="C",CreatedBy="Admin",CreatedDate=DateTime.Now,ModifiedBy="",ModifiedDate=DateTime.Now,IsDeleted=false }
         }.AsQueryable();
 
         public static IQueryable<AgentSchedulingGroup> agentSchedulingGroupsDB = new List<AgentSchedulingGroup>()
@@ -47,12 +50,12 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
 
         public static IQueryable<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
         {
-                new SchedulingCode { Id=1,RefId=1,EmployeeId=1,IconId=1,CreatedBy="admin",CreatedDate=DateTime.UtcNow,Description="test",
-                IsDeleted=false,ModifiedBy="",ModifiedDate=DateTime.UtcNow,PriorityNumber=1},
-                new SchedulingCode { Id=2,RefId=2,EmployeeId=2,IconId=1,CreatedBy="admin",CreatedDate=DateTime.UtcNow,Description="test",
-                IsDeleted=false,ModifiedBy="",ModifiedDate=DateTime.UtcNow,PriorityNumber=2},
-                new SchedulingCode { Id=3,RefId=3,EmployeeId=3,IconId=1,CreatedBy="admin",CreatedDate=DateTime.UtcNow,Description="test",
-                IsDeleted=false,ModifiedBy="",ModifiedDate=DateTime.UtcNow,PriorityNumber=3}
+             new SchedulingCode { Id=1,RefId=1,EmployeeId=1,IconId=1,CreatedBy="admin",CreatedDate=DateTime.UtcNow,Description="test",
+             IsDeleted=false,ModifiedBy="",ModifiedDate=DateTime.UtcNow,PriorityNumber=1},
+             new SchedulingCode { Id=2,RefId=2,EmployeeId=2,IconId=1,CreatedBy="admin",CreatedDate=DateTime.UtcNow,Description="test",
+             IsDeleted=false,ModifiedBy="",ModifiedDate=DateTime.UtcNow,PriorityNumber=2},
+             new SchedulingCode { Id=3,RefId=3,EmployeeId=3,IconId=1,CreatedBy="admin",CreatedDate=DateTime.UtcNow,Description="test",
+             IsDeleted=false,ModifiedBy="",ModifiedDate=DateTime.UtcNow,PriorityNumber=3}
 
         }.AsQueryable();
 
@@ -125,6 +128,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
         }.AsQueryable();
     }
 
+    /// <summary>
+    /// MockInit
+    /// </summary>
     public class MockInit
     {
         /// <summary>
