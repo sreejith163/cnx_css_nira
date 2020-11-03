@@ -96,6 +96,7 @@ namespace Css.Api.Scheduling.Business
 
             var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);
             schedulingCodeRequest.SchedulingTypeCode = new List<SchedulingTypeCode>();
+
             foreach (var codeType in schedulingCodeDetails?.CodeTypes)
             {
                 schedulingCodeRequest.SchedulingTypeCode.Add(new SchedulingTypeCode { SchedulingCodeTypeId = codeType });

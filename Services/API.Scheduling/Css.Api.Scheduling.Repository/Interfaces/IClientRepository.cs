@@ -1,6 +1,7 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository.Interfaces
@@ -13,6 +14,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="clientParameters">The client parameters.</param>
         /// <returns></returns>
         Task<PagedList<Entity>> GetClients(ClientQueryParameters clientParameters);
+
+        /// <summary>
+        /// Gets the name of the clients by.
+        /// </summary>
+        /// <param name="clientNameDetails">The client name details.</param>
+        /// <returns></returns>
+        Task<List<int>> GetClientsByName(ClientNameDetails clientNameDetails);
 
         /// <summary>
         /// Gets the client.

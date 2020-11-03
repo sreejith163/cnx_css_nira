@@ -66,6 +66,12 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> CreateClient(CreateClient clientDetails)
         {
+            var clients = await _repository.Clients.GetClientsByName(new ClientNameDetails { Name = clientDetails.Name });
+            if (clients?.Count > 0)
+            {
+                return new CSSResponse($"Client with name '{clientDetails.Name}' already exists.", HttpStatusCode.Conflict);
+            }
+
             var clientRequest = _mapper.Map<Client>(clientDetails);
             _repository.Clients.CreateClient(clientRequest);
 

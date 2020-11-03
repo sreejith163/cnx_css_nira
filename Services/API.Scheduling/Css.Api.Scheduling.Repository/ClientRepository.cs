@@ -5,9 +5,9 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -62,6 +62,17 @@ namespace Css.Api.Scheduling.Repository
         public async Task<Client> GetClient(ClientIdDetails clientIdDetails)
         {
             var client = FindByCondition(x => x.Id == clientIdDetails.ClientId && x.IsDeleted == false).SingleOrDefault();
+            return await Task.FromResult(client);
+        }
+
+        /// <summary>
+        /// Gets the name of the client by.
+        /// </summary>
+        /// <param name="clientNameDetails">The client name details.</param>
+        /// <returns></returns>
+        public async Task<List<int>> GetClientsByName(ClientNameDetails clientNameDetails)
+        {
+            var client = FindByCondition(x => x.Name == clientNameDetails.Name && x.IsDeleted == false).Select(x => x.Id).ToList();
             return await Task.FromResult(client);
         }
 
