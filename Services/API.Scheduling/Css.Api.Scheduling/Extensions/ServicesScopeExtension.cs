@@ -48,6 +48,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddTransient<IClientService, ClientService>();
             services.AddTransient<IClientLOBGroupService, ClientLOBGroupService>();
             services.AddTransient<ISchedulingCodeService, SchedulingCodeService>();
+            services.AddTransient<ISchedulingCodeIconService, SchedulingCodeIconService>();
 
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 

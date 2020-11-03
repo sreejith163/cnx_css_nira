@@ -103,6 +103,29 @@
             <param name="clientId">The client identifier.</param>
             <returns></returns>
         </member>
+        <member name="T:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController">
+            <summary>
+            Controller for handling the schedulingCode resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController._schedulingCodeIconService">
+            <summary>
+            The scheduling code icon service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController.#ctor(Css.Api.Scheduling.Business.Interfaces.ISchedulingCodeIconService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController" /> class.
+            </summary>
+            <param name="schedulingCodeIconService">The scheduling code icon service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SchedulingCodeIconsController.GetSchedulingCodes">
+            <summary>
+            Gets the scheduling codes.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.SchedulingCodesController">
             <summary>
             Controller for handling the schedulingCode resource

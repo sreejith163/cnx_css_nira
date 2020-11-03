@@ -1,5 +1,4 @@
-﻿using Css.Api.Scheduling.Repository.Interfaces;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository.Interfaces
 {
@@ -22,6 +21,11 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// Gets the scheduling codes.
         /// </summary>
         ISchedulingCodeRepository SchedulingCodes { get; }
+
+        /// <summary>
+        /// Gets the scheduling code icons.
+        /// </summary>
+        ISchedulingCodeIconRepository SchedulingCodeIcons { get; }
 
         /// <summary>
         /// Saves the asynchronous.
