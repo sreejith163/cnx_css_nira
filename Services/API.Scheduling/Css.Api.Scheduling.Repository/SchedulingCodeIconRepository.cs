@@ -5,9 +5,9 @@ using Css.Api.Scheduling.Repository.Interfaces;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Css.Api.Scheduling.Models.DTO.Response.SchedulingCodeIcon;
 using System.Collections.Generic;
 using System.Linq;
+using Css.Api.Core.Models.DTO.Response;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -36,9 +36,9 @@ namespace Css.Api.Scheduling.Repository
         /// Gets the scheduling code icons.
         /// </summary>
         /// <returns></returns>
-        public async Task<List<SchedulingCodeIconDTO>> GetSchedulingCodeIcons()
+        public async Task<List<KeyValue>> GetSchedulingCodeIcons()
         {
-            var schedulingCodeIcons = FindAll().ProjectTo<SchedulingCodeIconDTO>(_mapper.ConfigurationProvider).ToList();
+            var schedulingCodeIcons = FindAll().ProjectTo<KeyValue>(_mapper.ConfigurationProvider).ToList();
             return await Task.FromResult(schedulingCodeIcons);
         }
     }

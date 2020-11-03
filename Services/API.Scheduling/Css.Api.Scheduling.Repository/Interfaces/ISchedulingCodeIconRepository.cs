@@ -1,4 +1,4 @@
-﻿using Css.Api.Scheduling.Models.DTO.Response.SchedulingCodeIcon;
+﻿using Css.Api.Core.Models.DTO.Response;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,6 +10,6 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// Gets the scheduling code icons.
         /// </summary>
         /// <returns></returns>
-        Task<List<SchedulingCodeIconDTO>> GetSchedulingCodeIcons();
+        Task<List<KeyValue>> GetSchedulingCodeIcons();
     }
 }
