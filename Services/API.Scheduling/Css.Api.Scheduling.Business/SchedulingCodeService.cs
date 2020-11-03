@@ -97,9 +97,9 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);
-
             _repository.SchedulingTypeCodes.RemoveSchedulingTypeCodes(schedulingCode.SchedulingTypeCode.ToList());
+
+            var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);
 
             foreach (var codeType in schedulingCodeDetails?.CodeTypes)
             {

@@ -12,7 +12,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.SchedulingCode
         /// <summary>
         /// Gets or sets the priority.
         /// </summary>
-        public int Priority { get; set; }
+        public int PriorityNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the code types.

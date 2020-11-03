@@ -87,7 +87,7 @@ namespace Css.Api.Scheduling.Business.UnitTest
             {
                 RefId = 4,
                 CodeTypes = new List<int>(),
-                Priority = 4,
+                PriorityNumber = 4,
                 CreatedBy = "admin",
                 Description = "test",
                 IconId = 1
@@ -114,7 +114,7 @@ namespace Css.Api.Scheduling.Business.UnitTest
         {
             UpdateSchedulingCode schedulingCode = new UpdateSchedulingCode()
             {
-                Priority = 4,
+                PriorityNumber = 4,
                 Description = "test",
                 IconId = 2,
                 CodeTypes = new List<int>(),
@@ -138,7 +138,7 @@ namespace Css.Api.Scheduling.Business.UnitTest
         {
             UpdateSchedulingCode schedulingCode = new UpdateSchedulingCode()
             {
-                Priority = 4,
+                PriorityNumber = 4,
                 Description = "test",
                 IconId = 2,
                 CodeTypes = new List<int>(),

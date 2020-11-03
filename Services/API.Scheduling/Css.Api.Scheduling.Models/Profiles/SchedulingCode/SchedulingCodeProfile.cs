@@ -16,12 +16,10 @@ namespace Css.Api.Scheduling.Models.Profiles.SchedulingCode
         {
             CreateMap<CreateSchedulingCode, Domain.SchedulingCode>()
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
-                .ForMember(x => x.Icon, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<UpdateSchedulingCode, Domain.SchedulingCode>()
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
-                .ForMember(x => x.Icon, opt => opt.Ignore())
                 .ForMember(x => x.SchedulingTypeCode, opt => new List<SchedulingTypeCode>())
                 .ReverseMap();
 
