@@ -94,6 +94,26 @@ namespace Css.Api.Scheduling.Business.UnitTest
             Assert.Equal(HttpStatusCode.Created, result.Code);
         }
 
+        /// <summary>
+        /// Gets the client with no found.
+        /// </summary>
+        /// <param name="clientId">The client identifier.</param>
+        [Fact]
+        public async void CreateClientWithConflictFound()
+        {
+            CreateClient clientDetails = new CreateClient()
+            {
+                RefId = 4,
+                CreatedBy = "admin",
+                Name = "A"
+            };
+            var result = await clientService.CreateClient(clientDetails);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.Conflict, result.Code);
+        }
+
         #endregion
 
         #region GetClient
