@@ -46,6 +46,11 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         private ISchedulingCodeTypeRepository _schedulingCodeTypesRepository { get; set; }
 
+
+        /// <summary>Gets or sets the timezone repository.</summary>
+        /// <value>The timezone repository.</value>
+        private ITimezoneRepository _timezoneRepository { get; set; }
+
         /// <summary>
         /// Gets or sets the scheduling type codes repository.
         /// </summary>
@@ -155,6 +160,20 @@ namespace Css.Api.Scheduling.Repository
                 return _schedulingCodeTypesRepository;
             }
         }
+
+        /// <summary>Gets the time zones.</summary>
+        /// <value>The time zones.</value>
+        public ITimezoneRepository TimeZones
+        {
+            get
+            {
+                if (_timezoneRepository == null)
+                {
+                    _timezoneRepository = new TimezoneRepository(_repositoryContext, _mapper);
+                }
+                return _timezoneRepository;
+            }
+        }        
 
         /// <summary>
         /// Gets the scheduling type codes.

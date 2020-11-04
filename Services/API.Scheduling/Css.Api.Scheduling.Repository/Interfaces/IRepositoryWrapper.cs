@@ -32,6 +32,12 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         ISchedulingCodeTypeRepository SchedulingCodeTypes { get; }
 
+
+        /// <summary>Gets the time zones.</summary>
+        /// <value>The time zones.</value>
+        ITimezoneRepository TimeZones { get; }
+
+
         /// <summary>
         /// Gets the scheduling type codes.
         /// </summary>
