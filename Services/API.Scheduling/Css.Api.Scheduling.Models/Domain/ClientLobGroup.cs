@@ -16,7 +16,6 @@ namespace Css.Api.Scheduling.Models.Domain
         public int RefId { get; set; }
         public string Name { get; set; }
         public int ClientId { get; set; }
-        public string ClientName { get; set; }
         public int FirstDayOfWeek { get; set; }
         public int TimezoneId { get; set; }
         public string CreatedBy { get; set; }

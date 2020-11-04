@@ -623,12 +623,7 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
                 entity.Property(e => e.ClientId)
                     .HasColumnName("client_id")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.ClientName)
-                    .IsRequired()
-                    .HasColumnName("client_name")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                
 
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
