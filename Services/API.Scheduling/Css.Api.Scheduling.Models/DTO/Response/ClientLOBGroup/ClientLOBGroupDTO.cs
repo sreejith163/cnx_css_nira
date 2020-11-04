@@ -23,12 +23,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup
         /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
-        public int ClientId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the client.
-        /// </summary>
-        public string ClientName { get; set; }
+        public int ClientId { get; set; }        
 
         /// <summary>
         /// Gets or sets the client.
