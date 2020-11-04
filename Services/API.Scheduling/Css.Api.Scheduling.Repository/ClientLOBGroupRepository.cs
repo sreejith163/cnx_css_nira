@@ -59,9 +59,17 @@ namespace Css.Api.Scheduling.Repository
         /// </returns>
         public async Task<PagedList<Entity>> GetClientLOBGroups(ClientLOBGroupQueryParameter clientLOBGroupParameters)
         {
-            var clientLOBGroups = FindByCondition(x => x.IsDeleted == false);
+            IQueryable<ClientLobGroup> clientLOBGroups = null;
+            if (clientLOBGroupParameters.ClientId != default(int))
+            {
+                clientLOBGroups = FindByCondition(x => x.ClientId == clientLOBGroupParameters.ClientId && x.IsDeleted == false);
+            }
+            else
+            {
+                clientLOBGroups = FindByCondition(x => x.IsDeleted == false);
+            }
 
-            var filteredClientLOBGroups =  SearchByLOBGroupName(clientLOBGroups, clientLOBGroupParameters.SearchKeyword);
+            var filteredClientLOBGroups = SearchByLOBGroupName(clientLOBGroups, clientLOBGroupParameters.SearchKeyword);
 
             var pagedClientLOBGroups = filteredClientLOBGroups
                 .Skip((clientLOBGroupParameters.PageNumber - 1) * clientLOBGroupParameters.PageSize)
@@ -93,7 +101,7 @@ namespace Css.Api.Scheduling.Repository
                 SingleOrDefault();
 
             return await Task.FromResult(clientLOBGroup);
-        }     
+        }
 
         /// <summary>
         /// Creates the client lob group.

@@ -15,5 +15,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup
         /// <summary>Gets or sets the client lob group identifier.</summary>
         /// <value>The client lob group identifier.</value>
         public int? ClientLOBGroupId { get; set; }
+
+
+        /// <summary>Gets or sets the client identifier.</summary>
+        /// <value>The client identifier.</value>
+        public int? ClientId { get; set; }
+
     }
 }
