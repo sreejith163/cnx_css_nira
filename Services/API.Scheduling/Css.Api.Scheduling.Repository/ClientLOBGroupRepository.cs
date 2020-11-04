@@ -8,6 +8,7 @@ using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -65,6 +66,7 @@ namespace Css.Api.Scheduling.Repository
             var pagedClientLOBGroups = filteredClientLOBGroups
                 .Skip((clientLOBGroupParameters.PageNumber - 1) * clientLOBGroupParameters.PageSize)
                 .Take(clientLOBGroupParameters.PageSize)
+                .Include(x => x.Client).Include(x => x.Timezone)
                 .ToList();
 
             var mappedClientLOBGroups = pagedClientLOBGroups
@@ -91,7 +93,7 @@ namespace Css.Api.Scheduling.Repository
                 SingleOrDefault();
 
             return await Task.FromResult(clientLOBGroup);
-        }
+        }     
 
         /// <summary>
         /// Creates the client lob group.

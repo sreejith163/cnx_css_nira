@@ -1,5 +1,4 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.Scheduling.Models.DTO.Response.Client;
 using System;
 
 namespace Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup
@@ -24,7 +23,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup
         /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
-        public int ClientId { get; set; }        
+        public int ClientId { get; set; }
 
         /// <summary>
         /// Gets or sets the client.
@@ -34,7 +33,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup
         /// <summary>Gets or sets the timezone.</summary>
         /// <value>The timezone.</value>
         public KeyValue Timezone { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the first day of week.
         /// </summary>
