@@ -11,7 +11,7 @@ namespace Css.Api.Scheduling.Models.Profiles.Timezone
         {
             CreateMap<Domain.Timezone, KeyValue>()
                .ForMember(x => x.Id, opt => opt.MapFrom(o => o.Id))
-               .ForMember(x => x.Value, opt => opt.MapFrom(o => o.Name))
+               .ForMember(x => x.Value, opt => opt.MapFrom(o => o.DisplayName))
                .ReverseMap();
         }
     }
