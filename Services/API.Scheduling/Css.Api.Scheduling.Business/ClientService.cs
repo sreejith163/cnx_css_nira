@@ -107,6 +107,11 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
+            if (client.Id != clientIdDetails.ClientId)
+            {
+                return new CSSResponse($"Client with name '{clientDetails.Name}' already exists.", HttpStatusCode.Conflict);
+            }
+
             var clientRequest = _mapper.Map(clientDetails, client);
             _repository.Clients.UpdateClient(clientRequest);
 
