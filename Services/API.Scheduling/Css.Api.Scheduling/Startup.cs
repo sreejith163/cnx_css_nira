@@ -86,7 +86,7 @@ namespace Css.Api.Scheduling
             {
                 c.RoutePrefix = Configuration["Environment:SwaggerRoutePrefix"];
                 c.DocumentTitle = Configuration["Title"] + " " + Configuration["Version"];
-                c.SwaggerEndpoint(Configuration["Environment:ApplicationURL"] + "/swagger/" + Configuration["Version"] + "/swagger.json", Configuration["Title"] + " " + Configuration["Version"]);
+                c.SwaggerEndpoint("/swagger/" + Configuration["Version"] + "/swagger.json", Configuration["Title"] + " " + Configuration["Version"]);
             });
 
 

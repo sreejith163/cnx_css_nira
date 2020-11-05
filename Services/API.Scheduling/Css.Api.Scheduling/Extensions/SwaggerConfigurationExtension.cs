@@ -21,7 +21,6 @@ namespace Css.Api.Scheduling.Extensions
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc(configuration["Version"],  new OpenApiInfo { Title = configuration["Title"], Version = configuration["Version"] });
-                c.IncludeXmlComments(@"App_Data\api-comments.xml");
                 c.AddSecurityDefinition("Bearer", GetSwaggerSecurityScheme());
                 c.OperationFilter<SecurityRequirementsOperationFilter>("Bearer");
             });
