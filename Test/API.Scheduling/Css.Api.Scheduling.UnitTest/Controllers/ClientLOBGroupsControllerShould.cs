@@ -51,6 +51,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
                 PageSize = 10,
                 SearchKeyword = ""
             };
+
             mockClientLOBGroupService.Setup(mr => mr.GetClientLOBGroups(It.IsAny<ClientLOBGroupQueryParameter>())).ReturnsAsync((ClientLOBGroupQueryParameter client) =>
               MockClientLOBGroupService.GetClientLOBGroups(clientLOBGroupQueryParameters));
 

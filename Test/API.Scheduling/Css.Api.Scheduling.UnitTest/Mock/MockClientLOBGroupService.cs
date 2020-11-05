@@ -16,9 +16,9 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// </summary>
         public static List<ClientLobGroup> clientLOBGroups = new List<ClientLobGroup>()
         {
-            new ClientLobGroup{Id=1,ClientId=1,ClientName="ClientA",FirstDayOfWeek=1,Name="A",IsDeleted=false,TimezoneId=1,RefId=1},
-            new ClientLobGroup{Id=2,ClientId=2,ClientName="ClientB",FirstDayOfWeek=1,Name="B",IsDeleted=false,TimezoneId=1,RefId=1},
-            new ClientLobGroup{Id=3,ClientId=3,ClientName="ClientC",FirstDayOfWeek=1,Name="C",IsDeleted=false,TimezoneId=1,RefId=1}
+            new ClientLobGroup{Id=1,ClientId=1,FirstDayOfWeek=1,Name="A",IsDeleted=false,TimezoneId=1,RefId=1},
+            new ClientLobGroup{Id=2,ClientId=2,FirstDayOfWeek=1,Name="B",IsDeleted=false,TimezoneId=1,RefId=1},
+            new ClientLobGroup{Id=3,ClientId=3,FirstDayOfWeek=1,Name="C",IsDeleted=false,TimezoneId=1,RefId=1}
         };
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             ClientLobGroup clientLOBGroup = new ClientLobGroup()
             {
                 Id = 4,
-                ClientName = createClientLOBGroup.name,
+                Name = createClientLOBGroup.name,
                 RefId = createClientLOBGroup.RefId,
                 CreatedBy=createClientLOBGroup.CreatedBy,
                 CreatedDate = DateTime.UtcNow,

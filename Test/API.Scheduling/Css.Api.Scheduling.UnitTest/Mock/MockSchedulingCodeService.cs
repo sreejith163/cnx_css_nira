@@ -70,7 +70,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
                 CreatedBy= createSchedulingCode.CreatedBy,
                 Description=createSchedulingCode.Description,
                 IconId=createSchedulingCode.IconId,
-                PriorityNumber=createSchedulingCode.Priority
+                PriorityNumber=createSchedulingCode.PriorityNumber
             };
 
             schedulingCodes.Add(schedulingCode);
@@ -109,7 +109,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         public static object UpdateSchedulingCodeOKResult(SchedulingCodeIdDetails schedulingCodeIdDetails, UpdateSchedulingCode updateSchedulingCode)
         {
             var schedulingCode = schedulingCodes.Where(x => x.Id == schedulingCodeIdDetails.SchedulingCodeId && x.IsDeleted == false).FirstOrDefault();
-            schedulingCode.PriorityNumber = updateSchedulingCode.Priority;
+            schedulingCode.PriorityNumber = updateSchedulingCode.PriorityNumber;
             schedulingCode.Description = updateSchedulingCode.Description;
             schedulingCode.ModifiedBy = updateSchedulingCode.ModifiedBy;
             schedulingCode.IconId = updateSchedulingCode.IconId;

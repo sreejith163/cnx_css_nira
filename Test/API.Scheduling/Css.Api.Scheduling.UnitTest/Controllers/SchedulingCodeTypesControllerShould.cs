@@ -42,8 +42,8 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         [Fact]
         public async void GetSchedulingCodes()
         {
-            mockSchedulingCodeTypeService.Setup(mr => mr.GetSchedulingCodeTypes()).Returns =>
-                MockSchedulingCodeTypeService.GetSchedulingCodeTypes());
+            mockSchedulingCodeTypeService.Setup(mr => mr.GetSchedulingCodeTypes()).ReturnsAsync(() =>
+              MockSchedulingCodeTypeService.GetSchedulingCodeTypes());
 
             var value = await controller.GetSchedulingCodes();
 

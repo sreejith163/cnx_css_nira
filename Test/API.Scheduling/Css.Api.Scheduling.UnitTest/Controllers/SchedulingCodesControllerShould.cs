@@ -101,7 +101,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
             {
                 RefId = 4,
                 CodeTypes = new List<int>(),
-                Priority = 4,
+                PriorityNumber = 4,
                 CreatedBy = "admin",
                 Description = "test",
                 IconId = 1
@@ -155,7 +155,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
                 CodeTypes = new List<int>(),
                 Description="test",
                 IconId=2,
-                Priority=4,
+                PriorityNumber = 4,
                 ModifiedBy="admin"
             };
 
@@ -177,7 +177,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
                 CodeTypes = new List<int>(),
                 Description = "test",
                 IconId = 2,
-                Priority = 4,
+                PriorityNumber = 4,
                 ModifiedBy = "admin"
             };
 
