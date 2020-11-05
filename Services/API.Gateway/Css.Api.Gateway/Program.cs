@@ -29,8 +29,14 @@ namespace Css.Api.Gateway
                 {
                     webBuilder.UseStartup<Startup>();
                 })
-                .ConfigureAppConfiguration((hostingCOntext, config) => {
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    var env = context.HostingEnvironment;
+
                     config.AddJsonFile(Path.Combine("Configuration", "Configuration.json"), false, false);
+                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                    config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                    config.AddEnvironmentVariables();
                 })
                 .ConfigureLogging((hostingContext, loggingbuilder) =>
                 {
