@@ -5,20 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {
     public class MockClientLOBGroupService
     {
         /// <summary>
-        /// The clients
+        /// The client lob groups
         /// </summary>
-        public static List<ClientLobGroup> clientLOBGroups = new List<ClientLobGroup>()
+        private List<ClientLobGroup> clientLOBGroupsDB = new List<ClientLobGroup>()
         {
-            new ClientLobGroup{Id=1,ClientId=1,FirstDayOfWeek=1,Name="A",IsDeleted=false,TimezoneId=1,RefId=1},
-            new ClientLobGroup{Id=2,ClientId=2,FirstDayOfWeek=1,Name="B",IsDeleted=false,TimezoneId=1,RefId=1},
-            new ClientLobGroup{Id=3,ClientId=3,FirstDayOfWeek=1,Name="C",IsDeleted=false,TimezoneId=1,RefId=1}
+            new ClientLobGroup{ Id = 1, ClientId = 1, FirstDayOfWeek = 1, Name = "A", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new ClientLobGroup{ Id = 2, ClientId = 2, FirstDayOfWeek = 1, Name = "B", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new ClientLobGroup{ Id = 3, ClientId = 3, FirstDayOfWeek = 1, Name = "C", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
         };
 
         /// <summary>
@@ -26,31 +25,21 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// </summary>
         /// <param name="clientLOBGroupQueryParameters">The client lob group query parameters.</param>
         /// <returns></returns>
-        public static CSSResponse GetClientLOBGroups(ClientLOBGroupQueryParameter clientLOBGroupQueryParameters)
+        public CSSResponse GetClientLOBGroups(ClientLOBGroupQueryParameter clientLOBGroupQueryParameters)
         {
+            var clientLOBGroups = clientLOBGroupsDB.Skip((clientLOBGroupQueryParameters.PageNumber - 1) * clientLOBGroupQueryParameters.PageSize).Take(clientLOBGroupQueryParameters.PageSize);
             return new CSSResponse(clientLOBGroups, HttpStatusCode.OK);
         }
 
         /// <summary>
-        /// Gets the client lob group ok result.
+        /// Gets the client lob group.
         /// </summary>
         /// <param name="clientLOBGroupId">The client lob group identifier.</param>
         /// <returns></returns>
-        public static CSSResponse GetClientLOBGroupOKResult(ClientLOBGroupIdDetails clientLOBGroupId)
+        public CSSResponse GetClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupId)
         {
-            var client = clientLOBGroups.Where(x => x.Id == clientLOBGroupId.ClientLOBGroupId && x.IsDeleted == false).FirstOrDefault();
-            return new CSSResponse(client, HttpStatusCode.OK);
-        }
-
-        /// <summary>
-        /// Gets the client lob group not found result.
-        /// </summary>
-        /// <param name="clientLOBGroupId">The client lob group identifier.</param>
-        /// <returns></returns>
-        public static CSSResponse GetClientLOBGroupNotFoundResult(ClientLOBGroupIdDetails clientLOBGroupId)
-        {
-            var client = clientLOBGroups.Where(x => x.Id == clientLOBGroupId.ClientLOBGroupId && x.IsDeleted == false).FirstOrDefault();
-            return new CSSResponse(client, HttpStatusCode.NotFound);
+            var clientLOBGroup = clientLOBGroupsDB.Where(x => x.Id == clientLOBGroupId.ClientLOBGroupId && x.IsDeleted == false).FirstOrDefault();
+            return clientLOBGroup != null ? new CSSResponse(clientLOBGroup, HttpStatusCode.OK) : new CSSResponse(HttpStatusCode.NotFound);
         }
 
         /// <summary>
@@ -58,7 +47,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// </summary>
         /// <param name="createClientLOBGroup">The create client lob group.</param>
         /// <returns></returns>
-        public static CSSResponse CreateClientLOBGroup(CreateClientLOBGroup createClientLOBGroup)
+        public CSSResponse CreateClientLOBGroup(CreateClientLOBGroup createClientLOBGroup)
         {
             ClientLobGroup clientLOBGroup = new ClientLobGroup()
             {
@@ -69,31 +58,9 @@ namespace Css.Api.Scheduling.UnitTest.Mock
                 CreatedDate = DateTime.UtcNow,
             };
 
-            clientLOBGroups.Add(clientLOBGroup);
+            clientLOBGroupsDB.Add(clientLOBGroup);
 
             return new CSSResponse(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroup.Id }, HttpStatusCode.Created);
-        }
-
-        /// <summary>
-        /// Deletes the client lob group ok result.
-        /// </summary>
-        /// <param name="clientLOBGroupId">The client lob group identifier.</param>
-        /// <returns></returns>
-        public static CSSResponse DeleteClientLOBGroupOKResult(ClientLOBGroupIdDetails clientLOBGroupId)
-        {
-            var clientLOBGroup = clientLOBGroups.Where(x => x.Id == clientLOBGroupId.ClientLOBGroupId && x.IsDeleted == false).FirstOrDefault();
-            clientLOBGroups.Remove(clientLOBGroup);
-            return new CSSResponse(HttpStatusCode.NoContent);
-        }
-
-        /// <summary>
-        /// Deletes the client not found result.
-        /// </summary>
-        /// <param name="clientId">The client identifier.</param>
-        /// <returns></returns>
-        public static CSSResponse DeleteClientLOBGroupNotFoundResult(ClientLOBGroupIdDetails clientLOBGroupId)
-        {
-            return new CSSResponse(HttpStatusCode.NotFound);
         }
 
         /// <summary>
@@ -102,9 +69,14 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// <param name="clientLOBGroupId">The client lob group identifier.</param>
         /// <param name="updateClientLOBGroup">The update client lob group.</param>
         /// <returns></returns>
-        public static object UpdateClientOKResult(ClientLOBGroupIdDetails clientLOBGroupId, UpdateClientLOBGroup updateClientLOBGroup)
+        public CSSResponse UpdateClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupId, UpdateClientLOBGroup updateClientLOBGroup)
         {
-            var clientLOBGroup = clientLOBGroups.Where(x => x.Id == clientLOBGroupId.ClientLOBGroupId && x.IsDeleted == false).FirstOrDefault();
+            if (!clientLOBGroupsDB.Exists(x => x.IsDeleted == false && x.Id == clientLOBGroupId.ClientLOBGroupId))
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var clientLOBGroup = clientLOBGroupsDB.Where(x => x.Id == clientLOBGroupId.ClientLOBGroupId && x.IsDeleted == false).FirstOrDefault();
             clientLOBGroup.ModifiedBy = updateClientLOBGroup.ModifiedBy;
             clientLOBGroup.Name = updateClientLOBGroup.name;
             clientLOBGroup.ModifiedDate = DateTime.UtcNow;
@@ -112,14 +84,20 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         }
 
         /// <summary>
-        /// Updates the client not found result.
+        /// Deletes the client lob group.
         /// </summary>
         /// <param name="clientLOBGroupId">The client lob group identifier.</param>
-        /// <param name="updateClientLOBGroup">The update client lob group.</param>
         /// <returns></returns>
-        public static object UpdateClientNotFoundResult(ClientLOBGroupIdDetails clientLOBGroupId, UpdateClientLOBGroup updateClientLOBGroup)
+        public CSSResponse DeleteClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupId)
         {
-            return new CSSResponse(HttpStatusCode.NotFound);
+            if (!clientLOBGroupsDB.Exists(x => x.IsDeleted == false && x.Id == clientLOBGroupId.ClientLOBGroupId))
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var clientLOBGroup = clientLOBGroupsDB.Where(x => x.Id == clientLOBGroupId.ClientLOBGroupId && x.IsDeleted == false).FirstOrDefault();
+            clientLOBGroupsDB.Remove(clientLOBGroup);
+            return new CSSResponse(HttpStatusCode.NoContent);
         }
     }
 }

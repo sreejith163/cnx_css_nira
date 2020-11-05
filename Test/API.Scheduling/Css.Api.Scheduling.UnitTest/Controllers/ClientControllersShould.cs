@@ -149,7 +149,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        public async void UpdateClient_ReturnsOKResult(int clientId)
+        public async void UpdateClient_ReturnsNoContentResult(int clientId)
         {
             UpdateClient updateClient = new UpdateClient()
             {
@@ -192,7 +192,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        public async void DeleteClient_ReturnsOKResult(int clientId)
+        public async void DeleteClient_ReturnsNoContentResult(int clientId)
         {
             mockClientService.Setup(mr => mr.DeleteClient(It.IsAny<ClientIdDetails>())).ReturnsAsync(
                 (ClientIdDetails client) => mockClientData.DeleteClient(new ClientIdDetails { ClientId = clientId }));

@@ -32,7 +32,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         }
 
         /// <summary>
-        /// Gets the client ok result.
+        /// Gets the client.
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
         /// <returns></returns>
@@ -69,7 +69,27 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         }
 
         /// <summary>
-        /// Deletes the client ok result.
+        /// Updates the client.
+        /// </summary>
+        /// <param name="clientIdDetails">The client identifier details.</param>
+        /// <param name="updateClient">The update client.</param>
+        /// <returns></returns>
+        public CSSResponse UpdateClient(ClientIdDetails clientIdDetails, UpdateClient updateClient)
+        {
+            if (!clientsDB.Exists(x => x.IsDeleted == false && x.Id == clientIdDetails.ClientId))
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var client = clientsDB.Where(x => x.Id == clientIdDetails.ClientId && x.IsDeleted == false).FirstOrDefault();
+            client.ModifiedBy = updateClient.ModifiedBy;
+            client.Name = updateClient.Name;
+            client.ModifiedDate = DateTime.UtcNow;
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Deletes the client.
         /// </summary>
         /// <param name="clientIdDetails">The client identifier details.</param>
         /// <returns></returns>
@@ -82,26 +102,6 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 
             var client = clientsDB.Where(x => x.Id == clientIdDetails.ClientId && x.IsDeleted == false).FirstOrDefault();
             clientsDB.Remove(client);
-            return new CSSResponse(HttpStatusCode.NoContent);
-        }
-
-        /// <summary>
-        /// Updates the client ok result.
-        /// </summary>
-        /// <param name="clientIdDetails">The client identifier details.</param>
-        /// <param name="updateClient">The update client.</param>
-        /// <returns></returns>
-        public CSSResponse UpdateClient(ClientIdDetails clientIdDetails,UpdateClient updateClient)
-        {
-            if (!clientsDB.Exists(x => x.IsDeleted == false && x.Id == clientIdDetails.ClientId))
-            {
-                return new CSSResponse(HttpStatusCode.NotFound);
-            }
-
-            var client = clientsDB.Where(x => x.Id == clientIdDetails.ClientId && x.IsDeleted == false).FirstOrDefault();
-            client.ModifiedBy = updateClient.ModifiedBy;
-            client.Name = updateClient.Name;
-            client.ModifiedDate = DateTime.UtcNow;
             return new CSSResponse(HttpStatusCode.NoContent);
         }
     }
