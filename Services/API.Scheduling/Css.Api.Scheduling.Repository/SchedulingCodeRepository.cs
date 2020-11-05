@@ -76,7 +76,7 @@ namespace Css.Api.Scheduling.Repository
             var shapedSchedulingCodes = _dataShaper.ShapeData(sortedSchedulingCodes, schedulingCodeParameters.Fields);
 
             return await PagedList<Entity>
-                .ToPagedList(shapedSchedulingCodes, schedulingCodes.Count(), schedulingCodeParameters.PageNumber, schedulingCodeParameters.PageSize);
+                .ToPagedList(shapedSchedulingCodes, filteredSchedulingCodes.Count(), schedulingCodeParameters.PageNumber, schedulingCodeParameters.PageSize);
         }
 
         /// <summary>

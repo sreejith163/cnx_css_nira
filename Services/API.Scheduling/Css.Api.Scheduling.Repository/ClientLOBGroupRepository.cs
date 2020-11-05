@@ -78,7 +78,7 @@ namespace Css.Api.Scheduling.Repository
             var shapedClientLOBGroups = _dataShaper.ShapeData(sortedClientLOBGroups, clientLOBGroupParameters.Fields);
 
             return await PagedList<Entity>
-                .ToPagedList(shapedClientLOBGroups, clientLOBGroups.Count(), clientLOBGroupParameters.PageNumber, clientLOBGroupParameters.PageSize);
+                .ToPagedList(shapedClientLOBGroups, filteredClientLOBGroups.Count(), clientLOBGroupParameters.PageNumber, clientLOBGroupParameters.PageSize);
         }
 
         /// <summary>
