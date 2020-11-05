@@ -24,7 +24,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         /// <summary>
         /// The mock client data
         /// </summary>
-        private MockClientService mockClientData;
+        private MockClientData mockClientData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientControllersShould" /> class.
@@ -32,7 +32,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         public ClientControllersShould()
         {
             mockClientService = new Mock<IClientService>();
-            mockClientData = new MockClientService();
+            mockClientData = new MockClientData();
             controller = new ClientsController(mockClientService.Object);
         }
 

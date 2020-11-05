@@ -72,7 +72,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             SetSchedulingCodeAsCurrentDbContext();
 
-            repositoryWrapper = new RepositoryWrapper(mockSchedulingContext.Object, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
+            repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
                                                       clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);
 
             schedulingCodeService = new SchedulingCodeService(repositoryWrapper, mockHttContext.Object, mapper);
@@ -254,13 +254,13 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// </summary>
         private void SetSchedulingCodeAsCurrentDbContext()
         {
-            var mockClient = new Mock<DbSet<SchedulingCode>>();
-            mockClient.As<IQueryable<SchedulingCode>>().Setup(m => m.Provider).Returns(MockDataContext.schedulingCodesDB.Provider);
-            mockClient.As<IQueryable<SchedulingCode>>().Setup(m => m.Expression).Returns(MockDataContext.schedulingCodesDB.Expression);
-            mockClient.As<IQueryable<SchedulingCode>>().Setup(m => m.ElementType).Returns(MockDataContext.schedulingCodesDB.ElementType);
-            mockClient.As<IQueryable<SchedulingCode>>().Setup(m => m.GetEnumerator()).Returns(MockDataContext.schedulingCodesDB.GetEnumerator());
+            var mockSchedulingCode = new Mock<DbSet<SchedulingCode>>();
+            mockSchedulingCode.As<IQueryable<SchedulingCode>>().Setup(m => m.Provider).Returns(MockDataContext.schedulingCodesDB.Provider);
+            mockSchedulingCode.As<IQueryable<SchedulingCode>>().Setup(m => m.Expression).Returns(MockDataContext.schedulingCodesDB.Expression);
+            mockSchedulingCode.As<IQueryable<SchedulingCode>>().Setup(m => m.ElementType).Returns(MockDataContext.schedulingCodesDB.ElementType);
+            mockSchedulingCode.As<IQueryable<SchedulingCode>>().Setup(m => m.GetEnumerator()).Returns(MockDataContext.schedulingCodesDB.GetEnumerator());
 
-            mockSchedulingContext.Setup(x => x.Set<SchedulingCode>()).Returns(mockClient.Object);
+            mockSchedulingContext.Setup(x => x.Set<SchedulingCode>()).Returns(mockSchedulingCode.Object);
         }
 
         #endregion

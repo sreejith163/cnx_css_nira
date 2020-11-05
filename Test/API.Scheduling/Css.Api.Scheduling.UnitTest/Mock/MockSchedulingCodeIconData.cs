@@ -5,7 +5,7 @@ using System.Net;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {
-    public class MockSchedulingCodeIconService
+    public class MockSchedulingCodeIconData
     {
         /// <summary>
         /// The scheduling code icons

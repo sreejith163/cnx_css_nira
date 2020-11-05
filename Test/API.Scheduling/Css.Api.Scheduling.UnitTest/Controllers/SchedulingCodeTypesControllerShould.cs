@@ -23,7 +23,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         /// <summary>
         /// The mock scheduling code type data
         /// </summary>
-        private MockSchedulingCodeTypeService mockSchedulingCodeTypeData;
+        private MockSchedulingCodeTypeData mockSchedulingCodeTypeData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SchedulingCodeTypesControllerShould"/> class.
@@ -31,7 +31,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         public SchedulingCodeTypesControllerShould()
         {
             mockSchedulingCodeTypeService = new Mock<ISchedulingCodeTypeService>();
-            mockSchedulingCodeTypeData = new MockSchedulingCodeTypeService();
+            mockSchedulingCodeTypeData = new MockSchedulingCodeTypeData();
             controller = new SchedulingCodeTypesController(mockSchedulingCodeTypeService.Object);
         }
 

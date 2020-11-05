@@ -25,7 +25,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         /// <summary>
         /// The mock client lob group data
         /// </summary>
-        private MockClientLOBGroupService mockClientLOBGroupData;
+        private MockClientLOBGroupData mockClientLOBGroupData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientLOBGroupsControllerShould"/> class.
@@ -33,7 +33,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         public ClientLOBGroupsControllerShould()
         {
             mockClientLOBGroupService = new Mock<IClientLOBGroupService>();
-            mockClientLOBGroupData = new MockClientLOBGroupService();
+            mockClientLOBGroupData = new MockClientLOBGroupData();
             controller = new ClientLOBGroupsController(mockClientLOBGroupService.Object);
         }
 

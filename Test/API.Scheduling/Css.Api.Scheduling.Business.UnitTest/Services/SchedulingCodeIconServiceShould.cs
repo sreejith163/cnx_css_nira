@@ -66,7 +66,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             SetSchedulingCodeIconAsCurrentDbContext();
 
-            repositoryWrapper = new RepositoryWrapper(mockSchedulingContext.Object, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
+            repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
                                                       clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);
 
             schedulingCodeIconService = new SchedulingCodeIconService(repositoryWrapper);
@@ -97,13 +97,13 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// </summary>
         private void SetSchedulingCodeIconAsCurrentDbContext()
         {
-            var mockClient = new Mock<DbSet<SchedulingCodeIcon>>();
-            mockClient.As<IQueryable<SchedulingCodeIcon>>().Setup(m => m.Provider).Returns(MockDataContext.schedulingCodeIconsDB.Provider);
-            mockClient.As<IQueryable<SchedulingCodeIcon>>().Setup(m => m.Expression).Returns(MockDataContext.schedulingCodeIconsDB.Expression);
-            mockClient.As<IQueryable<SchedulingCodeIcon>>().Setup(m => m.ElementType).Returns(MockDataContext.schedulingCodeIconsDB.ElementType);
-            mockClient.As<IQueryable<SchedulingCodeIcon>>().Setup(m => m.GetEnumerator()).Returns(MockDataContext.schedulingCodeIconsDB.GetEnumerator());
+            var mockSchedulingCodeIcon = new Mock<DbSet<SchedulingCodeIcon>>();
+            mockSchedulingCodeIcon.As<IQueryable<SchedulingCodeIcon>>().Setup(m => m.Provider).Returns(MockDataContext.schedulingCodeIconsDB.Provider);
+            mockSchedulingCodeIcon.As<IQueryable<SchedulingCodeIcon>>().Setup(m => m.Expression).Returns(MockDataContext.schedulingCodeIconsDB.Expression);
+            mockSchedulingCodeIcon.As<IQueryable<SchedulingCodeIcon>>().Setup(m => m.ElementType).Returns(MockDataContext.schedulingCodeIconsDB.ElementType);
+            mockSchedulingCodeIcon.As<IQueryable<SchedulingCodeIcon>>().Setup(m => m.GetEnumerator()).Returns(MockDataContext.schedulingCodeIconsDB.GetEnumerator());
 
-            mockSchedulingContext.Setup(x => x.Set<SchedulingCodeIcon>()).Returns(mockClient.Object);
+            mockSchedulingContext.Setup(x => x.Set<SchedulingCodeIcon>()).Returns(mockSchedulingCodeIcon.Object);
         }
 
         #endregion

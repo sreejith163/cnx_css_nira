@@ -25,7 +25,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         /// <summary>
         /// The mock scheduling code data
         /// </summary>
-        private MockSchedulingCodeService mockSchedulingCodeData;
+        private MockSchedulingCodeData mockSchedulingCodeData;
 
         /// <summary>
         /// 
@@ -33,7 +33,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         public SchedulingCodesControllerShould()
         {
             mockSchedulingCodeService = new Mock<ISchedulingCodeService>();
-            mockSchedulingCodeData = new MockSchedulingCodeService();
+            mockSchedulingCodeData = new MockSchedulingCodeData();
             controller = new SchedulingCodesController(mockSchedulingCodeService.Object);
         }
 

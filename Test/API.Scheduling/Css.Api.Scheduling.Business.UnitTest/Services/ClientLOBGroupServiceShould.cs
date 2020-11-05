@@ -75,7 +75,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             SetClientLOBGroupAsCurrentDbContext();
 
-            repositoryWrapper = new RepositoryWrapper(mockSchedulingContext.Object, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
+            repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
                                                       clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);
 
             clientLOBGroupService = new ClientLOBGroupService(repositoryWrapper, mockHttContext.Object, mapper);
@@ -247,13 +247,13 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// </summary>
         private void SetClientLOBGroupAsCurrentDbContext()
         {
-            var mockClient = new Mock<DbSet<ClientLobGroup>>();
-            mockClient.As<IQueryable<ClientLobGroup>>().Setup(m => m.Provider).Returns(MockDataContext.clientLobGroupsDB.Provider);
-            mockClient.As<IQueryable<ClientLobGroup>>().Setup(m => m.Expression).Returns(MockDataContext.clientLobGroupsDB.Expression);
-            mockClient.As<IQueryable<ClientLobGroup>>().Setup(m => m.ElementType).Returns(MockDataContext.clientLobGroupsDB.ElementType);
-            mockClient.As<IQueryable<ClientLobGroup>>().Setup(m => m.GetEnumerator()).Returns(MockDataContext.clientLobGroupsDB.GetEnumerator());
+            var mockClientLobGroup = new Mock<DbSet<ClientLobGroup>>();
+            mockClientLobGroup.As<IQueryable<ClientLobGroup>>().Setup(m => m.Provider).Returns(MockDataContext.clientLobGroupsDB.Provider);
+            mockClientLobGroup.As<IQueryable<ClientLobGroup>>().Setup(m => m.Expression).Returns(MockDataContext.clientLobGroupsDB.Expression);
+            mockClientLobGroup.As<IQueryable<ClientLobGroup>>().Setup(m => m.ElementType).Returns(MockDataContext.clientLobGroupsDB.ElementType);
+            mockClientLobGroup.As<IQueryable<ClientLobGroup>>().Setup(m => m.GetEnumerator()).Returns(MockDataContext.clientLobGroupsDB.GetEnumerator());
 
-            mockSchedulingContext.Setup(x => x.Set<ClientLobGroup>()).Returns(mockClient.Object);
+            mockSchedulingContext.Setup(x => x.Set<ClientLobGroup>()).Returns(mockClientLobGroup.Object);
         }
 
         #endregion

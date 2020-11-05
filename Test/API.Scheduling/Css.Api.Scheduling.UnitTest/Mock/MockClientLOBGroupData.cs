@@ -8,7 +8,7 @@ using System.Net;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {
-    public class MockClientLOBGroupService
+    public class MockClientLOBGroupData
     {
         /// <summary>
         /// The client lob groups

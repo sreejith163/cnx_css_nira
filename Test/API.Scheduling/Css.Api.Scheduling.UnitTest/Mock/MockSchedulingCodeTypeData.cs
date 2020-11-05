@@ -5,7 +5,7 @@ using System.Net;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {
-    public class MockSchedulingCodeTypeService
+    public class MockSchedulingCodeTypeData
     {
         /// <summary>
         /// The scheduling code types

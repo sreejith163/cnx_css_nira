@@ -23,7 +23,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         /// <summary>
         /// The mock scheduling code icon data
         /// </summary>
-        private MockSchedulingCodeIconService mockSchedulingCodeIconData;
+        private MockSchedulingCodeIconData mockSchedulingCodeIconData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SchedulingCodeIconsControllerShould"/> class.
@@ -31,7 +31,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         public SchedulingCodeIconsControllerShould()
         {
             mockSchedulingCodeIconService = new Mock<ISchedulingCodeIconService>();
-            mockSchedulingCodeIconData = new MockSchedulingCodeIconService();
+            mockSchedulingCodeIconData = new MockSchedulingCodeIconData();
             controller = new SchedulingCodeIconsController(mockSchedulingCodeIconService.Object);
         }
 

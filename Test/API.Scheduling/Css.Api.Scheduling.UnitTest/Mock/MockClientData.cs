@@ -8,7 +8,7 @@ using System.Net;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {
-    public class MockClientService
+    public class MockClientData
     {
         /// <summary>
         /// The clients

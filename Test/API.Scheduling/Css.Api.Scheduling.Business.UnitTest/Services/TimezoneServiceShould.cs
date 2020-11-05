@@ -66,7 +66,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             SetTimeZoneAsCurrentDbContext();
 
-            repositoryWrapper = new RepositoryWrapper(mockSchedulingContext.Object, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
+            repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
                                                       clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);
 
             timezoneService = new TimezoneService(repositoryWrapper);
