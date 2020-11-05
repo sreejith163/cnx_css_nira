@@ -5,9 +5,7 @@ using AutoMapper;
 using System.Linq;
 using Css.Api.Core.Utilities;
 using Css.Api.Core.Models.Domain;
-using Microsoft.EntityFrameworkCore;
 using Css.Api.Scheduling.Repository;
-using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Css.Api.Scheduling.Models.Profiles.Client;
@@ -68,8 +66,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
             mockSchedulingContext = MockDataContext.IntializeMockData(true);
-
-            SetClientAsCurrentDbContext();
 
             repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
                                                       clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);
@@ -251,24 +247,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Assert.NotNull(result);
             Assert.Null(result.Value);
             Assert.Equal(HttpStatusCode.NoContent, result.Code);
-        }
-
-        #endregion
-
-        #region PrivateMethods
-
-        /// <summary>
-        /// Sets the client.
-        /// </summary>
-        private void SetClientAsCurrentDbContext()
-        {
-            var mockClient = new Mock<DbSet<Client>>();
-            mockClient.As<IQueryable<Client>>().Setup(m => m.Provider).Returns(MockDataContext.clientsDB.Provider);
-            mockClient.As<IQueryable<Client>>().Setup(m => m.Expression).Returns(MockDataContext.clientsDB.Expression);
-            mockClient.As<IQueryable<Client>>().Setup(m => m.ElementType).Returns(MockDataContext.clientsDB.ElementType);
-            mockClient.As<IQueryable<Client>>().Setup(m => m.GetEnumerator()).Returns(MockDataContext.clientsDB.GetEnumerator());
-
-            mockSchedulingContext.Setup(x => x.Set<Client>()).Returns(mockClient.Object);
         }
 
         #endregion

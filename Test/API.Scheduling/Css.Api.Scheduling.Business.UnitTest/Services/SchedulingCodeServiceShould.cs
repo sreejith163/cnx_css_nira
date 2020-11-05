@@ -2,13 +2,10 @@
 using Xunit;
 using System.Net;
 using AutoMapper;
-using System.Linq;
 using Css.Api.Core.Utilities;
 using Css.Api.Core.Models.Domain;
 using System.Collections.Generic;
 using Css.Api.Scheduling.Repository;
-using Microsoft.EntityFrameworkCore;
-using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Css.Api.Scheduling.Business.UnitTest.Mock;
@@ -69,8 +66,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
             mockSchedulingContext = MockDataContext.IntializeMockData(true);
-
-            SetSchedulingCodeAsCurrentDbContext();
 
             repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
                                                       clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);
@@ -243,24 +238,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Assert.NotNull(result);
             Assert.Null(result.Value);
             Assert.Equal(HttpStatusCode.NotFound, result.Code);
-        }
-
-        #endregion
-
-        #region PrivateMethods
-
-        /// <summary>
-        /// Sets the client.
-        /// </summary>
-        private void SetSchedulingCodeAsCurrentDbContext()
-        {
-            var mockSchedulingCode = new Mock<DbSet<SchedulingCode>>();
-            mockSchedulingCode.As<IQueryable<SchedulingCode>>().Setup(m => m.Provider).Returns(MockDataContext.schedulingCodesDB.Provider);
-            mockSchedulingCode.As<IQueryable<SchedulingCode>>().Setup(m => m.Expression).Returns(MockDataContext.schedulingCodesDB.Expression);
-            mockSchedulingCode.As<IQueryable<SchedulingCode>>().Setup(m => m.ElementType).Returns(MockDataContext.schedulingCodesDB.ElementType);
-            mockSchedulingCode.As<IQueryable<SchedulingCode>>().Setup(m => m.GetEnumerator()).Returns(MockDataContext.schedulingCodesDB.GetEnumerator());
-
-            mockSchedulingContext.Setup(x => x.Set<SchedulingCode>()).Returns(mockSchedulingCode.Object);
         }
 
         #endregion
