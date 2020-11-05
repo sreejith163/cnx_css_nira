@@ -26,6 +26,7 @@ services:
   css.api.scheduling:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Database=server=localhost;user id=root;password=root;persistsecurityinfo=True;database=css
     ports:
       - "4203:80"
     volumes:

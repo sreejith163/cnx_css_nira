@@ -36,7 +36,8 @@ namespace Css.Api.Scheduling
                         builder.AddJsonFile("appsettings.json",
                                      optional: true, reloadOnChange: true)
                                .AddJsonFile($"appsettings.{env.EnvironmentName}.json",
-                                     optional: true, reloadOnChange: true);
+                                     optional: true, reloadOnChange: true)
+                               .AddEnvironmentVariables();
                     }).UseSerilog();
                 });
     }
