@@ -165,7 +165,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             {
                 RefId = 4,
                 CreatedBy = "admin",
-                Name = "A"
+                Name = "B"
             };
             var result = await clientService.CreateClient(clientDetails);
 
