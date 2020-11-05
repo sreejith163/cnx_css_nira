@@ -1,5 +1,6 @@
 ﻿using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Controllers;
+using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
 using Css.Api.Scheduling.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;
@@ -121,6 +122,9 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
             mockClientLOBGroupService.Setup(mr => mr.GetClientLOBGroup(It.IsAny<ClientLOBGroupIdDetails>())).ReturnsAsync((ClientLOBGroupIdDetails client) =>
                 MockClientLOBGroupService.GetClientLOBGroupOKResult(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupId }));
 
+            mockClientLOBGroupService.Setup(mr => mr.DeleteClientLOBGroup(It.IsAny<ClientLOBGroupIdDetails>())).ReturnsAsync((ClientLOBGroupIdDetails client) =>
+                MockClientLOBGroupService.DeleteClientLOBGroupNotFoundResult(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupId }));
+
             var value = await controller.DeleteClientLOBGroup(clientLOBGroupId);
 
             Assert.Equal((int)HttpStatusCode.NoContent, (value as ObjectResult).StatusCode);
@@ -131,6 +135,9 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         public async void DeleteClient_ReturnsNotFoundResult(int clientLOBGroupId)
         {
             mockClientLOBGroupService.Setup(mr => mr.GetClientLOBGroup(It.IsAny<ClientLOBGroupIdDetails>())).ReturnsAsync((ClientLOBGroupIdDetails client) =>
+                MockClientLOBGroupService.GetClientLOBGroupOKResult(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupId }));
+
+            mockClientLOBGroupService.Setup(mr => mr.DeleteClientLOBGroup(It.IsAny<ClientLOBGroupIdDetails>())).ReturnsAsync((ClientLOBGroupIdDetails client) =>
                 MockClientLOBGroupService.DeleteClientLOBGroupNotFoundResult(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupId }));
 
             var value = await controller.DeleteClientLOBGroup(clientLOBGroupId);
@@ -152,9 +159,17 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
                 ModifiedBy = "admin"
             };
 
-            //mockClientService.Setup(mr => mr.UpdateClient(It.IsAny<ClientIdDetails>(),It.IsAny<UpdateClient>()))    
-            //.ReturnsAsync((ClientIdDetails idDetails),(UpdateClient update)=>
-            //    MockClientService.UpdateClientOKResult(new ClientIdDetails { ClientId = clientId },updateClient)));
+            mockClientLOBGroupService.Setup(mr => mr.GetClientLOBGroup(It.IsAny<ClientLOBGroupIdDetails>())).ReturnsAsync(
+                (ClientIdDetails idDetails, UpdateClientLOBGroup update) =>
+                MockClientLOBGroupService.UpdateClientOKResult(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupId }, updateClientLOBGroup));
+
+            mockClientLOBGroupService.Setup(mr => mr.UpdateClientLOBGroup(It.IsAny<ClientLOBGroupIdDetails>(), It.IsAny<UpdateClientLOBGroup>())).ReturnsAsync(
+                (ClientLOBGroupIdDetails client) =>
+                MockClientLOBGroupService.DeleteClientLOBGroupNotFoundResult(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupId }));
+
+            mockClientLOBGroupService.Setup(mr => mr.UpdateClientLOBGroup(It.IsAny<ClientLOBGroupIdDetails>(), It.IsAny<UpdateClientLOBGroup>())).ReturnsAsync(
+                (ClientIdDetails idDetails, UpdateClientLOBGroup update) =>
+                MockClientLOBGroupService.UpdateClientOKResult(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupId }, updateClientLOBGroup));
 
             var value = await controller.UpdateClientLOBGroup(clientLOBGroupId,updateClientLOBGroup);
 

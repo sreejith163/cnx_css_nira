@@ -8,7 +8,9 @@ using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.Client;
 using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
+using Css.Api.Scheduling.Models.Profiles.Client;
 using Css.Api.Scheduling.Models.Profiles.ClientLOBGroup;
+using Css.Api.Scheduling.Models.Profiles.Timezone;
 using Css.Api.Scheduling.Repository;
 using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Repository.Interfaces;
@@ -50,7 +52,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         {
             var mapperConfig = new MapperConfiguration(cfg =>
             {
+                cfg.AddProfile(new ClientProfile());
                 cfg.AddProfile(new ClientLOBGroupProfile());
+                cfg.AddProfile(new TimezoneProfile());
             });
 
             mapper = new Mapper(mapperConfig);
@@ -65,6 +69,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             var context = new DefaultHttpContext();
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
+            mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
             mockSchedulingContext = MockDataContext.IntializeMockData(true);
 

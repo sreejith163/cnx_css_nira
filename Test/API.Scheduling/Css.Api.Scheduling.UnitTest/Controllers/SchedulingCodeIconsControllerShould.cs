@@ -3,10 +3,7 @@ using Css.Api.Scheduling.Controllers;
 using Css.Api.Scheduling.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using Xunit;
 
 namespace Css.Api.Scheduling.UnitTest.Controllers
@@ -24,26 +21,30 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         SchedulingCodeIconsController controller;
 
         /// <summary>
-        /// The service
+        /// The mock scheduling code icon data
         /// </summary>
-        ISchedulingCodeIconService service;
+        private MockSchedulingCodeIconService mockSchedulingCodeIconData;
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="SchedulingCodeIconsControllerShould"/> class.
         /// </summary>
         public SchedulingCodeIconsControllerShould()
         {
             mockSchedulingCodeIconService = new Mock<ISchedulingCodeIconService>();
+            mockSchedulingCodeIconData = new MockSchedulingCodeIconService();
             controller = new SchedulingCodeIconsController(mockSchedulingCodeIconService.Object);
         }
 
         #region GetSchedulingCode
 
+        /// <summary>
+        /// Gets the scheduling codes.
+        /// </summary>
         [Fact]
         public async void GetSchedulingCodes()
         {
-            mockSchedulingCodeIconService.Setup(mr => mr.GetSchedulingCodeIcons()).ReturnsAsync(() =>
-              MockSchedulingCodeIconService.GetSchedulingCodeIcons());
+            mockSchedulingCodeIconService.Setup(mr => mr.GetSchedulingCodeIcons()).ReturnsAsync(
+                () => mockSchedulingCodeIconData.GetSchedulingCodeIcons());
 
             var value = await controller.GetSchedulingCodeTypes();
 

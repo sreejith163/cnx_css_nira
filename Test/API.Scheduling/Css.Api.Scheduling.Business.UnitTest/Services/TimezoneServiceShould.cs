@@ -78,7 +78,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// Gets the scheduling code types.
         /// </summary>
         [Fact]
-        public async void GetSchedulingCodeTypes()
+        public async void GetTimezones()
         {
             var result = await timezoneService.GetTimezones();
 
@@ -98,9 +98,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         private void SetTimeZoneAsCurrentDbContext()
         {
             var mockTimezone = new Mock<DbSet<Timezone>>();
-            mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.Provider).Returns(MockDataContext.schedulingCodeTypesDB.Provider);
-            mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.Expression).Returns(MockDataContext.schedulingCodeTypesDB.Expression);
-            mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.ElementType).Returns(MockDataContext.schedulingCodeTypesDB.ElementType);
+            mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.Provider).Returns(MockDataContext.timezonesDB.Provider);
+            mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.Expression).Returns(MockDataContext.timezonesDB.Expression);
+            mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.ElementType).Returns(MockDataContext.timezonesDB.ElementType);
             mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.GetEnumerator()).Returns(MockDataContext.timezonesDB.GetEnumerator());
 
             mockSchedulingContext.Setup(x => x.Set<Timezone>()).Returns(mockTimezone.Object);

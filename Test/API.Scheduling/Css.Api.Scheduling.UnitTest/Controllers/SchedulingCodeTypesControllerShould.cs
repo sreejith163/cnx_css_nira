@@ -3,10 +3,7 @@ using Css.Api.Scheduling.Controllers;
 using Css.Api.Scheduling.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using Xunit;
 
 namespace Css.Api.Scheduling.UnitTest.Controllers
@@ -24,16 +21,17 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         SchedulingCodeTypesController controller;
 
         /// <summary>
-        /// The service
+        /// The mock scheduling code type data
         /// </summary>
-        ISchedulingCodeTypeService service;
+        private MockSchedulingCodeTypeService mockSchedulingCodeTypeData;
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="SchedulingCodeTypesControllerShould"/> class.
         /// </summary>
         public SchedulingCodeTypesControllerShould()
         {
             mockSchedulingCodeTypeService = new Mock<ISchedulingCodeTypeService>();
+            mockSchedulingCodeTypeData = new MockSchedulingCodeTypeService();
             controller = new SchedulingCodeTypesController(mockSchedulingCodeTypeService.Object);
         }
 
@@ -43,7 +41,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         public async void GetSchedulingCodes()
         {
             mockSchedulingCodeTypeService.Setup(mr => mr.GetSchedulingCodeTypes()).ReturnsAsync(() =>
-              MockSchedulingCodeTypeService.GetSchedulingCodeTypes());
+              mockSchedulingCodeTypeData.GetSchedulingCodeTypes());
 
             var value = await controller.GetSchedulingCodes();
 

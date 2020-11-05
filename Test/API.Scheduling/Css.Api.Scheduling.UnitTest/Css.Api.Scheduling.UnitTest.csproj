@@ -13,6 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\ClientLOBGroupsControllerShould.cs" />
+    <Compile Remove="Controllers\SchedulingCodesControllerShould.cs" />
+    <Compile Remove="Mock\MockClientLOBGroupService.cs" />
+    <Compile Remove="Mock\MockSchedulingCodeService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Moq" Version="4.14.7" />
     <PackageReference Include="xunit" Version="2.4.0" />
@@ -24,6 +31,12 @@
     <ProjectReference Include="..\..\..\Services\API.Scheduling\Css.Api.Scheduling.Business\Css.Api.Scheduling.Business.csproj" />
     <ProjectReference Include="..\..\..\Services\API.Scheduling\Css.Api.Scheduling.Models\Css.Api.Scheduling.Models.csproj" />
     <ProjectReference Include="..\..\..\Services\API.Scheduling\Css.Api.Scheduling\Css.Api.Scheduling.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,7 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Models.Domain;
-using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {
@@ -12,7 +10,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// <summary>
         /// The scheduling code types
         /// </summary>
-        public static List<SchedulingCodeType> schedulingCodeTypes = new List<SchedulingCodeType>()
+        private List<SchedulingCodeType> schedulingCodeTypes = new List<SchedulingCodeType>()
         {
             new SchedulingCodeType {Id=1,Description="test1",Value="A"},
             new SchedulingCodeType {Id=2,Description="test2",Value="B"},
@@ -24,7 +22,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// Gets the scheduling code types.
         /// </summary>
         /// <returns></returns>
-        public static CSSResponse GetSchedulingCodeTypes()
+        public CSSResponse GetSchedulingCodeTypes()
         {
             return new CSSResponse(schedulingCodeTypes, HttpStatusCode.OK);
         }

@@ -19,4 +19,10 @@
     <ProjectReference Include="..\..\..\Services\API.Scheduling\Css.Api.Scheduling.Business\Css.Api.Scheduling.Business.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

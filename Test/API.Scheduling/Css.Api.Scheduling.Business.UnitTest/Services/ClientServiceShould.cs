@@ -65,6 +65,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             var context = new DefaultHttpContext();
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
+            mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
             mockSchedulingContext = MockDataContext.IntializeMockData(true);
 

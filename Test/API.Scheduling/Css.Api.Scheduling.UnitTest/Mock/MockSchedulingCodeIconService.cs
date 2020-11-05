@@ -1,9 +1,7 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Models.Domain;
-using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {
@@ -12,7 +10,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// <summary>
         /// The scheduling code icons
         /// </summary>
-        public static List<SchedulingCodeIcon> schedulingCodeIcons = new List<SchedulingCodeIcon>()
+        private List<SchedulingCodeIcon> schedulingCodeIcons = new List<SchedulingCodeIcon>()
         {
             new SchedulingCodeIcon { Id = 1, Value = "1F30D", Description = "Earth Globe Europe-Africa" },
             new SchedulingCodeIcon { Id = 1, Value = "1F347", Description = "Grapes" },
@@ -25,7 +23,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// Gets the scheduling code icons.
         /// </summary>
         /// <returns></returns>
-        public static CSSResponse GetSchedulingCodeIcons()
+        public CSSResponse GetSchedulingCodeIcons()
         {
             return new CSSResponse(schedulingCodeIcons, HttpStatusCode.OK);
         }
