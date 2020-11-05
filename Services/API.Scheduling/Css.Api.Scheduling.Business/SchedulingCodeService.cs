@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using Css.Api.Scheduling.Repository.Interfaces;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -20,18 +22,25 @@ namespace Css.Api.Scheduling.Business
         private readonly IRepositoryWrapper _repository;
 
         /// <summary>
+        /// The HTTP context accessor
+        /// </summary>
+        private IHttpContextAccessor _httpContextAccessor;
+
+        /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SchedulingCodeService"/> class.
+        /// Initializes a new instance of the <see cref="SchedulingCodeService" /> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
+        /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="mapper">The mapper.</param>
-        public SchedulingCodeService(IRepositoryWrapper repository, IMapper mapper)
+        public SchedulingCodeService(IRepositoryWrapper repository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             _repository = repository;
+            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
 
@@ -43,6 +52,8 @@ namespace Css.Api.Scheduling.Business
         public async Task<CSSResponse> GetSchedulingCodes(SchedulingCodeQueryParameters schedulingCodeParameters)
         {
             var schedulingCodes = await _repository.SchedulingCodes.GetSchedulingCodes(schedulingCodeParameters);
+            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(schedulingCodes));
+
             return new CSSResponse(schedulingCodes, HttpStatusCode.OK);
         }
 

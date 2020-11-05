@@ -41,6 +41,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddSingleton(configuration);
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddHttpContextAccessor();
 
             services.AddScoped(typeof(ISortHelper<>), typeof(SortHelper<>));
             services.AddScoped(typeof(IDataShaper<>), typeof(DataShaper<>));

@@ -1,8 +1,6 @@
-﻿using Css.Api.Core.Models.Domain;
-using Css.Api.Scheduling.Business.Interfaces;
+﻿using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Controllers
@@ -34,11 +32,6 @@ namespace Css.Api.Scheduling.Controllers
         public async Task<IActionResult> GetClientLOBGroups([FromQuery] ClientLOBGroupQueryParameter clientLOBQueryParameters)
         {
             var result = await _clientLOBGroupService.GetClientLOBGroups(clientLOBQueryParameters);
-            if (result.Code == HttpStatusCode.OK)
-            {
-                Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(result.Value as PagedList<Entity>));
-            }
-
             return StatusCode((int)result.Code, result.Value);
         }
 

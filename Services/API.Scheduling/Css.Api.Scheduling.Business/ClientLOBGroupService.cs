@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Scheduling.Repository.Interfaces;
+using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -19,6 +21,11 @@ namespace Css.Api.Scheduling.Business
         private readonly IRepositoryWrapper _repository;
 
         /// <summary>
+        /// The HTTP context accessor
+        /// </summary>
+        private IHttpContextAccessor _httpContextAccessor;
+
+        /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
@@ -27,10 +34,12 @@ namespace Css.Api.Scheduling.Business
         /// Initializes a new instance of the <see cref="ClientLOBGroupService" /> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
+        /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="mapper">The mapper.</param>
-        public ClientLOBGroupService(IRepositoryWrapper repository, IMapper mapper)
+        public ClientLOBGroupService(IRepositoryWrapper repository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             _repository = repository;
+            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
 
@@ -44,6 +53,8 @@ namespace Css.Api.Scheduling.Business
         public async Task<CSSResponse> GetClientLOBGroups(ClientLOBGroupQueryParameter clientLOBGroupParameters)
         {
             var clientLOBGroups = await _repository.ClientLOBGroups.GetClientLOBGroups(clientLOBGroupParameters);
+            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(clientLOBGroups));
+
             return new CSSResponse(clientLOBGroups, HttpStatusCode.OK);
         }
 

@@ -1,8 +1,6 @@
-﻿using Css.Api.Core.Models.Domain;
-using Css.Api.Scheduling.Business.Interfaces;
+﻿using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Controllers
@@ -40,11 +38,6 @@ namespace Css.Api.Scheduling.Controllers
         public async Task<IActionResult> GetClients([FromQuery] ClientQueryParameters clientParameters)
         {
             var result = await _clientService.GetClients(clientParameters);
-            if (result.Code == HttpStatusCode.OK)
-            {
-                Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(result.Value as PagedList<Entity>));
-            }
-
             return StatusCode((int)result.Code, result.Value);
         }
 
