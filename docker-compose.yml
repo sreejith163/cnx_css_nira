@@ -2,6 +2,10 @@ version: '3.4'
 
 services:
 
+  scheduling.mysql.data:
+    image: mysql:latest
+    container_name: mysql.data
+
   css.web.ui:
     image: ${DOCKER_REGISTRY:-cnx}/css.web.ui:${PLATFORM:-linux}-${TAG:-latest} 
     container_name: css.web.ui
@@ -23,14 +27,12 @@ services:
       context: .
       dockerfile: Services/API.Scheduling/Css.Api.Scheduling/Dockerfile
 
-
   css.api.auth:
     image: ${DOCKER_REGISTRY:-cnx}/css.api.auth:${PLATFORM:-linux}-${TAG:-latest}
     container_name: css.api.auth
     build:
       context: .
       dockerfile: Services/API.Identity/Css.Api.Auth/Dockerfile
-
 
   css.api.adminops:
     image: ${DOCKER_REGISTRY:-cnx}/css.api.adminops:${PLATFORM:-linux}-${TAG:-latest}
