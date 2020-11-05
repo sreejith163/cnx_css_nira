@@ -7,7 +7,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.SchedulingCode
         /// <summary>
         /// Gets or sets the ref Id.
         /// </summary>
-        public int RefId { get; set; }
+        public int? RefId { get; set; }
 
         /// <summary>
         /// Gets or sets the created by.

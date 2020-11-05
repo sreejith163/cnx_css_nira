@@ -13,7 +13,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup
         /// <summary>
         /// Gets or sets the reference identifier.
         /// </summary>
-        public int RefId { get; set; }
+        public int? RefId { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
