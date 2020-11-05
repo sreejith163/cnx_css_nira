@@ -107,7 +107,8 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            if (client.Id != clientIdDetails.ClientId)
+            var clients = await _repository.Clients.GetClientsByName(new ClientNameDetails { Name = clientDetails.Name });
+            if (clients?.Count > 0 && clients.IndexOf(clientIdDetails.ClientId) == -1)
             {
                 return new CSSResponse($"Client with name '{clientDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }

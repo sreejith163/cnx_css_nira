@@ -195,6 +195,26 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         }
 
         /// <summary>
+        /// Updates the client with not found.
+        /// </summary>
+        /// <param name="clientId">The client identifier.</param>
+        [Theory]
+        [InlineData(1)]
+        public async void UpdateClientWithConflict(int clientId)
+        {
+            UpdateClient updateClient = new UpdateClient()
+            {
+                Name = "B",
+                ModifiedBy = "admin1"
+            };
+            var result = await clientService.UpdateClient(new ClientIdDetails { ClientId = clientId }, updateClient);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.Conflict, result.Code);
+        }
+
+        /// <summary>
         /// Updates the client.
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
