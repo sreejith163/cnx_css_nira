@@ -81,6 +81,11 @@ namespace Css.Api.Scheduling.UnitTest.Mock
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
+            if (clientsDB.Exists(x => x.IsDeleted == false && x.Name == updateClient.Name && x.Id != clientIdDetails.ClientId))
+            {
+                return new CSSResponse($"Client with name '{updateClient.Name}' already exists.", HttpStatusCode.Conflict);
+            }
+
             var client = clientsDB.Where(x => x.Id == clientIdDetails.ClientId && x.IsDeleted == false).FirstOrDefault();
             client.ModifiedBy = updateClient.ModifiedBy;
             client.Name = updateClient.Name;

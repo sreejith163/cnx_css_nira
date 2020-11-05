@@ -149,6 +149,26 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
+        public async void UpdateClient_ReturnsConflictResult(int clientId)
+        {
+            UpdateClient updateClient = new UpdateClient()
+            {
+                Name = "C",
+                ModifiedBy = "admin"
+            };
+
+            mockClientService.Setup(mr => mr.UpdateClient(It.IsAny<ClientIdDetails>(), It.IsAny<UpdateClient>())).ReturnsAsync(
+                (ClientIdDetails client, UpdateClient update) =>
+                mockClientData.UpdateClient(new ClientIdDetails { ClientId = clientId }, updateClient));
+
+            var value = await controller.UpdateClient(clientId, updateClient);
+
+            Assert.Equal((int)HttpStatusCode.Conflict, (value as ObjectResult).StatusCode);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
         public async void UpdateClient_ReturnsNoContentResult(int clientId)
         {
             UpdateClient updateClient = new UpdateClient()
