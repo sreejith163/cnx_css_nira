@@ -53,11 +53,11 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
 
         public static IQueryable<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
         {
-             new SchedulingCode { Id = 1, RefId = 1, Description = "test1", PriorityNumber = 1, EmployeeId = 1, IconId = 1, CreatedBy = "admin", 
+             new SchedulingCode { Id = 1, RefId = 1, Description = "test1", PriorityNumber = 1, IconId = 1, CreatedBy = "admin", 
                                   CreatedDate = DateTime.UtcNow },
-             new SchedulingCode { Id = 2, RefId = 1, Description = "test2", PriorityNumber = 2, EmployeeId = 1, IconId = 2, CreatedBy = "admin",
+             new SchedulingCode { Id = 2, RefId = 1, Description = "test2", PriorityNumber = 2, IconId = 2, CreatedBy = "admin",
                                   CreatedDate = DateTime.UtcNow },
-             new SchedulingCode { Id = 3, RefId = 1, Description = "test3", PriorityNumber = 3, EmployeeId = 1, IconId = 3, CreatedBy = "admin",
+             new SchedulingCode { Id = 3, RefId = 1, Description = "test3", PriorityNumber = 3, IconId = 3, CreatedBy = "admin",
                                   CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 

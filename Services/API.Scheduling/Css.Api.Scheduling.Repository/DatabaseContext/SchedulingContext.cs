@@ -946,10 +946,6 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EmployeeId)
-                    .HasColumnName("employee_id")
-                    .HasColumnType("int(11)");
-
                 entity.Property(e => e.IconId)
                     .HasColumnName("icon_id")
                     .HasColumnType("int(11)");
