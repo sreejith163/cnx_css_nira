@@ -45,7 +45,7 @@ export class ClientLobGroupListService {
       lobGroup.refId = i;
       lobGroup.clientName = 'Client ' + i;
       lobGroup.firstDayOfWeek = i - 1;
-      lobGroup.clientLOBGroupName = 'ClientLOBGroup ' + i;
+      //lobGroup.clientLOBGroupName = 'ClientLOBGroup ' + i;
       const timeZone = this.timeZone.find(x => x.id === i);
       lobGroup.timeZoneForReporting = timeZone.timeZoneName;
       lobGroup.createdDate = '2020-09-1' + i;

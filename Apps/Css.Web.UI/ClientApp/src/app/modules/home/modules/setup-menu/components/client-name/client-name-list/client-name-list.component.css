@@ -1,0 +1,16 @@
+label {
+  font-weight: 100;
+}
+
+.breadcrumb-item.active {
+  color: inherit;
+  font-weight: bold;
+}
+
+.breadcrumb {
+  background-color: inherit;
+}
+
+.p-r-5 {
+  padding-right: 5px;
+}

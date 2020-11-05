@@ -1,0 +1,132 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-md-12">
+      <h2>{{ 'Scheduling Codes' | translation: 'lbl_page_title' : translationValues }}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a>System Admin</a></li>
+        <li class="breadcrumb-item active"><b>Scheduling Code List</b></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="row m-l-r-10">
+    <div class="col-md-3 p-b-5">
+      <input type="text" class="form-control" placeholder="Enter a text to search" [(ngModel)]="searchKeyword" />
+    </div>
+    <div class="col-md-2 p-b-5">
+      <button class="form-control" id="btn_search" (click)="searchSchedulingCode()">
+        <i class="fa fa-search" aria-hidden="true"></i>
+        {{ 'Search' | translation: 'btn_search' : translationValues }}
+      </button>
+    </div>
+    <div class="col-md-7 p-b-5">
+      <button type="button" class="btn btn-primary float-r" (click)="addSchedulingCode()" id="btn_add">
+        <i class="fa fa-plus padding-5" aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 mt-2 table-responsive">
+      <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+        <thead>
+          <tr>
+            <th class="width-10-p">
+              {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}
+            </th>
+            <th class="sortable-field width-10-p" (click)="sort('id', sortBy)">
+              {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
+              <i *ngIf="orderBy !== 'id'" class="fa fa-sort"></i>
+              <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                [class.fa-sort-up]="sortBy === 'desc'">
+              </i>
+            </th>
+            <th class="sortable-field width-10-p" (click)="sort('refId', sortBy)">
+              {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
+              <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
+              <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                [class.fa-sort-up]="sortBy === 'desc'">
+              </i>
+            </th>
+            <th class="sortable-field width-30-p" (click)="sort('description', sortBy)">
+              {{ 'Description' | translation: 'lbl_table_heading_description' : translationValues }}
+              <i *ngIf="orderBy !== 'description'" class="fa fa-sort"></i>
+              <i id="sortIcon" *ngIf="orderBy === 'description'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                [class.fa-sort-up]="sortBy === 'desc'">
+              </i>
+            </th>
+            <th class="sortable-field width-10-p" (click)="sort('priorityNumber', sortBy)">
+              {{ 'Priority No.' | translation: 'lbl_table_heading_priority_no' : translationValues }}
+              <i *ngIf="orderBy !== 'priorityNumber'" class="fa fa-sort"></i>
+              <i id="sortIcon" *ngIf="orderBy === 'priorityNumber'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                [class.fa-sort-up]="sortBy === 'desc'">
+              </i>
+            </th>
+            <th class="sortable-field width-30-p">
+              {{ 'Type of Code' | translation: 'lbl_table_heading_code_type' : translationValues }}
+            </th>
+            <th class="sortable-field width-10-p">
+              {{ 'Icon' | translation: 'lbl_table_heading_icon' : translationValues }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <ngx-spinner [name]="spinner">
+          </ngx-spinner>
+          <tr *ngFor="let el of schedulingCodes;let i = index;">
+            <td>
+              <i class="far fa-edit padding-5 pointer" (click)="editSchedulingCode(el)"></i>
+              <i class="fa fa-trash padding-5 pointer" (click)="deleteSchedulingCode(el.id)"></i>
+            </td>
+            <td>{{ el.id }}</td>
+            <td>{{ el.refId }}</td>
+            <td>{{ el.description }}</td>
+            <td>{{ el.priorityNumber }}</td>
+            <td class="flex dot">
+              <ng-container *ngFor="let type of el.schedulingTypeCode  | slice:0:3; let i = index;">
+                <span class="border">{{ type.value }}</span>
+              </ng-container>
+              <ng-container>
+                <span class="p-l-10">
+                  <a type="button" class="padding-t-10" [ngbPopover]="popContent" [popoverTitle]="popTitle"
+                    [placement]="'bottom'" container="body">
+                    <i class="fa fa-ellipsis-h"></i>
+                  </a>
+                  <ng-template #popContent>
+                    <ul *ngFor="let type of el.schedulingTypeCode">
+                      <li>{{ type.value }}</li>
+                    </ul>
+                  </ng-template>
+                  <ng-template #popTitle>
+                    {{ 'Type of Code' | translation: 'lbl_table_heading_code_type' : translationValues }}
+                  </ng-template>
+                </span>
+              </ng-container>
+            </td>
+            <td><i class="icon-style">{{ unifiedToNative(el.icon.value) }}</i></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row">
+        <div class="col-md-12 d-flex justify-content-end mt-3">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination p-0 float-right">
+              <ngb-pagination class="p-r-5" [collectionSize]="totalSchedulingCodesRecord"
+                (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
+              </ngb-pagination>
+              <select class="form-control" (change)="changePageSize($event.target.value)">
+                <option [value]="x.count" *ngFor="let x of paginationSize">
+                  {{ x.text }}
+                </option>
+              </select>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

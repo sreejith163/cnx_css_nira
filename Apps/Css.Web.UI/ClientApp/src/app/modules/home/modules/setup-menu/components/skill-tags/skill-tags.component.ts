@@ -30,7 +30,7 @@ export class SkillTagsComponent implements OnInit {
   currentPage = 1;
   pageSize = 5;
   expandedDetail: SkillTag;
-  translationValues: Translation[];
+  translationValues: Translation[] = [];
   skillTags: SkillTag[] = [];
 
   constructor(

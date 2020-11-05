@@ -1,7 +1,7 @@
-export class ClientDetails {
-    id: number;
+import { ClientBaseModel } from './client-base.model';
+
+export class ClientDetails extends ClientBaseModel{
     refId: number;
-    clientName: string;
     createdBy: string;
     createdDate: string;
     modifiedBy: string;

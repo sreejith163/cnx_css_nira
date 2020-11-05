@@ -201,7 +201,7 @@
                         (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage"
                         [boundaryLinks]="true"></ngb-pagination>
                     <select class="form-control" (change)="changePageSize($event.target.value)">
-                        <option [value]="x.count" *ngFor="let x of paginationSize">{{x.sizeText}}</option>
+                        <option [value]="x.count" *ngFor="let x of paginationSize">{{x.text}}</option>
                     </select>
                 </ul>
             </nav>

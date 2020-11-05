@@ -1,4 +1,4 @@
 export class PaginationSize {
     count: number;
-    sizeText: string;
+    text: string;
 }

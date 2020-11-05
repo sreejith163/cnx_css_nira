@@ -24,15 +24,15 @@ export class AgentCategoryDropdownService {
     const tablePageSize: PaginationSize[] = [
       {
         count: 5,
-        sizeText: '5/Page'
+        text: '5/Page'
       },
       {
         count: 10,
-        sizeText: '10/Page'
+        text: '10/Page'
       },
       {
         count: 15,
-        sizeText: '15/Page'
+        text: '15/Page'
       }
     ];
 

@@ -1,88 +1,74 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
+import { catchError } from 'rxjs/operators';
+import { HttpBaseService } from 'src/app/core/services/http-base.service';
+import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
+import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
+import { environment } from 'src/environments/environment';
+import { AddSchedulingCode } from '../models/add-scheduling-code.model';
+import { SchedulingCodeDetails } from '../models/scheduling-code-details.model';
 import { SchedulingCodeType } from '../models/scheduling-code-type.model';
-import { SchedulingCode } from '../models/scheduling-code.model';
+import { SchedulingIcon } from '../models/scheduling-icon.model';
+import { UpdateSchedulingCode } from '../models/update-scheduling-code.mode';
 
 @Injectable()
-export class SchedulingCodeService {
+export class SchedulingCodeService extends HttpBaseService {
 
-  schedulingCodesListSize: number;
-  schedulingCodes: SchedulingCode[] = [];
+  private baseURL = '';
 
-  constructor() {
-    this.createSchedulingCodes();
+  constructor(
+    private http: HttpClient
+  ) {
+    super();
+    this.baseURL = environment.services.schedulingService;
   }
 
-  getSchedulingCodes() {
-    return this.schedulingCodes;
+  getSchedulingCodes(schedulingCodeQueryParams: QueryStringParameters) {
+    const url = `${this.baseURL}/schedulingCodes`;
+
+    return this.http.get<SchedulingCodeDetails>(url, { params: this.convertToHttpParam(schedulingCodeQueryParams), observe: 'response' })
+      .pipe(catchError(this.handleError));
   }
 
-  addSchedulingCode(schedulingCode: SchedulingCode) {
-    schedulingCode.id = this.schedulingCodes.length + 1;
-    schedulingCode.refId = this.schedulingCodes.length + 1;
-    this.schedulingCodes.push(schedulingCode);
+  getSchedulingCode(schedulingCodeId: number) {
+    const url = `${this.baseURL}/schedulingCodes/${schedulingCodeId}`;
+
+    return this.http.get<SchedulingCodeDetails>(url)
+      .pipe(catchError(this.handleError));
   }
 
-  updateSchedulingCode(schedulingCode: SchedulingCode) {
-    const schedulingCodeIndex = this.schedulingCodes.findIndex(x => x.id === schedulingCode.id);
-    if (schedulingCodeIndex !== -1) {
-      this.schedulingCodes[schedulingCodeIndex] = schedulingCode;
-    }
+  getSchedulingIcons() {
+    const url = `${this.baseURL}/schedulingCodeIcons`;
+
+    return this.http.get<SchedulingIcon>(url)
+      .pipe(catchError(this.handleError));
   }
 
-  deleteSchedulingCode(id: number) {
-    const schedulingCodeIndex = this.schedulingCodes.findIndex(x => x.id === id);
-    if (schedulingCodeIndex !== -1) {
-      this.schedulingCodes.splice(schedulingCodeIndex, 1);
-    }
+  getSchedulingCodeTypes() {
+    const url = `${this.baseURL}/schedulingCodeTypes`;
+
+    return this.http.get<SchedulingCodeType>(url)
+      .pipe(catchError(this.handleError));
   }
 
-  getTablePageSizeList() {
-    const tablePageSize: PaginationSize[] = [
-      {
-        count: 5,
-        sizeText: '5/Page'
-      },
-      {
-        count: 10,
-        sizeText: '10/Page'
-      },
-      {
-        count: 15,
-        sizeText: '15/Page'
-      }
-    ];
+  addSchedulingCode(schedulingCode: AddSchedulingCode) {
+    const url = `${this.baseURL}/schedulingCodes`;
 
-    return tablePageSize;
+    return this.http.post<ApiResponseModel>(url, schedulingCode)
+      .pipe(catchError(this.handleError));
   }
 
-  private createSchedulingCodes() {
-    for (let i = 1; i <= 9; i++) {
-      const schedulingCode = new SchedulingCode();
-      schedulingCode.id = i;
-      schedulingCode.refId = i;
-      schedulingCode.description = i % 2 === 0 ? 'Break' : 'Lunch';
-      schedulingCode.priorityNo = i;
-      schedulingCode.types = new Array<SchedulingCodeType>();
+  updateSchedulingCode(schedulingCodeId: number, schedulingCode: UpdateSchedulingCode) {
+    const url = `${this.baseURL}/schedulingCodes/${schedulingCodeId}`;
 
-      let type = new SchedulingCodeType();
-      type.id = 3;
-      type.value = 'Work Hours';
-      schedulingCode.types.push(type);
+    return this.http.put<ApiResponseModel>(url, schedulingCode)
+      .pipe(catchError(this.handleError));
+  }
 
-      type = new SchedulingCodeType();
-      type.id = 4;
-      type.value = 'Paid';
-      schedulingCode.types.push(type);
+  deleteSchedulingCode(schedulingCodeId: number) {
+    const url = `${this.baseURL}/schedulingCodes/${schedulingCodeId}`;
 
-      type = new SchedulingCodeType();
-      type.id = 5;
-      type.value = 'In Office';
-      schedulingCode.types.push(type);
-
-      schedulingCode.scheduleIcon = i % 2 === 0 ? '2708-FE0F' : '1F454';
-
-      this.schedulingCodes.push(schedulingCode);
-    }
+    return this.http.delete<ApiResponseModel>(url)
+      .pipe(catchError(this.handleError));
   }
 }

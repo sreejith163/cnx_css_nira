@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ClientLOBGroupList } from '../models/client-lob-group-list.model';
-import { ClientNameList } from '../models/client-name-list.model';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
 import { ClientLOBName } from '../../scheduling-menu/models/client-lob-name.model';
+import { ClientBaseModel } from '../models/client-base.model';
 
 @Injectable()
 export class ClientLobGroupDropdownService {
 
-  clientNames: ClientNameList[] = [];
+  clientNames: ClientBaseModel[] = [];
   clientLOB: ClientLOBGroupList[] = [];
   clientLOBNames: ClientLOBName[] = [];
 
@@ -19,9 +19,9 @@ export class ClientLobGroupDropdownService {
 
   createClientNameList() {
     for (let i = 1; i <= 9; i++) {
-      const client = new ClientNameList();
+      const client = new ClientBaseModel();
       client.id = i;
-      client.clientName = 'Client ' + i;
+      client.name = 'Client ' + i;
 
       this.clientNames.push(client);
     }
@@ -63,15 +63,15 @@ export class ClientLobGroupDropdownService {
     const tablePageSize: PaginationSize[] = [
       {
         count: 5,
-        sizeText: '5/Page'
+        text: '5/Page'
       },
       {
         count: 10,
-        sizeText: '10/Page'
+        text: '10/Page'
       },
       {
         count: 15,
-        sizeText: '15/Page'
+        text: '15/Page'
       }
     ];
 

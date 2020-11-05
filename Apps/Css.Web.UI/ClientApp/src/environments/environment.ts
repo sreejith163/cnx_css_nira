@@ -8,6 +8,9 @@ export const environment = {
     authBaseUrl: 'https://auth-api.concentrix.com/employee/authenticate?attributes[0]=mail&attributes[1]=uid&attributes[2]=displayname&attributes[3]=employeeid&client=',
     authAppToken: 'w6VEeeJ9CdAuCWh8ORi702Es400EXcMnVf1'
   },
+  services: {
+    schedulingService: 'https://localhost:44393/api/v1'
+  },
   settings: {
     applicationUrl: 'http://localhost:4200',
     sessionName: 'session',

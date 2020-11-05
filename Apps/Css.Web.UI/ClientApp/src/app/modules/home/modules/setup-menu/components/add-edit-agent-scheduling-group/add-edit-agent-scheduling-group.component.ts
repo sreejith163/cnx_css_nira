@@ -16,7 +16,7 @@ import { Translation } from 'src/app/shared/models/translation.model';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { ClientLOBName } from '../../../scheduling-menu/models/client-lob-name.model';
-import { ClientNameList } from '../../models/client-name-list.model';
+import { ClientBaseModel } from '../../models/client-base.model';
 import {
   SchedulingGroupDetails,
   SchedulingGroupOpenHours,
@@ -44,7 +44,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit {
   openTime: Array<any>;
   schedulingGroupModel: SchedulingGroupDetails;
   schedulingGroupForm: FormGroup;
-  clientNamesList: ClientNameList[] = [];
+  clientNamesList: ClientBaseModel[] = [];
   clientLOBNames: ClientLOBName[] = [];
   skillGroupList: SkillGroupList[] = [];
   skillTagList: SkillTagList[] = [];

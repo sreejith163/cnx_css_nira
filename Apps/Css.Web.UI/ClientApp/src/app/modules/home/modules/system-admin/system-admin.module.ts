@@ -9,11 +9,11 @@ import { TranslationListComponent } from './components/translation-list/translat
 import { AgentCategoryListComponent } from './components/agent-category-list/agent-category-list.component';
 import { AgentCategoryListService } from './services/agent-category-list.service';
 import { AgentAdminDropdownsService } from '../scheduling-menu/services/agent-admin-dropdowns.service';
-import { SchedulingCodeListComponent } from './components/scheduling-code-list/scheduling-code-list.component';
-import { AddEditSchedulingCodeComponent } from './components/add-edit-scheduling-code/add-edit-scheduling-code.component';
 import { AgentCategoryDropdownService } from './services/agent-category-dropdown.service';
 import { AddAgentCategoryComponent } from './components/add-agent-category/add-agent-category.component';
 import { AddEditTranslationComponent } from './components/add-edit-translation/add-edit-translation.component';
+import { SchedulingCodeListComponent } from './components/scheduling-code/scheduling-code-list/scheduling-code-list.component';
+import { AddUpdateSchedulingCodeComponent } from './components/scheduling-code/add-update-scheduling-code/add-update-scheduling-code.component';
 
 const modules = [
   SharedModule,
@@ -24,7 +24,7 @@ const components = [
   AddEditTranslationComponent,
   AgentCategoryListComponent,
   SchedulingCodeListComponent,
-  AddEditSchedulingCodeComponent,
+  AddUpdateSchedulingCodeComponent,
   AddAgentCategoryComponent];
 
 const providers = [

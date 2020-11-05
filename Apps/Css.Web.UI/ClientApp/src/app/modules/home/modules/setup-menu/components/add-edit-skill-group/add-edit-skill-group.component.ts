@@ -15,7 +15,7 @@ import {
 import { Translation } from 'src/app/shared/models/translation.model';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
-import { ClientNameList } from '../../models/client-name-list.model';
+import { ClientBaseModel } from '../../models/client-base.model';
 import { SkillGroupDetails, SkillGroupOpenHours } from '../../models/skill-group.model';
 import { TimeZone } from '../../models/time-zone.model';
 import { DropdownListService } from '../../services/dropdown-list.service';
@@ -37,7 +37,7 @@ export class AddEditSkillGroupComponent implements OnInit {
   openTime: Array<any>;
   skillGroupModel: SkillGroupDetails;
   skillGroupForm: FormGroup;
-  clientNamesList: ClientNameList[] = [];
+  clientNamesList: ClientBaseModel[] = [];
   timeZoneList: TimeZone[] = [];
 
   @Input() title: string;

@@ -23,7 +23,7 @@
                 formControlName="clientName">
                 <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}
                 </option>
-                <option *ngFor="let x of clientNamesList" [value]="x.clientName">{{x.clientName}}</option>
+                <option *ngFor="let x of clientNamesList" [value]="x.name">{{x.name}}</option>
               </select>
               <div *ngIf="hasFormControlValidationError('clientName')" class="valid-error">
                 {{ 'Client Name is required' | translation: 'lbl_add_edit_client_name_required_validation_message' : translationValues }}

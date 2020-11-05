@@ -11,10 +11,11 @@ import { AuthGuard } from './guards/auth.guard';
 
 import { TokenInterceptorProviders } from './interceptors/token.interceptor';
 import { UnAuthorizedInterceptorProviders } from './interceptors/unauthorized.interceptor';
+import { HttpBaseService } from './services/http-base.service';
 
 const modules = [BrowserModule, BrowserAnimationsModule, CommonModule, HttpClientModule];
 
-const providers = [AuthGuard, AuthService, CookieService, TokenInterceptorProviders, UnAuthorizedInterceptorProviders];
+const providers = [AuthGuard, AuthService, CookieService, HttpBaseService, TokenInterceptorProviders, UnAuthorizedInterceptorProviders];
 
 @NgModule({
   imports: [modules],

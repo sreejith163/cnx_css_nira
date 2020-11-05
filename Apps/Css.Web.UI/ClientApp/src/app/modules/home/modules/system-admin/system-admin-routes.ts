@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
-import { SchedulingCodeListComponent } from './components/scheduling-code-list/scheduling-code-list.component';
 import { AgentCategoryListComponent } from './components/agent-category-list/agent-category-list.component';
+import { SchedulingCodeListComponent } from './components/scheduling-code/scheduling-code-list/scheduling-code-list.component';
 import { TranslationListComponent } from './components/translation-list/translation-list.component';
 
 export const SystemAdminRoutes: Routes = [

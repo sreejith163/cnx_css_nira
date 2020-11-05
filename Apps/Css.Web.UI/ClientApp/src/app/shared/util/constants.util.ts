@@ -1,5 +1,7 @@
 import { SchedulingInterval } from 'src/app/modules/home/modules/scheduling-menu/models/scheduling-interval.model';
 import { SchedulingCodeType } from 'src/app/modules/home/modules/system-admin/models/scheduling-code-type.model';
+import { PaginationSize } from '../models/pagination-size.model';
+import { SpinnerStyleOption } from '../models/spinner-style-option.model';
 import { Translation } from '../models/translation.model';
 
 export class Constants {
@@ -193,11 +195,44 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
+      variableId: 'lbl_add_edit_description_maxlength_validation_message',
+      menu: 'Scheduling Codes',
+      description: 'text',
+      language: 'English',
+      translation: 'Description cannot exceed 50 characters',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
       variableId: 'lbl_add_edit_priority_required_validation_message',
       menu: 'Scheduling Codes',
       description: 'text',
       language: 'English',
       translation: 'Priority # is required',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_type_of_codes_required_validation_message',
+      menu: 'Scheduling Codes',
+      description: 'text',
+      language: 'English',
+      translation: 'Type of Codes is required',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_schedule_icon_required_validation_message',
+      menu: 'Scheduling Codes',
+      description: 'text',
+      language: 'English',
+      translation: 'Schedule Icon is required',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -1032,6 +1067,17 @@ export class Constants {
       description: 'text',
       language: 'English',
       translation: 'Client Name is required',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_client_name_maxlength_validation_message',
+      menu: 'Client Name',
+      description: 'text',
+      language: 'English',
+      translation: 'Client Name cannot exceed 50 characters',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -3546,6 +3592,25 @@ export class Constants {
       id: 30,
       value: '30'
     }
+  ];
+
+  public static readonly paginationSize: PaginationSize[] = [
+    {
+      count: 5,
+      text: '5/Page'
+    },
+    {
+      count: 10,
+      text: '10/Page'
+    },
+    {
+      count: 15,
+      text: '15/Page'
+    },
+    {
+      count: 20,
+      text: '20/Page'
+    },
   ];
 
   public static readonly EmailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{3,}))$/;
