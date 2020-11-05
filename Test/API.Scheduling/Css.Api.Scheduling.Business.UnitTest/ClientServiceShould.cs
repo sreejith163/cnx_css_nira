@@ -62,7 +62,7 @@ namespace Css.Api.Scheduling.Business.UnitTest
             var clientLObGroupDataShaperHelper = new DataShaper<ClientLOBGroupDTO>();
             var clientSchedulingCodeDataShaperHelper = new DataShaper<SchedulingCodeDTO>();
 
-            mockSchedulingContext = MockInit.IntializeMockData(true);
+            mockSchedulingContext = MockDataContext.IntializeMockData(true);
 
             SetClientAsCurrentDbContext();
 
@@ -71,6 +71,61 @@ namespace Css.Api.Scheduling.Business.UnitTest
 
             clientService = new ClientService(repositoryWrapper, mapper);
         }
+
+        #region GetClients
+
+        /// <summary>
+        /// Gets the clients.
+        /// </summary>
+        [Fact]
+        public async void GetClients()
+        {
+            ClientQueryParameters queryParameters = new ClientQueryParameters();
+            var result = await clientService.GetClients(queryParameters);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.IsType<PagedList<Entity>>(result.Value);
+            Assert.Equal(HttpStatusCode.OK, result.Code);
+        }
+
+        #endregion
+
+        #region GetClient
+
+        /// <summary>
+        /// Gets the client with no found.
+        /// </summary>
+        /// <param name="clientId">The client identifier.</param>
+        [Theory]
+        [InlineData(100)]
+        public async void GetClientWithNotFound(int clientId)
+        {
+            var result = await clientService.GetClient(new ClientIdDetails { ClientId = clientId });
+
+            Assert.NotNull(result);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        /// <summary>
+        /// Gets the client.
+        /// </summary>
+        /// <param name="clientId">The client identifier.</param>
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void GetClient(int clientId)
+        {
+            var result = await clientService.GetClient(new ClientIdDetails { ClientId = clientId });
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.IsType<ClientDTO>(result.Value);
+            Assert.Equal(HttpStatusCode.OK, result.Code);
+        }
+
+        #endregion
 
         #region CreateClient
 
@@ -116,59 +171,51 @@ namespace Css.Api.Scheduling.Business.UnitTest
 
         #endregion
 
-        #region GetClient
+        #region UpdateClient
 
         /// <summary>
-        /// Gets the client.
-        /// </summary>
-        /// <param name="clientId">The client identifier.</param>
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void GetClient(int clientId)
-        {
-            var result = await clientService.GetClient(new ClientIdDetails { ClientId = clientId });
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.Value);
-            Assert.IsType<ClientDTO>(result.Value);
-            Assert.Equal(HttpStatusCode.OK, result.Code);
-        }
-
-        /// <summary>
-        /// Gets the client with no found.
+        /// Updates the client with not found.
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
         [Theory]
         [InlineData(100)]
-        public async void GetClientWithNotFound(int clientId)
+        public async void UpdateClientWithNotFound(int clientId)
         {
-            var result = await clientService.GetClient(new ClientIdDetails { ClientId = clientId });
+            UpdateClient updateClient = new UpdateClient()
+            {
+                Name = "X",
+                ModifiedBy = "admin1"
+            };
+            var result = await clientService.UpdateClient(new ClientIdDetails { ClientId = clientId }, updateClient);
 
             Assert.NotNull(result);
             Assert.Null(result.Value);
             Assert.Equal(HttpStatusCode.NotFound, result.Code);
         }
 
-        #endregion
-
-        #region DeleteClient
-
         /// <summary>
-        /// Deletes the client.
+        /// Updates the client.
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
         [Theory]
         [InlineData(1)]
-        [InlineData(2)]
-        public async void DeleteClient(int clientId)
+        public async void UpdateClient(int clientId)
         {
-            var result = await clientService.DeleteClient(new ClientIdDetails { ClientId = clientId });
+            UpdateClient updateClient = new UpdateClient()
+            {
+                Name = "X",
+                ModifiedBy = "admin1"
+            };
+            var result = await clientService.UpdateClient(new ClientIdDetails { ClientId = clientId }, updateClient);
 
             Assert.NotNull(result);
             Assert.Null(result.Value);
             Assert.Equal(HttpStatusCode.NoContent, result.Code);
         }
+
+        #endregion
+
+        #region DeleteClient
 
         /// <summary>
         /// Deletes the client with not found.
@@ -185,75 +232,20 @@ namespace Css.Api.Scheduling.Business.UnitTest
             Assert.Equal(HttpStatusCode.NotFound, result.Code);
         }
 
-        #endregion
-
-        #region GetClients
-
         /// <summary>
-        /// Gets the clients.
+        /// Deletes the client.
         /// </summary>
-        [Fact]
-        public async void GetClients()
-        {
-            ClientQueryParameters queryParameters = new ClientQueryParameters()
-            {
-                Fields = "",
-                OrderBy = "",
-                PageNumber = 1,
-                PageSize = 10,
-                SearchKeyword = ""
-            };
-            var result = await clientService.GetClients(queryParameters);
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.Value);
-            Assert.IsType<PagedList<Entity>>(result.Value);
-            Assert.Equal(HttpStatusCode.OK, result.Code);
-        }
-
-        #endregion
-
-        #region UpdateClient
-
-        /// <summary>
-        /// Creates the scheduling code.
-        /// </summary>
-        /// <param name="schedulingCode">The scheduling code.</param>
+        /// <param name="clientId">The client identifier.</param>
         [Theory]
         [InlineData(1)]
-        public async void UpdateSchedulingCode(int clientId)
+        [InlineData(2)]
+        public async void DeleteClient(int clientId)
         {
-            UpdateClient updateClient = new UpdateClient()
-            {
-                Name = "X",
-                ModifiedBy = "admin1"
-            };
-            var result = await clientService.UpdateClient(new ClientIdDetails { ClientId = clientId }, updateClient);
+            var result = await clientService.DeleteClient(new ClientIdDetails { ClientId = clientId });
 
             Assert.NotNull(result);
             Assert.Null(result.Value);
             Assert.Equal(HttpStatusCode.NoContent, result.Code);
-        }
-
-        /// <summary>
-        /// Updates the scheduling code with not found.
-        /// </summary>
-        /// <param name="clientId">The client identifier.</param>
-        /// <param name="updateClient">The update client.</param>
-        [Theory]
-        [InlineData(100)]
-        public async void UpdateSchedulingCodeWithNotFound(int clientId)
-        {
-            UpdateClient updateClient = new UpdateClient()
-            {
-                Name = "X",
-                ModifiedBy = "admin1"
-            };
-            var result = await clientService.UpdateClient(new ClientIdDetails { ClientId = clientId }, updateClient);
-
-            Assert.NotNull(result);
-            Assert.Null(result.Value);
-            Assert.Equal(HttpStatusCode.NotFound, result.Code);
         }
 
         #endregion

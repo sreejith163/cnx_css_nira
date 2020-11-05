@@ -59,7 +59,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var clients = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredClients = SearchByName(clients, clientParameters.SearchKeyword);
+            var filteredClients = FilterClients(clients, clientParameters.SearchKeyword);
 
             var pagedClients = filteredClients
                 .Skip((clientParameters.PageNumber - 1) * clientParameters.PageSize)
@@ -131,14 +131,17 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
-        /// Searches the name of the by.
+        /// Filters the clients.
         /// </summary>
         /// <param name="clients">The clients.</param>
         /// <param name="clientName">Name of the client.</param>
-        private IQueryable<Client> SearchByName(IQueryable<Client> clients, string clientName)
+        /// <returns></returns>
+        private IQueryable<Client> FilterClients(IQueryable<Client> clients, string clientName)
         {
             if (!clients.Any() || string.IsNullOrWhiteSpace(clientName))
+            {
                 return clients;
+            }
 
             return clients.Where(o => o.Name.ToLower().Contains(clientName.Trim().ToLower()));
         }

@@ -59,7 +59,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var schedulingCodes = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredSchedulingCodes = SearchByName(schedulingCodes, schedulingCodeParameters.SearchKeyword);
+            var filteredSchedulingCodes = FilterSchedulingCodes(schedulingCodes, schedulingCodeParameters.SearchKeyword);
 
             var pagedSchedulingCodes = filteredSchedulingCodes
                 .Skip((schedulingCodeParameters.PageNumber - 1) * schedulingCodeParameters.PageSize)
@@ -127,10 +127,13 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="schedulingCodes">The scheduling codes.</param>
         /// <param name="schedulingCodeName">Name of the scheduling code.</param>
-        private IQueryable<SchedulingCode> SearchByName(IQueryable<SchedulingCode> schedulingCodes, string schedulingCodeName)
+        /// <returns></returns>
+        private IQueryable<SchedulingCode> FilterSchedulingCodes(IQueryable<SchedulingCode> schedulingCodes, string schedulingCodeName)
         {
             if (!schedulingCodes.Any() || string.IsNullOrWhiteSpace(schedulingCodeName))
+            {
                 return schedulingCodes;
+            }
 
             return schedulingCodes.Where(o => o.Description.ToLower().Contains(schedulingCodeName.Trim().ToLower()));
         }

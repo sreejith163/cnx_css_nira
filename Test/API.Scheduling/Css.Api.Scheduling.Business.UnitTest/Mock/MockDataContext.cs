@@ -15,9 +15,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
     {
         public static IQueryable<Client> clientsDB = new List<Client>()
         {
-            new Client { Id=1,RefId=1,Name="A",CreatedBy="Admin",CreatedDate=DateTime.Now,ModifiedBy="",ModifiedDate=DateTime.Now,IsDeleted=false },
-            new Client { Id=2,RefId=2,Name="B",CreatedBy="Admin",CreatedDate=DateTime.Now,ModifiedBy="",ModifiedDate=DateTime.Now,IsDeleted=false },
-            new Client { Id=3,RefId=3,Name="C",CreatedBy="Admin",CreatedDate=DateTime.Now,ModifiedBy="",ModifiedDate=DateTime.Now,IsDeleted=false }
+            new Client() { Id = 1, RefId = 1, Name= "A", CreatedBy = "Admin", CreatedDate = DateTime.Now },
+            new Client() { Id = 2, RefId = 2, Name= "B", CreatedBy = "Admin", CreatedDate = DateTime.Now },
+            new Client() { Id = 3, RefId = 3, Name= "C", CreatedBy = "Admin", CreatedDate = DateTime.Now }
         }.AsQueryable();
 
         public static IQueryable<AgentSchedulingGroup> agentSchedulingGroupsDB = new List<AgentSchedulingGroup>()
@@ -26,6 +26,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
 
         public static IQueryable<ClientLobGroup> clientLobGroupsDB = new List<ClientLobGroup>()
         {
+            new ClientLobGroup{ Id = 1, ClientId = 1, FirstDayOfWeek = 1, Name = "A", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new ClientLobGroup{ Id = 2, ClientId = 2, FirstDayOfWeek = 1, Name = "B", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new ClientLobGroup{ Id = 3, ClientId = 3, FirstDayOfWeek = 1, Name = "C", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
         public static IQueryable<SkillGroup> skillGroupsDB = new List<SkillGroup>()
@@ -50,17 +53,19 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
 
         public static IQueryable<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
         {
-             new SchedulingCode { Id=1,RefId=1,EmployeeId=1,IconId=1,CreatedBy="admin",CreatedDate=DateTime.UtcNow,Description="test",
-             IsDeleted=false,ModifiedBy="",ModifiedDate=DateTime.UtcNow,PriorityNumber=1},
-             new SchedulingCode { Id=2,RefId=2,EmployeeId=2,IconId=1,CreatedBy="admin",CreatedDate=DateTime.UtcNow,Description="test",
-             IsDeleted=false,ModifiedBy="",ModifiedDate=DateTime.UtcNow,PriorityNumber=2},
-             new SchedulingCode { Id=3,RefId=3,EmployeeId=3,IconId=1,CreatedBy="admin",CreatedDate=DateTime.UtcNow,Description="test",
-             IsDeleted=false,ModifiedBy="",ModifiedDate=DateTime.UtcNow,PriorityNumber=3}
-
+             new SchedulingCode { Id = 1, RefId = 1, Description = "test1", PriorityNumber = 1, EmployeeId = 1, IconId = 1, CreatedBy = "admin", 
+                                  CreatedDate = DateTime.UtcNow },
+             new SchedulingCode { Id = 2, RefId = 1, Description = "test2", PriorityNumber = 2, EmployeeId = 1, IconId = 2, CreatedBy = "admin",
+                                  CreatedDate = DateTime.UtcNow },
+             new SchedulingCode { Id = 3, RefId = 1, Description = "test3", PriorityNumber = 3, EmployeeId = 1, IconId = 3, CreatedBy = "admin",
+                                  CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
         public static IQueryable<Timezone> timezonesDB = new List<Timezone>()
         {
+            new Timezone { Id = 1, Name= "Dateline Standard Time", DisplayName = "(UTC-12:00) International Date Line West", Abbreviation = "DST", Offset = -12 },
+            new Timezone { Id = 2, Name= "Hawaiian Standard Time", DisplayName = "(UTC-10:00) Hawaii", Abbreviation = "HST", Offset = -10 },
+            new Timezone { Id = 3, Name= "Alaskan Standard Time", DisplayName = "(UTC-09:00) Alaska", Abbreviation = "AKDT", Offset = -8 }
         }.AsQueryable();
 
         public static IQueryable<SchedulingTypeCode> schedulingTypeCodes = new List<SchedulingTypeCode>()
@@ -73,6 +78,10 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
 
         public static IQueryable<SchedulingCodeType> schedulingCodeTypesDB = new List<SchedulingCodeType>()
         {
+            new SchedulingCodeType { Id = 1, Description = "test1", Value = "A" },
+            new SchedulingCodeType { Id = 2, Description = "test2", Value = "B" },
+            new SchedulingCodeType { Id = 3, Description = "test3", Value = "C" },
+            new SchedulingCodeType { Id = 4, Description = "test4", Value = "D" }
         }.AsQueryable();
 
         public static IQueryable<SchedulingCodeIcon> schedulingCodeIconsDB = new List<SchedulingCodeIcon>()
@@ -104,7 +113,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
         {
         }.AsQueryable();
 
-
         public static IQueryable<AgentSchedulingChart> agentSchedulingChartsDB = new List<AgentSchedulingChart>()
         {
         }.AsQueryable();
@@ -113,11 +121,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
         {
         }.AsQueryable();
 
-
         public static IQueryable<AgentGroupDetail> agentGroupDetailsDB = new List<AgentGroupDetail>()
         {
         }.AsQueryable();
-
 
         public static IQueryable<AgentDetail> agentDetailsDB = new List<AgentDetail>()
         {
@@ -126,13 +132,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
         public static IQueryable<AgentCategoryDataType> agentCategoryDataTypesDB = new List<AgentCategoryDataType>()
         {
         }.AsQueryable();
-    }
 
-    /// <summary>
-    /// MockInit
-    /// </summary>
-    public class MockInit
-    {
+        #region Methods
+
         /// <summary>
         /// Intializes the mock data.
         /// </summary>
@@ -314,5 +316,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
 
             return mockSchedulingContext;
         }
+
+        #endregion
     }
 }

@@ -59,22 +59,15 @@ namespace Css.Api.Scheduling.Repository
         /// </returns>
         public async Task<PagedList<Entity>> GetClientLOBGroups(ClientLOBGroupQueryParameter clientLOBGroupParameters)
         {
-            IQueryable<ClientLobGroup> clientLOBGroups = null;
-            if (clientLOBGroupParameters.ClientId != default(int))
-            {
-                clientLOBGroups = FindByCondition(x => x.ClientId == clientLOBGroupParameters.ClientId && x.IsDeleted == false);
-            }
-            else
-            {
-                clientLOBGroups = FindByCondition(x => x.IsDeleted == false);
-            }
+            var clientLOBGroups = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredClientLOBGroups = SearchByLOBGroupName(clientLOBGroups, clientLOBGroupParameters.SearchKeyword);
+            var filteredClientLOBGroups = FilterClientLOBGroups(clientLOBGroups, clientLOBGroupParameters.SearchKeyword, clientLOBGroupParameters.ClientId);
 
             var pagedClientLOBGroups = filteredClientLOBGroups
                 .Skip((clientLOBGroupParameters.PageNumber - 1) * clientLOBGroupParameters.PageSize)
                 .Take(clientLOBGroupParameters.PageSize)
-                .Include(x => x.Client).Include(x => x.Timezone)
+                .Include(x => x.Client)
+                .Include(x => x.Timezone)
                 .ToList();
 
             var mappedClientLOBGroups = pagedClientLOBGroups
@@ -97,8 +90,10 @@ namespace Css.Api.Scheduling.Repository
         /// </returns>
         public async Task<ClientLobGroup> GetClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupIdDetails)
         {
-            var clientLOBGroup = FindByCondition(x => x.Id == clientLOBGroupIdDetails.ClientLOBGroupId && x.IsDeleted == false).
-                SingleOrDefault();
+            var clientLOBGroup = FindByCondition(x => x.Id == clientLOBGroupIdDetails.ClientLOBGroupId && x.IsDeleted == false)
+                .Include(x => x.Client)
+                .Include(x => x.Timezone)
+                .SingleOrDefault();
 
             return await Task.FromResult(clientLOBGroup);
         }
@@ -128,16 +123,29 @@ namespace Css.Api.Scheduling.Repository
             Delete(clientLobGroup);
         }
 
-        /// <summary>Searches the name of the by lob group.</summary>
+        /// <summary>
+        /// Filters the client lob groups.
+        /// </summary>
         /// <param name="clientLOBGroups">The client lob groups.</param>
         /// <param name="clientLOBGroupName">Name of the client lob group.</param>
-        private IQueryable<ClientLobGroup> SearchByLOBGroupName(IQueryable<ClientLobGroup> clientLOBGroups, string clientLOBGroupName)
+        /// <returns></returns>
+        private IQueryable<ClientLobGroup> FilterClientLOBGroups(IQueryable<ClientLobGroup> clientLOBGroups, string clientLOBGroupName, int? clientId)
         {
             if (!clientLOBGroups.Any() || string.IsNullOrWhiteSpace(clientLOBGroupName))
+            {
                 return clientLOBGroups;
+            }
+
+            if (clientId.HasValue)
+            {
+                clientLOBGroups = FindByCondition(x => x.ClientId == clientId);
+            }
+            else
+            {
+                clientLOBGroups = FindByCondition(x => x.IsDeleted == false);
+            }
 
             return clientLOBGroups.Where(o => o.Name.ToLower().Contains(clientLOBGroupName.Trim().ToLower()));
         }
     }
 }
-
