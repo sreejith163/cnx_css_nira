@@ -110,7 +110,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         {
             CreateClient clientDetails = new CreateClient()
             {
-                Name = "D",
+                Name = "Z",
                 CreatedBy = "admin",
                 RefId = 4
             };

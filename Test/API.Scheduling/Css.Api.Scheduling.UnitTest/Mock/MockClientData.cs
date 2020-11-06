@@ -119,7 +119,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 
             var client = clientsDB.Where(x => x.Id == clientIdDetails.ClientId && x.IsDeleted == false).FirstOrDefault();
 
-            if (!clientLOBGroupsDB.Exists(x => x.IsDeleted == false && x.ClientId == clientIdDetails.ClientId))
+            if (clientLOBGroupsDB.Exists(x => x.IsDeleted == false && x.ClientId == clientIdDetails.ClientId))
             {
                 return new CSSResponse($"The client {client.Name} has dependency with other modules", HttpStatusCode.FailedDependency);
             }
