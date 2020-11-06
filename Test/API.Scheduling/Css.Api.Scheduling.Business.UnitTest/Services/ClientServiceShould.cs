@@ -253,13 +253,25 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Assert.Equal(HttpStatusCode.NotFound, result.Code);
         }
 
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void DeleteClientWithDependenyFailed(int clientId)
+        {
+            var result = await clientService.DeleteClient(new ClientIdDetails { ClientId = clientId });
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.FailedDependency, result.Code);
+        }
+
         /// <summary>
         /// Deletes the client.
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
+        [InlineData(4)]
+        [InlineData(5)]
         public async void DeleteClient(int clientId)
         {
             var result = await clientService.DeleteClient(new ClientIdDetails { ClientId = clientId });

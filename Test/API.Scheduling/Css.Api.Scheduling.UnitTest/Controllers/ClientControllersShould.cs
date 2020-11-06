@@ -195,12 +195,6 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         [InlineData(101)]
         public async void DeleteClient_ReturnsNotFoundResult(int clientId)
         {
-            UpdateClient updateClient = new UpdateClient()
-            {
-                Name = "X",
-                ModifiedBy = "admin"
-            };
-
             mockClientService.Setup(mr => mr.DeleteClient(It.IsAny<ClientIdDetails>())).ReturnsAsync(
                 (ClientIdDetails client) => mockClientData.DeleteClient(new ClientIdDetails { ClientId = clientId }));
 
@@ -212,6 +206,19 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
+        public async void DeleteClient_ReturnsDependencyFailedResult(int clientId)
+        {
+            mockClientService.Setup(mr => mr.DeleteClient(It.IsAny<ClientIdDetails>())).ReturnsAsync(
+                (ClientIdDetails client) => mockClientData.DeleteClient(new ClientIdDetails { ClientId = clientId }));
+
+            var value = await controller.DeleteClient(clientId);
+
+            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+        }
+
+        [Theory]
+        [InlineData(4)]
+        [InlineData(5)]
         public async void DeleteClient_ReturnsNoContentResult(int clientId)
         {
             mockClientService.Setup(mr => mr.DeleteClient(It.IsAny<ClientIdDetails>())).ReturnsAsync(

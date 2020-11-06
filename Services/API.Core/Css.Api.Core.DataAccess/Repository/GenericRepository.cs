@@ -58,7 +58,9 @@ namespace Css.Api.Core.DataAccess.Repository
         /// <param name="entity">The entity.</param>
         public void Update(T entity)
         {
-            RepositoryContext.Entry(entity).State = EntityState.Modified;
+            var sd = RepositoryContext.Entry<T>(entity);
+            var sd1 = RepositoryContext.Entry<T>(entity);
+            RepositoryContext.Entry<T>(entity).State = EntityState.Modified;
         }
 
         /// <summary>

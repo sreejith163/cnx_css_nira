@@ -17,7 +17,19 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         {
             new Client() { Id = 1, RefId = 1, Name= "A", CreatedBy = "Admin", CreatedDate = DateTime.Now },
             new Client() { Id = 2, RefId = 2, Name= "B", CreatedBy = "Admin", CreatedDate = DateTime.Now },
-            new Client() { Id = 3, RefId = 3, Name= "C", CreatedBy = "Admin", CreatedDate = DateTime.Now }
+            new Client() { Id = 3, RefId = 3, Name= "C", CreatedBy = "Admin", CreatedDate = DateTime.Now },
+            new Client() { Id = 4, RefId = 4, Name= "D", CreatedBy = "Admin", CreatedDate = DateTime.Now },
+            new Client() { Id = 5, RefId = 5, Name= "E", CreatedBy = "Admin", CreatedDate = DateTime.Now }
+        };
+
+        /// <summary>
+        /// The client lob groups
+        /// </summary>
+        private List<ClientLobGroup> clientLOBGroupsDB = new List<ClientLobGroup>()
+        {
+            new ClientLobGroup{ Id = 1, ClientId = 1, FirstDayOfWeek = 1, Name = "A", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new ClientLobGroup{ Id = 2, ClientId = 2, FirstDayOfWeek = 1, Name = "B", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new ClientLobGroup{ Id = 3, ClientId = 3, FirstDayOfWeek = 1, Name = "C", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
         };
 
         /// <summary>
@@ -106,6 +118,12 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             }
 
             var client = clientsDB.Where(x => x.Id == clientIdDetails.ClientId && x.IsDeleted == false).FirstOrDefault();
+
+            if (!clientLOBGroupsDB.Exists(x => x.IsDeleted == false && x.ClientId == clientIdDetails.ClientId))
+            {
+                return new CSSResponse($"The client {client.Name} has dependency with other modules", HttpStatusCode.FailedDependency);
+            }
+
             clientsDB.Remove(client);
             return new CSSResponse(HttpStatusCode.NoContent);
         }
