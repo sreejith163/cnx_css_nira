@@ -2,12 +2,6 @@ version: '3.4'
 
 services:
 
-  scheduling.mysql.data:
-    environment:
-      MYSQL_ROOT_PASSWORD: cssuser_DEV
-    ports:
-      - "3306:3306"
-
   css.web.ui:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -33,7 +27,7 @@ services:
   css.api.scheduling:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__Database=server=scheduling.mysql.data;user id=cssuser;password=cssuser_DEV;persistsecurityinfo=True;database=css_dev
+      - ConnectionStrings__Database=server=10.87.222.42;user id=cssuser;password=cssuser_DEV;persistsecurityinfo=True;database=css_dev      
     ports:
       - "4203:80"
     volumes:
