@@ -6,6 +6,7 @@ import { SubscriptionLike as ISubscription } from 'rxjs';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { AddUpdateClientNameComponent } from '../add-update-client-name/add-update-client-name.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
+import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
 import { ClientDetails } from '../../../models/client-details.model';
 import { Translation } from 'src/app/shared/models/translation.model';
@@ -19,6 +20,7 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 
 import { ClientService } from '../../../services/client.service';
 
+
 @Component({
   selector: 'app-client-name-list',
   templateUrl: './client-name-list.component.html',
@@ -29,7 +31,6 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
   currentPage = 1;
   pageSize = 5;
   totalClientRecord: number;
-  clientId: number;
 
   searchKeyword: string;
   orderBy = 'createdDate';
@@ -43,7 +44,6 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
   clientsDetails: ClientDetails[] = [];
 
   getAllClientDetailsSubscription: ISubscription;
-  getClientTranslationSubscription: ISubscription;
   deleteClientSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
 
@@ -115,17 +115,16 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
             this.getModalPopup(MessagePopUpComponent, 'sm');
             this.setComponentMessages('Success', 'The record has been deleted!');
           }, (error) => {
+            if (error.status === 424) {
+              this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
+              this.setComponentMessages('Error', error.error);
+            }
             this.spinnerService.hide(this.spinner);
-            console.log(error);
           });
 
         this.subscriptionList.push(this.deleteClientSubscription);
       }
     });
-  }
-
-  setClient(client: number) {
-    this.clientId = client;
   }
 
   searchClients() {
@@ -156,7 +155,6 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
 
   private getQueryParams() {
     const clientQueryParams = new ClientNameQueryParameters();
-    clientQueryParams.clientId = this.clientId ?? 0;
     clientQueryParams.pageNumber = this.currentPage;
     clientQueryParams.pageSize = this.pageSize;
     clientQueryParams.searchKeyword = this.searchKeyword ?? '';

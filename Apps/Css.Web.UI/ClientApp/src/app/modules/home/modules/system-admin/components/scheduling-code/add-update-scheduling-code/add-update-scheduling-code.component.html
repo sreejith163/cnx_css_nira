@@ -20,7 +20,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control" formControlName="description" />
+              <input type="text" class="form-control" formControlName="description" [maxLength]="maxLength"/>
               <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.description.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('description'); else maxLengthError">
                   <div *ngIf="hasFormControlValidationError('description')" class="valid-error">
@@ -33,9 +33,6 @@
                   </div>
                 </ng-template>
               </ng-container>
-              <!-- <div *ngIf=" hasFormControlValidationError('description')" class="valid-error">
-                {{ 'Description is required' | translation: 'lbl_add_edit_description_required_validation_message' : translationValues }}
-              </div> -->
             </div>
           </div>
         </div>
@@ -47,11 +44,20 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control" formControlName="priorityNumber" (keypress)="isNumberKey($event)"
-                onpaste="return false;" />
-              <div *ngIf="hasFormControlValidationError('priorityNumber')" class="valid-error">
-                {{ 'Priority # is required' | translation: 'lbl_add_edit_priority_required_validation_message' : translationValues }}
-              </div>
+              <input type="text" class="form-control" formControlName="priorityNumber" [maxLength]="maxPriority"
+               (keypress)="isNumberKey($event)" onpaste="return false;" />
+               <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.priorityNumber.invalid">
+                <ng-container *ngIf="hasFormControlValidationError('priorityNumber'); else maxLengthError">
+                  <div *ngIf="hasFormControlValidationError('priorityNumber')" class="valid-error">
+                    {{ 'Priority # is required' | translation: 'lbl_add_edit_priority_required_validation_message' : translationValues }}
+                  </div>
+                </ng-container>
+                <ng-template #maxLengthError>
+                  <div class="valid-error">
+                    {{ 'Priority # cannot exceed 10 characters' | translation: 'lbl_add_edit_priority_maxlength_validation_message' : translationValues }}
+                  </div>
+                </ng-template>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -60,6 +66,7 @@
           <div class="row">
             <div class="col-md-4">
               <label>{{ 'Type of Codes' | translation: 'lbl_add_edit_code_type' : translationValues }}</label>
+              <span class="required">*</span>
             </div>
             <div class="col-md-8 grid">
               <div class="form-group clearfix margin-b-05-rem" *ngFor="let data of codeList; let i = index">
@@ -81,7 +88,7 @@
           <div class="row">
             <div class="col-md-4">
               <label>{{ 'Schedule Icon' | translation: 'lbl_add_edit_icon' : translationValues }}
-                <span class="required"></span>
+                <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">

@@ -16,6 +16,7 @@ import { ComponentOperation } from 'src/app/shared/enums/component-operation.enu
 import { ClientService } from '../../../services/client.service';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+import { Constants } from 'src/app/shared/util/constants.util';
 
 @Component({
   selector: 'app-add-update-client-list',
@@ -24,6 +25,7 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 })
 export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
 
+  maxLength = Constants.DefaultTextMaxLength;
   formSubmitted: boolean;
   spinner = 'spinner';
   clientForm: FormGroup;
@@ -94,8 +96,10 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
         this.activeModal.close({ needRefresh: true });
         this.showSuccessPopUpMessage('The record has been added!');
       }, (error) => {
+        if (error.status === 409) {
+          this.showErrorWarningPopUpMessage(error.error);
+        }
         this.spinnerService.hide(this.spinner);
-        this.showErrorWarningPopUpMessage(error.error);
       });
 
     this.subscriptionList.push(this.addClientSubscription);

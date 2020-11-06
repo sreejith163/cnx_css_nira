@@ -20,7 +20,8 @@ import { ClientLobGroupService } from '../../../services/client-lob-group.servic
 import { AddUpdateClientLobGroupComponent } from '../add-update-client-lob-group/add-update-client-lob-group.component';
 import { ClientLobGroupQueryParameters } from '../../../models/client-lob-group-query-parameters.model';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
-import { WeekDay } from '@angular/common';
+import { JsonPipe, WeekDay } from '@angular/common';
+import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 
 @Component({
   selector: 'app-client-lob-group-list',
@@ -34,11 +35,13 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
   pageSize = 5;
   totalClientLOBGroupRecord: number;
   clientLOBGroupId: number;
-  clientId: number;
+  clientId?: number;
+  spinner = 'tableSpinner';
 
 
-  searchClientLOBGroupName: string;
+  searchKeyword: string;
   orderBy = 'createdDate';
+  sortBy = 'desc';
   sortKeyword: 'asc' | 'desc';
   weekDay = WeekDay;
 
@@ -56,7 +59,7 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalService: NgbModal,
-    private spinner: NgxSpinnerService,
+    private spinnerService: NgxSpinnerService,
     private clientLOBGroupService: ClientLobGroupService
   ) { }
 
@@ -102,7 +105,7 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
   editClientLOBGroup(data: ClientLOBGroupDetails) {
     this.getModalPopup(AddUpdateClientLobGroupComponent, 'lg');
     this.setComponentValues(ComponentOperation.Edit, this.translationValues);
-    this.modalRef.componentInstance.clientDetails = data;
+    this.modalRef.componentInstance.clientLOBGroupDetails = data;
 
     this.modalRef.result.then(() => {
       this.loadClientLOBGroups();
@@ -116,20 +119,30 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then((result) => {
       if (result && result === clientIndex) {
+        this.spinnerService.show(this.spinner, SpinnerOptions);
         this.deleteClientLOBGroupSubscription = this.clientLOBGroupService.deleteClient(clientIndex)
           .subscribe((response) => {
-            if (response) {
+            if (response === null) {
+              this.spinnerService.hide(this.spinner);
               this.loadClientLOBGroups();
               this.getModalPopup(MessagePopUpComponent, 'sm');
               this.setComponentMessages('Success', 'The record has been deleted!');
             }
           }, (error) => {
             console.log(error);
+            this.spinnerService.hide(this.spinner);
           });
 
         this.subscriptionList.push(this.deleteClientLOBGroupSubscription);
       }
     });
+  }
+
+  sort(columnName: string, sortBy: string) {
+    this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
+    this.orderBy = columnName;
+
+    this.loadClientLOBGroups();
   }
 
   setClientLOBGroup(clientLOBGroup: number) {
@@ -143,7 +156,7 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
   sortClientLOBGroups(orderBy: string) {
     this.sortKeyword = this.sortKeyword === 'asc' ? 'desc' : 'asc';
     this.orderBy = `${orderBy} ${this.sortKeyword}`;
-    //this.loadClientLOBGroups();
+    // this.loadClientLOBGroups();
   }
 
   private getModalPopup(component: any, size: string) {
@@ -163,34 +176,30 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
 
   private getQueryParams() {
     const clientLOBGroupQueryParams = new ClientLobGroupQueryParameters();
-    clientLOBGroupQueryParams.clientLOBGroupId = this.clientLOBGroupId ?? 0;
-    clientLOBGroupQueryParams.clientId = this.clientId ?? 0;
+    clientLOBGroupQueryParams.clientId = this.clientId;
     clientLOBGroupQueryParams.pageNumber = this.currentPage;
     clientLOBGroupQueryParams.pageSize = this.pageSize;
-    clientLOBGroupQueryParams.searchKeyword = this.searchClientLOBGroupName ?? '';
-    clientLOBGroupQueryParams.orderBy = this.orderBy;
-    clientLOBGroupQueryParams.sortBy = this.sortKeyword;
+    clientLOBGroupQueryParams.searchKeyword = this.searchKeyword ?? '';
+    clientLOBGroupQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     clientLOBGroupQueryParams.fields = '';
 
     return clientLOBGroupQueryParams;
   }
 
   private loadClientLOBGroups() {
-    this.spinner.show();
     const queryParams = this.getQueryParams();
-    console.log("loadClientLOBGroups");
+
+    this.spinnerService.show(this.spinner, SpinnerOptions);
     this.getAllClientLOBGroupDetailsSubscription = this.clientLOBGroupService.getClientLOBGroups(queryParams)
       .subscribe((response) => {
         if (response.body) {
-          console.log("response.bory");
+          this.spinnerService.hide(this.spinner);
           this.clientLOBGroupDetails = response.body;
           this.headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
           this.totalClientLOBGroupRecord = this.headerPaginationValues.totalCount;
         }
-
-        this.spinner.hide();
       }, (error) => {
-        this.spinner.hide();
+        this.spinnerService.hide(this.spinner);
         console.log(error);
       });
 

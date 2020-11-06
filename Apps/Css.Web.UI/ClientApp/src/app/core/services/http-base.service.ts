@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError as observableThrowError , Observable } from 'rxjs';
+import { throwError as observableThrowError, Observable } from 'rxjs';
 
 @Injectable()
 export class HttpBaseService {
@@ -10,8 +10,10 @@ export class HttpBaseService {
   protected convertToHttpParam(data): HttpParams {
     let httpParams = new HttpParams();
     Object.keys(data).forEach((key) => {
+      if (data[key] !== undefined && data[key] !== null) {
         httpParams = httpParams.append(key, data[key]);
-      });
+      }
+    });
     return httpParams;
   }
 

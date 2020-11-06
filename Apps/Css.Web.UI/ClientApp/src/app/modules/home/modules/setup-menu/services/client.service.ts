@@ -24,7 +24,8 @@ export class ClientService extends HttpBaseService {
   getClients(clientnameQueryParams: ClientNameQueryParameters) {
     const url = `${this.baseURL}/clients`;
 
-    return this.http.get<ClientDetails>(url, { params: this.convertToHttpParam(clientnameQueryParams), observe: 'response' })
+    return this.http.get<ClientDetails>(url,
+      { params: this.convertToHttpParam(clientnameQueryParams), observe: 'response' })
       .pipe(catchError(this.handleError));
   }
 

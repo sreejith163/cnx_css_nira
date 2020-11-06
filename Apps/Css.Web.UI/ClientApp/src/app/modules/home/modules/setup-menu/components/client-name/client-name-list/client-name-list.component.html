@@ -15,9 +15,6 @@
   </div>
 
   <div class="row m-l-r-10">
-    <div class="col-md-3">
-      <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
-    </div>
     <div class="col-md-3 p-b-5">
       <input type="text" class="form-control" [(ngModel)]="searchKeyword"
         placeholder="{{ 'Client Name' | translation: 'lbl_client_name' : translationValues }}" />
@@ -27,7 +24,7 @@
         {{ 'Search' | translation: 'btn_search' : translationValues }}
       </button>
     </div>
-    <div class="col-md-4 text-right">
+    <div class="col-md-7 text-right">
       <button type="button" class="btn btn-primary float-r" (click)="addClient()">
         <i class="fa fa-plus p-1" aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}
       </button>

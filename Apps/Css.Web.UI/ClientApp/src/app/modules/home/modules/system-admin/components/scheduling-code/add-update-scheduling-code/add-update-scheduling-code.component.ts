@@ -16,8 +16,10 @@ import { ComponentOperation } from 'src/app/shared/enums/component-operation.enu
 
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
+import { Constants } from 'src/app/shared/util/constants.util';
 
 import { SchedulingCodeService } from '../../../services/scheduling-code.service';
+
 
 @Component({
   selector: 'app-add-update-scheduling-code',
@@ -26,6 +28,8 @@ import { SchedulingCodeService } from '../../../services/scheduling-code.service
 })
 export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
 
+  maxLength = Constants.DefaultTextMaxLength;
+  maxPriority = 10;
   formSubmitted: boolean;
   iconId: string;
   spinner = 'modalSpinner';
@@ -251,7 +255,9 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.maxLength(50),
         CustomValidators.cannotContainSpace])),
-      priorityNumber: new FormControl('', Validators.required),
+      priorityNumber: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.maxLength(10)])),
       codeTypes: this.formBuilder.array([], Validators.required),
       iconId: new FormControl('', Validators.required),
     });

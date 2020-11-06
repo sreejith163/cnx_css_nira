@@ -4,6 +4,6 @@ export class AddClientLobGroup extends ClientLobGroupBase {
     createdBy: string;
     firstDayOfWeek: number;
     timeZoneId: number;
-    clientId: number;
+    clientId?: number;
 }
 

@@ -19,7 +19,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control"
+              <input type="text" class="form-control" [maxLength]="maxLength"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('name')}" formControlName="name" />
               <ng-container *ngIf="formSubmitted && form.name.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('name'); else maxLengthError">

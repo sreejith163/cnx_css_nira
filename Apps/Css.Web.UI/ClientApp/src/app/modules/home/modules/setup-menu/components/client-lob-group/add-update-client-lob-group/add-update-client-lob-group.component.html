@@ -1,5 +1,6 @@
 <div class="modal-dialog w-1000 add-edit-modal" role="document">
     <div class="modal-content">
+      <ngx-spinner [name]="spinner" bdColor="rgba(255, 0, 0, 0.8)"></ngx-spinner>
       <div class="modal-header header-color">
         <h6 class="modal-title w-100 font-weight-bold header">
           <p>{{ getTitle()}} {{ 'Client LOB Group' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
@@ -18,8 +19,11 @@
                 </label>
               </div>
               <div class="col-md-8">
-                <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead
-                  >
+                <app-client-name-typeahead (clientSelected)="setClient($event)"
+                 [clientId]="editClientId"></app-client-name-typeahead>
+                 <div *ngIf="clientId" class="valid-error">
+                  {{ 'Client Name is required' | translation: 'lbl_add_edit_client_name_required_validation_message' : translationValues }}
+                </div>
               </div>
             </div>
           </div>
@@ -31,19 +35,21 @@
                 </label>
               </div>
               <div class="col-md-8">
-                <input type="text" class="form-control"
+                <input type="text" class="form-control" [maxLength]="maxLength"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('clientLOBGroup')}"
-                formControlName="clientLOBGroup" />   
-                <!-- <select class="form-control"
-                  [ngClass]="{'valid-border-error': hasFormControlValidationError('clientLOBGroup')}"
-                  formControlName="clientLOBGroup">
-                  <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}
-                  </option>
-                  <option *ngFor="let x of clientLOBGroups" [value]="x.clientLOBName">{{x.clientLOBName}}</option>
-                </select> -->
+                formControlName="clientLOBGroup" /> 
+                <ng-container *ngIf="formSubmitted && form.clientLOBGroup.invalid">
+                  <ng-container *ngIf="hasFormControlValidationError('clientLOBGroup'); else maxLengthError">
                 <div *ngIf="hasFormControlValidationError('clientLOBGroup')" class="valid-error">
-                  {{ 'LOB Group Name is required' | translation: 'lbl_add_edit_client_lob_group_required_validation_message' : translationValues }}
+                  {{ 'LOB Group Name is required' | translation: 'lbl_add_edit_lob_group_name_required_validation_message' : translationValues }}
                 </div>
+              </ng-container>
+              <ng-template #maxLengthError>
+                <div class="valid-error">
+                  {{ 'Client LOB group name cannot exceed 50 characters' | translation: 'lbl_add_edit_client_lob_group_maxlength_validation_message' : translationValues }}
+                </div>
+              </ng-template>
+            </ng-container>
               </div>
             </div>
           </div>

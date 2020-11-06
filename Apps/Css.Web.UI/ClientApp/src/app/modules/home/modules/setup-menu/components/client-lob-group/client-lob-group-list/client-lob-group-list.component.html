@@ -12,22 +12,48 @@
             </ol>
         </div>
     </div>
-    <div class="row m-l-r-10">
+    <!-- <div class="row m-l-r-10">
         <div class="col-md-3 d-flex flex-column">
             {{ 'Client Name' | translation: 'lbl_client_name' : translationValues }}            
             <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
         </div>
+        <div class="col-md-3 p-b-5">
+          <input type="text" class="form-control" [(ngModel)]="searchKeyword"
+            placeholder="{{ 'Client Name' | translation: 'lbl_page_title' : translationValues }}" />
+        </div>
         <div class="col-md-2 padding-t-24">
-            <button class="form-control" id="btn_search"><i class="fa fa-search" aria-hidden="true"></i>
+            <button class="form-control" (click)="searchClientLOBGroups()" id="btn_search"><i class="fa fa-search" aria-hidden="true"></i>
                 {{ 'Search' | translation: 'btn_search' : translationValues }}
             </button>
         </div>
-        <div class="col-md-7 padding-t-24">
-            <button type="button" class="btn btn-primary float-r" (click)="addClientLOBGroup()" id="btn_add"><i
+        <div class="col-md-4 text-right">
+          <button type="button" class="btn btn-primary float-r" (click)="addClientLOBGroup()" id="btn_add"><i
                     class="fa fa-plus padding-5"
                     aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}</button>
+        </div> 
+        </div>-->
+
+        <div class="row m-l-r-10">
+          <div class="col-md-3">
+            <!-- {{ 'Client Name' | translation: 'lbl_client_name' : translationValues }}             -->
+            <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
+          </div>
+          <div class="col-md-3 p-b-5">
+            <input type="text" class="form-control" [(ngModel)]="searchKeyword"
+            placeholder="{{ 'Enter a Client LOB Group' | translation: 'lbl_search_text' : translationValues }}" />
+          </div>
+          <div class="col-md-2">
+            <button class="form-control" (click)="searchClientLOBGroups()" id="btn_search"><i class="fa fa-search" aria-hidden="true"></i>
+              {{ 'Search' | translation: 'btn_search' : translationValues }}
+          </button>
+          </div>
+          <div class="col-md-4 text-right">
+            <button type="button" class="btn btn-primary float-r" (click)="addClientLOBGroup()" id="btn_add"><i
+              class="fa fa-plus padding-5"
+              aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}</button>
+          </div>
         </div>
-    </div>
+  
     <div class="row m-r-15">
         <div class="col-md-12 mt-2 table-responsive">
             <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
@@ -35,61 +61,91 @@
                     <tr>
                         <th class="width-10-p">
                             {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}</th>
-                        <th class="sortable-field width-10-p" [appSort]="sortClientLOBGroups('Id')" data-order="asc" data-name="id">
-                            {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
-                            <i class="fa fa-sort"></i></th>
-                        <th class="sortable-field width-10-p" [appSort]="sortClientLOBGroups('RefId')" data-order="asc"
-                            data-name="refId">
+
+                         <th class="sortable-field width-10-p" (click)="sort('Id', sortBy)">
+                                {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
+                                <i *ngIf="orderBy !== 'Id'" class="fa fa-sort"></i>
+                                <i id="sortIcon" *ngIf="orderBy === 'Id'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                                  [class.fa-sort-up]="sortBy === 'desc'">
+                                </i>
+                          </th>
+                          <th class="sortable-field width-10-p" (click)="sort('RefId', sortBy)">
                             {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
-                            <i class="fa fa-sort"></i></th>
-                        <th class="sortable-field width-10-p" [appSort]="sortClientLOBGroups('Clientname')" data-order="asc"
-                            data-name="clientName">
+                            <i *ngIf="orderBy !== 'RefId'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'RefId'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                              [class.fa-sort-up]="sortBy === 'desc'">
+                            </i>
+                          </th>
+                          <th class="sortable-field width-10-p" (click)="sort('ClientName', sortBy)">
                             {{ 'Client Name' | translation: 'lbl_table_heading_client_name' : translationValues }}
-                            <i class="fa fa-sort"></i>
-                        </th>
-                        <th class="sortable-field width-10-p" [appSort]="sortClientLOBGroups('Name')" data-order="asc"
-                            data-name="clientLOBGroupName">
+                            <i *ngIf="orderBy !== 'Clientname'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'Clientname'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                              [class.fa-sort-up]="sortBy === 'desc'">
+                            </i>
+                          </th>
+                          <th class="sortable-field width-10-p" (click)="sort('Name', sortBy)">
                             {{ 'LOB Group Name' | translation: 'lbl_table_heading_lob_group_name' : translationValues }}
-                            <i class="fa fa-sort"></i>
-                        </th>
-                        <th class="sortable-field width-10-p" [appSort]="sortClientLOBGroups('FirstDayOfWeek')" data-order="asc"
-                            data-name="firstDayOfWeek">
+                            <i *ngIf="orderBy !== 'Name'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'Name'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                              [class.fa-sort-up]="sortBy === 'desc'">
+                            </i>
+                          </th>
+                          <th class="sortable-field width-10-p" (click)="sort('FirstDayOfWeek', sortBy)">
                             {{ 'First day of week' | translation: 'lbl_table_heading_first_day_of_week' : translationValues }}
-                            <i class="fa fa-sort"></i>
-                        </th>
-                        <th class="sortable-field width-10-p" [appSort]="sortClientLOBGroups('TimeZoneForReporting')" data-order="asc"
-                            data-name="timeZoneForReporting">
+                            <i *ngIf="orderBy !== 'FirstDayOfWeek'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'FirstDayOfWeek'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                              [class.fa-sort-up]="sortBy === 'desc'">
+                            </i>
+                          </th>
+                          <th class="sortable-field width-10-p" (click)="sort('TimezoneLabel', sortBy)">
                             {{ 'Time zone for reporting' | translation: 'lbl_table_heading_time_zone_for_reporting' : translationValues }}
-                            <i class="fa fa-sort"></i></th>
-                        <th class="sortable-field width-10-p" [appSort]="sortClientLOBGroups('CreatedBy')" data-order="asc"
-                            data-name="createdBy">
+                            <i *ngIf="orderBy !== 'TimeZoneForReporting'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'TimeZoneForReporting'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                              [class.fa-sort-up]="sortBy === 'desc'">
+                            </i>
+                          </th>
+                          <th class="sortable-field width-10-p" (click)="sort('CreatedBy', sortBy)">
                             {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
-                            <i class="fa fa-sort"></i></th>
-                        <th class="sortable-field width-10-p" [appSort]="sortClientLOBGroups('CreatedDate')" data-order="asc"
-                            data-name="createdDate" data-type="date">
+                            <i *ngIf="orderBy !== 'CreatedBy'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'CreatedBy'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                              [class.fa-sort-up]="sortBy === 'desc'">
+                            </i>
+                          </th>
+                          <th class="sortable-field width-10-p" (click)="sort('CreatedDate', sortBy)">
                             {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
-                            <i class="fa fa-sort"></i></th>
-                        <th class="sortable-field width-10-p" [appSort]="sortClientLOBGroups('ModifiedBy')" data-order="asc"
-                            data-name="modifiedBy">
+                            <i *ngIf="orderBy !== 'CreatedDate'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'CreatedDate'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                              [class.fa-sort-up]="sortBy === 'desc'">
+                            </i>
+                          </th>
+                          <th class="sortable-field width-10-p" (click)="sort('ModifiedBy', sortBy)">
                             {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
-                            <i class="fa fa-sort"></i></th>
-                        <th class="sortable-field width-10-p" [appSort]="sortClientLOBGroups('ModifiedDate')" data-order="asc"
-                            data-name="modifiedDate" data-type="date">
+                            <i *ngIf="orderBy !== 'ModifiedBy'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'ModifiedBy'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                              [class.fa-sort-up]="sortBy === 'desc'">
+                            </i>
+                          </th>
+                          <th class="sortable-field width-10-p" (click)="sort('ModifiedDate', sortBy)">
                             {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
-                            <i class="fa fa-sort"></i></th>
+                            <i *ngIf="orderBy !== 'ModifiedDate'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'ModifiedDate'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
+                              [class.fa-sort-up]="sortBy === 'desc'">
+                            </i>
+                          </th>
                     </tr>
                 </thead>
                 <tbody>
+                  <ngx-spinner [name]="spinner" bdColor="rgba(255, 0, 0, 0.8)"></ngx-spinner>
           <tr *ngFor="let el of clientLOBGroupDetails; let i = index">
             <td><i class="far fa-edit padding-5 pointer" (click)="editClientLOBGroup(el)"></i>
               <i class="fa fa-trash padding-5 pointer" (click)="deleteClientLOBGroup(el.id)"></i>
             </td>
                         <td>{{el.id}}</td>
                         <td>{{el.refId}}</td>
-                        <td>{{el.client.value}}</td>
+                        <td>{{el.clientName}}</td>
                         <td>{{el.name}}</td>
                         <td>{{weekDay[el.firstDayOfWeek]}}</td>
-                        <td>{{el.timezone.value}}</td>
+                        <td>{{el.timezoneLabel}}</td>
                         <td>{{el.createdBy}}</td>
                         <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
                         <td>{{el.modifiedBy}}</td>

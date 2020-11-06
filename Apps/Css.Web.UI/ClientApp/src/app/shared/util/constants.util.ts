@@ -217,6 +217,17 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
+      variableId: 'lbl_add_edit_priority_maxlength_validation_message',
+      menu: 'Scheduling Codes',
+      description: 'text',
+      language: 'English',
+      translation: 'Priority # cannot exceed 10 characters',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
       variableId: 'lbl_add_edit_type_of_codes_required_validation_message',
       menu: 'Scheduling Codes',
       description: 'text',
@@ -1142,6 +1153,17 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
+      variableId: 'lbl_add_edit_client_lob_group_maxlength_validation_message',
+      menu: 'Client LOB Group',
+      description: 'text',
+      language: 'English',
+      translation: 'Client LOB group name cannot exceed 50 characters',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
       variableId: 'btn_add',
       menu: 'Client LOB Group',
       description: 'text',
@@ -1279,6 +1301,17 @@ export class Constants {
       description: 'text',
       language: 'English',
       translation: 'Client LOB Group',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_search_text',
+      menu: 'Client LOB Group',
+      description: 'text',
+      language: 'English',
+      translation: 'Enter a Client LOB Group',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -3614,4 +3647,6 @@ export class Constants {
   ];
 
   public static readonly EmailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{3,}))$/;
+
+  public static readonly DefaultTextMaxLength = 50;
 }
