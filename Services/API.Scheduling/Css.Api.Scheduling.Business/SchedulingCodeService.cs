@@ -7,7 +7,6 @@ using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -137,7 +136,9 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            _repository.SchedulingCodes.DeleteSchedulingCode(schedulingCode);
+            schedulingCode.IsDeleted = true;
+
+            _repository.SchedulingCodes.UpdateSchedulingCode(schedulingCode);
             await _repository.SaveAsync();
 
             return new CSSResponse(HttpStatusCode.NoContent);
