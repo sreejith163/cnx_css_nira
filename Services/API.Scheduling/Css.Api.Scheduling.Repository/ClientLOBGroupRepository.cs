@@ -142,7 +142,7 @@ namespace Css.Api.Scheduling.Repository
                 clientLOBGroups = clientLOBGroups.Where(x => x.ClientId == clientId);
             }
 
-            if (string.IsNullOrWhiteSpace(clientLOBGroupName))
+            if (!string.IsNullOrWhiteSpace(clientLOBGroupName))
             {
                 clientLOBGroups = clientLOBGroups.Where(o => o.Name.ToLower().Contains(clientLOBGroupName.Trim().ToLower()));
             }
