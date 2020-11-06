@@ -1,5 +1,6 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
 using System.Threading.Tasks;
 
@@ -24,6 +25,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         ///   <br />
         /// </returns>
         Task<ClientLobGroup> GetClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupIdDetails);
+
+        /// <summary>
+        /// Gets the client lob groups count by client identifier.
+        /// </summary>
+        /// <param name="clientIdDetails">The client identifier details.</param>
+        /// <returns></returns>
+        Task<int> GetClientLOBGroupsCountByClientId(ClientIdDetails clientIdDetails);
 
         /// <summary>
         /// Creates the client lob group.

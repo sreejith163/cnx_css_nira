@@ -97,7 +97,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<List<int>> GetClientsByName(ClientNameDetails clientNameDetails)
         {
-            var client = FindByCondition(x => x.Name == clientNameDetails.Name && x.IsDeleted == false).Select(x => x.Id)
+            var client = FindByCondition(x => x.Name == clientNameDetails.Name && x.IsDeleted == false)
+                .Select(x => x.Id)
                 .ToList();
 
             return await Task.FromResult(client);

@@ -134,6 +134,12 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
+            var hasDependency = await _repository.ClientLOBGroups.GetClientLOBGroupsCountByClientId(clientIdDetails) > 0;
+            if (hasDependency)
+            {
+                return new CSSResponse($"The client {client.Name} has dependency with other modules", HttpStatusCode.FailedDependency);
+            }
+
             client.IsDeleted = true;
 
             _repository.Clients.UpdateClient(client);

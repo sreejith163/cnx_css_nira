@@ -39,6 +39,7 @@ namespace Css.Api.Scheduling.Repository
         public async Task<List<KeyValue>> GetSchedulingCodeIcons()
         {
             var schedulingCodeIcons = FindAll().ProjectTo<KeyValue>(_mapper.ConfigurationProvider).ToList();
+
             return await Task.FromResult(schedulingCodeIcons);
         }
     }
