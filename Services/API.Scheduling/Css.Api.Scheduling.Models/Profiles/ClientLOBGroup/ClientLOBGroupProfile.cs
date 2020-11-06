@@ -1,5 +1,4 @@
-﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
+﻿using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using System;
 

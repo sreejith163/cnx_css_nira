@@ -13,7 +13,6 @@ namespace Css.Api.Scheduling.Validators.Client
         /// </summary>
         public AddClientValidator()
         {
-            RuleFor(x => x.RefId).NotEmpty();
             RuleFor(x => x.Name).NotEmpty();
             RuleFor(x => x.CreatedBy).NotEmpty();
         }

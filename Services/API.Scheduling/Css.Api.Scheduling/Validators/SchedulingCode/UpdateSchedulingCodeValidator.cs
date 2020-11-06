@@ -6,7 +6,7 @@ namespace Css.Api.Scheduling.Validators.SchedulingCode
     /// <summary>
     /// Validator for handling the validation of update scheduling code object
     /// </summary>
-    public class UpdateSchedulingCodeValidator : AbstractValidator<CreateSchedulingCode>
+    public class UpdateSchedulingCodeValidator : AbstractValidator<UpdateSchedulingCode>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UpdateSchedulingCodeValidator" /> class.
@@ -17,7 +17,7 @@ namespace Css.Api.Scheduling.Validators.SchedulingCode
             RuleFor(x => x.PriorityNumber).NotEmpty();
             RuleFor(x => x.CodeTypes).NotEmpty();
             RuleFor(x => x.IconId).NotEmpty();
-            RuleFor(x => x.CreatedBy).NotEmpty();
+            RuleFor(x => x.ModifiedBy).NotEmpty();
         }
     }
 }

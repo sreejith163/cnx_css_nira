@@ -13,7 +13,6 @@ namespace Css.Api.Scheduling.Validators.SchedulingCode
         /// </summary>
         public AddSchedulingCodeValidator()
         {
-            RuleFor(x => x.RefId).NotEmpty();
             RuleFor(x => x.Description).NotEmpty();
             RuleFor(x => x.PriorityNumber).NotEmpty();
             RuleFor(x => x.CodeTypes).NotEmpty();
