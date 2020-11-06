@@ -19,7 +19,7 @@ namespace Css.Api.Scheduling.Models.Profiles.ClientLOBGroup
 
             CreateMap<Domain.ClientLobGroup, ClientLOBGroupDTO>()
                 .ForMember(x => x.ClientName, opt => opt.MapFrom(o => o.Client.Name))
-                .ForMember(x => x.TimezoneLabel, opt => opt.MapFrom(o => o.Timezone.DisplayName))
+                .ForMember(x => x.TimezoneLabel, opt => opt.MapFrom(o => o.Timezone.Name))
                 .ReverseMap();
         }
     }
