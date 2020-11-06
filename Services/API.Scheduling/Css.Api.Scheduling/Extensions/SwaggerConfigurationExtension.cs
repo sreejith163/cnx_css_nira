@@ -2,6 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace Css.Api.Scheduling.Extensions
 {
@@ -21,6 +24,10 @@ namespace Css.Api.Scheduling.Extensions
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc(configuration["Version"],  new OpenApiInfo { Title = configuration["Title"], Version = configuration["Version"] });
+                var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
                 c.AddSecurityDefinition("Bearer", GetSwaggerSecurityScheme());
                 c.OperationFilter<SecurityRequirementsOperationFilter>("Bearer");
             });
