@@ -137,7 +137,7 @@ namespace Css.Api.Scheduling.Repository
                 return clientLOBGroups;
             }
 
-            if (clientId.HasValue)
+            if (clientId.HasValue && clientId != default(int))
             {
                 clientLOBGroups = clientLOBGroups.Where(x => x.ClientId == clientId);
             }
