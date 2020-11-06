@@ -1,0 +1,36 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: cnx-css-api-scheduling
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cnx-css-api-scheduling
+  template:
+    metadata:
+      labels:
+        app: cnx-css-api-scheduling
+    spec:
+      containers:
+        - name: cnx-css-api-scheduling
+          image: sreejith163/cnx-css:cnx.css.api.scheduling.s3.0511.v1
+          ports:
+            - name: node-port
+              containerPort: 80
+              protocol: TCP
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cnx-css-api-scheduling
+spec:
+  ports:
+    - name: client
+      protocol: TCP
+      port: 4202
+      targetPort: 80
+  selector:
+    app: cnx-css-api-scheduling
+  type: LoadBalancer
+
