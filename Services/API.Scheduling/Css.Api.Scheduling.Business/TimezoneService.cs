@@ -12,7 +12,6 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IRepositoryWrapper _repository;
 
-
         /// <summary>Initializes a new instance of the <see cref="TimezoneService" /> class.</summary>
         /// <param name="repository">The repository.</param>
         public TimezoneService(IRepositoryWrapper repository)

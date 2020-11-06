@@ -129,7 +129,9 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            _repository.ClientLOBGroups.DeleteClientLOBGroup(clientLOBGroup);
+            clientLOBGroup.IsDeleted = true;
+
+            _repository.ClientLOBGroups.UpdateClientLOBGroup(clientLOBGroup);
             await _repository.SaveAsync();
 
             return new CSSResponse(HttpStatusCode.NoContent);

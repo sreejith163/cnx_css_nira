@@ -134,7 +134,9 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            _repository.Clients.DeleteClient(client);
+            client.IsDeleted = true;
+
+            _repository.Clients.UpdateClient(client);
             await _repository.SaveAsync();
 
             return new CSSResponse(HttpStatusCode.NoContent);
