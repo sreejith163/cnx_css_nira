@@ -131,19 +131,19 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         private IQueryable<ClientLobGroup> FilterClientLOBGroups(IQueryable<ClientLobGroup> clientLOBGroups, string clientLOBGroupName, int? clientId)
         {
-            if (!clientLOBGroups.Any() || string.IsNullOrWhiteSpace(clientLOBGroupName))
+            if (clientId.HasValue && clientId.Value != default(int))
             {
-                return clientLOBGroups;
-            }
-
-            if (clientId.HasValue)
-            {
-                clientLOBGroups = FindByCondition(x => x.ClientId == clientId);
+                clientLOBGroups = FindByCondition(x => x.ClientId == clientId && x.IsDeleted == false);
             }
             else
             {
                 clientLOBGroups = FindByCondition(x => x.IsDeleted == false);
             }
+
+            if (!clientLOBGroups.Any() || string.IsNullOrWhiteSpace(clientLOBGroupName))
+            {
+                return clientLOBGroups;
+            }            
 
             return clientLOBGroups.Where(o => o.Name.ToLower().Contains(clientLOBGroupName.Trim().ToLower()));
         }
