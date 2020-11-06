@@ -3,7 +3,6 @@ using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Business.UnitTest.Mock;
-using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.Client;
 using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
@@ -12,7 +11,6 @@ using Css.Api.Scheduling.Models.Profiles.Client;
 using Css.Api.Scheduling.Models.Profiles.ClientLOBGroup;
 using Css.Api.Scheduling.Models.Profiles.Timezone;
 using Css.Api.Scheduling.Repository;
-using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Moq;
@@ -27,11 +25,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// The client lob group service
         /// </summary>
         private readonly IClientLOBGroupService clientLOBGroupService;
-
-        /// <summary>
-        /// The mock scheduling context
-        /// </summary>
-        private readonly Mock<SchedulingContext> mockSchedulingContext;
 
         /// <summary>
         /// The repository wrapper
@@ -69,7 +62,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
-            mockSchedulingContext = MockDataContext.IntializeMockData(true);
+            var mockSchedulingContext = new MockDataContext().IntializeMockData();
 
             repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
                                                       clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);

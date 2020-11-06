@@ -8,9 +8,7 @@ using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using Css.Api.Scheduling.Models.Profiles.SchedulingCode;
 using Css.Api.Scheduling.Repository;
-using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Repository.Interfaces;
-using Moq;
 using System.Collections.Generic;
 using System.Net;
 using Xunit;
@@ -23,11 +21,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// The scheduling code icon service
         /// </summary>
         private readonly ISchedulingCodeIconService schedulingCodeIconService;
-
-        /// <summary>
-        /// The mock scheduling context
-        /// </summary>
-        private readonly Mock<SchedulingContext> mockSchedulingContext;
 
         /// <summary>
         /// The repository wrapper
@@ -58,8 +51,8 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             var clientDataShaperHelper = new DataShaper<ClientDTO>();
             var clientLObGroupDataShaperHelper = new DataShaper<ClientLOBGroupDTO>();
             var clientSchedulingCodeDataShaperHelper = new DataShaper<SchedulingCodeDTO>();
-
-            mockSchedulingContext = MockDataContext.IntializeMockData(true);
+            
+            var mockSchedulingContext = new MockDataContext().IntializeMockData();
 
             repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
                                                       clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);

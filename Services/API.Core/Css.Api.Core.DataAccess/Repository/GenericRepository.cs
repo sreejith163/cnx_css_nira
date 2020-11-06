@@ -40,7 +40,7 @@ namespace Css.Api.Core.DataAccess.Repository
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
         {
             return RepositoryContext.Set<T>()
-                .Where(expression).AsNoTracking();
+                .Where(expression);
         }
 
         /// <summary>
@@ -58,9 +58,7 @@ namespace Css.Api.Core.DataAccess.Repository
         /// <param name="entity">The entity.</param>
         public void Update(T entity)
         {
-            var sd = RepositoryContext.Entry<T>(entity);
-            var sd1 = RepositoryContext.Entry<T>(entity);
-            RepositoryContext.Entry<T>(entity).State = EntityState.Modified;
+            RepositoryContext.Set<T>().Update(entity);
         }
 
         /// <summary>

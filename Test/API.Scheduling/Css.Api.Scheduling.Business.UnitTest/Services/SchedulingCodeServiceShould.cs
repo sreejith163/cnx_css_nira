@@ -9,7 +9,6 @@ using Css.Api.Scheduling.Repository;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Css.Api.Scheduling.Business.UnitTest.Mock;
-using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Models.Profiles.SchedulingCode;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using Css.Api.Scheduling.Models.DTO.Response.Client;
@@ -25,11 +24,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// The scheduling code service
         /// </summary>
         private readonly ISchedulingCodeService schedulingCodeService;
-
-        /// <summary>
-        /// The mock scheduling context
-        /// </summary>
-        private readonly Mock<SchedulingContext> mockSchedulingContext;
 
         /// <summary>
         /// The repository wrapper
@@ -65,7 +59,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
-            mockSchedulingContext = MockDataContext.IntializeMockData(true);
+            var mockSchedulingContext = new MockDataContext().IntializeMockData();
 
             repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
                                                       clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);
