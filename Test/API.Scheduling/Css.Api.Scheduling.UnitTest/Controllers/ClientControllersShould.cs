@@ -213,7 +213,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
             var value = await controller.DeleteClient(clientId);
 
-            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+            Assert.Equal((int)HttpStatusCode.FailedDependency, (value as ObjectResult).StatusCode);
         }
 
         [Theory]
