@@ -63,11 +63,9 @@ namespace Css.Api.Scheduling.Repository
 
             var pagedClients = filteredClients
                 .Skip((clientParameters.PageNumber - 1) * clientParameters.PageSize)
-                .Take(clientParameters.PageSize)
-                .ToList();
+                .Take(clientParameters.PageSize);
 
             var mappedClients = pagedClients
-                .AsQueryable()
                 .ProjectTo<ClientDTO>(_mapper.ConfigurationProvider);
 
             var sortedClients = _sortHelper.ApplySort(mappedClients, clientParameters.OrderBy);

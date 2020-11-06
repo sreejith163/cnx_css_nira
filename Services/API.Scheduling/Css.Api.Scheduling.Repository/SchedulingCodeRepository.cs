@@ -65,11 +65,9 @@ namespace Css.Api.Scheduling.Repository
                 .Skip((schedulingCodeParameters.PageNumber - 1) * schedulingCodeParameters.PageSize)
                 .Take(schedulingCodeParameters.PageSize)
                 .Include(x => x.Icon).Include(x => x.SchedulingTypeCode)
-                .ThenInclude(x => x.SchedulingCodeType)
-                .ToList();
+                .ThenInclude(x => x.SchedulingCodeType);
 
             var mappedSchedulingCodes = pagedSchedulingCodes
-                .AsQueryable()
                 .ProjectTo<SchedulingCodeDTO>(_mapper.ConfigurationProvider);
 
             var sortedSchedulingCodes = _sortHelper.ApplySort(mappedSchedulingCodes, schedulingCodeParameters.OrderBy);

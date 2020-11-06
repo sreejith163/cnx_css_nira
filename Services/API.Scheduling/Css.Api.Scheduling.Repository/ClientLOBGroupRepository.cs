@@ -68,11 +68,9 @@ namespace Css.Api.Scheduling.Repository
                 .Skip((clientLOBGroupParameters.PageNumber - 1) * clientLOBGroupParameters.PageSize)
                 .Take(clientLOBGroupParameters.PageSize)
                 .Include(x => x.Client)
-                .Include(x => x.Timezone)
-                .ToList();
+                .Include(x => x.Timezone);
 
-            var mappedClientLOBGroups = pagedClientLOBGroups
-                .AsQueryable()
+            var mappedClientLOBGroups = pagedClientLOBGroups                
                 .ProjectTo<ClientLOBGroupDTO>(_mapper.ConfigurationProvider);
 
             var sortedClientLOBGroups = _sortHelper.ApplySort(mappedClientLOBGroups, clientLOBGroupParameters.OrderBy);
