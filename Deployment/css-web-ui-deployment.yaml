@@ -1,19 +1,19 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: cnx-css-ui
+  name: cnx-css-ui-1
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: cnx-css-ui
+      app: cnx-css-ui-1
   template:
     metadata:
       labels:
-        app: cnx-css-ui
+        app: cnx-css-ui-1
     spec:
       containers:
-        - name: cnx-css-ui
+        - name: cnx-css-ui-1
           image: sreejith163/cnx-css:cnx.css.ui.s3.0911.v1
           ports:
             - name: node-port
@@ -23,14 +23,14 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: cnx-css-ui
+  name: cnx-css-ui-1
 spec:
   ports:
     - name: client
       protocol: TCP
-      port: 4200
+      port: 4205
       targetPort: 80
   selector:
-    app: cnx-css-ui
+    app: cnx-css-ui-1
   type: LoadBalancer
 
