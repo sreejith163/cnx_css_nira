@@ -8,7 +8,7 @@ export const environment = {
     schedulingService: 'http://10.87.221.6:4202/api/v1'
   },
   settings: {
-    applicationUrl: 'http://10.87.222.56:4200',
+    applicationUrl: 'http://10.87.221.8:4200',
     sessionName: 'session',
     cookiePath: '/'
   }
