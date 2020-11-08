@@ -61,15 +61,16 @@ namespace Css.Api.Scheduling.Repository
 
             var filteredClients = FilterClients(clients, clientParameters.SearchKeyword);
 
-            var pagedClients = filteredClients
-                .Skip((clientParameters.PageNumber - 1) * clientParameters.PageSize)
-                .Take(clientParameters.PageSize);
-
-            var mappedClients = pagedClients
+            var mappedClients = filteredClients
                 .ProjectTo<ClientDTO>(_mapper.ConfigurationProvider);
 
             var sortedClients = _sortHelper.ApplySort(mappedClients, clientParameters.OrderBy);
-            var shapedClients = _dataShaper.ShapeData(sortedClients, clientParameters.Fields);
+
+            var pagedClients = sortedClients
+                .Skip((clientParameters.PageNumber - 1) * clientParameters.PageSize)
+                .Take(clientParameters.PageSize);
+
+            var shapedClients = _dataShaper.ShapeData(pagedClients, clientParameters.Fields);
 
             return await PagedList<Entity>
                 .ToPagedList(shapedClients, filteredClients.Count(), clientParameters.PageNumber, clientParameters.PageSize);

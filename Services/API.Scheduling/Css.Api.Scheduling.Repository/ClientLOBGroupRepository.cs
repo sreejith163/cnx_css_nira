@@ -62,19 +62,20 @@ namespace Css.Api.Scheduling.Repository
         {
             var clientLOBGroups = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredClientLOBGroups = FilterClientLOBGroups(clientLOBGroups, clientLOBGroupParameters.SearchKeyword, clientLOBGroupParameters.ClientId);
-
-            var pagedClientLOBGroups = filteredClientLOBGroups
-                .Skip((clientLOBGroupParameters.PageNumber - 1) * clientLOBGroupParameters.PageSize)
-                .Take(clientLOBGroupParameters.PageSize)
+            var filteredClientLOBGroups = FilterClientLOBGroups(clientLOBGroups, clientLOBGroupParameters.SearchKeyword, clientLOBGroupParameters.ClientId)
                 .Include(x => x.Client)
                 .Include(x => x.Timezone);
 
-            var mappedClientLOBGroups = pagedClientLOBGroups                
+            var mappedClientLOBGroups = filteredClientLOBGroups
                 .ProjectTo<ClientLOBGroupDTO>(_mapper.ConfigurationProvider);
 
             var sortedClientLOBGroups = _sortHelper.ApplySort(mappedClientLOBGroups, clientLOBGroupParameters.OrderBy);
-            var shapedClientLOBGroups = _dataShaper.ShapeData(sortedClientLOBGroups, clientLOBGroupParameters.Fields);
+
+            var pagedClientLOBGroups = sortedClientLOBGroups
+                .Skip((clientLOBGroupParameters.PageNumber - 1) * clientLOBGroupParameters.PageSize)
+                .Take(clientLOBGroupParameters.PageSize);
+
+            var shapedClientLOBGroups = _dataShaper.ShapeData(pagedClientLOBGroups, clientLOBGroupParameters.Fields);
 
             return await PagedList<Entity>
                 .ToPagedList(shapedClientLOBGroups, filteredClientLOBGroups.Count(), clientLOBGroupParameters.PageNumber, clientLOBGroupParameters.PageSize);

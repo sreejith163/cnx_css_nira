@@ -59,19 +59,20 @@ namespace Css.Api.Scheduling.Repository
         {
             var schedulingCodes = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredSchedulingCodes = FilterSchedulingCodes(schedulingCodes, schedulingCodeParameters.SearchKeyword);
-
-            var pagedSchedulingCodes = filteredSchedulingCodes
-                .Skip((schedulingCodeParameters.PageNumber - 1) * schedulingCodeParameters.PageSize)
-                .Take(schedulingCodeParameters.PageSize)
+            var filteredSchedulingCodes = FilterSchedulingCodes(schedulingCodes, schedulingCodeParameters.SearchKeyword)
                 .Include(x => x.Icon).Include(x => x.SchedulingTypeCode)
                 .ThenInclude(x => x.SchedulingCodeType);
 
-            var mappedSchedulingCodes = pagedSchedulingCodes
+            var mappedSchedulingCodes = filteredSchedulingCodes
                 .ProjectTo<SchedulingCodeDTO>(_mapper.ConfigurationProvider);
 
             var sortedSchedulingCodes = _sortHelper.ApplySort(mappedSchedulingCodes, schedulingCodeParameters.OrderBy);
-            var shapedSchedulingCodes = _dataShaper.ShapeData(sortedSchedulingCodes, schedulingCodeParameters.Fields);
+
+            var pagedSchedulingCodes = sortedSchedulingCodes
+                .Skip((schedulingCodeParameters.PageNumber - 1) * schedulingCodeParameters.PageSize)
+                .Take(schedulingCodeParameters.PageSize);
+
+            var shapedSchedulingCodes = _dataShaper.ShapeData(pagedSchedulingCodes, schedulingCodeParameters.Fields);
 
             return await PagedList<Entity>
                 .ToPagedList(shapedSchedulingCodes, filteredSchedulingCodes.Count(), schedulingCodeParameters.PageNumber, schedulingCodeParameters.PageSize);
