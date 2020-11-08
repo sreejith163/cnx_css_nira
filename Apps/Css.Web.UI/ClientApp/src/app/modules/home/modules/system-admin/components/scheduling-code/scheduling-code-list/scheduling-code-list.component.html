@@ -41,29 +41,29 @@
             <th class="sortable-field width-10-p" (click)="sort('id', sortBy)">
               {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
               <i *ngIf="orderBy !== 'id'" class="fa fa-sort"></i>
-              <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
-                [class.fa-sort-up]="sortBy === 'desc'">
+              <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                [class.fa-sort-up]="sortBy === 'asc'">
               </i>
             </th>
             <th class="sortable-field width-10-p" (click)="sort('refId', sortBy)">
               {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
               <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
-              <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
-                [class.fa-sort-up]="sortBy === 'desc'">
+              <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                [class.fa-sort-up]="sortBy === 'asc'">
               </i>
             </th>
             <th class="sortable-field width-30-p" (click)="sort('description', sortBy)">
               {{ 'Description' | translation: 'lbl_table_heading_description' : translationValues }}
               <i *ngIf="orderBy !== 'description'" class="fa fa-sort"></i>
-              <i id="sortIcon" *ngIf="orderBy === 'description'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
-                [class.fa-sort-up]="sortBy === 'desc'">
+              <i id="sortIcon" *ngIf="orderBy === 'description'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                [class.fa-sort-up]="sortBy === 'asc'">
               </i>
             </th>
             <th class="sortable-field width-10-p" (click)="sort('priorityNumber', sortBy)">
               {{ 'Priority No.' | translation: 'lbl_table_heading_priority_no' : translationValues }}
               <i *ngIf="orderBy !== 'priorityNumber'" class="fa fa-sort"></i>
-              <i id="sortIcon" *ngIf="orderBy === 'priorityNumber'" class="fa" [class.fa-sort-down]="sortBy === 'asc'"
-                [class.fa-sort-up]="sortBy === 'desc'">
+              <i id="sortIcon" *ngIf="orderBy === 'priorityNumber'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                [class.fa-sort-up]="sortBy === 'asc'">
               </i>
             </th>
             <th class="sortable-field width-30-p">
