@@ -21,7 +21,7 @@
               <div class="col-md-8">
                 <app-client-name-typeahead (clientSelected)="setClient($event)"
                  [clientId]="editClientId"></app-client-name-typeahead>
-                 <div *ngIf="clientId" class="valid-error">
+                 <div *ngIf="!clientId && formSubmitted" class="valid-error">
                   {{ 'Client Name is required' | translation: 'lbl_add_edit_client_name_required_validation_message' : translationValues }}
                 </div>
               </div>
