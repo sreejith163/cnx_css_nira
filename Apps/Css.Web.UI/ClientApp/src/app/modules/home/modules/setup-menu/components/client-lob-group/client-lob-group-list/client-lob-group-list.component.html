@@ -40,7 +40,7 @@
           </div>
           <div class="col-md-3 p-b-5">
             <input type="text" class="form-control  mt-4" [(ngModel)]="searchKeyword"  
-            placeholder="{{ 'Enter a Client LOB Group' | translation: 'lbl_search_text' : translationValues }}" />
+            placeholder="{{ 'Enter a Client LOB Group Name' | translation: 'lbl_search_text' : translationValues }}" />
           </div>
           <div class="col-md-2">
             <button class="form-control mt-4" (click)="searchClientLOBGroups()" id="btn_search"><i class="fa fa-search" aria-hidden="true"></i>
@@ -78,8 +78,8 @@
                           </th>
                           <th class="sortable-field width-10-p" (click)="sort('ClientName', sortBy)">
                             {{ 'Client Name' | translation: 'lbl_table_heading_client_name' : translationValues }}
-                            <i *ngIf="orderBy !== 'Clientname'" class="fa fa-sort"></i>
-                            <i id="sortIcon" *ngIf="orderBy === 'Clientname'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                            <i *ngIf="orderBy !== 'ClientName'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'ClientName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                               [class.fa-sort-up]="sortBy === 'asc'">
                             </i>
                           </th>
@@ -99,8 +99,8 @@
                           </th>
                           <th class="sortable-field width-10-p" (click)="sort('TimezoneLabel', sortBy)">
                             {{ 'Time zone for reporting' | translation: 'lbl_table_heading_time_zone_for_reporting' : translationValues }}
-                            <i *ngIf="orderBy !== 'TimeZoneForReporting'" class="fa fa-sort"></i>
-                            <i id="sortIcon" *ngIf="orderBy === 'TimeZoneForReporting'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                            <i *ngIf="orderBy !== 'TimezoneLabel'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'TimezoneLabel'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                               [class.fa-sort-up]="sortBy === 'asc'">
                             </i>
                           </th>

@@ -15,7 +15,7 @@
 
   <div class="row m-l-r-10">
     <div class="col-md-3 p-b-5">
-      <input type="text" class="form-control" placeholder="Enter a text to search" [(ngModel)]="searchKeyword" />
+      <input type="text" class="form-control" placeholder="{{ 'Enter a Description' | translation: 'lbl_search_place_holder' : translationValues }}" [(ngModel)]="searchKeyword" />
     </div>
     <div class="col-md-2 p-b-5">
       <button class="form-control" id="btn_search" (click)="searchSchedulingCode()">

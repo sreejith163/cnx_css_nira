@@ -173,7 +173,6 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     this.getTimeZonesSubscription = this.clientLobGroupService.getTimeZones()
       .subscribe((response) => {
-        debugger;
         this.spinnerService.hide(this.spinner);
         this.timeZones = response;
       }, (error) => {

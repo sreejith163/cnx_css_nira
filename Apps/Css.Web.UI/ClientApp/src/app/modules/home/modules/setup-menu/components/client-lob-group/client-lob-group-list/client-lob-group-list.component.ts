@@ -40,7 +40,7 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
 
 
   searchKeyword: string;
-  orderBy = 'createdDate';
+  orderBy = 'CreatedDate';
   sortBy = 'desc';
   sortKeyword: 'asc' | 'desc';
   weekDay = WeekDay;
@@ -188,7 +188,6 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
 
   private loadClientLOBGroups() {
     const queryParams = this.getQueryParams();
-
     this.spinnerService.show(this.spinner, SpinnerOptions);
     this.getAllClientLOBGroupDetailsSubscription = this.clientLOBGroupService.getClientLOBGroups(queryParams)
       .subscribe((response) => {
