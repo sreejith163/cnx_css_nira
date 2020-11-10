@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Css.Api.Core.Utilities.Interfaces;
+using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Response.Client;
 using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
@@ -59,17 +60,17 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>
         /// The clients sort helper
         /// </summary>
-        private readonly ISortHelper<ClientDTO> _clientsSortHelper;
+        private readonly ISortHelper<Client> _clientsSortHelper;
 
         /// <summary>
         /// The client lob groups sort helper
         /// </summary>
-        private readonly ISortHelper<ClientLOBGroupDTO> _clientLOBGroupsSortHelper;
+        private readonly ISortHelper<ClientLobGroup> _clientLOBGroupsSortHelper;
 
         /// <summary>
         /// The scheduling codes sort helper
         /// </summary>
-        private readonly ISortHelper<SchedulingCodeDTO> _schedulingCodesSortHelper;
+        private readonly ISortHelper<SchedulingCode> _schedulingCodesSortHelper;
 
         /// <summary>
         /// The clients data shaper
@@ -204,9 +205,9 @@ namespace Css.Api.Scheduling.Repository
         public RepositoryWrapper(
             SchedulingContext repositoryContext,
             IMapper mapper,
-            ISortHelper<ClientDTO> clientsSortHelper,
-            ISortHelper<ClientLOBGroupDTO> clientLOBGroupsSortHelper,
-            ISortHelper<SchedulingCodeDTO> schedulingCodesSortHelper,
+            ISortHelper<Client> clientsSortHelper,
+            ISortHelper<ClientLobGroup> clientLOBGroupsSortHelper,
+            ISortHelper<SchedulingCode> schedulingCodesSortHelper,
             IDataShaper<ClientDTO> clientsDataShaper,
             IDataShaper<ClientLOBGroupDTO> clientLobGroupsDataShaper,
             IDataShaper<SchedulingCodeDTO> schedulingCodesDataShaper)

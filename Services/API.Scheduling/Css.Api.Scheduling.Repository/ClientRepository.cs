@@ -25,7 +25,7 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>
         /// The sort helper
         /// </summary>
-        private readonly ISortHelper<ClientDTO> _sortHelper;
+        private readonly ISortHelper<Client> _sortHelper;
 
         /// <summary>
         /// The data shaper
@@ -42,7 +42,7 @@ namespace Css.Api.Scheduling.Repository
         public ClientRepository(
             SchedulingContext repositoryContext,
             IMapper mapper,
-            ISortHelper<ClientDTO> sortHelper,
+            ISortHelper<Client> sortHelper,
             IDataShaper<ClientDTO> dataShaper)
             : base(repositoryContext)
         {
@@ -62,16 +62,16 @@ namespace Css.Api.Scheduling.Repository
 
             var filteredClients = FilterClients(clients, clientParameters.SearchKeyword);
 
-            var mappedClients = filteredClients
-                .ProjectTo<ClientDTO>(_mapper.ConfigurationProvider);
-
-            var sortedClients = _sortHelper.ApplySort(mappedClients, clientParameters.OrderBy);
+            var sortedClients = _sortHelper.ApplySort(filteredClients, clientParameters.OrderBy);
 
             var pagedClients = sortedClients
                 .Skip((clientParameters.PageNumber - 1) * clientParameters.PageSize)
                 .Take(clientParameters.PageSize);
 
-            var shapedClients = _dataShaper.ShapeData(pagedClients, clientParameters.Fields);
+            var mappedClients = pagedClients
+                .ProjectTo<ClientDTO>(_mapper.ConfigurationProvider);
+
+            var shapedClients = _dataShaper.ShapeData(mappedClients, clientParameters.Fields);
 
             return await PagedList<Entity>
                 .ToPagedList(shapedClients, filteredClients.Count(), clientParameters.PageNumber, clientParameters.PageSize);

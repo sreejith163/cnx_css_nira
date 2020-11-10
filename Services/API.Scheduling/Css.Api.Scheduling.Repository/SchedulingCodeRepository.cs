@@ -26,7 +26,7 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>
         /// The sort helper
         /// </summary>
-        private readonly ISortHelper<SchedulingCodeDTO> _sortHelper;
+        private readonly ISortHelper<SchedulingCode> _sortHelper;
 
         /// <summary>
         /// The data shaper
@@ -43,7 +43,7 @@ namespace Css.Api.Scheduling.Repository
         public SchedulingCodeRepository(
             SchedulingContext repositoryContext,
             IMapper mapper,
-            ISortHelper<SchedulingCodeDTO> sortHelper,
+            ISortHelper<SchedulingCode> sortHelper,
             IDataShaper<SchedulingCodeDTO> dataShaper)
             : base(repositoryContext)
         {
@@ -61,20 +61,21 @@ namespace Css.Api.Scheduling.Repository
         {
             var schedulingCodes = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredSchedulingCodes = FilterSchedulingCodes(schedulingCodes, schedulingCodeParameters.SearchKeyword)
-                .Include(x => x.Icon).Include(x => x.SchedulingTypeCode)
-                .ThenInclude(x => x.SchedulingCodeType);
+            var filteredSchedulingCodes = FilterSchedulingCodes(schedulingCodes, schedulingCodeParameters.SearchKeyword);
 
-            var mappedSchedulingCodes = filteredSchedulingCodes
-                .ProjectTo<SchedulingCodeDTO>(_mapper.ConfigurationProvider);
-
-            var sortedSchedulingCodes = _sortHelper.ApplySort(mappedSchedulingCodes, schedulingCodeParameters.OrderBy);
+            var sortedSchedulingCodes = _sortHelper.ApplySort(filteredSchedulingCodes, schedulingCodeParameters.OrderBy);
 
             var pagedSchedulingCodes = sortedSchedulingCodes
                 .Skip((schedulingCodeParameters.PageNumber - 1) * schedulingCodeParameters.PageSize)
-                .Take(schedulingCodeParameters.PageSize);
+                .Take(schedulingCodeParameters.PageSize)
+                .Include(x => x.Icon)
+                .Include(x => x.SchedulingTypeCode)
+                .ThenInclude(x => x.SchedulingCodeType);
 
-            var shapedSchedulingCodes = _dataShaper.ShapeData(pagedSchedulingCodes, schedulingCodeParameters.Fields);
+            var mappedSchedulingCodes = pagedSchedulingCodes
+                .ProjectTo<SchedulingCodeDTO>(_mapper.ConfigurationProvider);
+
+            var shapedSchedulingCodes = _dataShaper.ShapeData(mappedSchedulingCodes, schedulingCodeParameters.Fields);
 
             return await PagedList<Entity>
                 .ToPagedList(shapedSchedulingCodes, filteredSchedulingCodes.Count(), schedulingCodeParameters.PageNumber, schedulingCodeParameters.PageSize);

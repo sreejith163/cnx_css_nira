@@ -25,7 +25,7 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>
         /// The sort helper
         /// </summary>
-        private readonly ISortHelper<ClientLOBGroupDTO> _sortHelper;
+        private readonly ISortHelper<ClientLobGroup> _sortHelper;
 
         /// <summary>
         /// The data shaper
@@ -42,7 +42,7 @@ namespace Css.Api.Scheduling.Repository
         public ClientLOBGroupRepository(
             SchedulingContext repositoryContext,
             IMapper mapper,
-            ISortHelper<ClientLOBGroupDTO> sortHelper,
+            ISortHelper<ClientLobGroup> sortHelper,
             IDataShaper<ClientLOBGroupDTO> dataShaper)
             : base(repositoryContext)
         {
@@ -63,19 +63,19 @@ namespace Css.Api.Scheduling.Repository
             var clientLOBGroups = FindByCondition(x => x.IsDeleted == false);
 
             var filteredClientLOBGroups = FilterClientLOBGroups(clientLOBGroups, clientLOBGroupParameters.SearchKeyword, clientLOBGroupParameters.ClientId)
-                .Include(x => x.Client)
                 .Include(x => x.Timezone);
 
-            var mappedClientLOBGroups = filteredClientLOBGroups
-                .ProjectTo<ClientLOBGroupDTO>(_mapper.ConfigurationProvider);
-
-            var sortedClientLOBGroups = _sortHelper.ApplySort(mappedClientLOBGroups, clientLOBGroupParameters.OrderBy);
+            var sortedClientLOBGroups = _sortHelper.ApplySort(filteredClientLOBGroups, clientLOBGroupParameters.OrderBy);
 
             var pagedClientLOBGroups = sortedClientLOBGroups
                 .Skip((clientLOBGroupParameters.PageNumber - 1) * clientLOBGroupParameters.PageSize)
-                .Take(clientLOBGroupParameters.PageSize);
+                .Take(clientLOBGroupParameters.PageSize)
+                .Include(x => x.Client);
 
-            var shapedClientLOBGroups = _dataShaper.ShapeData(pagedClientLOBGroups, clientLOBGroupParameters.Fields);
+            var mappedClientLOBGroups = pagedClientLOBGroups
+                .ProjectTo<ClientLOBGroupDTO>(_mapper.ConfigurationProvider);
+
+            var shapedClientLOBGroups = _dataShaper.ShapeData(mappedClientLOBGroups, clientLOBGroupParameters.Fields);
 
             return await PagedList<Entity>
                 .ToPagedList(shapedClientLOBGroups, filteredClientLOBGroups.Count(), clientLOBGroupParameters.PageNumber, clientLOBGroupParameters.PageSize);
