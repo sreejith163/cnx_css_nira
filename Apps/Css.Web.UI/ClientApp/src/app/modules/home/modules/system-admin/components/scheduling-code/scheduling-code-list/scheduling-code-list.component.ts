@@ -27,7 +27,7 @@ import { ComponentOperation } from 'src/app/shared/enums/component-operation.enu
 export class SchedulingCodeListComponent implements OnInit, OnDestroy {
 
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
   totalSchedulingCodesRecord: number;
 
   searchKeyword: string;

@@ -18,6 +18,7 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 
 import { TimezoneService } from 'src/app/shared/services/timezone.service';
 import { ClientLobGroupService } from '../../../services/client-lob-group.service';
+import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
 @Component({
   selector: 'app-add-update-client-lob-group',
@@ -119,8 +120,10 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
         this.activeModal.close();
         this.showSuccessPopUpMessage('The record has been added!');
       }, (error) => {
-        console.log(error);
         this.spinnerService.hide(this.spinner);
+        if (error.status === 409) {
+          this.showErrorWarningPopUpMessage(error.error);
+        }
       });
 
     this.subscriptionList.push(this.addClientLOBGroupSubscription);
@@ -128,7 +131,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
 
   private updateClientLobGroupDetails() {
     if (this.hasClientLobGroupDetailsMismatch()) {
-      const updateClientLobGroupModel = this.clientLOBGroupForm.value as  UpdateClientLobGroup;
+      const updateClientLobGroupModel = this.clientLOBGroupForm.value as UpdateClientLobGroup;
       updateClientLobGroupModel.ModifiedBy = 'User';
       updateClientLobGroupModel.clientId = this.clientId;
 
@@ -140,8 +143,10 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
           this.activeModal.close();
           this.showSuccessPopUpMessage('The record has been updated!');
         }, (error) => {
-          console.log(error);
           this.spinnerService.hide(this.spinner);
+          if (error.status === 409) {
+            this.showErrorWarningPopUpMessage(error.error);
+          }
         });
 
       this.subscriptionList.push(this.updateClientLOBGroupSubscription);
@@ -188,6 +193,15 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
     this.clientLOBGroupForm.controls.timeZoneId.setValue(
       this.clientLOBGroupDetails.timezoneId
     );
+  }
+
+  private showErrorWarningPopUpMessage(contentMessage: string) {
+    const options: NgbModalOptions = { backdrop: false, centered: true, size: 'sm' };
+    const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
+    modalRef.componentInstance.headingMessage = 'Error';
+    modalRef.componentInstance.contentMessage = contentMessage;
+
+    return modalRef;
   }
 
   private intializeClientLobGroupForm() {

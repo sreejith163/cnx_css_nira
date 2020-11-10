@@ -98,6 +98,14 @@ th:last-of-type {
   padding: 5px;
 }
 
+.padding-bottom-5 {
+  padding-bottom: 5px !important;
+}
+
+.padding-left-10 {
+  padding-left: 10px !important;
+}
+
 .m-r-15 {
   margin-right: 15px !important;
 }
@@ -257,6 +265,10 @@ th:last-of-type {
 
 .expanding-table {
   display: table;
+}
+
+.display-flex {
+  display: inline-flex;
 }
 
 .expanding-table thead th {

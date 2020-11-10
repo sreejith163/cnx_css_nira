@@ -16,7 +16,7 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
   clientItemsBufferSize = 10;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   loading = false;
-  totalItems: number;
+  totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
   selectedClientId: any;

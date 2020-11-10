@@ -1,7 +1,6 @@
 import { SchedulingInterval } from 'src/app/modules/home/modules/scheduling-menu/models/scheduling-interval.model';
 import { SchedulingCodeType } from 'src/app/modules/home/modules/system-admin/models/scheduling-code-type.model';
 import { PaginationSize } from '../models/pagination-size.model';
-import { SpinnerStyleOption } from '../models/spinner-style-option.model';
 import { Translation } from '../models/translation.model';
 
 export class Constants {
@@ -1219,22 +1218,22 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
-      variableId: 'lbl_table_heading_client_name',
+      variableId: 'lbl_table_heading_lob_group_name',
       menu: 'Client LOB Group',
       description: 'text',
       language: 'English',
-      translation: 'Client Name',
+      translation: 'LOB Group Name',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
       modifiedDate: '2020-10-04',
     },
     {
-      variableId: 'lbl_table_heading_lob_group_name',
+      variableId: 'lbl_table_client_lob_group_hierarchy',
       menu: 'Client LOB Group',
       description: 'text',
       language: 'English',
-      translation: 'LOB Group Name',
+      translation: 'Hierachy',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -3639,6 +3638,10 @@ export class Constants {
   ];
 
   public static readonly paginationSize: PaginationSize[] = [
+    {
+      count: 5,
+      text: '5/Page'
+    },
     {
       count: 10,
       text: '10/Page'

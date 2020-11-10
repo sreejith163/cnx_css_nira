@@ -14,16 +14,18 @@
   </div>
 
   <div class="row m-l-r-10">
-    <div class="col-md-3 p-b-5">
-      <input type="text" class="form-control" placeholder="{{ 'Enter a Description' | translation: 'lbl_search_place_holder' : translationValues }}" [(ngModel)]="searchKeyword" />
+    <div class="col-md-3 padding-bottom-5">
+      <input type="text" class="form-control"
+        placeholder="{{ 'Enter a Description' | translation: 'lbl_search_place_holder' : translationValues }}"
+        [(ngModel)]="searchKeyword" />
     </div>
-    <div class="col-md-2 p-b-5">
+    <div class="col-md-2 padding-bottom-5">
       <button class="form-control" id="btn_search" (click)="searchSchedulingCode()">
         <i class="fa fa-search" aria-hidden="true"></i>
         {{ 'Search' | translation: 'btn_search' : translationValues }}
       </button>
     </div>
-    <div class="col-md-7 p-b-5">
+    <div class="col-md-7 padding-bottom-5">
       <button type="button" class="btn btn-primary float-r" (click)="addSchedulingCode()" id="btn_add">
         <i class="fa fa-plus padding-5" aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}
       </button>
@@ -84,28 +86,32 @@
             </td>
             <td>{{ el.id }}</td>
             <td>{{ el.refId }}</td>
-            <td>{{ el.description }}</td>
-            <td>{{ el.priorityNumber }}</td>
-            <td class="flex dot">
+            <td>
+              <span
+              ngbTooltip="{{ el.description }}">{{ el.description | truncate:{sliceStart: 0, sliceEnd: 25, append: '...'} }}</span>
+             </td>
+            <td>
+              <span
+              ngbTooltip="{{ el.priorityNumber }}">{{ el.priorityNumber | truncate:{sliceStart: 0, sliceEnd: 25, append: '...'} }}</span>
+            </td>
+            <td>
               <ng-container *ngFor="let type of el.schedulingTypeCode  | slice:0:3; let i = index;">
                 <span class="border">{{ type.value }}</span>
               </ng-container>
-              <ng-container>
-                <span class="p-l-10">
-                  <a type="button" class="padding-t-10" [ngbPopover]="popContent" [popoverTitle]="popTitle"
-                    [placement]="'bottom'" container="body">
-                    <i class="fa fa-ellipsis-h"></i>
-                  </a>
-                  <ng-template #popContent>
-                    <ul *ngFor="let type of el.schedulingTypeCode">
-                      <li>{{ type.value }}</li>
-                    </ul>
-                  </ng-template>
-                  <ng-template #popTitle>
-                    {{ 'Type of Code' | translation: 'lbl_table_heading_code_type' : translationValues }}
-                  </ng-template>
-                </span>
-              </ng-container>
+              <span class="padding-left-10 float-right">
+                <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle"
+                  [placement]="'auto'" container="body">
+                  <i class="fa fa-ellipsis-h"></i>
+                </a>
+                <ng-template #popContent>
+                  <ul *ngFor="let type of el.schedulingTypeCode">
+                    <li>{{ type.value }}</li>
+                  </ul>
+                </ng-template>
+                <ng-template #popTitle>
+                  {{ 'Type of Code' | translation: 'lbl_table_heading_code_type' : translationValues }}
+                </ng-template>
+              </span>
             </td>
             <td><i class="icon-style">{{ unifiedToNative(el.icon.value) }}</i></td>
           </tr>
@@ -119,7 +125,7 @@
                 (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
               </ngb-pagination>
               <select class="form-control" (change)="changePageSize($event.target.value)">
-                <option [value]="x.count" *ngFor="let x of paginationSize">
+                <option [selected]="x.count === pageSize"  [value]="x.count" *ngFor="let x of paginationSize">
                   {{ x.text }}
                 </option>
               </select>

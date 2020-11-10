@@ -8,14 +8,15 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { SortDirective } from './directives/sort.directive';
 import { TranslationPipe } from './pipes/translation.pipe';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 import { GenericStateManagerService } from './services/generic-state-manager.service';
 import { TranslationService } from './services/translation.service';
+import { TimezoneService } from './services/timezone.service';
 
 import { MessagePopUpComponent } from './popups/message-pop-up/message-pop-up.component';
 import { ConfirmationPopUpComponent } from './popups/confirmation-pop-up/confirmation-pop-up.component';
 import { ErrorWarningPopUpComponent } from './popups/error-warning-pop-up/error-warning-pop-up.component';
-import { TimezoneService } from './services/timezone.service';
 
 const components =
   [
@@ -23,7 +24,8 @@ const components =
     ConfirmationPopUpComponent,
     ErrorWarningPopUpComponent,
     SortDirective,
-    TranslationPipe
+    TranslationPipe,
+    TruncatePipe
   ];
 
 const modalComponents = [ConfirmationPopUpComponent, MessagePopUpComponent];

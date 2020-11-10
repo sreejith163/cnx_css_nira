@@ -95,10 +95,10 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
         this.activeModal.close({ needRefresh: true });
         this.showSuccessPopUpMessage('The record has been added!');
       }, (error) => {
+        this.spinnerService.hide(this.spinner);
         if (error.status === 409) {
           this.showErrorWarningPopUpMessage(error.error);
         }
-        this.spinnerService.hide(this.spinner);
       });
 
     this.subscriptionList.push(this.addClientSubscription);
@@ -117,7 +117,9 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
           this.showSuccessPopUpMessage('The record has been updated!');
         }, (error) => {
           this.spinnerService.hide(this.spinner);
-          this.showErrorWarningPopUpMessage(error.error);
+          if (error.status === 409) {
+            this.showErrorWarningPopUpMessage(error.error);
+          }
         });
       this.subscriptionList.push(this.updateClientSubscription);
     } else {

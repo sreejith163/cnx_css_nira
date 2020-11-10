@@ -8,6 +8,7 @@ import { SchedulingCodeTypesService } from './services/scheduling-code-types.ser
 import { AgentCategoryListService } from './services/agent-category-list.service';
 import { AgentAdminDropdownsService } from '../scheduling-menu/services/agent-admin-dropdowns.service';
 import { AgentCategoryDropdownService } from './services/agent-category-dropdown.service';
+import { SchedulingCodeIconsService } from './services/scheduling-code-icons.service';
 
 import { TranslationListComponent } from './components/translation-list/translation-list.component';
 import { AgentCategoryListComponent } from './components/agent-category-list/agent-category-list.component';
@@ -34,7 +35,7 @@ const providers = [
   SchedulingCodeTypesService,
   AgentCategoryListService,
   AgentAdminDropdownsService,
-  SchedulingCodeService,
+  SchedulingCodeIconsService,
   AgentCategoryDropdownService];
 
 @NgModule({

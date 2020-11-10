@@ -21,6 +21,7 @@ import { Constants } from 'src/app/shared/util/constants.util';
 import { SchedulingCodeService } from '../../../services/scheduling-code.service';
 import { SchedulingCodeIconsService } from '../../../services/scheduling-code-icons.service';
 import { SchedulingCodeTypesService } from '../../../services/scheduling-code-types.service';
+import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
 
 @Component({
@@ -103,7 +104,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
 
   isNumberKey(evt) {
     const charCode = (evt.which) ? evt.which : evt.keyCode;
-    if ((charCode < 49 || charCode > 57)) {
+    if ((charCode < 48 || charCode > 57)) {
       return false;
     }
 
@@ -146,7 +147,9 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
         this.showSuccessPopUpMessage('The record has been added!');
       }, (error) => {
         this.spinnerService.hide(this.spinner);
-        console.log(error);
+        if (error.status === 409) {
+          this.showErrorWarningPopUpMessage(error.error);
+        }
       });
 
     this.subscriptionList.push(this.addSchedulingCodeSubscription);
@@ -168,7 +171,9 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
           this.showSuccessPopUpMessage('The record has been updated!');
         }, (error) => {
           this.spinnerService.hide(this.spinner);
-          console.log(error);
+          if (error.status === 409) {
+            this.showErrorWarningPopUpMessage(error.error);
+          }
         });
 
       this.subscriptionList.push(this.updateSchedulingCodeSubscription);
@@ -215,6 +220,15 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  private showErrorWarningPopUpMessage(contentMessage: string) {
+    const options: NgbModalOptions = { backdrop: false, centered: true, size: 'sm' };
+    const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
+    modalRef.componentInstance.headingMessage = 'Error';
+    modalRef.componentInstance.contentMessage = contentMessage;
+
+    return modalRef;
   }
 
   private showSuccessPopUpMessage(contentMessage: string) {

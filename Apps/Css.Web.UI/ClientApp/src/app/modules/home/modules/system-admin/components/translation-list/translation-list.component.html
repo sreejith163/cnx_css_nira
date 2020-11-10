@@ -14,16 +14,16 @@
   </div>
 
   <div class="row m-l-r-10">
-    <div class="col-md-4 p-b-5">
+    <div class="col-md-4 padding-bottom-5">
       <input type="text" class="form-control" placeholder="Enter a text to search" />
     </div>
-    <div class="col-md-2 p-b-5">
+    <div class="col-md-2 padding-bottom-5">
       <button class="form-control" id="btn_search">
         <i class="fa fa-search" aria-hidden="true"></i>
         {{ 'Search' | translation: 'btn_search' : translationValues }}
       </button>
     </div>
-    <div class="col-md-6 p-b-5">
+    <div class="col-md-6 padding-bottom-5">
       <button type="button" class="btn btn-primary float-r" (click)="openModal()" id="btn_add">
         <i class="fa fa-plus padding-5" aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}
       </button>
