@@ -3,6 +3,7 @@ using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Scheduling.Repository.Interfaces;
@@ -86,6 +87,13 @@ namespace Css.Api.Scheduling.Business
         /// </returns>
         public async Task<CSSResponse> CreateClientLOBGroup(CreateClientLOBGroup clientLOBGroupDetails)
         {
+            var clientLOBGroups = await _repository.ClientLOBGroups.GetClientLOBGroupsIdByClientIdAndGroupName(
+                new ClientIdDetails { ClientId = clientLOBGroupDetails.ClientId }, new ClientLOBGroupNameDetails { Name = clientLOBGroupDetails.name });
+            if (clientLOBGroups?.Count > 0)
+            {
+                return new CSSResponse($"Client LOB Group with name '{clientLOBGroupDetails.name}' already exists.", HttpStatusCode.Conflict);
+            }
+
             var clientLOBGroupRequest = _mapper.Map<ClientLobGroup>(clientLOBGroupDetails);
             _repository.ClientLOBGroups.CreateClientLOBGroup(clientLOBGroupRequest);
 
@@ -106,6 +114,13 @@ namespace Css.Api.Scheduling.Business
             if (clientLOBGroup == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var clientLOBGroups = await _repository.ClientLOBGroups.GetClientLOBGroupsIdByClientIdAndGroupName(
+               new ClientIdDetails { ClientId = clientLOBGroupDetails.ClientId }, new ClientLOBGroupNameDetails { Name = clientLOBGroupDetails.name });
+            if (clientLOBGroups?.Count > 0 && clientLOBGroups.IndexOf(clientLOBGroupIdDetails.ClientLOBGroupId) == -1)
+            {
+                return new CSSResponse($"Client LOB Group with name '{clientLOBGroupDetails.name}' already exists.", HttpStatusCode.Conflict);
             }
 
             var clientLOBGroupRequest = _mapper.Map(clientLOBGroupDetails, clientLOBGroup);

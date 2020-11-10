@@ -10,6 +10,8 @@ using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -107,6 +109,22 @@ namespace Css.Api.Scheduling.Repository
         {
             var count = FindByCondition(x => x.ClientId == clientIdDetails.ClientId && x.IsDeleted == false)
                 .Count();
+
+            return await Task.FromResult(count);
+        }
+
+        /// <summary>
+        /// Gets the name of the client lob groups identifier by client identifier and group.
+        /// </summary>
+        /// <param name="clientIdDetails">The client identifier details.</param>
+        /// <param name="clientLOBGroupNameDetails">The client lob group name details.</param>
+        /// <returns></returns>
+        public async Task<List<int>> GetClientLOBGroupsIdByClientIdAndGroupName(ClientIdDetails clientIdDetails, ClientLOBGroupNameDetails clientLOBGroupNameDetails)
+        {
+            var count = FindByCondition
+                (x => x.ClientId == clientIdDetails.ClientId && string.Equals(x.Name, clientLOBGroupNameDetails.Name, StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
+                .Select(x => x.Id)
+                .ToList();
 
             return await Task.FromResult(count);
         }
