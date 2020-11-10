@@ -28,6 +28,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
 
   currentPage = 1;
   pageSize = 10;
+  characterSplice = 25;
   totalSchedulingCodesRecord: number;
 
   searchKeyword: string;

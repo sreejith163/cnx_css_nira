@@ -31,6 +31,7 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
 
   currentPage = 1;
   pageSize = 10;
+  characterSplice = 25;
   totalClientLOBGroupRecord: number;
   clientLOBGroupId: number;
   clientId?: number;

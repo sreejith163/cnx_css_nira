@@ -29,6 +29,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
 
   currentPage = 1;
   pageSize = 10;
+  characterSplice = 25;
   totalClientRecord: number;
 
   searchKeyword: string;
