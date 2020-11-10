@@ -80,6 +80,12 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> CreateSchedulingCode(CreateSchedulingCode schedulingCodeDetails)
         {
+            var schedulingCodes = await _repository.SchedulingCodes.GetSchedulingCodesByDescription(new SchedulingCodeNameDetails { Name = schedulingCodeDetails.Description });
+            if (schedulingCodes?.Count > 0)
+            {
+                return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' already exists.", HttpStatusCode.Conflict);
+            }
+
             var schedulingCodeRequest = _mapper.Map<SchedulingCode>(schedulingCodeDetails);
             foreach (var codeType in schedulingCodeDetails?.CodeTypes)
             {
@@ -105,6 +111,12 @@ namespace Css.Api.Scheduling.Business
             if (schedulingCode == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var schedulingCodes = await _repository.SchedulingCodes.GetSchedulingCodesByDescription(new SchedulingCodeNameDetails { Name = schedulingCodeDetails.Description });
+            if (schedulingCodes?.Count > 0 && schedulingCodes.IndexOf(schedulingCodeIdDetails.SchedulingCodeId) == -1)
+            {
+                return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' already exists.", HttpStatusCode.Conflict);
             }
 
             var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);

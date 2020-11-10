@@ -11,6 +11,8 @@ using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using AutoMapper;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using AutoMapper.QueryableExtensions;
+using System.Collections.Generic;
+using System;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -92,6 +94,20 @@ namespace Css.Api.Scheduling.Repository
                 .SingleOrDefault();
 
             return await Task.FromResult(schedulingCode);
+        }
+
+        /// <summary>
+        /// Gets the scheduling codes by description.
+        /// </summary>
+        /// <param name="schedulingCodeNameDetails">The scheduling code name details.</param>
+        /// <returns></returns>
+        public async Task<List<int>> GetSchedulingCodesByDescription(SchedulingCodeNameDetails schedulingCodeNameDetails)
+        {
+            var schedulingCodes = FindByCondition(x => string.Equals(x.Description, schedulingCodeNameDetails.Name, StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
+                .Select(x => x.Id)
+                .ToList();
+
+            return await Task.FromResult(schedulingCodes);
         }
 
         /// <summary>

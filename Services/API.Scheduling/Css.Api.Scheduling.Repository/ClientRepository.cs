@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Css.Api.Scheduling.Models.DTO.Response.Client;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using System;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -96,11 +97,11 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<List<int>> GetClientsByName(ClientNameDetails clientNameDetails)
         {
-            var client = FindByCondition(x => x.Name == clientNameDetails.Name && x.IsDeleted == false)
+            var clients = FindByCondition(x => string.Equals(x.Name, clientNameDetails.Name, StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
                 .Select(x => x.Id)
                 .ToList();
 
-            return await Task.FromResult(client);
+            return await Task.FromResult(clients);
         }
 
         /// <summary>
