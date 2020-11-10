@@ -17,7 +17,8 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         {
             new ClientLobGroup{ Id = 1, ClientId = 1, FirstDayOfWeek = 1, Name = "A", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
             new ClientLobGroup{ Id = 2, ClientId = 2, FirstDayOfWeek = 1, Name = "B", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
-            new ClientLobGroup{ Id = 3, ClientId = 3, FirstDayOfWeek = 1, Name = "C", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
+            new ClientLobGroup{ Id = 3, ClientId = 3, FirstDayOfWeek = 1, Name = "C", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new ClientLobGroup{ Id = 4, ClientId = 2, FirstDayOfWeek = 1, Name = "D", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
         };
 
         /// <summary>
@@ -49,6 +50,11 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// <returns></returns>
         public CSSResponse CreateClientLOBGroup(CreateClientLOBGroup createClientLOBGroup)
         {
+            if (clientLOBGroupsDB.Exists(x => x.IsDeleted == false && x.Name == createClientLOBGroup.name && x.ClientId == createClientLOBGroup.ClientId))
+            {
+                return new CSSResponse($"Client LOB Group with name '{createClientLOBGroup.name}' already exists.", HttpStatusCode.Conflict);
+            }
+
             ClientLobGroup clientLOBGroup = new ClientLobGroup()
             {
                 Id = 4,
@@ -74,6 +80,11 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             if (!clientLOBGroupsDB.Exists(x => x.IsDeleted == false && x.Id == clientLOBGroupId.ClientLOBGroupId))
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            if (clientLOBGroupsDB.Exists(x => x.IsDeleted == false && x.Name == updateClientLOBGroup.name && x.ClientId == updateClientLOBGroup.ClientId && x.Id != clientLOBGroupId.ClientLOBGroupId))
+            {
+                return new CSSResponse($"Client LOB Group with name '{updateClientLOBGroup.name}' already exists.", HttpStatusCode.Conflict);
             }
 
             var clientLOBGroup = clientLOBGroupsDB.Where(x => x.Id == clientLOBGroupId.ClientLOBGroupId && x.IsDeleted == false).FirstOrDefault();
