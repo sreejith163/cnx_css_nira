@@ -1,11 +1,11 @@
 import { WeekDay } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { DaysOfWeek } from 'src/app/shared/enums/days-of-week.enum';
+import { TimeZone } from 'src/app/shared/models/time-zone.model';
 import {
   SkillGroupDetails,
   SkillGroupOpenHours,
 } from '../models/skill-group.model';
-import { TimeZone } from '../models/time-zone.model';
 
 @Injectable()
 export class SkillGroupsService {
@@ -35,7 +35,7 @@ export class SkillGroupsService {
     for (let i = 1; i <= 7; i++) {
       const timeZone = new TimeZone();
       timeZone.id = i;
-      timeZone.timeZoneName = this.timeZoneValues[i];
+      timeZone.value = this.timeZoneValues[i];
       this.timeZone.push(timeZone);
     }
   }
@@ -54,7 +54,7 @@ export class SkillGroupsService {
       skillGroup.firstDayOfWeek = i - 1;
       skillGroup.clientLOBGroupName = 'ClientLOBGroup ' + i;
       const timeZone = this.timeZone.find((x) => x.id === i);
-      skillGroup.timeZoneForReporting = timeZone.timeZoneName;
+      skillGroup.timeZoneForReporting = timeZone.value;
       skillGroup.createdDate = '2020-09-1' + i;
       skillGroup.createdBy = 'User ' + i;
       skillGroup.modifiedDate = '2020-09-1' + i;

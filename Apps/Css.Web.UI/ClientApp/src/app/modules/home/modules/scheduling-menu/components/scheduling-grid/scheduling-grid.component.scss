@@ -78,9 +78,17 @@ button.calendar:active {
 
 .jsgrid-header-cell {
   cursor: pointer;
-  background-color: white;
   height: 40px;
   width: 40px;
+}
+
+.morning {
+  background-color: white;
+}
+
+.night {
+  background-color: darkgrey;
+  color: white;
 }
 
 .cell-selected {

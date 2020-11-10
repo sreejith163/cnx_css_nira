@@ -1,6 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { WeekDay } from '@angular/common';
-import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
 import { Translation } from 'src/app/shared/models/translation.model';
@@ -21,7 +21,6 @@ declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
 declare function removeHighlightedCells(table: string, className: string);
 declare function highlightCell(cell: string, className: string);
-declare function isDraggedInValidCell(table: string, className: string, hoveredCell: string);
 
 @Component({
   selector: 'app-scheduling-grid',
@@ -49,7 +48,6 @@ export class SchedulingGridComponent implements OnInit {
   totalSchedulingRecord: number;
 
   selectedIconId: string;
-  icon: string;
   tableClassName = 'schedulingGridTable';
   selectedCellClassName = 'cell-selected';
   hasMismatch: boolean;
@@ -59,7 +57,6 @@ export class SchedulingGridComponent implements OnInit {
   fromDate: NgbDate;
   toDate: NgbDate | null = null;
   today = this.calendar.getToday();
-  hoveredCellId: any;
 
   model: NgbDateStruct;
   weekDay = WeekDay;
@@ -74,8 +71,6 @@ export class SchedulingGridComponent implements OnInit {
   totalSchedulingGridData: SchedulingGrid[] = [];
   schedulingStatus: any[] = [];
   weekDays: Array<string> = [];
-
-  @ViewChildren('rows') rows: QueryList<ElementRef>;
 
   constructor(
     private schedulingGridService: SchedulingGridService,
@@ -161,7 +156,7 @@ export class SchedulingGridComponent implements OnInit {
     const weekData = this.selectedGrid.calendar?.weekDays.find(x => x.day === +week);
 
     if (weekData) {
-      const weekTimeData = weekData.times.find(x => x.time === time && x.meridiem === meridiem);
+      const weekTimeData = weekData.times.find(x => x.from === time && x.meridiem === meridiem);
       if (weekTimeData) {
         return this.unifiedToNative(weekTimeData?.icon);
       }
@@ -194,8 +189,9 @@ export class SchedulingGridComponent implements OnInit {
     this.endIcon = this.iconData.length;
   }
 
-  onIconClick(icon) {
-    this.selectedIconId = icon;
+  onIconClick(event) {
+    this.selectedIconId = event.target.id;
+    this.saveGridItems( this.selectedIconId);
   }
 
   isMainMinute(data: any) {
@@ -211,20 +207,11 @@ export class SchedulingGridComponent implements OnInit {
 
     setRowCellIndex(event.currentTarget.id);
     highlightCell(event.currentTarget.id, this.selectedCellClassName);
+
   }
 
   dragged(event: CdkDragDrop<any>) {
-    if (isDraggedInValidCell(this.tableClassName, this.selectedCellClassName, this.hoveredCellId)) {
       this.saveGridItems(event.item.element.nativeElement.id);
-    }
-  }
-
-  mouseEnter(event) {
-    this.hoveredCellId = event.currentTarget.id;
-  }
-
-  mouseLeave() {
-    this.hoveredCellId = undefined;
   }
 
   changeTimeInterval(event) {
@@ -286,8 +273,12 @@ export class SchedulingGridComponent implements OnInit {
         ap[Math.floor(hh / 12)];
       tt = tt + x;
     }
-    const index = times.lastIndexOf('00:00 pm');
-    times.splice(index, 1, '12:00 pm');
+    times.forEach((ele, index) => {
+      if (ele.split(' ')[0] === '00:00') {
+        const meridian = ele.split(' ')[1];
+        times.splice(index, 1, '12:00 ' + meridian);
+      }
+    });
     return times;
   }
 
@@ -295,24 +286,27 @@ export class SchedulingGridComponent implements OnInit {
     const table = $('#' + this.tableClassName);
     table.find('.' + this.selectedCellClassName).each((index, elem) => {
       const week = elem.attributes.week.value;
-      const time = elem.attributes.time.value;
+      const from = elem.attributes.time.value;
+      const minuteValue = Number(from.split(':')[1]) + this.timeIntervals;
+      const minute = minuteValue === 5 ? '05' : minuteValue;
+      const to = from.split(':')[0] + ':' + minute;
       const meridiem = elem.attributes.meridiem.value;
 
       const weekDays = this.selectedGrid?.calendar?.weekDays;
       const weekData = weekDays.find(x => x.day === +week);
 
       if (weekData) {
-        const timeData = weekData.times.find(x => x.time === time && x.meridiem === meridiem);
+        const timeData = weekData.times.find(x => x.from === from && x.meridiem === meridiem);
         if (timeData) {
           timeData.icon = icon;
         } else {
-          const calendarTime = new SchedulingCalendarTime(meridiem, time, icon);
+          const calendarTime = new SchedulingCalendarTime(meridiem, from, to, icon);
           weekData.times.push(calendarTime);
         }
       } else {
         const weekDay = new SchedulingCalendarDays();
         weekDay.day = +week;
-        const calendarTime = new SchedulingCalendarTime(meridiem, time, icon);
+        const calendarTime = new SchedulingCalendarTime(meridiem, from, to, icon);
         weekDay.times.push(calendarTime);
 
         weekDays.push(weekDay);

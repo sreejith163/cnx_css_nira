@@ -39,7 +39,7 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscribeToClients();
     this.subscribeToSearching();
-    if(this.clientId!==undefined)
+    if (this.clientId)
     {
       this.selectedClientId = this.clientId;
     }

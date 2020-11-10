@@ -149,7 +149,7 @@
                 formControlName="timeZoneForReporting">
                 <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}
                 </option>
-                <option value="" *ngFor="let x of timeZoneList" [value]="x.timeZoneName">{{x.timeZoneName}}</option>
+                <option value="" *ngFor="let x of timeZoneList" [value]="x.value">{{x.value}}</option>
               </select>
               <div *ngIf="hasFormControlValidationError('timeZoneForReporting')" class="valid-error">
                 {{ 'Time zone for reporting is required' | translation: 'lbl_add_edit_time_zone_required_validation_message' : translationValues }}

@@ -86,7 +86,6 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
 
   private addClientDetails() {
     const addClientModel = this.clientForm.value as AddClient;
-    addClientModel.refId = 1;
     addClientModel.createdBy = 'User';
 
     this.spinnerService.show(this.spinner, SpinnerOptions);

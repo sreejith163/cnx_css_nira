@@ -4,15 +4,19 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
-import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-import { Translation } from 'src/app/shared/models/translation.model';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
-import { Constants } from 'src/app/shared/util/constants.util';
-import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+
+import { Translation } from 'src/app/shared/models/translation.model';
 import { AddClientLobGroup } from '../../../models/add-client-lob-group.model';
 import { ClientLOBGroupDetails } from '../../../models/client-lob-group-details.model';
-import { LobGroupTimezone } from '../../../models/lob-group-timezone.model';
 import { UpdateClientLobGroup } from '../../../models/update-client-lob-group.model';
+import { TimeZone } from 'src/app/shared/models/time-zone.model';
+import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
+
+import { Constants } from 'src/app/shared/util/constants.util';
+import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+
+import { TimezoneService } from 'src/app/shared/services/timezone.service';
 import { ClientLobGroupService } from '../../../services/client-lob-group.service';
 
 @Component({
@@ -34,10 +38,8 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
   weekDays: Array<WeekDay>;
   weekDay = WeekDay;
   clientId?: number;
-  timeZones: LobGroupTimezone[] = [];
+  timeZones: TimeZone[] = [];
   editClientId: number;
-
-
 
   @Input() operation: ComponentOperation;
   @Input() clientLOBGroupDetails: ClientLOBGroupDetails;
@@ -47,6 +49,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
     private clientLobGroupService: ClientLobGroupService,
+    private timezoneService: TimezoneService,
     private spinnerService: NgxSpinnerService,
     public activeModal: NgbActiveModal,
   ) { }
@@ -94,30 +97,20 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
   }
 
   private hasClientLobGroupDetailsMismatch() {
-    if (this.clientLOBGroupDetails.clientId !== this.clientId) {
+    if (this.clientLOBGroupDetails.clientId !== this.clientId ||
+      this.clientLOBGroupDetails.name !== this.clientLOBGroupForm.controls.name.value ||
+      this.clientLOBGroupDetails.firstDayOfWeek !== this.clientLOBGroupForm.controls.firstDayOfWeek.value ||
+      this.clientLOBGroupDetails.timezoneId !== this.clientLOBGroupForm.controls.timeZoneId.value) {
       return true;
     }
-    if (this.clientLOBGroupDetails.name !== this.clientLOBGroupForm.controls.clientLOBGroup.value) {
-      return true;
-    }
-    if (this.clientLOBGroupDetails.firstDayOfWeek !== this.clientLOBGroupForm.controls.firstDayOfWeek.value) {
-      return true;
-    }
-    if (this.clientLOBGroupDetails.timezoneId !== this.clientLOBGroupForm.controls.timeZoneForReporting.value) {
-      return true;
-    }
+
     return false;
   }
 
   private addClientLobGroupDetails() {
-
-    const addClientLobGroupModel = new AddClientLobGroup();
-    addClientLobGroupModel.refId = 1;
-    addClientLobGroupModel.name = this.clientLOBGroupForm.controls.clientLOBGroup.value;
+    const addClientLobGroupModel = this.clientLOBGroupForm.value as AddClientLobGroup;
     addClientLobGroupModel.createdBy = 'User';
     addClientLobGroupModel.clientId = this.clientId;
-    addClientLobGroupModel.firstDayOfWeek = this.clientLOBGroupForm.controls.firstDayOfWeek.value;
-    addClientLobGroupModel.timeZoneId = this.clientLOBGroupForm.controls.timeZoneForReporting.value;
 
     this.spinnerService.show(this.spinner, SpinnerOptions);
     this.addClientLOBGroupSubscription = this.clientLobGroupService.addClientLOBGroup(addClientLobGroupModel)
@@ -135,15 +128,13 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
 
   private updateClientLobGroupDetails() {
     if (this.hasClientLobGroupDetailsMismatch()) {
-      const updateClientLobGroupModel = new UpdateClientLobGroup();
-      updateClientLobGroupModel.name = this.clientLOBGroupForm.controls.clientLOBGroup.value;
+      const updateClientLobGroupModel = this.clientLOBGroupForm.value as  UpdateClientLobGroup;
       updateClientLobGroupModel.ModifiedBy = 'User';
       updateClientLobGroupModel.clientId = this.clientId;
-      updateClientLobGroupModel.firstDayOfWeek = this.clientLOBGroupForm.controls.firstDayOfWeek.value;
-      updateClientLobGroupModel.timeZoneId = this.clientLOBGroupForm.controls.timeZoneForReporting.value;
 
       this.spinnerService.show(this.spinner, SpinnerOptions);
-      this.updateClientLOBGroupSubscription = this.clientLobGroupService.updateClientLOBGroup(this.clientLOBGroupDetails.id, updateClientLobGroupModel)
+      this.updateClientLOBGroupSubscription = this.clientLobGroupService.updateClientLOBGroup(
+        this.clientLOBGroupDetails.id, updateClientLobGroupModel)
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
           this.activeModal.close();
@@ -171,7 +162,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
 
   private getTimeZones() {
     this.spinnerService.show(this.spinner, SpinnerOptions);
-    this.getTimeZonesSubscription = this.clientLobGroupService.getTimeZones()
+    this.getTimeZonesSubscription = this.timezoneService.getTimeZones()
       .subscribe((response) => {
         this.spinnerService.hide(this.spinner);
         this.timeZones = response;
@@ -188,25 +179,24 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
   }
 
   private populateClientLobGroupFormDetails() {
-    this.clientLOBGroupForm.controls.clientLOBGroup.setValue(
+    this.clientLOBGroupForm.controls.name.setValue(
       this.clientLOBGroupDetails.name);
     this.editClientId = this.clientLOBGroupDetails.clientId;
     this.clientLOBGroupForm.controls.firstDayOfWeek.setValue(
       this.clientLOBGroupDetails.firstDayOfWeek
     );
-    this.clientLOBGroupForm.controls.timeZoneForReporting.setValue(
+    this.clientLOBGroupForm.controls.timeZoneId.setValue(
       this.clientLOBGroupDetails.timezoneId
     );
   }
 
   private intializeClientLobGroupForm() {
-
     this.clientLOBGroupForm = this.formBuilder.group({
-      clientLOBGroup: new FormControl('', Validators.compose([
+      name: new FormControl('', Validators.compose([
         Validators.required,
         Validators.maxLength(50)])),
       firstDayOfWeek: new FormControl('', Validators.required),
-      timeZoneForReporting: new FormControl('', Validators.required),
+      timeZoneId: new FormControl('', Validators.required),
     });
   }
 

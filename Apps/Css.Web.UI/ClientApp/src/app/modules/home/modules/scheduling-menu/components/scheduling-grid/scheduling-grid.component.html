@@ -1,254 +1,241 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-12 col-md-12">
-            <h2 id="page_title">{{ 'Scheduling Grid' | translation: 'lbl_page_title' : translationValues }}</h2>
-        </div>
+  <div class="row">
+    <div class="col-12 col-md-12">
+      <h2 id="page_title">{{ 'Scheduling Grid' | translation: 'lbl_page_title' : translationValues }}</h2>
     </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-left">
-                <li class="breadcrumb-item"><a>Scheduling Menu</a></li>
-                <li class="breadcrumb-item active"><b>Scheduling Grid List</b> </li>
-            </ol>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a>Scheduling Menu</a></li>
+        <li class="breadcrumb-item active"><b>Scheduling Grid List</b> </li>
+      </ol>
     </div>
-    <div class="row m-l-r-10">
-        <div class="col-md-3 d-flex flex-column">
-            {{ 'Scheduling Grid' | translation: 'lbl_scheduling_group' : translationValues }}
-            <select class="form-control">
-                <option value="">{{ 'Scheduling Grid' | translation: 'drp_list_all' : translationValues }}</option>
-            </select>
-        </div>
-        <div class="col-md-3 d-flex flex-column padding-t-24">
-            <div class="input-group">
-                <input class="form-control" placeholder="Select Start Date" name="dp" ngbDatepicker [readonly]="true"
-                    [footerTemplate]="footerTemplate" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
-                </div>
-                <ng-template #footerTemplate>
-                    <button class="btn btn-primary btn-sm m-2 float-left" (click)="model = today; d.close()"
-                        id="btn_today">Today</button>
-                    <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()"
-                        id="btn_close">Close</button>
-                </ng-template>
-            </div>
-        </div>
-        <div class="col-md-2 col-sm-6 padding-t-24">
-            <input type="text" class="form-control" placeholder="Type here to search">
-        </div>
-        <div class="col-md-2 col-sm-6">
-            <button class="form-control mt-4" id="btn_search"><i class="fa fa-search" aria-hidden="true"></i>
-                {{ 'Scheduling Grid' | translation: 'btn_search' : translationValues }}
-            </button>
-        </div>
+  </div>
+  <div class="row m-l-r-10">
+    <div class="col-md-3 d-flex flex-column">
+      {{ 'Scheduling Grid' | translation: 'lbl_scheduling_group' : translationValues }}
+      <select class="form-control">
+        <option value="">{{ 'Scheduling Grid' | translation: 'drp_list_all' : translationValues }}</option>
+      </select>
     </div>
+    <div class="col-md-3 d-flex flex-column padding-t-24">
+      <div class="input-group">
+        <input class="form-control" placeholder="Select Start Date" name="dp" ngbDatepicker [readonly]="true"
+          [footerTemplate]="footerTemplate" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
+        </div>
+        <ng-template #footerTemplate>
+          <button class="btn btn-primary btn-sm m-2 float-left" (click)="model = today; d.close()"
+            id="btn_today">Today</button>
+          <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()" id="btn_close">Close</button>
+        </ng-template>
+      </div>
+    </div>
+    <div class="col-md-2 col-sm-6 padding-t-24">
+      <input type="text" class="form-control" placeholder="Type here to search">
+    </div>
+    <div class="col-md-2 col-sm-6">
+      <button class="form-control mt-4" id="btn_search"><i class="fa fa-search" aria-hidden="true"></i>
+        {{ 'Scheduling Grid' | translation: 'btn_search' : translationValues }}
+      </button>
+    </div>
+  </div>
 
-    <div class="row">
-        <div class="col-md-12 mt-2 table-responsive">
-            <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
-                <thead>
-                    <tr>
-                        <th class="width-5-p"></th>
-                        <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc"
-                            data-name="employeeId">
-                            {{ 'Employee ID' | translation: 'lbl_table_heading_employee_id' : translationValues }}
-                            <i class="fa fa-sort"></i></th>
-                        <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc"
-                            data-name="name">
-                            {{ 'Name' | translation: 'lbl_table_heading_name' : translationValues }}
-                            <i class="fa fa-sort"></i></th>
-                        <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc"
-                            data-name="dateRange">
-                            {{ 'Date Range' | translation: 'lbl_table_heading_date_range' : translationValues }}
-                            <i class="fa fa-sort"></i></th>
-                        <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc"
-                            data-name="status">
-                            {{ 'Satus' | translation: 'lbl_table_heading_status' : translationValues }}
-                            <i class="fa fa-sort"></i>
-                        </th>
-                        <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc"
-                            data-name="modifiedBy" data-type="date">
-                            {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
-                            <i class="fa fa-sort"></i>
-                        </th>
-                        <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc"
-                            data-name="modifiedDate">
-                            {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
-                            <i class="fa fa-sort"></i></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container
-                        *ngFor="let el of totalSchedulingGridData  | slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize; let i = index">
-                        <tr class="table-row">
-                            <td>
-                                <i class="expand-icon fas padding-5 pointer"
-                                    [ngClass]="( selectedGrid?.employeeId === el?.employeeId ) ? 'fa-minus' : 'fa-plus'"
-                                    (click)="toggleDetails(el)"></i></td>
-                            <td>{{el.employeeId}}</td>
-                            <td>{{el.name}}</td>
-                            <td>{{el.fromDate }} - {{ el.toDate }}
-                                <i class="fa fa-calendar" aria-hidden="true" (click)="datepicker.toggle()"></i>
-                                <input name="datepicker" class="hidden-datepicker" ngbDatepicker
-                                    #datepicker="ngbDatepicker" [autoClose]="'outside'"
-                                    (dateSelect)="onDateSelection($event, i)" [displayMonths]="2" [dayTemplate]="t"
-                                    [container]="'body'" [placement]="'bottom'" outsideDays="hidden"
-                                    [startDate]="fromDate!">
-                                <ng-template #t let-date let-focused="focused">
-                                    <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                                        [class.faded]="isHovered(date) || isInside(date)"
-                                        (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
-                                        {{ date.day }}
-                                    </span>
-                                </ng-template>
-                            </td>
-                            <td>
-                                <select class="form-control" (change)="setSchedulingStatus($event.target.value)">
-                                    <option [value]="status" [selected]="el.status === +status"
-                                        *ngFor="let status of schedulingStatus">
-                                        {{ scheduleStatus[status] }}
-                                    </option>
-                                </select>
-                            </td>
-                            <td>{{el.modifiedBy}}</td>
-                            <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
-                        </tr>
-                        <ng-container>
-                            <tr class="row-details" *ngIf="selectedGrid?.employeeId === el?.employeeId"
-                                [@enterAnimation]="selectedGrid?.employeeId === el?.employeeId">
-                                <td colspan="12">
-                                    <div class="jsgrid-grid-body">
-                                        <div class="row">
-                                            <div class="col-md-4 col-sm-4">
-                                                <p class="float-left">
-                                                    {{ 'Time Interval' | translation: 'lbl_grid_time_interval' : translationValues }}:
-                                                </p>
-                                                <select class="form-control width-sm" [(ngModel)]="timeIntervals"
-                                                    (change)="changeTimeInterval($event)">
-                                                    <ng-container
-                                                        *ngFor="let interval of schedulingIntervals; let i = index">
-                                                        <option [value]="interval.id">{{ interval.value }}</option>
-                                                    </ng-container>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4 col-sm-4">
-                                                <p class="text-center">
-                                                    {{ 'Agent' | translation: 'lbl_grid_agent' : translationValues }}:
-                                                    {{ selectedGrid.name }}</p>
-                                            </div>
-                                            <div class="col-md-4 col-sm-4">
-                                                <p class="float-right">
-                                                    {{ 'Date' | translation: 'lbl_grid_date' : translationValues }}:
-                                                    {{ selectedGrid.fromDate }} -
-                                                    {{selectedGrid.toDate}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12" cdkDropList (cdkDropListDropped)="dragged($event)">
-                                                <div class="row">
-                                                    <div class="col-md-12 col-sm-12 align">
-                                                        <span>
-                                                            <i class="fa fa-angle-double-left arrow-icon"
-                                                                aria-hidden="true" (click)="toBeginning()"
-                                                                [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-                                                            <i class="fa fa-caret-left arrow-icon" aria-hidden="true"
-                                                                (click)="previous()"
-                                                                [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-                                                        </span>
-                                                        <ng-container class="margin-5"
-                                                            *ngFor="let icon of iconData | horizontalScroll : startIcon: endIcon: iconCount; let i= index;">
-                                                            <i id="{{ icon.unified }}" class="icon-style icon"
-                                                                [ngClass]="{'icon-active': icon === icon.unified}"
-                                                                (click)="onIconClick(icon)"
-                                                                [ngClass]="{ 'icon-active': (selectedIconId == icon)}"
-                                                                cdkDrag>{{ unifiedToNative(icon.unified) }}</i>
-                                                        </ng-container>
-                                                        <span>
-                                                            <i class="fa fa-caret-right arrow-icon" aria-hidden="true"
-                                                                (click)="next()"
-                                                                [ngClass]="(endIcon == iconData.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-                                                            <i class="fa fa-angle-double-right arrow-icon"
-                                                                aria-hidden="true" (click)="toEnd()"
-                                                                [ngClass]="(endIcon == iconData.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="row table-responsive" [style.max-width]="getGridMaxWidth()">
-                                                    <div class="col-md-12 col-sm-12">
-                                                        <table class="jsgrid-table table" id="schedulingGridTable">
-                                                            <tbody>
-                                                                <tr class="jsgrid-header-row">
-                                                                    <th
-                                                                        class="jsgrid-header-cell jsgrid-header-sortable">
-                                                                    </th>
-                                                                    <ng-container *ngFor="let data of openTimes;">
-                                                                        <ng-container
-                                                                            *ngIf="isMainMinute(data); else subMinutes">
-                                                                            <th
-                                                                                class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                                                                                {{ data.split(':')[0] }}
-                                                                            </th>
-                                                                        </ng-container>
-                                                                        <ng-template #subMinutes>
-                                                                            <th
-                                                                                class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                                                                                <sup>{{ data.split(':')[1].split(' ')[0] }}</sup>
-                                                                            </th>
-                                                                        </ng-template>
-                                                                    </ng-container>
-                                                                </tr>
-                                                                <tr class="jsgrid-row"
-                                                                    *ngFor="let week of weekDays; let i = index" #rows>
-                                                                    <td class="jsgrid-cell-week user-select-none">
-                                                                        {{ weekDay[week] | slice: 0 : 3 }}
-                                                                    </td>
-                                                                    <td id="grid_col_{{week}}_{{j}}" class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
-                                                                        attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}" [attr.week]="week"
-                                                                        *ngFor="let openTime of openTimes;let j = index" (click)="setCellSelected($event)" (mouseenter)="mouseEnter($event)"
-                                                                        (mouseleave)="mouseLeave()">
-                                                                        <ng-container *ngIf="getIconFromSelectedGrid(week, openTime).length">
-                                                                            <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime) }}</i>
-                                                                        </ng-container>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row padding-10">
-                                        <div class="col-md-12 padding-12">
-                                            <button class="btn btn-primary float-r" data-dismiss="modal"
-                                                (click)="save()" id="btn_save">
-                                                <i
-                                                    class="fa fa-save padding-5"></i>{{ 'Save for later' | translation: 'btn_save_for_later' : translationValues }}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-container>
-                    </ng-container>
-                </tbody>
-            </table>
-            <div class="row">
-                <div class="col-md-12 d-flex justify-content-end mt-3">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination p-0 float-right">
-                            <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalSchedulingRecord"
-                                (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage"
-                                [boundaryLinks]="true"></ngb-pagination>
-                            <select class="form-control" (change)="changePageSize($event.target.value)">
-                                <option [value]="x.count" *ngFor="let x of paginationSize">{{x.text}}</option>
-                            </select>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-md-12 mt-2 table-responsive">
+      <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+        <thead>
+          <tr>
+            <th class="width-5-p"></th>
+            <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc"
+              data-name="employeeId">
+              {{ 'Employee ID' | translation: 'lbl_table_heading_employee_id' : translationValues }}
+              <i class="fa fa-sort"></i></th>
+            <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc" data-name="name">
+              {{ 'Name' | translation: 'lbl_table_heading_name' : translationValues }}
+              <i class="fa fa-sort"></i></th>
+            <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc"
+              data-name="dateRange">
+              {{ 'Date Range' | translation: 'lbl_table_heading_date_range' : translationValues }}
+              <i class="fa fa-sort"></i></th>
+            <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc"
+              data-name="status">
+              {{ 'Satus' | translation: 'lbl_table_heading_status' : translationValues }}
+              <i class="fa fa-sort"></i>
+            </th>
+            <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc"
+              data-name="modifiedBy" data-type="date">
+              {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
+              <i class="fa fa-sort"></i>
+            </th>
+            <th class="sortable-field width-10-p" [appSort]="totalSchedulingGridData" data-order="asc"
+              data-name="modifiedDate">
+              {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
+              <i class="fa fa-sort"></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container
+            *ngFor="let el of totalSchedulingGridData  | slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize; let i = index">
+            <tr class="table-row">
+              <td>
+                <i class="expand-icon fas padding-5 pointer"
+                  [ngClass]="( selectedGrid?.employeeId === el?.employeeId ) ? 'fa-minus' : 'fa-plus'"
+                  (click)="toggleDetails(el)"></i></td>
+              <td>{{el.employeeId}}</td>
+              <td>{{el.name}}</td>
+              <td>{{el.fromDate }} - {{ el.toDate }}
+                <i class="fa fa-calendar" aria-hidden="true" (click)="datepicker.toggle()"></i>
+                <input name="datepicker" class="hidden-datepicker" ngbDatepicker #datepicker="ngbDatepicker"
+                  [autoClose]="'outside'" (dateSelect)="onDateSelection($event, i)" [displayMonths]="2"
+                  [dayTemplate]="t" [container]="'body'" [placement]="'bottom'" outsideDays="hidden"
+                  [startDate]="fromDate!">
+                <ng-template #t let-date let-focused="focused">
+                  <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                    (mouseleave)="hoveredDate = null">
+                    {{ date.day }}
+                  </span>
+                </ng-template>
+              </td>
+              <td>
+                <select class="form-control" (change)="setSchedulingStatus($event.target.value)">
+                  <option [value]="status" [selected]="el.status === +status" *ngFor="let status of schedulingStatus">
+                    {{ scheduleStatus[status] }}
+                  </option>
+                </select>
+              </td>
+              <td>{{el.modifiedBy}}</td>
+              <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
+            </tr>
+            <ng-container>
+              <tr class="row-details" *ngIf="selectedGrid?.employeeId === el?.employeeId"
+                [@enterAnimation]="selectedGrid?.employeeId === el?.employeeId">
+                <td colspan="12">
+                  <div class="jsgrid-grid-body">
+                    <div class="row">
+                      <div class="col-md-4 col-sm-4">
+                        <p class="float-left">
+                          {{ 'Time Interval' | translation: 'lbl_grid_time_interval' : translationValues }}:
+                        </p>
+                        <select class="form-control width-sm" [(ngModel)]="timeIntervals"
+                          (change)="changeTimeInterval($event)">
+                          <ng-container *ngFor="let interval of schedulingIntervals; let i = index">
+                            <option [value]="interval.id">{{ interval.value }}</option>
+                          </ng-container>
+                        </select>
+                      </div>
+                      <div class="col-md-4 col-sm-4">
+                        <p class="text-center">
+                          {{ 'Agent' | translation: 'lbl_grid_agent' : translationValues }}:
+                          {{ selectedGrid.name }}</p>
+                      </div>
+                      <div class="col-md-4 col-sm-4">
+                        <p class="float-right">
+                          {{ 'Date' | translation: 'lbl_grid_date' : translationValues }}:
+                          {{ selectedGrid.fromDate }} -
+                          {{selectedGrid.toDate}}</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12" cdkDropList (cdkDropListDropped)="dragged($event)">
+                        <div class="row">
+                          <div class="col-md-12 col-sm-12 align">
+                            <span>
+                              <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true" (click)="toBeginning()"
+                                [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
+                              <i class="fa fa-caret-left arrow-icon" aria-hidden="true" (click)="previous()"
+                                [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
+                            </span>
+                            <ng-container class="margin-5"
+                              *ngFor="let icon of iconData | horizontalScroll : startIcon: endIcon: iconCount; let i= index;">
+                              <i id="{{ icon.unified }}" class="icon-style icon"
+                                [ngClass]="{'icon-active': icon === icon.unified}" (click)="onIconClick($event)"
+                                [ngClass]="{ 'icon-active': (selectedIconId == icon)}"
+                                cdkDrag>{{ unifiedToNative(icon.unified) }}</i>
+                            </ng-container>
+                            <span>
+                              <i class="fa fa-caret-right arrow-icon" aria-hidden="true" (click)="next()"
+                                [ngClass]="(endIcon == iconData.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
+                              <i class="fa fa-angle-double-right arrow-icon" aria-hidden="true" (click)="toEnd()"
+                                [ngClass]="(endIcon == iconData.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
+                            </span>
+                          </div>
+                        </div>
+                        <br>
+                        <div class="row table-responsive" [style.max-width]="getGridMaxWidth()">
+                          <div class="col-md-12 col-sm-12">
+                            <table class="jsgrid-table table" id="schedulingGridTable">
+                              <tbody>
+                                <tr class="jsgrid-header-row">
+                                  <th class="jsgrid-header-cell jsgrid-header-sortable">
+                                  </th>
+                                  <ng-container *ngFor="let data of openTimes;">
+                                    <ng-container *ngIf="isMainMinute(data); else subMinutes">
+                                      <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                                        class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                                        {{ data.split(':')[0] }}
+                                      </th>
+                                    </ng-container>
+                                    <ng-template #subMinutes>
+                                      <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                                        class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                                        <sup>{{ data.split(':')[1].split(' ')[0] }}</sup>
+                                      </th>
+                                    </ng-template>
+                                  </ng-container>
+                                </tr>
+                                <tr class="jsgrid-row" *ngFor="let week of weekDays; let i = index">
+                                  <td class="jsgrid-cell-week user-select-none">
+                                    {{ weekDay[week] | slice: 0 : 3 }}
+                                  </td>
+                                  <td id="grid_col_{{week}}_{{j}}" class="jsgrid-cell"
+                                    attr.time="{{ openTime.split(' ')[0] }}"
+                                    attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}" [attr.week]="week"
+                                    *ngFor="let openTime of openTimes;let j = index" (click)="setCellSelected($event)"
+                                    [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : 'night'">
+                                    <ng-container *ngIf="getIconFromSelectedGrid(week, openTime).length">
+                                      <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime) }}</i>
+                                    </ng-container>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row padding-10">
+                    <div class="col-md-12 padding-12">
+                      <button class="btn btn-primary float-r" data-dismiss="modal" (click)="save()" id="btn_save">
+                        <i
+                          class="fa fa-save padding-5"></i>{{ 'Save for later' | translation: 'btn_save_for_later' : translationValues }}
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </tbody>
+      </table>
+      <div class="row">
+        <div class="col-md-12 d-flex justify-content-end mt-3">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination p-0 float-right">
+              <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalSchedulingRecord"
+                (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
+              </ngb-pagination>
+              <select class="form-control" (change)="changePageSize($event.target.value)">
+                <option [value]="x.count" *ngFor="let x of paginationSize">{{x.text}}</option>
+              </select>
+            </ul>
+          </nav>
         </div>
+      </div>
     </div>
+  </div>
 </div>

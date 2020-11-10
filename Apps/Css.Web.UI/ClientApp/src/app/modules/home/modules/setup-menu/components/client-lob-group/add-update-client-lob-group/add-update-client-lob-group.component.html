@@ -36,11 +36,11 @@
               </div>
               <div class="col-md-8">
                 <input type="text" class="form-control" [maxLength]="maxLength"
-                [ngClass]="{'valid-border-error': hasFormControlValidationError('clientLOBGroup')}"
-                formControlName="clientLOBGroup" /> 
-                <ng-container *ngIf="formSubmitted && form.clientLOBGroup.invalid">
-                  <ng-container *ngIf="hasFormControlValidationError('clientLOBGroup'); else maxLengthError">
-                <div *ngIf="hasFormControlValidationError('clientLOBGroup')" class="valid-error">
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('name')}"
+                formControlName="name" /> 
+                <ng-container *ngIf="formSubmitted && form.name.invalid">
+                  <ng-container *ngIf="hasFormControlValidationError('name'); else maxLengthError">
+                <div *ngIf="hasFormControlValidationError('name')" class="valid-error">
                   {{ 'LOB Group Name is required' | translation: 'lbl_add_edit_lob_group_name_required_validation_message' : translationValues }}
                 </div>
               </ng-container>
@@ -89,13 +89,13 @@
               </div>
               <div class="col-md-8">
                 <select class="form-control"
-                  [ngClass]="{'valid-border-error': hasFormControlValidationError('timeZoneForReporting')}"
-                  formControlName="timeZoneForReporting">
+                  [ngClass]="{'valid-border-error': hasFormControlValidationError('timeZoneId')}"
+                  formControlName="timeZoneId">
                   <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}
                   </option>
                   <option value="" *ngFor="let x of timeZones" [value]="x.id">{{x.value}}</option>
                 </select>
-                <div *ngIf="hasFormControlValidationError('timeZoneForReporting')" class="valid-error">
+                <div *ngIf="hasFormControlValidationError('timeZoneId')" class="valid-error">
                   {{ 'Time zone for reporting is required' | translation: 'lbl_add_edit_time_zone_required_validation_message' : translationValues }}
                 </div>
               </div>

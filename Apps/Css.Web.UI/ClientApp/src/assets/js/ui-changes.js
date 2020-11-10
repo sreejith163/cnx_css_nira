@@ -61,16 +61,3 @@ function removeHighlightedCells(tableId, className) {
     const table = $('#' + tableId);
     table.find('.' + className).removeClass(className);
 }
-
-function isDraggedInValidCell(tableId, className, hoveredCellId) {
-    const table = $('#' + tableId);
-    let isValid = false;
-    table.find('.' + className).each((index, elem) => {
-        if (!isValid && elem.id === hoveredCellId) {
-            isValid = true;
-            return;
-        }
-    });
-
-    return isValid;
-}

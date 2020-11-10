@@ -20,7 +20,6 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 
 import { ClientService } from '../../../services/client.service';
 
-
 @Component({
   selector: 'app-client-name-list',
   templateUrl: './client-name-list.component.html',
@@ -29,7 +28,7 @@ import { ClientService } from '../../../services/client.service';
 export class ClientNameListComponent implements OnInit, OnDestroy {
 
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
   totalClientRecord: number;
 
   searchKeyword: string;

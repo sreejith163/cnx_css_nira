@@ -7,7 +7,6 @@ import { environment } from 'src/environments/environment';
 import { AddClientLobGroup } from '../models/add-client-lob-group.model';
 import { ClientLOBGroupDetails } from '../models/client-lob-group-details.model';
 import { ClientLobGroupQueryParameters } from '../models/client-lob-group-query-parameters.model';
-import { LobGroupTimezone } from '../models/lob-group-timezone.model';
 import { UpdateClientLobGroup } from '../models/update-client-lob-group.model';
 
 @Injectable()
@@ -25,7 +24,10 @@ export class ClientLobGroupService extends HttpBaseService {
   getClientLOBGroups(clientLobGroupQueryParameters: ClientLobGroupQueryParameters) {
     const url = `${this.baseURL}/ClientLOBGroups`;
 
-    return this.http.get<ClientLOBGroupDetails>(url, { params: this.convertToHttpParam(clientLobGroupQueryParameters), observe: 'response' })
+    return this.http.get<ClientLOBGroupDetails>(url, {
+      params: this.convertToHttpParam(clientLobGroupQueryParameters),
+      observe: 'response'
+    })
       .pipe(catchError(this.handleError));
   }
 
@@ -54,13 +56,6 @@ export class ClientLobGroupService extends HttpBaseService {
     const url = `${this.baseURL}/ClientLOBGroups/${clientLOBGroupId}`;
 
     return this.http.delete<ApiResponseModel>(url)
-      .pipe(catchError(this.handleError));
-  }
-  
-  getTimeZones() {
-    const url = `${this.baseURL}/TimeZones`;
-
-    return this.http.get<LobGroupTimezone>(url)
       .pipe(catchError(this.handleError));
   }
 }

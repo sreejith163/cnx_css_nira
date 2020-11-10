@@ -7,8 +7,6 @@ import { QueryStringParameters } from 'src/app/shared/models/query-string-parame
 import { environment } from 'src/environments/environment';
 import { AddSchedulingCode } from '../models/add-scheduling-code.model';
 import { SchedulingCodeDetails } from '../models/scheduling-code-details.model';
-import { SchedulingCodeType } from '../models/scheduling-code-type.model';
-import { SchedulingIcon } from '../models/scheduling-icon.model';
 import { UpdateSchedulingCode } from '../models/update-scheduling-code.mode';
 
 @Injectable()
@@ -34,20 +32,6 @@ export class SchedulingCodeService extends HttpBaseService {
     const url = `${this.baseURL}/schedulingCodes/${schedulingCodeId}`;
 
     return this.http.get<SchedulingCodeDetails>(url)
-      .pipe(catchError(this.handleError));
-  }
-
-  getSchedulingIcons() {
-    const url = `${this.baseURL}/schedulingCodeIcons`;
-
-    return this.http.get<SchedulingIcon>(url)
-      .pipe(catchError(this.handleError));
-  }
-
-  getSchedulingCodeTypes() {
-    const url = `${this.baseURL}/schedulingCodeTypes`;
-
-    return this.http.get<SchedulingCodeType>(url)
       .pipe(catchError(this.handleError));
   }
 

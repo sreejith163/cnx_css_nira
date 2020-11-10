@@ -15,9 +15,7 @@ import { TranslationService } from './services/translation.service';
 import { MessagePopUpComponent } from './popups/message-pop-up/message-pop-up.component';
 import { ConfirmationPopUpComponent } from './popups/confirmation-pop-up/confirmation-pop-up.component';
 import { ErrorWarningPopUpComponent } from './popups/error-warning-pop-up/error-warning-pop-up.component';
-
-
-
+import { TimezoneService } from './services/timezone.service';
 
 const components =
   [
@@ -32,7 +30,7 @@ const modalComponents = [ConfirmationPopUpComponent, MessagePopUpComponent];
 
 const modules = [CommonModule, FormsModule, ReactiveFormsModule, NgbModule, NgSelectModule, NgxSpinnerModule];
 
-const providers = [GenericStateManagerService, TranslationService];
+const providers = [GenericStateManagerService, TranslationService, TimezoneService];
 
 @NgModule({
   imports: modules,

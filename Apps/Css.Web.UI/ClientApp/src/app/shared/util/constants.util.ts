@@ -3640,10 +3640,6 @@ export class Constants {
 
   public static readonly paginationSize: PaginationSize[] = [
     {
-      count: 5,
-      text: '5/Page'
-    },
-    {
       count: 10,
       text: '10/Page'
     },

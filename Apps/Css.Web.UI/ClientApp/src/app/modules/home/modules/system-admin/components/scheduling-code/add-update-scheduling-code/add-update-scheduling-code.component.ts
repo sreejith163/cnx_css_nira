@@ -19,6 +19,8 @@ import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { Constants } from 'src/app/shared/util/constants.util';
 
 import { SchedulingCodeService } from '../../../services/scheduling-code.service';
+import { SchedulingCodeIconsService } from '../../../services/scheduling-code-icons.service';
+import { SchedulingCodeTypesService } from '../../../services/scheduling-code-types.service';
 
 
 @Component({
@@ -53,6 +55,8 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     private schedulingCodeService: SchedulingCodeService,
+    private schedulingCodeIconsService: SchedulingCodeIconsService,
+    private schedulingCodeTypesService: SchedulingCodeTypesService,
     private spinnerService: NgxSpinnerService,
   ) { }
 
@@ -131,7 +135,6 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
 
   private addSchedulingCodeDetails() {
     const addSchedulingCodeModel = this.schedulingCodeForm.value as AddSchedulingCode;
-    addSchedulingCodeModel.refId = 1;
     addSchedulingCodeModel.createdBy = 'User';
 
     this.spinnerService.show(this.spinner, SpinnerOptions);
@@ -228,7 +231,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   }
 
   private getSchedulingCodeIcons() {
-    this.getSchedulingIconsSubscription = this.schedulingCodeService.getSchedulingIcons()
+    this.getSchedulingIconsSubscription = this.schedulingCodeIconsService.getSchedulingIcons()
       .subscribe((response) => {
         this.schedulingIcons = response;
       }, (error) => {
@@ -239,7 +242,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   }
 
   private getSchedulingCodeTypes() {
-    this.getSchedulingCodeTypesSubscription = this.schedulingCodeService.getSchedulingCodeTypes()
+    this.getSchedulingCodeTypesSubscription = this.schedulingCodeTypesService.getSchedulingCodeTypes()
       .subscribe((response) => {
         this.codeList = response;
       }, (error) => {

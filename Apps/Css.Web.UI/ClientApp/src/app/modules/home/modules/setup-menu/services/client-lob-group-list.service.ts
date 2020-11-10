@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DaysOfWeek } from 'src/app/shared/enums/days-of-week.enum';
+import { TimeZone } from 'src/app/shared/models/time-zone.model';
 import { ClientLOBGroupDetails } from '../models/client-lob-group-details.model';
-import { TimeZone } from '../models/time-zone.model';
 
 @Injectable()
 export class ClientLobGroupListService {
@@ -29,7 +29,7 @@ export class ClientLobGroupListService {
     for (let i = 1; i <= 7; i++) {
       const timeZone = new TimeZone();
       timeZone.id = i;
-      timeZone.timeZoneName = this.timeZoneValues[i];
+      timeZone.value = this.timeZoneValues[i];
       this.timeZone.push(timeZone);
     }
   }
@@ -45,9 +45,8 @@ export class ClientLobGroupListService {
       lobGroup.refId = i;
       lobGroup.clientName = 'Client ' + i;
       lobGroup.firstDayOfWeek = i - 1;
-      //lobGroup.clientLOBGroupName = 'ClientLOBGroup ' + i;
       const timeZone = this.timeZone.find(x => x.id === i);
-      lobGroup.timeZoneForReporting = timeZone.timeZoneName;
+      lobGroup.timeZoneForReporting = timeZone.value;
       lobGroup.createdDate = '2020-09-1' + i;
       lobGroup.createdBy = 'User ' + i;
       lobGroup.modifiedDate = '2020-09-1' + i;

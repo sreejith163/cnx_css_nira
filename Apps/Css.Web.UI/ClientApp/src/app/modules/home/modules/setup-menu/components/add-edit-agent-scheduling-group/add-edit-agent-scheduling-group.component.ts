@@ -12,6 +12,7 @@ import {
   NgbModal,
   NgbModalOptions,
 } from '@ng-bootstrap/ng-bootstrap';
+import { TimeZone } from 'src/app/shared/models/time-zone.model';
 import { Translation } from 'src/app/shared/models/translation.model';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
@@ -23,7 +24,6 @@ import {
 } from '../../models/scheduling-group-details.model';
 import { SkillGroupList } from '../../models/skill-group-list.model';
 import { SkillTagList } from '../../models/skill-tag-list.model';
-import { TimeZone } from '../../models/time-zone.model';
 import { AgentSchedulingGroupService } from '../../services/agent-scheduling-group.service';
 import { DropdownListService } from '../../services/dropdown-list.service';
 

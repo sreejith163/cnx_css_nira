@@ -7,9 +7,7 @@ import { SubscriptionLike as ISubscription } from 'rxjs';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 
-import { ClientDetails } from '../../../models/client-details.model';
 import { Translation } from 'src/app/shared/models/translation.model';
-import { ClientNameQueryParameters } from '../../../models/client-name-query-parameters.model';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 
@@ -20,8 +18,8 @@ import { ClientLobGroupService } from '../../../services/client-lob-group.servic
 import { AddUpdateClientLobGroupComponent } from '../add-update-client-lob-group/add-update-client-lob-group.component';
 import { ClientLobGroupQueryParameters } from '../../../models/client-lob-group-query-parameters.model';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
-import { JsonPipe, WeekDay } from '@angular/common';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+import { WeekDay } from '@angular/common';
 
 @Component({
   selector: 'app-client-lob-group-list',
@@ -32,19 +30,17 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 export class ClientLobGroupListComponent implements OnInit, OnDestroy {
 
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
   totalClientLOBGroupRecord: number;
   clientLOBGroupId: number;
   clientId?: number;
   spinner = 'tableSpinner';
-
 
   searchKeyword: string;
   orderBy = 'CreatedDate';
   sortBy = 'desc';
   sortKeyword: 'asc' | 'desc';
   weekDay = WeekDay;
-
 
   modalRef: NgbModalRef;
   headerPaginationValues: HeaderPagination;

@@ -1,11 +1,13 @@
 export class SchedulingCalendarTime {
     meridiem: 'am' | 'pm';
-    time: any;
+    from: any;
+    to: any;
     icon: string;
 
-    constructor(meridiem: 'am' | 'pm', time: any, icon: string) {
+    constructor(meridiem: 'am' | 'pm', from: any, to: any, icon: string) {
         this.meridiem = meridiem;
-        this.time = time;
+        this.from = from;
+        this.to = to;
         this.icon = icon;
     }
 }

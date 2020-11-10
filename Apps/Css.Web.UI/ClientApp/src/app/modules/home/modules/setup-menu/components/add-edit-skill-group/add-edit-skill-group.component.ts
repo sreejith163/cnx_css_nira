@@ -12,12 +12,12 @@ import {
   NgbModal,
   NgbModalOptions,
 } from '@ng-bootstrap/ng-bootstrap';
+import { TimeZone } from 'src/app/shared/models/time-zone.model';
 import { Translation } from 'src/app/shared/models/translation.model';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { ClientBaseModel } from '../../models/client-base.model';
 import { SkillGroupDetails, SkillGroupOpenHours } from '../../models/skill-group.model';
-import { TimeZone } from '../../models/time-zone.model';
 import { DropdownListService } from '../../services/dropdown-list.service';
 import { SkillGroupsService } from '../../services/skill-groups.service';
 
