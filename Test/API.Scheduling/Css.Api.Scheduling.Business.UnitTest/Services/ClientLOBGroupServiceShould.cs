@@ -3,6 +3,7 @@ using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Business.UnitTest.Mock;
+using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.Client;
 using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
@@ -50,9 +51,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             mapper = new Mapper(mapperConfig);
 
-            var clientSortHelper = new SortHelper<ClientDTO>();
-            var clientLObGroupSortHelper = new SortHelper<ClientLOBGroupDTO>();
-            var clientSchedulingCodeSortHelper = new SortHelper<SchedulingCodeDTO>();
+            var clientSortHelper = new SortHelper<Client>();
+            var clientLObGroupSortHelper = new SortHelper<ClientLobGroup>();
+            var clientSchedulingCodeSortHelper = new SortHelper<SchedulingCode>();
 
             var clientDataShaperHelper = new DataShaper<ClientDTO>();
             var clientLObGroupDataShaperHelper = new DataShaper<ClientLOBGroupDTO>();
@@ -131,13 +132,32 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// Creates the client lob group.
         /// </summary>
         [Fact]
+        public async void CreateClientLOBGroupWithConflict()
+        {
+            CreateClientLOBGroup clientLOBGroup = new CreateClientLOBGroup()
+            {
+                ClientId = 1,
+                CreatedBy = "Admin",
+                name = "A"
+            };
+            var result = await clientLOBGroupService.CreateClientLOBGroup(clientLOBGroup);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.Conflict, result.Code);
+        }
+
+        /// <summary>
+        /// Creates the client lob group.
+        /// </summary>
+        [Fact]
         public async void CreateClientLOBGroup()
         {
             CreateClientLOBGroup clientLOBGroup = new CreateClientLOBGroup()
             {
-                RefId = 4,
+                ClientId = 1,
                 CreatedBy = "Admin",
-                name = "A"
+                name = "F"
             };
             var result = await clientLOBGroupService.CreateClientLOBGroup(clientLOBGroup);
 
@@ -162,6 +182,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         {
             UpdateClientLOBGroup clientLOBGroup = new UpdateClientLOBGroup()
             {
+                ClientId = 1,
                 name = "X",
                 ModifiedBy = "admin1"
             };
@@ -170,6 +191,23 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Assert.NotNull(result);
             Assert.Null(result.Value);
             Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public async void UpdateClientLOBGroupWithConflict(int clientLOBGroupId)
+        {
+            UpdateClientLOBGroup clientLOBGroup = new UpdateClientLOBGroup()
+            {
+                ClientId = 2,
+                name = "B",
+                ModifiedBy = "admin"
+            };
+            var result = await clientLOBGroupService.UpdateClientLOBGroup(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupId }, clientLOBGroup);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.Conflict, result.Code);
         }
 
         /// <summary>
@@ -182,7 +220,8 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         {
             UpdateClientLOBGroup clientLOBGroup = new UpdateClientLOBGroup()
             {
-                name = "X",
+                ClientId = 1,
+                name = "A",
                 ModifiedBy = "admin1"
             };
             var result = await clientLOBGroupService.UpdateClientLOBGroup(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupId }, clientLOBGroup);

@@ -87,7 +87,28 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         #region CreateSchedulingCode
 
         [Fact]
-        public async void CreateSchedulingCode()
+        public async void CreateSchedulingCode_ReturnsConflictResult()
+        {
+            CreateSchedulingCode codeDetails = new CreateSchedulingCode()
+            {
+                RefId = 4,
+                CodeTypes = new List<int>(),
+                PriorityNumber = 4,
+                CreatedBy = "admin",
+                Description = "test1",
+                IconId = 1
+            };
+
+            mockSchedulingCodeService.Setup(mr => mr.CreateSchedulingCode(It.IsAny<CreateSchedulingCode>())).ReturnsAsync(
+                (CreateSchedulingCode code) => mockSchedulingCodeData.CreateSchedulingCode(codeDetails));
+
+            var value = await controller.CreateSchedulingCode(codeDetails);
+
+            Assert.Equal((int)HttpStatusCode.Conflict, (value as ObjectResult).StatusCode);
+        }
+
+        [Fact]
+        public async void CreateSchedulingCode_ReturnsOkResult()
         {
             CreateSchedulingCode codeDetails = new CreateSchedulingCode()
             {
@@ -112,29 +133,6 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         #region UpdateSchedulingCode
 
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void UpdateSchedulingCode_ReturnsNoContentResult(int schedulingCodeId)
-        {
-            UpdateSchedulingCode schedulingCode = new UpdateSchedulingCode()
-            {
-                CodeTypes = new List<int>(),
-                Description = "test",
-                IconId = 2,
-                PriorityNumber = 4,
-                ModifiedBy = "admin"
-            };
-
-            mockSchedulingCodeService.Setup(mr => mr.UpdateSchedulingCode(It.IsAny<SchedulingCodeIdDetails>(), It.IsAny<UpdateSchedulingCode>())).ReturnsAsync(
-                (SchedulingCodeIdDetails idDetails, UpdateSchedulingCode update) =>
-                mockSchedulingCodeData.UpdateSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId }, schedulingCode));
-
-            var value = await controller.UpdateSchedulingCode(schedulingCodeId,schedulingCode);
-
-            Assert.Equal((int)HttpStatusCode.NoContent, (value as ObjectResult).StatusCode);
-        }
-
-        [Theory]
         [InlineData(100)]
         [InlineData(101)]
         public async void UpdateSchedulingCode_ReturnsNotFoundResult(int schedulingCodeId)
@@ -155,6 +153,52 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
             var value = await controller.UpdateSchedulingCode(schedulingCodeId, schedulingCode);
 
             Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+        }
+
+        [Theory]
+        [InlineData(1, "test2")]
+        [InlineData(2, "test3")]
+        public async void UpdateSchedulingCode_ReturnsConflictResult(int schedulingCodeId, string description)
+        {
+            UpdateSchedulingCode schedulingCode = new UpdateSchedulingCode()
+            {
+                CodeTypes = new List<int>(),
+                Description = description,
+                IconId = 2,
+                PriorityNumber = 4,
+                ModifiedBy = "admin"
+            };
+
+            mockSchedulingCodeService.Setup(mr => mr.UpdateSchedulingCode(It.IsAny<SchedulingCodeIdDetails>(), It.IsAny<UpdateSchedulingCode>())).ReturnsAsync(
+                (SchedulingCodeIdDetails idDetails, UpdateSchedulingCode update) =>
+                mockSchedulingCodeData.UpdateSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId }, schedulingCode));
+
+            var value = await controller.UpdateSchedulingCode(schedulingCodeId, schedulingCode);
+
+            Assert.Equal((int)HttpStatusCode.Conflict, (value as ObjectResult).StatusCode);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void UpdateSchedulingCode_ReturnsNoContentResult(int schedulingCodeId)
+        {
+            UpdateSchedulingCode schedulingCode = new UpdateSchedulingCode()
+            {
+                CodeTypes = new List<int>(),
+                Description = "test",
+                IconId = 2,
+                PriorityNumber = 4,
+                ModifiedBy = "admin"
+            };
+
+            mockSchedulingCodeService.Setup(mr => mr.UpdateSchedulingCode(It.IsAny<SchedulingCodeIdDetails>(), It.IsAny<UpdateSchedulingCode>())).ReturnsAsync(
+                (SchedulingCodeIdDetails idDetails, UpdateSchedulingCode update) =>
+                mockSchedulingCodeData.UpdateSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId }, schedulingCode));
+
+            var value = await controller.UpdateSchedulingCode(schedulingCodeId,schedulingCode);
+
+            Assert.Equal((int)HttpStatusCode.NoContent, (value as ObjectResult).StatusCode);
         }
 
         #endregion

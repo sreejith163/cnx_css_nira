@@ -1,6 +1,5 @@
 ﻿using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Controllers;
-using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
 using Css.Api.Scheduling.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;

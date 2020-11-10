@@ -3,6 +3,7 @@ using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Core.Utilities;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Business.UnitTest.Mock;
+using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Response.Client;
 using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
@@ -44,9 +45,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             mapper = new Mapper(mapperConfig);
 
-            var clientSortHelper = new SortHelper<ClientDTO>();
-            var clientLObGroupSortHelper = new SortHelper<ClientLOBGroupDTO>();
-            var clientSchedulingCodeSortHelper = new SortHelper<SchedulingCodeDTO>();
+            var clientSortHelper = new SortHelper<Client>();
+            var clientLObGroupSortHelper = new SortHelper<ClientLobGroup>();
+            var clientSchedulingCodeSortHelper = new SortHelper<SchedulingCode>();
 
             var clientDataShaperHelper = new DataShaper<ClientDTO>();
             var clientLObGroupDataShaperHelper = new DataShaper<ClientLOBGroupDTO>();

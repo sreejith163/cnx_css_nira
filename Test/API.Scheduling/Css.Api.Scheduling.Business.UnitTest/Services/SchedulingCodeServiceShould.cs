@@ -15,6 +15,7 @@ using Css.Api.Scheduling.Models.DTO.Response.Client;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Microsoft.AspNetCore.Http;
+using Css.Api.Scheduling.Models.Domain;
 
 namespace Css.Api.Scheduling.Business.UnitTest.Services
 {
@@ -47,9 +48,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             mapper = new Mapper(mapperConfig);
 
-            var clientSortHelper = new SortHelper<ClientDTO>();
-            var clientLObGroupSortHelper = new SortHelper<ClientLOBGroupDTO>();
-            var clientSchedulingCodeSortHelper = new SortHelper<SchedulingCodeDTO>();
+            var clientSortHelper = new SortHelper<Client>();
+            var clientLObGroupSortHelper = new SortHelper<ClientLobGroup>();
+            var clientSchedulingCodeSortHelper = new SortHelper<SchedulingCode>();
 
             var clientDataShaperHelper = new DataShaper<ClientDTO>();
             var clientLObGroupDataShaperHelper = new DataShaper<ClientLOBGroupDTO>();
@@ -125,6 +126,28 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         #region CreateSchedulingCode
 
         /// <summary>
+        /// Creates the scheduling code with conflict found.
+        /// </summary>
+        [Fact]
+        public async void CreateSchedulingCodeWithConflictFound()
+        {
+            CreateSchedulingCode schedulingCode = new CreateSchedulingCode()
+            {
+                RefId = 4,
+                CodeTypes = new List<int>(),
+                PriorityNumber = 4,
+                CreatedBy = "admin",
+                Description = "test1",
+                IconId = 1
+            };
+            var result = await schedulingCodeService.CreateSchedulingCode(schedulingCode);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.Conflict, result.Code);
+        }
+
+        /// <summary>
         /// Creates the scheduling code.
         /// </summary>
         /// <param name="schedulingCode">The scheduling code.</param>
@@ -174,6 +197,29 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Assert.NotNull(result);
             Assert.Null(result.Value);
             Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        /// <summary>
+        /// Updates the scheduling code with conflict.
+        /// </summary>
+        /// <param name="schedulingCodeId">The scheduling code identifier.</param>
+        [Theory]
+        [InlineData(1)]
+        public async void UpdateSchedulingCodeWithConflict(int schedulingCodeId)
+        {
+            UpdateSchedulingCode schedulingCode = new UpdateSchedulingCode()
+            {
+                PriorityNumber = 4,
+                Description = "test2",
+                IconId = 2,
+                CodeTypes = new List<int>(),
+                ModifiedBy = "admin"
+            };
+            var result = await schedulingCodeService.UpdateSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId }, schedulingCode);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.Conflict, result.Code);
         }
 
         /// <summary>

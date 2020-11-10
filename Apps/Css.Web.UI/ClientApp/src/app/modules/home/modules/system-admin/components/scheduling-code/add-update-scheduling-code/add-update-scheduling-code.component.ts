@@ -103,8 +103,10 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   }
 
   isNumberKey(evt) {
+    const currentValue = this.schedulingCodeForm.controls.priorityNumber?.value;
     const charCode = (evt.which) ? evt.which : evt.keyCode;
-    if ((charCode < 48 || charCode > 57)) {
+    const sd = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
+    if (sd) {
       return false;
     }
 

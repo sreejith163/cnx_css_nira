@@ -52,6 +52,11 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// <returns></returns>
         public CSSResponse CreateSchedulingCode(CreateSchedulingCode createSchedulingCode)
         {
+            if (schedulingCodesDB.Exists(x => x.IsDeleted == false && x.Description == createSchedulingCode.Description))
+            {
+                return new CSSResponse($"Scheduling Code with name '{createSchedulingCode.Description}' already exists.", HttpStatusCode.Conflict);
+            }
+
             SchedulingCode schedulingCode = new SchedulingCode()
             {
                 Id = 4,
@@ -78,6 +83,11 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             if (!schedulingCodesDB.Exists(x => x.IsDeleted == false && x.Id == schedulingCodeIdDetails.SchedulingCodeId))
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            if (schedulingCodesDB.Exists(x => x.IsDeleted == false && x.Description == updateSchedulingCode.Description && x.Id != schedulingCodeIdDetails.SchedulingCodeId))
+            {
+                return new CSSResponse($"Scheduling Code with name '{updateSchedulingCode.Description}' already exists.", HttpStatusCode.Conflict);
             }
 
             var schedulingCode = schedulingCodesDB.Where(x => x.IsDeleted == false && x.Id == schedulingCodeIdDetails.SchedulingCodeId).FirstOrDefault();
