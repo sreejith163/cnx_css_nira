@@ -162,7 +162,6 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
       const updateSchedulingCodeModel = this.schedulingCodeForm.value as UpdateSchedulingCode;
-      updateSchedulingCodeModel.refId = 1;
       updateSchedulingCodeModel.modifiedBy = 'User';
 
       this.updateSchedulingCodeSubscription = this.schedulingCodeService.updateSchedulingCode
