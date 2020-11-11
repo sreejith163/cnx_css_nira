@@ -30,7 +30,8 @@ import { AddEditSkillGroupComponent } from '../add-edit-skill-group/add-edit-ski
 export class SkillGroupListComponent implements OnInit {
 
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
+  characterSplice = 25;
   totalSkillGroupRecord: number;
   weekDay = WeekDay;
   skillGroupData: SkillGroupDetails;
@@ -42,7 +43,6 @@ export class SkillGroupListComponent implements OnInit {
 
   constructor(
     private skillGroupService: SkillGroupsService,
-    private dropdownService: DropdownListService,
     private modalService: NgbModal
   ) { }
 
@@ -52,7 +52,7 @@ export class SkillGroupListComponent implements OnInit {
     this.totalSkillGroupRecord = this.totalSkillGroup.length;
     this.skillGroups = this.totalSkillGroup.sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
     );
-    this.paginationSize = this.dropdownService.getTablePageSizeList();
+    this.paginationSize = Constants.paginationSize;
   }
 
   changePageSize(pageSize: number) {

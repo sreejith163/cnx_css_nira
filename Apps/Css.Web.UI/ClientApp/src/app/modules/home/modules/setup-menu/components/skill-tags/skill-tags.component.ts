@@ -9,6 +9,7 @@ import { UpdateSkillTagsComponent } from '../update-skill-tags/update-skill-tags
 import { Constants } from 'src/app/shared/util/constants.util';
 import { Translation } from 'src/app/shared/models/translation.model';
 import { WeekDay } from '@angular/common';
+import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
 
 @Component({
   selector: 'app-skill-tags',
@@ -28,8 +29,10 @@ import { WeekDay } from '@angular/common';
 export class SkillTagsComponent implements OnInit {
 
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
+  characterSplice = 25;
   expandedDetail: SkillTag;
+  paginationSize: PaginationSize[] = [];
   translationValues: Translation[] = [];
   skillTags: SkillTag[] = [];
 
@@ -45,6 +48,7 @@ export class SkillTagsComponent implements OnInit {
         this.skillTags = data.sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
         );
       });
+    this.paginationSize = Constants.paginationSize;
   }
 
   addSkillTags() {

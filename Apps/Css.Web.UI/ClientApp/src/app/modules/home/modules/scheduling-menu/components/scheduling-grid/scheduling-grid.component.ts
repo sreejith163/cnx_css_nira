@@ -41,7 +41,8 @@ export class SchedulingGridComponent implements OnInit {
 
   timeIntervals = 5;
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
+  characterSplice = 25;
   iconCount = 33;
   startIcon = 0;
   endIcon: number;
@@ -91,7 +92,7 @@ export class SchedulingGridComponent implements OnInit {
         new Date(b.employeeId).getTime() - new Date(a.employeeId).getTime()
     );
     this.totalSchedulingRecord = this.totalSchedulingGridData.length;
-    this.paginationSize = this.schedulingGridService.getTablePageSizeList();
+    this.paginationSize = Constants.paginationSize;
   }
 
   getGridMaxWidth() {

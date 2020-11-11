@@ -9,7 +9,6 @@ import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/mess
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SchedulingGroupDetails } from '../../models/scheduling-group-details.model';
 import { AgentSchedulingGroupService } from '../../services/agent-scheduling-group.service';
-import { DropdownListService } from '../../services/dropdown-list.service';
 import { AddEditAgentSchedulingGroupComponent } from '../add-edit-agent-scheduling-group/add-edit-agent-scheduling-group.component';
 
 @Component({
@@ -30,7 +29,8 @@ import { AddEditAgentSchedulingGroupComponent } from '../add-edit-agent-scheduli
 export class AgentSchedulingGroupListComponent implements OnInit {
 
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
+  characterSplice = 25;
   totalScheduledGroupRecord: number;
   weekDay = WeekDay;
   expandedDetail: SchedulingGroupDetails;
@@ -40,7 +40,6 @@ export class AgentSchedulingGroupListComponent implements OnInit {
 
   constructor(
     private schedulingGroupService: AgentSchedulingGroupService,
-    private dropdownService: DropdownListService,
     private modalService: NgbModal
   ) { }
 
@@ -50,7 +49,7 @@ export class AgentSchedulingGroupListComponent implements OnInit {
     this.totalScheduledGroupRecord = this.totalScheduledGroup.length;
     this.totalScheduledGroup = this.totalScheduledGroup.sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
     );
-    this.paginationSize = this.dropdownService.getTablePageSizeList();
+    this.paginationSize = Constants.paginationSize;
   }
 
   changePageSize(pageSize: number) {

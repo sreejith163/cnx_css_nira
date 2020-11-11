@@ -5,7 +5,6 @@ import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/mess
 import { Constants } from 'src/app/shared/util/constants.util';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
 import { AgentCategory } from '../../models/agent-category.model';
-import { AgentCategoryDropdownService } from '../../services/agent-category-dropdown.service';
 import { AgentCategoryListService } from '../../services/agent-category-list.service';
 import { AddAgentCategoryComponent } from '../add-agent-category/add-agent-category.component';
 import { DataType } from '../../enum/data-type.enum';
@@ -19,7 +18,8 @@ import { Translation } from 'src/app/shared/models/translation.model';
 export class AgentCategoryListComponent implements OnInit {
 
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
+  characterSplice = 25;
   dataType = DataType;
   translationValues: Translation[];
   paginationSize: PaginationSize[] = [];
@@ -30,7 +30,6 @@ export class AgentCategoryListComponent implements OnInit {
 
   constructor(
     private agentCategoryListService: AgentCategoryListService,
-    private agentCategoryDropdownService: AgentCategoryDropdownService,
     private modalService: NgbModal
   ) { }
 
@@ -42,7 +41,7 @@ export class AgentCategoryListComponent implements OnInit {
       (a, b) =>
         new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
     );
-    this.paginationSize = this.agentCategoryDropdownService.getTablePageSizeList();
+    this.paginationSize = Constants.paginationSize;
   }
 
   changePageSize(pageSize) {

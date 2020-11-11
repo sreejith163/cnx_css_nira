@@ -31,80 +31,81 @@
   </div>
 
   <div class="row m-r-15">
-    <div class="col-md-12 mt-2 table-responsive">
-      <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
-        <thead>
-          <tr>
-            <th class=" width-10-p">{{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}
-            </th>
-            <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
-              data-name="language">
-              {{ 'Language' | translation: 'lbl_table_heading_language' : translationValues }}
-              <i class="fa fa-sort"></i>
-            </th>
-            <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc" data-name="menu">
-              {{ 'Menu' | translation: 'lbl_table_heading_menu' : translationValues }}
-              <i class="fa fa-sort"></i>
-            </th>
-            <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
-              data-name="variableId">
-              {{ 'Variable' | translation: 'lbl_table_heading_variable' : translationValues }}
-              <i class="fa fa-sort"></i>
-            </th>
-            <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
-              data-name="description">
-              {{ 'Description' | translation: 'lbl_table_heading_description' : translationValues }}
-              <i class="fa fa-sort"></i>
-            </th>
-            <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
-              data-name="translation">
-              {{ 'Translation' | translation: 'lbl_table_heading_translation' : translationValues }}
-              <i class="fa fa-sort"></i>
-            </th>
-            <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
-              data-name="createdBy">
-              {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
-              <i class="fa fa-sort"></i></th>
-            <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
-              data-name="createdDate" data-type="date">
-              {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
-              <i class="fa fa-sort"></i></th>
-            <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
-              data-name="modifiedBy">
-              {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
-              <i class="fa fa-sort"></i></th>
-            <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
-              data-name="modifiedDate" data-type="date">
-              {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
-              <i class="fa fa-sort"></i></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="
+    <div class="scrollable-table">
+      <div class="col-md-12 mt-2 table-responsive">
+        <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+          <thead>
+            <tr>
+              <th class=" width-10-p">{{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}
+              </th>
+              <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
+                data-name="language">
+                {{ 'Language' | translation: 'lbl_table_heading_language' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc" data-name="menu">
+                {{ 'Menu' | translation: 'lbl_table_heading_menu' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
+                data-name="variableId">
+                {{ 'Variable' | translation: 'lbl_table_heading_variable' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
+                data-name="description">
+                {{ 'Description' | translation: 'lbl_table_heading_description' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
+                data-name="translation">
+                {{ 'Translation' | translation: 'lbl_table_heading_translation' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
+                data-name="createdBy">
+                {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
+                <i class="fa fa-sort"></i></th>
+              <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
+                data-name="createdDate" data-type="date">
+                {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
+                <i class="fa fa-sort"></i></th>
+              <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
+                data-name="modifiedBy">
+                {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
+                <i class="fa fa-sort"></i></th>
+              <th class="sortable-field width-10-p" [appSort]="totaltranslationList" data-order="asc"
+                data-name="modifiedDate" data-type="date">
+                {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
+                <i class="fa fa-sort"></i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
                 let el of totaltranslationList
                   | slice
                     : (currentPage - 1) * pageSize
                     : (currentPage - 1) * pageSize + pageSize;
                 let i = index;">
-            <td>
-              <i class="far fa-edit padding-5 pointer" (click)="edit(el)"></i>
-              <i class="fa fa-trash padding-5 pointer" (click)="delete(el)"></i>
-            </td>
-            <td>{{ el.language }}</td>
-            <td>{{ el.menu }}</td>
-            <td>{{ el.variableId }}</td>
-            <td>{{ el.description }}</td>
-            <td>{{ el.translation }}</td>
-            <td>{{ el.createdBy }}</td>
-            <td>{{ el.createdDate | date: 'yyyy-MM-dd' }}</td>
-            <td>{{ el.modifiedBy }}</td>
-            <td>{{ el.modifiedDate | date: 'yyyy-MM-dd' }}</td>
-          </tr>
-        </tbody>
-      </table>
+              <td>
+                <i class="far fa-edit padding-5 pointer" (click)="edit(el)"></i>
+                <i class="fa fa-trash padding-5 pointer" (click)="delete(el)"></i>
+              </td>
+              <td>{{ el.language }}</td>
+              <td>{{ el.menu }}</td>
+              <td>{{ el.variableId }}</td>
+              <td>{{ el.description }}</td>
+              <td>{{ el.translation }}</td>
+              <td>{{ el.createdBy }}</td>
+              <td>{{ el.createdDate | date: 'yyyy-MM-dd' }}</td>
+              <td>{{ el.modifiedBy }}</td>
+              <td>{{ el.modifiedDate | date: 'yyyy-MM-dd' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-
   <div class="row">
     <div class="col-md-12 d-flex justify-content-end mt-3">
       <nav aria-label="Page navigation example">
@@ -113,7 +114,7 @@
             [pageSize]="pageSize" [maxSize]="3" [rotate]="true" [(page)]="currentPage" [boundaryLinks]="true">
           </ngb-pagination>
           <select class="form-control" (change)="changePageSize($event.target.value)">
-            <option [value]="x.count" *ngFor="let x of paginationSize">
+            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
               {{ x.text }}
             </option>
           </select>

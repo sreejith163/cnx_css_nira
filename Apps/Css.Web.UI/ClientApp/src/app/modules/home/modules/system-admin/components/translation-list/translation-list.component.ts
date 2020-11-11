@@ -16,7 +16,9 @@ import { AddEditTranslationComponent } from '../add-edit-translation/add-edit-tr
 export class TranslationListComponent implements OnInit {
 
   currentPage = 1;
-  pageSize = 5;
+
+  pageSize = 10;
+  characterSplice = 25;
   totalRecord: number;
   translationValues: Translation[];
   paginationSize: PaginationSize[] = [];
@@ -33,7 +35,7 @@ export class TranslationListComponent implements OnInit {
     this.totalRecord = this.totaltranslationList.length;
     this.totaltranslationList = this.totaltranslationList.sort((a, b) =>
       new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
-    this.paginationSize = this.translationService.getTablePageSizeList();
+    this.paginationSize = Constants.paginationSize;
   }
 
   openModal() {
@@ -92,5 +94,4 @@ export class TranslationListComponent implements OnInit {
     const options: NgbModalOptions = { backdrop: false, centered: true, size };
     return this.modalService.open(component, options);
   }
-
 }

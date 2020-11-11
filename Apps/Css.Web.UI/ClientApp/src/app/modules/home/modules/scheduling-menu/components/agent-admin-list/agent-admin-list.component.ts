@@ -3,7 +3,6 @@ import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstr
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { AgentAdmin } from '../../models/agent-admin.model';
-import { AgentAdminDropdownsService } from '../../services/agent-admin-dropdowns.service';
 import { AgentAdminListService } from '../../services/agent-admin-list.service';
 import { AddAgentProfileComponent } from '../add-agent-profile/add-agent-profile.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
@@ -17,7 +16,8 @@ import { Translation } from 'src/app/shared/models/translation.model';
 })
 export class AgentAdminListComponent implements OnInit {
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
+  characterSplice = 25;
   totalAgentRecord: number;
   modalRef: NgbModalRef;
   translationValues: Translation[];
@@ -26,7 +26,6 @@ export class AgentAdminListComponent implements OnInit {
 
   constructor(
     private agentAdminListService: AgentAdminListService,
-    private agentAdminDropdownService: AgentAdminDropdownsService,
     private modalService: NgbModal
   ) { }
 
@@ -37,7 +36,7 @@ export class AgentAdminListComponent implements OnInit {
         new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
     );
     this.totalAgentRecord = this.totalAgents.length;
-    this.paginationSize = this.agentAdminDropdownService.getTablePageSizeList();
+    this.paginationSize = Constants.paginationSize;
   }
 
   changePageSize(pageSize: number) {
