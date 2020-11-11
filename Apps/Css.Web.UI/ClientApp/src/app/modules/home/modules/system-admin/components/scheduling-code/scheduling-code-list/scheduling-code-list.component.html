@@ -34,89 +34,91 @@
 
   <div class="row">
     <div class="col-md-12 mt-2 table-responsive">
-      <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
-        <thead>
-          <tr>
-            <th>
-              {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}
-            </th>
-            <th class="sortable-field" (click)="sort('id', sortBy)">
-              {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
-              <i *ngIf="orderBy !== 'id'" class="fa fa-sort"></i>
-              <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                [class.fa-sort-up]="sortBy === 'asc'">
-              </i>
-            </th>
-            <th class="sortable-field" (click)="sort('refId', sortBy)">
-              {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
-              <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
-              <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                [class.fa-sort-up]="sortBy === 'asc'">
-              </i>
-            </th>
-            <th class="sortable-field" (click)="sort('description', sortBy)">
-              {{ 'Description' | translation: 'lbl_table_heading_description' : translationValues }}
-              <i *ngIf="orderBy !== 'description'" class="fa fa-sort"></i>
-              <i id="sortIcon" *ngIf="orderBy === 'description'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                [class.fa-sort-up]="sortBy === 'asc'">
-              </i>
-            </th>
-            <th class="sortable-field" (click)="sort('priorityNumber', sortBy)">
-              {{ 'Priority No.' | translation: 'lbl_table_heading_priority_no' : translationValues }}
-              <i *ngIf="orderBy !== 'priorityNumber'" class="fa fa-sort"></i>
-              <i id="sortIcon" *ngIf="orderBy === 'priorityNumber'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                [class.fa-sort-up]="sortBy === 'asc'">
-              </i>
-            </th>
-            <th class="sortable-field">
-              {{ 'Type of Code' | translation: 'lbl_table_heading_code_type' : translationValues }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Icon' | translation: 'lbl_table_heading_icon' : translationValues }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <ngx-spinner [name]="spinner">
-          </ngx-spinner>
-          <tr *ngFor="let el of schedulingCodes;let i = index;">
-            <td>
-              <i class="far fa-edit padding-5 pointer" (click)="editSchedulingCode(el)"></i>
-              <i class="fa fa-trash padding-5 pointer" (click)="deleteSchedulingCode(el.id)"></i>
-            </td>
-            <td>{{ el.id }}</td>
-            <td>{{ el.refId }}</td>
-            <td>
-              <span
-              ngbTooltip="{{ el.description }}">{{ el.description | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
-             </td>
-            <td>
-              <span
-              ngbTooltip="{{ el.priorityNumber }}">{{ el.priorityNumber | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
-            </td>
-            <td>
-              <ng-container *ngFor="let type of el.schedulingTypeCode  | slice:0:3; let i = index;">
-                <span class="border">{{ type.value }}</span>
-              </ng-container>
-              <span class="padding-left-10 float-right">
-                <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle"
-                  [placement]="'auto'" container="body">
-                  <i class="fa fa-ellipsis-h"></i>
-                </a>
-                <ng-template #popContent>
-                  <ul *ngFor="let type of el.schedulingTypeCode">
-                    <li>{{ type.value }}</li>
-                  </ul>
-                </ng-template>
-                <ng-template #popTitle>
-                  {{ 'Type of Code' | translation: 'lbl_table_heading_code_type' : translationValues }}
-                </ng-template>
-              </span>
-            </td>
-            <td><i class="icon-style">{{ unifiedToNative(el.icon.value) }}</i></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="scrollable-table">
+        <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+          <thead>
+            <tr>
+              <th>
+                {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}
+              </th>
+              <th class="sortable-field" (click)="sort('id', sortBy)">
+                {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
+                <i *ngIf="orderBy !== 'id'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('refId', sortBy)">
+                {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
+                <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('description', sortBy)">
+                {{ 'Description' | translation: 'lbl_table_heading_description' : translationValues }}
+                <i *ngIf="orderBy !== 'description'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'description'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('priorityNumber', sortBy)">
+                {{ 'Priority No.' | translation: 'lbl_table_heading_priority_no' : translationValues }}
+                <i *ngIf="orderBy !== 'priorityNumber'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'priorityNumber'" class="fa"
+                  [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field">
+                {{ 'Type of Code' | translation: 'lbl_table_heading_code_type' : translationValues }}
+              </th>
+              <th class="sortable-field">
+                {{ 'Icon' | translation: 'lbl_table_heading_icon' : translationValues }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ngx-spinner [name]="spinner">
+            </ngx-spinner>
+            <tr *ngFor="let el of schedulingCodes;let i = index;">
+              <td>
+                <i class="far fa-edit padding-5 pointer" (click)="editSchedulingCode(el)"></i>
+                <i class="fa fa-trash padding-5 pointer" (click)="deleteSchedulingCode(el.id)"></i>
+              </td>
+              <td>{{ el.id }}</td>
+              <td>{{ el.refId }}</td>
+              <td>
+                <span
+                  ngbTooltip="{{ el.description }}">{{ el.description | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
+              </td>
+              <td>
+                <span
+                  ngbTooltip="{{ el.priorityNumber }}">{{ el.priorityNumber | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
+              </td>
+              <td>
+                <ng-container *ngFor="let type of el.schedulingTypeCode  | slice:0:3; let i = index;">
+                  <span class="border">{{ type.value }}</span>
+                </ng-container>
+                <span class="padding-left-10 float-right">
+                  <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle" [placement]="'auto'"
+                    container="body">
+                    <i class="fa fa-ellipsis-h"></i>
+                  </a>
+                  <ng-template #popContent>
+                    <ul *ngFor="let type of el.schedulingTypeCode">
+                      <li>{{ type.value }}</li>
+                    </ul>
+                  </ng-template>
+                  <ng-template #popTitle>
+                    {{ 'Type of Code' | translation: 'lbl_table_heading_code_type' : translationValues }}
+                  </ng-template>
+                </span>
+              </td>
+              <td><i class="icon-style">{{ unifiedToNative(el.icon.value) }}</i></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div class="row">
         <div class="col-md-12 d-flex justify-content-end mt-3">
           <nav aria-label="Page navigation example">
@@ -125,7 +127,7 @@
                 (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
               </ngb-pagination>
               <select class="form-control" (change)="changePageSize($event.target.value)">
-                <option [selected]="x.count === pageSize"  [value]="x.count" *ngFor="let x of paginationSize">
+                <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
                   {{ x.text }}
                 </option>
               </select>

@@ -109,22 +109,22 @@
             </tr>
           </tbody>
         </table>
-      </div>
-      <div class="row">
-        <div class="col-md-12 d-flex justify-content-end mt-3">
-          <nav aria-label="Page navigation example">
-            <ul class="pagination p-0 float-right">
-              <ngb-pagination class="p-r-5" [collectionSize]="totalClientRecord" (pageChange)="changePage($event)"
-                [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
-              <select class="form-control" (change)="changePageSize($event.target.value)">
-                <option [selected]="x.count === pageSize"  [value]="x.count" *ngFor="let x of paginationSize">
-                  {{ x.text }}
-                </option>
-              </select>
-            </ul>
-          </nav>
-        </div>
-      </div>
+      </div>     
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end mt-3">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination p-0 float-right">
+          <ngb-pagination class="p-r-5" [collectionSize]="totalClientRecord" (pageChange)="changePage($event)"
+            [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+          <select class="form-control" (change)="changePageSize($event.target.value)">
+            <option [selected]="x.count === pageSize"  [value]="x.count" *ngFor="let x of paginationSize">
+              {{ x.text }}
+            </option>
+          </select>
+        </ul>
+      </nav>
     </div>
   </div>
 </div>

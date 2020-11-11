@@ -76,7 +76,7 @@ th:last-of-type {
 
 .scrollable-table {
   overflow-y: auto;
-  max-height: calc(55vh);
+  max-height: calc(53vh);
 }
 
 .valid-error {
