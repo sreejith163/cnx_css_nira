@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: cnx-css-ui
-          image: sreejith163/cnx-css:cnx.css.web.ui.s3.1211.v5
+          image: sreejith163/cnx-css:cnx.css.web.ui.s3.1211.v6
           ports:
             - name: node-port
               containerPort: 80
