@@ -19,6 +19,7 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { TimezoneService } from 'src/app/shared/services/timezone.service';
 import { ClientLobGroupService } from '../../../services/client-lob-group.service';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-add-update-client-lob-group',
@@ -49,6 +50,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
+    private authService: AuthService,
     private clientLobGroupService: ClientLobGroupService,
     private timezoneService: TimezoneService,
     private spinnerService: NgxSpinnerService,
@@ -110,7 +112,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
 
   private addClientLobGroupDetails() {
     const addClientLobGroupModel = this.clientLOBGroupForm.value as AddClientLobGroup;
-    addClientLobGroupModel.createdBy = 'User';
+    addClientLobGroupModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
     addClientLobGroupModel.clientId = this.clientId;
 
     this.spinnerService.show(this.spinner, SpinnerOptions);
@@ -132,7 +134,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
   private updateClientLobGroupDetails() {
     if (this.hasClientLobGroupDetailsMismatch()) {
       const updateClientLobGroupModel = this.clientLOBGroupForm.value as UpdateClientLobGroup;
-      updateClientLobGroupModel.ModifiedBy = 'User';
+      updateClientLobGroupModel.ModifiedBy = this.authService.getLoggedUserInfo()?.displayName;
       updateClientLobGroupModel.clientId = this.clientId;
 
       this.spinnerService.show(this.spinner, SpinnerOptions);

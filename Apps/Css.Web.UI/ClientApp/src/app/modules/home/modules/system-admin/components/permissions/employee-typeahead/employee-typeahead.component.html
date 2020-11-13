@@ -1,0 +1,16 @@
+<form [formGroup]="permissionForm">
+  <ng-select [items]="getItems()" [loading]="loading" bindLabel="firstName" bindValue="employeeId"
+  [typeahead]="typeAheadInput$"
+    placeholder="{{ 'Click here to search an Employee' | translation: 'drp_select_an_employee' : translationValues }}"
+    (scroll)="onEmployeeScroll($event)" (scrollToEnd)="onEmployeeScrollToEnd()" (change)="onEmployeeChange($event)"
+    (clear)="clearSelectedValues()" formControlName="employeeId">
+    <ng-template ng-header-tmp *ngIf="updatePermissionData.length === 0" else #update>
+      <small class="form-text text-muted">Loaded {{employeeItemsBuffer.length}} of
+        {{totalItems}} </small>
+    </ng-template>
+    <ng-template ng-header-tmp id="update">
+      <small class="form-text text-muted">Loaded {{updatePermissionData.length}} of
+        {{totalItems}} </small>
+    </ng-template>
+  </ng-select>
+</form>

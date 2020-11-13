@@ -1,0 +1,185 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-md-12">
+      <h2>{{ 'Permissions' | translation: 'lbl_page_title' : translationValues }}</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a>System Admin</a></li>
+        <li class="breadcrumb-item active"><b>Permissions List</b> </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="card row">
+    <form [formGroup]="permissionForm">
+      <div class=" card-header">
+        <button class="btn btn-primary float-right" (click)="savePermission()">
+          <i class="fa fa-user-circle padding-5"></i>
+          {{getTitle()}}
+          {{ 'User' | translation: 'btn_add_edit_user' : translationValues }}</button>
+      </div>
+      <div class="card-body row">
+        <div class="col-md-4 col-sm-4 margin-b-05-rem">
+          <label
+            class="text-color">{{ 'Select an Employee' | translation: 'lbl_select_an_employee' : translationValues }}</label>
+          <app-employee-typeahead [permissionForm]="permissionForm" (employeeSelected)="setEmployee($event)"
+            [updatePermissionData]="updatePermissionData"></app-employee-typeahead>
+        </div>
+        <div class="col-md-3 col-sm-3 margin-l-20px">
+          <div class="form-group clearfix margin-b-05-rem" *ngFor="let data of userRoles | slice: 0:3; let i = index">
+            <div class="icheck-primary d-inline">
+              <input type="checkbox" id="{{ data.id }}" [value]="data.id" [checked]="hasValueSelected(data.id)"
+                (change)="onCheckboxChange($event)">
+              <label for="{{ data.id }}">
+                {{ data.role }}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-3 margin-l-20px">
+          <div class="form-group clearfix margin-b-05-rem" *ngFor="let data of userRoles | slice: 3: 5; let i = index">
+            <div class="icheck-primary d-inline">
+              <input type="checkbox" id="{{ data.id }}" [value]="data.id" [checked]="hasValueSelected(data.id)"
+                (change)="onCheckboxChange($event)">
+              <label for="{{ data.id }}">
+                {{ data.role }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row m-l-r-10">
+    <div class="col-md-3 p-b-5">
+      <input type="text" class="form-control"
+        placeholder="{{ 'Type here to search an Employee' | translation: 'lbl_search_employee' : translationValues }}" />
+    </div>
+    <div class="col-md-2">
+      <button class="form-control"><i class="fa fa-search" aria-hidden="true"></i>
+        {{ 'Search' | translation: 'btn_search' : translationValues }}
+      </button>
+    </div>
+    <div class="col-md-7 text-right">
+      <button type="button" class="btn btn-default float-r btn-grid">
+        <i class="fas fa-th"></i>
+        <i class="fas fa-sort-down padding-5" [ngbPopover]="popContent" [popoverTitle]="popTitle" [placement]="'left'"
+          container="body" [autoClose]="'outside'"></i>
+        <ng-template #popContent>
+          <div class="form-group clearfix margin-b-05-rem" *ngFor="let role of this.hiddenRoles; let i = index">
+            <div class="icheck-primary d-inline">
+              <input type="checkbox" id="{{ role.id }}" [value]="role.role" [checked]="hasHideRoleSelected(role.role)"
+                (change)="onCheckRolesToHide($event)">
+              <label for="{{ role.id }}">
+                {{ role.role }}
+              </label>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #popTitle>
+          {{ 'Select roles to hide' | translation: 'lbl_table_heading_user_roles' : translationValues }}
+        </ng-template>
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="scrollable-table">
+      <div class="col-md-12 mt-2 table-responsive">
+        <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+          <thead>
+            <tr>
+              <th class="sortable-field width-10-p" [appSort]="permissions" data-order="asc" data-name="employeeId">
+                {{ 'Employee ID' | translation: 'lbl_table_heading_employee_id' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th class="sortable-field width-10-p" [appSort]="permissions" data-order="asc" data-name="firstName">
+                {{ 'First Name' | translation: 'lbl_table_heading_first_name' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th class="sortable-field width-10-p" [appSort]="permissions" data-order="asc" data-name="lastName">
+                {{ 'Last Name' | translation: 'lbl_table_heading_last_name' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th *ngIf="hasRoleHidden('System Admin')" class="sortable-field width-15-p" [appSort]="permissions"
+                data-order="asc" data-name="roles">
+                {{ 'System Admin' | translation: 'lbl_table_heading_system_admin' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th *ngIf="hasRoleHidden('WFM Admin')" class="sortable-field width-15-p" [appSort]="permissions"
+                data-order="asc" data-name="roles">
+                {{ 'WFM Admin' | translation: 'lbl_table_heading_wfm_admin' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th *ngIf="hasRoleHidden('WFM Scheduling Team')" class="sortable-field width-15-p" [appSort]="permissions"
+                data-order="asc" data-name="roles">
+                {{ 'WFM Scheduling Team' | translation: 'lbl_table_heading_wfm_scheduling_team' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th *ngIf="hasRoleHidden('Delivery Team')" class="sortable-field width-15-p" [appSort]="permissions"
+                data-order="asc" data-name="roles">
+                {{ 'Delivery Team' | translation: 'lbl_table_heading_delivery_team' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th *ngIf="hasRoleHidden('Active')" class="sortable-field width-15-p" [appSort]="permissions"
+                data-order="asc" data-name="roles">
+                {{ 'Active' | translation: 'lbl_table_heading_active' : translationValues }}
+                <i class="fa fa-sort"></i>
+              </th>
+              <th class="sortable-field width-14-p" [appSort]="permissions" data-order="asc" data-name="createdBy">
+                {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
+                <i class="fa fa-sort"></i></th>
+              <th class="sortable-field width-14-p" [appSort]="permissions" data-order="asc" data-name="createdDate">
+                {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
+                <i class="fa fa-sort"></i></th>
+              <th class="sortable-field width-14-p" [appSort]="permissions" data-order="asc" data-name="modifiedBy">
+                {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
+                <i class="fa fa-sort"></i></th>
+              <th class="sortable-field width-14-p" [appSort]="permissions" data-order="asc" data-name="modifiedDate">
+                {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
+                <i class="fa fa-sort"></i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let el of permissions| slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize; let i = index;"
+              (click)="getPermissionRecordToUpdate(el,i)" [ngClass]="{'selected-row': isRowSelected(i)}">
+              <td>{{el.employeeId}}</td>
+              <td>{{el.firstName}}</td>
+              <td>{{el.lastName}}</td>
+              <td *ngIf="hasRoleHidden('System Admin')">{{checkPermission(el,1)}}</td>
+              <td *ngIf="hasRoleHidden('WFM Admin')">{{checkPermission(el,2)}}</td>
+              <td *ngIf="hasRoleHidden('WFM Scheduling Team')">{{checkPermission(el,3)}}</td>
+              <td *ngIf="hasRoleHidden('Delivery Team')">{{checkPermission(el,4)}}</td>
+              <td *ngIf="hasRoleHidden('Active')">{{checkPermission(el,5)}}</td>
+              <td>{{el.createdBy}}</td>
+              <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
+              <td>{{el.modifiedBy}}</td>
+              <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end mt-3">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination p-0 float-right">
+          <ngb-pagination class="p-r-5" [collectionSize]="totalRecord" (pageChange)="changePage($event)"
+            [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+          <select class="form-control" (change)="changePageSize($event.target.value)">
+            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+              {{ x.text }}
+            </option>
+          </select>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

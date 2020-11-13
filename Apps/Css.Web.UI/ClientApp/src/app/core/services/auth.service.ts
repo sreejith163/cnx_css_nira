@@ -13,7 +13,7 @@ export class AuthService {
   ) { }
 
   isLoggedIn() {
-    return true;
+    return this.cookieService.get(environment.settings.sessionName) ?? false;
   }
 
   getLoggedUserInfo(): LoggedUserInfo {

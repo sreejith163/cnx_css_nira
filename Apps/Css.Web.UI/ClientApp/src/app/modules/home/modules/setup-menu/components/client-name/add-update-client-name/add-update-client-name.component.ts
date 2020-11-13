@@ -17,6 +17,7 @@ import { ClientService } from '../../../services/client.service';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { Constants } from 'src/app/shared/util/constants.util';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-add-update-client-list',
@@ -41,6 +42,7 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
+    private authService: AuthService,
     private clientService: ClientService,
     public activeModal: NgbActiveModal,
     private spinnerService: NgxSpinnerService,
@@ -86,7 +88,7 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
 
   private addClientDetails() {
     const addClientModel = this.clientForm.value as AddClient;
-    addClientModel.createdBy = 'User';
+    addClientModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
 
     this.spinnerService.show(this.spinner, SpinnerOptions);
     this.addClientSubscription = this.clientService.addClient(addClientModel)
@@ -108,7 +110,7 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
     if (this.hasClientDetailsMismatch()) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
       const updateClientModel = this.clientForm.value as UpdateClient;
-      updateClientModel.ModifiedBy = 'User';
+      updateClientModel.ModifiedBy = this.authService.getLoggedUserInfo()?.displayName;
 
       this.updateClientSubscription = this.clientService.updateClient(this.clientDetails.id, updateClientModel)
         .subscribe(() => {

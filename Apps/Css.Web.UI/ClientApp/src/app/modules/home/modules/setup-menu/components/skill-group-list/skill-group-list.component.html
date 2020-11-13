@@ -105,11 +105,11 @@
                             *ngFor="let el of totalSkillGroup | slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize; let i = index">
                             <tr>
                                 <td>
-                                    <i class="expand-icon fas padding-5 pointer"
+                                    <i class="expand-icon fa padding-5 pointer"
                                         [ngClass]="( expandedDetail?.id === el?.id ) ? 'fa-minus' : 'fa-plus'"
                                         (click)="toggleDetails(el)"></i></td>
                                 <td>
-                                    <i class="far fa-edit padding-5 pointer" (click)="editSkillGroup(el)"></i>
+                                    <i class="fa fa-edit padding-5 pointer" (click)="editSkillGroup(el)"></i>
                                     <i class="fa fa-trash padding-5 pointer" (click)="delete(el.id)"></i>
                                 </td>
                                 <td>{{el.id}}</td>

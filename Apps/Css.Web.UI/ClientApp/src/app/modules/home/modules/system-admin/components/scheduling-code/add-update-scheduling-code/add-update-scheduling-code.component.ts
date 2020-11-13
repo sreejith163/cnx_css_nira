@@ -22,6 +22,8 @@ import { SchedulingCodeService } from '../../../services/scheduling-code.service
 import { SchedulingCodeIconsService } from '../../../services/scheduling-code-icons.service';
 import { SchedulingCodeTypesService } from '../../../services/scheduling-code-types.service';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { LoggedUserInfo } from 'src/app/core/models/logged-user-info.model';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 
 @Component({
@@ -55,6 +57,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
+    private authService: AuthService,
     private schedulingCodeService: SchedulingCodeService,
     private schedulingCodeIconsService: SchedulingCodeIconsService,
     private schedulingCodeTypesService: SchedulingCodeTypesService,
@@ -105,8 +108,8 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   isNumberKey(evt) {
     const currentValue = this.schedulingCodeForm.controls.priorityNumber?.value;
     const charCode = (evt.which) ? evt.which : evt.keyCode;
-    const sd = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
-    if (sd) {
+    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
+    if (isValid) {
       return false;
     }
 
@@ -138,7 +141,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
 
   private addSchedulingCodeDetails() {
     const addSchedulingCodeModel = this.schedulingCodeForm.value as AddSchedulingCode;
-    addSchedulingCodeModel.createdBy = 'User';
+    addSchedulingCodeModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
 
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
@@ -162,7 +165,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
       const updateSchedulingCodeModel = this.schedulingCodeForm.value as UpdateSchedulingCode;
-      updateSchedulingCodeModel.modifiedBy = 'User';
+      updateSchedulingCodeModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
 
       this.updateSchedulingCodeSubscription = this.schedulingCodeService.updateSchedulingCode
         (this.schedulingCodeData.id, updateSchedulingCodeModel)

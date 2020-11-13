@@ -1,0 +1,56 @@
+.header-title {
+  span {
+    margin-right: 5px;
+    background: white;
+    border: solid 1px #d2d2d2;
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+  }
+
+  h5 {
+    padding-top: 3px;
+  }
+}
+
+.breadcrumb {
+  background-color: inherit;
+}
+
+.card-header {
+  padding: 3px 2px;
+  background-color: #dadbeb73;
+}
+
+label:not(.form-check-label):not(.custom-file-label) {
+  font-weight: 400;
+}
+
+.margin-l-20px {
+  margin-left: 20px;
+}
+
+.btn-grid {
+  background-color: #c1c1c1;
+  color: white;
+}
+
+.text-color {
+  color: #1666fa
+}
+
+.selected-row {
+  border: solid gray;
+}
+
+.card {
+  max-height: 160px;
+}
+
+@media only screen and (max-width: 992px) {
+  .card {
+    max-height: 300px;
+  }
+ }

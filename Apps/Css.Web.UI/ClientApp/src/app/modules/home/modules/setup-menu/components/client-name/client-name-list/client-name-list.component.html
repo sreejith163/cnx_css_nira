@@ -16,9 +16,10 @@
 
   <div class="row m-l-r-10">
     <div class="col-md-3 padding-bottom-5">
-      <input type="text" class="form-control" [(ngModel)]="searchKeyword"
+      <input id="search"  type="text" class="form-control" [(ngModel)]="searchKeyword"
         placeholder="{{ 'Client Name' | translation: 'lbl_client_name' : translationValues }}" />
     </div>
+      <i id="input_close_btn"  class="fa fa-close cursor-pointer" type="button"></i>
     <div class="col-md-2">
       <button class="form-control" (click)="searchClients()"><i class="fa fa-search" aria-hidden="true"></i>
         {{ 'Search' | translation: 'btn_search' : translationValues }}
@@ -93,7 +94,7 @@
           <tbody>
             <ngx-spinner [name]="spinner"></ngx-spinner>
             <tr *ngFor="let el of clientsDetails; let i = index">
-              <td><i class="far fa-edit padding-5 pointer" (click)="editClient(el)"></i>
+              <td><i class="fa fa-edit padding-5 pointer" (click)="editClient(el)"></i>
                 <i class="fa fa-trash padding-5 pointer" (click)="deleteClient(el.id)"></i>
               </td>
               <td>{{el.id}}</td>

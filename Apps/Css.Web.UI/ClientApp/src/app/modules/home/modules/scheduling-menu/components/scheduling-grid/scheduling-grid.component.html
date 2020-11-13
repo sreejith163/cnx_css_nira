@@ -83,7 +83,7 @@
               *ngFor="let el of totalSchedulingGridData  | slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize; let i = index">
               <tr class="table-row">
                 <td>
-                  <i class="expand-icon fas padding-5 pointer"
+                  <i class="expand-icon fa padding-5 pointer"
                     [ngClass]="( selectedGrid?.employeeId === el?.employeeId ) ? 'fa-minus' : 'fa-plus'"
                     (click)="toggleDetails(el)"></i></td>
                 <td>{{el.employeeId}}</td>

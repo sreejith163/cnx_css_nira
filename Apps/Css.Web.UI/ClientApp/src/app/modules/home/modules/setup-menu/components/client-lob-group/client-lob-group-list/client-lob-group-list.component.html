@@ -111,7 +111,7 @@
           <tbody>
             <ngx-spinner [name]="spinner" bdColor="rgba(255, 0, 0, 0.8)"></ngx-spinner>
             <tr *ngFor="let el of clientLOBGroupDetails; let i = index">
-              <td><i class="far fa-edit padding-5 pointer" (click)="editClientLOBGroup(el)"></i>
+              <td><i class="fa fa-edit padding-5 pointer" (click)="editClientLOBGroup(el)"></i>
                 <i class="fa fa-trash padding-5 pointer" (click)="deleteClientLOBGroup(el.id)"></i>
               </td>
               <td>{{el.id}}</td>
