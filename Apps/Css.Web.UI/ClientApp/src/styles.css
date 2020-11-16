@@ -302,3 +302,7 @@ sup {
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
   background-color: #e9e9e99e !important;
 }
+
+#input_close_btn {
+  color: gray;
+}

@@ -8,6 +8,7 @@ import { UserRole } from '../../../models/user-role.model';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
 
 @Component({
   selector: 'app-permissions-list',
@@ -20,7 +21,11 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   totalRecord: number;
   selectedRow: number;
+  employeeId: number;
   employeeFirstName: string;
+  searchKeyword: string;
+  orderBy = 'createdDate';
+  sortBy = 'desc';
   isEdit: boolean;
 
   permissionForm: FormGroup;
@@ -28,9 +33,9 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   translationValues = Constants.permissionsTranslationValues;
   paginationSize = Constants.paginationSize;
   userRoles = Constants.UserRoles;
+  permissionDataToUpdate: PermissionDetails;
 
   permissions: PermissionDetails[] = [];
-  updatePermissionData: any[] = [];
   hiddenRolesList: UserRole[] = [];
   hiddenRoles: UserRole[] = [];
 
@@ -59,6 +64,10 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
     });
   }
 
+  get userRolesFormArray() {
+    return this.permissionForm.get('roles') as FormArray;
+  }
+
   changePageSize(pageSize: number) {
     this.pageSize = pageSize;
     this.getPermissions();
@@ -74,8 +83,21 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   }
 
   setEmployee(user: Permission) {
-    this.permissionForm.controls.employeeId.setValue(user.employeeId);
-    this.employeeFirstName = user.firstName;
+    if (user) {
+      this.employeeId = user.employeeId;
+      this.employeeFirstName = user.firstName;
+      const index = this.permissions.findIndex(x => x.employeeId === user.employeeId);
+      if (index !== -1) {
+        this.isEdit = true;
+        this.permissionDataToUpdate = this.permissions.find(x => x.employeeId === this.employeeId);
+        this.setUpdatePermissionDetails(this.permissionDataToUpdate);
+        this.selectedRow = index;
+        this.isRowSelected(index);
+      } else {
+        this.isEdit = false;
+        this.intializePermissionForm();
+      }
+    }
   }
 
   hasValueSelected(value) {
@@ -100,7 +122,7 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   }
 
   savePermission() {
-    if (this.permissionForm.valid) {
+    if (this.permissionForm.valid && this.employeeId) {
       if (this.isEdit) {
         this.updatePermission();
       } else {
@@ -114,12 +136,12 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   updatePermission() {
     if (this.hasPermissionDetailsMismatch()) {
       let updatePermissionModel = new PermissionDetails();
-      updatePermissionModel = this.updatePermissionData[0];
+      updatePermissionModel = this.permissionDataToUpdate;
       updatePermissionModel.modifiedDate = String(new Date());
       updatePermissionModel.modifiedBy = 'User';
       updatePermissionModel.roles = new Array<UserRole>();
 
-      this.userRoles.forEach((ele, index) => {
+      this.userRolesFormArray.controls.forEach((ele, index) => {
         const role = new UserRole();
         role.id = Number(this.permissionForm.value.roles[index]);
         updatePermissionModel.roles.push(role);
@@ -131,7 +153,7 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
             this.isEdit = false;
             this.getPermissions();
             this.intializePermissionForm();
-            this.updatePermissionData = [];
+            this.employeeId = null;
             this.showSuccessPopUpMessage('The record has been updated!');
           }
         }, (error) => {
@@ -140,22 +162,23 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
       this.subscriptions.push(this.updatePermissionSubscription);
     } else {
       this.isEdit = false;
+      this.employeeId = null;
+      this.permissionDataToUpdate = null;
       this.intializePermissionForm();
-      this.updatePermissionData = [];
       this.showSuccessPopUpMessage('No changes has been made!');
     }
   }
 
   addPermission() {
     const addPermissionModel = new PermissionDetails();
-    addPermissionModel.employeeId = this.permissionForm.controls.employeeId.value;
+    addPermissionModel.employeeId = this.employeeId;
     addPermissionModel.firstName = this.employeeFirstName;
     addPermissionModel.lastName = 'LastName';
     addPermissionModel.createdDate = String(new Date());
     addPermissionModel.createdBy = 'User';
     addPermissionModel.roles = new Array<UserRole>();
 
-    this.userRoles.forEach((ele, index) => {
+    this.userRolesFormArray.controls.forEach((ele, index) => {
       const role = new UserRole();
       role.id = Number(this.permissionForm.value.roles[index]);
       addPermissionModel.roles.push(role);
@@ -164,9 +187,9 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
     this.addPermissionSubscription = this.permissionsService.addPermission(addPermissionModel)
       .subscribe((data) => {
         if (data) {
-          this.updatePermissionData = JSON.parse(JSON.stringify(data));
           this.getPermissions();
           this.intializePermissionForm();
+          this.employeeId = null;
           this.showSuccessPopUpMessage('The record has been added!');
         }
       }, (error) => {
@@ -178,15 +201,20 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   }
 
   getPermissionRecordToUpdate(record: PermissionDetails, index: number) {
-    if (this.updatePermissionData.length === 0) {
+    if (!this.isEdit && this.selectedRow !== index) {
       this.isEdit = true;
       this.selectedRow = index;
-      this.updatePermissionData.push(record);
-      this.setUpdatePermissionDetails(record);
-    } else {
+      this.permissionDataToUpdate = record;
+      this.setUpdatePermissionDetails(this.permissionDataToUpdate);
+    } else if (this.isEdit && this.selectedRow !== index) {
+      this.isEdit = true;
+      this.selectedRow = index;
+      this.permissionDataToUpdate = record;
+      this.setUpdatePermissionDetails(this.permissionDataToUpdate);
+    }else {
       this.isEdit = false;
       this.selectedRow = null;
-      this.updatePermissionData = [];
+      this.employeeId = null;
       this.intializePermissionForm();
     }
   }
@@ -229,9 +257,13 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
     return this.isEdit && this.selectedRow === index;
   }
 
+  search() {
+    this.getPermissions();
+  }
+
   private hasPermissionDetailsMismatch() {
     for (const index in this.userRoles) {
-      if (this.updatePermissionData[0]?.roles[index]?.id !== this.permissionForm.controls.roles.value[index]) {
+      if (this.permissionDataToUpdate.roles[index]?.id !== this.permissionForm.controls.roles.value[index]) {
         return true;
       }
     }
@@ -257,9 +289,8 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
 
   private setUpdatePermissionDetails(record: PermissionDetails) {
     this.intializePermissionForm();
-    this.permissionForm.controls.employeeId.setValue(record.employeeId);
+    this.employeeId = record.employeeId;
     this.setUserRoles(record);
-
   }
 
   private setUserRoles(record: PermissionDetails) {
@@ -269,8 +300,21 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
     return array;
   }
 
+  private getQueryParams() {
+    const permissionsQueryParams = new QueryStringParameters();
+    permissionsQueryParams.pageNumber = this.currentPage;
+    permissionsQueryParams.pageSize = this.pageSize;
+    permissionsQueryParams.searchKeyword = this.searchKeyword ?? '';
+    permissionsQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
+    permissionsQueryParams.fields = '';
+
+    return permissionsQueryParams;
+  }
+
   private getPermissions() {
-    this.getPermissionsSubscription = this.permissionsService.getPermissions()
+    const queryParams = this.getQueryParams();
+
+    this.getPermissionsSubscription = this.permissionsService.getPermissions(queryParams)
       .subscribe((data) => {
         this.permissions = data.sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
         this.totalRecord = this.permissions.length;
@@ -283,7 +327,6 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
 
   private intializePermissionForm() {
     this.permissionForm = this.formBuilder.group({
-      employeeId: new FormControl(null, Validators.required),
       roles: this.formBuilder.array([], Validators.required)
     });
   }

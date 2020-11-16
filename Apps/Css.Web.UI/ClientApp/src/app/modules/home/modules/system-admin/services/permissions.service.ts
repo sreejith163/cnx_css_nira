@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
+import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { PermissionDetails } from '../models/permission-details.model';
 import { Permission } from '../models/permission.model';
@@ -18,37 +19,42 @@ export class PermissionsService {
   }
 
   createEmployeeIds() {
-    for (let i = 6; i <= 10; i++) {
+    for (let i = 1; i <= 20; i++) {
       const employee = new Permission();
       employee.employeeId = i;
-      employee.firstName = 'Employee ' + i;
+      employee.firstName = 'FirstName ' + i;
 
       this.employees.push(employee);
     }
   }
 
-  getEmployees(searchKeyword?: string) {
-    if (searchKeyword) {
+  getEmployees(queryParams: QueryStringParameters) {
+    const end = queryParams.pageNumber * queryParams.pageSize;
+    const start = (queryParams.pageNumber * queryParams.pageSize) - (queryParams.pageSize);
+    if (queryParams.searchKeyword) {
       const employee = new Array<Permission>();
       this.employees.forEach(ele => {
-        if (ele.firstName.includes(searchKeyword)) {
+        if (ele.firstName.toLowerCase().includes(queryParams.searchKeyword.toLowerCase())) {
           employee.push(ele);
         }
       });
       return of(employee);
     } else {
-      return of(this.employees);
+      return of(this.employees.slice(start, end));
     }
   }
 
   createUserPermissionDetails() {
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 9; i++) {
       const permission = new PermissionDetails();
       permission.employeeId = i;
       permission.firstName = 'FirstName ' + i;
       permission.lastName = 'LastName ' + i;
       permission.roles = new Array<UserRole>();
-      permission.roles.push(this.roles[i - 1]);
+      const n = i % 2 === 0 ? 0 : 3;
+      for (let j = n; j < n + 2; j++) {
+        permission.roles.push(this.roles[j]);
+      }
       permission.createdBy = 'User ' + i;
       permission.createdDate = '2020-09-1' + i;
       permission.modifiedBy = 'User ' + i;
@@ -58,16 +64,19 @@ export class PermissionsService {
     }
   }
 
-  getPermissions() {
-    return of(this.permissions);
+  getPermissions(queryParams?: QueryStringParameters) {
+    if (queryParams.searchKeyword) {
+      const permissions = this.searchKeyword(queryParams.searchKeyword);
+      return of(permissions);
+    } else {
+      return of(this.permissions);
+    }
   }
 
   addPermission(permission: PermissionDetails) {
     this.permissions.push(permission);
-    const index = this.employees.findIndex(x => x.employeeId === permission.employeeId);
-    this.employees.splice(index, 1);
-    const employees = this.employees;
-    return of(employees);
+    const success = true;
+    return of(success);
   }
 
   updatePermission(employeeId: number, permission: PermissionDetails) {
@@ -77,6 +86,21 @@ export class PermissionsService {
     }
     const success = true;
     return of(success);
+  }
+
+  private searchKeyword(keyword) {
+    const permissions = new Array<PermissionDetails>();
+    this.permissions.forEach(ele => {
+      if (ele.firstName.toLowerCase().includes(keyword.toLowerCase())) {
+        permissions.push(ele);
+      } else if (ele.lastName.toLowerCase().includes(keyword.toLowerCase())) {
+        permissions.push(ele);
+      } else if (ele.employeeId === keyword) {
+        permissions.push(ele);
+      }
+    });
+
+    return permissions;
   }
 
 }

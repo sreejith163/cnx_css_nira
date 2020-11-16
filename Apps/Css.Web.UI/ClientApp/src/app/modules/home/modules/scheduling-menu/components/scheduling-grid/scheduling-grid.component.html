@@ -151,7 +151,7 @@
                                 <i class="fa fa-caret-left arrow-icon" aria-hidden="true" (click)="previous()"
                                   [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
                               </span>
-                              <ng-container class="margin-5"
+                              <ng-container
                                 *ngFor="let icon of iconData | horizontalScroll : startIcon: endIcon: iconCount; let i= index;">
                                 <i id="{{ icon.unified }}" class="icon-style icon"
                                   [ngClass]="{'icon-active': icon === icon.unified}" (click)="onIconClick($event)"
@@ -189,8 +189,8 @@
                                       </ng-template>
                                     </ng-container>
                                   </tr>
-                                  <tr class="jsgrid-row" *ngFor="let week of weekDays; let i = index">
-                                    <td class="jsgrid-cell-week user-select-none">
+                                  <tr class="jsgrid-row user-select-none" *ngFor="let week of weekDays; let i = index">
+                                    <td class="jsgrid-cell-week">
                                       {{ weekDay[week] | slice: 0 : 3 }}
                                     </td>
                                     <td id="grid_col_{{week}}_{{j}}" class="jsgrid-cell"

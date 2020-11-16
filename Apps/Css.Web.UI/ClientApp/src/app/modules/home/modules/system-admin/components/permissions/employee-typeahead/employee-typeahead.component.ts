@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { Permission } from '../../../models/permission.model';
 import { PermissionsService } from '../../../services/permissions.service';
@@ -11,21 +11,24 @@ import { PermissionsService } from '../../../services/permissions.service';
   templateUrl: './employee-typeahead.component.html',
   styleUrls: ['./employee-typeahead.component.scss']
 })
-export class EmployeeTypeAheadComponent implements OnInit {
+export class EmployeeTypeAheadComponent implements OnInit, OnDestroy {
   loading = false;
   pageNumber = 1;
   employeeItemsBufferSize = 10;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   totalItems: number;
-  totalPages: number;
+  totalPages = 1;
   searchKeyWord = '';
 
   employeeItemsBuffer: Permission[] = [];
   translationValues = Constants.permissionsTranslationValues;
   typeAheadInput$ = new Subject<string>();
 
-  @Input() permissionForm: FormGroup;
-  @Input() updatePermissionData: Permission[];
+  getEmployeesSubscription: any;
+  typeAheadSubscription: any;
+  subscriptions: any[] = [];
+
+  @Input() employeeId: number;
 
   @Output() employeeSelected = new EventEmitter();
 
@@ -36,6 +39,14 @@ export class EmployeeTypeAheadComponent implements OnInit {
   ngOnInit(): void {
     this.subscribeToEmployeesWithoutPermissions();
     this.subscribeToSearching();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    });
   }
 
   onEmployeeScrollToEnd() {
@@ -62,15 +73,9 @@ export class EmployeeTypeAheadComponent implements OnInit {
   clearSelectedValues() {
     this.searchKeyWord = '';
     this.pageNumber = 1;
+    this.totalPages = 1;
     this.subscribeToEmployeesWithoutPermissions();
-  }
-
-  getItems() {
-    if (this.updatePermissionData.length > 0) {
-      return this.updatePermissionData;
-    } else {
-      return this.employeeItemsBuffer;
-    }
+    this.employeeSelected.emit(null);
   }
 
   private fetchMoreEmployees() {
@@ -80,36 +85,55 @@ export class EmployeeTypeAheadComponent implements OnInit {
     }
   }
 
+  private setPaginationValues(response) {
+    this.totalItems = response.length;
+    this.totalPages = this.totalItems / this.totalPages;
+  }
+
   private subscribeToEmployeesWithoutPermissions(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getEmployees().subscribe(
+    this.getEmployeesSubscription = this.getEmployees().subscribe(
       response => {
         if (response) {
           this.employeeItemsBuffer = needBufferAdd ? this.employeeItemsBuffer.concat(response) : response;
-          this.totalItems = this.employeeItemsBuffer.length;
+          this.setPaginationValues(this.employeeItemsBuffer);
         }
         this.loading = false;
       }, err => this.loading = false);
 
+    this.subscriptions.push(this.getEmployeesSubscription);
   }
 
   private subscribeToSearching() {
-    this.typeAheadInput$.pipe(
+    this.typeAheadSubscription = this.typeAheadInput$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
       switchMap(term => this.getEmployees(term))
     ).subscribe(response => {
       if (response) {
+        this.setPaginationValues(response);
         this.employeeItemsBuffer = response;
       }
     }, (error) => {
       console.log(error);
     });
+    this.subscriptions.push(this.typeAheadSubscription);
+  }
 
+  private getQueryParams(searchkeyword?: string) {
+    const queryParams = new QueryStringParameters();
+    queryParams.pageSize = this.employeeItemsBufferSize;
+    queryParams.pageNumber = this.pageNumber;
+    queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
+    queryParams.orderBy = null;
+    queryParams.fields = 'id, firstName';
+
+    return queryParams;
   }
 
   private getEmployees(searchKeyword?: string) {
-    return this.permissionService.getEmployees(searchKeyword);
+    const queryParams = this.getQueryParams(searchKeyword);
+    return this.permissionService.getEmployees(queryParams);
   }
 
 }

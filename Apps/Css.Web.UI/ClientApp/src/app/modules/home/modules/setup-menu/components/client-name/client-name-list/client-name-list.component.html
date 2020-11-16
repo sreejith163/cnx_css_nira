@@ -16,10 +16,13 @@
 
   <div class="row m-l-r-10">
     <div class="col-md-3 padding-bottom-5">
-      <input id="search"  type="text" class="form-control" [(ngModel)]="searchKeyword"
+      <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
+        [maxLength]="maxLength"
         placeholder="{{ 'Client Name' | translation: 'lbl_client_name' : translationValues }}" />
+      <ng-container *ngIf="searchKeyword?.length">
+        <i id="input_close_btn" class="fa fa-times-circle cursor-pointer icon" type="button" (click)="clearSearchBox()"></i>
+      </ng-container>
     </div>
-      <i id="input_close_btn"  class="fa fa-close cursor-pointer" type="button"></i>
     <div class="col-md-2">
       <button class="form-control" (click)="searchClients()"><i class="fa fa-search" aria-hidden="true"></i>
         {{ 'Search' | translation: 'btn_search' : translationValues }}

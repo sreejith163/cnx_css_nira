@@ -41,8 +41,9 @@ label:not(.form-check-label):not(.custom-file-label) {
   color: #1666fa
 }
 
-.selected-row {
-  border: solid gray;
+.table-striped tbody tr:nth-of-type(odd).selected, .table-striped tbody tr:nth-of-type(even).selected {
+  background: #c4e2ff54 !important;
+  border-color: #c4e2ff54 !important;
 }
 
 .card {

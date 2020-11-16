@@ -31,6 +31,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   characterSplice = 25;
   totalClientRecord: number;
+  maxLength = Constants.DefaultTextMaxLength;
 
   searchKeyword: string;
   orderBy = 'createdDate';
@@ -136,6 +137,10 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
     this.orderBy = columnName;
 
     this.loadClients();
+  }
+
+  clearSearchBox() {
+    this.searchKeyword = null;
   }
 
   private getModalPopup(component: any, size: string) {

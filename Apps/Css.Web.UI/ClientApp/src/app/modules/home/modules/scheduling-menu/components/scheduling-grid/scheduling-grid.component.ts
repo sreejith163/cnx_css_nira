@@ -43,7 +43,7 @@ export class SchedulingGridComponent implements OnInit {
   currentPage = 1;
   pageSize = 10;
   characterSplice = 25;
-  iconCount = 33;
+  iconCount = 30;
   startIcon = 0;
   endIcon: number;
   totalSchedulingRecord: number;

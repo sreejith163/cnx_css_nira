@@ -26,8 +26,8 @@
         <div class="col-md-4 col-sm-4 margin-b-05-rem">
           <label
             class="text-color">{{ 'Select an Employee' | translation: 'lbl_select_an_employee' : translationValues }}</label>
-          <app-employee-typeahead [permissionForm]="permissionForm" (employeeSelected)="setEmployee($event)"
-            [updatePermissionData]="updatePermissionData"></app-employee-typeahead>
+          <app-employee-typeahead [employeeId]="employeeId" (employeeSelected)="setEmployee($event)">
+          </app-employee-typeahead>
         </div>
         <div class="col-md-3 col-sm-3 margin-l-20px">
           <div class="form-group clearfix margin-b-05-rem" *ngFor="let data of userRoles | slice: 0:3; let i = index">
@@ -57,18 +57,18 @@
 
   <div class="row m-l-r-10">
     <div class="col-md-3 p-b-5">
-      <input type="text" class="form-control"
+      <input type="text" class="form-control" [(ngModel)]="searchKeyword"
         placeholder="{{ 'Type here to search an Employee' | translation: 'lbl_search_employee' : translationValues }}" />
     </div>
     <div class="col-md-2">
-      <button class="form-control"><i class="fa fa-search" aria-hidden="true"></i>
+      <button class="form-control" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
         {{ 'Search' | translation: 'btn_search' : translationValues }}
       </button>
     </div>
     <div class="col-md-7 text-right">
       <button type="button" class="btn btn-default float-r btn-grid">
-        <i class="fas fa-th"></i>
-        <i class="fas fa-sort-down padding-5" [ngbPopover]="popContent" [popoverTitle]="popTitle" [placement]="'left'"
+        <i class="fa fa-th"></i>
+        <i class="fa fa-sort-down padding-5" [ngbPopover]="popContent" [popoverTitle]="popTitle" [placement]="'left'"
           container="body" [autoClose]="'outside'"></i>
         <ng-template #popContent>
           <div class="form-group clearfix margin-b-05-rem" *ngFor="let role of this.hiddenRoles; let i = index">
@@ -87,10 +87,10 @@
       </button>
     </div>
   </div>
-
+  <br>
   <div class="row">
-    <div class="scrollable-table">
-      <div class="col-md-12 mt-2 table-responsive">
+    <div class="col-md-12 mt-2 table-responsive">
+      <div class="scrollable-table">
         <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
           <thead>
             <tr>
@@ -107,27 +107,27 @@
                 <i class="fa fa-sort"></i>
               </th>
               <th *ngIf="hasRoleHidden('System Admin')" class="sortable-field width-15-p" [appSort]="permissions"
-                data-order="asc" data-name="roles">
+                data-order="asc" data-name="roles" data-type="array">
                 {{ 'System Admin' | translation: 'lbl_table_heading_system_admin' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
               <th *ngIf="hasRoleHidden('WFM Admin')" class="sortable-field width-15-p" [appSort]="permissions"
-                data-order="asc" data-name="roles">
+                data-order="asc" data-name="roles" data-type="array">
                 {{ 'WFM Admin' | translation: 'lbl_table_heading_wfm_admin' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
               <th *ngIf="hasRoleHidden('WFM Scheduling Team')" class="sortable-field width-15-p" [appSort]="permissions"
-                data-order="asc" data-name="roles">
+                data-order="asc" data-name="roles" data-type="array">
                 {{ 'WFM Scheduling Team' | translation: 'lbl_table_heading_wfm_scheduling_team' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
               <th *ngIf="hasRoleHidden('Delivery Team')" class="sortable-field width-15-p" [appSort]="permissions"
-                data-order="asc" data-name="roles">
+                data-order="asc" data-name="roles" data-type="array">
                 {{ 'Delivery Team' | translation: 'lbl_table_heading_delivery_team' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
               <th *ngIf="hasRoleHidden('Active')" class="sortable-field width-15-p" [appSort]="permissions"
-                data-order="asc" data-name="roles">
+                data-order="asc" data-name="roles" data-type="array">
                 {{ 'Active' | translation: 'lbl_table_heading_active' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
@@ -148,7 +148,8 @@
           <tbody>
             <tr
               *ngFor="let el of permissions| slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize; let i = index;"
-              (click)="getPermissionRecordToUpdate(el,i)" [ngClass]="{'selected-row': isRowSelected(i)}">
+              (click)="getPermissionRecordToUpdate(el,i)" class="cursor-pointer"
+              [ngClass]="{'selected': isRowSelected(i)}">
               <td>{{el.employeeId}}</td>
               <td>{{el.firstName}}</td>
               <td>{{el.lastName}}</td>
