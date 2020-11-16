@@ -33,7 +33,7 @@
               "src/styles.css",
               "node_modules/font-awesome/css/font-awesome.min.css",
               "node_modules/admin-lte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css",
-              "node_modules/admin-lte/docs_html/assets/css/adminlte.css",
+              "src/assets/css/adminlte.css",
               "node_modules/admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css",
               "node_modules/admin-lte/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css",
               "src/assets/css/loader-styles.css",
