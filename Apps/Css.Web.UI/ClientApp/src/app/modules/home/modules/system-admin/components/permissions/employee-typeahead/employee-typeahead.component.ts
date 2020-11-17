@@ -65,7 +65,9 @@ export class EmployeeTypeAheadComponent implements OnInit, OnDestroy {
   }
 
   onEmployeeChange(event: Permission) {
-    this.employeeSelected.emit(event);
+    if (event) {
+      this.employeeSelected.emit(event);
+    }
   }
 
   clearSelectedEmployee() {
