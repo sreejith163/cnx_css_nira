@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
-import { Constants } from 'src/app/shared/util/constants.util';
+import { Translation } from 'src/app/shared/models/translation.model';
 import { Permission } from '../../../models/permission.model';
 import { PermissionsService } from '../../../services/permissions.service';
 
@@ -12,16 +12,16 @@ import { PermissionsService } from '../../../services/permissions.service';
   styleUrls: ['./employee-typeahead.component.scss']
 })
 export class EmployeeTypeAheadComponent implements OnInit, OnDestroy {
+
   loading = false;
   pageNumber = 1;
   employeeItemsBufferSize = 10;
   numberOfItemsFromEndBeforeFetchingMore = 10;
-  totalItems: number;
   totalPages = 1;
+  totalItems: number;
   searchKeyWord = '';
 
   employeeItemsBuffer: Permission[] = [];
-  translationValues = Constants.permissionsTranslationValues;
   typeAheadInput$ = new Subject<string>();
 
   getEmployeesSubscription: any;
@@ -29,15 +29,16 @@ export class EmployeeTypeAheadComponent implements OnInit, OnDestroy {
   subscriptions: any[] = [];
 
   @Input() employeeId: number;
-
+  @Input() translationValues: Translation[];
   @Output() employeeSelected = new EventEmitter();
+  @Output() employeeCleared = new EventEmitter();
 
   constructor(
     private permissionService: PermissionsService
   ) { }
 
   ngOnInit(): void {
-    this.subscribeToEmployeesWithoutPermissions();
+    this.subscribeToEmployees();
     this.subscribeToSearching();
   }
 
@@ -64,24 +65,21 @@ export class EmployeeTypeAheadComponent implements OnInit, OnDestroy {
   }
 
   onEmployeeChange(event: Permission) {
-    const employee = new Permission();
-    employee.employeeId = event?.employeeId;
-    employee.firstName = event?.firstName;
-    this.employeeSelected.emit(employee);
+    this.employeeSelected.emit(event);
   }
 
-  clearSelectedValues() {
+  clearSelectedEmployee() {
     this.searchKeyWord = '';
     this.pageNumber = 1;
     this.totalPages = 1;
-    this.subscribeToEmployeesWithoutPermissions();
-    this.employeeSelected.emit(null);
+    this.subscribeToEmployees();
+    this.employeeCleared.emit();
   }
 
   private fetchMoreEmployees() {
     if (this.pageNumber < this.totalPages) {
       this.pageNumber += 1;
-      this.subscribeToEmployeesWithoutPermissions(true);
+      this.subscribeToEmployees(true);
     }
   }
 
@@ -90,7 +88,7 @@ export class EmployeeTypeAheadComponent implements OnInit, OnDestroy {
     this.totalPages = this.totalItems / this.totalPages;
   }
 
-  private subscribeToEmployeesWithoutPermissions(needBufferAdd?: boolean) {
+  private subscribeToEmployees(needBufferAdd?: boolean) {
     this.loading = true;
     this.getEmployeesSubscription = this.getEmployees().subscribe(
       response => {
@@ -126,7 +124,7 @@ export class EmployeeTypeAheadComponent implements OnInit, OnDestroy {
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
     queryParams.orderBy = null;
-    queryParams.fields = 'id, firstName';
+    queryParams.fields = 'id, firstName, lastName';
 
     return queryParams;
   }
@@ -135,5 +133,4 @@ export class EmployeeTypeAheadComponent implements OnInit, OnDestroy {
     const queryParams = this.getQueryParams(searchKeyword);
     return this.permissionService.getEmployees(queryParams);
   }
-
 }

@@ -19,6 +19,7 @@ import { SchedulingCodeListComponent } from './components/scheduling-code/schedu
 import { AddUpdateSchedulingCodeComponent } from './components/scheduling-code/add-update-scheduling-code/add-update-scheduling-code.component';
 import { PermissionsListComponent } from './components/permissions/permissions-list/permissions-list.component';
 import { EmployeeTypeAheadComponent } from './components/permissions/employee-typeahead/employee-typeahead.component';
+import { AddUpdatePermissionComponent } from './components/permissions/add-update-permission/add-update-permission.component';
 
 const modules = [
   SharedModule,
@@ -31,6 +32,7 @@ const components = [
   SchedulingCodeListComponent,
   AddUpdateSchedulingCodeComponent,
   PermissionsListComponent,
+  AddUpdatePermissionComponent,
   EmployeeTypeAheadComponent,
   AddAgentCategoryComponent];
 

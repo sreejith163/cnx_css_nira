@@ -23,6 +23,7 @@ export class PermissionsService {
       const employee = new Permission();
       employee.employeeId = i;
       employee.firstName = 'FirstName ' + i;
+      employee.lastName = 'LastName ' + i;
 
       this.employees.push(employee);
     }
@@ -44,6 +45,10 @@ export class PermissionsService {
     }
   }
 
+  getEmployee(employeeId: number) {
+    return of(this.employees.find(x => x.employeeId === employeeId));
+  }
+
   createUserPermissionDetails() {
     for (let i = 1; i <= 9; i++) {
       const permission = new PermissionDetails();
@@ -56,9 +61,9 @@ export class PermissionsService {
         permission.roles.push(this.roles[j]);
       }
       permission.createdBy = 'User ' + i;
-      permission.createdDate = '2020-09-1' + i;
+      permission.createdDate = new Date('2020-09-1' + i);
       permission.modifiedBy = 'User ' + i;
-      permission.modifiedDate = '2020-09-1' + i;
+      permission.modifiedDate = new Date('2020-09-1' + i);
 
       this.permissions.push(permission);
     }
@@ -71,6 +76,10 @@ export class PermissionsService {
     } else {
       return of(this.permissions);
     }
+  }
+
+  getPermission(employeeId: number) {
+    return of(this.permissions.find(x => x.employeeId === employeeId));
   }
 
   addPermission(permission: PermissionDetails) {

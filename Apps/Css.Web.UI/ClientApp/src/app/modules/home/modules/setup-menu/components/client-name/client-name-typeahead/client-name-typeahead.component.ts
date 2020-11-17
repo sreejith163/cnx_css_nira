@@ -29,7 +29,6 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
   subscriptions: ISubscription[] = [];
 
   @Input() clientId: number;
-
   @Output() clientSelected = new EventEmitter();
 
   constructor(

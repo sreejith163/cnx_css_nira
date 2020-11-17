@@ -3783,7 +3783,7 @@ export class Constants {
       menu: 'Permissions',
       description: 'text',
       language: 'English',
-      translation: 'Select roles to hide',
+      translation: 'Select columns to hide',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',

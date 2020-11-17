@@ -14,46 +14,9 @@
     </div>
   </div>
 
-  <div class="card row">
-    <form [formGroup]="permissionForm">
-      <div class=" card-header">
-        <button class="btn btn-primary float-right" (click)="savePermission()">
-          <i class="fa fa-user-circle padding-5"></i>
-          {{getTitle()}}
-          {{ 'User' | translation: 'btn_add_edit_user' : translationValues }}</button>
-      </div>
-      <div class="card-body row">
-        <div class="col-md-4 col-sm-4 margin-b-05-rem">
-          <label
-            class="text-color">{{ 'Select an Employee' | translation: 'lbl_select_an_employee' : translationValues }}</label>
-          <app-employee-typeahead [employeeId]="employeeId" (employeeSelected)="setEmployee($event)">
-          </app-employee-typeahead>
-        </div>
-        <div class="col-md-3 col-sm-3 margin-l-20px">
-          <div class="form-group clearfix margin-b-05-rem" *ngFor="let data of userRoles | slice: 0:3; let i = index">
-            <div class="icheck-primary d-inline">
-              <input type="checkbox" id="{{ data.id }}" [value]="data.id" [checked]="hasValueSelected(data.id)"
-                (change)="onCheckboxChange($event)">
-              <label for="{{ data.id }}">
-                {{ data.role }}
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-3 margin-l-20px">
-          <div class="form-group clearfix margin-b-05-rem" *ngFor="let data of userRoles | slice: 3: 5; let i = index">
-            <div class="icheck-primary d-inline">
-              <input type="checkbox" id="{{ data.id }}" [value]="data.id" [checked]="hasValueSelected(data.id)"
-                (change)="onCheckboxChange($event)">
-              <label for="{{ data.id }}">
-                {{ data.role }}
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
+  <app-add-update-permission [employeeId]="employeeId" [translationValues]="translationValues" (permissionCleared)="onPermissionCleared()"
+  (permissionUpdated)="onPermissionUpdated()">
+  </app-add-update-permission>
 
   <div class="row m-l-r-10">
     <div class="col-md-3 p-b-5">
@@ -82,12 +45,11 @@
           </div>
         </ng-template>
         <ng-template #popTitle>
-          {{ 'Select roles to hide' | translation: 'lbl_table_heading_user_roles' : translationValues }}
+          {{ 'Select columns to hide' | translation: 'lbl_table_heading_user_roles' : translationValues }}
         </ng-template>
       </button>
     </div>
   </div>
-  <br>
   <div class="row">
     <div class="col-md-12 mt-2 table-responsive">
       <div class="scrollable-table">
@@ -148,7 +110,7 @@
           <tbody>
             <tr
               *ngFor="let el of permissions| slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize; let i = index;"
-              (click)="getPermissionRecordToUpdate(el,i)" class="cursor-pointer"
+              (click)="setSelectedEmployee(el.employeeId, i)" class="cursor-pointer"
               [ngClass]="{'selected': isRowSelected(i)}">
               <td>{{el.employeeId}}</td>
               <td>{{el.firstName}}</td>

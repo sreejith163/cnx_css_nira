@@ -2,7 +2,7 @@
   [typeahead]="typeAheadInput$"
   placeholder="{{ 'Click here to search an Employee' | translation: 'drp_select_an_employee' : translationValues }}"
   (scroll)="onEmployeeScroll($event)" (scrollToEnd)="onEmployeeScrollToEnd()" (change)="onEmployeeChange($event)"
-  (clear)="clearSelectedValues()" [(ngModel)]="employeeId">
+  (clear)="clearSelectedEmployee()" [(ngModel)]="employeeId">
   <ng-template ng-header-tmp>
     <small class="form-text text-muted">Loaded {{employeeItemsBuffer.length}} of
       {{totalItems}} </small>

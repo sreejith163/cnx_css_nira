@@ -5,7 +5,7 @@ export class PermissionDetails extends Permission {
     lastName: string;
     roles: UserRole[];
     createdBy: string;
-    createdDate: string;
+    createdDate: Date;
     modifiedBy: string;
-    modifiedDate: string;
+    modifiedDate: Date;
 }
