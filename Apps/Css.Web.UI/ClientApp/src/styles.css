@@ -306,3 +306,9 @@ sup {
 #input_close_btn {
   color: gray;
 }
+
+.closable-icon {
+  position: absolute;
+  bottom: 17px;
+  margin-left: 253px;
+}

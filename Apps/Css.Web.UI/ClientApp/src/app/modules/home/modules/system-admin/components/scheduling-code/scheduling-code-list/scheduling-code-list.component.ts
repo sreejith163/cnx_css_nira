@@ -72,6 +72,10 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     return String.fromCodePoint(...codePoints);
   }
 
+  clearSearchKeyword() {
+    this.searchKeyword = undefined;
+  }
+
   addSchedulingCode() {
     this.getModalPopup(AddUpdateSchedulingCodeComponent, 'lg');
     this.setComponentValues(ComponentOperation.Add, this.translationValues);

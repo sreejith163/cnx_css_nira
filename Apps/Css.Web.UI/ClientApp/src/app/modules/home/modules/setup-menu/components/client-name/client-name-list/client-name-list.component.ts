@@ -139,8 +139,8 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
     this.loadClients();
   }
 
-  clearSearchBox() {
-    this.searchKeyword = null;
+  clearSearchKeyword() {
+    this.searchKeyword = undefined;
   }
 
   private getModalPopup(component: any, size: string) {

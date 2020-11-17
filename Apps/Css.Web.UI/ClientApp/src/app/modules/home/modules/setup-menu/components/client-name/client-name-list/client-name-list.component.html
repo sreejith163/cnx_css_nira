@@ -20,7 +20,8 @@
         [maxLength]="maxLength"
         placeholder="{{ 'Client Name' | translation: 'lbl_client_name' : translationValues }}" />
       <ng-container *ngIf="searchKeyword?.length">
-        <i id="input_close_btn" class="fa fa-times-circle cursor-pointer icon" type="button" (click)="clearSearchBox()"></i>
+        <!-- <i id="input_close_btn" class="fa fa-times-circle cursor-pointer closable-icon" type="button"
+          (click)="clearSearchKeyword()"></i> -->
       </ng-container>
     </div>
     <div class="col-md-2">

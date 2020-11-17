@@ -18,6 +18,10 @@
       <input type="text" class="form-control"
         placeholder="{{ 'Enter a Description' | translation: 'lbl_search_place_holder' : translationValues }}"
         [(ngModel)]="searchKeyword" />
+      <ng-container *ngIf="searchKeyword?.length">
+        <!-- <i id="input_close_btn" class="fa fa-times-circle cursor-pointer closable-icon" type="button"
+          (click)="clearSearchKeyword()"></i> -->
+      </ng-container>
     </div>
     <div class="col-md-2 padding-bottom-5">
       <button class="form-control" id="btn_search" (click)="searchSchedulingCode()">
