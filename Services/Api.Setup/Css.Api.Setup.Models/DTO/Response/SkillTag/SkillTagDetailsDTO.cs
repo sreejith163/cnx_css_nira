@@ -1,7 +1,7 @@
-﻿using Css.Api.SetupMenu.Models.DTO.Request.OperationHour;
+﻿using Css.Api.Setup.Models.DTO.Request.OperationHour;
 using System.Collections.Generic;
 
-namespace Css.Api.SetupMenu.Models.DTO.Response.SkillTag
+namespace Css.Api.Setup.Models.DTO.Response.SkillTag
 {
     public class SkillTagDetailsDTO : SkillTagDTO
     {

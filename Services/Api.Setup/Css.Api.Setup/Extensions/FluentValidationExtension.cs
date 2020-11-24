@@ -1,8 +1,8 @@
-﻿using Css.Api.SetupMenu.Filters;
+﻿using Css.Api.Setup.Filters;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Css.Api.SetupMenu.Extensions
+namespace Css.Api.Setup.Extensions
 {
     /// <summary>
     /// Extension for adding the fluent validation assemblies

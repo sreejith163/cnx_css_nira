@@ -1,4 +1,4 @@
-﻿namespace Css.Api.SetupMenu.Models.DTO.Request.Client
+﻿namespace Css.Api.Setup.Models.DTO.Request.Client
 {
     public class ClientNameDetails
     {

@@ -1,12 +1,12 @@
-﻿using Css.Api.SetupMenu.Models.Domain;
-using Css.Api.SetupMenu.Repository.DatabaseContext;
+﻿using Css.Api.Setup.Models.Domain;
+using Css.Api.Setup.Repository.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Css.Api.SetupMenu.Business.UnitTest.Mock
+namespace Css.Api.Setup.Business.UnitTest.Mock
 {
     /// <summary>
     /// MockDataContext
@@ -74,9 +74,9 @@ namespace Css.Api.SetupMenu.Business.UnitTest.Mock
         /// Intializes the mock data.
         /// </summary>
         /// <returns></returns>
-        public Mock<SetupMenuContext> IntializeMockData()
+        public Mock<SetupContext> IntializeMockData()
         {
-            Mock<SetupMenuContext> mockSetupMenuContext = new Mock<SetupMenuContext>();
+            Mock<SetupContext> mockSetupContext = new Mock<SetupContext>();
             var mockAgentAdmin = new Mock<DbSet<AgentAdmin>>();
             mockAgentAdmin.As<IQueryable<AgentAdmin>>().Setup(m => m.Provider).Returns(agentAdminsDB.Provider);
             mockAgentAdmin.As<IQueryable<AgentAdmin>>().Setup(m => m.Expression).Returns(agentAdminsDB.Expression);
@@ -143,19 +143,19 @@ namespace Css.Api.SetupMenu.Business.UnitTest.Mock
             mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.ElementType).Returns(timezonesDB.ElementType);
             mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.GetEnumerator()).Returns(timezonesDB.GetEnumerator());
 
-            mockSetupMenuContext.Setup(c => c.AgentAdmin).Returns(mockAgentAdmin.Object);
-            mockSetupMenuContext.Setup(c => c.AgentDetail).Returns(mockAgentDetail.Object);
-            mockSetupMenuContext.Setup(c => c.AgentGroupDetail).Returns(mockAgentGroupDetail.Object);
-            mockSetupMenuContext.Setup(c => c.AgentSchedulingGroup).Returns(mockEAgentSchedulingGroup.Object);
-            mockSetupMenuContext.Setup(c => c.Client).Returns(mockClient.Object);
-            mockSetupMenuContext.Setup(c => c.ClientLobGroup).Returns(mockClientLobGroup.Object);
-            mockSetupMenuContext.Setup(c => c.OperationHour).Returns(mockOperationHour.Object);
-            mockSetupMenuContext.Setup(c => c.OperationHourOpenType).Returns(mockOperationHourOpenType.Object);
-            mockSetupMenuContext.Setup(c => c.SkillGroup).Returns(mockSkillGroup.Object);
-            mockSetupMenuContext.Setup(c => c.SkillTag).Returns(mockSkillTag.Object);
-            mockSetupMenuContext.Setup(c => c.Timezone).Returns(mockTimezone.Object);
+            mockSetupContext.Setup(c => c.AgentAdmin).Returns(mockAgentAdmin.Object);
+            mockSetupContext.Setup(c => c.AgentDetail).Returns(mockAgentDetail.Object);
+            mockSetupContext.Setup(c => c.AgentGroupDetail).Returns(mockAgentGroupDetail.Object);
+            mockSetupContext.Setup(c => c.AgentSchedulingGroup).Returns(mockEAgentSchedulingGroup.Object);
+            mockSetupContext.Setup(c => c.Client).Returns(mockClient.Object);
+            mockSetupContext.Setup(c => c.ClientLobGroup).Returns(mockClientLobGroup.Object);
+            mockSetupContext.Setup(c => c.OperationHour).Returns(mockOperationHour.Object);
+            mockSetupContext.Setup(c => c.OperationHourOpenType).Returns(mockOperationHourOpenType.Object);
+            mockSetupContext.Setup(c => c.SkillGroup).Returns(mockSkillGroup.Object);
+            mockSetupContext.Setup(c => c.SkillTag).Returns(mockSkillTag.Object);
+            mockSetupContext.Setup(c => c.Timezone).Returns(mockTimezone.Object);
 
-            return mockSetupMenuContext;
+            return mockSetupContext;
         }
 
         #endregion

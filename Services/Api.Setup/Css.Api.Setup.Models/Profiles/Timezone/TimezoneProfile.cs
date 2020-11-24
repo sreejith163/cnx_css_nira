@@ -1,6 +1,6 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
 
-namespace Css.Api.SetupMenu.Models.Profiles.Timezone
+namespace Css.Api.Setup.Models.Profiles.Timezone
 {
     public class TimezoneProfile : AutoMapper.Profile
     {

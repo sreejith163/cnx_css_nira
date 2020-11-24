@@ -1,5 +1,5 @@
 using Css.Api.Core.Utilities.Filters;
-using Css.Api.AdminOps.Extensions;
+using Css.Api.Admin.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Css.Api.AdminOps
+namespace Css.Api.Admin
 {
     /// <summary>
     /// Base method for intilaizing the services and middlewares

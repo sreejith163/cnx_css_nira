@@ -1,8 +1,8 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.SetupMenu.Models.DTO.Request.Client;
+using Css.Api.Setup.Models.DTO.Request.Client;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Business.Interfaces
+namespace Css.Api.Setup.Business.Interfaces
 {
     public interface IClientService
     {

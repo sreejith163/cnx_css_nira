@@ -1,8 +1,8 @@
-﻿using Css.Api.SetupMenu.Models.DTO.Request.SkillGroup;
-using Css.Api.SetupMenu.Models.DTO.Response.SkillGroup;
+﻿using Css.Api.Setup.Models.DTO.Request.SkillGroup;
+using Css.Api.Setup.Models.DTO.Response.SkillGroup;
 using System;
 
-namespace Css.Api.SetupMenu.Models.Profiles.SkillGroup
+namespace Css.Api.Setup.Models.Profiles.SkillGroup
 {
     public class SkillGroupProfile : AutoMapper.Profile
     {

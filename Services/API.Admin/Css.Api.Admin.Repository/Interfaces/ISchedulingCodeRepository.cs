@@ -1,10 +1,10 @@
 ﻿using Css.Api.Core.Models.Domain;
-using Css.Api.AdminOps.Models.Domain;
-using Css.Api.AdminOps.Models.DTO.Request.SchedulingCode;
+using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Css.Api.AdminOps.Repository.Interfaces
+namespace Css.Api.Admin.Repository.Interfaces
 {
     public interface ISchedulingCodeRepository
     {

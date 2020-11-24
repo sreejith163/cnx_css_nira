@@ -1,4 +1,4 @@
-﻿namespace Css.Api.SetupMenu.Models.DTO.Request.SkillGroup
+﻿namespace Css.Api.Setup.Models.DTO.Request.SkillGroup
 {
     public class SkillGroupNameDetails
     {

@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
-using Css.Api.AdminOps.Business.Interfaces;
-using Css.Api.AdminOps.Models.Domain;
-using Css.Api.AdminOps.Models.DTO.Request.SchedulingCode;
-using Css.Api.AdminOps.Models.DTO.Response.SchedulingCode;
-using Css.Api.AdminOps.Repository.Interfaces;
+using Css.Api.Admin.Business.Interfaces;
+using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
+using Css.Api.Admin.Models.DTO.Response.SchedulingCode;
+using Css.Api.Admin.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Css.Api.AdminOps.Business
+namespace Css.Api.Admin.Business
 {
     public class SchedulingCodeService : ISchedulingCodeService
     {

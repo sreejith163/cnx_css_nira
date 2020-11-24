@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using Css.Api.Core.Models.DTO.Response;
-using Css.Api.SetupMenu.Business.Interfaces;
-using Css.Api.SetupMenu.Business.UnitTest.Mock;
-using Css.Api.SetupMenu.Models.Profiles.Timezone;
-using Css.Api.SetupMenu.Repository;
-using Css.Api.SetupMenu.Repository.Interfaces;
+using Css.Api.Setup.Business.Interfaces;
+using Css.Api.Setup.Business.UnitTest.Mock;
+using Css.Api.Setup.Models.Profiles.Timezone;
+using Css.Api.Setup.Repository;
+using Css.Api.Setup.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Collections.Generic;
 using System.Net;
 using Xunit;
 
-namespace Css.Api.SetupMenu.Business.UnitTest.Services
+namespace Css.Api.Setup.Business.UnitTest.Services
 {
     public class TimezoneServiceShould
     {

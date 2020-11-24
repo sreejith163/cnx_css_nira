@@ -1,12 +1,12 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.SetupMenu.Models.Domain;
-using Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup;
+using Css.Api.Setup.Models.Domain;
+using Css.Api.Setup.Models.DTO.Request.ClientLOBGroup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
-namespace Css.Api.SetupMenu.UnitTest.Mock
+namespace Css.Api.Setup.UnitTest.Mock
 {
     public class MockClientLOBGroupData
     {

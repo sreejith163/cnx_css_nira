@@ -1,7 +1,7 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
 using System.Threading.Tasks;
 
-namespace Css.Api.AdminOps.Business.Interfaces
+namespace Css.Api.Admin.Business.Interfaces
 {
     public interface ISchedulingCodeTypeService
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Css.Api.SetupMenu.Models.Domain
+namespace Css.Api.Setup.Models.Domain
 {
     public partial class OperationHourOpenType
     {

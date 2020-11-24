@@ -1,9 +1,9 @@
-﻿using Css.Api.SetupMenu.Business.Interfaces;
-using Css.Api.SetupMenu.Models.DTO.Request.Client;
+﻿using Css.Api.Setup.Business.Interfaces;
+using Css.Api.Setup.Models.DTO.Request.Client;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Controllers
+namespace Css.Api.Setup.Controllers
 {
     /// <summary>
     /// Controller for handling the client resource

@@ -1,8 +1,8 @@
-﻿using Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup;
-using Css.Api.SetupMenu.Models.DTO.Response.ClientLOBGroup;
+﻿using Css.Api.Setup.Models.DTO.Request.ClientLOBGroup;
+using Css.Api.Setup.Models.DTO.Response.ClientLOBGroup;
 using System;
 
-namespace Css.Api.SetupMenu.Models.Profiles.ClientLOBGroup
+namespace Css.Api.Setup.Models.Profiles.ClientLOBGroup
 {
     public class ClientLOBGroupProfile : AutoMapper.Profile
     {

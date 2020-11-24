@@ -1,20 +1,20 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Core.DataAccess.Repository;
-using Css.Api.AdminOps.Models.Domain;
-using Css.Api.AdminOps.Repository.DatabaseContext;
-using Css.Api.AdminOps.Repository.Interfaces;
+using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Repository.DatabaseContext;
+using Css.Api.Admin.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Css.Api.AdminOps.Models.DTO.Request.SchedulingCode;
+using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
 using AutoMapper;
-using Css.Api.AdminOps.Models.DTO.Response.SchedulingCode;
+using Css.Api.Admin.Models.DTO.Response.SchedulingCode;
 using AutoMapper.QueryableExtensions;
 using System.Collections.Generic;
 using System;
 using Css.Api.Core.Utilities.Extensions;
 
-namespace Css.Api.AdminOps.Repository
+namespace Css.Api.Admin.Repository
 {
     public class SchedulingCodeRepository : GenericRepository<SchedulingCode>, ISchedulingCodeRepository
     {
@@ -29,7 +29,7 @@ namespace Css.Api.AdminOps.Repository
         /// <param name="repositoryContext">The repository context.</param>
         /// <param name="mapper">The mapper.</param>
         public SchedulingCodeRepository(
-            AdminOpsContext repositoryContext,
+            AdminContext repositoryContext,
             IMapper mapper)
             : base(repositoryContext)
         {

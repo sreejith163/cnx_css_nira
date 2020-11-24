@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Css.Api.SetupMenu.Models.DTO.Response.SkillGroup
+namespace Css.Api.Setup.Models.DTO.Response.SkillGroup
 {
     public class SkillGroupDTO
     {

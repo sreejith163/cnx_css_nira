@@ -1,7 +1,7 @@
-﻿using Css.Api.AdminOps.Models.Domain;
+﻿using Css.Api.Admin.Models.Domain;
 using System.Collections.Generic;
 
-namespace Css.Api.AdminOps.Repository.Interfaces
+namespace Css.Api.Admin.Repository.Interfaces
 {
     public interface ISchedulingTypeCodeRepository
     {

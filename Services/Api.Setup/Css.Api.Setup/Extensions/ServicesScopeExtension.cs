@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using Css.Api.SetupMenu.Business;
-using Css.Api.SetupMenu.Business.Interfaces;
-using Css.Api.SetupMenu.Repository;
-using Css.Api.SetupMenu.Repository.Interfaces;
+using Css.Api.Setup.Business;
+using Css.Api.Setup.Business.Interfaces;
+using Css.Api.Setup.Repository;
+using Css.Api.Setup.Repository.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
 
-namespace Css.Api.SetupMenu.Extensions
+namespace Css.Api.Setup.Extensions
 {
     /// <summary>
     /// Extension for adding service lide scopes

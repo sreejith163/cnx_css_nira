@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
-using Css.Api.SetupMenu.Repository.DatabaseContext;
-using Css.Api.SetupMenu.Repository.Interfaces;
+using Css.Api.Setup.Repository.DatabaseContext;
+using Css.Api.Setup.Repository.Interfaces;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Repository
+namespace Css.Api.Setup.Repository
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
         /// <summary>
         /// Gets or sets the repository context.
         /// </summary>
-        private SetupMenuContext _repositoryContext { get; set; }
+        private SetupContext _repositoryContext { get; set; }
 
         /// <summary>
         /// Gets or sets the mapper.
@@ -139,7 +139,7 @@ namespace Css.Api.SetupMenu.Repository
         /// <param name="mapper">The mapper.</param>
         /// <param name="">The .</param>
         public RepositoryWrapper(
-            SetupMenuContext repositoryContext,
+            SetupContext repositoryContext,
             IMapper mapper)
         {
             _repositoryContext = repositoryContext;

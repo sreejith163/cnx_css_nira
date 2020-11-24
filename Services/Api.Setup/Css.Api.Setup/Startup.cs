@@ -1,5 +1,5 @@
 using Css.Api.Core.Utilities.Filters;
-using Css.Api.SetupMenu.Extensions;
+using Css.Api.Setup.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Css.Api.SetupMenu
+namespace Css.Api.Setup
 {
     /// <summary>
     /// Base method for intilaizing the services and middlewares

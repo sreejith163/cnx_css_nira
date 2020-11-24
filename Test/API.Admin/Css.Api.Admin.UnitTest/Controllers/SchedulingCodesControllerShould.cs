@@ -1,14 +1,14 @@
-﻿using Css.Api.AdminOps.Business.Interfaces;
-using Css.Api.AdminOps.Controllers;
-using Css.Api.AdminOps.Models.DTO.Request.SchedulingCode;
-using Css.Api.AdminOps.UnitTest.Mock;
+﻿using Css.Api.Admin.Business.Interfaces;
+using Css.Api.Admin.Controllers;
+using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
+using Css.Api.Admin.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Collections.Generic;
 using System.Net;
 using Xunit;
 
-namespace Css.Api.AdminOps.UnitTest.Controllers
+namespace Css.Api.Admin.UnitTest.Controllers
 {
     public class SchedulingCodesControllerShould
     {

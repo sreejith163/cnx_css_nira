@@ -1,6 +1,6 @@
-﻿using Css.Api.SetupMenu.Models.DTO.Request.OperationHour;
+﻿using Css.Api.Setup.Models.DTO.Request.OperationHour;
 
-namespace Css.Api.SetupMenu.Models.Profiles.OperatingHours
+namespace Css.Api.Setup.Models.Profiles.OperatingHours
 {
     public class OperatingHourProfile : AutoMapper.Profile
     {

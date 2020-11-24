@@ -1,7 +1,7 @@
-﻿using Css.Api.SetupMenu.Models.Domain;
+﻿using Css.Api.Setup.Models.Domain;
 using System.Collections.Generic;
 
-namespace Css.Api.SetupMenu.Repository.Interfaces
+namespace Css.Api.Setup.Repository.Interfaces
 {
     public interface IOperationHourRepository
     {

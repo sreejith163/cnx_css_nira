@@ -1,13 +1,13 @@
-﻿using Css.Api.SetupMenu.Business.Interfaces;
-using Css.Api.SetupMenu.Controllers;
-using Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup;
-using Css.Api.SetupMenu.UnitTest.Mock;
+﻿using Css.Api.Setup.Business.Interfaces;
+using Css.Api.Setup.Controllers;
+using Css.Api.Setup.Models.DTO.Request.ClientLOBGroup;
+using Css.Api.Setup.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Net;
 using Xunit;
 
-namespace Css.Api.SetupMenu.UnitTest.Controllers
+namespace Css.Api.Setup.UnitTest.Controllers
 {
     public class ClientLOBGroupsControllerShould
     {

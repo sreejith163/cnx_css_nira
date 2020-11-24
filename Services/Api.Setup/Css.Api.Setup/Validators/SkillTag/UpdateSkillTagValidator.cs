@@ -1,7 +1,7 @@
-﻿using Css.Api.SetupMenu.Models.DTO.Request.SkillTag;
+﻿using Css.Api.Setup.Models.DTO.Request.SkillTag;
 using FluentValidation;
 
-namespace Css.Api.SetupMenu.Validators.SkillTag
+namespace Css.Api.Setup.Validators.SkillTag
 {
     /// <summary>
     /// Validator for handling the validation of update skill tag object

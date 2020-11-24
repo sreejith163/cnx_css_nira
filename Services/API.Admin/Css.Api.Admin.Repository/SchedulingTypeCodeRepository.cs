@@ -1,10 +1,10 @@
 ﻿using Css.Api.Core.DataAccess.Repository;
-using Css.Api.AdminOps.Models.Domain;
-using Css.Api.AdminOps.Repository.DatabaseContext;
-using Css.Api.AdminOps.Repository.Interfaces;
+using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Repository.DatabaseContext;
+using Css.Api.Admin.Repository.Interfaces;
 using System.Collections.Generic;
 
-namespace Css.Api.AdminOps.Repository
+namespace Css.Api.Admin.Repository
 {
     public class SchedulingTypeCodeRepository : GenericRepository<SchedulingTypeCode>, ISchedulingTypeCodeRepository
     {
@@ -14,7 +14,7 @@ namespace Css.Api.AdminOps.Repository
         /// <param name="repositoryContext">The repository context.</param>
         /// <param name="">The .</param>
         public SchedulingTypeCodeRepository(
-                    AdminOpsContext repositoryContext)
+                    AdminContext repositoryContext)
             : base(repositoryContext)
         {
         }

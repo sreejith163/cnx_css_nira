@@ -3,21 +3,21 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Css.Api.Core.Models.Domain;
-using Css.Api.SetupMenu.Models.Domain;
+using Css.Api.Setup.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
-using Css.Api.SetupMenu.Business.Interfaces;
-using Css.Api.SetupMenu.Repository.Interfaces;
-using Css.Api.SetupMenu.Models.DTO.Request.SkillTag;
-using Css.Api.SetupMenu.Models.DTO.Request.SkillGroup;
+using Css.Api.Setup.Business.Interfaces;
+using Css.Api.Setup.Repository.Interfaces;
+using Css.Api.Setup.Models.DTO.Request.SkillTag;
+using Css.Api.Setup.Models.DTO.Request.SkillGroup;
 using System.Linq;
-using Css.Api.SetupMenu.Models.DTO.Response.SkillTag;
+using Css.Api.Setup.Models.DTO.Response.SkillTag;
 
-namespace Css.Api.SetupMenu.Business
+namespace Css.Api.Setup.Business
 {
     /// <summary>
     /// Service for skill tag part
     /// </summary>
-    /// <seealso cref="Css.Api.SetupMenu.Business.Interfaces.ISkillTagService" />
+    /// <seealso cref="Css.Api.Setup.Business.Interfaces.ISkillTagService" />
     public class SkillTagService : ISkillTagService
     {
         /// <summary>

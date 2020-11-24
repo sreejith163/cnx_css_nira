@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace Css.Api.SetupMenu
+namespace Css.Api.Setup
 {
     /// <summary>
     /// Program starts here

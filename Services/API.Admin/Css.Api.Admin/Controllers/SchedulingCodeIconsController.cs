@@ -1,8 +1,8 @@
-﻿using Css.Api.AdminOps.Business.Interfaces;
+﻿using Css.Api.Admin.Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Css.Api.AdminOps.Controllers
+namespace Css.Api.Admin.Controllers
 {
     /// <summary>
     /// Controller for handling the scheduling code icons resource

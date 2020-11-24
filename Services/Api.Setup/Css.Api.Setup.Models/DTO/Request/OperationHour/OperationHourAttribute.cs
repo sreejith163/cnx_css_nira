@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Css.Api.SetupMenu.Models.DTO.Request.OperationHour
+namespace Css.Api.Setup.Models.DTO.Request.OperationHour
 {
     public class OperationHourAttribute
     {

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Css.Api.AdminOps.Models.DTO.Response.SchedulingCode
+namespace Css.Api.Admin.Models.DTO.Response.SchedulingCode
 {
     public class SchedulingCodeDTO
     {

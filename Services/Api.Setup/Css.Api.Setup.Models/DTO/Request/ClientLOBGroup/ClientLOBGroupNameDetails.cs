@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup
+namespace Css.Api.Setup.Models.DTO.Request.ClientLOBGroup
 {
     public class ClientLOBGroupNameDetails
     {

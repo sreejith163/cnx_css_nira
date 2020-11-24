@@ -1,8 +1,8 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup;
+using Css.Api.Setup.Models.DTO.Request.ClientLOBGroup;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Business.Interfaces
+namespace Css.Api.Setup.Business.Interfaces
 {
     /// <summary>Interface for Client lob group service</summary>
     public interface IClientLOBGroupService

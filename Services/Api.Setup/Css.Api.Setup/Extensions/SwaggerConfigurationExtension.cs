@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace Css.Api.SetupMenu.Extensions
+namespace Css.Api.Setup.Extensions
 {
     /// <summary>
     /// Extension for adding swagger documentation

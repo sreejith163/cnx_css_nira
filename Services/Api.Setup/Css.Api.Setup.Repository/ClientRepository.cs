@@ -1,19 +1,19 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Core.DataAccess.Repository;
-using Css.Api.SetupMenu.Models.Domain;
-using Css.Api.SetupMenu.Models.DTO.Request.Client;
-using Css.Api.SetupMenu.Repository.DatabaseContext;
-using Css.Api.SetupMenu.Repository.Interfaces;
+using Css.Api.Setup.Models.Domain;
+using Css.Api.Setup.Models.DTO.Request.Client;
+using Css.Api.Setup.Repository.DatabaseContext;
+using Css.Api.Setup.Repository.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Css.Api.SetupMenu.Models.DTO.Response.Client;
+using Css.Api.Setup.Models.DTO.Response.Client;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using System;
 using Css.Api.Core.Utilities.Extensions;
 
-namespace Css.Api.SetupMenu.Repository
+namespace Css.Api.Setup.Repository
 {
     public class ClientRepository : GenericRepository<Client>, IClientRepository
     {
@@ -28,7 +28,7 @@ namespace Css.Api.SetupMenu.Repository
         /// <param name="repositoryContext">The repository context.</param>
         /// <param name="mapper">The mapper.</param>
         public ClientRepository(
-            SetupMenuContext repositoryContext,
+            SetupContext repositoryContext,
             IMapper mapper)
             : base(repositoryContext)
         {

@@ -1,4 +1,4 @@
-﻿namespace Css.Api.AdminOps.Models.DTO.Request.SchedulingCode
+﻿namespace Css.Api.Admin.Models.DTO.Request.SchedulingCode
 {
     public class SchedulingCodeTypes
     {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Css.Api.AdminOps.Repository.Interfaces
+namespace Css.Api.Admin.Repository.Interfaces
 {
     /// <summary>
     /// Interface for repository wrapper

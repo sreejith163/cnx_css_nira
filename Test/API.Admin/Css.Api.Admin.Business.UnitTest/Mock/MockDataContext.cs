@@ -1,12 +1,12 @@
-﻿using Css.Api.AdminOps.Models.Domain;
-using Css.Api.AdminOps.Repository.DatabaseContext;
+﻿using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Repository.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Css.Api.AdminOps.Business.UnitTest.Mock
+namespace Css.Api.Admin.Business.UnitTest.Mock
 {
     /// <summary>
     /// MockDataContext
@@ -78,9 +78,9 @@ namespace Css.Api.AdminOps.Business.UnitTest.Mock
         /// Intializes the mock data.
         /// </summary>
         /// <returns></returns>
-        public Mock<AdminOpsContext> IntializeMockData()
+        public Mock<AdminContext> IntializeMockData()
         {
-            Mock<AdminOpsContext> mockAdminOpsContext = new Mock<AdminOpsContext>();
+            Mock<AdminContext> mockAdminContext = new Mock<AdminContext>();
 
             var mockAgentCategory = new Mock<DbSet<AgentCategory>>();
             mockAgentCategory.As<IQueryable<AgentCategory>>().Setup(m => m.Provider).Returns(agentCategorysDB.Provider);
@@ -148,19 +148,19 @@ namespace Css.Api.AdminOps.Business.UnitTest.Mock
             mockSchedulingTypeCode.As<IQueryable<SchedulingTypeCode>>().Setup(m => m.ElementType).Returns(schedulingTypeCodes.ElementType);
             mockSchedulingTypeCode.As<IQueryable<SchedulingTypeCode>>().Setup(m => m.GetEnumerator()).Returns(schedulingTypeCodes.GetEnumerator());
 
-            mockAdminOpsContext.Setup(c => c.AgentCategory).Returns(mockAgentCategory.Object);
-            mockAdminOpsContext.Setup(c => c.AgentCategoryDataType).Returns(mockAgentCategoryDataType.Object);
-            mockAdminOpsContext.Setup(c => c.CssLanguage).Returns(mockCssLanguage.Object);
-            mockAdminOpsContext.Setup(c => c.CssMenu).Returns(mockCssMenu.Object);
-            mockAdminOpsContext.Setup(c => c.CssVariable).Returns(mockCssVariable.Object);
-            mockAdminOpsContext.Setup(c => c.LanguageTranslation).Returns(mockLanguageTranslation.Object);
-            mockAdminOpsContext.Setup(c => c.SchedulingCode).Returns(mockSchedulingCode.Object);
-            mockAdminOpsContext.Setup(c => c.SchedulingCodeIcon).Returns(mockSchedulingCodeIcon.Object);
-            mockAdminOpsContext.Setup(c => c.SchedulingCodeType).Returns(mockSchedulingCodeType.Object);
-            mockAdminOpsContext.Setup(c => c.SchedulingStatus).Returns(mockSchedulingStatus.Object);
-            mockAdminOpsContext.Setup(c => c.SchedulingTypeCode).Returns(mockSchedulingTypeCode.Object);
+            mockAdminContext.Setup(c => c.AgentCategory).Returns(mockAgentCategory.Object);
+            mockAdminContext.Setup(c => c.AgentCategoryDataType).Returns(mockAgentCategoryDataType.Object);
+            mockAdminContext.Setup(c => c.CssLanguage).Returns(mockCssLanguage.Object);
+            mockAdminContext.Setup(c => c.CssMenu).Returns(mockCssMenu.Object);
+            mockAdminContext.Setup(c => c.CssVariable).Returns(mockCssVariable.Object);
+            mockAdminContext.Setup(c => c.LanguageTranslation).Returns(mockLanguageTranslation.Object);
+            mockAdminContext.Setup(c => c.SchedulingCode).Returns(mockSchedulingCode.Object);
+            mockAdminContext.Setup(c => c.SchedulingCodeIcon).Returns(mockSchedulingCodeIcon.Object);
+            mockAdminContext.Setup(c => c.SchedulingCodeType).Returns(mockSchedulingCodeType.Object);
+            mockAdminContext.Setup(c => c.SchedulingStatus).Returns(mockSchedulingStatus.Object);
+            mockAdminContext.Setup(c => c.SchedulingTypeCode).Returns(mockSchedulingTypeCode.Object);
 
-            return mockAdminOpsContext;
+            return mockAdminContext;
         }
 
         #endregion

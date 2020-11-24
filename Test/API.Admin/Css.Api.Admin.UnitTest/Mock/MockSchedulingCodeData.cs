@@ -1,12 +1,12 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.AdminOps.Models.Domain;
-using Css.Api.AdminOps.Models.DTO.Request.SchedulingCode;
+using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
-namespace Css.Api.AdminOps.UnitTest.Mock
+namespace Css.Api.Admin.UnitTest.Mock
 {
     public class MockSchedulingCodeData
     {

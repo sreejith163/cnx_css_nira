@@ -1,6 +1,6 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
 
-namespace Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup
+namespace Css.Api.Setup.Models.DTO.Request.ClientLOBGroup
 {
     public class ClientLOBGroupQueryParameter : QueryStringParameters
     {

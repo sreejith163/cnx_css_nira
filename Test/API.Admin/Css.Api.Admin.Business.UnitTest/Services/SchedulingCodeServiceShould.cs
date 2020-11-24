@@ -4,16 +4,16 @@ using System.Net;
 using AutoMapper;
 using Css.Api.Core.Models.Domain;
 using System.Collections.Generic;
-using Css.Api.AdminOps.Repository;
-using Css.Api.AdminOps.Business.Interfaces;
-using Css.Api.AdminOps.Repository.Interfaces;
-using Css.Api.AdminOps.Business.UnitTest.Mock;
-using Css.Api.AdminOps.Models.Profiles.SchedulingCode;
-using Css.Api.AdminOps.Models.DTO.Request.SchedulingCode;
-using Css.Api.AdminOps.Models.DTO.Response.SchedulingCode;
+using Css.Api.Admin.Repository;
+using Css.Api.Admin.Business.Interfaces;
+using Css.Api.Admin.Repository.Interfaces;
+using Css.Api.Admin.Business.UnitTest.Mock;
+using Css.Api.Admin.Models.Profiles.SchedulingCode;
+using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
+using Css.Api.Admin.Models.DTO.Response.SchedulingCode;
 using Microsoft.AspNetCore.Http;
 
-namespace Css.Api.AdminOps.Business.UnitTest.Services
+namespace Css.Api.Admin.Business.UnitTest.Services
 {
     public class SchedulingCodeServiceShould
     {

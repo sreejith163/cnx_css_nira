@@ -1,8 +1,8 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.SetupMenu.Models.DTO.Request.SkillTag;
+using Css.Api.Setup.Models.DTO.Request.SkillTag;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Business.Interfaces
+namespace Css.Api.Setup.Business.Interfaces
 {
     /// <summary>Interface for skill tag service</summary>
     public interface ISkillTagService

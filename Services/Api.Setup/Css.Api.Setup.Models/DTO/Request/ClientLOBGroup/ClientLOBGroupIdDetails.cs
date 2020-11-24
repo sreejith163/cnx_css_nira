@@ -1,4 +1,4 @@
-﻿namespace Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup
+﻿namespace Css.Api.Setup.Models.DTO.Request.ClientLOBGroup
 {
     public class ClientLOBGroupIdDetails
     {

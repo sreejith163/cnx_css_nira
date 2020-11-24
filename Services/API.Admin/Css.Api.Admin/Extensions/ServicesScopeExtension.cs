@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using Css.Api.AdminOps.Business;
-using Css.Api.AdminOps.Business.Interfaces;
-using Css.Api.AdminOps.Repository;
-using Css.Api.AdminOps.Repository.Interfaces;
+using Css.Api.Admin.Business;
+using Css.Api.Admin.Business.Interfaces;
+using Css.Api.Admin.Repository;
+using Css.Api.Admin.Repository.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
 
-namespace Css.Api.AdminOps.Extensions
+namespace Css.Api.Admin.Extensions
 {
     /// <summary>
     /// Extension for adding service lide scopes

@@ -1,7 +1,7 @@
-﻿using Css.Api.AdminOps.Models.DTO.Request.SchedulingCode;
+﻿using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
 using FluentValidation;
 
-namespace Css.Api.AdminOps.Validators.SchedulingCode
+namespace Css.Api.Admin.Validators.SchedulingCode
 {
     /// <summary>
     /// Validator for handling the validation of update scheduling code object

@@ -1,9 +1,9 @@
-﻿using Css.Api.SetupMenu.Business.Interfaces;
-using Css.Api.SetupMenu.Models.DTO.Request.SkillTag;
+﻿using Css.Api.Setup.Business.Interfaces;
+using Css.Api.Setup.Models.DTO.Request.SkillTag;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Controllers
+namespace Css.Api.Setup.Controllers
 {
     /// <summary>Controller for handling Skill Tags resource</summary>
     [Produces("application/json")]

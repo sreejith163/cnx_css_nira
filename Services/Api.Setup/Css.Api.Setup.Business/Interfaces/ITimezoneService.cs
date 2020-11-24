@@ -1,7 +1,7 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Business.Interfaces
+namespace Css.Api.Setup.Business.Interfaces
 {
     public interface ITimezoneService
     {

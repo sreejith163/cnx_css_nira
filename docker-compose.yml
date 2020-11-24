@@ -27,18 +27,18 @@ services:
       context: .
       dockerfile: Services/API.Identity/Css.Api.Auth/Dockerfile
 
-  css.api.adminops:
-    image: ${DOCKER_REGISTRY:-cnx}/css.api.adminops:${PLATFORM:-linux}-${TAG:-latest}
-    container_name: css.api.adminops
+  css.api.admin:
+    image: ${DOCKER_REGISTRY:-cnx}/css.api.admin:${PLATFORM:-linux}-${TAG:-latest}
+    container_name: css.api.admin
     build:
       context: .
-      dockerfile: Services/API.AdminOps/Css.Api.AdminOps/Dockerfile
+      dockerfile: Services/API.Admin/Css.Api.Admin/Dockerfile
 
-  css.api.setupmenu:
-    image: ${DOCKER_REGISTRY:-cnx}/css.api.setupmenu:${PLATFORM:-linux}-${TAG:-latest}
+  css.api.setup:
+    image: ${DOCKER_REGISTRY:-cnx}/css.api.setup:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: Services/Api.SetupMenu/Css.Api.SetupMenu/Dockerfile
+      dockerfile: Services/Api.Setup/Css.Api.Setup/Dockerfile
 
   css.api.scheduling:
     image: ${DOCKER_REGISTRY:-cnx}/css.api.scheduling:${PLATFORM:-linux}-${TAG:-latest}

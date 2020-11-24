@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Css.Api.AdminOps.Repository.Interfaces
+namespace Css.Api.Admin.Repository.Interfaces
 {
     public interface ISchedulingCodeTypeRepository
     {

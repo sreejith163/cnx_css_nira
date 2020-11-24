@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Css.Api.SetupMenu": {
+    "Css.Api.Setup": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "weatherforecast",

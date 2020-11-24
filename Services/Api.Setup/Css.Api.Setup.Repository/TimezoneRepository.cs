@@ -2,14 +2,14 @@
 using AutoMapper.QueryableExtensions;
 using Css.Api.Core.DataAccess.Repository;
 using Css.Api.Core.Models.DTO.Response;
-using Css.Api.SetupMenu.Models.Domain;
-using Css.Api.SetupMenu.Repository.DatabaseContext;
-using Css.Api.SetupMenu.Repository.Interfaces;
+using Css.Api.Setup.Models.Domain;
+using Css.Api.Setup.Repository.DatabaseContext;
+using Css.Api.Setup.Repository.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Repository
+namespace Css.Api.Setup.Repository
 {
     public class TimezoneRepository : GenericRepository<Timezone>, ITimezoneRepository
     {
@@ -25,7 +25,7 @@ namespace Css.Api.SetupMenu.Repository
         /// <param name="mapper">The mapper.</param>
         /// <param name="">The .</param>
         public TimezoneRepository(
-            SetupMenuContext repositoryContext,
+            SetupContext repositoryContext,
             IMapper mapper)
             : base(repositoryContext)
         {

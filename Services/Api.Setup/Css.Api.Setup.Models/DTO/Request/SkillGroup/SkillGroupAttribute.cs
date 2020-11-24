@@ -1,7 +1,7 @@
-﻿using Css.Api.SetupMenu.Models.DTO.Request.OperationHour;
+﻿using Css.Api.Setup.Models.DTO.Request.OperationHour;
 using System.Collections.Generic;
 
-namespace Css.Api.SetupMenu.Models.DTO.Request.SkillGroup
+namespace Css.Api.Setup.Models.DTO.Request.SkillGroup
 {
     public class SkillGroupAttribute
     {

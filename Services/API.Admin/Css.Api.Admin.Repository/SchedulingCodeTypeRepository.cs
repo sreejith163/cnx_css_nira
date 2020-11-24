@@ -1,7 +1,7 @@
 ﻿using Css.Api.Core.DataAccess.Repository;
-using Css.Api.AdminOps.Models.Domain;
-using Css.Api.AdminOps.Repository.DatabaseContext;
-using Css.Api.AdminOps.Repository.Interfaces;
+using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Repository.DatabaseContext;
+using Css.Api.Admin.Repository.Interfaces;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Css.Api.Core.Models.DTO.Response;
 
-namespace Css.Api.AdminOps.Repository
+namespace Css.Api.Admin.Repository
 {
     public class SchedulingCodeTypeRepository : GenericRepository<SchedulingCodeType>, ISchedulingCodeTypeRepository
     {
@@ -25,7 +25,7 @@ namespace Css.Api.AdminOps.Repository
         /// <param name="mapper">The mapper.</param>
         /// <param name="">The .</param>
         public SchedulingCodeTypeRepository(
-            AdminOpsContext repositoryContext,
+            AdminContext repositoryContext,
             IMapper mapper)
             : base(repositoryContext)
         {

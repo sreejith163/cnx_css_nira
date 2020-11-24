@@ -1,7 +1,7 @@
-﻿using Css.Api.SetupMenu.Models.DTO.Request.SkillGroup;
+﻿using Css.Api.Setup.Models.DTO.Request.SkillGroup;
 using FluentValidation;
 
-namespace Css.Api.SetupMenu.Validators.SkillGroup
+namespace Css.Api.Setup.Validators.SkillGroup
 {
     /// <summary>
     /// Validator for handling the validation of update skill group object

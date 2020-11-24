@@ -1,9 +1,9 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.SetupMenu.Models.DTO.Request.Client;
-using Css.Api.SetupMenu.Models.DTO.Response.Client;
+using Css.Api.Setup.Models.DTO.Request.Client;
+using Css.Api.Setup.Models.DTO.Response.Client;
 using System;
 
-namespace Css.Api.SetupMenu.Models.Profiles.Client
+namespace Css.Api.Setup.Models.Profiles.Client
 {
     public class ClientProfile : AutoMapper.Profile
     {

@@ -1,7 +1,7 @@
-﻿using Css.Api.SetupMenu.Models.DTO.Request.Client;
+﻿using Css.Api.Setup.Models.DTO.Request.Client;
 using FluentValidation;
 
-namespace Css.Api.SetupMenu.Validators.Client
+namespace Css.Api.Setup.Validators.Client
 {
     /// <summary>
     /// Validator for handling the validation of update client object

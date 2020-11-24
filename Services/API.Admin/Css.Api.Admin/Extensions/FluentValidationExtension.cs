@@ -1,8 +1,8 @@
-﻿using Css.Api.AdminOps.Filters;
+﻿using Css.Api.Admin.Filters;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Css.Api.AdminOps.Extensions
+namespace Css.Api.Admin.Extensions
 {
     /// <summary>
     /// Extension for adding the fluent validation assemblies

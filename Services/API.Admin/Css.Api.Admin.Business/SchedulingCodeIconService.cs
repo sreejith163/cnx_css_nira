@@ -1,10 +1,10 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.AdminOps.Business.Interfaces;
-using Css.Api.AdminOps.Repository.Interfaces;
+using Css.Api.Admin.Business.Interfaces;
+using Css.Api.Admin.Repository.Interfaces;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Css.Api.AdminOps.Business
+namespace Css.Api.Admin.Business
 {
     public class SchedulingCodeIconService : ISchedulingCodeIconService
     {

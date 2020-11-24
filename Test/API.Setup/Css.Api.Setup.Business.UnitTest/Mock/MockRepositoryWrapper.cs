@@ -1,21 +1,21 @@
 ﻿using AutoMapper;
-using Css.Api.SetupMenu.Business.UnitTest.Mock;
-using Css.Api.SetupMenu.Models.Domain;
-using Css.Api.SetupMenu.Repository.DatabaseContext;
-using Css.Api.SetupMenu.Repository.Interfaces;
+using Css.Api.Setup.Business.UnitTest.Mock;
+using Css.Api.Setup.Models.Domain;
+using Css.Api.Setup.Repository.DatabaseContext;
+using Css.Api.Setup.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Repository
+namespace Css.Api.Setup.Repository
 {
     public class MockRepositoryWrapper: IRepositoryWrapper
     {
         /// <summary>
         /// Gets or sets the repository context.
         /// </summary>
-        private Mock<SetupMenuContext> _repositoryContext { get; set; }
+        private Mock<SetupContext> _repositoryContext { get; set; }
 
         /// <summary>
         /// Gets or sets the mapper.
@@ -189,7 +189,7 @@ namespace Css.Api.SetupMenu.Repository
         /// <param name="repositoryContext">The repository context.</param>
         /// <param name="mapper">The mapper.</param>
         public MockRepositoryWrapper(
-            Mock<SetupMenuContext> repositoryContext,
+            Mock<SetupContext> repositoryContext,
             IMapper mapper)
         {
             _repositoryContext = repositoryContext;

@@ -1,9 +1,9 @@
-﻿using Css.Api.SetupMenu.Repository.DatabaseContext;
+﻿using Css.Api.Setup.Repository.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Css.Api.SetupMenu.Extensions
+namespace Css.Api.Setup.Extensions
 {
     /// <summary>
     /// Extension for adding the DB Context
@@ -18,7 +18,7 @@ namespace Css.Api.SetupMenu.Extensions
         /// <returns></returns>
         public static IServiceCollection AddDBContextConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<SetupMenuContext>(options =>
+            services.AddDbContext<SetupContext>(options =>
                  options.UseMySQL(configuration.GetConnectionString("Database")));
 
             return services;

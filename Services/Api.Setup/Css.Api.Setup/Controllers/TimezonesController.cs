@@ -1,8 +1,8 @@
-﻿using Css.Api.SetupMenu.Business.Interfaces;
+﻿using Css.Api.Setup.Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Controllers
+namespace Css.Api.Setup.Controllers
 {
     /// <summary>
     /// Controller for handling the Time zones resource

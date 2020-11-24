@@ -1,6 +1,6 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
 
-namespace Css.Api.AdminOps.Models.DTO.Request.SchedulingCode
+namespace Css.Api.Admin.Models.DTO.Request.SchedulingCode
 {
     public class SchedulingCodeQueryParameters: QueryStringParameters
     {

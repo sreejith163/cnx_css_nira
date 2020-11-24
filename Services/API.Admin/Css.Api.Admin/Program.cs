@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace Css.Api.AdminOps
+namespace Css.Api.Admin
 {
     /// <summary>
     /// Program starts here

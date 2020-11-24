@@ -1,21 +1,21 @@
 ﻿using AutoMapper;
-using Css.Api.AdminOps.Business.UnitTest.Mock;
-using Css.Api.AdminOps.Models.Domain;
-using Css.Api.AdminOps.Repository.DatabaseContext;
-using Css.Api.AdminOps.Repository.Interfaces;
+using Css.Api.Admin.Business.UnitTest.Mock;
+using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Repository.DatabaseContext;
+using Css.Api.Admin.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Css.Api.AdminOps.Repository
+namespace Css.Api.Admin.Repository
 {
     public class MockRepositoryWrapper: IRepositoryWrapper
     {
         /// <summary>
         /// Gets or sets the repository context.
         /// </summary>
-        private Mock<AdminOpsContext> _repositoryContext { get; set; }
+        private Mock<AdminContext> _repositoryContext { get; set; }
 
         /// <summary>
         /// Gets or sets the mapper.
@@ -140,7 +140,7 @@ namespace Css.Api.AdminOps.Repository
         /// <param name="repositoryContext">The repository context.</param>
         /// <param name="mapper">The mapper.</param>
         public MockRepositoryWrapper(
-            Mock<AdminOpsContext> repositoryContext,
+            Mock<AdminContext> repositoryContext,
             IMapper mapper)
         {
             _repositoryContext = repositoryContext;

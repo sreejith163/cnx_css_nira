@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Css.Api.AdminOps.Extensions
+namespace Css.Api.Admin.Extensions
 {
     /// <summary>
     /// Extension for adding the mvc configuration

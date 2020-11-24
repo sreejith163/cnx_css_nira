@@ -1,11 +1,11 @@
 ﻿using Css.Api.Core.Models.Domain;
-using Css.Api.SetupMenu.Models.Domain;
-using Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup;
-using Css.Api.SetupMenu.Models.DTO.Request.SkillGroup;
+using Css.Api.Setup.Models.Domain;
+using Css.Api.Setup.Models.DTO.Request.ClientLOBGroup;
+using Css.Api.Setup.Models.DTO.Request.SkillGroup;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Repository.Interfaces
+namespace Css.Api.Setup.Repository.Interfaces
 {
     public interface ISkillGroupRepository
     {

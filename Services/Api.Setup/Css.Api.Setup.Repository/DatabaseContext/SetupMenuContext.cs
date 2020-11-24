@@ -1,10 +1,10 @@
-﻿using Css.Api.SetupMenu.Models.Domain;
+﻿using Css.Api.Setup.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Css.Api.SetupMenu.Repository.DatabaseContext
+namespace Css.Api.Setup.Repository.DatabaseContext
 {
-    public partial class SetupMenuContext : DbContext
+    public partial class SetupContext : DbContext
     {
         /// <summary>
         /// The configuration
@@ -12,17 +12,17 @@ namespace Css.Api.SetupMenu.Repository.DatabaseContext
         private readonly IConfiguration _configuration;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetupMenuContext"/> class.
+        /// Initializes a new instance of the <see cref="SetupContext"/> class.
         /// </summary>
-        public SetupMenuContext() { }
+        public SetupContext() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetupMenuContext" /> class.
+        /// Initializes a new instance of the <see cref="SetupContext" /> class.
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="configuration">The configuration.</param>
-        public SetupMenuContext(
-                    DbContextOptions<SetupMenuContext> options, IConfiguration configuration)
+        public SetupContext(
+                    DbContextOptions<SetupContext> options, IConfiguration configuration)
                     : base(options)
         {
             _configuration = configuration;

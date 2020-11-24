@@ -1,10 +1,10 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.AdminOps.Models.Domain;
-using Css.Api.AdminOps.Models.DTO.Request.SchedulingCode;
-using Css.Api.AdminOps.Models.DTO.Response.SchedulingCode;
+using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
+using Css.Api.Admin.Models.DTO.Response.SchedulingCode;
 using System;
 
-namespace Css.Api.AdminOps.Models.Profiles.SchedulingCode
+namespace Css.Api.Admin.Models.Profiles.SchedulingCode
 {
     public class SchedulingCodeProfile : AutoMapper.Profile
     {

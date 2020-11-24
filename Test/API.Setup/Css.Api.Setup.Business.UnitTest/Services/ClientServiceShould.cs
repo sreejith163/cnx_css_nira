@@ -3,16 +3,16 @@ using Xunit;
 using System.Net;
 using AutoMapper;
 using Css.Api.Core.Models.Domain;
-using Css.Api.SetupMenu.Repository;
-using Css.Api.SetupMenu.Business.Interfaces;
-using Css.Api.SetupMenu.Repository.Interfaces;
-using Css.Api.SetupMenu.Models.Profiles.Client;
-using Css.Api.SetupMenu.Business.UnitTest.Mock;
-using Css.Api.SetupMenu.Models.DTO.Request.Client;
-using Css.Api.SetupMenu.Models.DTO.Response.Client;
+using Css.Api.Setup.Repository;
+using Css.Api.Setup.Business.Interfaces;
+using Css.Api.Setup.Repository.Interfaces;
+using Css.Api.Setup.Models.Profiles.Client;
+using Css.Api.Setup.Business.UnitTest.Mock;
+using Css.Api.Setup.Models.DTO.Request.Client;
+using Css.Api.Setup.Models.DTO.Response.Client;
 using Microsoft.AspNetCore.Http;
 
-namespace Css.Api.SetupMenu.Business.UnitTest.Services
+namespace Css.Api.Setup.Business.UnitTest.Services
 {
     public class ClientServiceShould
     {

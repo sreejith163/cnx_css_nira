@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Css.Api.AdminOps.Models.Domain
+namespace Css.Api.Admin.Models.Domain
 {
     public partial class CssVariable
     {

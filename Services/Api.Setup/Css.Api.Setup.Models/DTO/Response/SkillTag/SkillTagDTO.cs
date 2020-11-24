@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Css.Api.SetupMenu.Models.DTO.Response.SkillTag
+namespace Css.Api.Setup.Models.DTO.Response.SkillTag
 {
     public class SkillTagDTO
     {

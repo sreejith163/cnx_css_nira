@@ -1,10 +1,10 @@
-﻿using Css.Api.AdminOps.Models.Domain;
+﻿using Css.Api.Admin.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Css.Api.AdminOps.Repository.DatabaseContext
+namespace Css.Api.Admin.Repository.DatabaseContext
 {
-    public partial class AdminOpsContext : DbContext
+    public partial class AdminContext : DbContext
     {
         /// <summary>
         /// The configuration
@@ -12,17 +12,17 @@ namespace Css.Api.AdminOps.Repository.DatabaseContext
         private readonly IConfiguration _configuration;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AdminOpsContext"/> class.
+        /// Initializes a new instance of the <see cref="AdminContext"/> class.
         /// </summary>
-        public AdminOpsContext() { }
+        public AdminContext() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AdminOpsContext" /> class.
+        /// Initializes a new instance of the <see cref="AdminContext" /> class.
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="configuration">The configuration.</param>
-        public AdminOpsContext(
-                    DbContextOptions<AdminOpsContext> options, IConfiguration configuration)
+        public AdminContext(
+                    DbContextOptions<AdminContext> options, IConfiguration configuration)
                     : base(options)
         {
             _configuration = configuration;

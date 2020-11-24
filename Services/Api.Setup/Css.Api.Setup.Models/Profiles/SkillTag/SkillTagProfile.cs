@@ -1,8 +1,8 @@
-﻿using Css.Api.SetupMenu.Models.DTO.Request.SkillTag;
-using Css.Api.SetupMenu.Models.DTO.Response.SkillTag;
+﻿using Css.Api.Setup.Models.DTO.Request.SkillTag;
+using Css.Api.Setup.Models.DTO.Response.SkillTag;
 using System;
 
-namespace Css.Api.SetupMenu.Models.Profiles.SkillTag
+namespace Css.Api.Setup.Models.Profiles.SkillTag
 {
     public class SkillTagProfile : AutoMapper.Profile
     {

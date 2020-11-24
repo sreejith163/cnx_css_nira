@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
-using Css.Api.AdminOps.Repository.DatabaseContext;
-using Css.Api.AdminOps.Repository.Interfaces;
+using Css.Api.Admin.Repository.DatabaseContext;
+using Css.Api.Admin.Repository.Interfaces;
 using System.Threading.Tasks;
 
-namespace Css.Api.AdminOps.Repository
+namespace Css.Api.Admin.Repository
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
         /// <summary>
         /// Gets or sets the repository context.
         /// </summary>
-        private AdminOpsContext _repositoryContext { get; set; }
+        private AdminContext _repositoryContext { get; set; }
 
         /// <summary>
         /// Gets or sets the mapper.
@@ -105,7 +105,7 @@ namespace Css.Api.AdminOps.Repository
         /// <param name="mapper">The mapper.</param>
         /// <param name="">The .</param>
         public RepositoryWrapper(
-            AdminOpsContext repositoryContext,
+            AdminContext repositoryContext,
             IMapper mapper)
         {
             _repositoryContext = repositoryContext;

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -9,13 +9,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>App_Data\Css.Api.AdminOps.xml</DocumentationFile>
+    <DocumentationFile>App_Data\Css.Api.Admin.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>App_Data\Css.Api.AdminOps.xml</DocumentationFile>
+    <DocumentationFile>App_Data\Css.Api.Admin.xml</DocumentationFile>
   </PropertyGroup>
   
   <ItemGroup>
@@ -62,6 +62,10 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <DocFileItem Remove="App_Data\Css.Api.Admin.xml" />
   </ItemGroup>
 
 </Project>

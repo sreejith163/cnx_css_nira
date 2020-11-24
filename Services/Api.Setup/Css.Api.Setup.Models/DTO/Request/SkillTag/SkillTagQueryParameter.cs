@@ -1,6 +1,6 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
 
-namespace Css.Api.SetupMenu.Models.DTO.Request.SkillTag
+namespace Css.Api.Setup.Models.DTO.Request.SkillTag
 {
     public class SkillTagQueryParameter : QueryStringParameters
     {

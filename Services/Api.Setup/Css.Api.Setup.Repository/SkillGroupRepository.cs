@@ -3,19 +3,19 @@ using AutoMapper.QueryableExtensions;
 using Css.Api.Core.DataAccess.Repository;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
-using Css.Api.SetupMenu.Models.Domain;
-using Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup;
-using Css.Api.SetupMenu.Models.DTO.Request.SkillGroup;
-using Css.Api.SetupMenu.Models.DTO.Response.SkillGroup;
-using Css.Api.SetupMenu.Repository.DatabaseContext;
-using Css.Api.SetupMenu.Repository.Interfaces;
+using Css.Api.Setup.Models.Domain;
+using Css.Api.Setup.Models.DTO.Request.ClientLOBGroup;
+using Css.Api.Setup.Models.DTO.Request.SkillGroup;
+using Css.Api.Setup.Models.DTO.Response.SkillGroup;
+using Css.Api.Setup.Repository.DatabaseContext;
+using Css.Api.Setup.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Repository
+namespace Css.Api.Setup.Repository
 {
     public class SkillGroupRepository : GenericRepository<SkillGroup>, ISkillGroupRepository
     {
@@ -30,7 +30,7 @@ namespace Css.Api.SetupMenu.Repository
         /// <param name="repositoryContext">The repository context.</param>
         /// <param name="mapper">The mapper.</param>
         public SkillGroupRepository(
-            SetupMenuContext repositoryContext,
+            SetupContext repositoryContext,
             IMapper mapper)
             : base(repositoryContext)
         {

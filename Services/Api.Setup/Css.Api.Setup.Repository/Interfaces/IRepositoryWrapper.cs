@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Css.Api.SetupMenu.Repository.Interfaces
+namespace Css.Api.Setup.Repository.Interfaces
 {
     /// <summary>
     /// Interface for repository wrapper

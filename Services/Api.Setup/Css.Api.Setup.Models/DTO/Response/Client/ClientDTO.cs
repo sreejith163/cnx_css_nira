@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Css.Api.SetupMenu.Models.DTO.Response.Client
+namespace Css.Api.Setup.Models.DTO.Response.Client
 {
     public class ClientDTO
     {
