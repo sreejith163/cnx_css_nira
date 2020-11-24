@@ -35,10 +35,15 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
 
         public IQueryable<SkillGroup> skillGroupsDB = new List<SkillGroup>()
         {
+            new SkillGroup{ Id=1, ClientId=1, ClientLobGroupId=1, Name="group1", TimezoneId=1, CreatedDate=DateTime.UtcNow,CreatedBy="admin" },
+            new SkillGroup{ Id=2, ClientId=1, ClientLobGroupId=1, Name="group2", TimezoneId=1, CreatedDate=DateTime.UtcNow,CreatedBy="admin" }
         }.AsQueryable();
 
         public IQueryable<SkillTag> skillTagsDB = new List<SkillTag>()
         {
+            new SkillTag { Id = 1, ClientId = 1, ClientLobGroupId = 3, SkillGroupId = 1, Name="Skill1", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new SkillTag { Id = 2, ClientId = 1, ClientLobGroupId = 3, SkillGroupId = 1, Name="Skill2", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new SkillTag { Id = 3, ClientId = 1, ClientLobGroupId = 3, SkillGroupId = 1, Name="Skill3", CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
         public IQueryable<AgentAdmin> agentAdminsDB = new List<AgentAdmin>()
@@ -51,6 +56,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mock
 
         public IQueryable<OperationHour> operationHoursDB = new List<OperationHour>()
         {
+            new OperationHour{ Id = 1, Day = 1, From = "9AM", SkillTagId = 1, To = "9PM", OperationHourOpenTypeId = 1}
         }.AsQueryable();
 
         public IQueryable<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()

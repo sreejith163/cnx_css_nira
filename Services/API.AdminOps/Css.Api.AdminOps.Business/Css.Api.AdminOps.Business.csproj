@@ -4,4 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\API.Core\Css.Api.Core.Models\Css.Api.Core.Models.csproj" />
+    <ProjectReference Include="..\Css.Api.AdminOps.Models\Css.Api.AdminOps.Models.csproj" />
+    <ProjectReference Include="..\Css.Api.AdminOps.Repository\Css.Api.AdminOps.Repository.csproj" />
+  </ItemGroup>
+
 </Project>

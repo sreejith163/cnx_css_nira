@@ -1,12 +1,14 @@
 <ng-select [items]="clientItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="All"
   [typeahead]="typeAheadInput$" (scroll)="onClientScroll($event)" (scrollToEnd)="onClientScrollToEnd()"
   (change)="onClientChange($event)" (clear)="clearSelectedValues()"
-  [(ngModel)]="selectedClientId">
+  [(ngModel)]="clientId">
   <ng-template ng-header-tmp>
     <small class="form-text text-muted">Loaded {{clientItemsBuffer.length}} of
       {{totalItems}}</small>
   </ng-template>
   <ng-template ng-option-tmp let-item="item" let-index="index">
-    <b>{{item.name}}</b>
+    <span container="body" ngbTooltip="{{ item.name }}">
+      {{ item.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}
+    </span>
   </ng-template>
 </ng-select>

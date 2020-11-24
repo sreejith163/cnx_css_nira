@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
 using Css.Api.Core.Models.DTO.Response;
-using Css.Api.Core.Utilities;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Business.UnitTest.Mock;
-using Css.Api.Scheduling.Models.Domain;
-using Css.Api.Scheduling.Models.DTO.Response.Client;
-using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
-using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using Css.Api.Scheduling.Models.Profiles.SchedulingCode;
 using Css.Api.Scheduling.Repository;
 using Css.Api.Scheduling.Repository.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Moq;
 using System.Collections.Generic;
 using System.Net;
 using Xunit;
@@ -45,18 +42,13 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             mapper = new Mapper(mapperConfig);
 
-            var clientSortHelper = new SortHelper<Client>();
-            var clientLObGroupSortHelper = new SortHelper<ClientLobGroup>();
-            var clientSchedulingCodeSortHelper = new SortHelper<SchedulingCode>();
-
-            var clientDataShaperHelper = new DataShaper<ClientDTO>();
-            var clientLObGroupDataShaperHelper = new DataShaper<ClientLOBGroupDTO>();
-            var clientSchedulingCodeDataShaperHelper = new DataShaper<SchedulingCodeDTO>();
+            var context = new DefaultHttpContext();
+            Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
+            mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
             var mockSchedulingContext = new MockDataContext().IntializeMockData();
 
-            repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
-                                                      clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);
+            repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper);
 
             schedulingCodeTypeService = new SchedulingCodeTypeService(repositoryWrapper);
         }

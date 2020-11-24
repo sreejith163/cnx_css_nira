@@ -97,7 +97,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         {
             CreateClientLOBGroup clientLOBGroupDetails = new CreateClientLOBGroup()
             {
-                name = "A",
+                Name = "A",
                 ClientId = 1,
                 CreatedBy = "admin",
                 RefId = 4
@@ -115,7 +115,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         {
             CreateClientLOBGroup clientLOBGroupDetails = new CreateClientLOBGroup()
             {
-                name = "D",
+                Name = "D",
                 ClientId = 1,
                 CreatedBy = "admin",
                 RefId = 4
@@ -139,7 +139,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         {
             UpdateClientLOBGroup updateClientLOBGroup = new UpdateClientLOBGroup()
             {
-                name = "X",
+                Name = "X",
                 ModifiedBy = "admin"
             };
 
@@ -159,7 +159,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         {
             UpdateClientLOBGroup updateClientLOBGroup = new UpdateClientLOBGroup()
             {
-                name = name,
+                Name = name,
                 ClientId = 2,
                 ModifiedBy = "admin"
             };
@@ -180,7 +180,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         {
             UpdateClientLOBGroup updateClientLOBGroup = new UpdateClientLOBGroup()
             {
-                name = name,
+                Name = name,
                 ClientId = 1, 
                 ModifiedBy = "admin"
             };

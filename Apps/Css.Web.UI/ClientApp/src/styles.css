@@ -114,6 +114,22 @@ th:last-of-type {
   margin-top: 20px;
 }
 
+.m-t-10 {
+  margin-top: 10px;
+}
+
+.m-t-15 {
+  margin-top: 15px;
+}
+
+.m-t-25 {
+  margin-top: 25px;
+}
+
+.ng-select.ng-select-single .ng-select-container {
+  height: 39px;
+}
+
 .add-edit-modal .modal-header .close {
   margin-top: -12px;
 }

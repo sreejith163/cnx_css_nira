@@ -1,6 +1,8 @@
 import { SchedulingInterval } from 'src/app/modules/home/modules/scheduling-menu/models/scheduling-interval.model';
+import { OperationHours } from 'src/app/modules/home/modules/setup-menu/models/operation-hours.model';
 import { SchedulingCodeType } from 'src/app/modules/home/modules/system-admin/models/scheduling-code-type.model';
 import { UserRole } from 'src/app/modules/home/modules/system-admin/models/user-role.model';
+import { KeyValue } from '../models/key-value.model';
 import { PaginationSize } from '../models/pagination-size.model';
 import { Translation } from '../models/translation.model';
 
@@ -1230,11 +1232,11 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
-      variableId: 'lbl_table_client_lob_group_hierarchy',
+      variableId: 'lbl_table_heading_client_lob_group_hierarchy',
       menu: 'Client LOB Group',
       description: 'text',
       language: 'English',
-      translation: 'Hierachy',
+      translation: 'Hierarchy',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -1974,7 +1976,7 @@ export class Constants {
       menu: 'Skill Groups',
       description: 'text',
       language: 'English',
-      translation: 'TTime zone for reporting is required',
+      translation: 'Time zone for reporting is required',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -2019,6 +2021,39 @@ export class Constants {
       description: 'text',
       language: 'English',
       translation: 'Save',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'search_hint',
+      menu: 'Skill Groups',
+      description: 'text',
+      language: 'English',
+      translation: 'Enter a Skill Group Name',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_table_heading_skill_group_hierarchy',
+      menu: 'Skill Groups',
+      description: 'text',
+      language: 'English',
+      translation: 'Hierarchy',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_skill_group_name_length_validation_message',
+      menu: 'Skill Groups',
+      description: 'text',
+      language: 'English',
+      translation: 'Skill group name cannot exceed 50 characters',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -2077,6 +2112,17 @@ export class Constants {
       description: 'text',
       language: 'English',
       translation: 'All',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_skill_tag',
+      menu: 'Skill Tags',
+      description: 'text',
+      language: 'English',
+      translation: 'Enter a Skill Tag Name',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -2176,6 +2222,17 @@ export class Constants {
       description: 'text',
       language: 'English',
       translation: 'Skill Tag Name',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_table_heading_skill_tag_hierarchy',
+      menu: 'Skill Tags',
+      description: 'text',
+      language: 'English',
+      translation: 'Hierarchy',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -2385,6 +2442,17 @@ export class Constants {
       description: 'text',
       language: 'English',
       translation: 'Skill Tag Name is required',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_skill_tag_name_maxlength_validation_message',
+      menu: 'Skill Tags',
+      description: 'text',
+      language: 'English',
+      translation: 'Skill Tag Name cannot exceed 50 characters',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -2608,6 +2676,17 @@ export class Constants {
       description: 'text',
       language: 'English',
       translation: 'Agent Scheduling Group Name',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_table_heading_scheduling_group_hierarchy',
+      menu: 'Agent Scheduling Group',
+      description: 'text',
+      language: 'English',
+      translation: 'Hierarchy',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -3136,11 +3215,44 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
-      variableId: 'lbl_table_heading_agent_scheduling_group_name',
+      variableId: 'lbl_add_edit_client_name',
       menu: 'Agent Admin',
       description: 'text',
       language: 'English',
-      translation: 'Agent Scheduling Group Name',
+      translation: 'Client Name',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_lob_group_name',
+      menu: 'Agent Admin',
+      description: 'text',
+      language: 'English',
+      translation: 'LOB Group Name',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_skill_group_name',
+      menu: 'Agent Admin',
+      description: 'text',
+      language: 'English',
+      translation: 'Skill Group Name',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_skill_tag_name',
+      menu: 'Agent Admin',
+      description: 'text',
+      language: 'English',
+      translation: 'Skill Tag Name',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -3279,11 +3391,44 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
-      variableId: 'lbl_add_edit_agent_scheduling_group_name',
+      variableId: 'lbl_add_edit_client_name',
       menu: 'Agent Admin',
       description: 'text',
       language: 'English',
-      translation: 'Agent Scheduling Group Name',
+      translation: 'Client Name',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_client_lob_group',
+      menu: 'Agent Admin',
+      description: 'text',
+      language: 'English',
+      translation: 'Client LOB Group',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_skill_group',
+      menu: 'Agent Admin',
+      description: 'text',
+      language: 'English',
+      translation: 'Skill Group',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_skill_tag',
+      menu: 'Agent Admin',
+      description: 'text',
+      language: 'English',
+      translation: 'Skill Tag',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -3356,11 +3501,44 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
-      variableId: 'lbl_add_edit_agent_scheduling_group_name_required_validation_message',
+      variableId: 'lbl_add_edit_client_name_required_validation_message',
       menu: 'Agent Admin',
       description: 'text',
       language: 'English',
-      translation: 'Agent Scheduling Group Name is required',
+      translation: 'Client Name is required',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_client_lob_group_required_validation_message',
+      menu: 'Agent Admin',
+      description: 'text',
+      language: 'English',
+      translation: 'Client LOB Group is required',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_skill_group_required_validation_message',
+      menu: 'Agent Admin',
+      description: 'text',
+      language: 'English',
+      translation: 'Skill Group is required',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_skill_tag_required_validation_message',
+      menu: 'Agent Admin',
+      description: 'text',
+      language: 'English',
+      translation: 'Skill Tag is required',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -3814,7 +3992,7 @@ export class Constants {
     }
   ];
 
-  public static readonly SchedulingCodes: SchedulingCodeType[] = [
+  public static readonly SchedulingCodes: KeyValue[] = [
     {
       id: 1,
       value: 'In Office Scheduling Code'
@@ -3869,6 +4047,21 @@ export class Constants {
     {
       id: 30,
       value: '30'
+    }
+  ];
+
+  public static readonly operationHours: OperationHours[] = [
+    {
+      id: 1,
+      open: 'Open All Day'
+    },
+    {
+      id: 2,
+      open: 'Open Partial Day'
+    },
+    {
+      id: 3,
+      open: 'Closed'
     }
   ];
 

@@ -68,9 +68,6 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
     if (this.operation === ComponentOperation.Edit) {
       this.populateClientLobGroupFormDetails();
     }
-    if (this.operation === ComponentOperation.Add) {
-      this.clientLOBGroupForm.controls.firstDayOfWeek.setValue(0);
-    }
     if (this.clientLOBGroupDetails !== undefined && this.clientLOBGroupDetails.clientId !== undefined) {
       this.clientId = this.clientLOBGroupDetails.clientId;
     }
@@ -171,8 +168,8 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     this.getTimeZonesSubscription = this.timezoneService.getTimeZones()
       .subscribe((response) => {
-        this.spinnerService.hide(this.spinner);
         this.timeZones = response;
+        this.spinnerService.hide(this.spinner);
       }, (error) => {
         console.log(error);
         this.spinnerService.hide(this.spinner);

@@ -20,7 +20,10 @@ export class AgentAdminListService {
       agent.firstName = 'Sample User ' + i;
       agent.lastName = 'Name ' + i;
       agent.hireDate = '2020-09-1' + i;
-      agent.agentSchedulingGroupName = 'Agent Scheduling Group ' + i;
+      agent.client = 'Client ' + i;
+      agent.clientLOBGroup = 'ClientLOBGroup ' + i;
+      agent.skillGroup = 'Skill Group ' + i;
+      agent.skillTag = 'Skill Tag ' + i;
       agent.createdDate = '2020-09-1' + i;
       agent.createdBy = 'User ' + i;
       agent.modifiedDate = '2020-09-1' + i;

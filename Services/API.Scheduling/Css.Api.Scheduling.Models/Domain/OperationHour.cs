@@ -14,6 +14,7 @@ namespace Css.Api.Scheduling.Models.Domain
         public string From { get; set; }
         public string To { get; set; }
 
+        public virtual OperationHourOpenType OperationHourOpenType { get; set; }
         public virtual AgentSchedulingGroup SchedulingGroup { get; set; }
         public virtual SkillGroup SkillGroup { get; set; }
         public virtual SkillTag SkillTag { get; set; }

@@ -64,13 +64,22 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
     return permission.roles.some(x => x.id === userRoleId) ? 'Yes' : 'No';
   }
 
+  onEmployeeSelected(employeeId: number) {
+    this.employeeId = employeeId;
+    this.selectedRow = undefined;
+  }
+
   onPermissionUpdated() {
+    this.resetSelectedData();
+  }
+
+  onPermissionAdded() {
+    this.resetSelectedData();
     this.getPermissions();
   }
 
   onPermissionCleared() {
-    this.employeeId = undefined;
-    this.selectedRow = undefined;
+    this.resetSelectedData();
   }
 
   setSelectedEmployee(employeeId: number, index: number) {
@@ -113,6 +122,11 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
 
   search() {
     this.getPermissions();
+  }
+
+  private resetSelectedData() {
+    this.employeeId = undefined;
+    this.selectedRow = undefined;
   }
 
   private getQueryParams() {

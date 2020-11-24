@@ -7,4 +7,9 @@
     <small class="form-text text-muted">Loaded {{employeeItemsBuffer.length}} of
       {{totalItems}} </small>
   </ng-template>
+  <ng-template ng-option-tmp let-item="item" let-index="index">
+    <span container="body" ngbTooltip="{{ item.firstName }}">
+      {{ item.firstName | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}
+    </span>
+  </ng-template>
 </ng-select>

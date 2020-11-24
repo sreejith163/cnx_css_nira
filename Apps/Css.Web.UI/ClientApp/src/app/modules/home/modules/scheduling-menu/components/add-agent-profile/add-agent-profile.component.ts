@@ -17,8 +17,11 @@ import { Translation } from 'src/app/shared/models/translation.model';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { AgentAdmin } from '../../models/agent-admin.model';
-import { AgentSchedulingGroupName } from '../../models/agent-scheduling-group-name.model';
+import { ClientLOBGroup } from '../../models/client-lob-group.model';
+import { ClientNameList } from '../../models/client-name-list.model';
 import { EmployeeId } from '../../models/employee-id.model';
+import { SkillGroup } from '../../models/skill-group.model';
+import { SkillTag } from '../../models/skill-tag.model';
 import { AgentAdminDropdownsService } from '../../services/agent-admin-dropdowns.service';
 import { AgentAdminListService } from '../../services/agent-admin-list.service';
 
@@ -36,7 +39,10 @@ export class AddAgentProfileComponent implements OnInit {
   agentProfileModel: AgentAdmin;
   agentProfileForm: FormGroup;
   model: NgbDateStruct;
-  agentSchedulingGroupNames: AgentSchedulingGroupName[] = [];
+  clientNames: ClientNameList[] = [];
+  clientLOB: ClientLOBGroup[] = [];
+  skillGroup: SkillGroup[] = [];
+  skillTag: SkillTag[] = [];
   employeeIdList: EmployeeId[] = [];
 
   @Input() employeeId: number;
@@ -148,7 +154,10 @@ export class AddAgentProfileComponent implements OnInit {
     this.agentProfileForm.patchValue({
       employeeId: this.agentProfileData.employeeId,
       sso: this.agentProfileData.sso,
-      agentSchedulingGroupName: this.agentProfileData.agentSchedulingGroupName,
+      client: this.agentProfileData.client,
+      clientLOBGroup: this.agentProfileData.clientLOBGroup,
+      skillGroup: this.agentProfileData.skillGroup,
+      skillTag: this.agentProfileData.skillTag,
       firstName: this.agentProfileData.firstName,
       lastName: this.agentProfileData.lastName,
     });
@@ -162,7 +171,10 @@ export class AddAgentProfileComponent implements OnInit {
   }
 
   private getDropdownValues() {
-    this.agentSchedulingGroupNames = this.agentDropdownService.getAgentSchedulingGroupNames();
+    this.clientNames = this.agentDropdownService.getClientNameList();
+    this.clientLOB = this.agentDropdownService.getClientLOBGroupList();
+    this.skillGroup = this.agentDropdownService.getSkillGroup();
+    this.skillTag = this.agentDropdownService.getSkillTag();
     this.employeeIdList = this.agentDropdownService.getEmployeeIdList();
   }
 
@@ -170,7 +182,10 @@ export class AddAgentProfileComponent implements OnInit {
     this.agentProfileForm = this.formBuilder.group({
       employeeId: new FormControl('', Validators.required),
       sso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
-      agentSchedulingGroupName: new FormControl('', Validators.required),
+      client: new FormControl('', Validators.required),
+      clientLOBGroup: new FormControl('', Validators.required),
+      skillGroup: new FormControl('', Validators.required),
+      skillTag: new FormControl('', Validators.required),
       firstName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
       lastName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
       hireDate: new FormControl('', Validators.required),

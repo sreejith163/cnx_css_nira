@@ -89,7 +89,6 @@ namespace Css.Api.Scheduling
                 c.SwaggerEndpoint("/swagger/" + Configuration["Version"] + "/swagger.json", Configuration["Title"] + " " + Configuration["Version"]);
             });
 
-
             app.UseRouting();
 
             app.UseAuthorization();

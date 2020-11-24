@@ -17,9 +17,10 @@ export class EmployeeTypeAheadComponent implements OnInit, OnDestroy {
   pageNumber = 1;
   employeeItemsBufferSize = 10;
   numberOfItemsFromEndBeforeFetchingMore = 10;
+  characterSplice = 25;
   totalPages = 1;
-  totalItems: number;
   searchKeyWord = '';
+  totalItems: number;
 
   employeeItemsBuffer: Permission[] = [];
   typeAheadInput$ = new Subject<string>();
@@ -30,7 +31,7 @@ export class EmployeeTypeAheadComponent implements OnInit, OnDestroy {
 
   @Input() employeeId: number;
   @Input() translationValues: Translation[];
-  @Output() employeeSelected = new EventEmitter();
+  @Output() employeeSelected: EventEmitter<Permission> = new EventEmitter<Permission>();
   @Output() employeeCleared = new EventEmitter();
 
   constructor(

@@ -15,11 +15,11 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
   pageNumber = 1;
   clientItemsBufferSize = 10;
   numberOfItemsFromEndBeforeFetchingMore = 10;
-  loading = false;
+  characterSplice = 25;
   totalItems = 0;
-  totalPages: number;
   searchKeyWord = '';
-  selectedClientId: any;
+  loading = false;
+  totalPages: number;
 
   clientItemsBuffer: ClientBaseModel[] = [];
   typeAheadInput$ = new Subject<string>();
@@ -38,10 +38,6 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscribeToClients();
     this.subscribeToSearching();
-    if (this.clientId)
-    {
-      this.selectedClientId = this.clientId;
-    }
   }
 
   ngOnDestroy() {

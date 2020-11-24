@@ -1,5 +1,4 @@
 ﻿using Css.Api.Core.Models.Domain;
-using Css.Api.Core.Utilities.Interfaces;
 using Css.Api.Core.DataAccess.Repository;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Repository.DatabaseContext;
@@ -13,6 +12,7 @@ using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using AutoMapper.QueryableExtensions;
 using System.Collections.Generic;
 using System;
+using Css.Api.Core.Utilities.Extensions;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -24,32 +24,16 @@ namespace Css.Api.Scheduling.Repository
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// The sort helper
-        /// </summary>
-        private readonly ISortHelper<SchedulingCode> _sortHelper;
-
-        /// <summary>
-        /// The data shaper
-        /// </summary>
-        private readonly IDataShaper<SchedulingCodeDTO> _dataShaper;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SchedulingCodeRepository" /> class.
         /// </summary>
         /// <param name="repositoryContext">The repository context.</param>
         /// <param name="mapper">The mapper.</param>
-        /// <param name="sortHelper">The sort helper.</param>
-        /// <param name="dataShaper">The data shaper.</param>
         public SchedulingCodeRepository(
             SchedulingContext repositoryContext,
-            IMapper mapper,
-            ISortHelper<SchedulingCode> sortHelper,
-            IDataShaper<SchedulingCodeDTO> dataShaper)
+            IMapper mapper)
             : base(repositoryContext)
         {
             _mapper = mapper;
-            _sortHelper = sortHelper;
-            _dataShaper = dataShaper;
         }
 
         /// <summary>
@@ -63,7 +47,7 @@ namespace Css.Api.Scheduling.Repository
 
             var filteredSchedulingCodes = FilterSchedulingCodes(schedulingCodes, schedulingCodeParameters.SearchKeyword);
 
-            var sortedSchedulingCodes = _sortHelper.ApplySort(filteredSchedulingCodes, schedulingCodeParameters.OrderBy);
+            var sortedSchedulingCodes = SortHelper.ApplySort(filteredSchedulingCodes, schedulingCodeParameters.OrderBy);
 
             var pagedSchedulingCodes = sortedSchedulingCodes
                 .Skip((schedulingCodeParameters.PageNumber - 1) * schedulingCodeParameters.PageSize)
@@ -75,7 +59,7 @@ namespace Css.Api.Scheduling.Repository
             var mappedSchedulingCodes = pagedSchedulingCodes
                 .ProjectTo<SchedulingCodeDTO>(_mapper.ConfigurationProvider);
 
-            var shapedSchedulingCodes = _dataShaper.ShapeData(mappedSchedulingCodes, schedulingCodeParameters.Fields);
+            var shapedSchedulingCodes = DataShaper.ShapeData(mappedSchedulingCodes, schedulingCodeParameters.Fields);
 
             return await PagedList<Entity>
                 .ToPagedList(shapedSchedulingCodes, filteredSchedulingCodes.Count(), schedulingCodeParameters.PageNumber, schedulingCodeParameters.PageSize);

@@ -106,8 +106,7 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
 
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'");
+                    .HasColumnType("tinyint(4)");
 
                 entity.Property(e => e.LastName)
                     .IsRequired()
@@ -166,8 +165,7 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
 
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'");
+                    .HasColumnType("tinyint(4)");
 
                 entity.Property(e => e.ModifiedBy)
                     .HasColumnName("modified_by")
@@ -422,8 +420,7 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
 
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'");
+                    .HasColumnType("tinyint(4)");
 
                 entity.Property(e => e.ModifiedBy)
                     .HasColumnName("modified_by")
@@ -504,8 +501,7 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
 
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'");
+                    .HasColumnType("tinyint(4)");
 
                 entity.Property(e => e.ModifiedBy)
                     .HasColumnName("modified_by")
@@ -585,8 +581,7 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
 
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'");
+                    .HasColumnType("tinyint(4)");
 
                 entity.Property(e => e.ModifiedBy)
                     .HasColumnName("modified_by")
@@ -623,7 +618,6 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
                 entity.Property(e => e.ClientId)
                     .HasColumnName("client_id")
                     .HasColumnType("int(11)");
-                
 
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
@@ -639,8 +633,7 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
 
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'");
+                    .HasColumnType("tinyint(4)");
 
                 entity.Property(e => e.ModifiedBy)
                     .HasColumnName("modified_by")
@@ -779,8 +772,7 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
 
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'");
+                    .HasColumnType("tinyint(4)");
 
                 entity.Property(e => e.LanguageId)
                     .HasColumnName("language_id")
@@ -845,6 +837,9 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
             {
                 entity.ToTable("operation_hour");
 
+                entity.HasIndex(e => e.OperationHourOpenTypeId)
+                    .HasName("FK_operation_hour_operation_hour_type_id_idx");
+
                 entity.HasIndex(e => e.SchedulingGroupId)
                     .HasName("FK_operation_hour_agent_scheduling_group_id_idx");
 
@@ -887,6 +882,12 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
                     .HasColumnName("to")
                     .HasMaxLength(10)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.OperationHourOpenType)
+                    .WithMany(p => p.OperationHour)
+                    .HasForeignKey(d => d.OperationHourOpenTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_operation_hour_operation_hour_type_id");
 
                 entity.HasOne(d => d.SchedulingGroup)
                     .WithMany(p => p.OperationHour)
@@ -952,8 +953,7 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
 
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'");
+                    .HasColumnType("tinyint(4)");
 
                 entity.Property(e => e.ModifiedBy)
                     .HasColumnName("modified_by")
@@ -1032,6 +1032,9 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
             {
                 entity.ToTable("scheduling_type_code");
 
+                entity.HasIndex(e => e.SchedulingCodeId)
+                    .HasName("FK_scheduling_type_code_scheduling_code_id_idx");
+
                 entity.HasIndex(e => e.SchedulingCodeTypeId)
                     .HasName("fk_schedulingcodeid_idx");
 
@@ -1047,11 +1050,17 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
                     .HasColumnName("scheduling_code_type_id")
                     .HasColumnType("int(11)");
 
+                entity.HasOne(d => d.SchedulingCode)
+                    .WithMany(p => p.SchedulingTypeCode)
+                    .HasForeignKey(d => d.SchedulingCodeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_scheduling_type_code_scheduling_code_id");
+
                 entity.HasOne(d => d.SchedulingCodeType)
                     .WithMany(p => p.SchedulingTypeCode)
                     .HasForeignKey(d => d.SchedulingCodeTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_schedulingcodeid");
+                    .HasConstraintName("FK_scheduling_type_code_type_code_id");
             });
 
             modelBuilder.Entity<SkillGroup>(entity =>
@@ -1093,14 +1102,12 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
 
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'");
+                    .HasColumnType("tinyint(4)");
 
                 entity.Property(e => e.ModifiedBy)
                     .HasColumnName("modified_by")
                     .HasMaxLength(45)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("'VARCHAR(50)'");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ModifiedDate).HasColumnName("modified_date");
 
@@ -1172,8 +1179,7 @@ namespace Css.Api.Scheduling.Repository.DatabaseContext
 
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'");
+                    .HasColumnType("tinyint(4)");
 
                 entity.Property(e => e.ModifiedBy)
                     .HasColumnName("modified_by")

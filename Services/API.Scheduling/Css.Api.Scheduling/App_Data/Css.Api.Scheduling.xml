@@ -202,6 +202,100 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Css.Api.Scheduling.Controllers.SkillGroupsController">
+            <summary>Controller for handling skill group related routings</summary>
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.SkillGroupsController._skillGroupService">
+            <summary>The skill group service</summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillGroupsController.#ctor(Css.Api.Scheduling.Business.Interfaces.ISkillGroupService)">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.SkillGroupsController" /> class.</summary>
+            <param name="skillGroupService">The skill group service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillGroupsController.GetSkillGroups(Css.Api.Scheduling.Models.DTO.Request.SkillGroup.SkillGroupQueryParameter)">
+            <summary>Gets the skill groups.</summary>
+            <param name="skillQueryParameters">The skill query parameters.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillGroupsController.GetSkillGroup(System.Int32)">
+            <summary>Gets the skill group.</summary>
+            <param name="skillGroupId">The skill group identifier.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillGroupsController.CreateSkillGroup(Css.Api.Scheduling.Models.DTO.Request.SkillGroup.CreateSkillGroup)">
+            <summary>Creates the skill group.</summary>
+            <param name="skillGroupDetails">The skill group details.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillGroupsController.UpdateSkillGroup(System.Int32,Css.Api.Scheduling.Models.DTO.Request.SkillGroup.UpdateSkillGroup)">
+            <summary>Updates the skill group.</summary>
+            <param name="skillGroupId">The skill group identifier.</param>
+            <param name="skillGroupDetails">The skill group details.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillGroupsController.DeleteSkillGroup(System.Int32)">
+            <summary>Deletes the skill group.</summary>
+            <param name="skillGroupId">The skill group identifier.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="T:Css.Api.Scheduling.Controllers.SkillTagsController">
+            <summary>Controller for handling Skill Tags resource</summary>
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.SkillTagsController._skillTagService">
+            <summary>The skill tag service</summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillTagsController.#ctor(Css.Api.Scheduling.Business.Interfaces.ISkillTagService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.SkillTagsController"/> class.
+            </summary>
+            <param name="skillTagService">The skill tag service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillTagsController.GetSkillTags(Css.Api.Scheduling.Models.DTO.Request.SkillTag.SkillTagQueryParameter)">
+            <summary>
+            Gets the skill tags.
+            </summary>
+            <param name="skillTagQueryParameter">The skill tag query parameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillTagsController.GetSkillTag(System.Int32)">
+            <summary>
+            Gets the skill tag.
+            </summary>
+            <param name="skillTagId">The skill tag identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillTagsController.CreateSkillTag(Css.Api.Scheduling.Models.DTO.Request.SkillTag.CreateSkillTag)">
+            <summary>
+            Creates the skill tag.
+            </summary>
+            <param name="skillTagDetails">The skill tag details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillTagsController.UpdateSkillTag(System.Int32,Css.Api.Scheduling.Models.DTO.Request.SkillTag.UpdateSkillTag)">
+            <summary>
+            Updates the skill tag.
+            </summary>
+            <param name="skillTagId">The skill tag identifier.</param>
+            <param name="skillTagDetails">The skill tag details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.SkillTagsController.DeleteSkillTag(System.Int32)">
+            <summary>
+            Deletes the skill tag.
+            </summary>
+            <param name="skillTagId">The skill tag identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.TimeZonesController">
             <summary>
             Controller for handling the Time zones resource
@@ -445,6 +539,46 @@
         <member name="M:Css.Api.Scheduling.Validators.SchedulingCode.UpdateSchedulingCodeValidator.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.SchedulingCode.UpdateSchedulingCodeValidator" /> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.SkillGroup.AddSkillGroupValidator">
+            <summary>
+            Validator for handling the validation of add skill group object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.SkillGroup.AddSkillGroupValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.SkillGroup.AddSkillGroupValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.SkillGroup.UpdateSkillGroupValidator">
+            <summary>
+            Validator for handling the validation of update skill group object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.SkillGroup.UpdateSkillGroupValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.SkillGroup.UpdateSkillGroupValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.SkillTag.AddSkillTagValidator">
+            <summary>
+            Validator for handling the validation of add skill tag object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.SkillTag.AddSkillTagValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.SkillTag.AddSkillTagValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.SkillTag.UpdateSkillTagValidator">
+            <summary>
+            Validator for handling the validation of update skill tag object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.SkillTag.UpdateSkillTagValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.SkillTag.UpdateSkillTagValidator"/> class.
             </summary>
         </member>
     </members>

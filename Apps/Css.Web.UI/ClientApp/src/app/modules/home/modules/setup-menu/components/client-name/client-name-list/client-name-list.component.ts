@@ -116,11 +116,11 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
             this.getModalPopup(MessagePopUpComponent, 'sm');
             this.setComponentMessages('Success', 'The record has been deleted!');
           }, (error) => {
+            this.spinnerService.hide(this.spinner);
             if (error.status === 424) {
               this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
               this.setComponentMessages('Error', error.error);
             }
-            this.spinnerService.hide(this.spinner);
           });
 
         this.subscriptionList.push(this.deleteClientSubscription);

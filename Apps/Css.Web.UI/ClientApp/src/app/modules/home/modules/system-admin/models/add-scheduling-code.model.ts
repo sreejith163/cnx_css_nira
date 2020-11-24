@@ -1,7 +1,6 @@
-import { SchedulingCode } from './scheduling-code.model';
+import { SchedulingCodeAttributes } from './scheduling-code-attributes.model';
 
-export class AddSchedulingCode extends SchedulingCode{
-    iconId: number;
-    codeTypes: number[];
+export class AddSchedulingCode extends SchedulingCodeAttributes {
+    refId?: number;
     createdBy: string;
 }

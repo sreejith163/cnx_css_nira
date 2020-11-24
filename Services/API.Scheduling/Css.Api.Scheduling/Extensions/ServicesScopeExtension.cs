@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Css.Api.Core.Utilities;
-using Css.Api.Core.Utilities.Interfaces;
 using Css.Api.Scheduling.Business;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Repository;
@@ -43,15 +41,14 @@ namespace Css.Api.Scheduling.Extensions
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddHttpContextAccessor();
 
-            services.AddScoped(typeof(ISortHelper<>), typeof(SortHelper<>));
-            services.AddScoped(typeof(IDataShaper<>), typeof(DataShaper<>));
-
             services.AddTransient<IClientService, ClientService>();
             services.AddTransient<IClientLOBGroupService, ClientLOBGroupService>();
+            services.AddTransient<ISkillTagService, SkillTagService>();
             services.AddTransient<ISchedulingCodeService, SchedulingCodeService>();
             services.AddTransient<ISchedulingCodeIconService, SchedulingCodeIconService>();
             services.AddTransient<ISchedulingCodeTypeService, SchedulingCodeTypeService>();
             services.AddTransient<ITimezoneService, TimezoneService>();
+            services.AddTransient<ISkillGroupService, SkillGroupService>();
 
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 

@@ -50,5 +50,5 @@
     <ProjectReference Include="..\Css.Api.Scheduling.Business\Css.Api.Scheduling.Business.csproj" />
     <ProjectReference Include="..\Css.Api.Scheduling.Models\Css.Api.Scheduling.Models.csproj" />
   </ItemGroup>
-
+  
 </Project>

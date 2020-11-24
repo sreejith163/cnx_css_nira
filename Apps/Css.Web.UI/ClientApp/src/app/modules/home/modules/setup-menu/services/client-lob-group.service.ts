@@ -52,7 +52,7 @@ export class ClientLobGroupService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
 
-  deleteClient(clientLOBGroupId: number) {
+  deleteClientLOBGroup(clientLOBGroupId: number) {
     const url = `${this.baseURL}/ClientLOBGroups/${clientLOBGroupId}`;
 
     return this.http.delete<ApiResponseModel>(url)

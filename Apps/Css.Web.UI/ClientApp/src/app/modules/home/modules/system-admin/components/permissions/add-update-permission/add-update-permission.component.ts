@@ -19,11 +19,11 @@ export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestro
 
   currentPage = 1;
   pageSize = 10;
+  isEdit: boolean;
   totalRecord: number;
   searchKeyword: string;
   orderBy = 'createdDate';
   sortBy = 'desc';
-  isEdit = false;
 
   userRoles = Constants.UserRoles;
   employee: Permission;
@@ -37,6 +37,8 @@ export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestro
 
   @Input() employeeId: number;
   @Input() translationValues: Translation[];
+  @Output() employeeSelected: EventEmitter<number> = new EventEmitter<number>();
+  @Output() permissionAdded = new EventEmitter();
   @Output() permissionUpdated = new EventEmitter();
   @Output() permissionCleared = new EventEmitter();
 
@@ -47,13 +49,12 @@ export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestro
   ) { }
 
   ngOnInit(): void {
-    this.intializePermissionForm();
-    this.getPermission();
+    this.loadPermissions();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.employeeId?.currentValue !== changes?.employeeId?.previousValue) {
-      this.getPermission();
+      this.loadPermissions();
     }
   }
 
@@ -92,7 +93,8 @@ export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestro
   onEmployeeSelected(permission: Permission) {
     this.employeeId = permission.employeeId;
     this.employee = permission;
-    this.getPermission();
+    this.loadPermissions();
+    this.employeeSelected.emit(permission.employeeId);
   }
 
   onEmployeeCleared() {
@@ -108,14 +110,27 @@ export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestro
   }
 
   savePermission() {
-    if (this.permissionForm.valid && this.employeeId) {
+    if (this.checkFormIsValid()) {
       if (this.isEdit) {
         this.updatePermission();
       } else {
         this.addPermission();
       }
-    } else {
+    }
+  }
+
+  private checkFormIsValid() {
+    if (this.permissionForm.invalid && !this.employeeId) {
       this.showErrorWarningPopUpMessage('Please select an employee and its user access role');
+      return false;
+    } else if (this.permissionForm.invalid) {
+      this.showErrorWarningPopUpMessage('Please select user access role');
+      return false;
+    } else if (!this.employeeId) {
+      this.showErrorWarningPopUpMessage('Please select an employee');
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -135,7 +150,7 @@ export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestro
       .subscribe((data) => {
         if (data) {
           this.resetForm();
-          this.permissionUpdated.emit();
+          this.permissionAdded.emit();
           this.showSuccessPopUpMessage('The record has been added!');
         }
       }, (error) => {
@@ -171,6 +186,7 @@ export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestro
       this.subscriptions.push(this.updatePermissionSubscription);
     } else {
       this.resetForm();
+      this.permissionUpdated.emit();
       this.showSuccessPopUpMessage('No changes has been made!');
     }
   }
@@ -194,8 +210,8 @@ export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestro
     if (this.employeeId) {
       this.getPermissionSubscription = this.permissionsService.getPermission(this.employeeId)
         .subscribe((data: PermissionDetails) => {
+          this.permission = data;
           if (data) {
-            this.permission = data;
             this.setPermissionDetails(data);
           }
         }, (error) => {
@@ -207,8 +223,6 @@ export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestro
   }
 
   private setPermissionDetails(record: PermissionDetails) {
-    this.intializePermissionForm();
-    this.employeeId = record.employeeId;
     this.setUserRoles(record);
     this.isEdit = true;
   }
@@ -218,6 +232,12 @@ export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestro
     record.roles.forEach(ele => array.push(new FormControl(ele.id)));
 
     return array;
+  }
+
+  private loadPermissions() {
+    this.isEdit = false;
+    this.intializePermissionForm();
+    this.getPermission();
   }
 
   private showSuccessPopUpMessage(contentMessage: string) {

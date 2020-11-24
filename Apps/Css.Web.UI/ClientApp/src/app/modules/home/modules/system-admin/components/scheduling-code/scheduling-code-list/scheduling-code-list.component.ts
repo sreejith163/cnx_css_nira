@@ -9,7 +9,6 @@ import { Translation } from 'src/app/shared/models/translation.model';
 import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
 import { SchedulingCode } from '../../../models/scheduling-code.model';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
-import { SchedulingCodeDetails } from '../../../models/scheduling-code-details.model';
 
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
@@ -41,7 +40,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
   headerPaginationValues: HeaderPagination;
   translationValues: Translation[];
   paginationSize: PaginationSize[] = [];
-  schedulingCodes: SchedulingCodeDetails[] = [];
+  schedulingCodes: SchedulingCode[] = [];
 
   deleteSchedulingCodeSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
@@ -107,13 +106,11 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
         this.spinnerService.show(this.spinner, this.spinnerOptions);
 
         this.deleteSchedulingCodeSubscription = this.schedulingCodeService.deleteSchedulingCode(id)
-          .subscribe((response) => {
-            if (response === null) {
-              this.spinnerService.hide(this.spinner);
-              this.loadSchedulingCodes();
-              this.getModalPopup(MessagePopUpComponent, 'sm');
-              this.setComponentMessages('Success', 'The record has been deleted!');
-            }
+          .subscribe(() => {
+            this.spinnerService.hide(this.spinner);
+            this.loadSchedulingCodes();
+            this.getModalPopup(MessagePopUpComponent, 'sm');
+            this.setComponentMessages('Success', 'The record has been deleted!');
           }, (error) => {
             this.spinnerService.hide(this.spinner);
             console.log(error);
@@ -191,5 +188,4 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
 
     this.subscriptionList.push(this.getSchedulingCodesSubscription);
   }
-
 }

@@ -30,7 +30,7 @@ services:
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
-  css.api.scheduling:
+  css.api.adminops:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__Database=server=scheduling.mysql.data;user id=root;password=root;persistsecurityinfo=True;database=css
@@ -39,11 +39,20 @@ services:
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
-  css.api.adminops:
+  css.api.setupmenu:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Database=server=scheduling.mysql.data;user id=root;password=root;persistsecurityinfo=True;database=css
     ports:
       - "4204:80"
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
+  css.api.scheduling:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Database=server=scheduling.mysql.data;user id=root;password=root;persistsecurityinfo=True;database=css
+    ports:
+      - "4205:80"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

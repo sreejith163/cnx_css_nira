@@ -88,10 +88,10 @@ namespace Css.Api.Scheduling.Business
         public async Task<CSSResponse> CreateClientLOBGroup(CreateClientLOBGroup clientLOBGroupDetails)
         {
             var clientLOBGroups = await _repository.ClientLOBGroups.GetClientLOBGroupsIdByClientIdAndGroupName(
-                new ClientIdDetails { ClientId = clientLOBGroupDetails.ClientId }, new ClientLOBGroupNameDetails { Name = clientLOBGroupDetails.name });
+                new ClientIdDetails { ClientId = clientLOBGroupDetails.ClientId }, new ClientLOBGroupNameDetails { Name = clientLOBGroupDetails.Name });
             if (clientLOBGroups?.Count > 0)
             {
-                return new CSSResponse($"Client LOB Group with name '{clientLOBGroupDetails.name}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Client LOB Group with name '{clientLOBGroupDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
 
             var clientLOBGroupRequest = _mapper.Map<ClientLobGroup>(clientLOBGroupDetails);
@@ -117,10 +117,10 @@ namespace Css.Api.Scheduling.Business
             }
 
             var clientLOBGroups = await _repository.ClientLOBGroups.GetClientLOBGroupsIdByClientIdAndGroupName(
-               new ClientIdDetails { ClientId = clientLOBGroupDetails.ClientId }, new ClientLOBGroupNameDetails { Name = clientLOBGroupDetails.name });
+               new ClientIdDetails { ClientId = clientLOBGroupDetails.ClientId }, new ClientLOBGroupNameDetails { Name = clientLOBGroupDetails.Name });
             if (clientLOBGroups?.Count > 0 && clientLOBGroups.IndexOf(clientLOBGroupIdDetails.ClientLOBGroupId) == -1)
             {
-                return new CSSResponse($"Client LOB Group with name '{clientLOBGroupDetails.name}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Client LOB Group with name '{clientLOBGroupDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
 
             var clientLOBGroupRequest = _mapper.Map(clientLOBGroupDetails, clientLOBGroup);
@@ -142,6 +142,12 @@ namespace Css.Api.Scheduling.Business
             if (clientLOBGroup == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var hasDependency = await _repository.SkillGroups.GetSkillGroupsCountByClientLobId(clientLOBGroupIdDetails) > 0;
+            if (hasDependency)
+            {
+                return new CSSResponse($"The Client LOB Group {clientLOBGroup.Name} has dependency with other modules", HttpStatusCode.FailedDependency);
             }
 
             clientLOBGroup.IsDeleted = true;

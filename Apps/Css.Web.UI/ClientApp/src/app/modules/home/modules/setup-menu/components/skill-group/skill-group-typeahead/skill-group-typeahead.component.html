@@ -1,0 +1,14 @@
+<ng-select [items]="skillGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="All"
+  [typeahead]="typeAheadInput$" (scroll)="onSkillGroupScroll($event)" (scrollToEnd)="onSkillGroupScrollToEnd()"
+  (change)="onSkillGroupChange($event)" (clear)="clearSkillGroupValues()"
+  [(ngModel)]="skillGroupId">
+  <ng-template ng-header-tmp>
+    <small class="form-text text-muted">Loaded {{skillGroupItemsBuffer.length}} of
+      {{totalItems}}</small>
+  </ng-template>
+  <ng-template ng-option-tmp let-item="item" let-index="index">
+    <span container="body" ngbTooltip="{{ item.name }}">
+      {{ item.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}
+    </span>
+  </ng-template>
+</ng-select>

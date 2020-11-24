@@ -9,7 +9,10 @@ namespace Css.Api.Scheduling.Validators.ClientLOBGroup
         /// <summary>Initializes a new instance of the <see cref="AddClientLOBGroupValidator" /> class.</summary>
         public AddClientLOBGroupValidator()
         {
-            RuleFor(x => x.name).NotEmpty();
+            RuleFor(x => x.Name).NotEmpty();
+            RuleFor(x => x.ClientId).NotEmpty();
+            RuleFor(x => x.TimezoneId).NotEmpty();
+            RuleFor(x => x.FirstDayOfWeek).NotNull();
             RuleFor(x => x.CreatedBy).NotEmpty();
         }
     }

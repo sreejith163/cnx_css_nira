@@ -40,7 +40,7 @@ namespace Css.Api.Core.DataAccess.Repository
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
         {
             return RepositoryContext.Set<T>()
-                .Where(expression);
+                .Where(expression).AsNoTracking();
         }
 
         /// <summary>

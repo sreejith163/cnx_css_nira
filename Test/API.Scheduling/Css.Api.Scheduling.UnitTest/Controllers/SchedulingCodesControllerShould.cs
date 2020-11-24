@@ -92,7 +92,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
             CreateSchedulingCode codeDetails = new CreateSchedulingCode()
             {
                 RefId = 4,
-                CodeTypes = new List<int>(),
+                SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 PriorityNumber = 4,
                 CreatedBy = "admin",
                 Description = "test1",
@@ -113,7 +113,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
             CreateSchedulingCode codeDetails = new CreateSchedulingCode()
             {
                 RefId = 4,
-                CodeTypes = new List<int>(),
+                SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 PriorityNumber = 4,
                 CreatedBy = "admin",
                 Description = "test",
@@ -139,7 +139,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         {
             UpdateSchedulingCode schedulingCode = new UpdateSchedulingCode()
             {
-                CodeTypes = new List<int>(),
+                SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 Description = "test",
                 IconId = 2,
                 PriorityNumber = 4,
@@ -162,7 +162,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         {
             UpdateSchedulingCode schedulingCode = new UpdateSchedulingCode()
             {
-                CodeTypes = new List<int>(),
+                SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 Description = description,
                 IconId = 2,
                 PriorityNumber = 4,
@@ -185,7 +185,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         {
             UpdateSchedulingCode schedulingCode = new UpdateSchedulingCode()
             {
-                CodeTypes = new List<int>(),
+                SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 Description = "test",
                 IconId = 2,
                 PriorityNumber = 4,

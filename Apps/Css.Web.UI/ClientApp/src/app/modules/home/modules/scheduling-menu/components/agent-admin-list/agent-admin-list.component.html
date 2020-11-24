@@ -54,8 +54,20 @@
                                 {{ 'SSO' | translation: 'lbl_table_heading_sso' : translationValues }}
                                 <i class="fa fa-sort"></i></th>
                             <th class="sortable-field width-10-p" [appSort]="totalAgents" data-order="asc"
-                                data-name="agentSchedulingGroupName">
-                                {{ 'Agent Scheduling Group Name' | translation: 'lbl_table_heading_agent_scheduling_group_name' : translationValues }}
+                                data-name="client">
+                                {{ 'Client Name' | translation: 'lbl_table_heading_agent_client_name' : translationValues }}
+                                <i class="fa fa-sort"></i></th>
+                            <th class="sortable-field width-10-p" [appSort]="totalAgents" data-order="asc"
+                                data-name="clientLOBGroup">
+                                {{ 'LOB Group Name' | translation: 'lbl_add_edit_lob_group_name' : translationValues }}
+                                <i class="fa fa-sort"></i></th>
+                            <th class="sortable-field width-10-p" [appSort]="totalAgents" data-order="asc"
+                                data-name="skillGroup">
+                                {{ 'Skill Group Name' | translation: 'lbl_add_edit_skill_group_name' : translationValues }}
+                                <i class="fa fa-sort"></i></th>
+                            <th class="sortable-field width-10-p" [appSort]="totalAgents" data-order="asc"
+                                data-name="skillTag">
+                                {{ 'Skill Tag Name' | translation: 'lbl_add_edit_skill_tag_name' : translationValues }}
                                 <i class="fa fa-sort"></i></th>
                             <th class="sortable-field width-10-p" [appSort]="totalAgents" data-order="asc"
                                 data-name="firstName">
@@ -97,7 +109,10 @@
                             </td>
                             <td>{{el.employeeId}}</td>
                             <td>{{el.sso}}</td>
-                            <td>{{el.agentSchedulingGroupName}}</td>
+                            <td>{{el.client}}</td>
+                            <td>{{el.clientLOBGroup}}</td>
+                            <td>{{el.skillGroup}}</td>
+                            <td>{{el.skillTag}}</td>
                             <td>{{el.firstName}}</td>
                             <td>{{el.lastName}}</td>
                             <td>{{el.hireDate}}</td>

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.21" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\API.Core\Css.Api.Core.DataAccess\Css.Api.Core.DataAccess.csproj" />
+    <ProjectReference Include="..\..\API.Core\Css.Api.Core.Utilities\Css.Api.Core.Utilities.csproj" />
+    <ProjectReference Include="..\Css.Api.SetupMenu.Models\Css.Api.SetupMenu.Models.csproj" />
+  </ItemGroup>
+
+
+</Project>

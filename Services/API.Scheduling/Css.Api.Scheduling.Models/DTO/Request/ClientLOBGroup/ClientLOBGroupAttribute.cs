@@ -4,7 +4,7 @@
     {
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>
-        public string name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>Gets or sets the client identifier.</summary>
         /// <value>The client identifier.</value>
@@ -17,6 +17,5 @@
         /// <summary>Gets or sets the first day of week.</summary>
         /// <value>The first day of week.</value>
         public int FirstDayOfWeek { get; set; }
-
     }
 }

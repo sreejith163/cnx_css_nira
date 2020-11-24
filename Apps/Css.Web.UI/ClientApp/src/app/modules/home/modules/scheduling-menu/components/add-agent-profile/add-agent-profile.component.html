@@ -59,19 +59,77 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Agent Scheduling Group Name' | translation: 'lbl_add_edit_agent_scheduling_group_name' : translationValues }}
+              <label>{{ 'Client Name' | translation: 'lbl_add_edit_client_name' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <select class="form-control" [ngClass]="{'valid-border-error': hasFormControlValidationError('client')}"
+                formControlName="client">
+                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
+                <option *ngFor="let x of clientNames" [value]="x.clientName">{{x.clientName}}</option>
+              </select>
+              <div *ngIf="hasFormControlValidationError('client')" class="valid-error">
+                {{ 'Client Name is required' | translation: 'lbl_add_edit_client_name_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Client LOB Group' | translation: 'lbl_add_edit_client_lob_group' : translationValues }}
                 <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
               <select class="form-control"
-                [ngClass]="{'valid-border-error': hasFormControlValidationError('agentSchedulingGroupName')}"
-                formControlName="agentSchedulingGroupName">
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('clientLOBGroup')}"
+                formControlName="clientLOBGroup">
                 <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
-                <option *ngFor="let x of agentSchedulingGroupNames" [value]="x.agentSchedulingGroupName">{{x.agentSchedulingGroupName}}</option>
+                <option *ngFor="let x of clientLOB" [value]="x.clientLOBGroup">{{x.clientLOBGroup}}</option>
               </select>
-              <div *ngIf="hasFormControlValidationError('agentSchedulingGroupName')" class="valid-error">
-                {{ 'Agent Scheduling Group Name is required' | translation: 'lbl_add_edit_agent_scheduling_group_name_required_validation_message' : translationValues }}
+              <div *ngIf="hasFormControlValidationError('clientLOBGroup')" class="valid-error">
+                {{ 'Client LOB Group is required' | translation: 'lbl_add_edit_client_lob_group_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Skill Group' | translation: 'lbl_add_edit_skill_group' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <select class="form-control"
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('skillGroup')}"
+                formControlName="skillGroup">
+                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
+                <option *ngFor="let x of skillGroup" [value]="x.skillGroup">{{x.skillGroup}}</option>
+              </select>
+              <div *ngIf="hasFormControlValidationError('skillGroup')" class="valid-error">
+                {{ 'Skill Group is required' | translation: 'lbl_add_edit_skill_group_required_validation_message' : translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Skill Tag' | translation: 'lbl_add_edit_skill_tag' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <select class="form-control" [ngClass]="{'valid-border-error': hasFormControlValidationError('skillTag')}"
+                formControlName="skillTag">
+                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
+                <option *ngFor="let x of skillTag" [value]="x.skillTag">{{x.skillTag}}</option>
+              </select>
+              <div *ngIf="hasFormControlValidationError('skillTag')" class="valid-error">
+                {{ 'Skill Tags is required' | translation: 'lbl_add_edit_skill_tag_required_validation_message' : translationValues }}
               </div>
             </div>
           </div>

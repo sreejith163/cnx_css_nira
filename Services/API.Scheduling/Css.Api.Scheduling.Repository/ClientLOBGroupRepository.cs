@@ -2,7 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Css.Api.Core.DataAccess.Repository;
 using Css.Api.Core.Models.Domain;
-using Css.Api.Core.Utilities.Interfaces;
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLOBGroup;
@@ -25,32 +25,16 @@ namespace Css.Api.Scheduling.Repository
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// The sort helper
-        /// </summary>
-        private readonly ISortHelper<ClientLobGroup> _sortHelper;
-
-        /// <summary>
-        /// The data shaper
-        /// </summary>
-        private readonly IDataShaper<ClientLOBGroupDTO> _dataShaper;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ClientLOBGroupRepository" /> class.
         /// </summary>
         /// <param name="repositoryContext">The repository context.</param>
         /// <param name="mapper">The mapper.</param>
-        /// <param name="sortHelper">The sort helper.</param>
-        /// <param name="dataShaper">The data shaper.</param>
         public ClientLOBGroupRepository(
             SchedulingContext repositoryContext,
-            IMapper mapper,
-            ISortHelper<ClientLobGroup> sortHelper,
-            IDataShaper<ClientLOBGroupDTO> dataShaper)
+            IMapper mapper)
             : base(repositoryContext)
         {
             _mapper = mapper;
-            _sortHelper = sortHelper;
-            _dataShaper = dataShaper;
         }
 
         /// <summary>
@@ -67,7 +51,7 @@ namespace Css.Api.Scheduling.Repository
             var filteredClientLOBGroups = FilterClientLOBGroups(clientLOBGroups, clientLOBGroupParameters.SearchKeyword, clientLOBGroupParameters.ClientId)
                 .Include(x => x.Timezone);
 
-            var sortedClientLOBGroups = _sortHelper.ApplySort(filteredClientLOBGroups, clientLOBGroupParameters.OrderBy);
+            var sortedClientLOBGroups = SortHelper.ApplySort(filteredClientLOBGroups, clientLOBGroupParameters.OrderBy);
 
             var pagedClientLOBGroups = sortedClientLOBGroups
                 .Skip((clientLOBGroupParameters.PageNumber - 1) * clientLOBGroupParameters.PageSize)
@@ -77,7 +61,7 @@ namespace Css.Api.Scheduling.Repository
             var mappedClientLOBGroups = pagedClientLOBGroups
                 .ProjectTo<ClientLOBGroupDTO>(_mapper.ConfigurationProvider);
 
-            var shapedClientLOBGroups = _dataShaper.ShapeData(mappedClientLOBGroups, clientLOBGroupParameters.Fields);
+            var shapedClientLOBGroups = DataShaper.ShapeData(mappedClientLOBGroups, clientLOBGroupParameters.Fields);
 
             return await PagedList<Entity>
                 .ToPagedList(shapedClientLOBGroups, filteredClientLOBGroups.Count(), clientLOBGroupParameters.PageNumber, clientLOBGroupParameters.PageSize);

@@ -75,10 +75,10 @@
                   [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field width-10-p" (click)="sort('TimezoneLabel', sortBy)">
+              <th class="sortable-field width-10-p" (click)="sort('Timezone.Name', sortBy)">
                 {{ 'Time zone for reporting' | translation: 'lbl_table_heading_time_zone_for_reporting' : translationValues }}
-                <i *ngIf="orderBy !== 'TimezoneLabel'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'TimezoneLabel'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                <i *ngIf="orderBy !== 'Timezone.Name'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'Timezone.Name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
@@ -132,7 +132,7 @@
                     <b>Client Name : </b> {{ el.clientName }}
                   </ng-template>
                   <ng-template #popTitle>
-                    {{ 'Hierachy' | translation: 'lbl_table_client_lob_group_hierarchy' : translationValues }}
+                    {{ 'Hierarchy' | translation: 'lbl_table_heading_client_lob_group_hierarchy' : translationValues }}
                   </ng-template>
                 </span>
               </td>

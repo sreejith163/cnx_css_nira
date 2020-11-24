@@ -14,8 +14,9 @@
     </div>
   </div>
 
-  <app-add-update-permission [employeeId]="employeeId" [translationValues]="translationValues" (permissionCleared)="onPermissionCleared()"
-  (permissionUpdated)="onPermissionUpdated()">
+  <app-add-update-permission [employeeId]="employeeId" [translationValues]="translationValues"
+    (employeeSelected)="onEmployeeSelected($event)" (permissionCleared)="onPermissionCleared()"
+    (permissionUpdated)="onPermissionUpdated()" (permissionAdded)="onPermissionAdded()">
   </app-add-update-permission>
 
   <div class="row m-l-r-10">

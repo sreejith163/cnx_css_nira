@@ -3,7 +3,6 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using System;
-using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.Profiles.SchedulingCode
 {
@@ -20,10 +19,12 @@ namespace Css.Api.Scheduling.Models.Profiles.SchedulingCode
 
             CreateMap<UpdateSchedulingCode, Domain.SchedulingCode>()
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
-                .ForMember(x => x.SchedulingTypeCode, opt => new List<SchedulingTypeCode>())
                 .ReverseMap();
 
             CreateMap<Domain.SchedulingCode, SchedulingCodeDTO>()
+                .ReverseMap();
+
+            CreateMap<SchedulingCodeTypes, SchedulingTypeCode>()
                 .ReverseMap();
 
             CreateMap<SchedulingCodeIcon, KeyValue>()

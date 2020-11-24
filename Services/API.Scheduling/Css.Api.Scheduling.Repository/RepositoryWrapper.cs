@@ -1,9 +1,4 @@
 ﻿using AutoMapper;
-using Css.Api.Core.Utilities.Interfaces;
-using Css.Api.Scheduling.Models.Domain;
-using Css.Api.Scheduling.Models.DTO.Response.Client;
-using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
-using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Repository.Interfaces;
 using System.Threading.Tasks;
@@ -33,9 +28,22 @@ namespace Css.Api.Scheduling.Repository
         private IClientLOBGroupRepository _clientLOBGroupRepository { get; set; }
 
         /// <summary>
+        /// Gets or sets the skill tag repository.
+        /// </summary>
+        /// <value>
+        /// The skill tag repository.
+        /// </value>
+        private ISkillTagRepository _skillTagRepository { get; set; }
+
+
+        /// <summary>
         /// Gets or sets the scheduling codes repository.
         /// </summary>
         private ISchedulingCodeRepository _schedulingCodesRepository { get; set; }
+
+        /// <summary>Gets or sets the skill group repository.</summary>
+        /// <value>The skill group repository.</value>
+        private ISkillGroupRepository _skillGroupRepository { get; set; }
 
         /// <summary>
         /// Gets or sets the scheduling code icons repository.
@@ -47,9 +55,9 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         private ISchedulingCodeTypeRepository _schedulingCodeTypesRepository { get; set; }
 
-
-        /// <summary>Gets or sets the timezone repository.</summary>
-        /// <value>The timezone repository.</value>
+        /// <summary>
+        /// Gets or sets the timezone repository.
+        /// </summary>
         private ITimezoneRepository _timezoneRepository { get; set; }
 
         /// <summary>
@@ -57,35 +65,9 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         private ISchedulingTypeCodeRepository _schedulingTypeCodesRepository { get; set; }
 
-        /// <summary>
-        /// The clients sort helper
-        /// </summary>
-        private readonly ISortHelper<Client> _clientsSortHelper;
-
-        /// <summary>
-        /// The client lob groups sort helper
-        /// </summary>
-        private readonly ISortHelper<ClientLobGroup> _clientLOBGroupsSortHelper;
-
-        /// <summary>
-        /// The scheduling codes sort helper
-        /// </summary>
-        private readonly ISortHelper<SchedulingCode> _schedulingCodesSortHelper;
-
-        /// <summary>
-        /// The clients data shaper
-        /// </summary>
-        private readonly IDataShaper<ClientDTO> _clientsDataShaper;
-
-        /// <summary>
-        /// The client lob groups data shaper
-        /// </summary>
-        private readonly IDataShaper<ClientLOBGroupDTO> _clientLOBGroupsDataShaper;
-
-        /// <summary>
-        /// The scheduling codes data shaper
-        /// </summary>
-        private readonly IDataShaper<SchedulingCodeDTO> _schedulingCodesDataShaper;
+        /// <summary>Gets or sets the operation hours repository.</summary>
+        /// <value>The operation hours repository.</value>
+        private IOperationHourRepository _operationHoursRepository { get; set; }
 
         /// <summary>
         /// Gets the clients.
@@ -96,7 +78,7 @@ namespace Css.Api.Scheduling.Repository
             {
                 if (_clientRepository == null)
                 {
-                    _clientRepository = new ClientRepository(_repositoryContext, _mapper, _clientsSortHelper, _clientsDataShaper);
+                    _clientRepository = new ClientRepository(_repositoryContext, _mapper);
                 }
                 return _clientRepository;
             }
@@ -111,7 +93,7 @@ namespace Css.Api.Scheduling.Repository
             {
                 if (_clientLOBGroupRepository == null)
                 {
-                    _clientLOBGroupRepository = new ClientLOBGroupRepository(_repositoryContext, _mapper, _clientLOBGroupsSortHelper, _clientLOBGroupsDataShaper);
+                    _clientLOBGroupRepository = new ClientLOBGroupRepository(_repositoryContext, _mapper);
                 }
                 return _clientLOBGroupRepository;
             }
@@ -126,9 +108,24 @@ namespace Css.Api.Scheduling.Repository
             {
                 if (_schedulingCodesRepository == null)
                 {
-                    _schedulingCodesRepository = new SchedulingCodeRepository(_repositoryContext, _mapper, _schedulingCodesSortHelper, _schedulingCodesDataShaper);
+                    _schedulingCodesRepository = new SchedulingCodeRepository(_repositoryContext, _mapper);
                 }
                 return _schedulingCodesRepository;
+            }
+        }
+
+
+        /// <summary>Gets the skill groups.</summary>
+        /// <value>The skill groups.</value>
+        public ISkillGroupRepository SkillGroups
+        {
+            get
+            {
+                if (_skillGroupRepository == null)
+                {
+                    _skillGroupRepository = new SkillGroupRepository(_repositoryContext, _mapper);
+                }
+                return _skillGroupRepository;
             }
         }
 
@@ -174,7 +171,7 @@ namespace Css.Api.Scheduling.Repository
                 }
                 return _timezoneRepository;
             }
-        }        
+        }
 
         /// <summary>
         /// Gets the scheduling type codes.
@@ -191,35 +188,44 @@ namespace Css.Api.Scheduling.Repository
             }
         }
 
+        /// <summary>Gets the operation hours.</summary>
+        /// <value>The operation hours.</value>
+        public IOperationHourRepository OperationHours
+        {
+            get
+            {
+                if (_operationHoursRepository == null)
+                {
+                    _operationHoursRepository = new OperationHourRepository(_repositoryContext);
+                }
+                return _operationHoursRepository;
+            }
+        }
+        public ISkillTagRepository SkillTags
+        {
+            get
+            {
+                if (_skillTagRepository == null)
+                {
+                    _skillTagRepository = new SkillTagRepository(_repositoryContext, _mapper);
+                }
+                return _skillTagRepository;
+            }
+        }
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryWrapper" /> class.
         /// </summary>
         /// <param name="repositoryContext">The repository context.</param>
         /// <param name="mapper">The mapper.</param>
-        /// <param name="clientsSortHelper">The clients sort helper.</param>
-        /// <param name="clientLOBGroupsSortHelper">The client lob groups sort helper.</param>
-        /// <param name="schedulingCodesSortHelper">The scheduling codes sort helper.</param>
-        /// <param name="clientsDataShaper">The clients data shaper.</param>
-        /// <param name="clientLobGroupsDataShaper">The client lob groups data shaper.</param>
-        /// <param name="schedulingCodesDataShaper">The scheduling codes data shaper.</param>
+        /// <param name="">The .</param>
         public RepositoryWrapper(
             SchedulingContext repositoryContext,
-            IMapper mapper,
-            ISortHelper<Client> clientsSortHelper,
-            ISortHelper<ClientLobGroup> clientLOBGroupsSortHelper,
-            ISortHelper<SchedulingCode> schedulingCodesSortHelper,
-            IDataShaper<ClientDTO> clientsDataShaper,
-            IDataShaper<ClientLOBGroupDTO> clientLobGroupsDataShaper,
-            IDataShaper<SchedulingCodeDTO> schedulingCodesDataShaper)
+            IMapper mapper)
         {
             _repositoryContext = repositoryContext;
             _mapper = mapper;
-            _clientsSortHelper = clientsSortHelper;
-            _clientLOBGroupsSortHelper = clientLOBGroupsSortHelper;
-            _schedulingCodesSortHelper = schedulingCodesSortHelper;
-            _clientsDataShaper = clientsDataShaper;
-            _clientLOBGroupsDataShaper = clientLobGroupsDataShaper;
-            _schedulingCodesDataShaper = schedulingCodesDataShaper;
         }
 
         /// <summary>

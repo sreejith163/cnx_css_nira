@@ -20,6 +20,7 @@ import { ClientLobGroupQueryParameters } from '../../../models/client-lob-group-
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { WeekDay } from '@angular/common';
+import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
 @Component({
   selector: 'app-client-lob-group-list',
@@ -121,17 +122,18 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
     this.modalRef.result.then((result) => {
       if (result && result === clientIndex) {
         this.spinnerService.show(this.spinner, SpinnerOptions);
-        this.deleteClientLOBGroupSubscription = this.clientLOBGroupService.deleteClient(clientIndex)
-          .subscribe((response) => {
-            if (response === null) {
-              this.spinnerService.hide(this.spinner);
-              this.loadClientLOBGroups();
-              this.getModalPopup(MessagePopUpComponent, 'sm');
-              this.setComponentMessages('Success', 'The record has been deleted!');
-            }
-          }, (error) => {
-            console.log(error);
+        this.deleteClientLOBGroupSubscription = this.clientLOBGroupService.deleteClientLOBGroup(clientIndex)
+          .subscribe(() => {
             this.spinnerService.hide(this.spinner);
+            this.loadClientLOBGroups();
+            this.getModalPopup(MessagePopUpComponent, 'sm');
+            this.setComponentMessages('Success', 'The record has been deleted!');
+          }, (error) => {
+            this.spinnerService.hide(this.spinner);
+            if (error.status === 424) {
+              this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
+              this.setComponentMessages('Error', error.error);
+            }
           });
 
         this.subscriptionList.push(this.deleteClientLOBGroupSubscription);
@@ -192,8 +194,8 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     this.getAllClientLOBGroupDetailsSubscription = this.clientLOBGroupService.getClientLOBGroups(queryParams)
       .subscribe((response) => {
+        this.spinnerService.hide(this.spinner);
         if (response.body) {
-          this.spinnerService.hide(this.spinner);
           this.clientLOBGroupDetails = response.body;
           this.headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
           this.totalClientLOBGroupRecord = this.headerPaginationValues.totalCount;

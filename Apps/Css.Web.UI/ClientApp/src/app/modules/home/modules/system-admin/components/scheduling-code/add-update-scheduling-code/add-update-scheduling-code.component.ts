@@ -5,24 +5,23 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
+import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
 import { Translation } from 'src/app/shared/models/translation.model';
 import { SchedulingCodeType } from '../../../models/scheduling-code-type.model';
 import { AddSchedulingCode } from '../../../models/add-scheduling-code.model';
 import { UpdateSchedulingCode } from '../../../models/update-scheduling-code.mode';
-import { SchedulingIcon } from '../../../models/scheduling-icon.model';
-import { SchedulingCodeDetails } from '../../../models/scheduling-code-details.model';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { Constants } from 'src/app/shared/util/constants.util';
+import { KeyValue } from 'src/app/shared/models/key-value.model';
+import { SchedulingCode } from '../../../models/scheduling-code.model';
 
 import { SchedulingCodeService } from '../../../services/scheduling-code.service';
 import { SchedulingCodeIconsService } from '../../../services/scheduling-code-icons.service';
 import { SchedulingCodeTypesService } from '../../../services/scheduling-code-types.service';
-import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
-import { LoggedUserInfo } from 'src/app/core/models/logged-user-info.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 
@@ -40,7 +39,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   spinner = 'modalSpinner';
 
   schedulingCodeForm: FormGroup;
-  schedulingIcons: SchedulingIcon[] = [];
+  schedulingIcons: KeyValue[] = [];
   codeList: SchedulingCodeType[] = [];
 
   getSchedulingCodeTypesSubscription: ISubscription;
@@ -50,7 +49,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   subscriptionList: ISubscription[] = [];
 
   @Input() operation: ComponentOperation;
-  @Input() schedulingCodeData: SchedulingCodeDetails;
+  @Input() schedulingCodeData: SchedulingCode;
   @Input() translationValues: Translation[];
 
   constructor(
@@ -68,7 +67,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
     this.getSchedulingCodeTypes();
     this.getSchedulingCodeIcons();
     this.createSchedulingCodeForm();
-    this.loadExistingSchedulingCodeDetails();
+    this.loadSchedulingCodeDetails();
   }
 
   ngOnDestroy() {
@@ -84,11 +83,11 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   }
 
   hasValueSelected(value) {
-    const codeTypes: FormArray = this.schedulingCodeForm.get('codeTypes') as FormArray;
-    return codeTypes.controls.findIndex(x => x.value === value) !== -1;
+    const schedulingTypeCode: FormArray = this.schedulingCodeForm.get('schedulingTypeCode') as FormArray;
+    return schedulingTypeCode.controls.findIndex(x => x.value === value) !== -1;
   }
 
-  onIconSelect(icon: SchedulingIcon) {
+  onIconSelect(icon: KeyValue) {
     this.iconId = icon.value;
     this.schedulingCodeForm.controls.iconId.setValue(icon.id);
   }
@@ -117,14 +116,14 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   }
 
   onCheckboxChange(e) {
-    const codeTypes: FormArray = this.schedulingCodeForm.get('codeTypes') as FormArray;
+    const schedulingTypeCode: FormArray = this.schedulingCodeForm.get('schedulingTypeCode') as FormArray;
     if (e.target.checked) {
-      codeTypes.push(new FormControl(Number(e.target.value)));
+      schedulingTypeCode.push(new FormControl(Number(e.target.value)));
     } else {
       let i = 0;
-      codeTypes.controls.forEach((item: FormControl) => {
+      schedulingTypeCode.controls.forEach((item: FormControl) => {
         if (item.value === Number(e.target.value)) {
-          codeTypes.removeAt(i);
+          schedulingTypeCode.removeAt(i);
           return;
         }
         i++;
@@ -141,6 +140,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
 
   private addSchedulingCodeDetails() {
     const addSchedulingCodeModel = this.schedulingCodeForm.value as AddSchedulingCode;
+    addSchedulingCodeModel.schedulingTypeCode = this.getCodeTypes();
     addSchedulingCodeModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
 
     this.spinnerService.show(this.spinner, SpinnerOptions);
@@ -165,6 +165,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
       const updateSchedulingCodeModel = this.schedulingCodeForm.value as UpdateSchedulingCode;
+      updateSchedulingCodeModel.schedulingTypeCode = this.getCodeTypes();
       updateSchedulingCodeModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
 
       this.updateSchedulingCodeSubscription = this.schedulingCodeService.updateSchedulingCode
@@ -187,28 +188,40 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadExistingSchedulingCodeDetails() {
+  private loadSchedulingCodeDetails() {
     if (this.operation === ComponentOperation.Edit) {
       this.schedulingCodeForm.patchValue({
         description: this.schedulingCodeData.description,
         priorityNumber: this.schedulingCodeData.priorityNumber,
         iconId: this.schedulingCodeData.icon.id
       });
-      this.setCodeValue();
+      this.setCodeTypes();
       this.iconId = this.schedulingCodeData.icon.value;
     }
   }
 
-  private setCodeValue() {
-    const array = this.schedulingCodeForm.controls.codeTypes as FormArray;
+  private setCodeTypes() {
+    const array = this.schedulingCodeForm.controls.schedulingTypeCode as FormArray;
     this.schedulingCodeData.schedulingTypeCode.forEach(ele => array.push(new FormControl(ele.id)));
 
     return array;
   }
 
+  private getCodeTypes(): Array<SchedulingCodeType> {
+    const codeTypes = new Array<SchedulingCodeType>();
+    const schedulingTypeCode = this.schedulingCodeForm.controls.schedulingTypeCode as FormArray;
+    schedulingTypeCode.value?.forEach(value => {
+      const codeType = new SchedulingCodeType();
+      codeType.schedulingCodeTypeId = value;
+      codeTypes.push(codeType);
+    });
+
+    return codeTypes;
+  }
+
   private hasSchedulingCodeDetailsMismatch() {
     for (const propertyName in this.schedulingCodeForm.value) {
-      if (propertyName !== 'codeTypes' && propertyName !== 'iconId') {
+      if (propertyName !== 'schedulingTypeCode' && propertyName !== 'iconId') {
         if (this.schedulingCodeForm.value[propertyName] !== this.schedulingCodeData[propertyName]) {
           return true;
         }
@@ -218,7 +231,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
         }
       } else {
         for (const index in this.codeList) {
-          if (this.schedulingCodeData?.schedulingTypeCode[index]?.id !== this.schedulingCodeForm.controls.codeTypes.value[index]) {
+          if (this.schedulingCodeData?.schedulingTypeCode[index]?.id !== this.schedulingCodeForm.controls.schedulingTypeCode.value[index]) {
             return true;
           }
         }
@@ -279,7 +292,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
       priorityNumber: new FormControl('', Validators.compose([
         Validators.required,
         Validators.maxLength(10)])),
-      codeTypes: this.formBuilder.array([], Validators.required),
+      schedulingTypeCode: this.formBuilder.array([], Validators.required),
       iconId: new FormControl('', Validators.required),
     });
   }

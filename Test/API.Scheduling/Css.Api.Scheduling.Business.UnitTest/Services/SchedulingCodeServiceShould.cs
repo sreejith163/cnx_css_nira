@@ -2,7 +2,6 @@
 using Xunit;
 using System.Net;
 using AutoMapper;
-using Css.Api.Core.Utilities;
 using Css.Api.Core.Models.Domain;
 using System.Collections.Generic;
 using Css.Api.Scheduling.Repository;
@@ -11,11 +10,8 @@ using Css.Api.Scheduling.Repository.Interfaces;
 using Css.Api.Scheduling.Business.UnitTest.Mock;
 using Css.Api.Scheduling.Models.Profiles.SchedulingCode;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
-using Css.Api.Scheduling.Models.DTO.Response.Client;
 using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
-using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
 using Microsoft.AspNetCore.Http;
-using Css.Api.Scheduling.Models.Domain;
 
 namespace Css.Api.Scheduling.Business.UnitTest.Services
 {
@@ -48,22 +44,13 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             mapper = new Mapper(mapperConfig);
 
-            var clientSortHelper = new SortHelper<Client>();
-            var clientLObGroupSortHelper = new SortHelper<ClientLobGroup>();
-            var clientSchedulingCodeSortHelper = new SortHelper<SchedulingCode>();
-
-            var clientDataShaperHelper = new DataShaper<ClientDTO>();
-            var clientLObGroupDataShaperHelper = new DataShaper<ClientLOBGroupDTO>();
-            var clientSchedulingCodeDataShaperHelper = new DataShaper<SchedulingCodeDTO>();
-
             var context = new DefaultHttpContext();
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
             var mockSchedulingContext = new MockDataContext().IntializeMockData();
 
-            repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper, clientSortHelper, clientLObGroupSortHelper, clientSchedulingCodeSortHelper,
-                                                      clientDataShaperHelper, clientLObGroupDataShaperHelper, clientSchedulingCodeDataShaperHelper);
+            repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper);
 
             schedulingCodeService = new SchedulingCodeService(repositoryWrapper, mockHttContext.Object, mapper);
         }
@@ -134,7 +121,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             CreateSchedulingCode schedulingCode = new CreateSchedulingCode()
             {
                 RefId = 4,
-                CodeTypes = new List<int>(),
+                SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 PriorityNumber = 4,
                 CreatedBy = "admin",
                 Description = "test1",
@@ -157,7 +144,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             CreateSchedulingCode schedulingCode = new CreateSchedulingCode()
             {
                 RefId = 4,
-                CodeTypes = new List<int>(),
+                SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 PriorityNumber = 4,
                 CreatedBy = "admin",
                 Description = "test",
@@ -189,7 +176,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 PriorityNumber = 4,
                 Description = "test",
                 IconId = 2,
-                CodeTypes = new List<int>(),
+                SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 ModifiedBy = "admin"
             };
             var result = await schedulingCodeService.UpdateSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId }, schedulingCode);
@@ -212,7 +199,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 PriorityNumber = 4,
                 Description = "test2",
                 IconId = 2,
-                CodeTypes = new List<int>(),
+                SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 ModifiedBy = "admin"
             };
             var result = await schedulingCodeService.UpdateSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId }, schedulingCode);
@@ -235,7 +222,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 PriorityNumber = 4,
                 Description = "test",
                 IconId = 2,
-                CodeTypes = new List<int>(),
+                SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 ModifiedBy = "admin"
             };
             var result = await schedulingCodeService.UpdateSchedulingCode(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeId }, schedulingCode);

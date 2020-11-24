@@ -15,9 +15,9 @@ namespace Css.Api.Scheduling.Models.DTO.Request.SchedulingCode
         public int PriorityNumber { get; set; }
 
         /// <summary>
-        /// Gets or sets the code types.
+        /// Gets or sets the scheduling type code.
         /// </summary>
-        public List<int> CodeTypes { get; set; }
+        public List<SchedulingCodeTypes> SchedulingTypeCode { get; set; }
 
         /// <summary>
         /// Gets or sets the icon.

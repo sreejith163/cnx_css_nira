@@ -6,7 +6,7 @@ import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
 import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
 import { environment } from 'src/environments/environment';
 import { AddSchedulingCode } from '../models/add-scheduling-code.model';
-import { SchedulingCodeDetails } from '../models/scheduling-code-details.model';
+import { SchedulingCode } from '../models/scheduling-code.model';
 import { UpdateSchedulingCode } from '../models/update-scheduling-code.mode';
 
 @Injectable()
@@ -24,14 +24,14 @@ export class SchedulingCodeService extends HttpBaseService {
   getSchedulingCodes(schedulingCodeQueryParams: QueryStringParameters) {
     const url = `${this.baseURL}/schedulingCodes`;
 
-    return this.http.get<SchedulingCodeDetails>(url, { params: this.convertToHttpParam(schedulingCodeQueryParams), observe: 'response' })
+    return this.http.get<SchedulingCode>(url, { params: this.convertToHttpParam(schedulingCodeQueryParams), observe: 'response' })
       .pipe(catchError(this.handleError));
   }
 
   getSchedulingCode(schedulingCodeId: number) {
     const url = `${this.baseURL}/schedulingCodes/${schedulingCodeId}`;
 
-    return this.http.get<SchedulingCodeDetails>(url)
+    return this.http.get<SchedulingCode>(url)
       .pipe(catchError(this.handleError));
   }
 

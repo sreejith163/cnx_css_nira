@@ -5,8 +5,15 @@ namespace Css.Api.Scheduling.Models.Domain
 {
     public partial class OperationHourOpenType
     {
+        public OperationHourOpenType()
+        {
+            OperationHour = new HashSet<OperationHour>();
+        }
+
         public int Id { get; set; }
         public string Value { get; set; }
         public string Description { get; set; }
+
+        public virtual ICollection<OperationHour> OperationHour { get; set; }
     }
 }

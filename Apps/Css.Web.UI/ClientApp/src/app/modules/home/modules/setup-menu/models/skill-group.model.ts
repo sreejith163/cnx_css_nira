@@ -3,6 +3,8 @@ import { WeekDay } from '@angular/common';
 export class SkillGroupDetails {
     id: number;
     refId: number;
+    clientId: number;
+    clientLobGroupId: number;
     skillGroupName: string;
     clientName: string;
     clientLOBGroupName: string;

@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using Css.Api.Core.Utilities.Interfaces;
 using Css.Api.Scheduling.Business.UnitTest.Mock;
 using Css.Api.Scheduling.Models.Domain;
-using Css.Api.Scheduling.Models.DTO.Response.Client;
-using Css.Api.Scheduling.Models.DTO.Response.ClientLOBGroup;
-using Css.Api.Scheduling.Models.DTO.Response.SchedulingCode;
 using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -51,45 +47,33 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         private ISchedulingCodeTypeRepository _schedulingCodeTypesRepository { get; set; }
 
+        /// <summary>
+        /// Gets the skill groups repository.
+        /// </summary>
+        private ISkillGroupRepository _skillGroupsRepository { get; set; }
 
-        /// <summary>Gets or sets the timezone repository.</summary>
-        /// <value>The timezone repository.</value>
+        /// <summary>
+        /// Gets or sets the skill tags repository.
+        /// </summary>
+        private ISkillTagRepository _skillTagsRepository { get; set; }
+
+        /// <summary>
+        /// Gets the operation hours repository.
+        /// </summary>
+        private IOperationHourRepository _operationHoursRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the timezone repository.
+        /// </summary>
+        /// <value>
+        /// The timezone repository.
+        /// </value>
         private ITimezoneRepository _timezoneRepository { get; set; }
 
         /// <summary>
         /// Gets or sets the scheduling type codes repository.
         /// </summary>
         private ISchedulingTypeCodeRepository _schedulingTypeCodesRepository { get; set; }
-
-        /// <summary>
-        /// The clients sort helper
-        /// </summary>
-        private readonly ISortHelper<Client> _clientsSortHelper;
-
-        /// <summary>
-        /// The client lob groups sort helper
-        /// </summary>
-        private readonly ISortHelper<ClientLobGroup> _clientLOBGroupsSortHelper;
-
-        /// <summary>
-        /// The scheduling codes sort helper
-        /// </summary>
-        private readonly ISortHelper<SchedulingCode> _schedulingCodesSortHelper;
-
-        /// <summary>
-        /// The clients data shaper
-        /// </summary>
-        private readonly IDataShaper<ClientDTO> _clientsDataShaper;
-
-        /// <summary>
-        /// The client lob groups data shaper
-        /// </summary>
-        private readonly IDataShaper<ClientLOBGroupDTO> _clientLOBGroupsDataShaper;
-
-        /// <summary>
-        /// The scheduling codes data shaper
-        /// </summary>
-        private readonly IDataShaper<SchedulingCodeDTO> _schedulingCodesDataShaper;
 
         /// <summary>
         /// Gets the clients.
@@ -108,7 +92,7 @@ namespace Css.Api.Scheduling.Repository
 
                     _repositoryContext.Setup(x => x.Set<Client>()).Returns(mockClient.Object);
 
-                    _clientRepository = new ClientRepository(_repositoryContext.Object, _mapper, _clientsSortHelper, _clientsDataShaper);
+                    _clientRepository = new ClientRepository(_repositoryContext.Object, _mapper);
                 }
                 return _clientRepository;
             }
@@ -131,7 +115,7 @@ namespace Css.Api.Scheduling.Repository
 
                     _repositoryContext.Setup(x => x.Set<ClientLobGroup>()).Returns(mockClientLobGroup.Object);
 
-                    _clientLOBGroupRepository = new ClientLOBGroupRepository(_repositoryContext.Object, _mapper, _clientLOBGroupsSortHelper, _clientLOBGroupsDataShaper);
+                    _clientLOBGroupRepository = new ClientLOBGroupRepository(_repositoryContext.Object, _mapper);
                 }
                 return _clientLOBGroupRepository;
             }
@@ -154,7 +138,7 @@ namespace Css.Api.Scheduling.Repository
 
                     _repositoryContext.Setup(x => x.Set<SchedulingCode>()).Returns(mockSchedulingCode.Object);
 
-                    _schedulingCodesRepository = new SchedulingCodeRepository(_repositoryContext.Object, _mapper, _schedulingCodesSortHelper, _schedulingCodesDataShaper);
+                    _schedulingCodesRepository = new SchedulingCodeRepository(_repositoryContext.Object, _mapper);
                 }
                 return _schedulingCodesRepository;
             }
@@ -203,6 +187,74 @@ namespace Css.Api.Scheduling.Repository
                     _schedulingCodeTypesRepository = new SchedulingCodeTypeRepository(_repositoryContext.Object, _mapper);
                 }
                 return _schedulingCodeTypesRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the skill groups.
+        /// </summary>
+        /// <value>
+        /// The skill groups.
+        /// </value>
+        public ISkillGroupRepository SkillGroups
+        {
+            get
+            {
+                if (_skillGroupsRepository == null)
+                {
+                    var mockSkillGroup = new Mock<DbSet<SkillGroup>>();
+                    mockSkillGroup.As<IQueryable<SkillGroup>>().Setup(m => m.Provider).Returns(new MockDataContext().skillGroupsDB.Provider);
+                    mockSkillGroup.As<IQueryable<SkillGroup>>().Setup(m => m.Expression).Returns(new MockDataContext().skillGroupsDB.Expression);
+                    mockSkillGroup.As<IQueryable<SkillGroup>>().Setup(m => m.ElementType).Returns(new MockDataContext().skillGroupsDB.ElementType);
+                    mockSkillGroup.As<IQueryable<SkillGroup>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().skillGroupsDB.GetEnumerator());
+
+                    _repositoryContext.Setup(x => x.Set<SkillGroup>()).Returns(mockSkillGroup.Object);
+
+                    _skillGroupsRepository = new SkillGroupRepository(_repositoryContext.Object, _mapper);
+                }
+                return _skillGroupsRepository;
+            }
+        }
+
+        public ISkillTagRepository SkillTags
+        {
+            get
+            {
+                if (_skillTagsRepository == null)
+                {
+                    var mockSkillTag = new Mock<DbSet<SkillTag>>();
+                    mockSkillTag.As<IQueryable<SkillTag>>().Setup(m => m.Provider).Returns(new MockDataContext().skillTagsDB.Provider);
+                    mockSkillTag.As<IQueryable<SkillTag>>().Setup(m => m.Expression).Returns(new MockDataContext().skillTagsDB.Expression);
+                    mockSkillTag.As<IQueryable<SkillTag>>().Setup(m => m.ElementType).Returns(new MockDataContext().skillTagsDB.ElementType);
+                    mockSkillTag.As<IQueryable<SkillTag>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().skillTagsDB.GetEnumerator());
+
+                    _repositoryContext.Setup(x => x.Set<SkillTag>()).Returns(mockSkillTag.Object);
+
+                    _skillTagsRepository = new SkillTagRepository(_repositoryContext.Object, _mapper);
+                }
+                return _skillTagsRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the operation hours.
+        /// </summary>
+        /// <value>
+        /// The operation hours.
+        /// </value>
+        public IOperationHourRepository OperationHours
+        {
+            get
+            {
+                if (_operationHoursRepository == null)
+                {
+                    var mockSchedulingCodeTypes = new Mock<DbSet<SchedulingCodeType>>();
+                    
+                    _repositoryContext.Setup(x => x.Set<SchedulingCodeType>()).Returns(mockSchedulingCodeTypes.Object);
+
+                    _operationHoursRepository = new OperationHourRepository(_repositoryContext.Object);
+                }
+                return _operationHoursRepository;
             }
         }
 
@@ -256,30 +308,12 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="repositoryContext">The repository context.</param>
         /// <param name="mapper">The mapper.</param>
-        /// <param name="clientsSortHelper">The clients sort helper.</param>
-        /// <param name="clientLOBGroupsSortHelper">The client lob groups sort helper.</param>
-        /// <param name="schedulingCodesSortHelper">The scheduling codes sort helper.</param>
-        /// <param name="clientsDataShaper">The clients data shaper.</param>
-        /// <param name="clientLobGroupsDataShaper">The client lob groups data shaper.</param>
-        /// <param name="schedulingCodesDataShaper">The scheduling codes data shaper.</param>
         public MockRepositoryWrapper(
             Mock<SchedulingContext> repositoryContext,
-            IMapper mapper,
-            ISortHelper<Client> clientsSortHelper,
-            ISortHelper<ClientLobGroup> clientLOBGroupsSortHelper,
-            ISortHelper<SchedulingCode> schedulingCodesSortHelper,
-            IDataShaper<ClientDTO> clientsDataShaper,
-            IDataShaper<ClientLOBGroupDTO> clientLobGroupsDataShaper,
-            IDataShaper<SchedulingCodeDTO> schedulingCodesDataShaper)
+            IMapper mapper)
         {
             _repositoryContext = repositoryContext;
             _mapper = mapper;
-            _clientsSortHelper = clientsSortHelper;
-            _clientLOBGroupsSortHelper = clientLOBGroupsSortHelper;
-            _schedulingCodesSortHelper = schedulingCodesSortHelper;
-            _clientsDataShaper = clientsDataShaper;
-            _clientLOBGroupsDataShaper = clientLobGroupsDataShaper;
-            _schedulingCodesDataShaper = schedulingCodesDataShaper;
         }
 
         /// <summary>

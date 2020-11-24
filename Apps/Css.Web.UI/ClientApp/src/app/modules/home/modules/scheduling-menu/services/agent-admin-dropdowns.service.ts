@@ -1,18 +1,27 @@
 import { Injectable } from '@angular/core';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
-import { EmployeeId} from '../models/employee-id.model';
-import { AgentSchedulingGroupName } from '../models/agent-scheduling-group-name.model';
+import { EmployeeId } from '../models/employee-id.model';
+import { ClientLOBGroup } from '../models/client-lob-group.model';
+import { ClientNameList } from '../models/client-name-list.model';
+import { SkillGroup } from '../models/skill-group.model';
+import { SkillTag } from '../models/skill-tag.model';
 
 @Injectable()
 export class AgentAdminDropdownsService {
 
-  agentSchedulingGroupNames: AgentSchedulingGroupName[] = [];
+  clientNames: ClientNameList[] = [];
+  clientLOB: ClientLOBGroup[] = [];
+  skillGroup: SkillGroup[] = [];
+  skillTag: SkillTag[] = [];
   employeeIdList: EmployeeId[] = [];
 
   constructor() {
-    this.createAgentSchedulingGroupNamesList();
+    this.createClientLOBGroupList();
+    this.createClientNameList();
+    this.createSkillGroup();
+    this.createSkillTag();
     this.createEmployeeIdList();
-   }
+  }
 
   createEmployeeIdList() {
     for (let i = 1; i <= 10; i++) {
@@ -22,22 +31,64 @@ export class AgentAdminDropdownsService {
     }
   }
 
-   getEmployeeIdList() {
-     return this.employeeIdList;
-   }
+  getEmployeeIdList() {
+    return this.employeeIdList;
+  }
 
-  createAgentSchedulingGroupNamesList() {
+  createClientNameList() {
     for (let i = 1; i <= 9; i++) {
-      const agentSchedulingGroup = new AgentSchedulingGroupName();
-      agentSchedulingGroup.id = i;
-      agentSchedulingGroup.agentSchedulingGroupName = 'Agent Scheduling Group ' + i;
+      const client = new ClientNameList();
+      client.id = i;
+      client.clientName = 'Client ' + i;
 
-      this.agentSchedulingGroupNames.push(agentSchedulingGroup);
+      this.clientNames.push(client);
     }
   }
 
-  getAgentSchedulingGroupNames() {
-    return this.agentSchedulingGroupNames;
+  getClientNameList() {
+    return this.clientNames;
+  }
+
+  createClientLOBGroupList() {
+    for (let i = 1; i <= 9; i++) {
+      const clientLOB = new ClientLOBGroup();
+      clientLOB.id = i;
+      clientLOB.clientLOBGroup = 'ClientLOBGroup ' + i;
+
+      this.clientLOB.push(clientLOB);
+    }
+  }
+
+  getClientLOBGroupList() {
+    return this.clientLOB;
+  }
+
+  createSkillGroup() {
+    for (let i = 1; i <= 9; i++) {
+      const skillGroup = new SkillGroup();
+      skillGroup.id = i;
+      skillGroup.skillGroup = 'Skill Group ' + i;
+
+      this.skillGroup.push(skillGroup);
+    }
+  }
+
+  getSkillGroup() {
+    return this.skillGroup;
+  }
+
+  createSkillTag() {
+    for (let i = 1; i <= 9; i++) {
+      const skillTag = new SkillTag();
+      skillTag.id = i;
+      skillTag.skillTag = 'Skill Tag ' + i;
+
+      this.skillTag.push(skillTag);
+    }
+  }
+
+  getSkillTag() {
+    return this.skillTag;
   }
 
   getTablePageSizeList() {
@@ -57,7 +108,5 @@ export class AgentAdminDropdownsService {
     ];
 
     return tablePageSize;
-
   }
-
 }

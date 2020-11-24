@@ -87,10 +87,6 @@ namespace Css.Api.Scheduling.Business
             }
 
             var schedulingCodeRequest = _mapper.Map<SchedulingCode>(schedulingCodeDetails);
-            foreach (var codeType in schedulingCodeDetails?.CodeTypes)
-            {
-                schedulingCodeRequest.SchedulingTypeCode.Add(new SchedulingTypeCode { SchedulingCodeTypeId = codeType });
-            }
 
             _repository.SchedulingCodes.CreateSchedulingCode(schedulingCodeRequest);
 
@@ -119,15 +115,9 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' already exists.", HttpStatusCode.Conflict);
             }
 
-            var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);
-
             _repository.SchedulingTypeCodes.RemoveSchedulingTypeCodes(schedulingCode.SchedulingTypeCode.ToList());
 
-
-            foreach (var codeType in schedulingCodeDetails?.CodeTypes)
-            {
-                schedulingCodeRequest.SchedulingTypeCode.Add(new SchedulingTypeCode { SchedulingCodeTypeId = codeType });
-            }
+            var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);
 
             _repository.SchedulingCodes.UpdateSchedulingCode(schedulingCodeRequest);
 

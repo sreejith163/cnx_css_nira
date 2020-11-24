@@ -1,4 +1,3 @@
 export class SchedulingCodeType {
-    id: number;
-    value: string;
+    schedulingCodeTypeId: number;
 }

@@ -1,0 +1,33 @@
+﻿using Css.Api.SetupMenu.Models.DTO.Request.SkillGroup;
+using Css.Api.SetupMenu.Models.DTO.Response.SkillGroup;
+using System;
+
+namespace Css.Api.SetupMenu.Models.Profiles.SkillGroup
+{
+    public class SkillGroupProfile : AutoMapper.Profile
+    {
+        /// <summary>Initializes a new instance of the <see cref="SkillGroupProfile" /> class.</summary>
+        public SkillGroupProfile()
+        {
+            CreateMap<CreateSkillGroup, Domain.SkillGroup>()
+                .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
+                .ReverseMap();
+
+            CreateMap<UpdateSkillGroup, Domain.SkillGroup>()
+                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
+                .ReverseMap();
+
+            CreateMap<Domain.SkillGroup, SkillGroupDTO>()
+                .ForMember(x => x.ClientName, opt => opt.MapFrom(o => o.Client != null ? o.Client.Name : ""))
+                .ForMember(x => x.ClientLobGroupName, opt => opt.MapFrom(o => o.ClientLobGroup != null ? o.ClientLobGroup.Name : ""))
+                .ForMember(x => x.TimezoneLabel, opt => opt.MapFrom(o => o.Timezone != null ? o.Timezone.Name : ""))
+                .ReverseMap();
+
+            CreateMap<Domain.SkillGroup, SkillGroupDetailsDTO>()
+               .ForMember(x => x.ClientName, opt => opt.MapFrom(o => o.Client != null ? o.Client.Name : ""))
+               .ForMember(x => x.ClientLobGroupName, opt => opt.MapFrom(o => o.ClientLobGroup != null ? o.ClientLobGroup.Name : ""))
+               .ForMember(x => x.TimezoneLabel, opt => opt.MapFrom(o => o.Timezone != null ? o.Timezone.Name : ""))
+               .ReverseMap();
+        }
+    }
+}
