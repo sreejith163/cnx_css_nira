@@ -14,7 +14,7 @@ export class TranslationService extends HttpBaseService {
     private http: HttpClient
   ) {
     super();
-    this.baseURL = environment.services.schedulingService;
+    this.baseURL = environment.services.adminService;
   }
 
   getMenuTranslations(menuId: number, languageId: number) {

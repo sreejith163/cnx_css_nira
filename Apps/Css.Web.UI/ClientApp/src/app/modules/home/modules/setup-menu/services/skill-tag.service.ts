@@ -19,7 +19,7 @@ export class SkillTagService extends HttpBaseService {
     private http: HttpClient
   ) {
     super();
-    this.baseURL = environment.services.schedulingService;
+    this.baseURL = environment.services.setupService;
   }
 
   getSkillTags(skillTagsQueryParams: SkillTagQueryParams) {

@@ -20,7 +20,7 @@ export class SkillGroupService extends HttpBaseService {
     private http: HttpClient
   ) {
     super();
-    this.baseURL = environment.services.schedulingService;
+    this.baseURL = environment.services.setupService;
   }
 
   getSkillGroups(skillGroupQueryParameters: SkillGroupQueryParameters) {
