@@ -1,0 +1,466 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Css.Api.Setup</name>
+    </assembly>
+    <members>
+        <member name="T:Css.Api.SetupMenu.Controllers.ClientLOBGroupsController">
+            <summary>Controller for handling Client LOB group resource</summary>
+        </member>
+        <member name="F:Css.Api.SetupMenu.Controllers.ClientLOBGroupsController._clientLOBGroupService">
+            <summary>The client lob group service</summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientLOBGroupsController.#ctor(Css.Api.SetupMenu.Business.Interfaces.IClientLOBGroupService)">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Controllers.ClientLOBGroupsController" /> class.</summary>
+            <param name="clientLOBGroupService">The client lob group service.</param>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientLOBGroupsController.GetClientLOBGroups(Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup.ClientLOBGroupQueryParameter)">
+            <summary>Gets the client lob groups.</summary>
+            <param name="clientLOBQueryParameters">The client lob query parameters.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientLOBGroupsController.GetClientLOBGroup(System.Int32)">
+            <summary>Gets the client lob group.</summary>
+            <param name="clientLOBGroupId">The client lob group identifier.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientLOBGroupsController.CreateClientLOBGroup(Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup.CreateClientLOBGroup)">
+            <summary>Creates the client lob group.</summary>
+            <param name="clientLOBGroupDetails">The client lob group details.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientLOBGroupsController.UpdateClientLOBGroup(System.Int32,Css.Api.SetupMenu.Models.DTO.Request.ClientLOBGroup.UpdateClientLOBGroup)">
+            <summary>Updates the client lob group.</summary>
+            <param name="clientLOBGroupId">The client lob group identifier.</param>
+            <param name="clientLOBGroupDetails">The client lob group details.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientLOBGroupsController.DeleteClientLOBGroup(System.Int32)">
+            <summary>Deletes the client lob group.</summary>
+            <param name="clientLOBGroupId">The client lob group identifier.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Controllers.ClientsController">
+            <summary>
+            Controller for handling the client resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.SetupMenu.Controllers.ClientsController._clientService">
+            <summary>
+            The client service
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientsController.#ctor(Css.Api.SetupMenu.Business.Interfaces.IClientService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Controllers.ClientsController"/> class.
+            </summary>
+            <param name="clientService">The client service.</param>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientsController.GetClients(Css.Api.SetupMenu.Models.DTO.Request.Client.ClientQueryParameters)">
+            <summary>
+            Gets the clients.
+            </summary>
+            <param name="clientParameters">The client parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientsController.GetClient(System.Int32)">
+            <summary>
+            Gets the client.
+            </summary>
+            <param name="clientId">The client identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientsController.CreateClient(Css.Api.SetupMenu.Models.DTO.Request.Client.CreateClient)">
+            <summary>
+            Creates the client.
+            </summary>
+            <param name="clientDetails">The client details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientsController.UpdateClient(System.Int32,Css.Api.SetupMenu.Models.DTO.Request.Client.UpdateClient)">
+            <summary>
+            Updates the client.
+            </summary>
+            <param name="clientId">The client identifier.</param>
+            <param name="clientDetails">The client details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.ClientsController.DeleteClient(System.Int32)">
+            <summary>
+            Updates the client.
+            </summary>
+            <param name="clientId">The client identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Controllers.SkillGroupsController">
+            <summary>Controller for handling skill group related routings</summary>
+        </member>
+        <member name="F:Css.Api.SetupMenu.Controllers.SkillGroupsController._skillGroupService">
+            <summary>The skill group service</summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillGroupsController.#ctor(Css.Api.SetupMenu.Business.Interfaces.ISkillGroupService)">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Controllers.SkillGroupsController" /> class.</summary>
+            <param name="skillGroupService">The skill group service.</param>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillGroupsController.GetSkillGroups(Css.Api.SetupMenu.Models.DTO.Request.SkillGroup.SkillGroupQueryParameter)">
+            <summary>Gets the skill groups.</summary>
+            <param name="skillQueryParameters">The skill query parameters.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillGroupsController.GetSkillGroup(System.Int32)">
+            <summary>Gets the skill group.</summary>
+            <param name="skillGroupId">The skill group identifier.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillGroupsController.CreateSkillGroup(Css.Api.SetupMenu.Models.DTO.Request.SkillGroup.CreateSkillGroup)">
+            <summary>Creates the skill group.</summary>
+            <param name="skillGroupDetails">The skill group details.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillGroupsController.UpdateSkillGroup(System.Int32,Css.Api.SetupMenu.Models.DTO.Request.SkillGroup.UpdateSkillGroup)">
+            <summary>Updates the skill group.</summary>
+            <param name="skillGroupId">The skill group identifier.</param>
+            <param name="skillGroupDetails">The skill group details.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillGroupsController.DeleteSkillGroup(System.Int32)">
+            <summary>Deletes the skill group.</summary>
+            <param name="skillGroupId">The skill group identifier.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Controllers.SkillTagsController">
+            <summary>Controller for handling Skill Tags resource</summary>
+        </member>
+        <member name="F:Css.Api.SetupMenu.Controllers.SkillTagsController._skillTagService">
+            <summary>The skill tag service</summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillTagsController.#ctor(Css.Api.SetupMenu.Business.Interfaces.ISkillTagService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Controllers.SkillTagsController"/> class.
+            </summary>
+            <param name="skillTagService">The skill tag service.</param>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillTagsController.GetSkillTags(Css.Api.SetupMenu.Models.DTO.Request.SkillTag.SkillTagQueryParameter)">
+            <summary>
+            Gets the skill tags.
+            </summary>
+            <param name="skillTagQueryParameter">The skill tag query parameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillTagsController.GetSkillTag(System.Int32)">
+            <summary>
+            Gets the skill tag.
+            </summary>
+            <param name="skillTagId">The skill tag identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillTagsController.CreateSkillTag(Css.Api.SetupMenu.Models.DTO.Request.SkillTag.CreateSkillTag)">
+            <summary>
+            Creates the skill tag.
+            </summary>
+            <param name="skillTagDetails">The skill tag details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillTagsController.UpdateSkillTag(System.Int32,Css.Api.SetupMenu.Models.DTO.Request.SkillTag.UpdateSkillTag)">
+            <summary>
+            Updates the skill tag.
+            </summary>
+            <param name="skillTagId">The skill tag identifier.</param>
+            <param name="skillTagDetails">The skill tag details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.SkillTagsController.DeleteSkillTag(System.Int32)">
+            <summary>
+            Deletes the skill tag.
+            </summary>
+            <param name="skillTagId">The skill tag identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Controllers.TimeZonesController">
+            <summary>
+            Controller for handling the Time zones resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.SetupMenu.Controllers.TimeZonesController._timezoneService">
+            <summary>The timezone service</summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.TimeZonesController.#ctor(Css.Api.SetupMenu.Business.Interfaces.ITimezoneService)">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Controllers.TimeZonesController" /> class.</summary>
+            <param name="timezoneService">The timezone service.</param>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Controllers.TimeZonesController.GetTimeZones">
+            <summary>Gets the time zones.</summary>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Extensions.CustomMVCConfigurationExtension">
+            <summary>
+            Extension for adding the mvc configuration
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Extensions.CustomMVCConfigurationExtension.AddMVCConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds the swagger configuration.
+            </summary>
+            <param name="services">The services.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Extensions.DBContextExtension">
+            <summary>
+            Extension for adding the DB Context
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Extensions.DBContextExtension.AddDBContextConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Adds the database context configuration.
+            </summary>
+            <param name="services">The services.</param>
+            <param name="configuration">The configuration.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Extensions.ExceptionMiddlewareExtension">
+            <summary>
+            Extension for adding the exception middlware
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Extensions.ExceptionMiddlewareExtension.ConfigureExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,Serilog.ILogger)">
+            <summary>
+            Configures the exception handler.
+            </summary>
+            <param name="app">The application.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Extensions.ExceptionMiddlewareExtension.ConfigureCustomExceptionMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Configures the custom exception middleware.
+            </summary>
+            <param name="app">The application.</param>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Extensions.FluentValidationExtension">
+            <summary>
+            Extension for adding the fluent validation assemblies
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Extensions.FluentValidationExtension.AddFluentAbstractValidators(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds the fluent abstract validators.
+            </summary>
+            <param name="services">The services.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Extensions.HealthCheckExtension">
+            <summary>
+            Extension for adding health checks
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Extensions.HealthCheckExtension.AddHealthCheck(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds the health checks.
+            </summary>
+            <param name="services">The services.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Extensions.ServicesScopeExtension">
+            <summary>
+            Extension for adding service lide scopes
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Extensions.ServicesScopeExtension.AddServicesScope(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Adds the services scope.
+            </summary>
+            <param name="services">The services.</param>
+            <param name="HostingEnvironment">The hosting environment.</param>
+            <param name="configuration">The configuration.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Extensions.SwaggerConfigurationExtension">
+            <summary>
+            Extension for adding swagger documentation
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Extensions.SwaggerConfigurationExtension.AddSwaggerConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Creates the response compression.
+            </summary>
+            <param name="services">The services.</param>
+            <param name="configuration">The configuration.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Extensions.SwaggerConfigurationExtension.GetSwaggerSecurityScheme">
+            <summary>
+            Gets the swagger security scheme.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Filters.ValidationFilter">
+            <summary>
+            Filter for validating the DTO objects
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.Filters.IActionFilter" />
+        </member>
+        <member name="M:Css.Api.SetupMenu.Filters.ValidationFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            Called before the action executes, after model binding is complete.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext" />.</param>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Filters.ValidationFilter.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+            <summary>
+            Called after the action executes, before the action result.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext" />.</param>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Program">
+            <summary>
+            Program starts here
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Program.Main(System.String[])">
+            <summary>
+            Defines the entry point of the application.
+            </summary>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Creates the host builder.
+            </summary>
+            <param name="args">The arguments.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Startup">
+            <summary>
+            Base method for intilaizing the services and middlewares
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Startup"/> class.
+            </summary>
+            <param name="configuration">The configuration.</param>
+            <param name="hostingEnvironment">The hosting environment.</param>
+        </member>
+        <member name="P:Css.Api.SetupMenu.Startup.Configuration">
+            <summary>
+            Gets the configuration.
+            </summary>
+            <value>
+            The configuration.
+            </value>
+        </member>
+        <member name="P:Css.Api.SetupMenu.Startup.HostingEnvironment">
+            <summary>
+            Gets the hosting environment.
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures the services.
+            </summary>
+            <param name="services">The services.</param>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Configures the specified application.
+            </summary>
+            <param name="app">The application.</param>
+            <param name="env">The env.</param>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Validators.ClientLOBGroup.AddClientLOBGroupValidator">
+            <summary>Validator for handling the validation of add client lob group object</summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Validators.ClientLOBGroup.AddClientLOBGroupValidator.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Validators.ClientLOBGroup.AddClientLOBGroupValidator" /> class.</summary>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Validators.ClientLOBGroup.UpdateClientLOBGroupValidator">
+            <summary>Validator for handling the validation of update client lob group object</summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Validators.ClientLOBGroup.UpdateClientLOBGroupValidator.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Validators.ClientLOBGroup.UpdateClientLOBGroupValidator" /> class.</summary>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Validators.Client.AddClientValidator">
+            <summary>
+            Validator for handling the validation of add client object
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Validators.Client.AddClientValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Validators.Client.AddClientValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Validators.Client.UpdateClientValidator">
+            <summary>
+            Validator for handling the validation of update client object
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Validators.Client.UpdateClientValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Validators.Client.UpdateClientValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Validators.SkillGroup.AddSkillGroupValidator">
+            <summary>
+            Validator for handling the validation of add skill group object
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Validators.SkillGroup.AddSkillGroupValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Validators.SkillGroup.AddSkillGroupValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Validators.SkillGroup.UpdateSkillGroupValidator">
+            <summary>
+            Validator for handling the validation of update skill group object
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Validators.SkillGroup.UpdateSkillGroupValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Validators.SkillGroup.UpdateSkillGroupValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Validators.SkillTag.AddSkillTagValidator">
+            <summary>
+            Validator for handling the validation of add skill tag object
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Validators.SkillTag.AddSkillTagValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Validators.SkillTag.AddSkillTagValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.SetupMenu.Validators.SkillTag.UpdateSkillTagValidator">
+            <summary>
+            Validator for handling the validation of update skill tag object
+            </summary>
+        </member>
+        <member name="M:Css.Api.SetupMenu.Validators.SkillTag.UpdateSkillTagValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.SetupMenu.Validators.SkillTag.UpdateSkillTagValidator"/> class.
+            </summary>
+        </member>
+    </members>
+</doc>

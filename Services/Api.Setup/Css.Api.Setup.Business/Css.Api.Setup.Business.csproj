@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\API.Core\Css.Api.Core.Models\Css.Api.Core.Models.csproj" />
+    <ProjectReference Include="..\Css.Api.Setup.Models\Css.Api.Setup.Models.csproj" />
+    <ProjectReference Include="..\Css.Api.Setup.Repository\Css.Api.Setup.Repository.csproj" />
+  </ItemGroup>
+  
+</Project>

@@ -17,11 +17,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.Gateway", "API.Gateway"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.Identity", "API.Identity", "{2202C5CD-576F-493F-BD3C-628A3386928E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.AdminOps", "API.AdminOps", "{763ACC0A-2915-4711-AE58-18136556CBE7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.Admin", "API.Admin", "{763ACC0A-2915-4711-AE58-18136556CBE7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.Scheduling", "API.Scheduling", "{F2D95128-89A4-406D-943C-34924B8A90C0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.AdminOps", "API.AdminOps", "{D4F9C3A0-E8F3-4004-9762-32226E1714DC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.Admin", "API.Admin", "{D4F9C3A0-E8F3-4004-9762-32226E1714DC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.Scheduling", "API.Scheduling", "{A4704604-21B3-4A53-A068-C9427C50FCDE}"
 EndProject
@@ -33,13 +33,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Scheduling.Business
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Scheduling.Business.IntegrationTest", "Test\API.Scheduling\Css.Api.Scheduling.Business.IntegrationTest\Css.Api.Scheduling.Business.IntegrationTest.csproj", "{650BDC2A-66BE-4EFB-888C-34E42C10400B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.AdminOps.UnitTest", "Test\API.AdminOps\Css.Api.AdminOps.UnitTest\Css.Api.AdminOps.UnitTest.csproj", "{E429CDDD-2711-4D0D-BC0E-350B1D49EFA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Admin.UnitTest", "Test\API.Admin\Css.Api.Admin.UnitTest\Css.Api.Admin.UnitTest.csproj", "{E429CDDD-2711-4D0D-BC0E-350B1D49EFA0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.AdminOps.IntegrationTest", "Test\API.AdminOps\Css.Api.AdminOps.IntegrationTest\Css.Api.AdminOps.IntegrationTest.csproj", "{866778FF-6D0F-42C9-B452-07D3C7E6C8EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Admin.IntegrationTest", "Test\API.Admin\Css.Api.Admin.IntegrationTest\Css.Api.Admin.IntegrationTest.csproj", "{866778FF-6D0F-42C9-B452-07D3C7E6C8EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.AdminOps.Business.UnitTest", "Test\API.AdminOps\Css.Api.AdminOps.Business.UnitTest\Css.Api.AdminOps.Business.UnitTest.csproj", "{3648EEB7-5DEB-420A-BD91-5C456AD31E3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Admin.Business.UnitTest", "Test\API.Admin\Css.Api.Admin.Business.UnitTest\Css.Api.Admin.Business.UnitTest.csproj", "{3648EEB7-5DEB-420A-BD91-5C456AD31E3C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.AdminOps.Business.IntegrationTest", "Test\API.AdminOps\Css.Api.AdminOps.Business.IntegrationTest\Css.Api.AdminOps.Business.IntegrationTest.csproj", "{F258C3CD-90FD-4F47-9900-4A80C74690B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Admin.Business.IntegrationTest", "Test\API.Admin\Css.Api.Admin.Business.IntegrationTest\Css.Api.Admin.Business.IntegrationTest.csproj", "{F258C3CD-90FD-4F47-9900-4A80C74690B1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Core.DataAccess", "Services\API.Core\Css.Api.Core.DataAccess\Css.Api.Core.DataAccess.csproj", "{2118DF64-6560-4E69-9D18-4E2DA1A51AB1}"
 EndProject
@@ -57,13 +57,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Auth.Models", "Serv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Auth.Repository", "Services\API.Identity\Css.Api.Auth.Repository\Css.Api.Auth.Repository.csproj", "{C9C536C9-762E-469B-9362-7DF893D1CED2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.AdminOps", "Services\API.AdminOps\Css.Api.AdminOps\Css.Api.AdminOps.csproj", "{25AFB7B3-D929-4A80-AF1B-89BA651BB79C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Admin", "Services\API.Admin\Css.Api.Admin\Css.Api.Admin.csproj", "{25AFB7B3-D929-4A80-AF1B-89BA651BB79C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.AdminOps.Business", "Services\API.AdminOps\Css.Api.AdminOps.Business\Css.Api.AdminOps.Business.csproj", "{F3B85CB5-F642-440D-9D6B-F875FBFB3D97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Admin.Business", "Services\API.Admin\Css.Api.Admin.Business\Css.Api.Admin.Business.csproj", "{F3B85CB5-F642-440D-9D6B-F875FBFB3D97}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.AdminOps.Models", "Services\API.AdminOps\Css.Api.AdminOps.Models\Css.Api.AdminOps.Models.csproj", "{E776E85D-23C5-483D-AFA6-45F1176EDD6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Admin.Models", "Services\API.Admin\Css.Api.Admin.Models\Css.Api.Admin.Models.csproj", "{E776E85D-23C5-483D-AFA6-45F1176EDD6E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.AdminOps.Repository", "Services\API.AdminOps\Css.Api.AdminOps.Repository\Css.Api.AdminOps.Repository.csproj", "{BD5AB7F9-8ED5-4C3A-90A8-5504E8929279}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Admin.Repository", "Services\API.Admin\Css.Api.Admin.Repository\Css.Api.Admin.Repository.csproj", "{BD5AB7F9-8ED5-4C3A-90A8-5504E8929279}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Scheduling", "Services\API.Scheduling\Css.Api.Scheduling\Css.Api.Scheduling.csproj", "{DE73B812-7D42-4C1D-933B-54D08CFE4921}"
 EndProject
@@ -79,35 +79,45 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Core.Utilities", "Services\API.Core\Css.Api.Core.Utilities\Css.Api.Core.Utilities.csproj", "{E20A72DB-4B7A-45FC-BEE6-E8436A98B2A2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.SetupMenu", "API.SetupMenu", "{2E108AE1-C67A-4B31-8433-E49137B0CCD5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.Setup", "API.Setup", "{2E108AE1-C67A-4B31-8433-E49137B0CCD5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.SetupMenu", "Services\Api.SetupMenu\Css.Api.SetupMenu\Css.Api.SetupMenu.csproj", "{A761F37D-194F-4171-945C-367CB97E92F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Setup", "Services\Api.Setup\Css.Api.Setup\Css.Api.Setup.csproj", "{A761F37D-194F-4171-945C-367CB97E92F7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.SetupMenu.Models", "Services\Api.SetupMenu\Css.Api.SetupMenu.Models\Css.Api.SetupMenu.Models.csproj", "{C0DCA9A3-972B-4510-8E6E-28638D64E228}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Setup.Models", "Services\Api.Setup\Css.Api.Setup.Models\Css.Api.Setup.Models.csproj", "{C0DCA9A3-972B-4510-8E6E-28638D64E228}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.SetupMenu.Business", "Services\Api.SetupMenu\Css.Api.SetupMenu.Business\Css.Api.SetupMenu.Business.csproj", "{595F90DA-68A5-4E7A-998D-AC7AF288CC24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Setup.Business", "Services\Api.Setup\Css.Api.Setup.Business\Css.Api.Setup.Business.csproj", "{595F90DA-68A5-4E7A-998D-AC7AF288CC24}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.SetupMenu.Repository", "Services\Api.SetupMenu\Css.Api.SetupMenu.Repository\Css.Api.SetupMenu.Repository.csproj", "{122D2F9F-5655-48A8-9D14-98FF1F9FB6A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Setup.Repository", "Services\Api.Setup\Css.Api.Setup.Repository\Css.Api.Setup.Repository.csproj", "{122D2F9F-5655-48A8-9D14-98FF1F9FB6A4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.SetupMenu", "API.SetupMenu", "{AF770B10-114A-465E-9AB3-C5EAE57ECEA2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.Setup", "API.Setup", "{AF770B10-114A-465E-9AB3-C5EAE57ECEA2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.SetupMenu.Business.IntegrationTest", "Test\API.SetupMenu\Css.Api.SetupMenu.Business.IntegrationTest\Css.Api.SetupMenu.Business.IntegrationTest.csproj", "{DEE1E4E0-3642-4D26-8C2C-8464535F0978}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Setup.Business.IntegrationTest", "Test\API.Setup\Css.Api.Setup.Business.IntegrationTest\Css.Api.Setup.Business.IntegrationTest.csproj", "{DEE1E4E0-3642-4D26-8C2C-8464535F0978}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.SetupMenu.Business.UnitTest", "Test\API.SetupMenu\Css.Api.SetupMenu.Business.UnitTest\Css.Api.SetupMenu.Business.UnitTest.csproj", "{BAE54950-B0C0-4C94-946F-069723AB47C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Setup.Business.UnitTest", "Test\API.Setup\Css.Api.Setup.Business.UnitTest\Css.Api.Setup.Business.UnitTest.csproj", "{BAE54950-B0C0-4C94-946F-069723AB47C7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.SetupMenu.IntegrationTest", "Test\API.SetupMenu\Css.Api.SetupMenu.IntegrationTest\Css.Api.SetupMenu.IntegrationTest.csproj", "{117601BB-81F7-44A0-A2C4-A97DA57E683F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Setup.IntegrationTest", "Test\API.Setup\Css.Api.Setup.IntegrationTest\Css.Api.Setup.IntegrationTest.csproj", "{117601BB-81F7-44A0-A2C4-A97DA57E683F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.SetupMenu.UnitTest", "Test\API.SetupMenu\Css.Api.SetupMenu.UnitTest\Css.Api.SetupMenu.UnitTest.csproj", "{A008B034-48BE-481D-9124-000EC5A24B92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Setup.UnitTest", "Test\API.Setup\Css.Api.Setup.UnitTest\Css.Api.Setup.UnitTest.csproj", "{A008B034-48BE-481D-9124-000EC5A24B92}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.Reporting", "API.Reporting", "{AEDB966E-B0C7-4693-94B2-2245276A148E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Css.Api.Reporting", "Services\API.Reporting\Css.Api.Reporting\Css.Api.Reporting.csproj", "{63CDD452-8779-4CE7-A917-1F7997950DD5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Reporting", "Services\API.Reporting\Css.Api.Reporting\Css.Api.Reporting.csproj", "{63CDD452-8779-4CE7-A917-1F7997950DD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Css.Api.Reporting.Business", "Services\API.Reporting\Css.Api.Reporting.Business\Css.Api.Reporting.Business.csproj", "{3E5D242C-2120-468C-8D04-E53D8FE177C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Reporting.Business", "Services\API.Reporting\Css.Api.Reporting.Business\Css.Api.Reporting.Business.csproj", "{3E5D242C-2120-468C-8D04-E53D8FE177C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Css.Api.Reporting.Models", "Services\API.Reporting\Css.Api.Reporting.Models\Css.Api.Reporting.Models.csproj", "{19BDDD71-FA7F-4749-AEA5-CECF18558075}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Reporting.Models", "Services\API.Reporting\Css.Api.Reporting.Models\Css.Api.Reporting.Models.csproj", "{19BDDD71-FA7F-4749-AEA5-CECF18558075}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Css.Api.Reporting.Repository", "Services\API.Reporting\Css.Api.Reporting.Repository\Css.Api.Reporting.Repository.csproj", "{FDDA4674-43B1-47CC-BAE2-EB3F29889223}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Reporting.Repository", "Services\API.Reporting\Css.Api.Reporting.Repository\Css.Api.Reporting.Repository.csproj", "{FDDA4674-43B1-47CC-BAE2-EB3F29889223}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API.Reporting", "API.Reporting", "{091A2032-BB43-4997-BF14-866D0BB6E8A8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Reporting.UnitTest", "..\css\Test\API.Reporting\Css.Api.Reporting.UnitTest\Css.Api.Reporting.UnitTest.csproj", "{FF28DAFB-5168-481B-914A-6243F6137E11}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Reporting.Business.IntegrationTest", "..\css\Test\API.Reporting\Css.Api.Reporting.Business.IntegrationTest\Css.Api.Reporting.Business.IntegrationTest.csproj", "{BB8F4C64-9A0E-431A-BDB2-54981C629EF7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Reporting.Business.UnitTest", "..\css\Test\API.Reporting\Css.Api.Reporting.Business.UnitTest\Css.Api.Reporting.Business.UnitTest.csproj", "{B8501BF0-8DCA-4030-A1FD-D19D1912DCD4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Css.Api.Reporting.IntegrationTest", "..\css\Test\API.Reporting\Css.Api.Reporting.IntegrationTest\Css.Api.Reporting.IntegrationTest.csproj", "{D66DC44F-B565-4F6B-92ED-16FBA1F13BFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -275,6 +285,22 @@ Global
 		{FDDA4674-43B1-47CC-BAE2-EB3F29889223}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDDA4674-43B1-47CC-BAE2-EB3F29889223}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDDA4674-43B1-47CC-BAE2-EB3F29889223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF28DAFB-5168-481B-914A-6243F6137E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF28DAFB-5168-481B-914A-6243F6137E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF28DAFB-5168-481B-914A-6243F6137E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF28DAFB-5168-481B-914A-6243F6137E11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB8F4C64-9A0E-431A-BDB2-54981C629EF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB8F4C64-9A0E-431A-BDB2-54981C629EF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB8F4C64-9A0E-431A-BDB2-54981C629EF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB8F4C64-9A0E-431A-BDB2-54981C629EF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8501BF0-8DCA-4030-A1FD-D19D1912DCD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8501BF0-8DCA-4030-A1FD-D19D1912DCD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8501BF0-8DCA-4030-A1FD-D19D1912DCD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8501BF0-8DCA-4030-A1FD-D19D1912DCD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D66DC44F-B565-4F6B-92ED-16FBA1F13BFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D66DC44F-B565-4F6B-92ED-16FBA1F13BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D66DC44F-B565-4F6B-92ED-16FBA1F13BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D66DC44F-B565-4F6B-92ED-16FBA1F13BFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -329,6 +355,11 @@ Global
 		{3E5D242C-2120-468C-8D04-E53D8FE177C3} = {AEDB966E-B0C7-4693-94B2-2245276A148E}
 		{19BDDD71-FA7F-4749-AEA5-CECF18558075} = {AEDB966E-B0C7-4693-94B2-2245276A148E}
 		{FDDA4674-43B1-47CC-BAE2-EB3F29889223} = {AEDB966E-B0C7-4693-94B2-2245276A148E}
+		{091A2032-BB43-4997-BF14-866D0BB6E8A8} = {F612383E-484E-4F4D-B5F8-3C1C5B8352F8}
+		{FF28DAFB-5168-481B-914A-6243F6137E11} = {091A2032-BB43-4997-BF14-866D0BB6E8A8}
+		{BB8F4C64-9A0E-431A-BDB2-54981C629EF7} = {091A2032-BB43-4997-BF14-866D0BB6E8A8}
+		{B8501BF0-8DCA-4030-A1FD-D19D1912DCD4} = {091A2032-BB43-4997-BF14-866D0BB6E8A8}
+		{D66DC44F-B565-4F6B-92ED-16FBA1F13BFD} = {091A2032-BB43-4997-BF14-866D0BB6E8A8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B2909BD8-E153-42AD-BED6-162C98370DEE}
