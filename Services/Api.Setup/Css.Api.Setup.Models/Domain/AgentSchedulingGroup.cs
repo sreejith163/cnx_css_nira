@@ -7,7 +7,6 @@ namespace Css.Api.Setup.Models.Domain
     {
         public AgentSchedulingGroup()
         {
-            AgentAdmin = new HashSet<AgentAdmin>();
             OperationHour = new HashSet<OperationHour>();
         }
 
@@ -31,7 +30,6 @@ namespace Css.Api.Setup.Models.Domain
         public virtual SkillGroup SkillGroup { get; set; }
         public virtual SkillTag SkillTag { get; set; }
         public virtual Timezone Timezone { get; set; }
-        public virtual ICollection<AgentAdmin> AgentAdmin { get; set; }
         public virtual ICollection<OperationHour> OperationHour { get; set; }
     }
 }

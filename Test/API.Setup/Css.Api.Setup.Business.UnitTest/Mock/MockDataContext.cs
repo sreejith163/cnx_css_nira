@@ -62,10 +62,6 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
         {
         }.AsQueryable();
 
-        public IQueryable<AgentGroupDetail> agentGroupDetailsDB = new List<AgentGroupDetail>()
-        {
-        }.AsQueryable();
-
         #region Methods
 
         /// <summary>
@@ -75,12 +71,6 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
         public Mock<SetupContext> IntializeMockData()
         {
             Mock<SetupContext> mockSchedulingContext = new Mock<SetupContext>();
-
-            var mockAgentGroupDetail = new Mock<DbSet<AgentGroupDetail>>();
-            mockAgentGroupDetail.As<IQueryable<AgentGroupDetail>>().Setup(m => m.Provider).Returns(agentGroupDetailsDB.Provider);
-            mockAgentGroupDetail.As<IQueryable<AgentGroupDetail>>().Setup(m => m.Expression).Returns(agentGroupDetailsDB.Expression);
-            mockAgentGroupDetail.As<IQueryable<AgentGroupDetail>>().Setup(m => m.ElementType).Returns(agentGroupDetailsDB.ElementType);
-            mockAgentGroupDetail.As<IQueryable<AgentGroupDetail>>().Setup(m => m.GetEnumerator()).Returns(agentGroupDetailsDB.GetEnumerator());
 
             var mockEAgentSchedulingGroup = new Mock<DbSet<AgentSchedulingGroup>>();
             mockEAgentSchedulingGroup.As<IQueryable<AgentSchedulingGroup>>().Setup(m => m.Provider).Returns(agentSchedulingGroupsDB.Provider);
@@ -130,7 +120,6 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
             mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.ElementType).Returns(timezonesDB.ElementType);
             mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.GetEnumerator()).Returns(timezonesDB.GetEnumerator());
 
-            mockSchedulingContext.Setup(c => c.AgentGroupDetail).Returns(mockAgentGroupDetail.Object);
             mockSchedulingContext.Setup(c => c.AgentSchedulingGroup).Returns(mockEAgentSchedulingGroup.Object);
             mockSchedulingContext.Setup(c => c.Client).Returns(mockClient.Object);
             mockSchedulingContext.Setup(c => c.ClientLobGroup).Returns(mockClientLobGroup.Object);
