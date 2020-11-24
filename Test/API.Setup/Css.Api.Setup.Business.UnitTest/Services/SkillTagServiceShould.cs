@@ -1,21 +1,20 @@
 ﻿using AutoMapper;
 using Css.Api.Core.Models.Domain;
-using Css.Api.Scheduling.Business.Interfaces;
-using Css.Api.Scheduling.Business.UnitTest.Mock;
-using Css.Api.Scheduling.Models.DTO.Request.OperationHour;
-using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
-using Css.Api.Scheduling.Models.DTO.Response.SkillTag;
-using Css.Api.Scheduling.Models.Profiles.OperatingHours;
-using Css.Api.Scheduling.Models.Profiles.SkillTag;
-using Css.Api.Scheduling.Repository;
-using Css.Api.Scheduling.Repository.Interfaces;
+using Css.Api.Setup.Business.Interfaces;
+using Css.Api.Setup.Business.UnitTest.Mock;
+using Css.Api.Setup.Models.DTO.Request.OperationHour;
+using Css.Api.Setup.Models.DTO.Request.SkillTag;
+using Css.Api.Setup.Models.DTO.Response.SkillTag;
+using Css.Api.Setup.Models.Profiles.OperatingHours;
+using Css.Api.Setup.Models.Profiles.SkillTag;
+using Css.Api.Setup.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Collections.Generic;
 using System.Net;
 using Xunit;
 
-namespace Css.Api.Scheduling.Business.UnitTest.Services
+namespace Css.Api.Setup.Business.UnitTest.Services
 {
     public class SkillTagServiceShould
     {

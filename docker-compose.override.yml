@@ -56,3 +56,12 @@ services:
       - "4205:80"
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  css.api.reporting:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Database=server=scheduling.mysql.data;user id=root;password=root;persistsecurityinfo=True;database=css
+    ports:
+      - "4206:80"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

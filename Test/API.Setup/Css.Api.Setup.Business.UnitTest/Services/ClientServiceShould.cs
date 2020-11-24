@@ -3,7 +3,6 @@ using Xunit;
 using System.Net;
 using AutoMapper;
 using Css.Api.Core.Models.Domain;
-using Css.Api.Setup.Repository;
 using Css.Api.Setup.Business.Interfaces;
 using Css.Api.Setup.Repository.Interfaces;
 using Css.Api.Setup.Models.Profiles.Client;

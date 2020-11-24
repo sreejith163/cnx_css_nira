@@ -35,18 +35,15 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
 
         public IQueryable<SkillGroup> skillGroupsDB = new List<SkillGroup>()
         {
+            new SkillGroup{ Id=1, ClientId=1, ClientLobGroupId=1, Name="group1", TimezoneId=1, CreatedDate=DateTime.UtcNow,CreatedBy="admin" },
+            new SkillGroup{ Id=2, ClientId=1, ClientLobGroupId=1, Name="group2", TimezoneId=1, CreatedDate=DateTime.UtcNow,CreatedBy="admin" }
         }.AsQueryable();
 
         public IQueryable<SkillTag> skillTagsDB = new List<SkillTag>()
         {
-        }.AsQueryable();
-
-        public IQueryable<AgentAdmin> agentAdminsDB = new List<AgentAdmin>()
-        {
-        }.AsQueryable();
-
-        public IQueryable<OperationHour> operationHoursDB = new List<OperationHour>()
-        {
+            new SkillTag { Id = 1, ClientId = 1, ClientLobGroupId = 3, SkillGroupId = 1, Name="Skill1", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new SkillTag { Id = 2, ClientId = 1, ClientLobGroupId = 3, SkillGroupId = 1, Name="Skill2", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new SkillTag { Id = 3, ClientId = 1, ClientLobGroupId = 3, SkillGroupId = 1, Name="Skill3", CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
         public IQueryable<Timezone> timezonesDB = new List<Timezone>()
@@ -56,15 +53,16 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
             new Timezone { Id = 3, Name= "Alaskan Standard Time", DisplayName = "(UTC-09:00) Alaska", Abbreviation = "AKDT", Offset = -8 }
         }.AsQueryable();
 
+        public IQueryable<OperationHour> operationHoursDB = new List<OperationHour>()
+        {
+            new OperationHour{ Id = 1, Day = 1, From = "9AM", SkillTagId = 1, To = "9PM", OperationHourOpenTypeId = 1}
+        }.AsQueryable();
+
         public IQueryable<OperationHourOpenType> operationHourOpenTypesDB = new List<OperationHourOpenType>()
         {
         }.AsQueryable();
 
         public IQueryable<AgentGroupDetail> agentGroupDetailsDB = new List<AgentGroupDetail>()
-        {
-        }.AsQueryable();
-
-        public IQueryable<AgentDetail> agentDetailsDB = new List<AgentDetail>()
         {
         }.AsQueryable();
 
@@ -76,18 +74,7 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
         /// <returns></returns>
         public Mock<SetupContext> IntializeMockData()
         {
-            Mock<SetupContext> mockSetupContext = new Mock<SetupContext>();
-            var mockAgentAdmin = new Mock<DbSet<AgentAdmin>>();
-            mockAgentAdmin.As<IQueryable<AgentAdmin>>().Setup(m => m.Provider).Returns(agentAdminsDB.Provider);
-            mockAgentAdmin.As<IQueryable<AgentAdmin>>().Setup(m => m.Expression).Returns(agentAdminsDB.Expression);
-            mockAgentAdmin.As<IQueryable<AgentAdmin>>().Setup(m => m.ElementType).Returns(agentAdminsDB.ElementType);
-            mockAgentAdmin.As<IQueryable<AgentAdmin>>().Setup(m => m.GetEnumerator()).Returns(agentAdminsDB.GetEnumerator());
-
-            var mockAgentDetail = new Mock<DbSet<AgentDetail>>();
-            mockAgentDetail.As<IQueryable<AgentDetail>>().Setup(m => m.Provider).Returns(agentDetailsDB.Provider);
-            mockAgentDetail.As<IQueryable<AgentDetail>>().Setup(m => m.Expression).Returns(agentDetailsDB.Expression);
-            mockAgentDetail.As<IQueryable<AgentDetail>>().Setup(m => m.ElementType).Returns(agentDetailsDB.ElementType);
-            mockAgentDetail.As<IQueryable<AgentDetail>>().Setup(m => m.GetEnumerator()).Returns(agentDetailsDB.GetEnumerator());
+            Mock<SetupContext> mockSchedulingContext = new Mock<SetupContext>();
 
             var mockAgentGroupDetail = new Mock<DbSet<AgentGroupDetail>>();
             mockAgentGroupDetail.As<IQueryable<AgentGroupDetail>>().Setup(m => m.Provider).Returns(agentGroupDetailsDB.Provider);
@@ -143,19 +130,17 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
             mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.ElementType).Returns(timezonesDB.ElementType);
             mockTimezone.As<IQueryable<Timezone>>().Setup(m => m.GetEnumerator()).Returns(timezonesDB.GetEnumerator());
 
-            mockSetupContext.Setup(c => c.AgentAdmin).Returns(mockAgentAdmin.Object);
-            mockSetupContext.Setup(c => c.AgentDetail).Returns(mockAgentDetail.Object);
-            mockSetupContext.Setup(c => c.AgentGroupDetail).Returns(mockAgentGroupDetail.Object);
-            mockSetupContext.Setup(c => c.AgentSchedulingGroup).Returns(mockEAgentSchedulingGroup.Object);
-            mockSetupContext.Setup(c => c.Client).Returns(mockClient.Object);
-            mockSetupContext.Setup(c => c.ClientLobGroup).Returns(mockClientLobGroup.Object);
-            mockSetupContext.Setup(c => c.OperationHour).Returns(mockOperationHour.Object);
-            mockSetupContext.Setup(c => c.OperationHourOpenType).Returns(mockOperationHourOpenType.Object);
-            mockSetupContext.Setup(c => c.SkillGroup).Returns(mockSkillGroup.Object);
-            mockSetupContext.Setup(c => c.SkillTag).Returns(mockSkillTag.Object);
-            mockSetupContext.Setup(c => c.Timezone).Returns(mockTimezone.Object);
+            mockSchedulingContext.Setup(c => c.AgentGroupDetail).Returns(mockAgentGroupDetail.Object);
+            mockSchedulingContext.Setup(c => c.AgentSchedulingGroup).Returns(mockEAgentSchedulingGroup.Object);
+            mockSchedulingContext.Setup(c => c.Client).Returns(mockClient.Object);
+            mockSchedulingContext.Setup(c => c.ClientLobGroup).Returns(mockClientLobGroup.Object);
+            mockSchedulingContext.Setup(c => c.OperationHour).Returns(mockOperationHour.Object);
+            mockSchedulingContext.Setup(c => c.OperationHourOpenType).Returns(mockOperationHourOpenType.Object);
+            mockSchedulingContext.Setup(c => c.SkillGroup).Returns(mockSkillGroup.Object);
+            mockSchedulingContext.Setup(c => c.SkillTag).Returns(mockSkillTag.Object);
+            mockSchedulingContext.Setup(c => c.Timezone).Returns(mockTimezone.Object);
 
-            return mockSetupContext;
+            return mockSchedulingContext;
         }
 
         #endregion

@@ -47,3 +47,9 @@ services:
       context: .
       dockerfile: Services/API.Scheduling/Css.Api.Scheduling/Dockerfile
 
+  css.api.reporting:
+    image: ${DOCKER_REGISTRY:-cnx}/css.api.reporting:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/API.Reporting/Css.Api.Reporting/Dockerfile
+

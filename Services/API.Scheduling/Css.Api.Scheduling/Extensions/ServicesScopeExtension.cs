@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Css.Api.Scheduling.Business;
 using Css.Api.Scheduling.Business.Interfaces;
-using Css.Api.Scheduling.Repository;
-using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,16 +39,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddHttpContextAccessor();
 
-            services.AddTransient<IClientService, ClientService>();
-            services.AddTransient<IClientLOBGroupService, ClientLOBGroupService>();
-            services.AddTransient<ISkillTagService, SkillTagService>();
-            services.AddTransient<ISchedulingCodeService, SchedulingCodeService>();
-            services.AddTransient<ISchedulingCodeIconService, SchedulingCodeIconService>();
-            services.AddTransient<ISchedulingCodeTypeService, SchedulingCodeTypeService>();
             services.AddTransient<ITimezoneService, TimezoneService>();
-            services.AddTransient<ISkillGroupService, SkillGroupService>();
-
-            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
             return services;
 

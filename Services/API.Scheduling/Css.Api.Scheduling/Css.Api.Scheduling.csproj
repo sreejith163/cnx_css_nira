@@ -51,4 +51,8 @@
     <ProjectReference Include="..\Css.Api.Scheduling.Models\Css.Api.Scheduling.Models.csproj" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Folder Include="Validators\" />
+  </ItemGroup>
+  
 </Project>

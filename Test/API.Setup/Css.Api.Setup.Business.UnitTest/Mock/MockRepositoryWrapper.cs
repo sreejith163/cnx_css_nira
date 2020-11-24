@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Css.Api.Setup.Business.UnitTest.Mock;
 using Css.Api.Setup.Models.Domain;
 using Css.Api.Setup.Repository.DatabaseContext;
 using Css.Api.Setup.Repository.Interfaces;
@@ -7,8 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Linq;
 using System.Threading.Tasks;
+using Css.Api.Setup.Repository;
 
-namespace Css.Api.Setup.Repository
+namespace Css.Api.Setup.Business.UnitTest.Mock
 {
     public class MockRepositoryWrapper: IRepositoryWrapper
     {
@@ -113,9 +113,13 @@ namespace Css.Api.Setup.Repository
             {
                 if (_skillGroupsRepository == null)
                 {
-                    var mockClients = new Mock<DbSet<Client>>();
-                   
-                    _repositoryContext.Setup(x => x.Set<Client>()).Returns(mockClients.Object);
+                    var mockSkillGroup = new Mock<DbSet<SkillGroup>>();
+                    mockSkillGroup.As<IQueryable<SkillGroup>>().Setup(m => m.Provider).Returns(new MockDataContext().skillGroupsDB.Provider);
+                    mockSkillGroup.As<IQueryable<SkillGroup>>().Setup(m => m.Expression).Returns(new MockDataContext().skillGroupsDB.Expression);
+                    mockSkillGroup.As<IQueryable<SkillGroup>>().Setup(m => m.ElementType).Returns(new MockDataContext().skillGroupsDB.ElementType);
+                    mockSkillGroup.As<IQueryable<SkillGroup>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().skillGroupsDB.GetEnumerator());
+
+                    _repositoryContext.Setup(x => x.Set<SkillGroup>()).Returns(mockSkillGroup.Object);
 
                     _skillGroupsRepository = new SkillGroupRepository(_repositoryContext.Object, _mapper);
                 }
@@ -129,9 +133,13 @@ namespace Css.Api.Setup.Repository
             {
                 if (_skillTagsRepository == null)
                 {
-                    var mockClients = new Mock<DbSet<Client>>();
+                    var mockSkillTag = new Mock<DbSet<SkillTag>>();
+                    mockSkillTag.As<IQueryable<SkillTag>>().Setup(m => m.Provider).Returns(new MockDataContext().skillTagsDB.Provider);
+                    mockSkillTag.As<IQueryable<SkillTag>>().Setup(m => m.Expression).Returns(new MockDataContext().skillTagsDB.Expression);
+                    mockSkillTag.As<IQueryable<SkillTag>>().Setup(m => m.ElementType).Returns(new MockDataContext().skillTagsDB.ElementType);
+                    mockSkillTag.As<IQueryable<SkillTag>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().skillTagsDB.GetEnumerator());
 
-                    _repositoryContext.Setup(x => x.Set<Client>()).Returns(mockClients.Object);
+                    _repositoryContext.Setup(x => x.Set<SkillTag>()).Returns(mockSkillTag.Object);
 
                     _skillTagsRepository = new SkillTagRepository(_repositoryContext.Object, _mapper);
                 }
@@ -151,9 +159,9 @@ namespace Css.Api.Setup.Repository
             {
                 if (_operationHoursRepository == null)
                 {
-                    var mockClients = new Mock<DbSet<Client>>();
-
-                    _repositoryContext.Setup(x => x.Set<Client>()).Returns(mockClients.Object);
+                    var mockSchedulingCodeTypes = new Mock<DbSet<OperationHour>>();
+                    
+                    _repositoryContext.Setup(x => x.Set<OperationHour>()).Returns(mockSchedulingCodeTypes.Object);
 
                     _operationHoursRepository = new OperationHourRepository(_repositoryContext.Object);
                 }
@@ -181,7 +189,7 @@ namespace Css.Api.Setup.Repository
                 }
                 return _timezoneRepository;
             }
-        }        
+        }    
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryWrapper" /> class.

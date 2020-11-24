@@ -7,7 +7,6 @@ using Css.Api.Setup.Models.DTO.Response.ClientLOBGroup;
 using Css.Api.Setup.Models.Profiles.Client;
 using Css.Api.Setup.Models.Profiles.ClientLOBGroup;
 using Css.Api.Setup.Models.Profiles.Timezone;
-using Css.Api.Setup.Repository;
 using Css.Api.Setup.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Moq;

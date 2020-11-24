@@ -3,7 +3,6 @@ using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Setup.Business.Interfaces;
 using Css.Api.Setup.Business.UnitTest.Mock;
 using Css.Api.Setup.Models.Profiles.Timezone;
-using Css.Api.Setup.Repository;
 using Css.Api.Setup.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Moq;
