@@ -3,6 +3,8 @@ using Css.Api.Core.DataAccess.Repository.NoSQL;
 using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Scheduling.Business;
 using Css.Api.Scheduling.Business.Interfaces;
+using Css.Api.Scheduling.Repository;
+using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +51,8 @@ namespace Css.Api.Scheduling.Extensions
 
             services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
             services.AddTransient<ITimezoneService, TimezoneService>();
+
+            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
             return services;
 

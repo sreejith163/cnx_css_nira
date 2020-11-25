@@ -3,6 +3,7 @@ using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Repository.Interfaces;
 using System.Net;
 using System.Threading.Tasks;
+
 namespace Css.Api.Scheduling.Business
 {
     public class TimezoneService : ITimezoneService
