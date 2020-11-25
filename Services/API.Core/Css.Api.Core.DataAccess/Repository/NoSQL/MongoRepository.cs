@@ -15,7 +15,7 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
     /// </summary>
     /// <typeparam name="TDocument">The type of the document.</typeparam>
     /// <seealso cref="Css.Api.Core.DataAccess.Repository.Interfaces.IMongoRepository{TDocument}" />
-    public class MongoRepository<TDocument> : IMongoRepository<TDocument> where TDocument : IDocument
+    public class MongoRepository<TDocument> : IMongoRepository<TDocument> where TDocument : IBaseDocument
     {
         /// <summary>
         /// The collection
