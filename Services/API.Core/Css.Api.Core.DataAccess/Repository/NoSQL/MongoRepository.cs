@@ -241,10 +241,9 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <returns></returns>
         private protected string GetCollectionName(Type documentType)
         {
-            return ((BsonCollectionAttribute)documentType.GetCustomAttributes(
-                    typeof(BsonCollectionAttribute),
-                    true)
-                .FirstOrDefault())?.CollectionName;
+            return ((BsonCollectionAttribute)documentType.GetCustomAttributes(typeof(BsonCollectionAttribute), true)
+                .FirstOrDefault())
+                ?.CollectionName;
         }
     }
 }
