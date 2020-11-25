@@ -42,51 +42,51 @@
         <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
           <thead>
             <tr>
-              <th class="width-10-p">
+              <th>
                 {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}</th>
-              <th class="sortable-field width-10-p" (click)="sortClients('id', sortBy)">
+              <th class="sortable-field" (click)="sortClients('id', sortBy)">
                 {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
                 <i *ngIf="orderBy !== 'id'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field width-10-p" (click)="sortClients('refId', sortBy)">
+              <th class="sortable-field" (click)="sortClients('refId', sortBy)">
                 {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
                 <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field width-10-p" (click)="sortClients('name', sortBy)">
+              <th class="sortable-field" (click)="sortClients('name', sortBy)">
                 {{ 'Client Name' | translation: 'lbl_table_heading_client_name' : translationValues }}
                 <i *ngIf="orderBy !== 'name'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field width-15-p" (click)="sortClients('createdBy', sortBy)">
+              <th class="sortable-field" (click)="sortClients('createdBy', sortBy)">
                 {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
                 <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field width-15-p" (click)="sortClients('createdDate', sortBy)">
+              <th class="sortable-field" (click)="sortClients('createdDate', sortBy)">
                 {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
                 <i *ngIf="orderBy !== 'createdDate'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field width-15-p" (click)="sortClients('modifiedBy', sortBy)">
+              <th class="sortable-field" (click)="sortClients('modifiedBy', sortBy)">
                 {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
                 <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field width-15-p" (click)="sortClients('modifiedDate', sortBy)">
+              <th class="sortable-field" (click)="sortClients('modifiedDate', sortBy)">
                 {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
                 <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"

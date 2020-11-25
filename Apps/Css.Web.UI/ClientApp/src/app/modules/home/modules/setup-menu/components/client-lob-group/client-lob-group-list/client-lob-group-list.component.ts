@@ -12,7 +12,6 @@ import { HeaderPagination } from 'src/app/shared/models/header-pagination.model'
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 
 import { Constants } from 'src/app/shared/util/constants.util';
-import { ClientService } from '../../../services/client.service';
 import { ClientLOBGroupDetails } from '../../../models/client-lob-group-details.model';
 import { ClientLobGroupService } from '../../../services/client-lob-group.service';
 import { AddUpdateClientLobGroupComponent } from '../add-update-client-lob-group/add-update-client-lob-group.component';

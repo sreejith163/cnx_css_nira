@@ -1,167 +1,171 @@
 <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 col-md-12">
-        <h2>{{ 'Skill Groups' | translation: 'lbl_page_title' : translationValues }}</h2>
-      </div>
+  <div class="row">
+    <div class="col-12 col-md-12">
+      <h2>{{ 'Skill Groups' | translation: 'lbl_page_title' : translationValues }}</h2>
     </div>
-    <div class="row">
-      <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-left">
-          <li class="breadcrumb-item"><a>Setup Menu</a></li>
-          <li class="breadcrumb-item active"><b>Skill Groups</b> </li>
-        </ol>
-      </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a>Setup Menu</a></li>
+        <li class="breadcrumb-item active"><b>Skill Groups</b> </li>
+      </ol>
     </div>
-    <div class="row m-l-r-10">
-      <div class="col-md-2">
-        {{ 'Client Name' | translation: 'lbl_client_name' : translationValues }}
-        <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
-      </div>
-      <div class="col-md-3">
-        {{ 'Client LOB Group' | translation: 'lbl_client_lob_group' : translationValues }}
-        <app-client-lob-group-typeahead (clientLobSelected)="setClientLob($event)" ></app-client-lob-group-typeahead>
-      </div>
-      <div class="col-md-3 padding-bottom-5">
-        <input type="text" class="form-control  mt-4" [(ngModel)]="searchKeyword"
-          placeholder="{{ 'Enter a Skill Group Name' | translation: 'search_hint' : translationValues }}" />
-      </div>
-      <div class="col-md-2">
-        <button class="form-control mt-4" (click)="searchSkillGroups()" id="btn_search"><i class="fa fa-search"
-            aria-hidden="true"></i>
-          {{ 'Search' | translation: 'btn_search' : translationValues }}
-        </button>
-      </div>
-      <div class="col-md-2 text-right">
-        <button type="button" class="btn btn-primary float-r mt-4" (click)="addSkillGroup()" id="btn_add"><i
-            class="fa fa-plus padding-5"
-            aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}</button>
-      </div>
+  </div>
+  <div class="row m-l-r-10">
+    <div class="col-md-2">
+      {{ 'Client Name' | translation: 'lbl_client_name' : translationValues }}
+      <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
     </div>
-  
-    <div class="row m-r-15">
-      <div class="col-md-12 mt-2 table-responsive">
-        <div class="scrollable-table">
-          <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
-            <thead>
-              <tr>
-                <th class="width-10-p">
-                  {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}</th>
-  
-                <th class="sortable-field width-10-p" (click)="sort('Id', sortBy)">
-                  {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
-                  <i *ngIf="orderBy !== 'Id'" class="fa fa-sort"></i>
-                  <i id="sortIcon" *ngIf="orderBy === 'Id'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                    [class.fa-sort-up]="sortBy === 'asc'">
-                  </i>
-                </th>
-                <th class="sortable-field width-10-p" (click)="sort('RefId', sortBy)">
-                  {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
-                  <i *ngIf="orderBy !== 'RefId'" class="fa fa-sort"></i>
-                  <i id="sortIcon" *ngIf="orderBy === 'RefId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                    [class.fa-sort-up]="sortBy === 'asc'">
-                  </i>
-                </th>
-                <th class="sortable-field width-10-p" (click)="sort('Name', sortBy)">
-                  {{ 'Skill Group Name' | translation: 'lbl_table_heading_skill_group_name' : translationValues }}
-                  <i *ngIf="orderBy !== 'Name'" class="fa fa-sort"></i>
-                  <i id="sortIcon" *ngIf="orderBy === 'Name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                    [class.fa-sort-up]="sortBy === 'asc'">
-                  </i>
-                </th>
-                <th class="sortable-field width-10-p" (click)="sort('FirstDayOfWeek', sortBy)">
-                  {{ 'First day of week' | translation: 'lbl_table_heading_first_day_of_week' : translationValues }}
-                  <i *ngIf="orderBy !== 'FirstDayOfWeek'" class="fa fa-sort"></i>
-                  <i id="sortIcon" *ngIf="orderBy === 'FirstDayOfWeek'" class="fa"
-                    [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
-                  </i>
-                </th>
-                <th class="sortable-field width-10-p" (click)="sort('Timezone.Name', sortBy)">
-                  {{ 'Time zone for reporting' | translation: 'lbl_table_heading_time_zone_for_lob_group' : translationValues }}
-                  <i *ngIf="orderBy !== 'Timezone.Name'" class="fa fa-sort"></i>
-                  <i id="sortIcon" *ngIf="orderBy === 'Timezone.Name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                    [class.fa-sort-up]="sortBy === 'asc'">
-                  </i>
-                </th>
-                <th class="sortable-field width-10-p" (click)="sort('CreatedBy', sortBy)">
-                  {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
-                  <i *ngIf="orderBy !== 'CreatedBy'" class="fa fa-sort"></i>
-                  <i id="sortIcon" *ngIf="orderBy === 'CreatedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                    [class.fa-sort-up]="sortBy === 'asc'">
-                  </i>
-                </th>
-                <th class="sortable-field width-10-p" (click)="sort('CreatedDate', sortBy)">
-                  {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
-                  <i *ngIf="orderBy !== 'CreatedDate'" class="fa fa-sort"></i>
-                  <i id="sortIcon" *ngIf="orderBy === 'CreatedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                    [class.fa-sort-up]="sortBy === 'asc'">
-                  </i>
-                </th>
-                <th class="sortable-field width-10-p" (click)="sort('ModifiedBy', sortBy)">
-                  {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
-                  <i *ngIf="orderBy !== 'ModifiedBy'" class="fa fa-sort"></i>
-                  <i id="sortIcon" *ngIf="orderBy === 'ModifiedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                    [class.fa-sort-up]="sortBy === 'asc'">
-                  </i>
-                </th>
-                <th class="sortable-field width-10-p" (click)="sort('ModifiedDate', sortBy)">
-                  {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
-                  <i *ngIf="orderBy !== 'ModifiedDate'" class="fa fa-sort"></i>
-                  <i id="sortIcon" *ngIf="orderBy === 'ModifiedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                    [class.fa-sort-up]="sortBy === 'asc'">
-                  </i>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <ngx-spinner [name]="spinner" bdColor="rgba(255, 0, 0, 0.8)"></ngx-spinner>
-              <tr *ngFor="let el of skillGroupDetails; let i = index">
-                <td><i class="fa fa-edit padding-5 pointer" (click)="editSkillGroup(el.id)"></i>
-                  <i class="fa fa-trash padding-5 pointer" (click)="deleteSkillGroup(el.id)"></i>
-                </td>
-                <td>{{el.id}}</td>
-                <td>{{el.refId}}</td>
-                <td>
-                  <span
-                    ngbTooltip="{{ el.name }}">{{ el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
-                  <span class="padding-left-10" [class.float-right]="el.name.length < characterSplice">
+    <div class="col-md-3">
+      {{ 'Client LOB Group' | translation: 'lbl_client_lob_group' : translationValues }}
+      <app-client-lob-group-typeahead (clientLobSelected)="setClientLob($event)"></app-client-lob-group-typeahead>
+    </div>
+    <div class="col-md-3 padding-bottom-5">
+      <input type="text" class="form-control  mt-4" [(ngModel)]="searchKeyword"
+        placeholder="{{ 'Enter a Skill Group Name' | translation: 'search_hint' : translationValues }}" />
+    </div>
+    <div class="col-md-2">
+      <button class="form-control mt-4" (click)="searchSkillGroups()" id="btn_search"><i class="fa fa-search"
+          aria-hidden="true"></i>
+        {{ 'Search' | translation: 'btn_search' : translationValues }}
+      </button>
+    </div>
+    <div class="col-md-2 text-right">
+      <button type="button" class="btn btn-primary float-r mt-4" (click)="addSkillGroup()" id="btn_add"><i
+          class="fa fa-plus padding-5" aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues
+        }}</button>
+    </div>
+  </div>
+
+  <div class="row m-r-15">
+    <div class="col-md-12 mt-2 table-responsive">
+      <div class="scrollable-table">
+        <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+          <thead>
+            <tr>
+              <th>
+                {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}</th>
+
+              <th class="sortable-field" (click)="sort('Id', sortBy)">
+                {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
+                <i *ngIf="orderBy !== 'Id'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'Id'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('RefId', sortBy)">
+                {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
+                <i *ngIf="orderBy !== 'RefId'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'RefId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('Name', sortBy)">
+                {{ 'Skill Group Name' | translation: 'lbl_table_heading_skill_group_name' : translationValues }}
+                <i *ngIf="orderBy !== 'Name'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'Name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('FirstDayOfWeek', sortBy)">
+                {{ 'First day of week' | translation: 'lbl_table_heading_first_day_of_week' : translationValues }}
+                <i *ngIf="orderBy !== 'FirstDayOfWeek'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'FirstDayOfWeek'" class="fa"
+                  [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-fiel" (click)="sort('Timezone.Name', sortBy)">
+                {{ 'Time zone for reporting' | translation: 'lbl_table_heading_time_zone_for_lob_group' :
+                translationValues }}
+                <i *ngIf="orderBy !== 'Timezone.Name'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'Timezone.Name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('CreatedBy', sortBy)">
+                {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
+                <i *ngIf="orderBy !== 'CreatedBy'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'CreatedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('CreatedDate', sortBy)">
+                {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
+                <i *ngIf="orderBy !== 'CreatedDate'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'CreatedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('ModifiedBy', sortBy)">
+                {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
+                <i *ngIf="orderBy !== 'ModifiedBy'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'ModifiedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('ModifiedDate', sortBy)">
+                {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
+                <i *ngIf="orderBy !== 'ModifiedDate'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'ModifiedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ngx-spinner [name]="spinner" bdColor="rgba(255, 0, 0, 0.8)"></ngx-spinner>
+            <tr *ngFor="let el of skillGroupDetails; let i = index">
+              <td><i class="fa fa-edit padding-5 pointer" (click)="editSkillGroup(el.id)"></i>
+                <i class="fa fa-trash padding-5 pointer" (click)="deleteSkillGroup(el.id)"></i>
+              </td>
+              <td>{{el.id}}</td>
+              <td>{{el.refId}}</td>
+              <td>
+                <div class="display-inline-flex">
+                  <span ngbTooltip="{{ el.name }}">{{ el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                    append: '...' } }}</span>
+                  <span class="padding-left-10 float-right">
                     <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle" [placement]="'auto'"
                       container="body">
                       <i class="fa fa-ellipsis-h"></i>
                     </a>
                     <ng-template #popContent>
                       <b>Client Name : </b> {{ el.clientName }}
-                      <br/>
-                      <b>Client LOB group Name : </b> {{ el.clientLobGroupName }}                     
+                      <br />
+                      <br />
+                      <b>Client LOB group Name : </b> {{ el.clientLobGroupName }}
                     </ng-template>
                     <ng-template #popTitle>
                       {{ 'Hierarchy' | translation: 'lbl_table_heading_skill_group_hierarchy' : translationValues }}
                     </ng-template>
                   </span>
-                </td>
-                <td>{{weekDay[el.firstDayOfWeek]}}</td>
-                <td>{{el.timezoneLabel}}</td>
-                <td>{{el.createdBy}}</td>
-                <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
-                <td>{{el.modifiedBy}}</td>
-                <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12 d-flex justify-content-end mt-3">
-        <nav aria-label="Page navigation example">
-          <ul class="pagination p-0 float-right">
-            <ngb-pagination class="p-r-5" [collectionSize]="totalSkillGroupRecord" (pageChange)="changePage($event)"
-              [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
-            <select class="form-control" (change)="changePageSize($event.target.value)">
-              <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">{{x.text}}
-              </option>
-            </select>
-          </ul>
-        </nav>
+                </div>
+              </td>
+              <td>{{weekDay[el.firstDayOfWeek]}}</td>
+              <td>{{el.timezoneLabel}}</td>
+              <td>{{el.createdBy}}</td>
+              <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
+              <td>{{el.modifiedBy}}</td>
+              <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end mt-3">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination p-0 float-right">
+          <ngb-pagination class="p-r-5" [collectionSize]="totalSkillGroupRecord" (pageChange)="changePage($event)"
+            [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+          <select class="form-control" (change)="changePageSize($event.target.value)">
+            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">{{x.text}}
+            </option>
+          </select>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

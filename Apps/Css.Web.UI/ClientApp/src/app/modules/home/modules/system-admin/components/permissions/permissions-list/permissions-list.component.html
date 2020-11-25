@@ -57,53 +57,53 @@
         <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
           <thead>
             <tr>
-              <th class="sortable-field width-10-p" [appSort]="permissions" data-order="asc" data-name="employeeId">
+              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="employeeId">
                 {{ 'Employee ID' | translation: 'lbl_table_heading_employee_id' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
-              <th class="sortable-field width-10-p" [appSort]="permissions" data-order="asc" data-name="firstName">
+              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="firstName">
                 {{ 'First Name' | translation: 'lbl_table_heading_first_name' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
-              <th class="sortable-field width-10-p" [appSort]="permissions" data-order="asc" data-name="lastName">
+              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="lastName">
                 {{ 'Last Name' | translation: 'lbl_table_heading_last_name' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
-              <th *ngIf="hasRoleHidden('System Admin')" class="sortable-field width-15-p" [appSort]="permissions"
+              <th *ngIf="hasRoleHidden('System Admin')" class="sortable-field" [appSort]="permissions"
                 data-order="asc" data-name="roles" data-type="array">
                 {{ 'System Admin' | translation: 'lbl_table_heading_system_admin' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
-              <th *ngIf="hasRoleHidden('WFM Admin')" class="sortable-field width-15-p" [appSort]="permissions"
+              <th *ngIf="hasRoleHidden('WFM Admin')" class="sortable-field" [appSort]="permissions"
                 data-order="asc" data-name="roles" data-type="array">
                 {{ 'WFM Admin' | translation: 'lbl_table_heading_wfm_admin' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
-              <th *ngIf="hasRoleHidden('WFM Scheduling Team')" class="sortable-field width-15-p" [appSort]="permissions"
+              <th *ngIf="hasRoleHidden('WFM Scheduling Team')" class="sortable-field" [appSort]="permissions"
                 data-order="asc" data-name="roles" data-type="array">
                 {{ 'WFM Scheduling Team' | translation: 'lbl_table_heading_wfm_scheduling_team' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
-              <th *ngIf="hasRoleHidden('Delivery Team')" class="sortable-field width-15-p" [appSort]="permissions"
+              <th *ngIf="hasRoleHidden('Delivery Team')" class="sortable-field" [appSort]="permissions"
                 data-order="asc" data-name="roles" data-type="array">
                 {{ 'Delivery Team' | translation: 'lbl_table_heading_delivery_team' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
-              <th *ngIf="hasRoleHidden('Active')" class="sortable-field width-15-p" [appSort]="permissions"
+              <th *ngIf="hasRoleHidden('Active')" class="sortable-field" [appSort]="permissions"
                 data-order="asc" data-name="roles" data-type="array">
                 {{ 'Active' | translation: 'lbl_table_heading_active' : translationValues }}
                 <i class="fa fa-sort"></i>
               </th>
-              <th class="sortable-field width-14-p" [appSort]="permissions" data-order="asc" data-name="createdBy">
+              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="createdBy">
                 {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
                 <i class="fa fa-sort"></i></th>
-              <th class="sortable-field width-14-p" [appSort]="permissions" data-order="asc" data-name="createdDate">
+              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="createdDate">
                 {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
                 <i class="fa fa-sort"></i></th>
-              <th class="sortable-field width-14-p" [appSort]="permissions" data-order="asc" data-name="modifiedBy">
+              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="modifiedBy">
                 {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
                 <i class="fa fa-sort"></i></th>
-              <th class="sortable-field width-14-p" [appSort]="permissions" data-order="asc" data-name="modifiedDate">
+              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="modifiedDate">
                 {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
                 <i class="fa fa-sort"></i></th>
             </tr>

@@ -40,8 +40,8 @@
         </div>
         <div class="col-md-2 text-right">
             <button type="button" class="btn btn-primary float-r mt-4" (click)="addSkillTag()"><i
-                    class="fa fa-plus pr-1"
-                    aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}</button>
+                    class="fa fa-plus pr-1" aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues
+                }}</button>
         </div>
     </div>
     <br>
@@ -51,52 +51,55 @@
                 <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
                     <thead>
                         <tr>
-                            <th class="width-5-p"></th>
-                            <th class="width-10-p">
+                            <th></th>
+                            <th>
                                 {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}</th>
-                            <th class="sortable-field width-10-p" (click)="sort('id', sortBy)">
+                            <th class="sortable-field" (click)="sort('id', sortBy)">
                                 {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
                                 <i *ngIf="orderBy !== 'id'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
-                            <th class="sortable-field width-10-p" (click)="sort('refId', sortBy)">
+                            <th class="sortable-field" (click)="sort('refId', sortBy)">
                                 {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
                                 <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
-                            <th class="sortable-field width-15-p" (click)="sort('name', sortBy)">
-                                {{ 'Skill Tag Name' | translation: 'lbl_table_heading_skill_tag_name' : translationValues }}
+                            <th class="sortable-field" (click)="sort('name', sortBy)">
+                                {{ 'Skill Tag Name' | translation: 'lbl_table_heading_skill_tag_name' :
+                                translationValues }}
                                 <i *ngIf="orderBy !== 'name'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'name'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
-                            <th class="sortable-field width-15-p" (click)="sort('createdBy', sortBy)">
+                            <th class="sortable-field" (click)="sort('createdBy', sortBy)">
                                 {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
                                 <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
-                            <th class="sortable-field width-15-p" (click)="sort('createdDate', sortBy)">
+                            <th class="sortable-field" (click)="sort('createdDate', sortBy)">
                                 {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
                                 <i *ngIf="orderBy !== 'createdDate'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
-                                </i></th>
-                            <th class="sortable-field width-15-p" (click)="sort('modifiedBy', sortBy)">
+                                </i>
+                            </th>
+                            <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
                                 {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
                                 <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
-                            <th class="sortable-field width-15-p" (click)="sort('modifiedDate', sortBy)">
-                                {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
+                            <th class="sortable-field" (click)="sort('modifiedDate', sortBy)">
+                                {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues
+                                }}
                                 <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
@@ -111,7 +114,8 @@
                                 <td>
                                     <i class="expand-icon fa padding-5 pointer"
                                         [ngClass]="( skillTag?.id === el?.id ) ? 'fa-minus' : 'fa-plus'"
-                                        (click)="toggleDetails(el.id)"></i></td>
+                                        (click)="toggleDetails(el.id)"></i>
+                                </td>
                                 <td>
                                     <i class="fa fa-edit padding-5 pointer" (click)="editSkillTag(el.id)"></i>
                                     <i class="fa fa-trash padding-5 pointer" (click)="deleteSkillTag(el.id)"></i>
@@ -119,25 +123,29 @@
                                 <td>{{el.id}}</td>
                                 <td>{{el.refId}}</td>
                                 <td>
-                                    <span
-                                        ngbTooltip="{{ el.name }}">{{ el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
-                                    <span class="padding-left-10"
-                                        [class.float-right]="el.name.length < characterSplice">
-                                        <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle"
-                                            [placement]="'auto'" container="body">
-                                            <i class="fa fa-ellipsis-h"></i>
-                                        </a>
-                                        <ng-template #popContent>
-                                            <b>Client Name : </b> {{ el.clientName }}
-                                            <br />
-                                            <b>Client LOB group Name : </b> {{ el.clientLobGroupName }}
-                                            <br>
-                                            <b>Skill Group Name :</b> {{el.skillGroupName}}
-                                        </ng-template>
-                                        <ng-template #popTitle>
-                                            {{ 'Hierarchy' | translation: 'lbl_table_heading_skill_tag_hierarchy' : translationValues }}
-                                        </ng-template>
-                                    </span>
+                                    <div class="display-inline-flex">
+                                        <span ngbTooltip="{{ el.name }}">{{ el.name | truncate: { sliceStart: 0,
+                                            sliceEnd: characterSplice, append: '...' } }}</span>
+                                        <span class="padding-left-10 float-right">
+                                            <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle"
+                                                [placement]="'auto'" container="body">
+                                                <i class="fa fa-ellipsis-h"></i>
+                                            </a>
+                                            <ng-template #popContent>
+                                                <b>Client Name : </b> {{ el.clientName }}
+                                                <br />
+                                                <br />
+                                                <b>Client LOB group Name : </b> {{ el.clientLobGroupName }}
+                                                <br>
+                                                <br />
+                                                <b>Skill Group Name :</b> {{el.skillGroupName}}
+                                            </ng-template>
+                                            <ng-template #popTitle>
+                                                {{ 'Hierarchy' | translation: 'lbl_table_heading_skill_tag_hierarchy' :
+                                                translationValues }}
+                                            </ng-template>
+                                        </span>
+                                    </div>
                                 </td>
                                 <td>{{el.createdBy}}</td>
                                 <td>{{el.createdDate | date: 'yyyy-MM-dd' }}</td>
@@ -150,7 +158,8 @@
                                     <td [attr.colspan]="12">
                                         <div class="px-3">
                                             <div class="py-2 open-hours-title">
-                                                {{ 'Operation hours for skill' | translation: 'lbl_operation_hours_for_skill' : translationValues }}
+                                                {{ 'Operation hours for skill' | translation:
+                                                'lbl_operation_hours_for_skill' : translationValues }}
                                             </div>
                                             <table class="w-100 open-hours expanding-table">
                                                 <thead>

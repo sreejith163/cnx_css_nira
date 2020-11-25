@@ -283,7 +283,7 @@ th:last-of-type {
   display: table;
 }
 
-.display-flex {
+.display-inline-flex {
   display: inline-flex;
 }
 
