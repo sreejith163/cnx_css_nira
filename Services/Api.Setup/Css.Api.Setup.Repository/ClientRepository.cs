@@ -1,5 +1,5 @@
 ﻿using Css.Api.Core.Models.Domain;
-using Css.Api.Core.DataAccess.Repository;
+using Css.Api.Core.DataAccess.Repository.SQL;
 using Css.Api.Setup.Models.Domain;
 using Css.Api.Setup.Models.DTO.Request.Client;
 using Css.Api.Setup.Repository.DatabaseContext;

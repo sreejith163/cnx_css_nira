@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Css.Api.Core.DataAccess.Repository;
+using Css.Api.Core.DataAccess.Repository.SQL;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Setup.Models.Domain;

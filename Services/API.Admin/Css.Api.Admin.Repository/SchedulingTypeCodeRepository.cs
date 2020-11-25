@@ -1,4 +1,4 @@
-﻿using Css.Api.Core.DataAccess.Repository;
+﻿using Css.Api.Core.DataAccess.Repository.SQL;
 using Css.Api.Admin.Models.Domain;
 using Css.Api.Admin.Repository.DatabaseContext;
 using Css.Api.Admin.Repository.Interfaces;

@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Css.Api.Core.DataAccess.Repository.NoSQL;
+using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Scheduling.Business;
 using Css.Api.Scheduling.Business.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Serilog;
 using System;
 
@@ -39,6 +42,12 @@ namespace Css.Api.Scheduling.Extensions
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddHttpContextAccessor();
 
+            services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
+
+            services.AddSingleton<IMongoDbSettings>(serviceProvider =>
+                serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value);
+
+            services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
             services.AddTransient<ITimezoneService, TimezoneService>();
 
             return services;

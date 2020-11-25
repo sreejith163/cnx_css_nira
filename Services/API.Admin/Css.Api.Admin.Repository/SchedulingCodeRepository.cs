@@ -1,5 +1,4 @@
 ﻿using Css.Api.Core.Models.Domain;
-using Css.Api.Core.DataAccess.Repository;
 using Css.Api.Admin.Models.Domain;
 using Css.Api.Admin.Repository.DatabaseContext;
 using Css.Api.Admin.Repository.Interfaces;
@@ -13,6 +12,7 @@ using AutoMapper.QueryableExtensions;
 using System.Collections.Generic;
 using System;
 using Css.Api.Core.Utilities.Extensions;
+using Css.Api.Core.DataAccess.Repository.SQL;
 
 namespace Css.Api.Admin.Repository
 {
