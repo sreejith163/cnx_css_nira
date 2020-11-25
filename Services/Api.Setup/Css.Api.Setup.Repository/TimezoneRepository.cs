@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Css.Api.Setup.Repository
 {
-    public class TimezoneRepository : GenericRepository<Timezone>, ITimezoneRepository
+    public class TimezoneRepository : EFCoreGenericRepository<Timezone>, ITimezoneRepository
     {
         /// <summary>
         /// The mapper

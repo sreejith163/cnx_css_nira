@@ -16,7 +16,7 @@ using Css.Api.Core.Utilities.Extensions;
 
 namespace Css.Api.Admin.Repository
 {
-    public class SchedulingCodeRepository : GenericRepository<SchedulingCode>, ISchedulingCodeRepository
+    public class SchedulingCodeRepository : EFCoreGenericRepository<SchedulingCode>, ISchedulingCodeRepository
     {
         /// <summary>
         /// The mapper

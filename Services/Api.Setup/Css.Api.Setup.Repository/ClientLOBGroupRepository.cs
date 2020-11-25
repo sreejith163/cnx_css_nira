@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Css.Api.Setup.Repository
 {
-    public class ClientLOBGroupRepository : GenericRepository<ClientLobGroup>, IClientLOBGroupRepository
+    public class ClientLOBGroupRepository : EFCoreGenericRepository<ClientLobGroup>, IClientLOBGroupRepository
     {
         /// <summary>
         /// The mapper

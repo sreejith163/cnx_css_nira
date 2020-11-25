@@ -11,7 +11,7 @@ using Css.Api.Core.Models.DTO.Response;
 
 namespace Css.Api.Admin.Repository
 {
-    public class SchedulingCodeIconRepository : GenericRepository<SchedulingCodeIcon>, ISchedulingCodeIconRepository
+    public class SchedulingCodeIconRepository : EFCoreGenericRepository<SchedulingCodeIcon>, ISchedulingCodeIconRepository
     {
         /// <summary>
         /// The mapper

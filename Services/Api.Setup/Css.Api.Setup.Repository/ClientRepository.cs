@@ -15,7 +15,7 @@ using Css.Api.Core.Utilities.Extensions;
 
 namespace Css.Api.Setup.Repository
 {
-    public class ClientRepository : GenericRepository<Client>, IClientRepository
+    public class ClientRepository : EFCoreGenericRepository<Client>, IClientRepository
     {
         /// <summary>
         /// The mapper

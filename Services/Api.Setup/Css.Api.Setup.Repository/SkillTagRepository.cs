@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Css.Api.Setup.Repository
 {
-    public class SkillTagRepository : GenericRepository<SkillTag>, ISkillTagRepository
+    public class SkillTagRepository : EFCoreGenericRepository<SkillTag>, ISkillTagRepository
     {
         /// <summary>
         /// The mapper
