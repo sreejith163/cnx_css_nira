@@ -88,7 +88,7 @@ namespace Css.Api.Admin.Repository
         /// <returns></returns>
         public async Task<List<int>> GetSchedulingCodesByDescription(SchedulingCodeNameDetails schedulingCodeNameDetails)
         {
-            var schedulingCodes = FindByCondition(x => string.Equals(x.Description, schedulingCodeNameDetails.Name, StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
+            var schedulingCodes = FindByCondition(x => string.Equals(x.Description.Trim(), schedulingCodeNameDetails.Name.Trim(), StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
                 .Select(x => x.Id)
                 .ToList();
 

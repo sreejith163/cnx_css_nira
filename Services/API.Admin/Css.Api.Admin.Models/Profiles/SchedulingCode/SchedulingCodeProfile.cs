@@ -14,10 +14,14 @@ namespace Css.Api.Admin.Models.Profiles.SchedulingCode
         public SchedulingCodeProfile()
         {
             CreateMap<CreateSchedulingCode, Domain.SchedulingCode>()
+                .ForMember(x => x.Description, opt => opt.MapFrom(o => o.Description.Trim()))
+                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Trim()))
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
 
             CreateMap<UpdateSchedulingCode, Domain.SchedulingCode>()
+                .ForMember(x => x.Description, opt => opt.MapFrom(o => o.Description.Trim()))
+                .ForMember(x => x.ModifiedBy, opt => opt.MapFrom(o => o.ModifiedBy.Trim()))
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
 

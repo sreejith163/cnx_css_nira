@@ -10,10 +10,14 @@ namespace Css.Api.Setup.Models.Profiles.SkillGroup
         public SkillGroupProfile()
         {
             CreateMap<CreateSkillGroup, Domain.SkillGroup>()
+                .ForMember(x => x.Name, opt => opt.MapFrom(o => o.Name.Trim()))
+                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Trim()))
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
 
             CreateMap<UpdateSkillGroup, Domain.SkillGroup>()
+                .ForMember(x => x.Name, opt => opt.MapFrom(o => o.Name.Trim()))
+                .ForMember(x => x.ModifiedBy, opt => opt.MapFrom(o => o.ModifiedBy.Trim()))
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
 

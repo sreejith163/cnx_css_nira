@@ -106,7 +106,8 @@ namespace Css.Api.Setup.Repository
             SkillGroupNameDetails skillGroupNameDetails)
         {
             var count = FindByCondition
-                (x => x.ClientLobGroupId == clientLOBGroupIdDetails.ClientLOBGroupId && string.Equals(x.Name, skillGroupNameDetails.Name, StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
+                (x => x.ClientLobGroupId == clientLOBGroupIdDetails.ClientLOBGroupId && string.Equals(x.Name.Trim(), skillGroupNameDetails.Name.Trim(), 
+                      StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
                 .Select(x => x.Id)
                 .ToList();
 

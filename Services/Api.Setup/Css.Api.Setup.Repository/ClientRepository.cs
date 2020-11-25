@@ -81,7 +81,7 @@ namespace Css.Api.Setup.Repository
         /// <returns></returns>
         public async Task<List<int>> GetClientsByName(ClientNameDetails clientNameDetails)
         {
-            var clients = FindByCondition(x => string.Equals(x.Name, clientNameDetails.Name, StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
+            var clients = FindByCondition(x => string.Equals(x.Name.Trim(), clientNameDetails.Name.Trim(), StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
                 .Select(x => x.Id)
                 .ToList();
 

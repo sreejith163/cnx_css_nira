@@ -108,7 +108,8 @@ namespace Css.Api.Setup.Repository
         public async Task<List<int>> GetSkillTagIdBySkillGroupIdAndGroupName(SkillGroupIdDetails skillGroupIdDetails, SkillTagNameDetails skillTagNameDetails)
         {
             var count = FindByCondition
-                (x => x.SkillGroupId == skillGroupIdDetails.SkillGroupId && string.Equals(x.Name, skillTagNameDetails.Name, StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
+                (x => x.SkillGroupId == skillGroupIdDetails.SkillGroupId && string.Equals(x.Name.Trim(), skillTagNameDetails.Name.Trim(),
+                      StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
                 .Select(x => x.Id)
                 .ToList();
 

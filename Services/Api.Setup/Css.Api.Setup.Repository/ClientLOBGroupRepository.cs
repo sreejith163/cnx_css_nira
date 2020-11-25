@@ -106,7 +106,8 @@ namespace Css.Api.Setup.Repository
         public async Task<List<int>> GetClientLOBGroupsIdByClientIdAndGroupName(ClientIdDetails clientIdDetails, ClientLOBGroupNameDetails clientLOBGroupNameDetails)
         {
             var count = FindByCondition
-                (x => x.ClientId == clientIdDetails.ClientId && string.Equals(x.Name, clientLOBGroupNameDetails.Name, StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
+                (x => x.ClientId == clientIdDetails.ClientId && string.Equals(x.Name.Trim(), clientLOBGroupNameDetails.Name.Trim(),
+                      StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
                 .Select(x => x.Id)
                 .ToList();
 
