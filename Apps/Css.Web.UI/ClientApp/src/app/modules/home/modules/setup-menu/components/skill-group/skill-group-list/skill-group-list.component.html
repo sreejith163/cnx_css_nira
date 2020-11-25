@@ -46,7 +46,6 @@
             <tr>
               <th>
                 {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}</th>
-
               <th class="sortable-field" (click)="sort('Id', sortBy)">
                 {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
                 <i *ngIf="orderBy !== 'Id'" class="fa fa-sort"></i>
@@ -122,7 +121,7 @@
               <td>{{el.id}}</td>
               <td>{{el.refId}}</td>
               <td>
-                <div class="display-inline-flex">
+                <div [class.display-inline-flex]="el.name.length > characterSplice">
                   <span ngbTooltip="{{ el.name }}">{{ el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice,
                     append: '...' } }}</span>
                   <span class="padding-left-10 float-right">

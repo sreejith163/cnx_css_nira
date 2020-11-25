@@ -284,9 +284,12 @@ th:last-of-type {
 }
 
 .display-inline-flex {
-  display: inline-flex;
+  display: inline-flex !important;
 }
 
+.display-inline-contents {
+  display: contents !important;
+}
 .expanding-table thead th {
   border: none !important;
 }
