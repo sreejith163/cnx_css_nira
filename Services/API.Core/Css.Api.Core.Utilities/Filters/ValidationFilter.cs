@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Css.Api.Setup.Filters
+namespace Css.Api.Core.Utilities.Filters
 {
     /// <summary>
     /// Filter for validating the DTO objects

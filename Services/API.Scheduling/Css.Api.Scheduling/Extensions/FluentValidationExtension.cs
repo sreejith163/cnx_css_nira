@@ -1,4 +1,4 @@
-﻿using Css.Api.Scheduling.Filters;
+﻿using Css.Api.Core.Utilities.Filters;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
