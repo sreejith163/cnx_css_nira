@@ -12,7 +12,7 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces
     /// Interface for generic mongo repository
     /// </summary>
     /// <typeparam name="TDocument">The type of the document.</typeparam>
-    public interface IGenericRepository<TDocument> where TDocument : IBaseDocument
+    public interface IGenericRepository<TDocument> : IDisposable where TDocument : IBaseDocument
     {
         /// <summary>
         /// Ases the queryable.
