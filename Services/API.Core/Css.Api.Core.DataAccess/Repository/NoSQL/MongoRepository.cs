@@ -20,7 +20,7 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <summary>
         /// The client
         /// </summary>
-        private IMongoClient _client;
+        private readonly IMongoClient _client;
 
         /// <summary>
         /// The collection
@@ -141,21 +141,19 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <param name="documents">The documents.</param>
         public void InsertMany(ICollection<TDocument> documents)
         {
-            using (var session = _client.StartSession())
+            using var session = _client.StartSession();
+            try
             {
-                try
-                {
-                    session.StartTransaction();
-                    _collection.InsertMany(session, documents);
-                }
-                catch (Exception ex)
-                {
-                    session.AbortTransactionAsync();
-                    throw ex;
-                }
-
-                session.CommitTransactionAsync();
+                session.StartTransaction();
+                _collection.InsertMany(session, documents);
             }
+            catch (Exception ex)
+            {
+                session.AbortTransactionAsync();
+                throw ex;
+            }
+
+            session.CommitTransactionAsync();
         }
 
         /// <summary>
@@ -164,21 +162,19 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <param name="documents">The documents.</param>
         public virtual async Task InsertManyAsync(ICollection<TDocument> documents)
         {
-            using (var session = await _client.StartSessionAsync())
+            using var session = await _client.StartSessionAsync();
+            try
             {
-                try
-                {
-                    session.StartTransaction();
-                    await _collection.InsertManyAsync(session, documents);
-                }
-                catch (Exception ex)
-                {
-                    await session.AbortTransactionAsync();
-                    throw ex;
-                }
-
-                await session.CommitTransactionAsync();
+                session.StartTransaction();
+                await _collection.InsertManyAsync(session, documents);
             }
+            catch (Exception ex)
+            {
+                await session.AbortTransactionAsync();
+                throw ex;
+            }
+
+            await session.CommitTransactionAsync();
         }
 
         /// <summary>
@@ -249,21 +245,19 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <param name="filterExpression">The filter expression.</param>
         public void DeleteMany(Expression<Func<TDocument, bool>> filterExpression)
         {
-            using (var session = _client.StartSession())
+            using var session = _client.StartSession();
+            try
             {
-                try
-                {
-                    session.StartTransaction();
-                    _collection.DeleteMany(filterExpression);
-                }
-                catch (Exception ex)
-                {
-                    session.AbortTransactionAsync();
-                    throw ex;
-                }
-
-                session.CommitTransactionAsync();
+                session.StartTransaction();
+                _collection.DeleteMany(filterExpression);
             }
+            catch (Exception ex)
+            {
+                session.AbortTransactionAsync();
+                throw ex;
+            }
+
+            session.CommitTransactionAsync();
         }
 
         /// <summary>
@@ -273,21 +267,19 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <returns></returns>
         public async Task DeleteManyAsync(Expression<Func<TDocument, bool>> filterExpression)
         {
-            using (var session = await _client.StartSessionAsync())
+            using var session = await _client.StartSessionAsync();
+            try
             {
-                try
-                {
-                    session.StartTransaction();
-                    await _collection.DeleteManyAsync(filterExpression);
-                }
-                catch (Exception ex)
-                {
-                    await session.AbortTransactionAsync();
-                    throw ex;
-                }
-
-                await session.CommitTransactionAsync();
+                session.StartTransaction();
+                await _collection.DeleteManyAsync(filterExpression);
             }
+            catch (Exception ex)
+            {
+                await session.AbortTransactionAsync();
+                throw ex;
+            }
+
+            await session.CommitTransactionAsync();
         }
 
         /// <summary>

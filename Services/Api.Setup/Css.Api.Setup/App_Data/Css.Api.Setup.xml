@@ -216,18 +216,6 @@
               <br />
             </returns>
         </member>
-        <member name="T:Css.Api.Setup.Extensions.CustomMVCConfigurationExtension">
-            <summary>
-            Extension for adding the mvc configuration
-            </summary>
-        </member>
-        <member name="M:Css.Api.Setup.Extensions.CustomMVCConfigurationExtension.AddMVCConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            Adds the swagger configuration.
-            </summary>
-            <param name="services">The services.</param>
-            <returns></returns>
-        </member>
         <member name="T:Css.Api.Setup.Extensions.DBContextExtension">
             <summary>
             Extension for adding the DB Context
@@ -241,24 +229,6 @@
             <param name="configuration">The configuration.</param>
             <returns></returns>
         </member>
-        <member name="T:Css.Api.Setup.Extensions.ExceptionMiddlewareExtension">
-            <summary>
-            Extension for adding the exception middlware
-            </summary>
-        </member>
-        <member name="M:Css.Api.Setup.Extensions.ExceptionMiddlewareExtension.ConfigureExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,Serilog.ILogger)">
-            <summary>
-            Configures the exception handler.
-            </summary>
-            <param name="app">The application.</param>
-            <param name="logger">The logger.</param>
-        </member>
-        <member name="M:Css.Api.Setup.Extensions.ExceptionMiddlewareExtension.ConfigureCustomExceptionMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
-            <summary>
-            Configures the custom exception middleware.
-            </summary>
-            <param name="app">The application.</param>
-        </member>
         <member name="T:Css.Api.Setup.Extensions.FluentValidationExtension">
             <summary>
             Extension for adding the fluent validation assemblies
@@ -267,18 +237,6 @@
         <member name="M:Css.Api.Setup.Extensions.FluentValidationExtension.AddFluentAbstractValidators(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             Adds the fluent abstract validators.
-            </summary>
-            <param name="services">The services.</param>
-            <returns></returns>
-        </member>
-        <member name="T:Css.Api.Setup.Extensions.HealthCheckExtension">
-            <summary>
-            Extension for adding health checks
-            </summary>
-        </member>
-        <member name="M:Css.Api.Setup.Extensions.HealthCheckExtension.AddHealthCheck(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            Adds the health checks.
             </summary>
             <param name="services">The services.</param>
             <returns></returns>
@@ -296,43 +254,6 @@
             <param name="HostingEnvironment">The hosting environment.</param>
             <param name="configuration">The configuration.</param>
             <returns></returns>
-        </member>
-        <member name="T:Css.Api.Setup.Extensions.SwaggerConfigurationExtension">
-            <summary>
-            Extension for adding swagger documentation
-            </summary>
-        </member>
-        <member name="M:Css.Api.Setup.Extensions.SwaggerConfigurationExtension.AddSwaggerConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
-            <summary>
-            Creates the response compression.
-            </summary>
-            <param name="services">The services.</param>
-            <param name="configuration">The configuration.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Setup.Extensions.SwaggerConfigurationExtension.GetSwaggerSecurityScheme">
-            <summary>
-            Gets the swagger security scheme.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:Css.Api.Setup.Filters.ValidationFilter">
-            <summary>
-            Filter for validating the DTO objects
-            </summary>
-            <seealso cref="T:Microsoft.AspNetCore.Mvc.Filters.IActionFilter" />
-        </member>
-        <member name="M:Css.Api.Setup.Filters.ValidationFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
-            <summary>
-            Called before the action executes, after model binding is complete.
-            </summary>
-            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext" />.</param>
-        </member>
-        <member name="M:Css.Api.Setup.Filters.ValidationFilter.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
-            <summary>
-            Called after the action executes, before the action result.
-            </summary>
-            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext" />.</param>
         </member>
         <member name="T:Css.Api.Setup.Program">
             <summary>

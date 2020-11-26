@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Serilog;
 using System.Net;
 
-namespace Css.Api.Admin.Extensions
+namespace Css.Api.Core.Utilities.Extensions
 {
     /// <summary>
     /// Extension for adding the exception middlware

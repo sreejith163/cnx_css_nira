@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Css.Api.Scheduling.Extensions
+namespace Css.Api.Core.Utilities.Extensions
 {
     /// <summary>
     /// Extension for adding the mvc configuration

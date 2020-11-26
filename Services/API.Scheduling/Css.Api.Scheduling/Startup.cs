@@ -1,3 +1,4 @@
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Core.Utilities.Filters;
 using Css.Api.Scheduling.Extensions;
 using HealthChecks.UI.Client;
