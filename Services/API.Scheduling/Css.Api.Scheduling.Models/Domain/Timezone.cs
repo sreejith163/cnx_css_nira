@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.Domain;
+using System;
 
 namespace Css.Api.Scheduling.Models.Domain
 {
@@ -34,5 +35,25 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets a value indicating whether this instance is deleted.
         /// </summary>
         public bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// Gets or sets the created by.
+        /// </summary>
+        public string CreatedBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the created date.
+        /// </summary>
+        public DateTimeOffset CreatedDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the modified by.
+        /// </summary>
+        public string ModifiedBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the modified date.
+        /// </summary>
+        public DateTimeOffset? ModifiedDate { get; set; }
     }
 }

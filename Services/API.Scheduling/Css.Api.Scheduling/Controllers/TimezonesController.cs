@@ -35,7 +35,56 @@ namespace Css.Api.Scheduling.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTimeZones([FromQuery] TimezoneQueryParameters timezoneQueryParameters)
         {
-            var result = await _timezoneService.GetTimezones(timezoneQueryParameters);
+            var result = await _timezoneService.GetTimeZones(timezoneQueryParameters);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>
+        /// Gets the time zone.
+        /// </summary>
+        /// <param name="timezoneId">The timezone identifier.</param>
+        /// <returns></returns>
+        [HttpGet("{timezoneId}")]
+        public async Task<IActionResult> GetTimeZone(int timezoneId)
+        {
+            var result = await _timezoneService.GetTimeZone(new TimezoneIdDetails { TimezoneId = timezoneId });
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>
+        /// Creates the time zone.
+        /// </summary>
+        /// <param name="clientDetails">The client details.</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> CreateTimeZone([FromBody] CreateTimezone clientDetails)
+        {
+            var result = await _timezoneService.CreateTimeZone(clientDetails);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>
+        /// Updates the time zone.
+        /// </summary>
+        /// <param name="timezoneId">The timezone identifier.</param>
+        /// <param name="clientDetails">The client details.</param>
+        /// <returns></returns>
+        [HttpPut("{timezoneId}")]
+        public async Task<IActionResult> UpdateTimeZone(int timezoneId, [FromBody] UpdateTimezone clientDetails)
+        {
+            var result = await _timezoneService.UpdateTimeZone(new TimezoneIdDetails { TimezoneId = timezoneId }, clientDetails);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>
+        /// Deletes the time zone.
+        /// </summary>
+        /// <param name="timezoneId">The timezone identifier.</param>
+        /// <returns></returns>
+        [HttpDelete("{timezoneId}")]
+        public async Task<IActionResult> DeleteTimeZone(int timezoneId)
+        {
+            var result = await _timezoneService.DeleteTimeZone(new TimezoneIdDetails { TimezoneId = timezoneId });
             return StatusCode((int)result.Code, result.Value);
         }
     }

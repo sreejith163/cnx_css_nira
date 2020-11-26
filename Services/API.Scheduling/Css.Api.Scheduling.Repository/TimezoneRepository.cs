@@ -7,6 +7,7 @@ using Css.Api.Scheduling.Repository.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.Timezone;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Driver;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -24,7 +25,7 @@ namespace Css.Api.Scheduling.Repository
         /// Gets the timezones.
         /// </summary>
         /// <param name="timezoneQueryParameters">The timezone query parameters.</param>
-        public async Task<PagedList<Entity>> GetTimezones(TimezoneQueryParameters timezoneQueryParameters)
+        public async Task<PagedList<Entity>> GetTimeZones(TimezoneQueryParameters timezoneQueryParameters)
         {
             var timeZones = FilterBy(x => x.IsDeleted == false);
 
@@ -40,6 +41,46 @@ namespace Css.Api.Scheduling.Repository
 
             return await PagedList<Entity>
                 .ToPagedList(shapedSkillTags, filteredTimeZones.Count(), timezoneQueryParameters.PageNumber, timezoneQueryParameters.PageSize);
+        }
+
+        /// <summary>
+        /// Gets the timezone.
+        /// </summary>
+        /// <param name="timezoneIdDetails">The timezone identifier details.</param>
+        /// <returns></returns>
+        public async Task<Timezone> GetTimeZone(TimezoneIdDetails timezoneIdDetails)
+        {
+            var query = Builders<Timezone>.Filter.Eq(i => i.TimezoneId, timezoneIdDetails.TimezoneId) 
+                & Builders<Timezone>.Filter.Eq(i => i.TimezoneId, timezoneIdDetails.TimezoneId);
+
+            return await FindByIdAsync(query);
+        }
+
+        /// <summary>
+        /// Creates the timezone.
+        /// </summary>
+        /// <param name="timezone">The timezone.</param>
+        public void CreateTimeZone(Timezone timezone)
+        {
+            InsertOneAsync(timezone);
+        }
+
+        /// <summary>
+        /// Updates the timezone.
+        /// </summary>
+        /// <param name="timezone">The timezone.</param>
+        public void UpdateTimeZone(Timezone timezone)
+        {
+            ReplaceOneAsync(timezone);
+        }
+
+        /// <summary>
+        /// Deletes the timezone.
+        /// </summary>
+        /// <param name="timezone">The timezone.</param>
+        public void DeleteTimeZone(Timezone timezone)
+        {
+            DeleteOneAsync(x => x.Id == timezone.Id);
         }
 
         /// <summary>

@@ -15,9 +15,7 @@ namespace Css.Api.Setup.Business.Interfaces
         Task<CSSResponse> GetSkillGroups(SkillGroupQueryParameter skillGroupQueryParameter);
 
         /// <summary>
-        ///   <para>
         /// Gets the skill group.
-        /// </para>
         /// </summary>
         /// <param name="skillIdDetails">The skill identifier details.</param>
         /// <returns>
@@ -25,14 +23,18 @@ namespace Css.Api.Setup.Business.Interfaces
         /// </returns>
         Task<CSSResponse> GetSkillGroup(SkillGroupIdDetails skillIdDetails);
 
-        /// <summary>Creates the skill group.</summary>
+        /// <summary>
+        /// Creates the skill group.
+        /// </summary>
         /// <param name="skillDetails">The skill details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
         Task<CSSResponse> CreateSkillGroup(CreateSkillGroup skillDetails);
 
-        /// <summary>Updates the skill group.</summary>
+        /// <summary>
+        /// Updates the skill group.
+        /// </summary>
         /// <param name="skillIdDetails">The skill identifier details.</param>
         /// <param name="skillDetails">The skill details.</param>
         /// <returns>
@@ -40,7 +42,9 @@ namespace Css.Api.Setup.Business.Interfaces
         /// </returns>
         Task<CSSResponse> UpdateSkillGroup(SkillGroupIdDetails skillIdDetails, UpdateSkillGroup skillDetails);
 
-        /// <summary>Deletes the skill group.</summary>
+        /// <summary>
+        /// Deletes the skill group.
+        /// </summary>
         /// <param name="skillIdDetails">The skill identifier details.</param>
         /// <returns>
         ///   <br />

@@ -26,6 +26,35 @@
               <br />
             </returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.GetTimeZone(System.Int32)">
+            <summary>
+            Gets the time zone.
+            </summary>
+            <param name="timezoneId">The timezone identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.CreateTimeZone(Css.Api.Scheduling.Models.DTO.Request.Timezone.CreateTimezone)">
+            <summary>
+            Creates the time zone.
+            </summary>
+            <param name="clientDetails">The client details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.UpdateTimeZone(System.Int32,Css.Api.Scheduling.Models.DTO.Request.Timezone.UpdateTimezone)">
+            <summary>
+            Updates the time zone.
+            </summary>
+            <param name="timezoneId">The timezone identifier.</param>
+            <param name="clientDetails">The client details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.DeleteTimeZone(System.Int32)">
+            <summary>
+            Deletes the time zone.
+            </summary>
+            <param name="timezoneId">The timezone identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Extensions.DBContextExtension">
             <summary>
             Extension for adding the DB Context
