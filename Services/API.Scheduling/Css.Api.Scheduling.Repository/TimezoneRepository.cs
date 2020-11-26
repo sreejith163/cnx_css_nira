@@ -1,45 +1,67 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Css.Api.Core.DataAccess.Repository.SQL;
-using Css.Api.Core.Models.DTO.Response;
+﻿using Css.Api.Core.DataAccess.Repository.NoSQL;
+using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
+using Css.Api.Core.Models.Domain;
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
-using Css.Api.Scheduling.Repository.DatabaseContext;
 using Css.Api.Scheduling.Repository.Interfaces;
-using System.Collections.Generic;
+using Css.Api.Scheduling.Models.DTO.Request.Timezone;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository
 {
-    public class TimezoneRepository : EFCoreGenericRepository<Timezone>, ITimezoneRepository
+    public class TimezoneRepository : MongoRepository<Timezone>, ITimezoneRepository
     {
-        /// <summary>
-        /// The mapper
-        /// </summary>
-        private readonly IMapper _mapper;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TimezoneRepository" /> class.
         /// </summary>
-        /// <param name="repositoryContext">The repository context.</param>
-        /// <param name="mapper">The mapper.</param>
-        /// <param name="">The .</param>
-        public TimezoneRepository(
-            SchedulingContext repositoryContext,
-            IMapper mapper)
-            : base(repositoryContext)
+        /// <param name="mongoDbSettings">The mongo database settings.</param>
+        public TimezoneRepository(IMongoDbSettings mongoDbSettings): base(mongoDbSettings)
         {
-            _mapper = mapper;
         }
 
-        /// <summary>Gets the timezones.</summary>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<List<KeyValue>> GetTimezones()
+        /// <summary>
+        /// Gets the timezones.
+        /// </summary>
+        /// <param name="timezoneQueryParameters">The timezone query parameters.</param>
+        public async Task<PagedList<Entity>> GetTimezones(TimezoneQueryParameters timezoneQueryParameters)
         {
-            var timeZones = FindAll().ProjectTo<KeyValue>(_mapper.ConfigurationProvider).ToList();
-            return await Task.FromResult(timeZones);
+            var timeZones = AsQueryable();
+
+            var filteredTimeZones = FilterTimezones(timeZones, timezoneQueryParameters.SearchKeyword);
+
+            var sortedTimeZones = SortHelper.ApplySort(filteredTimeZones, timezoneQueryParameters.OrderBy);
+
+            var pagedTimeZones = sortedTimeZones
+                .Skip((timezoneQueryParameters.PageNumber - 1) * timezoneQueryParameters.PageSize)
+                .Take(timezoneQueryParameters.PageSize);
+
+            var shapedSkillTags = DataShaper.ShapeData(pagedTimeZones, timezoneQueryParameters.Fields);
+
+            return await PagedList<Entity>
+                .ToPagedList(shapedSkillTags, filteredTimeZones.Count(), timezoneQueryParameters.PageNumber, timezoneQueryParameters.PageSize);
+        }
+
+        /// <summary>
+        /// Filters the timezones.
+        /// </summary>
+        /// <param name="timezones">The timezones.</param>
+        /// <param name="timeZoneNam">The time zone nam.</param>
+        /// <param name="">The .</param>
+        /// <returns></returns>
+        private IQueryable<Timezone> FilterTimezones(IQueryable<Timezone> timezones, string timeZoneName)
+        {
+            if (!timezones.Any())
+            {
+                return timezones;
+            }
+
+            if (!string.IsNullOrWhiteSpace(timeZoneName))
+            {
+                timezones = timezones.Where(o => o.Name.ToLower().Contains(timeZoneName.Trim().ToLower()));
+            }
+
+            return timezones;
         }
     }
 }

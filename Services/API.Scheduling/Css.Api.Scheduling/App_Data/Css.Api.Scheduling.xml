@@ -4,87 +4,6 @@
         <name>Css.Api.Scheduling</name>
     </assembly>
     <members>
-        <member name="T:Css.Api.Scheduling.Controllers.SampleController">
-            <summary>
-            
-            </summary>
-            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
-        </member>
-        <member name="F:Css.Api.Scheduling.Controllers.SampleController._peopleRepository">
-            <summary>
-            The people repository
-            </summary>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SampleController.#ctor(Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces.IMongoRepository{Css.Api.Scheduling.Controllers.Person})">
-            <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.SampleController"/> class.
-            </summary>
-            <param name="peopleRepository">The people repository.</param>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SampleController.AddPerson(System.String,System.String)">
-            <summary>
-            Adds the person.
-            </summary>
-            <param name="firstName">The first name.</param>
-            <param name="lastName">The last name.</param>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SampleController.UpdatePerson(System.String,System.String,System.String)">
-            <summary>
-            Updates the person.
-            </summary>
-            <param name="firstName">The first name.</param>
-            <param name="lastName">The last name.</param>
-            <param name="id">The identifier.</param>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SampleController.GetPeopleData">
-            <summary>
-            Gets the people data.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SampleController.GetPeopleDatas">
-            <summary>
-            Gets the people data.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.SampleController.DeleteAsync(System.String)">
-            <summary>
-            Gets the people data.
-            </summary>
-            <param name="id">The identifier.</param>
-            <returns></returns>
-        </member>
-        <member name="T:Css.Api.Scheduling.Controllers.Person">
-            <summary>
-            
-            </summary>
-            <seealso cref="T:Css.Api.Core.Models.Domain.BaseDocument" />
-        </member>
-        <member name="P:Css.Api.Scheduling.Controllers.Person.FirstName">
-            <summary>
-            Gets or sets the first name.
-            </summary>
-            <value>
-            The first name.
-            </value>
-        </member>
-        <member name="P:Css.Api.Scheduling.Controllers.Person.LastName">
-            <summary>
-            Gets or sets the last name.
-            </summary>
-            <value>
-            The last name.
-            </value>
-        </member>
-        <member name="P:Css.Api.Scheduling.Controllers.Person.BirthDate">
-            <summary>
-            Gets or sets the birth date.
-            </summary>
-            <value>
-            The birth date.
-            </value>
-        </member>
         <member name="T:Css.Api.Scheduling.Controllers.TimeZonesController">
             <summary>
             Controller for handling the Time zones resource
@@ -98,8 +17,11 @@
             <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.TimeZonesController" /> class.</summary>
             <param name="timezoneService">The timezone service.</param>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.GetTimeZones">
-            <summary>Gets the time zones.</summary>
+        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.GetTimeZones(Css.Api.Scheduling.Models.DTO.Request.Timezone.TimezoneQueryParameters)">
+            <summary>
+            Gets the time zones.
+            </summary>
+            <param name="timezoneQueryParameters">The timezone query parameters.</param>
             <returns>
               <br />
             </returns>

@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.Domain;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,33 +25,21 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces
         /// </summary>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns></returns>
-        IEnumerable<TDocument> FilterBy(
-            Expression<Func<TDocument, bool>> filterExpression);
-
-        /// <summary>
-        /// Filters the by.
-        /// </summary>
-        /// <typeparam name="TProjected">The type of the projected.</typeparam>
-        /// <param name="filterExpression">The filter expression.</param>
-        /// <param name="projectionExpression">The projection expression.</param>
-        /// <returns></returns>
-        IEnumerable<TProjected> FilterBy<TProjected>(
-            Expression<Func<TDocument, bool>> filterExpression,
-            Expression<Func<TDocument, TProjected>> projectionExpression);
+        IEnumerable<TDocument> FilterBy(FilterDefinition<TDocument> filterExpression);
 
         /// <summary>
         /// Finds the one.
         /// </summary>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns></returns>
-        TDocument FindOne(Expression<Func<TDocument, bool>> filterExpression);
+        TDocument FindOne(FilterDefinition<TDocument> filterExpression);
 
         /// <summary>
         /// Finds the one asynchronous.
         /// </summary>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns></returns>
-        Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression);
+        Task<TDocument> FindOneAsync(FilterDefinition<TDocument> filterExpression);
 
         /// <summary>
         /// Finds the by identifier.

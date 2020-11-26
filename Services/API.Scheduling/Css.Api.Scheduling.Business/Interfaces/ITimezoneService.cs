@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
+using Css.Api.Scheduling.Models.DTO.Request.Timezone;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Business.Interfaces
@@ -8,7 +9,8 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <summary>
         /// Gets the time zones.
         /// </summary>
+        /// <param name="timezoneQueryParameters">The timezone query parameters.</param>
         /// <returns></returns>
-        Task<CSSResponse> GetTimezones();
+        Task<CSSResponse> GetTimezones(TimezoneQueryParameters timezoneQueryParameters);
     }
 }

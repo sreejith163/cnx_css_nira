@@ -52,24 +52,9 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// </summary>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns></returns>
-        public virtual IEnumerable<TDocument> FilterBy(
-            Expression<Func<TDocument, bool>> filterExpression)
+        public virtual IEnumerable<TDocument> FilterBy(FilterDefinition<TDocument> filterExpression)
         {
             return _collection.Find(filterExpression).ToEnumerable();
-        }
-
-        /// <summary>
-        /// Filters the by.
-        /// </summary>
-        /// <typeparam name="TProjected">The type of the projected.</typeparam>
-        /// <param name="filterExpression">The filter expression.</param>
-        /// <param name="projectionExpression">The projection expression.</param>
-        /// <returns></returns>
-        public virtual IEnumerable<TProjected> FilterBy<TProjected>(
-            Expression<Func<TDocument, bool>> filterExpression,
-            Expression<Func<TDocument, TProjected>> projectionExpression)
-        {
-            return _collection.Find(filterExpression).Project(projectionExpression).ToEnumerable();
         }
 
         /// <summary>
@@ -77,7 +62,7 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// </summary>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns></returns>
-        public virtual TDocument FindOne(Expression<Func<TDocument, bool>> filterExpression)
+        public virtual TDocument FindOne(FilterDefinition<TDocument> filterExpression)
         {
             return _collection.Find(filterExpression).FirstOrDefault();
         }
@@ -87,7 +72,7 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// </summary>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns></returns>
-        public virtual async Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression)
+        public virtual async Task<TDocument> FindOneAsync(FilterDefinition<TDocument> filterExpression)
         {
             return await _collection.Find(filterExpression).FirstOrDefaultAsync();
         }

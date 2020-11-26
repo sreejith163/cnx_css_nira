@@ -41,7 +41,10 @@ namespace Css.Api.Setup.Business
         /// <param name="repository">The repository.</param>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="mapper">The mapper.</param>
-        public SkillTagService(IRepositoryWrapper repository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+        public SkillTagService(
+            IRepositoryWrapper repository, 
+            IHttpContextAccessor httpContextAccessor, 
+            IMapper mapper)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;

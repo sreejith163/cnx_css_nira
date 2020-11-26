@@ -1,4 +1,5 @@
 ﻿using Css.Api.Scheduling.Business.Interfaces;
+using Css.Api.Scheduling.Models.DTO.Request.Timezone;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -24,14 +25,17 @@ namespace Css.Api.Scheduling.Controllers
             _timezoneService = timezoneService;
         }
 
-        /// <summary>Gets the time zones.</summary>
+        /// <summary>
+        /// Gets the time zones.
+        /// </summary>
+        /// <param name="timezoneQueryParameters">The timezone query parameters.</param>
         /// <returns>
         ///   <br />
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> GetTimeZones()
+        public async Task<IActionResult> GetTimeZones([FromQuery] TimezoneQueryParameters timezoneQueryParameters)
         {
-            var result = await _timezoneService.GetTimezones();
+            var result = await _timezoneService.GetTimezones(timezoneQueryParameters);
             return StatusCode((int)result.Code, result.Value);
         }
     }

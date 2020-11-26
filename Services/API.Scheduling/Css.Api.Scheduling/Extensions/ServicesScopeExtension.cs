@@ -52,7 +52,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
             services.AddTransient<ITimezoneService, TimezoneService>();
 
-            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<ITimezoneRepository, TimezoneRepository>();
 
             return services;
 

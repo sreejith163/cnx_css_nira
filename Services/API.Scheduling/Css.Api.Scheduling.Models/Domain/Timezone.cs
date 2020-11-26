@@ -29,5 +29,10 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets the offset.
         /// </summary>
         public int Offset { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }
