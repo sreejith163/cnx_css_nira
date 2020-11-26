@@ -6,6 +6,7 @@ using Css.Api.Scheduling.Models.DTO.Request.Timezone;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Threading.Tasks;
+using Css.Api.Core.DataAccess.Repository.UnitOfWork.Interfaces;
 
 namespace Css.Api.Scheduling.Business
 {
@@ -14,7 +15,7 @@ namespace Css.Api.Scheduling.Business
         /// <summary>
         /// The HTTP context accessor
         /// </summary>
-        private IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>
         /// The repository
@@ -22,16 +23,24 @@ namespace Css.Api.Scheduling.Business
         private readonly ITimezoneRepository _repository;
 
         /// <summary>
+        /// The uow
+        /// </summary>
+        private readonly IUnitOfWork _uow;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TimezoneService" /> class.
         /// </summary>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="repository">The repository.</param>
+        /// <param name="uow">The uow.</param>
         public TimezoneService(
             IHttpContextAccessor httpContextAccessor, 
-            ITimezoneRepository repository)
+            ITimezoneRepository repository,
+            IUnitOfWork uow)
         {
             _httpContextAccessor = httpContextAccessor;
             _repository = repository;
+            _uow = uow;
         }
 
         /// <summary>

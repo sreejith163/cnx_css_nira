@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Css.Api.Core.DataAccess.Repository.SQL
 {
-    public abstract class EFCoreGenericRepository<T> : IEFCoreGenericRepository<T> where T : class
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         /// <summary>
         /// Gets or sets the repository context.
@@ -18,7 +18,7 @@ namespace Css.Api.Core.DataAccess.Repository.SQL
         /// Initializes a new instance of the <see cref="RepositoryBase{T}"/> class.
         /// </summary>
         /// <param name="repositoryContext">The repository context.</param>
-        public EFCoreGenericRepository(DbContext repositoryContext)
+        public GenericRepository(DbContext repositoryContext)
         {
             RepositoryContext = repositoryContext;
         }

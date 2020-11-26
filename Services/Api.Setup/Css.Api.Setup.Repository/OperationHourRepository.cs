@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Css.Api.Setup.Repository
 {
-    public class OperationHourRepository : EFCoreGenericRepository<OperationHour>, IOperationHourRepository
+    public class OperationHourRepository : GenericRepository<OperationHour>, IOperationHourRepository
     {
         /// <summary>Initializes a new instance of the <see cref="OperationHourRepository" /> class.</summary>
         /// <param name="repositoryContext">The repository context.</param>

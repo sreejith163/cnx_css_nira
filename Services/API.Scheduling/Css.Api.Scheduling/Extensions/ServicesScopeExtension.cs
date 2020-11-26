@@ -49,7 +49,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddSingleton<IMongoDbSettings>(serviceProvider =>
                 serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
-            services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<ITimezoneService, TimezoneService>();
 
             services.AddScoped<ITimezoneRepository, TimezoneRepository>();

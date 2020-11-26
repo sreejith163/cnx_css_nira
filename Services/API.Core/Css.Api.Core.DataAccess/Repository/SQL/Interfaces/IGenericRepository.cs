@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace Css.Api.Core.DataAccess.Repository.SQL.Interfaces
 {
-    public interface IEFCoreGenericRepository<T> where T : class
+    public interface IGenericRepository<T> where T : class
     {
         /// <summary>
         /// Finds all.

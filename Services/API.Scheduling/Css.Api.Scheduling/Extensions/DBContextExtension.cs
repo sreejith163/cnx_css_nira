@@ -1,5 +1,7 @@
-﻿using Css.Api.Scheduling.Repository.DatabaseContext;
-using Microsoft.EntityFrameworkCore;
+﻿using Css.Api.Core.DataAccess.Repository.NoSQL;
+using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
+using Css.Api.Core.DataAccess.Repository.UnitOfWork;
+using Css.Api.Core.DataAccess.Repository.UnitOfWork.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,8 +20,8 @@ namespace Css.Api.Scheduling.Extensions
         /// <returns></returns>
         public static IServiceCollection AddDBContextConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<SchedulingContext>(options =>
-                 options.UseMySQL(configuration.GetConnectionString("Database")));
+            services.AddScoped<IMongoContext, MongoContext>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

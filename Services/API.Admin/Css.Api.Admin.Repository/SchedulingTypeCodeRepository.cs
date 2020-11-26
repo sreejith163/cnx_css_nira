@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Css.Api.Admin.Repository
 {
-    public class SchedulingTypeCodeRepository : EFCoreGenericRepository<SchedulingTypeCode>, ISchedulingTypeCodeRepository
+    public class SchedulingTypeCodeRepository : GenericRepository<SchedulingTypeCode>, ISchedulingTypeCodeRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SchedulingTypeCodeRepository" /> class.

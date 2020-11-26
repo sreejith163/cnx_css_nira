@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository
 {
-    public class TimezoneRepository : MongoRepository<Timezone>, ITimezoneRepository
+    public class TimezoneRepository : GenericRepository<Timezone>, ITimezoneRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TimezoneRepository" /> class.
         /// </summary>
-        /// <param name="mongoDbSettings">The mongo database settings.</param>
-        public TimezoneRepository(IMongoDbSettings mongoDbSettings): base(mongoDbSettings)
+        /// <param name="mongoContext">The mongo context.</param>
+        public TimezoneRepository(IMongoContext mongoContext) : base(mongoContext)
         {
         }
 
@@ -26,7 +26,7 @@ namespace Css.Api.Scheduling.Repository
         /// <param name="timezoneQueryParameters">The timezone query parameters.</param>
         public async Task<PagedList<Entity>> GetTimezones(TimezoneQueryParameters timezoneQueryParameters)
         {
-            var timeZones = AsQueryable();
+            var timeZones = FilterBy(x => x.IsDeleted == false);
 
             var filteredTimeZones = FilterTimezones(timeZones, timezoneQueryParameters.SearchKeyword);
 

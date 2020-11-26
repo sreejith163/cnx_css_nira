@@ -11,7 +11,7 @@ using Css.Api.Core.DataAccess.Repository.SQL;
 
 namespace Css.Api.Admin.Repository
 {
-    public class SchedulingCodeIconRepository : EFCoreGenericRepository<SchedulingCodeIcon>, ISchedulingCodeIconRepository
+    public class SchedulingCodeIconRepository : GenericRepository<SchedulingCodeIcon>, ISchedulingCodeIconRepository
     {
         /// <summary>
         /// The mapper
