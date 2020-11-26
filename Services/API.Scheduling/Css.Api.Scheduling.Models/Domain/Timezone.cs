@@ -1,14 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Css.Api.Core.Models.Domain;
 
 namespace Css.Api.Scheduling.Models.Domain
 {
-    public partial class Timezone
+    [BsonCollection("timezone")]
+    public class Timezone : BaseDocument
     {
-        public int Id { get; set; }
+        /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        public int TimezoneId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the display name.
+        /// </summary>
         public string DisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the abbreviation.
+        /// </summary>
         public string Abbreviation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the offset.
+        /// </summary>
         public int Offset { get; set; }
     }
 }
