@@ -345,35 +345,25 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
   private rangeValidator(operationHour: FormGroup) {
     const start = operationHour.get('from')?.value ?? '';
     const end = operationHour.get('to')?.value ?? '';
-    const operationHourOpenTypeId = operationHour.get('operationHourOpenTypeId')?.value ?? '';
-    let startTime;
-    let endTime;
-
-    if (+operationHourOpenTypeId !== 2) {
-      return null;
-    }
 
     if (start) {
-      startTime = new Date(null, null, null, this.genericDataService.getHours(start), this.genericDataService.getMinutes(start));
-    }
-    if (end) {
-      endTime = new Date(null, null, null, this.genericDataService.getHours(end), this.genericDataService.getMinutes(end));
-    }
+      const operationHourOpenTypeId = operationHour.get('operationHourOpenTypeId')?.value ?? '';
+      let startTime;
+      let endTime;
 
-    return (startTime < endTime) ? null : { rangeError: true };
-  }
+      if (+operationHourOpenTypeId !== 2) {
+        return null;
+      }
 
-  private getHours(time: string) {
-    const timeArray = time.split(':');
-    if (timeArray[1].split(' ')[1] === 'pm') {
-      return parseInt(timeArray[0], 10) + 12;
-    } else {
-      return parseInt(timeArray[0], 10);
+      if (start) {
+        startTime = new Date(null, null, null, this.genericDataService.getHours(start), this.genericDataService.getMinutes(start));
+      }
+      if (end) {
+        endTime = new Date(null, null, null, this.genericDataService.getHours(end), this.genericDataService.getMinutes(end));
+      }
+
+      return (startTime < endTime) ? null : { rangeError: true };
     }
-  }
-
-  private getMinutes(time: string) {
-    return +(time.split(':')[1].split(' ')[0]);
   }
 
   private getTimeZones() {

@@ -168,10 +168,6 @@
                                 <span *ngIf="hasOpenHoursValidationError('from', i)" class="valid-error">
                                   {{ 'Time range is required' | translation: 'lbl_add_edit_time_range_required_validation_message' : translationValues }}
                                 </span>
-                                <span *ngIf="formSubmitted && operationHour.controls[i].errors?.rangeError && !hasOpenHoursValidationError('from', i)"
-                                  class="valid-error">
-                                  {{ 'Enter a valid time range' | translation: 'lbl_add_edit_time_range_invalid_validation_message' : translationValues }}
-                                </span>
                               </td>
                               <td>
                                 <select class="form-control" formControlName="to">
