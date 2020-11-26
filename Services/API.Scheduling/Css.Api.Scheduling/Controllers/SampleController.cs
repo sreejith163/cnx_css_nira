@@ -39,13 +39,23 @@ namespace Css.Api.Scheduling.Controllers
         [HttpPost("registerPerson")]
         public async Task AddPerson(string firstName, string lastName)
         {
-            var person = new Person()
+            var person1 = new Person()
+            {
+                FirstName = firstName,
+                LastName = lastName
+            };
+            var person2 = new Person()
             {
                 FirstName = firstName,
                 LastName = lastName
             };
 
-            await _peopleRepository.InsertOneAsync(person);
+            var sd = new List<Person>() {
+                person1,
+                person2
+            };
+
+            await _peopleRepository.InsertManyAsync(sd);
         }
 
         /// <summary>

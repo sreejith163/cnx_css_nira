@@ -18,6 +18,11 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
     public class MongoRepository<TDocument> : IMongoRepository<TDocument> where TDocument : IBaseDocument
     {
         /// <summary>
+        /// The client
+        /// </summary>
+        private IMongoClient _client;
+
+        /// <summary>
         /// The collection
         /// </summary>
         private readonly IMongoCollection<TDocument> _collection;
@@ -28,7 +33,8 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <param name="settings">The settings.</param>
         public MongoRepository(IMongoDbSettings settings)
         {
-            var database = new MongoClient(settings.ConnectionString).GetDatabase(settings.DatabaseName);
+            _client = new MongoClient(settings.ConnectionString);
+            var database = _client.GetDatabase(settings.DatabaseName);
             _collection = database.GetCollection<TDocument>(GetCollectionName(typeof(TDocument)));
         }
 
@@ -81,9 +87,9 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// </summary>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns></returns>
-        public virtual Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression)
+        public virtual async Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression)
         {
-            return Task.Run(() => _collection.Find(filterExpression).FirstOrDefaultAsync());
+            return await _collection.Find(filterExpression).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -103,14 +109,11 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public virtual Task<TDocument> FindByIdAsync(string id)
+        public virtual async Task<TDocument> FindByIdAsync(string id)
         {
-            return Task.Run(() =>
-            {
-                var objectId = new ObjectId(id);
-                var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, objectId);
-                return _collection.Find(filter).SingleOrDefaultAsync();
-            });
+            var objectId = new ObjectId(id);
+            var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, objectId);
+            return await _collection.Find(filter).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -127,9 +130,9 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// </summary>
         /// <param name="document">The document.</param>
         /// <returns></returns>
-        public virtual Task InsertOneAsync(TDocument document)
+        public virtual async Task InsertOneAsync(TDocument document)
         {
-            return Task.Run(() => _collection.InsertOneAsync(document));
+            await _collection.InsertOneAsync(document);
         }
 
         /// <summary>
@@ -138,7 +141,21 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <param name="documents">The documents.</param>
         public void InsertMany(ICollection<TDocument> documents)
         {
-            _collection.InsertMany(documents);
+            using (var session = _client.StartSession())
+            {
+                try
+                {
+                    session.StartTransaction();
+                    _collection.InsertMany(session, documents);
+                }
+                catch (Exception ex)
+                {
+                    session.AbortTransactionAsync();
+                    throw ex;
+                }
+
+                session.CommitTransactionAsync();
+            }
         }
 
         /// <summary>
@@ -147,7 +164,21 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <param name="documents">The documents.</param>
         public virtual async Task InsertManyAsync(ICollection<TDocument> documents)
         {
-            await _collection.InsertManyAsync(documents);
+            using (var session = await _client.StartSessionAsync())
+            {
+                try
+                {
+                    session.StartTransaction();
+                    await _collection.InsertManyAsync(session, documents);
+                }
+                catch (Exception ex)
+                {
+                    await session.AbortTransactionAsync();
+                    throw ex;
+                }
+
+                await session.CommitTransactionAsync();
+            }
         }
 
         /// <summary>
@@ -184,9 +215,9 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// </summary>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns></returns>
-        public Task DeleteOneAsync(Expression<Func<TDocument, bool>> filterExpression)
+        public async Task DeleteOneAsync(Expression<Func<TDocument, bool>> filterExpression)
         {
-            return Task.Run(() => _collection.FindOneAndDeleteAsync(filterExpression));
+            await _collection.FindOneAndDeleteAsync(filterExpression);
         }
 
         /// <summary>
@@ -205,14 +236,11 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public Task DeleteByIdAsync(string id)
+        public async Task DeleteByIdAsync(string id)
         {
-            return Task.Run(() =>
-            {
-                var objectId = new ObjectId(id);
-                var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, objectId);
-                _collection.FindOneAndDeleteAsync(filter);
-            });
+            var objectId = new ObjectId(id);
+            var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, objectId);
+            await _collection.FindOneAndDeleteAsync(filter);
         }
 
         /// <summary>
@@ -221,7 +249,21 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <param name="filterExpression">The filter expression.</param>
         public void DeleteMany(Expression<Func<TDocument, bool>> filterExpression)
         {
-            _collection.DeleteMany(filterExpression);
+            using (var session = _client.StartSession())
+            {
+                try
+                {
+                    session.StartTransaction();
+                    _collection.DeleteMany(filterExpression);
+                }
+                catch (Exception ex)
+                {
+                    session.AbortTransactionAsync();
+                    throw ex;
+                }
+
+                session.CommitTransactionAsync();
+            }
         }
 
         /// <summary>
@@ -229,9 +271,23 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// </summary>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns></returns>
-        public Task DeleteManyAsync(Expression<Func<TDocument, bool>> filterExpression)
+        public async Task DeleteManyAsync(Expression<Func<TDocument, bool>> filterExpression)
         {
-            return Task.Run(() => _collection.DeleteManyAsync(filterExpression));
+            using (var session = await _client.StartSessionAsync())
+            {
+                try
+                {
+                    session.StartTransaction();
+                    await _collection.DeleteManyAsync(filterExpression);
+                }
+                catch (Exception ex)
+                {
+                    await session.AbortTransactionAsync();
+                    throw ex;
+                }
+
+                await session.CommitTransactionAsync();
+            }
         }
 
         /// <summary>
