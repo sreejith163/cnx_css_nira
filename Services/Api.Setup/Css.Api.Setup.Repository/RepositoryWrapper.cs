@@ -25,6 +25,9 @@ namespace Css.Api.Setup.Repository
         /// <summary>
         /// Gets or sets the client lob groups.
         /// </summary>
+        /// <value>
+        /// The client lob group repository.
+        /// </value>
         private IClientLOBGroupRepository _clientLOBGroupRepository { get; set; }
 
         /// <summary>
@@ -35,17 +38,36 @@ namespace Css.Api.Setup.Repository
         /// </value>
         private ISkillTagRepository _skillTagRepository { get; set; }
 
-        /// <summary>Gets or sets the skill group repository.</summary>
-        /// <value>The skill group repository.</value>
+        /// <summary>
+        /// Gets or sets the skill group repository.
+        /// </summary>
+        /// <value>
+        /// The skill group repository.
+        /// </value>
         private ISkillGroupRepository _skillGroupRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent scheduling group repository.
+        /// </summary>
+        /// <value>
+        /// The agent scheduling group repository.
+        /// </value>
+        private IAgentSchedulingGroupRepository _agentSchedulingGroupRepository { get; set; }
 
         /// <summary>
         /// Gets or sets the timezone repository.
         /// </summary>
+        /// <value>
+        /// The timezone repository.
+        /// </value>
         private ITimezoneRepository _timezoneRepository { get; set; }
 
-        /// <summary>Gets or sets the operation hours repository.</summary>
-        /// <value>The operation hours repository.</value>
+        /// <summary>
+        /// Gets or sets the operation hours repository.
+        /// </summary>
+        /// <value>
+        /// The operation hours repository.
+        /// </value>
         private IOperationHourRepository _operationHoursRepository { get; set; }
 
         /// <summary>
@@ -78,8 +100,9 @@ namespace Css.Api.Setup.Repository
             }
         }
 
-        /// <summary>Gets the skill groups.</summary>
-        /// <value>The skill groups.</value>
+        /// <summary>
+        /// Gets the skill groups.
+        /// </summary>
         public ISkillGroupRepository SkillGroups
         {
             get
@@ -91,9 +114,39 @@ namespace Css.Api.Setup.Repository
                 return _skillGroupRepository;
             }
         }
-                
-        /// <summary>Gets the time zones.</summary>
-        /// <value>The time zones.</value>
+        /// <summary>
+        /// Gets the skill tags.
+        /// </summary>
+        public ISkillTagRepository SkillTags
+        {
+            get
+            {
+                if (_skillTagRepository == null)
+                {
+                    _skillTagRepository = new SkillTagRepository(_repositoryContext, _mapper);
+                }
+                return _skillTagRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the operation hours.
+        /// </summary>
+        public IOperationHourRepository OperationHours
+        {
+            get
+            {
+                if (_operationHoursRepository == null)
+                {
+                    _operationHoursRepository = new OperationHourRepository(_repositoryContext);
+                }
+                return _operationHoursRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the time zones.
+        /// </summary>
         public ITimezoneRepository TimeZones
         {
             get
@@ -106,28 +159,18 @@ namespace Css.Api.Setup.Repository
             }
         }
 
-        /// <summary>Gets the operation hours.</summary>
-        /// <value>The operation hours.</value>
-        public IOperationHourRepository OperationHours
+        /// <summary>
+        /// Gets the agent scheduling group repository.
+        /// </summary>
+        public IAgentSchedulingGroupRepository AgentSchedulingGroups
         {
             get
             {
-                if (_operationHoursRepository == null)
+                if (_agentSchedulingGroupRepository == null)
                 {
-                    _operationHoursRepository = new OperationHourRepository(_repositoryContext);
+                    _agentSchedulingGroupRepository = new AgentSchedulingGroupRepository(_repositoryContext, _mapper);
                 }
-                return _operationHoursRepository;
-            }
-        }
-        public ISkillTagRepository SkillTags
-        {
-            get
-            {
-                if (_skillTagRepository == null)
-                {
-                    _skillTagRepository = new SkillTagRepository(_repositoryContext, _mapper);
-                }
-                return _skillTagRepository;
+                return _agentSchedulingGroupRepository;
             }
         }
 

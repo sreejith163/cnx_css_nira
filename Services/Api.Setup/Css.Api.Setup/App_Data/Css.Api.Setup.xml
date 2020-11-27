@@ -4,6 +4,54 @@
         <name>Css.Api.Setup</name>
     </assembly>
     <members>
+        <member name="T:Css.Api.Setup.Controllers.AgentSchedulingGroupsController">
+            <summary>Controller for handling Agent Scheduling Groups resource</summary>
+        </member>
+        <member name="F:Css.Api.Setup.Controllers.AgentSchedulingGroupsController._agentSchedulingGroupService">
+            <summary>The agent scheduling group service</summary>
+        </member>
+        <member name="M:Css.Api.Setup.Controllers.AgentSchedulingGroupsController.#ctor(Css.Api.Setup.Business.Interfaces.IAgentSchedulingGroupService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Setup.Controllers.AgentSchedulingGroupsController"/> class.
+            </summary>
+            <param name="agentSchedulingGroupService">The agent scheduling group service.</param>
+        </member>
+        <member name="M:Css.Api.Setup.Controllers.AgentSchedulingGroupsController.GetAgentSchedulingGroups(Css.Api.Setup.Models.DTO.Request.AgentSchedulingGroup.AgentSchedulingGroupQueryParameter)">
+            <summary>
+            Gets the agent scheduling groups.
+            </summary>
+            <param name="agentSchedulingGroupQueryParameter">The agent scheduling group query parameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Setup.Controllers.AgentSchedulingGroupsController.GetAgentSchedulingGroup(System.Int32)">
+            <summary>
+            Gets the agent scheduling group.
+            </summary>
+            <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Setup.Controllers.AgentSchedulingGroupsController.CreateAgentSchedulingGroup(Css.Api.Setup.Models.DTO.Request.AgentSchedulingGroup.CreateAgentSchedulingGroup)">
+            <summary>
+            Creates the agent scheduling group.
+            </summary>
+            <param name="agentSchedulingGroupDetails">The agent scheduling group details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Setup.Controllers.AgentSchedulingGroupsController.UpdateAgentSchedulingGroup(System.Int32,Css.Api.Setup.Models.DTO.Request.AgentSchedulingGroup.UpdateAgentSchedulingGroup)">
+            <summary>
+            Updates the agent scheduling group.
+            </summary>
+            <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+            <param name="agentSchedulingGroupDetails">The agent scheduling group details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Setup.Controllers.AgentSchedulingGroupsController.DeleteAgentSchedulingGroup(System.Int32)">
+            <summary>
+            Deletes the agent scheduling group.
+            </summary>
+            <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Setup.Controllers.ClientLOBGroupsController">
             <summary>Controller for handling Client LOB group resource</summary>
         </member>

@@ -43,6 +43,13 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
         private ISkillTagRepository _skillTagsRepository { get; set; }
 
         /// <summary>
+        /// Gets or sets the agent scheduling group repository.
+        /// </summary>
+        /// <value>
+        private IAgentSchedulingGroupRepository _agentSchedulingGroupRepository { get; set; }
+
+
+        /// <summary>
         /// Gets the operation hours repository.
         /// </summary>
         private IOperationHourRepository _operationHoursRepository { get; set; }
@@ -108,7 +115,7 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
         /// The skill groups.
         /// </value>
         public ISkillGroupRepository SkillGroups
-        {
+        {  
             get
             {
                 if (_skillGroupsRepository == null)
@@ -146,6 +153,29 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
                 return _skillTagsRepository;
             }
         }
+
+        /// <summary>
+        /// Gets the agent scheduling.
+        /// </summary>
+        public IAgentSchedulingGroupRepository AgentSchedulingGroups
+        {
+            get
+            {
+                if (_agentSchedulingGroupRepository == null)
+                {
+                    var mockAgentSchedulingGroup = new Mock<DbSet<AgentSchedulingGroup>>();
+                    mockAgentSchedulingGroup.As<IQueryable<AgentSchedulingGroup>>().Setup(m => m.Provider).Returns(new MockDataContext().agentSchedulingGroupsDB.Provider);
+                    mockAgentSchedulingGroup.As<IQueryable<AgentSchedulingGroup>>().Setup(m => m.Expression).Returns(new MockDataContext().agentSchedulingGroupsDB.Expression);
+                    mockAgentSchedulingGroup.As<IQueryable<AgentSchedulingGroup>>().Setup(m => m.ElementType).Returns(new MockDataContext().agentSchedulingGroupsDB.ElementType);
+                    mockAgentSchedulingGroup.As<IQueryable<AgentSchedulingGroup>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().agentSchedulingGroupsDB.GetEnumerator());
+
+                    _repositoryContext.Setup(x => x.Set<AgentSchedulingGroup>()).Returns(mockAgentSchedulingGroup.Object);
+
+                    _agentSchedulingGroupRepository = new AgentSchedulingGroupRepository(_repositoryContext.Object, _mapper);
+                }
+                return _agentSchedulingGroupRepository;
+            }
+        }        
 
         /// <summary>
         /// Gets the operation hours.

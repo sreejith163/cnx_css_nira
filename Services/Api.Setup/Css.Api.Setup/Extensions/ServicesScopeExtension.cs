@@ -46,6 +46,8 @@ namespace Css.Api.Setup.Extensions
             services.AddTransient<ISkillTagService, SkillTagService>();
             services.AddTransient<ITimezoneService, TimezoneService>();
             services.AddTransient<ISkillGroupService, SkillGroupService>();
+            services.AddTransient<ISkillGroupService, SkillGroupService>();
+            services.AddTransient<IAgentSchedulingGroupService, AgentSchedulingGroupService>(); 
 
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 

@@ -20,10 +20,16 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
             new Client() { Id = 3, RefId = 3, Name= "C", CreatedBy = "Admin", CreatedDate = DateTime.Now },
             new Client() { Id = 4, RefId = 4, Name= "D", CreatedBy = "Admin", CreatedDate = DateTime.Now },
             new Client() { Id = 5, RefId = 5, Name= "E", CreatedBy = "Admin", CreatedDate = DateTime.Now }
-        }.AsQueryable();
+        }.AsQueryable();       
 
         public IQueryable<AgentSchedulingGroup> agentSchedulingGroupsDB = new List<AgentSchedulingGroup>()
         {
+             new AgentSchedulingGroup { Id = 1, RefId = 1, Name = "agentSchedulingGroup1", ClientId=1, ClientLobGroupId=1, SkillGroupId=1, SkillTagId=1,
+                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+             new AgentSchedulingGroup { Id = 2, RefId = 1, Name = "agentSchedulingGroup2", ClientId=1, ClientLobGroupId=2, SkillGroupId=1, SkillTagId=1,
+                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+             new AgentSchedulingGroup { Id = 3, RefId = 1, Name = "agentSchedulingGroup3", ClientId=1, ClientLobGroupId=1, SkillGroupId=1, SkillTagId=1,
+                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
         public IQueryable<ClientLobGroup> clientLobGroupsDB = new List<ClientLobGroup>()
