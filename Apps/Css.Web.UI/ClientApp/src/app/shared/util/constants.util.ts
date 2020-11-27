@@ -1,6 +1,5 @@
 import { SchedulingInterval } from 'src/app/modules/home/modules/scheduling-menu/models/scheduling-interval.model';
 import { OperationHours } from 'src/app/modules/home/modules/setup-menu/models/operation-hours.model';
-import { SchedulingCodeType } from 'src/app/modules/home/modules/system-admin/models/scheduling-code-type.model';
 import { UserRole } from 'src/app/modules/home/modules/system-admin/models/user-role.model';
 import { KeyValue } from '../models/key-value.model';
 import { PaginationSize } from '../models/pagination-size.model';
@@ -2572,6 +2571,17 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
+      variableId: 'search_hint',
+      menu: 'Agent Scheduling Group',
+      description: 'text',
+      language: 'English',
+      translation: 'Enter a Agent Scheduling Group Name',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
       variableId: 'btn_search',
       menu: 'Agent Scheduling Group',
       description: 'text',
@@ -3024,6 +3034,17 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
+      variableId: 'lbl_agent_scheduling_name_maxlength_validation',
+      menu: 'Agent Scheduling Group',
+      description: 'text',
+      language: 'English',
+      translation: 'Scheduling Group Name cannot exceed 50 characters',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
       variableId: 'lbl_add_edit_skill_tag_name_required_validation_message',
       menu: 'Agent Scheduling Group',
       description: 'text',
@@ -3100,13 +3121,34 @@ export class Constants {
       modifiedBy: 'me',
       modifiedDate: '2020-10-04',
     },
-
     {
       variableId: 'btn_save',
       menu: 'Agent Scheduling Group',
       description: 'text',
       language: 'English',
       translation: 'Save',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_table_heading_agent_scheduling_group_name',
+      menu: 'Agent Scheduling Group',
+      description: 'text',
+      language: 'English',
+      translation: 'Scheduling Group Name',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_operation_hours_for_group',
+      menu: 'Agent Scheduling Group',
+      description: 'text',
+      language: 'English',
+      translation: 'Operation hours for group',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',

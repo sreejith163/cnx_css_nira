@@ -12,8 +12,8 @@ import { SkillTagService } from './services/skill-tag.service';
 
 import { AddUpdateClientNameComponent } from './components/client-name/add-update-client-name/add-update-client-name.component';
 import { ClientNameListComponent } from './components/client-name/client-name-list/client-name-list.component';
-import { AddEditAgentSchedulingGroupComponent } from './components/add-edit-agent-scheduling-group/add-edit-agent-scheduling-group.component';
-import { AgentSchedulingGroupListComponent } from './components/agent-scheduling-group-list/agent-scheduling-group-list.component';
+import { AddEditAgentSchedulingGroupComponent } from './components/agent-scheduling-group/add-edit-agent-scheduling-group/add-edit-agent-scheduling-group.component';
+import { AgentSchedulingGroupListComponent } from './components/agent-scheduling-group/agent-scheduling-group-list/agent-scheduling-group-list.component';
 import { AddEditSkillGroupComponent } from './components/skill-group/add-edit-skill-group/add-edit-skill-group.component';
 import { ClientNameTypeAheadComponent } from './components/client-name/client-name-typeahead/client-name-typeahead.component';
 import { ClientLobGroupListComponent } from './components/client-lob-group/client-lob-group-list/client-lob-group-list.component';
@@ -24,6 +24,7 @@ import { SkillTagTypeaheadComponent } from './components/skill-tags/skill-tag-ty
 import { SkillTagsListComponent } from './components/skill-tags/skill-tags-list/skill-tags-list.component';
 import { AddUpdateSkillTagComponent } from './components/skill-tags/add-update-skill-tag/add-update-skill-tag.component';
 import { SkillGroupTypeaheadComponent } from './components/skill-group/skill-group-typeahead/skill-group-typeahead.component';
+import { AgentSchedulingGroupTypeaheadComponent } from './components/agent-scheduling-group/agent-scheduling-group-typeahead/agent-scheduling-group-typeahead.component';
 
 const modules = [SharedModule, SetupMenuRoutingModule];
 const components = [
@@ -33,6 +34,7 @@ const components = [
   AddUpdateClientLobGroupComponent,
   AgentSchedulingGroupListComponent,
   AddEditAgentSchedulingGroupComponent,
+  AgentSchedulingGroupTypeaheadComponent,
   SkillGroupListComponent,
   AddEditSkillGroupComponent,
   ClientNameTypeAheadComponent,
