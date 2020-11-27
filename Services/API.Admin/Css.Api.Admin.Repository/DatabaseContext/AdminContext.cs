@@ -37,7 +37,6 @@ namespace Css.Api.Admin.Repository.DatabaseContext
         public virtual DbSet<SchedulingCode> SchedulingCode { get; set; }
         public virtual DbSet<SchedulingCodeIcon> SchedulingCodeIcon { get; set; }
         public virtual DbSet<SchedulingCodeType> SchedulingCodeType { get; set; }
-        public virtual DbSet<SchedulingStatus> SchedulingStatus { get; set; }
         public virtual DbSet<SchedulingTypeCode> SchedulingTypeCode { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -365,23 +364,6 @@ namespace Css.Api.Admin.Repository.DatabaseContext
             modelBuilder.Entity<SchedulingCodeType>(entity =>
             {
                 entity.ToTable("scheduling_code_type");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Description).HasColumnName("description");
-
-                entity.Property(e => e.Value)
-                    .IsRequired()
-                    .HasColumnName("value")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<SchedulingStatus>(entity =>
-            {
-                entity.ToTable("scheduling_status");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")

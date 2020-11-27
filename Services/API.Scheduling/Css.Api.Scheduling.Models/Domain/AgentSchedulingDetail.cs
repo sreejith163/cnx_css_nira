@@ -25,7 +25,7 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the status.
         /// </summary>
-        public string Status { get; set; }
+        public SchedulingStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the charts.
