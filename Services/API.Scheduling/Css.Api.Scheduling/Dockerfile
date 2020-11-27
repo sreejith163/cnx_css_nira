@@ -13,8 +13,8 @@ COPY ["Services/API.Core/Css.Api.Core.Models/Css.Api.Core.Models.csproj", "Servi
 COPY ["Services/API.Scheduling/Css.Api.Scheduling.Business/Css.Api.Scheduling.Business.csproj", "Services/API.Scheduling/Css.Api.Scheduling.Business/"]
 COPY ["Services/API.Scheduling/Css.Api.Scheduling.Repository/Css.Api.Scheduling.Repository.csproj", "Services/API.Scheduling/Css.Api.Scheduling.Repository/"]
 COPY ["Services/API.Core/Css.Api.Core.Utilities/Css.Api.Core.Utilities.csproj", "Services/API.Core/Css.Api.Core.Utilities/"]
-COPY ["Services/API.Core/Css.Api.Core.DataAccess/Css.Api.Core.DataAccess.csproj", "Services/API.Core/Css.Api.Core.DataAccess/"]
 COPY ["Services/API.Core/Css.Api.Core.ExceptionHandling/Css.Api.Core.ExceptionHandling.csproj", "Services/API.Core/Css.Api.Core.ExceptionHandling/"]
+COPY ["Services/API.Core/Css.Api.Core.DataAccess/Css.Api.Core.DataAccess.csproj", "Services/API.Core/Css.Api.Core.DataAccess/"]
 RUN dotnet restore "Services/API.Scheduling/Css.Api.Scheduling/Css.Api.Scheduling.csproj"
 COPY . .
 WORKDIR "/src/Services/API.Scheduling/Css.Api.Scheduling"
