@@ -257,5 +257,4 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(this.getAgentSchedulingGroupSubscription);
   }
-
 }
