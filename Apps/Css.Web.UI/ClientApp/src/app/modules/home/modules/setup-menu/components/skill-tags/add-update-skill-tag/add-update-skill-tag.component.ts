@@ -147,7 +147,32 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
     this.skillGroupId = skillGroupId;
   }
 
+  private convertToDateFormat(time: string) {
+    const now = new Date();
+    const dateTarget = new Date();
+
+    dateTarget.setHours(this.genericDataService.getHours(time));
+    dateTarget.setMinutes(this.genericDataService.getMinutes(time));
+    dateTarget.setSeconds(0);
+    dateTarget.setMilliseconds(0);
+
+    if (dateTarget < now) {
+      dateTarget.setDate(dateTarget.getDate() + 1);
+    }
+    return  dateTarget;
+  }
+
+  private convertOperationHourstoDateFormat(skillTag: any) {
+    skillTag.operationHour.forEach(ele => {
+      if (ele.from) {
+        ele.from = this.convertToDateFormat(ele.from);
+        ele.to = this.convertToDateFormat(ele.to);
+      }
+    });
+  }
+
   private addSkillTagDetails() {
+    this.convertOperationHourstoDateFormat(this.skillTagForm.value as AddSkillTag);
     const addSkillTagModel = this.skillTagForm.value as AddSkillTag;
     addSkillTagModel.skillGroupId = this.skillGroupId;
     addSkillTagModel.createdBy = this.authService.getLoggedUserInfo().displayName;
@@ -170,6 +195,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
 
   private updateSkillTagDetails() {
     if (this.hasSkillTagDetailsMismatch()) {
+      this.convertOperationHourstoDateFormat(this.skillTagForm.value as UpdateSkillTag);
       const updateSkillTagModel = this.skillTagForm.value as UpdateSkillTag;
       updateSkillTagModel.skillGroupId = this.skillGroupId;
       updateSkillTagModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
@@ -280,7 +306,6 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
   private rangeValidator(operationHour: FormGroup) {
     const start = operationHour.get('from')?.value ?? '';
     const end = operationHour.get('to')?.value ?? '';
-
     if (start) {
       const operationHourOpenTypeId = operationHour.get('operationHourOpenTypeId')?.value ?? '';
       let startTime;
@@ -299,6 +324,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
 
       return (startTime < endTime) ? null : { rangeError: true };
     }
+
   }
 
   private loadSkillTag() {
@@ -307,7 +333,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
     this.getSkillTagSubscription = this.skillTagService.getSkillTag(this.skillTagId)
       .subscribe((response) => {
         this.skillTag = response;
-        this.populateFormDetails();
+        this.convertOperationHoursDateToHoursFormat(this.skillTag.operationHour);
         this.spinnerService.hide(this.spinner);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
@@ -316,6 +342,31 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
         }
       });
     this.subscriptions.push(this.getSkillTagSubscription);
+  }
+
+  private convertOperationHoursDateToHoursFormat(operationHour) {
+    for (const index in operationHour) {
+      if (+index < operationHour.length) {
+        operationHour[index].from = this.convertDateToHoursMinutes(operationHour[index]?.from);
+        operationHour[index].to = this.convertDateToHoursMinutes(operationHour[index]?.to);
+      } else {
+        this.populateFormDetails();
+      }
+    }
+  }
+
+  private convertDateToHoursMinutes(date: Date) {
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    const meridiem = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    const hourValue = hours < 10 ? '0' + hours : hours;
+    const minutesValue = minutes < 10 ? '0' + minutes : minutes;
+
+    const time = hourValue + ':' + minutesValue + ' ' + meridiem;
+
+    return time;
   }
 
   private intializeSkillTagForm() {

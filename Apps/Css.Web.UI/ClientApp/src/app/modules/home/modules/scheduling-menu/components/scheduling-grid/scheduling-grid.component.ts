@@ -77,7 +77,7 @@ export class SchedulingGridComponent implements OnInit {
     private schedulingGridService: SchedulingGridService,
     private calendar: NgbCalendar,
     private modalService: NgbModal,
-    public ngbDateParserFormatter: NgbDateParserFormatter,
+    private ngbDateParserFormatter: NgbDateParserFormatter,
   ) { }
 
   ngOnInit(): void {
@@ -152,12 +152,10 @@ export class SchedulingGridComponent implements OnInit {
   }
 
   getIconFromSelectedGrid(week: number, openTime: any) {
-    const meridiem = openTime.split(':')[1].split(' ')[1];
-    const time = openTime.split(' ')[0];
     const weekData = this.selectedGrid.calendar?.weekDays.find(x => x.day === +week);
 
     if (weekData) {
-      const weekTimeData = weekData.times.find(x => x.from === time && x.meridiem === meridiem);
+      const weekTimeData = weekData.times.find(x =>  openTime >= x.from && openTime < x.to);
       if (weekTimeData) {
         return this.unifiedToNative(weekTimeData?.icon);
       }
@@ -192,7 +190,7 @@ export class SchedulingGridComponent implements OnInit {
 
   onIconClick(event) {
     this.selectedIconId = event.target.id;
-    this.saveGridItems( this.selectedIconId);
+    this.saveGridItems(this.selectedIconId);
   }
 
   isMainMinute(data: any) {
@@ -234,8 +232,13 @@ export class SchedulingGridComponent implements OnInit {
 
   save() {
     this.matchSchedulingGridDataChanges();
-    this.schedulingGridData =  JSON.parse(JSON.stringify(this.selectedGrid));
+    this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
+    this.sortSelectedGridCalendarTimes();
+    this.formatTimeValuesInSchedulingGrid();
+    this.convertCalendarTimesToDate();
     this.showPopUpMessage();
+    this.convertCalendarTimesToHoursFormat();
+    console.log('final', this.schedulingGridData);
   }
 
   private showPopUpMessage() {
@@ -252,7 +255,7 @@ export class SchedulingGridComponent implements OnInit {
   }
 
   private matchSchedulingGridDataChanges() {
-    if (JSON.stringify(this.schedulingGridData) !== JSON.stringify(this.selectedGrid) ) {
+    if (JSON.stringify(this.schedulingGridData) !== JSON.stringify(this.selectedGrid)) {
       this.hasMismatch = true;
     }
   }
@@ -274,45 +277,164 @@ export class SchedulingGridComponent implements OnInit {
         ap[Math.floor(hh / 12)];
       tt = tt + x;
     }
-    times.forEach((ele, index) => {
-      if (ele.split(' ')[0] === '00:00') {
-        const meridian = ele.split(' ')[1];
-        times.splice(index, 1, '12:00 ' + meridian);
-      }
-    });
     return times;
   }
 
   private saveGridItems(icon) {
     const table = $('#' + this.tableClassName);
     table.find('.' + this.selectedCellClassName).each((index, elem) => {
+      let to;
+      let hours;
+      let from;
+      let minute;
       const week = elem.attributes.week.value;
-      const from = elem.attributes.time.value;
-      const minuteValue = Number(from.split(':')[1]) + this.timeIntervals;
-      const minute = minuteValue === 5 ? '05' : minuteValue;
-      const to = from.split(':')[0] + ':' + minute;
-      const meridiem = elem.attributes.meridiem.value;
+      let meridiem = elem.attributes.meridiem.value;
+      from = elem.attributes.time.value + ' ' + meridiem;
+      hours = from.split(':')[0];
+      const minuteValue = Number(from.split(':')[1].split(' ')[0]) + this.timeIntervals;
+      minute = minuteValue === 5 ? '05' : minuteValue;
+
+      if (minute === 60) {
+        meridiem = (hours === '11' && meridiem === 'am') ? 'pm' : meridiem;
+        hours = hours !== '11' ? ('0' + (Number(hours) + 1)).slice(-2) : '00';
+        minute = '00';
+      }
+
+      to = hours + ':' + minute + ' ' + meridiem;
 
       const weekDays = this.selectedGrid?.calendar?.weekDays;
       const weekData = weekDays.find(x => x.day === +week);
 
       if (weekData) {
-        const timeData = weekData.times.find(x => x.from === from && x.meridiem === meridiem);
+        const timeData = weekData.times.find(x => x.from === from && x.to.split(':')[1].split(' ')[1] === meridiem);
         if (timeData) {
           timeData.icon = icon;
         } else {
-          const calendarTime = new SchedulingCalendarTime(meridiem, from, to, icon);
+          const calendarTime = new SchedulingCalendarTime(from, to, icon);
           weekData.times.push(calendarTime);
         }
       } else {
         const weekDay = new SchedulingCalendarDays();
         weekDay.day = +week;
-        const calendarTime = new SchedulingCalendarTime(meridiem, from, to, icon);
+        const calendarTime = new SchedulingCalendarTime(from, to, icon);
         weekDay.times.push(calendarTime);
 
         weekDays.push(weekDay);
       }
     });
     table.find('.' + this.selectedCellClassName).removeClass(this.selectedCellClassName);
+  }
+
+  private formatTimes(times: Array<SchedulingCalendarTime>) {
+    const newTimesarray = new Array<SchedulingCalendarTime>();
+    let calendarTimes = new SchedulingCalendarTime(null, null, null);
+
+    for (const index in times) {
+      if (+index === 0) {
+        calendarTimes = times[index];
+        if (+index === times.length - 1) {
+          break;
+        }
+      } else if (calendarTimes.to === times[index].from && calendarTimes.icon === times[index].icon) {
+        calendarTimes.to = times[index].to;
+        if (+index === times.length - 1) {
+          break;
+        }
+      } else {
+        const model = new SchedulingCalendarTime(calendarTimes.from, calendarTimes.to, calendarTimes.icon);
+        newTimesarray.push(model);
+        calendarTimes = times[index];
+        if (+index === times.length - 1) {
+          break;
+        }
+      }
+    }
+
+    const modelvalue = new SchedulingCalendarTime(calendarTimes.from, calendarTimes.to, calendarTimes.icon);
+    newTimesarray.push(modelvalue);
+
+    return newTimesarray;
+  }
+
+  private formatTimeValuesInSchedulingGrid() {
+    this.schedulingGridData.calendar.weekDays.forEach((element) => {
+      element.times = this.formatTimes(element.times);
+    });
+    console.log(this.schedulingGridData);
+  }
+
+  private sortSelectedGridCalendarTimes() {
+    this.schedulingGridData.calendar.weekDays.forEach((element) => {
+      element.times.sort((a, b): number => {
+        if (this.convertToDateFormat(a.from) < this.convertToDateFormat(b.from)) {
+          return -1;
+        } else if (this.convertToDateFormat(a.from) > this.convertToDateFormat(b.from)) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      });
+    });
+  }
+
+  private convertCalendarTimesToDate() {
+    this.schedulingGridData.calendar.weekDays.forEach((element) => {
+      for (const data of element.times) {
+        data.from = this.convertToDateFormat(data?.from);
+        data.to = this.convertToDateFormat(data?.to);
+      }
+    });
+  }
+
+  private convertCalendarTimesToHoursFormat() {
+    this.schedulingGridData.calendar.weekDays.forEach((element) => {
+      for (const data of element.times) {
+        data.from = this.convertDateToHoursMinutes(data?.from);
+        data.to = this.convertDateToHoursMinutes(data?.to);
+      }
+    });
+  }
+
+  private convertToDateFormat(time: string) {
+    const now = new Date();
+    const dateTarget = new Date();
+
+    dateTarget.setHours(this.getHours(time));
+    dateTarget.setMinutes(this.getMinutes(time));
+    dateTarget.setSeconds(0);
+    dateTarget.setMilliseconds(0);
+
+    if (dateTarget < now) {
+      dateTarget.setDate(dateTarget.getDate() + 1);
+    }
+    return dateTarget;
+  }
+
+  private convertDateToHoursMinutes(date: Date) {
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    const meridiem = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    const hourValue = hours < 10 ? '0' + hours : hours;
+    const minutesValue = minutes < 10 ? '0' + minutes : minutes;
+
+    const time = hourValue + ':' + minutesValue + ' ' + meridiem;
+
+    return time;
+  }
+
+  private getHours(time: string) {
+    const timeArray = time.split(':');
+    if (timeArray[1].split(' ')[1] === 'pm') {
+      return (parseInt(timeArray[0], 10) + 12);
+    } else {
+      return parseInt(timeArray[0], 10);
+    }
+  }
+
+  private getMinutes(time: string) {
+    return +time.split(':')[1].split(' ')[0];
   }
 }

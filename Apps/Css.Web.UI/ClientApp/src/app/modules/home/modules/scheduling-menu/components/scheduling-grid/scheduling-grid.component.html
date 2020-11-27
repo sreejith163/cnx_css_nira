@@ -178,7 +178,7 @@
                                       <ng-container *ngIf="isMainMinute(data); else subMinutes">
                                         <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
                                           class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                                          {{ data.split(':')[0] }}
+                                          {{ data.split(':')[0] === '00' ? '12' : data.split(':')[0] }}
                                         </th>
                                       </ng-container>
                                       <ng-template #subMinutes>
