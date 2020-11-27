@@ -19,7 +19,7 @@ namespace Css.Api.Setup.Business.UnitTest.Services
     public class SkillTagServiceShould
     {
         /// <summary>
-        /// The skill tag service
+        /// The skil tag service
         /// </summary>
         private readonly ISkillTagService skillTagService;
 
@@ -45,7 +45,6 @@ namespace Css.Api.Setup.Business.UnitTest.Services
             });
 
             mapper = new Mapper(mapperConfig);
-
 
             var context = new DefaultHttpContext();
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
@@ -116,21 +115,42 @@ namespace Css.Api.Setup.Business.UnitTest.Services
         #region CreateSkillTag
 
         /// <summary>
-        /// Creates the skill tag with conflict.
+        /// Creates the skill tag with skill group group not found.
         /// </summary>
-        [Fact]
-        public async void CreateSkillTagWithConflict()
+        /// <param name="skillGroupId">The skill group identifier.</param>
+        [Theory]
+        [InlineData(100)]
+        public async void CreateSkillTagWithSkillGroupGroupNotFound(int skillGroupId)
         {
-            List<OperationHourAttribute> operatingHours = new List<OperationHourAttribute>()
-            { new OperationHourAttribute {Day=1,From="",OperationHourOpenTypeId=1,To="" } };
             CreateSkillTag skillTag = new CreateSkillTag()
             {
-                CreatedBy = "Admin",
-                OperationHour = operatingHours,
-                Name = "skill1",
-                RefId = 1,
-                SkillGroupId = 1
+                Name = "skillGroup",
+                SkillGroupId = skillGroupId,
+                OperationHour = new List<OperationHourAttribute>(),
+                CreatedBy = "admin"
             };
+            var result = await skillTagService.CreateSkillTag(skillTag);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        /// <summary>
+        /// Creates the skill tag with conflict found.
+        /// </summary>
+        [Fact]
+        public async void CreateSkillTagWithConflictFound()
+        {
+            CreateSkillTag skillTag = new CreateSkillTag()
+            {
+                RefId = 1,
+                Name = "skillTag1",
+                SkillGroupId = 1,
+                OperationHour = new List<OperationHourAttribute>(),
+                CreatedBy = "admin"
+            };
+
             var result = await skillTagService.CreateSkillTag(skillTag);
 
             Assert.NotNull(result);
@@ -139,21 +159,18 @@ namespace Css.Api.Setup.Business.UnitTest.Services
         }
 
         /// <summary>
-        /// Creates the client lob group.
+        /// Creates the skill tag.
         /// </summary>
         [Fact]
         public async void CreateSkillTag()
         {
-            List<OperationHourAttribute> operationHours = new List<OperationHourAttribute>()
-            { new OperationHourAttribute {Day=1,From="",OperationHourOpenTypeId=1,To="" } };
             CreateSkillTag skillTag = new CreateSkillTag()
             {
-                CreatedBy = "Admin",
-                OperationHour = operationHours,
-                Name = "skill11",
                 RefId = 1,
+                Name = "skillTag",
                 SkillGroupId = 1,
-
+                OperationHour = new List<OperationHourAttribute>(),
+                CreatedBy = "admin"
             };
             var result = await skillTagService.CreateSkillTag(skillTag);
 
@@ -177,9 +194,10 @@ namespace Css.Api.Setup.Business.UnitTest.Services
         {
             UpdateSkillTag skillTag = new UpdateSkillTag()
             {
-                ModifiedBy = "admin1",
-                SkillGroupId = 1,
-                Name = "skill2"
+                Name = "skillTag",
+                SkillGroupId = 1,              
+                OperationHour = new List<OperationHourAttribute>(),
+                ModifiedBy = "admin"
             };
             var result = await skillTagService.UpdateSkillTag(new SkillTagIdDetails { SkillTagId = skillTagId }, skillTag);
 
@@ -189,18 +207,42 @@ namespace Css.Api.Setup.Business.UnitTest.Services
         }
 
         /// <summary>
+        /// Updates the skill tag with skill group not found.
+        /// </summary>
+        /// <param name="skillTagId">The skill tag identifier.</param>
+        /// <param name="skillGroupId">The skill group identifier.</param>
+        [Theory]
+        [InlineData(1, 100)]
+        public async void UpdateSkillTagWithSkillGroupNotFound(int skillTagId, int skillGroupId)
+        {
+            UpdateSkillTag skillTag = new UpdateSkillTag()
+            {
+                Name = "skillTag",
+                SkillGroupId = skillGroupId,
+                OperationHour = new List<OperationHourAttribute>(),
+                ModifiedBy = "admin"
+            };
+            var result = await skillTagService.UpdateSkillTag(new SkillTagIdDetails { SkillTagId = skillTagId }, skillTag);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        /// <summary>
         /// Updates the skill tag with conflict.
         /// </summary>
         /// <param name="skillTagId">The skill tag identifier.</param>
         [Theory]
-        [InlineData(2)]
+        [InlineData(1)]
         public async void UpdateSkillTagWithConflict(int skillTagId)
         {
             UpdateSkillTag skillTag = new UpdateSkillTag()
             {
-                ModifiedBy = "admin1",
+                Name = "skillTag3",
                 SkillGroupId = 1,
-                Name = "skill1",
+                OperationHour = new List<OperationHourAttribute>(),
+                ModifiedBy = "admin"
             };
             var result = await skillTagService.UpdateSkillTag(new SkillTagIdDetails { SkillTagId = skillTagId }, skillTag);
 
@@ -217,14 +259,12 @@ namespace Css.Api.Setup.Business.UnitTest.Services
         [InlineData(1)]
         public async void UpdateSkillTag(int skillTagId)
         {
-            List<OperationHourAttribute> operationHours = new List<OperationHourAttribute>()
-            { new OperationHourAttribute {Day=1,From="",OperationHourOpenTypeId=1,To="" } };
             UpdateSkillTag skillTag = new UpdateSkillTag()
             {
-                ModifiedBy = "admin1",
+                Name = "skillTag",
                 SkillGroupId = 1,
-                Name = "skill11",
-                OperationHour = operationHours
+                OperationHour = new List<OperationHourAttribute>(),
+                ModifiedBy = "admin"
             };
             var result = await skillTagService.UpdateSkillTag(new SkillTagIdDetails { SkillTagId = skillTagId }, skillTag);
 
@@ -236,6 +276,21 @@ namespace Css.Api.Setup.Business.UnitTest.Services
         #endregion
 
         #region DeleteSkillTag
+
+        /// <summary>
+        /// Deletes the skill g tag with dependeny failed.
+        /// </summary>
+        /// <param name="skillTagId">The skill tag identifier.</param>
+        [Theory]
+        [InlineData(1)]
+        public async void DeleteSkillGTagWithDependenyFailed(int skillTagId)
+        {
+            var result = await skillTagService.DeleteSkillTag(new SkillTagIdDetails { SkillTagId = skillTagId });
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.FailedDependency, result.Code);
+        }
 
         /// <summary>
         /// Deletes the skill tag with not found.
@@ -257,7 +312,6 @@ namespace Css.Api.Setup.Business.UnitTest.Services
         /// </summary>
         /// <param name="skillTagId">The skill tag identifier.</param>
         [Theory]
-        [InlineData(1)]
         [InlineData(2)]
         public async void DeleteSkillTag(int skillTagId)
         {
@@ -271,3 +325,5 @@ namespace Css.Api.Setup.Business.UnitTest.Services
         #endregion
     }
 }
+
+

@@ -113,6 +113,32 @@ namespace Css.Api.Setup.Business.UnitTest.Services
         #region CreateAgentSchedulingGroup
 
         /// <summary>
+        /// Creates the agent scheduling group with skill tag found.
+        /// </summary>
+        /// <param name="skillTagId">The skill tag identifier.</param>
+        [Theory]
+        [InlineData(100)]
+        public async void CreateAgentSchedulingGroupWithSkillTagFound(int skillTagId)
+        {
+            CreateAgentSchedulingGroup agentSchedulingGroup = new CreateAgentSchedulingGroup()
+            {
+                RefId = 1,
+                Name = "agentSchedulingGroup1",
+                SkillTagId = skillTagId,
+                FirstDayOfWeek = 1,
+                TimezoneId = 1,
+                OperationHour = new List<OperationHourAttribute>(),
+                CreatedBy = "admin"
+            };
+
+            var result = await agentSchedulingGroupService.CreateAgentSchedulingGroup(agentSchedulingGroup);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        /// <summary>
         /// Creates the agent scheduling group with conflict found.
         /// </summary>
         [Fact]
@@ -191,6 +217,31 @@ namespace Css.Api.Setup.Business.UnitTest.Services
         }
 
         /// <summary>
+        /// Updates the agent scheduling group with skill tag not found.
+        /// </summary>
+        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+        /// <param name="skilltagId">The skilltag identifier.</param>
+        [Theory]
+        [InlineData(1, 100)]
+        public async void UpdateAgentSchedulingGroupWithSkillTagNotFound(int agentSchedulingGroupId, int skilltagId)
+        {
+            UpdateAgentSchedulingGroup agentSchedulingGroup = new UpdateAgentSchedulingGroup()
+            {
+                Name = "agentSchedulingGroup",
+                SkillTagId = skilltagId,
+                FirstDayOfWeek = 1,
+                TimezoneId = 1,
+                OperationHour = new List<OperationHourAttribute>(),
+                ModifiedBy = "admin"
+            };
+            var result = await agentSchedulingGroupService.UpdateAgentSchedulingGroup(new AgentSchedulingGroupIdDetails { AgentSchedulingGroupId = agentSchedulingGroupId }, agentSchedulingGroup);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        /// <summary>
         /// Updates the agent scheduling group with conflict.
         /// </summary>
         /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
@@ -242,7 +293,6 @@ namespace Css.Api.Setup.Business.UnitTest.Services
 
         #region DeleteAgentSchedulingGroup
        
-
         /// <summary>
         /// Deletes the agent scheduling group.
         /// </summary>

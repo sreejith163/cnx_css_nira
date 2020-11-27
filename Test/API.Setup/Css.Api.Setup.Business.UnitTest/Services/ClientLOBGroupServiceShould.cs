@@ -243,6 +243,18 @@ namespace Css.Api.Setup.Business.UnitTest.Services
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
+        public async void DeleteClientLOBGroupWithDependenyFailed(int clientLOBGroupId)
+        {
+            var result = await clientLOBGroupService.DeleteClientLOBGroup(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupId });
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.FailedDependency, result.Code);
+        }
+
+        [Theory]
+        [InlineData(4)]
+        [InlineData(5)]
         public async void DeleteClientLOBGroup(int clientLOBGroupId)
         {
             var result = await clientLOBGroupService.DeleteClientLOBGroup(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupId });

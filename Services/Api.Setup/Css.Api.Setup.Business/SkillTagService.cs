@@ -172,6 +172,12 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
+            var hasDependency = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupsCountBySkillTagId(skillTagIdDetails) > 0;
+            if (hasDependency)
+            {
+                return new CSSResponse($"The Skill Group {skillTag.Name} has dependency with other modules", HttpStatusCode.FailedDependency);
+            }
+
             skillTag.IsDeleted = true;
 
             _repository.SkillTags.UpdateSkillTag(skillTag);

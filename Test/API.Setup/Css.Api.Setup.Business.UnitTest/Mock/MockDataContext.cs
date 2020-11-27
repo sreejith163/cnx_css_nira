@@ -22,34 +22,54 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
             new Client() { Id = 5, RefId = 5, Name= "E", CreatedBy = "Admin", CreatedDate = DateTime.Now }
         }.AsQueryable();       
 
-        public IQueryable<AgentSchedulingGroup> agentSchedulingGroupsDB = new List<AgentSchedulingGroup>()
-        {
-             new AgentSchedulingGroup { Id = 1, RefId = 1, Name = "agentSchedulingGroup1", ClientId=1, ClientLobGroupId=1, SkillGroupId=1, SkillTagId=1,
-                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
-             new AgentSchedulingGroup { Id = 2, RefId = 1, Name = "agentSchedulingGroup2", ClientId=1, ClientLobGroupId=2, SkillGroupId=1, SkillTagId=1,
-                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
-             new AgentSchedulingGroup { Id = 3, RefId = 1, Name = "agentSchedulingGroup3", ClientId=1, ClientLobGroupId=1, SkillGroupId=1, SkillTagId=1,
-                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
-        }.AsQueryable();
-
         public IQueryable<ClientLobGroup> clientLobGroupsDB = new List<ClientLobGroup>()
         {
             new ClientLobGroup{ Id = 1, ClientId = 1, FirstDayOfWeek = 1, Name = "A", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
             new ClientLobGroup{ Id = 2, ClientId = 2, FirstDayOfWeek = 1, Name = "B", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
-            new ClientLobGroup{ Id = 3, ClientId = 3, FirstDayOfWeek = 1, Name = "C", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
+            new ClientLobGroup{ Id = 3, ClientId = 3, FirstDayOfWeek = 1, Name = "C", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new ClientLobGroup{ Id = 4, ClientId = 1, FirstDayOfWeek = 1, Name = "D", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new ClientLobGroup{ Id = 5, ClientId = 2, FirstDayOfWeek = 1, Name = "E", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
         public IQueryable<SkillGroup> skillGroupsDB = new List<SkillGroup>()
         {
-            new SkillGroup{ Id=1, ClientId=1, ClientLobGroupId=1, Name="group1", TimezoneId=1, CreatedDate=DateTime.UtcNow,CreatedBy="admin" },
-            new SkillGroup{ Id=2, ClientId=1, ClientLobGroupId=1, Name="group2", TimezoneId=1, CreatedDate=DateTime.UtcNow,CreatedBy="admin" }
+             new SkillGroup { Id = 1, RefId = 1, Name = "skillGroup1", ClientId=1, ClientLobGroupId=1,
+                  FirstDayOfWeek=1, TimezoneId=1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+             new SkillGroup { Id = 2, RefId = 1, Name = "skillGroup2",  ClientId=1, ClientLobGroupId=2,
+                  FirstDayOfWeek=1, TimezoneId=1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+             new SkillGroup { Id = 3, RefId = 1, Name = "skillGroup3",  ClientId=1, ClientLobGroupId=1,
+                  FirstDayOfWeek=1, TimezoneId=1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
         public IQueryable<SkillTag> skillTagsDB = new List<SkillTag>()
         {
-            new SkillTag { Id = 1, ClientId = 1, ClientLobGroupId = 3, SkillGroupId = 1, Name="Skill1", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
-            new SkillTag { Id = 2, ClientId = 1, ClientLobGroupId = 3, SkillGroupId = 1, Name="Skill2", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
-            new SkillTag { Id = 3, ClientId = 1, ClientLobGroupId = 3, SkillGroupId = 1, Name="Skill3", CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
+            new SkillTag { Id = 1, RefId = 1, Name = "skillTag1", ClientId=1, ClientLobGroupId=1, SkillGroupId=1,
+                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+             new SkillTag { Id = 2, RefId = 1, Name = "skillTag2",  ClientId=1, ClientLobGroupId=2,SkillGroupId=1,
+                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+             new SkillTag { Id = 3, RefId = 1, Name = "skillTag3",  ClientId=1, ClientLobGroupId=1,SkillGroupId=1,
+                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
+        }.AsQueryable();
+
+        public IQueryable<AgentSchedulingGroup> agentSchedulingGroupsDB = new List<AgentSchedulingGroup>()
+        {
+             new AgentSchedulingGroup { Id = 1, RefId = 1, Name = "agentSchedulingGroup1", ClientId=1, ClientLobGroupId=1, SkillGroupId=1, SkillTagId=1,
+                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+             new AgentSchedulingGroup { Id = 2, RefId = 1, Name = "agentSchedulingGroup2",  ClientId=1, ClientLobGroupId=2,SkillGroupId=1, SkillTagId=1,
+                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+             new AgentSchedulingGroup { Id = 3, RefId = 1, Name = "agentSchedulingGroup3",  ClientId=1, ClientLobGroupId=1,SkillGroupId=1, SkillTagId=1,
+                   CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
+        }.AsQueryable();
+                
+        public IQueryable<OperationHour> operationHoursDB = new List<OperationHour>()
+        {
+            new OperationHour { Id = 1, SkillGroupId=1, Day=0, OperationHourOpenTypeId=1 },
+            new OperationHour { Id = 1, SkillGroupId=1, Day=1, OperationHourOpenTypeId=1 },
+            new OperationHour { Id = 1, SkillGroupId=1, Day=2, OperationHourOpenTypeId=1 },
+            new OperationHour { Id = 1, SkillGroupId=1, Day=3, OperationHourOpenTypeId=1 },
+            new OperationHour { Id = 1, SkillGroupId=1, Day=4, OperationHourOpenTypeId=1 },
+            new OperationHour { Id = 1, SkillGroupId=1, Day=5, OperationHourOpenTypeId=1 },
+            new OperationHour { Id = 1, SkillGroupId=1, Day=6, OperationHourOpenTypeId=1 }
         }.AsQueryable();
 
         public IQueryable<Timezone> timezonesDB = new List<Timezone>()
@@ -57,11 +77,6 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
             new Timezone { Id = 1, Name= "Dateline Standard Time", DisplayName = "(UTC-12:00) International Date Line West", Abbreviation = "DST", Offset = -12 },
             new Timezone { Id = 2, Name= "Hawaiian Standard Time", DisplayName = "(UTC-10:00) Hawaii", Abbreviation = "HST", Offset = -10 },
             new Timezone { Id = 3, Name= "Alaskan Standard Time", DisplayName = "(UTC-09:00) Alaska", Abbreviation = "AKDT", Offset = -8 }
-        }.AsQueryable();
-
-        public IQueryable<OperationHour> operationHoursDB = new List<OperationHour>()
-        {
-            new OperationHour{ Id = 1, Day = 1, From = "9AM", SkillTagId = 1, To = "9PM", OperationHourOpenTypeId = 1}
         }.AsQueryable();
 
         public IQueryable<OperationHourOpenType> operationHourOpenTypesDB = new List<OperationHourOpenType>()

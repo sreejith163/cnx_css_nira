@@ -45,9 +45,7 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
         /// <summary>
         /// Gets or sets the agent scheduling group repository.
         /// </summary>
-        /// <value>
         private IAgentSchedulingGroupRepository _agentSchedulingGroupRepository { get; set; }
-
 
         /// <summary>
         /// Gets the operation hours repository.
@@ -111,9 +109,6 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
         /// <summary>
         /// Gets the skill groups.
         /// </summary>
-        /// <value>
-        /// The skill groups.
-        /// </value>
         public ISkillGroupRepository SkillGroups
         {  
             get
@@ -134,6 +129,9 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
             }
         }
 
+        /// <summary>
+        /// Gets the skill tags.
+        /// </summary>
         public ISkillTagRepository SkillTags
         {
             get
@@ -155,7 +153,7 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
         }
 
         /// <summary>
-        /// Gets the agent scheduling.
+        /// Gets the agent scheduling groups.
         /// </summary>
         public IAgentSchedulingGroupRepository AgentSchedulingGroups
         {
@@ -189,9 +187,13 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
             {
                 if (_operationHoursRepository == null)
                 {
-                    var mockSchedulingCodeTypes = new Mock<DbSet<OperationHour>>();
-                    
-                    _repositoryContext.Setup(x => x.Set<OperationHour>()).Returns(mockSchedulingCodeTypes.Object);
+                    var mockOperationHours = new Mock<DbSet<OperationHour>>();
+                    mockOperationHours.As<IQueryable<OperationHour>>().Setup(m => m.Provider).Returns(new MockDataContext().operationHoursDB.Provider);
+                    mockOperationHours.As<IQueryable<OperationHour>>().Setup(m => m.Expression).Returns(new MockDataContext().operationHoursDB.Expression);
+                    mockOperationHours.As<IQueryable<OperationHour>>().Setup(m => m.ElementType).Returns(new MockDataContext().operationHoursDB.ElementType);
+                    mockOperationHours.As<IQueryable<OperationHour>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().operationHoursDB.GetEnumerator());
+
+                    _repositoryContext.Setup(x => x.Set<OperationHour>()).Returns(mockOperationHours.Object);
 
                     _operationHoursRepository = new OperationHourRepository(_repositoryContext.Object);
                 }
@@ -219,7 +221,7 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
                 }
                 return _timezoneRepository;
             }
-        }    
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryWrapper" /> class.
