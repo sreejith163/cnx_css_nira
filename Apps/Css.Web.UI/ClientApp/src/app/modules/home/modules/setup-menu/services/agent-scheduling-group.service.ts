@@ -19,7 +19,7 @@ export class AgentSchedulingGroupService extends HttpBaseService {
     private http: HttpClient
   ) {
     super();
-    this.baseURL = environment.services.schedulingService;
+    this.baseURL = environment.services.setupService;
   }
 
   getAgentSchedulingGroups(agentSchedulingGroupsQueryParams: AgentSchedulingGroupQueryParams) {
