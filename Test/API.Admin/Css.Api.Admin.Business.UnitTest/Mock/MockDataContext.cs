@@ -27,10 +27,6 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
         {
         }.AsQueryable();
 
-        public IQueryable<SchedulingStatus> schedulingStatusesDB = new List<SchedulingStatus>()
-        {
-        }.AsQueryable();
-
         public IQueryable<SchedulingCodeType> schedulingCodeTypesDB = new List<SchedulingCodeType>()
         {
             new SchedulingCodeType { Id = 1, Description = "test1", Value = "A" },
@@ -136,12 +132,6 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
             mockSchedulingCodeType.As<IQueryable<SchedulingCodeType>>().Setup(m => m.ElementType).Returns(schedulingCodeTypesDB.ElementType);
             mockSchedulingCodeType.As<IQueryable<SchedulingCodeType>>().Setup(m => m.GetEnumerator()).Returns(schedulingCodeTypesDB.GetEnumerator());
 
-            var mockSchedulingStatus = new Mock<DbSet<SchedulingStatus>>();
-            mockSchedulingStatus.As<IQueryable<SchedulingStatus>>().Setup(m => m.Provider).Returns(schedulingStatusesDB.Provider);
-            mockSchedulingStatus.As<IQueryable<SchedulingStatus>>().Setup(m => m.Expression).Returns(schedulingStatusesDB.Expression);
-            mockSchedulingStatus.As<IQueryable<SchedulingStatus>>().Setup(m => m.ElementType).Returns(schedulingStatusesDB.ElementType);
-            mockSchedulingStatus.As<IQueryable<SchedulingStatus>>().Setup(m => m.GetEnumerator()).Returns(schedulingStatusesDB.GetEnumerator());
-
             var mockSchedulingTypeCode = new Mock<DbSet<SchedulingTypeCode>>();
             mockSchedulingTypeCode.As<IQueryable<SchedulingTypeCode>>().Setup(m => m.Provider).Returns(schedulingTypeCodes.Provider);
             mockSchedulingTypeCode.As<IQueryable<SchedulingTypeCode>>().Setup(m => m.Expression).Returns(schedulingTypeCodes.Expression);
@@ -157,7 +147,6 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
             mockAdminContext.Setup(c => c.SchedulingCode).Returns(mockSchedulingCode.Object);
             mockAdminContext.Setup(c => c.SchedulingCodeIcon).Returns(mockSchedulingCodeIcon.Object);
             mockAdminContext.Setup(c => c.SchedulingCodeType).Returns(mockSchedulingCodeType.Object);
-            mockAdminContext.Setup(c => c.SchedulingStatus).Returns(mockSchedulingStatus.Object);
             mockAdminContext.Setup(c => c.SchedulingTypeCode).Returns(mockSchedulingTypeCode.Object);
 
             return mockAdminContext;
