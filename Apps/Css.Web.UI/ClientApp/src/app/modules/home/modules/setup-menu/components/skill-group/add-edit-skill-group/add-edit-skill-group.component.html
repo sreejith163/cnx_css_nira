@@ -91,7 +91,7 @@
                 </ng-container>
               </div>
               <div *ngIf="hasFormControlValidationError('firstDayOfWeek')" class="valid-error">
-                {{ 'FFirst day of week is required' | translation: 'lbl_add_edit_first_day_of_week_required_validation_message' : translationValues }}
+                {{ 'First day of week is required' | translation: 'lbl_add_edit_first_day_of_week_required_validation_message' : translationValues }}
               </div>
             </div>
           </div>
@@ -164,7 +164,7 @@
                               <td>
                                 <select class="form-control" formControlName="from">
                                   <option *ngFor="let x of openTime" [value]="x">{{x}}</option>
-                                </select>                                
+                                </select>
                                 <span *ngIf="hasOpenHoursValidationError('from', i)" class="valid-error">
                                   {{ 'Time range is required' | translation: 'lbl_add_edit_time_range_required_validation_message' : translationValues }}
                                 </span>

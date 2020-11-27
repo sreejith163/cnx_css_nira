@@ -28,8 +28,11 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
   getSkillTagsSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
-  @Input() skillTagId: number;
+
+  @Input() clientId: number;
+  @Input() clientLobGroupId: number;
   @Input() skillGroupId: number;
+  @Input() skillTagId: number;
   @Output() skillTagSelected = new EventEmitter();
 
   constructor(
@@ -51,6 +54,7 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
 
   ngOnChanges() {
     if (this.skillGroupId) {
+      this.pageNumber = 1;
       this.subscribeToSkillTags();
     } else {
       this.skillTagItemsBuffer = [];
@@ -130,9 +134,9 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
 
   private getQueryParams(searchkeyword?: string) {
     const queryParams = new SkillTagQueryParams();
-    queryParams.clientId = undefined;
-    queryParams.clientLobGroupId = undefined;
-    queryParams.skillGroupId = this.skillGroupId;
+    queryParams.clientId = this.clientId ?? undefined;
+    queryParams.clientLobGroupId = this.clientLobGroupId ?? undefined;
+    queryParams.skillGroupId = this.skillGroupId ?? undefined;
     queryParams.pageSize = this.skillTagItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;

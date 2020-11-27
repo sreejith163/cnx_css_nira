@@ -75,8 +75,8 @@
               </label>
             </div>
             <div class="col-md-8">
-              <app-skill-tag-typeahead (skillTagSelected)="setSkillTag($event)" [skillGroupId]="skillGroupId"
-                [skillTagId]="skillTagId">
+              <app-skill-tag-typeahead (skillTagSelected)="setSkillTag($event)" [clientId]="clientId"
+                [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId" [skillTagId]="skillTagId">
               </app-skill-tag-typeahead>
               <div *ngIf="!skillTagId && formSubmitted" class="valid-error">
                 {{ 'Skill Tag Name is required' | translation: 'lbl_add_edit_skill_tag_name_required_validation_message'

@@ -52,6 +52,7 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
 
   ngOnChanges() {
     if (this.clientId) {
+      this.pageNumber = 1;
       this.subscribeToClientLobs();
     } else {
       this.clientLobItemsBuffer = [];

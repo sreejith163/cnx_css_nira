@@ -52,6 +52,7 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
 
   ngOnChanges() {
     if (this.clientLobGroupId) {
+      this.pageNumber = 1;
       this.subscribeToSkillGroups();
     } else {
       this.skillGroupItemsBuffer = [];

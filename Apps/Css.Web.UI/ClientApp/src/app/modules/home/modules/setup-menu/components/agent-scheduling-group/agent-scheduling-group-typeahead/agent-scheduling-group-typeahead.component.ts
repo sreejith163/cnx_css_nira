@@ -28,6 +28,9 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
   getAgentSchedulingGroupSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
+  @Input() clientId: number;
+  @Input() clientLobGroupId: number;
+  @Input() skillGroupId: number;
   @Input() skillTagId: number;
   @Input() agentSchedulingGroupId: number;
   @Output() agentSchedulingGroupSelected = new EventEmitter();
@@ -50,7 +53,8 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
   }
 
   ngOnChanges() {
-    if (this.agentSchedulingGroupId) {
+    if (this.skillTagId) {
+      this.pageNumber = 1;
       this.subscribeToAgentSchedulingGroups();
     } else {
       this.agentSchedulingGroupItemsBuffer = [];
@@ -130,10 +134,10 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
 
   private getQueryParams(searchkeyword?: string) {
     const queryParams = new AgentSchedulingGroupQueryParams();
-    queryParams.clientId = undefined;
-    queryParams.clientLobGroupId = undefined;
-    queryParams.skillGroupId = undefined;
-    queryParams.skillTagId = this.skillTagId;
+    queryParams.clientId = this.clientId ?? undefined;
+    queryParams.clientLobGroupId = this.clientLobGroupId ?? undefined;
+    queryParams.skillGroupId = this.skillGroupId ?? undefined;
+    queryParams.skillTagId = this.skillTagId ?? undefined;
     queryParams.pageSize = this.agentSchedulingGroupItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
@@ -147,6 +151,5 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
     const queryParams = this.getQueryParams(searchKeyword);
     return this.agentSchedulingGroupService.getAgentSchedulingGroups(queryParams);
   }
-
 }
 
