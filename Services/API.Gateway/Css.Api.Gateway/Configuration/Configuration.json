@@ -5,8 +5,8 @@
       "DownStreamScheme": "https",
       "DownStreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 44378
+          "Host": "css.api.auth",
+          "Port": 8082
         }
       ],
       "UpStreamPathTemplate": "/weatherforecast",
