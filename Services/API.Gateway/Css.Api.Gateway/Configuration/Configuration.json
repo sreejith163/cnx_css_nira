@@ -1,15 +1,15 @@
 ﻿{
-  "ReRoutes": [
+  "Routes": [
     {
-      "DownStreamPathTemplate": "/api/{version}/{everything}",
-      "DownStreamScheme": "http",
+      "DownStreamPathTemplate": "/weatherforecast",
+      "DownStreamScheme": "https",
       "DownStreamHostAndPorts": [
         {
-          "Host": "cnx.serviceone.api",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 44378
         }
       ],
-      "UpStreamPathTemplate": "/api/{version}/so/{everything}",
+      "UpStreamPathTemplate": "/weatherforecast",
       "UpStreamHttpMethod": [ "GET", "POST", "PUT" ]
     },
     {
@@ -25,5 +25,6 @@
       "UpStreamHttpMethod": [ "GET", "POST" ]
     }
   ],
-  "GlobalConfiguration": {}
+  "GlobalConfiguration": {
+  }
 }
