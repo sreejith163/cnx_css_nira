@@ -147,26 +147,11 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
     this.skillGroupId = skillGroupId;
   }
 
-  private convertToDateFormat(time: string) {
-    const now = new Date();
-    const dateTarget = new Date();
-
-    dateTarget.setHours(this.genericDataService.getHours(time));
-    dateTarget.setMinutes(this.genericDataService.getMinutes(time));
-    dateTarget.setSeconds(0);
-    dateTarget.setMilliseconds(0);
-
-    if (dateTarget < now) {
-      dateTarget.setDate(dateTarget.getDate() + 1);
-    }
-    return  dateTarget;
-  }
-
   private convertOperationHourstoDateFormat(skillTag: any) {
     skillTag.operationHour.forEach(ele => {
       if (ele.from) {
-        ele.from = this.convertToDateFormat(ele.from);
-        ele.to = this.convertToDateFormat(ele.to);
+        ele.from = this.genericDataService.getTimeInDateTimeFormat(ele.from);
+        ele.to = this.genericDataService.getTimeInDateTimeFormat(ele.to);
       }
     });
   }
@@ -347,26 +332,12 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
   private convertOperationHoursDateToHoursFormat(operationHour) {
     for (const index in operationHour) {
       if (+index < operationHour.length) {
-        operationHour[index].from = this.convertDateToHoursMinutes(operationHour[index]?.from);
-        operationHour[index].to = this.convertDateToHoursMinutes(operationHour[index]?.to);
+        operationHour[index].from = this.genericDataService.getTimeInHoursMinutes(operationHour[index]?.from);
+        operationHour[index].to = this.genericDataService.getTimeInHoursMinutes(operationHour[index]?.to);
       } else {
         this.populateFormDetails();
       }
     }
-  }
-
-  private convertDateToHoursMinutes(date: Date) {
-    let hours = date.getHours();
-    const minutes = date.getMinutes();
-
-    const meridiem = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    const hourValue = hours < 10 ? '0' + hours : hours;
-    const minutesValue = minutes < 10 ? '0' + minutes : minutes;
-
-    const time = hourValue + ':' + minutesValue + ' ' + meridiem;
-
-    return time;
   }
 
   private intializeSkillTagForm() {

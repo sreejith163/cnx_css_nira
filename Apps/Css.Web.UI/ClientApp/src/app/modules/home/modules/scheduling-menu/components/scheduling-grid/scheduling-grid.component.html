@@ -196,7 +196,8 @@
                                     <td id="grid_col_{{week}}_{{j}}" class="jsgrid-cell"
                                       attr.time="{{ openTime.split(' ')[0] }}"
                                       attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}" [attr.week]="week"
-                                      *ngFor="let openTime of openTimes;let j = index" (click)="setCellSelected($event)"
+                                      *ngFor="let openTime of openTimes;let j = index" 
+                                      (mouseup)="setCellSelected($event)" 
                                       [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : 'night'">
                                       <ng-container *ngIf="getIconFromSelectedGrid(week, openTime).length">
                                         <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime) }}</i>

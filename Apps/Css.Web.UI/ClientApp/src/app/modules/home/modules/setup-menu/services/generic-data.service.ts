@@ -22,6 +22,35 @@ export class GenericDataService {
     return times;
   }
 
+  getTimeInHoursMinutes(date: Date) {
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    const meridiem = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    const hourValue = hours < 10 ? '0' + hours : hours;
+    const minutesValue = minutes < 10 ? '0' + minutes : minutes;
+
+    const time = hourValue + ':' + minutesValue + ' ' + meridiem;
+
+    return time;
+  }
+
+  getTimeInDateTimeFormat(time: string) {
+    const now = new Date();
+    const dateTarget = new Date();
+
+    dateTarget.setHours(this.getHours(time));
+    dateTarget.setMinutes(this.getMinutes(time));
+    dateTarget.setSeconds(0);
+    dateTarget.setMilliseconds(0);
+
+    if (dateTarget < now) {
+      dateTarget.setDate(dateTarget.getDate() + 1);
+    }
+    return  dateTarget;
+  }
+
   getHours(time: string) {
     const timeArray = time.split(':');
     if (timeArray[1].split(' ')[1] === 'pm') {

@@ -238,7 +238,28 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
     this.skillTagId = skillTagId;
   }
 
+  private convertOperationHourstoDateFormat(skillTag: any) {
+    skillTag.operationHour.forEach(ele => {
+      if (ele.from) {
+        ele.from = this.genericDataService.getTimeInDateTimeFormat(ele.from);
+        ele.to = this.genericDataService.getTimeInDateTimeFormat(ele.to);
+      }
+    });
+  }
+
+  private convertOperationHoursDateToHoursFormat(operationHour) {
+    for (const index in operationHour) {
+      if (+index < operationHour.length) {
+        operationHour[index].from = this.genericDataService.getTimeInHoursMinutes(operationHour[index]?.from);
+        operationHour[index].to = this.genericDataService.getTimeInHoursMinutes(operationHour[index]?.to);
+      } else {
+        this.populateFormDetails();
+      }
+    }
+  }
+
   private addAgentSchedulingGroupDetails() {
+    this.convertOperationHourstoDateFormat(this.agentSchedulingGroupForm.value as AddAgentSchedulingGroup);
     const addAgentSchedulingGroup = this.agentSchedulingGroupForm.value as AddAgentSchedulingGroup;
     addAgentSchedulingGroup.skillTagId = this.skillTagId;
     addAgentSchedulingGroup.createdBy = this.authService.getLoggedUserInfo().displayName;
@@ -260,6 +281,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
 
   private updateAgentSchedulingGroupDetails() {
     if (this.hasAgentSchedulingGroupDetailsMismatch()) {
+      this.convertOperationHourstoDateFormat(this.agentSchedulingGroupForm.value as UpdateAgentSchedulingGroup);
       const updateAgentSchedulingGroupModel = this.agentSchedulingGroupForm.value as UpdateAgentSchedulingGroup;
       updateAgentSchedulingGroupModel.skillTagId = this.skillTagId;
       updateAgentSchedulingGroupModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
@@ -405,7 +427,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
     this.getAgentSchedulingGroupSubscription = this.agentSchedulingGroupService.getAgentSchedulingGroup(this.agentSchedulingGroupId)
       .subscribe((response) => {
         this.agentSchedulingGroup = response;
-        this.populateFormDetails();
+        this.convertOperationHoursDateToHoursFormat(this.agentSchedulingGroup.operationHour);
         this.spinnerService.hide(this.spinner);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
