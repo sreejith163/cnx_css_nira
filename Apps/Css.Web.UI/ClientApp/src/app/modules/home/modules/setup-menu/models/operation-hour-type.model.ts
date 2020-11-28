@@ -1,4 +1,4 @@
-export class OperationHours {
+export class OperationHourType {
     id: number;
     open: string;
 }

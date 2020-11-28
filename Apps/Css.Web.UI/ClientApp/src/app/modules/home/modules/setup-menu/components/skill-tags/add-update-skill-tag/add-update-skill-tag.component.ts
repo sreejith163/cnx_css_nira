@@ -27,7 +27,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
 
   spinner = 'skillTag';
   maxLength = Constants.DefaultTextMaxLength;
-  openTypes = Constants.operationHours;
+  openTypes = Constants.OperationHourTypes;
 
   formSubmitted: boolean;
   clientId: number;

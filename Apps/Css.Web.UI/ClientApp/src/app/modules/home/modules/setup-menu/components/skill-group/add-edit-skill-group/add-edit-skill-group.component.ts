@@ -39,7 +39,7 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
 
   spinner = 'skillGroup';
   maxLength = Constants.DefaultTextMaxLength;
-  openTypes = Constants.operationHours;
+  openTypes = Constants.OperationHourTypes;
 
   formSubmitted: boolean;
   clientId: number;

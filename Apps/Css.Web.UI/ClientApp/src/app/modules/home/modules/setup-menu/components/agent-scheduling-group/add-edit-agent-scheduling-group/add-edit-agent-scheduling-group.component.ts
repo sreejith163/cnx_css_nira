@@ -29,7 +29,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
 
   spinner = 'agentSchedulingGroup';
   maxLength = Constants.DefaultTextMaxLength;
-  openTypes = Constants.operationHours;
+  openTypes = Constants.OperationHourTypes;
 
   formSubmitted: boolean;
   clientId: number;

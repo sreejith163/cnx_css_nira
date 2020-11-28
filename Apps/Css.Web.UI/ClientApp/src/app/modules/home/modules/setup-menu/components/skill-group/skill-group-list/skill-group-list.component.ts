@@ -165,7 +165,7 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
   }
 
   getOpenType(openTypeId) {
-    const skillTag = Constants.operationHours.find(x => x.id === openTypeId);
+    const skillTag = Constants.OperationHourTypes.find(x => x.id === openTypeId);
     return skillTag.open;
   }
 

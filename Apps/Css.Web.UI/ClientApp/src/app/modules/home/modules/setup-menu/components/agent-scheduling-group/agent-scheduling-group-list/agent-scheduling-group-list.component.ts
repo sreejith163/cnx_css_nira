@@ -167,7 +167,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   }
 
   getOpenType(openTypeId) {
-    const agentSchedulingGroup = Constants.operationHours.find(x => x.id === openTypeId);
+    const agentSchedulingGroup = Constants.OperationHourTypes.find(x => x.id === openTypeId);
     return agentSchedulingGroup.open;
   }
 

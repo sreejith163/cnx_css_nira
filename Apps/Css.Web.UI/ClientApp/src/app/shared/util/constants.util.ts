@@ -1,5 +1,5 @@
 import { SchedulingInterval } from 'src/app/modules/home/modules/scheduling-menu/models/scheduling-interval.model';
-import { OperationHours } from 'src/app/modules/home/modules/setup-menu/models/operation-hours.model';
+import { OperationHourType } from 'src/app/modules/home/modules/setup-menu/models/operation-hour-type.model';
 import { UserRole } from 'src/app/modules/home/modules/system-admin/models/user-role.model';
 import { KeyValue } from '../models/key-value.model';
 import { PaginationSize } from '../models/pagination-size.model';
@@ -4092,7 +4092,7 @@ export class Constants {
     }
   ];
 
-  public static readonly operationHours: OperationHours[] = [
+  public static readonly OperationHourTypes: OperationHourType[] = [
     {
       id: 1,
       open: 'Open All Day'
