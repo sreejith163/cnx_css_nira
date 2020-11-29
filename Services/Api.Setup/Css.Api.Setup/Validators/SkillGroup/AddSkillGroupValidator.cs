@@ -1,4 +1,6 @@
-﻿using Css.Api.Setup.Models.DTO.Request.SkillGroup;
+﻿using Css.Api.Setup.Models.DTO.Request.OperationHour;
+using Css.Api.Setup.Models.DTO.Request.SkillGroup;
+using Css.Api.Setup.Validators.OperationHour;
 using FluentValidation;
 
 namespace Css.Api.Setup.Validators.SkillGroup
@@ -17,7 +19,7 @@ namespace Css.Api.Setup.Validators.SkillGroup
             RuleFor(x => x.ClientLobGroupId).NotEmpty();
             RuleFor(x => x.TimezoneId).NotEmpty();
             RuleFor(x => x.FirstDayOfWeek).NotNull();
-            RuleFor(x => x.OperationHour).NotEmpty();
+            RuleFor(x => x.OperationHour).SetValidator(new OperationHourValidator<OperationHourAttribute>());
             RuleFor(x => x.CreatedBy).NotEmpty();
         }
     }

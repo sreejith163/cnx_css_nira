@@ -391,6 +391,34 @@
             Initializes a new instance of the <see cref="T:Css.Api.Setup.Validators.Client.UpdateClientValidator"/> class.
             </summary>
         </member>
+        <member name="T:Css.Api.Setup.Validators.OperationHour.OperationHourValidator`1">
+            <summary>
+            Custom validator for operation hours time range
+            </summary>
+            <typeparam name="T"></typeparam>
+            <seealso cref="T:FluentValidation.Validators.PropertyValidator" />
+        </member>
+        <member name="M:Css.Api.Setup.Validators.OperationHour.OperationHourValidator`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Setup.Validators.OperationHour.OperationHourValidator`1" /> class.
+            </summary>
+        </member>
+        <member name="M:Css.Api.Setup.Validators.OperationHour.OperationHourValidator`1.Validate(FluentValidation.Validators.PropertyValidatorContext)">
+            <summary>
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+            <inheritdoc />
+        </member>
+        <member name="M:Css.Api.Setup.Validators.OperationHour.OperationHourValidator`1.IsValid(FluentValidation.Validators.PropertyValidatorContext)">
+            <summary>
+            Returns true if ... is valid.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>
+              <c>true</c> if the specified context is valid; otherwise, <c>false</c>.
+            </returns>
+        </member>
         <member name="T:Css.Api.Setup.Validators.SkillGroup.AddSkillGroupValidator">
             <summary>
             Validator for handling the validation of add skill group object
