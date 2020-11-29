@@ -12,14 +12,14 @@ namespace Css.Api.Setup.Validators.OperationHour
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="FluentValidation.Validators.PropertyValidator" />
     public class OperationHourValidator<T> : PropertyValidator
-	{
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="OperationHourValidator{T}" /> class.
         /// </summary>
         public OperationHourValidator()
-			: base("{PropertyName} must be provided.")
-		{
-		}
+            : base("{PropertyName} must be provided.")
+        {
+        }
 
         /// <summary>
         /// </summary>
@@ -29,12 +29,12 @@ namespace Css.Api.Setup.Validators.OperationHour
         public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context)
         {
             var validationFailures = new List<ValidationFailure>();
-
             var list = context.PropertyValue as IList<OperationHourAttribute>;
 
             if (list.Count != 7)
             {
                 validationFailures.Add(new ValidationFailure("Operation Hour", "The operating hours should be defined for a full week"));
+                return validationFailures;
             }
 
             foreach (var item in list)
@@ -43,36 +43,79 @@ namespace Css.Api.Setup.Validators.OperationHour
                 {
                     if (string.IsNullOrEmpty(item.From) && string.IsNullOrEmpty(item.To))
                     {
-                        validationFailures.Add(new ValidationFailure("Operation Hour", "Operation FROM time and TO time is required"));
+                        validationFailures.Add(new ValidationFailure("Operation Hour", "FROM time and TO time is required"));
+                        return validationFailures;
                     }
                     else if (string.IsNullOrEmpty(item.From))
                     {
-                        validationFailures.Add(new ValidationFailure("Operation Hour", "Operation FROM time is required"));
+                        validationFailures.Add(new ValidationFailure("Operation Hour", "FROM time is required"));
+                        return validationFailures;
                     }
                     else if (string.IsNullOrEmpty(item.To))
                     {
-                        validationFailures.Add(new ValidationFailure("Operation Hour", "Operation TO time is required"));
+                        validationFailures.Add(new ValidationFailure("Operation Hour", "TO time is required"));
+                        return validationFailures;
                     }
                     else
                     {
-                        var fromTime = item.From;
-                        var fromHour = Convert.ToInt32(fromTime.Split(":")[0]);
-                        var fromMinute = Convert.ToInt32(fromTime.Split(":")[1].Split(" ")[0]);
-                        var fromMeridiem = fromTime.Split(" ")[1]?.ToLower();
+                        var fromHourString = item.From.Split(":")[0];
+                        if (fromHourString.Length != 2)
+                        {
+                            validationFailures.Add(new ValidationFailure("Operation Hour", "FROM time hour should be 2 digits"));
+                            return validationFailures;
+                        }
+
+                        var fromMinuteString = item.From.Split(":")[1]?.Split(" ")[0];
+                        if (fromMinuteString.Length != 2)
+                        {
+                            validationFailures.Add(new ValidationFailure("Operation Hour", "FROM time minute should be 2 digits"));
+                            return validationFailures;
+                        }
+
+                        var fromMeridiem = item.From.Split(" ")[1]?.ToLower();
+                        if (fromMeridiem.Length != 2)
+                        {
+                            validationFailures.Add(new ValidationFailure("Operation Hour", "FROM time meridiem should be 'am / pm'"));
+                            return validationFailures;
+                        }
+
+                        var fromHour = Convert.ToInt32(fromHourString);
+                        var fromMinute = Convert.ToInt32(fromMinuteString);
 
                         if (fromMinute != 15 && fromMinute != 30 && fromMinute != 45 && fromMinute != 0)
                         {
-                            validationFailures.Add(new ValidationFailure("OperationHour", "The FROM time should be an interval of 15 mins"));
+                            validationFailures.Add(new ValidationFailure("OperationHour", "FROM time should be an interval of 15 mins"));
+                            return validationFailures;
                         }
 
-                        var toTime = item.To;
-                        var toHour = Convert.ToInt32(toTime.Split(":")[0]);
-                        var toMinute = Convert.ToInt32(toTime.Split(":")[1].Split(" ")[0]);
-                        var toMeridiem = toTime.Split(" ")[1];
+                        var toHourString = item.To.Split(":")[0];
+                        if (toHourString.Length != 2)
+                        {
+                            validationFailures.Add(new ValidationFailure("Operation Hour", "TO time hour should be 2 digits"));
+                            return validationFailures;
+                        }
+
+                        var toMinuteString = item.To.Split(":")[1].Split(" ")[0];
+                        if (toMinuteString.Length != 2)
+                        {
+                            validationFailures.Add(new ValidationFailure("Operation Hour", "TO time minute should be 2 digits"));
+                            return validationFailures;
+                        }
+
+                        var toMeridiem = item.To.Split(" ")[1];
+                        if (fromMeridiem.Length != 2)
+                        {
+                            validationFailures.Add(new ValidationFailure("Operation Hour", "TO time meridiem should be 'am / pm'"));
+                            return validationFailures;
+                        }
+
+                        var toHour = Convert.ToInt32(toHourString);
+                        var toMinute = Convert.ToInt32(toMinuteString);
 
                         if (toMinute != 15 && toMinute != 30 && toMinute != 45 && toMinute != 0)
                         {
-                            validationFailures.Add(new ValidationFailure("Operation Hour", "The TO time should be an interval of 15 mins"));
+                            validationFailures.Add(new ValidationFailure("Operation Hour", "TO time should be an interval of 15 mins"));
+                            return validationFailures;
                         }
 
                         DateTime fromDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, fromHour, fromMinute, fromMeridiem == "am" ? 0 : 1);
@@ -80,7 +123,8 @@ namespace Css.Api.Setup.Validators.OperationHour
 
                         if (fromDateTime > toDateTime)
                         {
-                            validationFailures.Add(new ValidationFailure("Operation Hour", "The time range is not valid"));
+                            validationFailures.Add(new ValidationFailure("Operation Hour", "FROM and TO time range is not valid"));
+                            return validationFailures;
                         }
 
                     }
