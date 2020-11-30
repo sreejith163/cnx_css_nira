@@ -33,7 +33,7 @@ spec:
   ports:
     - name: client
       protocol: TCP
-      port: 4205
+      port: 4203
       targetPort: 80
   selector:
     app: cnx-css-api-admin

@@ -5,9 +5,9 @@ export const environment = {
     authAppToken: '9xxo7FxS7IdXQRQpBTaVQtmpgHTZBKxOEhN'
   },
   services: {
-    adminService: 'http://10.87.221.6:4202/api/v1',
-    setupService: 'http://10.87.221.6:4203/api/v1',
-    schedulingService: 'http://10.87.221.6:4204/api/v1'
+    adminService: 'http://10.87.221.6:4203/api/v1',
+    setupService: 'http://10.87.221.10:4204/api/v1',
+    schedulingService: 'http://10.87.221.13:4205/api/v1'
   },
   settings: {
     applicationUrl: 'http://10.87.221.8:4200',
