@@ -147,17 +147,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
     this.skillGroupId = skillGroupId;
   }
 
-  private convertOperationHourstoDateFormat(skillTag: any) {
-    skillTag.operationHour.forEach(ele => {
-      if (ele.from) {
-        ele.from = this.genericDataService.getTimeInDateTimeFormat(ele.from);
-        ele.to = this.genericDataService.getTimeInDateTimeFormat(ele.to);
-      }
-    });
-  }
-
   private addSkillTagDetails() {
-    this.convertOperationHourstoDateFormat(this.skillTagForm.value as AddSkillTag);
     const addSkillTagModel = this.skillTagForm.value as AddSkillTag;
     addSkillTagModel.skillGroupId = this.skillGroupId;
     addSkillTagModel.createdBy = this.authService.getLoggedUserInfo().displayName;
@@ -180,7 +170,6 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
 
   private updateSkillTagDetails() {
     if (this.hasSkillTagDetailsMismatch()) {
-      this.convertOperationHourstoDateFormat(this.skillTagForm.value as UpdateSkillTag);
       const updateSkillTagModel = this.skillTagForm.value as UpdateSkillTag;
       updateSkillTagModel.skillGroupId = this.skillGroupId;
       updateSkillTagModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
@@ -318,7 +307,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
     this.getSkillTagSubscription = this.skillTagService.getSkillTag(this.skillTagId)
       .subscribe((response) => {
         this.skillTag = response;
-        this.convertOperationHoursDateToHoursFormat(this.skillTag.operationHour);
+        this.populateFormDetails();
         this.spinnerService.hide(this.spinner);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
@@ -327,17 +316,6 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
         }
       });
     this.subscriptions.push(this.getSkillTagSubscription);
-  }
-
-  private convertOperationHoursDateToHoursFormat(operationHour) {
-    for (const index in operationHour) {
-      if (+index < operationHour.length) {
-        operationHour[index].from = this.genericDataService.getTimeInHoursMinutes(operationHour[index]?.from);
-        operationHour[index].to = this.genericDataService.getTimeInHoursMinutes(operationHour[index]?.to);
-      } else {
-        this.populateFormDetails();
-      }
-    }
   }
 
   private intializeSkillTagForm() {

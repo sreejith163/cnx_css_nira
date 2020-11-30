@@ -167,17 +167,7 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
     this.clientLobGroupId = clientLobGroupId;
   }
 
-  private convetOperationHourstoDateFormat(skillGroup: any) {
-    skillGroup.operationHour.forEach(ele => {
-      if (ele.from) {
-        ele.from = this.genericDataService.getTimeInDateTimeFormat(ele.from);
-        ele.to = this.genericDataService.getTimeInDateTimeFormat(ele.to);
-      }
-    });
-  }
-
   private addSkillGroupDetails() {
-    this.convetOperationHourstoDateFormat(this.skillGroupForm.value as AddSkillGroup);
     const addSkillGroupModel = this.skillGroupForm.value as AddSkillGroup;
     addSkillGroupModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
     addSkillGroupModel.clientLobGroupId = this.clientLobGroupId;
@@ -200,7 +190,6 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
 
   private updateSkillGroupDetails() {
     if (this.hasSkillGroupDetailsMismatch()) {
-      this.convetOperationHourstoDateFormat(this.skillGroupForm.value as UpdateSkillGroup);
 
       const updateSkillGroupModel = this.skillGroupForm.value as UpdateSkillGroup;
       updateSkillGroupModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
@@ -397,7 +386,7 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
     this.getSkillGroupSubscription = this.skillGroupService.getSkillGroup(this.skillGroupId)
       .subscribe((response) => {
         this.skillGroup = response;
-        this.convertOperationHoursDateToHoursFormat(this.skillGroup.operationHour);
+        this.populateFormDetails();
         this.spinnerService.hide(this.spinner);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
@@ -417,17 +406,6 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
     this.clientLobGroupId = this.skillGroup.clientLobGroupId;
     this.sortOperatingHoursArray(this.skillGroup.firstDayOfWeek);
     this.populateOperationHoursValue();
-  }
-
-  private convertOperationHoursDateToHoursFormat(operationHour) {
-    for (const index in operationHour) {
-      if (+index < operationHour.length) {
-        operationHour[index].from = this.genericDataService.getTimeInHoursMinutes(operationHour[index]?.from);
-        operationHour[index].to = this.genericDataService.getTimeInHoursMinutes(operationHour[index]?.to);
-      } else {
-        this.populateFormDetails();
-      }
-    }
   }
 
   private intializeSkillGroupForm() {
