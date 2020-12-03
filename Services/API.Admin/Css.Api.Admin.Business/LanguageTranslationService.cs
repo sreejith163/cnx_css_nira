@@ -7,10 +7,7 @@ using Css.Api.Admin.Repository.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Css.Api.Admin.Business
@@ -71,8 +68,8 @@ namespace Css.Api.Admin.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var mappedSchedulingCode = _mapper.Map<LanguageTranslationDTO>(languageTranslation);
-            return new CSSResponse(mappedSchedulingCode, HttpStatusCode.OK);
+            var mappedLanguageTranslation = _mapper.Map<LanguageTranslationDTO>(languageTranslation);
+            return new CSSResponse(mappedLanguageTranslation, HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -82,9 +79,9 @@ namespace Css.Api.Admin.Business
         /// <returns></returns>
         public async Task<CSSResponse> CreateLanguageTranslation(CreateLanguageTranslation translationDetails)
         {
-            var schedulingCodes = await _repository.LanguageTranslation.GetLanguageTranslationByOtherIds(new TranslationData 
+            var languageTranslations = await _repository.LanguageTranslation.GetLanguageTranslationByOtherIds(new TranslationData 
                 { LanguageId= translationDetails.LanguageId,MenuId=translationDetails.MenuId,VariableId=translationDetails.VariableId });
-            if (schedulingCodes?.Count > 0)
+            if (languageTranslations?.Count > 0)
             {
                 return new CSSResponse($"Translation with language '{translationDetails.LanguageName}' and " +
                     $"menu '{translationDetails.MenuName}' and variable '{translationDetails.VariableName}' already exists.", HttpStatusCode.Conflict);

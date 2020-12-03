@@ -1,7 +1,4 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Css.Api.Admin.Business.Interfaces
@@ -13,5 +10,12 @@ namespace Css.Api.Admin.Business.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<CSSResponse> GetCssMenus();
+
+        /// <summary>
+        /// Gets the CSS menu variables.
+        /// </summary>
+        /// <param name="menuId">The menu identifier.</param>
+        /// <returns></returns>
+        Task<CSSResponse> GetCssMenuVariables(int menuId);
     }
 }

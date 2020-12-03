@@ -1,14 +1,7 @@
-﻿using AutoMapper;
-using Css.Api.Admin.Business.Interfaces;
-using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
+﻿using Css.Api.Admin.Business.Interfaces;
 using Css.Api.Admin.Repository.Interfaces;
-using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Css.Api.Admin.Business
@@ -32,11 +25,10 @@ namespace Css.Api.Admin.Business
         /// <summary>
         /// Gets css variables
         /// </summary>
-        /// <param name="cssVariableQueryParameters"></param>
         /// <returns></returns>
-        public async Task<CSSResponse> GetCssVariables(CssVariableQueryParameters cssVariableQueryParameters)
+        public async Task<CSSResponse> GetCssVariables()
         {
-            var menus = await _repository.CssVariable.GetCssVariables(cssVariableQueryParameters);
+            var menus = await _repository.CssVariable.GetCssVariables();
             return new CSSResponse(menus, HttpStatusCode.OK);
         }
     }

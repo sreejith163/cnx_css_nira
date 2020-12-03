@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Css.Api.Admin.Business.Interfaces;
 using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +13,7 @@ namespace Css.Api.Admin.Controllers
     [Consumes("application/json")]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class LanguageTranslationController : ControllerBase
+    public class LanguageTranslationsController : ControllerBase
     {
         /// <summary>
         /// The language translation service
@@ -24,10 +21,10 @@ namespace Css.Api.Admin.Controllers
         private readonly ILanguageTranslationService _languageTranslationService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LanguageTranslationController"/> class.
+        /// Initializes a new instance of the <see cref="LanguageTranslationsController" /> class.
         /// </summary>
         /// <param name="languageTranslationService">The language translation service.</param>
-        public LanguageTranslationController(ILanguageTranslationService languageTranslationService)
+        public LanguageTranslationsController(ILanguageTranslationService languageTranslationService)
         {
             _languageTranslationService = languageTranslationService;
         }

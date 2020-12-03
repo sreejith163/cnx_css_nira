@@ -4,13 +4,9 @@ using Css.Api.Admin.Models.Domain;
 using Css.Api.Admin.Repository.DatabaseContext;
 using Css.Api.Admin.Repository.Interfaces;
 using Css.Api.Core.DataAccess.Repository.SQL;
-using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
-using Css.Api.Core.Utilities.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Css.Api.Admin.Repository
@@ -42,7 +38,9 @@ namespace Css.Api.Admin.Repository
         /// <returns></returns>
         public async Task<List<KeyValue>> GetCssLanguages()
         {
-            var languages = FindAll().ProjectTo<KeyValue>(_mapper.ConfigurationProvider).ToList();
+            var languages = FindAll()
+                .ProjectTo<KeyValue>(_mapper.ConfigurationProvider).ToList();
+
             return await Task.FromResult(languages);
         }
     }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Css.Api.Admin.Business.Interfaces;
 using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +13,7 @@ namespace Css.Api.Admin.Controllers
     [Consumes("application/json")]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class CssVariableController : ControllerBase
+    public class CssVariablesController : ControllerBase
     {
         /// <summary>
         /// The CSS variable service
@@ -24,10 +21,10 @@ namespace Css.Api.Admin.Controllers
         private readonly ICssVariableService _cssVariableService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CssVariableController"/> class.
+        /// Initializes a new instance of the <see cref="CssVariablesController"/> class.
         /// </summary>
         /// <param name="cssVariableService">The CSS variable service.</param>
-        public CssVariableController(ICssVariableService cssVariableService)
+        public CssVariablesController(ICssVariableService cssVariableService)
         {
             _cssVariableService = cssVariableService;
         }

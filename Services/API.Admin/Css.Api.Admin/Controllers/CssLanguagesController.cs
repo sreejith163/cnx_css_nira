@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Css.Api.Admin.Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +12,7 @@ namespace Css.Api.Admin.Controllers
     [Consumes("application/json")]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class CssLanguageController : ControllerBase
+    public class CssLanguagesController : ControllerBase
     {
         /// <summary>
         /// The lanmguage service
@@ -23,10 +20,10 @@ namespace Css.Api.Admin.Controllers
         private readonly ICssLanguageService _languageService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CssLanguageController"/> class.
+        /// Initializes a new instance of the <see cref="CssLanguagesController"/> class.
         /// </summary>
         /// <param name="languageService">The language service.</param>
-        public CssLanguageController(ICssLanguageService languageService)
+        public CssLanguagesController(ICssLanguageService languageService)
         {
             _languageService = languageService;
         }

@@ -22,10 +22,10 @@ namespace Css.Api.Admin.Repository
         /// </summary>
         private ISchedulingCodeRepository _schedulingCodesRepository { get; set; }
 
-        /// <summary>Gets or sets the agent category repository.</summary>
-        /// <value>The agent category repository.</value>
+        /// <summary>
+        /// Gets or sets the agent category repository.
+        /// </summary>
         private IAgentCategoryRepository _agentCategoryRepository { get; set; }
-
 
         /// <summary>
         /// Gets or sets the scheduling code icons repository.

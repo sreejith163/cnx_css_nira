@@ -8,6 +8,10 @@ namespace Css.Api.Admin.Business.Interfaces
 {
     public interface ICssLanguageService
     {
+        /// <summary>
+        /// Gets the CSS languages.
+        /// </summary>
+        /// <returns></returns>
         Task<CSSResponse> GetCssLanguages();
     }
 }

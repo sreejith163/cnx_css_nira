@@ -1,8 +1,6 @@
-﻿using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
+﻿using Css.Api.Admin.Models.DTO.Request.Menu;
 using Css.Api.Core.Models.DTO.Response;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Css.Api.Admin.Repository.Interfaces
@@ -13,6 +11,13 @@ namespace Css.Api.Admin.Repository.Interfaces
         /// Gets the CSS variables.
         /// </summary>
         /// <returns></returns>
-        Task<List<KeyValue>> GetCssVariables(CssVariableQueryParameters cssVariableQueryParameters);
+        Task<List<KeyValue>> GetCssVariables();
+
+        /// <summary>
+        /// Gets the CSS variablesby menu identifier.
+        /// </summary>
+        /// <param name="menuIdDetails">The menu identifier details.</param>
+        /// <returns></returns>
+        Task<List<KeyValue>> GetCssVariablesbyMenuId(MenuIdDetails menuIdDetails);
     }
 }

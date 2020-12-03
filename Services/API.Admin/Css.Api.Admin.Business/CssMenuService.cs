@@ -1,13 +1,8 @@
-﻿using AutoMapper;
-using Css.Api.Admin.Business.Interfaces;
+﻿using Css.Api.Admin.Business.Interfaces;
+using Css.Api.Admin.Models.DTO.Request.Menu;
 using Css.Api.Admin.Repository.Interfaces;
-using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Css.Api.Admin.Business
@@ -35,6 +30,17 @@ namespace Css.Api.Admin.Business
         public async Task<CSSResponse> GetCssMenus()
         {
             var menus = await _repository.CssMenu.GetCssMenus();
+            return new CSSResponse(menus, HttpStatusCode.OK);
+        }
+
+        /// <summary>
+        /// Gets the CSS menu variables.
+        /// </summary>
+        /// <param name="menuId">The menu identifier.</param>
+        /// <returns></returns>
+        public async Task<CSSResponse> GetCssMenuVariables(int menuId)
+        {
+            var menus = await _repository.CssVariable.GetCssVariablesbyMenuId(new MenuIdDetails { MenuId = menuId });
             return new CSSResponse(menus, HttpStatusCode.OK);
         }
     }
