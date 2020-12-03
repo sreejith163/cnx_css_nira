@@ -35,7 +35,7 @@ namespace Css.Api.Admin.Controllers
         /// <param name="variableQueryParams">The variable query parameters.</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetCssVariables(VariableQueryParams variableQueryParams)
+        public async Task<IActionResult> GetCssVariables([FromQuery] VariableQueryParams variableQueryParams)
         {
             var result = await _cssVariableService.GetCssVariables(variableQueryParams);
             return StatusCode((int)result.Code, result.Value);

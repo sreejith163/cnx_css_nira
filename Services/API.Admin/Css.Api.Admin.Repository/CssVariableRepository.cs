@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Css.Api.Admin.Models.Domain;
 using Css.Api.Admin.Models.DTO.Request.Menu;
 using Css.Api.Admin.Models.DTO.Request.Variable;
+using Css.Api.Admin.Models.DTO.Response.SchedulingCode;
 using Css.Api.Admin.Repository.DatabaseContext;
 using Css.Api.Admin.Repository.Interfaces;
 using Css.Api.Core.DataAccess.Repository.SQL;
@@ -39,7 +40,7 @@ namespace Css.Api.Admin.Repository
         /// </summary>
         /// <param name="variableQueryParams">The variable query parameters.</param>
         /// <returns></returns>
-        public async Task<List<KeyValue>> GetCssVariables(VariableQueryParams variableQueryParams)
+        public async Task<List<VariableDTO>> GetCssVariables(VariableQueryParams variableQueryParams)
         {
             var variables = FindAll();
 
@@ -49,7 +50,7 @@ namespace Css.Api.Admin.Repository
                 .Include(x => x.Menu);
 
             var mappedVariables = pagedVariables
-                .ProjectTo<KeyValue>(_mapper.ConfigurationProvider).ToList();
+                .ProjectTo<VariableDTO>(_mapper.ConfigurationProvider).ToList();
 
             return await Task.FromResult(mappedVariables);
         }

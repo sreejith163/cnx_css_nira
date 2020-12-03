@@ -1,4 +1,4 @@
-﻿namespace Css.Api.Admin.Models.DTO.Request.Menu
+﻿namespace Css.Api.Admin.Models.DTO.Request.Variable
 {
     public class VariableIdDetails
     {

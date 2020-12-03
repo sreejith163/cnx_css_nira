@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Models.DTO.Request.Language;
 using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
 using Css.Api.Admin.Models.DTO.Request.Menu;
+using Css.Api.Admin.Models.DTO.Request.Variable;
 using Css.Api.Admin.Models.DTO.Response.LanguageTranslation;
 using Css.Api.Admin.Repository.DatabaseContext;
 using Css.Api.Admin.Repository.Interfaces;
@@ -159,7 +161,7 @@ namespace Css.Api.Admin.Repository
                 languages = languages.Where(x => x.VariableId == variableId);
             }
 
-            if (string.IsNullOrWhiteSpace(keyword))
+            if (!string.IsNullOrWhiteSpace(keyword))
             {
                 languages = languages.Where(o => o.Description.ToLower().Contains(keyword.Trim().ToLower()) || o.Translation.ToLower().Contains(keyword.Trim().ToLower()));
 
