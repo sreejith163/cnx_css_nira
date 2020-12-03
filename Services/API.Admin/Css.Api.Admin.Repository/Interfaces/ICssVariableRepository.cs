@@ -17,6 +17,13 @@ namespace Css.Api.Admin.Repository.Interfaces
         Task<List<VariableDTO>> GetCssVariables(VariableQueryParams variableQueryParams);
 
         /// <summary>
+        /// Gets the CSS variable.
+        /// </summary>
+        /// <param name="variableIdDetails">The variable identifier details.</param>
+        /// <returns></returns>
+        Task<VariableDTO> GetCssVariable(VariableIdDetails variableIdDetails);
+
+        /// <summary>
         /// Gets the CSS variablesby menu identifier.
         /// </summary>
         /// <param name="menuIdDetails">The menu identifier details.</param>

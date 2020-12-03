@@ -38,9 +38,15 @@ namespace Css.Api.Admin.Business
         /// </summary>
         /// <param name="menuId">The menu identifier.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> GetCssMenuVariables(int menuId)
+        public async Task<CSSResponse> GetCssMenuVariables(MenuIdDetails menuIdDetails)
         {
-            var menus = await _repository.CssVariable.GetCssVariablesbyMenuId(new MenuIdDetails { MenuId = menuId });
+            var menu = await _repository.CssMenu.GetCssMenu(menuIdDetails);
+            if (menu == null)
+            {
+                return new CSSResponse($"Menu with id '{menuIdDetails.MenuId}' not found", HttpStatusCode.NotFound);
+            }
+
+            var menus = await _repository.CssVariable.GetCssVariablesbyMenuId(menuIdDetails);
             return new CSSResponse(menus, HttpStatusCode.OK);
         }
     }

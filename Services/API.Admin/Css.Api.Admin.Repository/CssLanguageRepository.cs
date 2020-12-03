@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Models.DTO.Request.Language;
 using Css.Api.Admin.Repository.DatabaseContext;
 using Css.Api.Admin.Repository.Interfaces;
 using Css.Api.Core.DataAccess.Repository.SQL;
@@ -42,6 +43,19 @@ namespace Css.Api.Admin.Repository
                 .ProjectTo<KeyValue>(_mapper.ConfigurationProvider).ToList();
 
             return await Task.FromResult(languages);
+        }
+
+        /// <summary>
+        /// Gets the CSS languages.
+        /// </summary>
+        /// <param name="languageIdDetails">The language identifier details.</param>
+        /// <returns></returns>
+        public async Task<KeyValue> GetCssLanguages(LanguageIdDetails languageIdDetails)
+        {
+            var language = FindByCondition(x => x.Id == languageIdDetails.LanguageId)
+                .ProjectTo<KeyValue>(_mapper.ConfigurationProvider).SingleOrDefault();
+
+            return await Task.FromResult(language);
         }
     }
 }

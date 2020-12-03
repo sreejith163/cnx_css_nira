@@ -56,6 +56,22 @@ namespace Css.Api.Admin.Repository
         }
 
         /// <summary>
+        /// Gets the CSS variable.
+        /// </summary>
+        /// <param name="variableIdDetails">The variable identifier details.</param>
+        /// <returns></returns>
+        public async Task<VariableDTO> GetCssVariable(VariableIdDetails variableIdDetails)
+        {
+            var variable = FindByCondition(x => x.Id == variableIdDetails.VariableId)
+                .Include(x => x.Menu);
+
+            var mappedVariable = variable
+                .ProjectTo<VariableDTO>(_mapper.ConfigurationProvider).SingleOrDefault();
+
+            return await Task.FromResult(mappedVariable);
+        }
+
+        /// <summary>
         /// Gets the CSS variablesby menu identifier.
         /// </summary>
         /// <param name="menuIdDetails">The menu identifier details.</param>

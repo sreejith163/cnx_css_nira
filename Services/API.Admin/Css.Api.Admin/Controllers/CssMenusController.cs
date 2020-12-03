@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Css.Api.Admin.Business.Interfaces;
+using Css.Api.Admin.Models.DTO.Request.Menu;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Css.Api.Admin.Controllers
@@ -47,7 +48,7 @@ namespace Css.Api.Admin.Controllers
         [HttpGet("{menuId}/variables")]
         public async Task<IActionResult> GetMenuVariables(int menuId)
         {
-            var result = await _cssMenuService.GetCssMenuVariables(menuId);
+            var result = await _cssMenuService.GetCssMenuVariables(new MenuIdDetails { MenuId = menuId });
             return StatusCode((int)result.Code, result.Value);
         }
     }

@@ -46,18 +46,30 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
 
         public IQueryable<LanguageTranslation> languageTranslationsDB = new List<LanguageTranslation>()
         {
+            new LanguageTranslation{ Id = 1, LanguageId = 1, MenuId = 1, VariableId = 1, Description = "test1", Translation = "test1", IsDeleted = false},
+            new LanguageTranslation{ Id = 2, LanguageId = 2, MenuId = 2, VariableId = 2, Description = "test2", Translation = "test2", IsDeleted = false},
+            new LanguageTranslation{ Id = 3, LanguageId = 3, MenuId = 3, VariableId = 3, Description = "test3", Translation = "test3", IsDeleted = false}
         }.AsQueryable();
 
         public IQueryable<CssVariable> cssVariablesDB = new List<CssVariable>()
         {
+            new CssVariable{ Id = 1, Name = "variable1", Description = "variable1", MenuId = 1},
+            new CssVariable{ Id = 2, Name = "variable2", Description = "variable2", MenuId = 1},
+            new CssVariable{ Id = 3, Name = "variable3", Description = "variable3", MenuId = 2}
         }.AsQueryable();
 
         public IQueryable<CssMenu> cssMenusDB = new List<CssMenu>()
         {
+            new CssMenu{ Id = 1, Name = "menu1", Description = "menu1"},
+            new CssMenu{ Id = 2, Name = "menu2", Description = "menu2"},
+            new CssMenu{ Id = 3, Name = "menu3", Description = "menu3"}
         }.AsQueryable();
 
         public IQueryable<CssLanguage> cssLanguagesDB = new List<CssLanguage>()
         {
+            new CssLanguage{ Id = 1, Name = "lang1", Description = "lang1"},
+            new CssLanguage{ Id = 2, Name = "lang2", Description = "lang2"},
+            new CssLanguage{ Id = 3, Name = "lang3", Description = "lang3"}
         }.AsQueryable();
 
         public IQueryable<AgentCategory> agentCategorysDB = new List<AgentCategory>()
@@ -71,9 +83,9 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
 
         public IQueryable<AgentCategoryDataType> agentCategoryDataTypesDB = new List<AgentCategoryDataType>()
         {
-            new AgentCategoryDataType{Id=1, Value="AlphaNumeric", Description="Describes the data type for AlphaNumeric"},
-            new AgentCategoryDataType{Id=2, Value="Date", Description="Describes the data type for Date"},
-            new AgentCategoryDataType{Id=3, Value="Numeric", Description="Describes the data type for Numeric"}
+            new AgentCategoryDataType{ Id=1, Value="AlphaNumeric", Description="Describes the data type for AlphaNumeric" },
+            new AgentCategoryDataType{ Id=2, Value="Date", Description="Describes the data type for Date" },
+            new AgentCategoryDataType{ Id=3, Value="Numeric", Description="Describes the data type for Numeric" }
         }.AsQueryable();
 
         #region Methods

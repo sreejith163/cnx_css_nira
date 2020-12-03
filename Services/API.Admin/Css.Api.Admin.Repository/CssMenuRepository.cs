@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Models.DTO.Request.Menu;
 using Css.Api.Admin.Repository.DatabaseContext;
 using Css.Api.Admin.Repository.Interfaces;
 using Css.Api.Core.DataAccess.Repository.SQL;
@@ -42,6 +43,19 @@ namespace Css.Api.Admin.Repository
                 .ProjectTo<KeyValue>(_mapper.ConfigurationProvider).ToList();
 
             return await Task.FromResult(menus);
+        }
+
+        /// <summary>
+        /// Gets the CSS menu.
+        /// </summary>
+        /// <param name="menuIdDetails">The menu identifier details.</param>
+        /// <returns></returns>
+        public async Task<KeyValue> GetCssMenu(MenuIdDetails menuIdDetails)
+        {
+            var menu = FindByCondition(x =>x.Id == menuIdDetails.MenuId)
+                .ProjectTo<KeyValue>(_mapper.ConfigurationProvider).SingleOrDefault();
+
+            return await Task.FromResult(menu);
         }
     }
 }

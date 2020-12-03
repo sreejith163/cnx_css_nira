@@ -27,6 +27,9 @@ namespace Css.Api.Admin.Models.Profiles.Translation
                 .ReverseMap();
 
             CreateMap<LanguageTranslation, LanguageTranslationDTO>()
+                .ForMember(x => x.LanguageName, opt => opt.MapFrom(o => o.Language != null ? o.Language.Name : ""))
+                .ForMember(x => x.MenuName, opt => opt.MapFrom(o => o.Menu != null ? o.Menu.Name : ""))
+                .ForMember(x => x.VariableName, opt => opt.MapFrom(o => o.Variable != null ? o.Variable.Name : ""))
                 .ReverseMap();
         }
     }

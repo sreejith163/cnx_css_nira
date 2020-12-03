@@ -22,9 +22,9 @@ namespace Css.Api.Setup.Models.Profiles.SkillTag
                 .ReverseMap();
 
             CreateMap<Domain.SkillTag, SkillTagDTO>()
-                .ForMember(x => x.ClientName, opt => opt.MapFrom(o => o.Client.Name ?? ""))
-                .ForMember(x => x.ClientLobGroupName, opt => opt.MapFrom(o => o.ClientLobGroup.Name ?? ""))
-                .ForMember(x => x.SkillGroupName, opt => opt.MapFrom(o => o.SkillGroup.Name ?? ""))
+                .ForMember(x => x.ClientName, opt => opt.MapFrom(o => o.Client != null ? o.Client.Name : ""))
+                .ForMember(x => x.ClientLobGroupName, opt => opt.MapFrom(o => o.ClientLobGroup != null ? o.ClientLobGroup.Name : ""))
+                .ForMember(x => x.SkillGroupName, opt => opt.MapFrom(o => o.SkillGroup != null ? o.SkillGroup.Name : ""))
                 .ReverseMap();
 
             CreateMap<Domain.SkillTag, SkillTagDetailsDTO>()
