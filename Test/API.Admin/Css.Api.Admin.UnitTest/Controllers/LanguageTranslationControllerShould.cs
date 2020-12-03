@@ -4,10 +4,7 @@ using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
 using Css.Api.Admin.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using Xunit;
 
 namespace Css.Api.Admin.UnitTest.Controllers
@@ -22,7 +19,7 @@ namespace Css.Api.Admin.UnitTest.Controllers
         /// <summary>
         /// The controller
         /// </summary>
-        private readonly LanguageTranslationController controller;
+        private readonly LanguageTranslationsController controller;
 
         /// <summary>
         /// The mock translation data
@@ -36,7 +33,7 @@ namespace Css.Api.Admin.UnitTest.Controllers
         {
             mockTranslationService = new Mock<ILanguageTranslationService>();
             mockTranslationData = new MockLanguageTranslationData();
-            controller = new LanguageTranslationController(mockTranslationService.Object);
+            controller = new LanguageTranslationsController(mockTranslationService.Object);
         }
 
         #region GetLanguageTranslations
@@ -44,10 +41,10 @@ namespace Css.Api.Admin.UnitTest.Controllers
         [Fact]
         public async void GetLanguageTranslations()
         {
-            TranslationQueryParameters queryParameters = new TranslationQueryParameters();
+            LanguageTranslationQueryParameters queryParameters = new LanguageTranslationQueryParameters();
 
-            mockTranslationService.Setup(mr => mr.GetLanguageTranslations(It.IsAny<TranslationQueryParameters>())).ReturnsAsync(
-                (TranslationQueryParameters queryParameters) => mockTranslationData.GetLanguageTranslations(queryParameters));
+            mockTranslationService.Setup(mr => mr.GetLanguageTranslations(It.IsAny<LanguageTranslationQueryParameters>())).ReturnsAsync(
+                (LanguageTranslationQueryParameters queryParameters) => mockTranslationData.GetLanguageTranslations(queryParameters));
 
             var value = await controller.GetLanguageTranslations(queryParameters);
 
@@ -63,8 +60,8 @@ namespace Css.Api.Admin.UnitTest.Controllers
         [InlineData(2)]
         public async void GetLanguageTranslation_ReturnsOKResult(int translationId)
         {
-            mockTranslationService.Setup(mr => mr.GetLanguageTranslation(It.IsAny<TranslationIdDetails>())).ReturnsAsync(
-                (TranslationIdDetails idDetails) => mockTranslationData.GetLanguageTranslation(new TranslationIdDetails { TranslationId = translationId }));
+            mockTranslationService.Setup(mr => mr.GetLanguageTranslation(It.IsAny<LanguageTranslationIdDetails>())).ReturnsAsync(
+                (LanguageTranslationIdDetails idDetails) => mockTranslationData.GetLanguageTranslation(new LanguageTranslationIdDetails { TranslationId = translationId }));
 
             var value = await controller.GetLanguageTranslation(translationId);
 
@@ -76,8 +73,8 @@ namespace Css.Api.Admin.UnitTest.Controllers
         [InlineData(101)]
         public async void GetLanguageTranslation_ReturnsNotFoundResult(int translationId)
         {
-            mockTranslationService.Setup(mr => mr.GetLanguageTranslation(It.IsAny<TranslationIdDetails>())).ReturnsAsync(
-                (TranslationIdDetails idDetails) => mockTranslationData.GetLanguageTranslation(new TranslationIdDetails { TranslationId = translationId }));
+            mockTranslationService.Setup(mr => mr.GetLanguageTranslation(It.IsAny<LanguageTranslationIdDetails>())).ReturnsAsync(
+                (LanguageTranslationIdDetails idDetails) => mockTranslationData.GetLanguageTranslation(new LanguageTranslationIdDetails { TranslationId = translationId }));
 
             var value = await controller.GetLanguageTranslation(translationId);
 
@@ -94,11 +91,8 @@ namespace Css.Api.Admin.UnitTest.Controllers
             CreateLanguageTranslation languageTranslation = new CreateLanguageTranslation()
             {
                 LanguageId = 1,
-                LanguageName = "test",
                 MenuId = 1,
-                MenuName = "menu",
                 VariableId = 1,
-                VariableName = "variable",
                 Description = "test",
                 Translation = "test",
                 CreatedBy = "admin"
@@ -118,11 +112,8 @@ namespace Css.Api.Admin.UnitTest.Controllers
             CreateLanguageTranslation languageTranslation = new CreateLanguageTranslation()
             {
                 LanguageId = 4,
-                LanguageName = "test",
                 MenuId = 4,
-                MenuName = "menu",
                 VariableId = 4,
-                VariableName = "variable",
                 Description = "test",
                 Translation = "test",
                 CreatedBy = "admin"
@@ -148,19 +139,16 @@ namespace Css.Api.Admin.UnitTest.Controllers
             UpdateLanguageTranslation languageTranslation = new UpdateLanguageTranslation()
             {
                 LanguageId = 4,
-                LanguageName = "test",
                 MenuId = 4,
-                MenuName = "menu",
                 VariableId = 4,
-                VariableName = "variable",
                 Description = "test",
                 Translation = "testing",
                 ModifiedBy = "admin"
             };
 
-            mockTranslationService.Setup(mr => mr.UpdateLanguageTranslation(It.IsAny<TranslationIdDetails>(), It.IsAny<UpdateLanguageTranslation>())).ReturnsAsync(
-                (TranslationIdDetails idDetails, UpdateLanguageTranslation update) =>
-                mockTranslationData.UpdateLanguageTranslatione(new TranslationIdDetails { TranslationId = translationId }, languageTranslation));
+            mockTranslationService.Setup(mr => mr.UpdateLanguageTranslation(It.IsAny<LanguageTranslationIdDetails>(), It.IsAny<UpdateLanguageTranslation>())).ReturnsAsync(
+                (LanguageTranslationIdDetails idDetails, UpdateLanguageTranslation update) =>
+                mockTranslationData.UpdateLanguageTranslatione(new LanguageTranslationIdDetails { TranslationId = translationId }, languageTranslation));
 
             var value = await controller.UpdateLanguageTranslation(translationId, languageTranslation);
 
@@ -174,46 +162,47 @@ namespace Css.Api.Admin.UnitTest.Controllers
             UpdateLanguageTranslation languageTranslation = new UpdateLanguageTranslation()
             {
                 LanguageId = 2,
-                LanguageName = "test",
                 MenuId = 2,
-                MenuName = "menu",
                 VariableId = 2,
-                VariableName = "variable",
                 Description = "test",
                 Translation = "testing",
                 ModifiedBy = "admin"
             };
 
-            mockTranslationService.Setup(mr => mr.UpdateLanguageTranslation(It.IsAny<TranslationIdDetails>(), It.IsAny<UpdateLanguageTranslation>())).ReturnsAsync(
-                (TranslationIdDetails idDetails, UpdateLanguageTranslation update) =>
-                mockTranslationData.UpdateLanguageTranslatione(new TranslationIdDetails { TranslationId = translationId }, languageTranslation));
+            mockTranslationService.Setup(mr => mr.UpdateLanguageTranslation(It.IsAny<LanguageTranslationIdDetails>(), It.IsAny<UpdateLanguageTranslation>())).ReturnsAsync(
+                (LanguageTranslationIdDetails idDetails, UpdateLanguageTranslation update) =>
+                mockTranslationData.UpdateLanguageTranslatione(new LanguageTranslationIdDetails { TranslationId = translationId }, languageTranslation));
 
             var value = await controller.UpdateLanguageTranslation(translationId, languageTranslation);
 
             Assert.Equal((int)HttpStatusCode.Conflict, (value as ObjectResult).StatusCode);
         }
 
+        /// <summary>
+        /// Updates the scheduling code returns no content result.
+        /// </summary>
+        /// <param name="translationId">The translation identifier.</param>
+        /// <param name="languageId">The language identifier.</param>
+        /// <param name="menuId">The menu identifier.</param>
+        /// <param name="variableId">The variable identifier.</param>
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void UpdateSchedulingCode_ReturnsNoContentResult(int translationId)
+        [InlineData(1, 1, 1, 1)]
+        [InlineData(2, 2, 2, 2)]
+        public async void UpdateSchedulingCode_ReturnsNoContentResult(int translationId, int languageId, int menuId, int variableId)
         {
             UpdateLanguageTranslation languageTranslation = new UpdateLanguageTranslation()
             {
-                LanguageId = 2,
-                LanguageName = "test",
-                MenuId = 2,
-                MenuName = "menu",
-                VariableId = 2,
-                VariableName = "variable",
+                LanguageId = languageId,
+                MenuId = menuId,
+                VariableId = variableId,
                 Description = "test",
                 Translation = "testing",
                 ModifiedBy = "admin"
             };
 
-            mockTranslationService.Setup(mr => mr.UpdateLanguageTranslation(It.IsAny<TranslationIdDetails>(), It.IsAny<UpdateLanguageTranslation>())).ReturnsAsync(
-                (TranslationIdDetails idDetails, UpdateLanguageTranslation update) =>
-                mockTranslationData.UpdateLanguageTranslatione(new TranslationIdDetails { TranslationId = translationId }, languageTranslation));
+            mockTranslationService.Setup(mr => mr.UpdateLanguageTranslation(It.IsAny<LanguageTranslationIdDetails>(), It.IsAny<UpdateLanguageTranslation>())).ReturnsAsync(
+                (LanguageTranslationIdDetails idDetails, UpdateLanguageTranslation update) =>
+                mockTranslationData.UpdateLanguageTranslatione(new LanguageTranslationIdDetails { TranslationId = translationId }, languageTranslation));
 
             var value = await controller.UpdateLanguageTranslation(translationId, languageTranslation);
 
@@ -229,8 +218,8 @@ namespace Css.Api.Admin.UnitTest.Controllers
         [InlineData(2)]
         public async void DeleteLanguageTranslation_ReturnsNoContentResult(int translationId)
         {
-            mockTranslationService.Setup(mr => mr.DeleteLanguageTranslation(It.IsAny<TranslationIdDetails>())).ReturnsAsync(
-                (TranslationIdDetails idDetails) => mockTranslationData.DeleteLanguageTranslation(new TranslationIdDetails { TranslationId = translationId }));
+            mockTranslationService.Setup(mr => mr.DeleteLanguageTranslation(It.IsAny<LanguageTranslationIdDetails>())).ReturnsAsync(
+                (LanguageTranslationIdDetails idDetails) => mockTranslationData.DeleteLanguageTranslation(new LanguageTranslationIdDetails { TranslationId = translationId }));
 
             var value = await controller.DeleteLanguageTranslation(translationId);
 
@@ -242,8 +231,8 @@ namespace Css.Api.Admin.UnitTest.Controllers
         [InlineData(101)]
         public async void DeleteLanguageTranslation_ReturnsNotFoundResult(int translationId)
         {
-            mockTranslationService.Setup(mr => mr.DeleteLanguageTranslation(It.IsAny<TranslationIdDetails>())).ReturnsAsync(
-                (TranslationIdDetails idDetails) => mockTranslationData.DeleteLanguageTranslation(new TranslationIdDetails { TranslationId = translationId }));
+            mockTranslationService.Setup(mr => mr.DeleteLanguageTranslation(It.IsAny<LanguageTranslationIdDetails>())).ReturnsAsync(
+                (LanguageTranslationIdDetails idDetails) => mockTranslationData.DeleteLanguageTranslation(new LanguageTranslationIdDetails { TranslationId = translationId }));
 
             var value = await controller.DeleteLanguageTranslation(translationId);
 

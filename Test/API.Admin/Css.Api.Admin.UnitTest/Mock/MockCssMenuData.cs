@@ -1,9 +1,7 @@
 ﻿using Css.Api.Admin.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
-using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace Css.Api.Admin.UnitTest.Mock
 {
@@ -23,7 +21,7 @@ namespace Css.Api.Admin.UnitTest.Mock
         /// Gets the menus.
         /// </summary>
         /// <returns></returns>
-        public CSSResponse GetMenus()
+        public CSSResponse GetCssMenus()
         {
             return new CSSResponse(cssMenusDB, HttpStatusCode.OK);
         }

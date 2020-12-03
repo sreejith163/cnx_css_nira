@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace Css.Api.Admin.UnitTest.Mock
 {
@@ -28,22 +27,22 @@ namespace Css.Api.Admin.UnitTest.Mock
         /// <summary>
         /// Gets the translation languages.
         /// </summary>
-        /// <param name="queryParameters">The query parameters.</param>
+        /// <param name="languageTranslationQueryParameters">The query parameters.</param>
         /// <returns></returns>
-        public CSSResponse GetLanguageTranslations(TranslationQueryParameters queryParameters)
+        public CSSResponse GetLanguageTranslations(LanguageTranslationQueryParameters languageTranslationQueryParameters)
         {
-            var translationLanguages = languageTranslationsDB.Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize).Take(queryParameters.PageSize);
+            var translationLanguages = languageTranslationsDB.Skip((languageTranslationQueryParameters.PageNumber - 1) * languageTranslationQueryParameters.PageSize).Take(languageTranslationQueryParameters.PageSize);
             return new CSSResponse(translationLanguages, HttpStatusCode.OK);
         }
 
         /// <summary>
         /// Gets the language translation.
         /// </summary>
-        /// <param name="translationDetails">The translation details.</param>
+        /// <param name="languageTranslationIdDetails">The translation details.</param>
         /// <returns></returns>
-        public CSSResponse GetLanguageTranslation(TranslationIdDetails translationDetails)
+        public CSSResponse GetLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails)
         {
-            var translationLanguage = languageTranslationsDB.Where(x => x.Id == translationDetails.TranslationId && x.IsDeleted == false).FirstOrDefault();
+            var translationLanguage = languageTranslationsDB.Where(x => x.Id == languageTranslationIdDetails.TranslationId && x.IsDeleted == false).FirstOrDefault();
             return translationLanguage != null ? new CSSResponse(translationLanguage, HttpStatusCode.OK) : new CSSResponse(HttpStatusCode.NotFound);
         }
 
@@ -57,19 +56,16 @@ namespace Css.Api.Admin.UnitTest.Mock
             if (languageTranslationsDB.Exists(x => x.IsDeleted == false && x.MenuId == languageTranslation.MenuId &&
                 x.VariableId == languageTranslation.VariableId && x.LanguageId == languageTranslation.LanguageId))
             {
-                return new CSSResponse($"Translation with language '{languageTranslation.LanguageName}' and " +
-                    $"menu '{languageTranslation.MenuName}' and variable '{languageTranslation.VariableName}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Translation with language id '{languageTranslation.LanguageId}' and " +
+                    $"menu id '{languageTranslation.MenuId}' and variable id '{languageTranslation.VariableId}' already exists.", HttpStatusCode.Conflict);
             }
 
             LanguageTranslation language = new LanguageTranslation()
             {
                 Id = 99,
                 LanguageId = languageTranslation.LanguageId,
-                LanguageName = languageTranslation.LanguageName,
                 MenuId = languageTranslation.MenuId,
-                MenuName = languageTranslation.MenuName,
                 VariableId = languageTranslation.VariableId,
-                VariableName = languageTranslation.VariableName,
                 Description = languageTranslation.Description,
                 Translation = languageTranslation.Translation,
                 CreatedBy = languageTranslation.CreatedBy
@@ -77,7 +73,7 @@ namespace Css.Api.Admin.UnitTest.Mock
 
             languageTranslationsDB.Add(language);
 
-            return new CSSResponse(new TranslationIdDetails { TranslationId = language.Id }, HttpStatusCode.Created);
+            return new CSSResponse(new LanguageTranslationIdDetails { TranslationId = language.Id }, HttpStatusCode.Created);
         }
 
         /// <summary>
@@ -86,28 +82,25 @@ namespace Css.Api.Admin.UnitTest.Mock
         /// <param name="schedulingCodeIdDetails">The scheduling code identifier details.</param>
         /// <param name="updateSchedulingCode">The update scheduling code.</param>
         /// <returns></returns>
-        public CSSResponse UpdateLanguageTranslatione(TranslationIdDetails translationIdDetails, UpdateLanguageTranslation languageTranslation)
+        public CSSResponse UpdateLanguageTranslatione(LanguageTranslationIdDetails languageTranslationIdDetails, UpdateLanguageTranslation languageTranslation)
         {
-            if (!languageTranslationsDB.Exists(x => x.IsDeleted == false && x.Id == translationIdDetails.TranslationId))
+            if (!languageTranslationsDB.Exists(x => x.IsDeleted == false && x.Id == languageTranslationIdDetails.TranslationId))
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
             if (languageTranslationsDB.Exists(x => x.IsDeleted == false && x.MenuId == languageTranslation.MenuId &&
-                x.VariableId == languageTranslation.VariableId && x.LanguageId == languageTranslation.LanguageId && x.Id != translationIdDetails.TranslationId))
+                x.VariableId == languageTranslation.VariableId && x.LanguageId == languageTranslation.LanguageId && x.Id != languageTranslationIdDetails.TranslationId))
             {
-                return new CSSResponse($"Translation with language '{languageTranslation.LanguageName}' and " +
-                    $"menu '{languageTranslation.MenuName}' and variable '{languageTranslation.VariableName}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Translation with language id '{languageTranslation.LanguageId}' and " +
+                    $"menu id '{languageTranslation.MenuId}' and variable id '{languageTranslation.VariableId}' already exists.", HttpStatusCode.Conflict);
             }
 
-            var language = languageTranslationsDB.Where(x => x.IsDeleted == false && x.Id == translationIdDetails.TranslationId).FirstOrDefault();
+            var language = languageTranslationsDB.Where(x => x.IsDeleted == false && x.Id == languageTranslationIdDetails.TranslationId).FirstOrDefault();
 
             language.LanguageId = languageTranslation.LanguageId;
             language.MenuId = languageTranslation.MenuId;
-            language.MenuName = languageTranslation.MenuName;
-            language.LanguageName = languageTranslation.LanguageName;
             language.VariableId = languageTranslation.VariableId;
-            language.VariableName = languageTranslation.VariableName;
             language.Description = languageTranslation.Description;
             language.Translation = languageTranslation.Translation;
             language.ModifiedDate = DateTime.UtcNow;
@@ -118,16 +111,16 @@ namespace Css.Api.Admin.UnitTest.Mock
         /// <summary>
         /// Deletes the language translation.
         /// </summary>
-        /// <param name="translationIdDetails">The translation identifier details.</param>
+        /// <param name="languageTranslationIdDetails">The translation identifier details.</param>
         /// <returns></returns>
-        public CSSResponse DeleteLanguageTranslation(TranslationIdDetails translationIdDetails)
+        public CSSResponse DeleteLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails)
         {
-            if (!languageTranslationsDB.Exists(x => x.IsDeleted == false && x.Id == translationIdDetails.TranslationId))
+            if (!languageTranslationsDB.Exists(x => x.IsDeleted == false && x.Id == languageTranslationIdDetails.TranslationId))
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var language = languageTranslationsDB.Where(x => x.IsDeleted == false && x.Id == translationIdDetails.TranslationId).FirstOrDefault();
+            var language = languageTranslationsDB.Where(x => x.IsDeleted == false && x.Id == languageTranslationIdDetails.TranslationId).FirstOrDefault();
             languageTranslationsDB.Remove(language);
             return new CSSResponse(HttpStatusCode.NoContent);
         }

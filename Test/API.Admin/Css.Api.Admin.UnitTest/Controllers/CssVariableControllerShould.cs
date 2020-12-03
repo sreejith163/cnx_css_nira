@@ -1,13 +1,10 @@
 ﻿using Css.Api.Admin.Business.Interfaces;
 using Css.Api.Admin.Controllers;
-using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
+using Css.Api.Admin.Models.DTO.Request.Variable;
 using Css.Api.Admin.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using Xunit;
 
 namespace Css.Api.Admin.UnitTest.Controllers
@@ -22,7 +19,7 @@ namespace Css.Api.Admin.UnitTest.Controllers
         /// <summary>
         /// The controller
         /// </summary>
-        private readonly CssVariableController controller;
+        private readonly CssVariablesController controller;
 
         /// <summary>
         /// The mock CSS variable data
@@ -36,7 +33,7 @@ namespace Css.Api.Admin.UnitTest.Controllers
         {
             mockVariableService = new Mock<ICssVariableService>();
             mockCssVariableData = new MockCssVariableData();
-            controller = new CssVariableController(mockVariableService.Object);
+            controller = new CssVariablesController(mockVariableService.Object);
         }
 
         #region CssVariables
@@ -47,12 +44,12 @@ namespace Css.Api.Admin.UnitTest.Controllers
         [Fact]
         public async void GetCssVariables()
         {
-            CssVariableQueryParameters queryParameters = new CssVariableQueryParameters();
+            VariableQueryParams variableQueryParams = new VariableQueryParams();
 
-            mockVariableService.Setup(mr => mr.GetCssVariables(It.IsAny<CssVariableQueryParameters>())).ReturnsAsync(
-                (CssVariableQueryParameters queryParameters) => mockCssVariableData.GetVariables(queryParameters));
+            mockVariableService.Setup(mr => mr.GetCssVariables(It.IsAny<VariableQueryParams>())).ReturnsAsync(
+                (VariableQueryParams queryParameters) => mockCssVariableData.GetVariables(variableQueryParams));
 
-            var value = await controller.GetCssVariables(queryParameters);
+            var value = await controller.GetCssVariables(variableQueryParams);
 
             Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
         }

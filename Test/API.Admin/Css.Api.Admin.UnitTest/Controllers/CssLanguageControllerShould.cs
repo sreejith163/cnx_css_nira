@@ -3,10 +3,7 @@ using Css.Api.Admin.Controllers;
 using Css.Api.Admin.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using Xunit;
 
 namespace Css.Api.Admin.UnitTest.Controllers
@@ -21,7 +18,7 @@ namespace Css.Api.Admin.UnitTest.Controllers
         /// <summary>
         /// The controller
         /// </summary>
-        private readonly CssLanguageController controller;
+        private readonly CssLanguagesController controller;
 
         /// <summary>
         /// The mock CSS language data
@@ -35,7 +32,7 @@ namespace Css.Api.Admin.UnitTest.Controllers
         {
             mockLanguageService = new Mock<ICssLanguageService>();
             mockCssLanguageData = new MockCssLanguageData();
-            controller = new CssLanguageController(mockLanguageService.Object);
+            controller = new CssLanguagesController(mockLanguageService.Object);
         }
 
         #region CssLanguage
