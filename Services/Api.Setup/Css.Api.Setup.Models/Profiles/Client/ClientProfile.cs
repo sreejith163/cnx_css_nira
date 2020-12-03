@@ -28,7 +28,6 @@ namespace Css.Api.Setup.Models.Profiles.Client
                 .ReverseMap();
 
             CreateMap<Domain.Client, KeyValue>()
-               .ForMember(x => x.Id, opt => opt.MapFrom(o => o.Id))
                .ForMember(x => x.Value, opt => opt.MapFrom(o => o.Name))
                .ReverseMap();
         }
