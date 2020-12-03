@@ -52,114 +52,121 @@
             <param name="agentCategoryId">The agent category identifier.</param>
             <returns></returns>
         </member>
-        <member name="T:Css.Api.Admin.Controllers.CssLanguageController">
+        <member name="T:Css.Api.Admin.Controllers.CssLanguagesController">
             <summary>
             Controller for handling the language resource
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="F:Css.Api.Admin.Controllers.CssLanguageController._languageService">
+        <member name="F:Css.Api.Admin.Controllers.CssLanguagesController._languageService">
             <summary>
             The lanmguage service
             </summary>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.CssLanguageController.#ctor(Css.Api.Admin.Business.Interfaces.ICssLanguageService)">
+        <member name="M:Css.Api.Admin.Controllers.CssLanguagesController.#ctor(Css.Api.Admin.Business.Interfaces.ICssLanguageService)">
             <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.CssLanguageController"/> class.
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.CssLanguagesController"/> class.
             </summary>
             <param name="languageService">The language service.</param>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.CssLanguageController.GetLanguages">
+        <member name="M:Css.Api.Admin.Controllers.CssLanguagesController.GetLanguages">
             <summary>
             Gets the languages.
             </summary>
             <returns></returns>
         </member>
-        <member name="T:Css.Api.Admin.Controllers.CssMenuController">
+        <member name="T:Css.Api.Admin.Controllers.CssMenusController">
             <summary>
             Controller for handling the css menu resource
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="F:Css.Api.Admin.Controllers.CssMenuController._cssMenuService">
+        <member name="F:Css.Api.Admin.Controllers.CssMenusController._cssMenuService">
             <summary>
             The CSS menu service
             </summary>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.CssMenuController.#ctor(Css.Api.Admin.Business.Interfaces.ICssMenuService)">
+        <member name="M:Css.Api.Admin.Controllers.CssMenusController.#ctor(Css.Api.Admin.Business.Interfaces.ICssMenuService)">
             <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.CssMenuController"/> class.
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.CssMenusController"/> class.
             </summary>
             <param name="cssMenuService">The CSS menu service.</param>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.CssMenuController.GetMenus">
+        <member name="M:Css.Api.Admin.Controllers.CssMenusController.GetMenus">
             <summary>
             Gets the menus.
             </summary>
             <returns></returns>
         </member>
-        <member name="T:Css.Api.Admin.Controllers.CssVariableController">
+        <member name="M:Css.Api.Admin.Controllers.CssMenusController.GetMenuVariables(System.Int32)">
+            <summary>
+            Gets the menu variables.
+            </summary>
+            <param name="menuId">The menu identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Admin.Controllers.CssVariablesController">
             <summary>
             Controller for handling the css variable resource
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="F:Css.Api.Admin.Controllers.CssVariableController._cssVariableService">
+        <member name="F:Css.Api.Admin.Controllers.CssVariablesController._cssVariableService">
             <summary>
             The CSS variable service
             </summary>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.CssVariableController.#ctor(Css.Api.Admin.Business.Interfaces.ICssVariableService)">
+        <member name="M:Css.Api.Admin.Controllers.CssVariablesController.#ctor(Css.Api.Admin.Business.Interfaces.ICssVariableService)">
             <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.CssVariableController"/> class.
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.CssVariablesController"/> class.
             </summary>
             <param name="cssVariableService">The CSS variable service.</param>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.CssVariableController.GetCssVariables(Css.Api.Admin.Models.DTO.Request.LanguageTranslation.CssVariableQueryParameters)">
+        <member name="M:Css.Api.Admin.Controllers.CssVariablesController.GetCssVariables">
             <summary>
             Gets the CSS variables.
             </summary>
             <returns></returns>
         </member>
-        <member name="T:Css.Api.Admin.Controllers.LanguageTranslationController">
+        <member name="T:Css.Api.Admin.Controllers.LanguageTranslationsController">
             <summary>
             Controller for handling the language translation resource
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="F:Css.Api.Admin.Controllers.LanguageTranslationController._languageTranslationService">
+        <member name="F:Css.Api.Admin.Controllers.LanguageTranslationsController._languageTranslationService">
             <summary>
             The language translation service
             </summary>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationController.#ctor(Css.Api.Admin.Business.Interfaces.ILanguageTranslationService)">
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.#ctor(Css.Api.Admin.Business.Interfaces.ILanguageTranslationService)">
             <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.LanguageTranslationController"/> class.
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.LanguageTranslationsController" /> class.
             </summary>
             <param name="languageTranslationService">The language translation service.</param>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationController.GetLanguageTranslations(Css.Api.Admin.Models.DTO.Request.LanguageTranslation.TranslationQueryParameters)">
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.GetLanguageTranslations(Css.Api.Admin.Models.DTO.Request.LanguageTranslation.TranslationQueryParameters)">
             <summary>
             Gets the language translations.
             </summary>
             <param name="translationQueryParameters">The translation query parameters.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationController.GetLanguageTranslation(System.Int32)">
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.GetLanguageTranslation(System.Int32)">
             <summary>
             Gets the language translation.
             </summary>
             <param name="translationId">The translation identifier.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationController.CreateLanguageTranslation(Css.Api.Admin.Models.DTO.Request.LanguageTranslation.CreateLanguageTranslation)">
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.CreateLanguageTranslation(Css.Api.Admin.Models.DTO.Request.LanguageTranslation.CreateLanguageTranslation)">
             <summary>
             Creates the language translation.
             </summary>
             <param name="translationDetails">The translation details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationController.UpdateLanguageTranslation(System.Int32,Css.Api.Admin.Models.DTO.Request.LanguageTranslation.UpdateLanguageTranslation)">
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.UpdateLanguageTranslation(System.Int32,Css.Api.Admin.Models.DTO.Request.LanguageTranslation.UpdateLanguageTranslation)">
             <summary>
             Updates the language translation.
             </summary>
@@ -167,7 +174,7 @@
             <param name="translationDetails">The translation details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationController.DeleteLanguageTranslation(System.Int32)">
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.DeleteLanguageTranslation(System.Int32)">
             <summary>
             Deletes the language translation.
             </summary>
