@@ -12,16 +12,16 @@ namespace Css.Api.Admin.Repository.Interfaces
         /// <summary>
         /// Gets the language translations.
         /// </summary>
-        /// <param name="translationQueryParameters">The translation query parameters.</param>
+        /// <param name="languageTranslationQueryParameters">The language translation query parameters.</param>
         /// <returns></returns>
-        Task<PagedList<Entity>> GetLanguageTranslations(TranslationQueryParameters translationQueryParameters);
+        Task<PagedList<Entity>> GetLanguageTranslations(LanguageTranslationQueryParameters languageTranslationQueryParameters);
 
         /// <summary>
         /// Gets the language translation.
         /// </summary>
-        /// <param name="translationIdDetails">The translation identifier details.</param>
+        /// <param name="languageTranslationIdDetails">The translation identifier details.</param>
         /// <returns></returns>
-        Task<LanguageTranslation> GetLanguageTranslation(TranslationIdDetails translationIdDetails);
+        Task<LanguageTranslation> GetLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails);
 
         /// <summary>
         /// Gets the language translation by other ids.

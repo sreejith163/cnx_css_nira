@@ -35,7 +35,7 @@ namespace Css.Api.Admin.Controllers
         /// <param name="translationQueryParameters">The translation query parameters.</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetLanguageTranslations([FromQuery] TranslationQueryParameters translationQueryParameters)
+        public async Task<IActionResult> GetLanguageTranslations([FromQuery] LanguageTranslationQueryParameters translationQueryParameters)
         {
             var result = await _languageTranslationService.GetLanguageTranslations(translationQueryParameters);
             return StatusCode((int)result.Code, result.Value);
@@ -49,7 +49,7 @@ namespace Css.Api.Admin.Controllers
         [HttpGet("{translationId}")]
         public async Task<IActionResult> GetLanguageTranslation(int translationId)
         {
-            var result = await _languageTranslationService.GetLanguageTranslation(new TranslationIdDetails { TranslationId = translationId });
+            var result = await _languageTranslationService.GetLanguageTranslation(new LanguageTranslationIdDetails { TranslationId = translationId });
             return StatusCode((int)result.Code, result.Value);
         }
 
@@ -74,7 +74,7 @@ namespace Css.Api.Admin.Controllers
         [HttpPut("{translationId}")]
         public async Task<IActionResult> UpdateLanguageTranslation(int translationId, [FromBody] UpdateLanguageTranslation translationDetails)
         {
-            var result = await _languageTranslationService.UpdateLanguageTranslation(new TranslationIdDetails { TranslationId = translationId },
+            var result = await _languageTranslationService.UpdateLanguageTranslation(new LanguageTranslationIdDetails { TranslationId = translationId },
                 translationDetails);
             return StatusCode((int)result.Code, result.Value);
         }
@@ -87,7 +87,7 @@ namespace Css.Api.Admin.Controllers
         [HttpDelete("{translationId}")]
         public async Task<IActionResult> DeleteLanguageTranslation(int translationId)
         {
-            var result = await _languageTranslationService.DeleteLanguageTranslation(new TranslationIdDetails { TranslationId = translationId });
+            var result = await _languageTranslationService.DeleteLanguageTranslation(new LanguageTranslationIdDetails { TranslationId = translationId });
             return StatusCode((int)result.Code, result.Value);
         }
     }

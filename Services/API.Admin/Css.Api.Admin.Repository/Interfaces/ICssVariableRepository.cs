@@ -1,4 +1,5 @@
 ﻿using Css.Api.Admin.Models.DTO.Request.Menu;
+using Css.Api.Admin.Models.DTO.Request.Variable;
 using Css.Api.Core.Models.DTO.Response;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,8 +11,9 @@ namespace Css.Api.Admin.Repository.Interfaces
         /// <summary>
         /// Gets the CSS variables.
         /// </summary>
+        /// <param name="variableQueryParams">The variable query parameters.</param>
         /// <returns></returns>
-        Task<List<KeyValue>> GetCssVariables();
+        Task<List<KeyValue>> GetCssVariables(VariableQueryParams variableQueryParams);
 
         /// <summary>
         /// Gets the CSS variablesby menu identifier.

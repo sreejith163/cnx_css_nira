@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Css.Api.Admin.Business.Interfaces;
+using Css.Api.Admin.Models.DTO.Request.Variable;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Css.Api.Admin.Controllers
@@ -31,11 +32,12 @@ namespace Css.Api.Admin.Controllers
         /// <summary>
         /// Gets the CSS variables.
         /// </summary>
+        /// <param name="variableQueryParams">The variable query parameters.</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetCssVariables()
+        public async Task<IActionResult> GetCssVariables(VariableQueryParams variableQueryParams)
         {
-            var result = await _cssVariableService.GetCssVariables();
+            var result = await _cssVariableService.GetCssVariables(variableQueryParams);
             return StatusCode((int)result.Code, result.Value);
         }
     }

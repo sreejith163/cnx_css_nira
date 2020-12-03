@@ -12,16 +12,16 @@ namespace Css.Api.Admin.Business.Interfaces
         /// <summary>
         /// Gets the language translations.
         /// </summary>
-        /// <param name="translationQueryParameters">The translation query parameters.</param>
+        /// <param name="languageTranslationQueryParameters">The language translation query parameters.</param>
         /// <returns></returns>
-        Task<CSSResponse> GetLanguageTranslations(TranslationQueryParameters translationQueryParameters);
+        Task<CSSResponse> GetLanguageTranslations(LanguageTranslationQueryParameters languageTranslationQueryParameters);
 
         /// <summary>
         /// Gets the language translation.
         /// </summary>
-        /// <param name="translationIdDetails">The translation identifier details.</param>
+        /// <param name="languageTranslationIdDetails">The translation identifier details.</param>
         /// <returns></returns>
-        Task<CSSResponse> GetLanguageTranslation(TranslationIdDetails translationIdDetails);
+        Task<CSSResponse> GetLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails);
 
         /// <summary>
         /// Creates the language translation.
@@ -33,16 +33,16 @@ namespace Css.Api.Admin.Business.Interfaces
         /// <summary>
         /// Updates the language translation.
         /// </summary>
-        /// <param name="translationIdDetails">The translation identifier details.</param>
+        /// <param name="languageTranslationIdDetails">The translation identifier details.</param>
         /// <param name="translationDetails">The translation details.</param>
         /// <returns></returns>
-        Task<CSSResponse> UpdateLanguageTranslation(TranslationIdDetails translationIdDetails, UpdateLanguageTranslation translationDetails);
+        Task<CSSResponse> UpdateLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails, UpdateLanguageTranslation translationDetails);
 
         /// <summary>
         /// Deletes the language translation.
         /// </summary>
-        /// <param name="translationIdDetails">The translation identifier details.</param>
+        /// <param name="languageTranslationIdDetails">The translation identifier details.</param>
         /// <returns></returns>
-        Task<CSSResponse> DeleteLanguageTranslation(TranslationIdDetails translationIdDetails);
+        Task<CSSResponse> DeleteLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails);
     }
 }

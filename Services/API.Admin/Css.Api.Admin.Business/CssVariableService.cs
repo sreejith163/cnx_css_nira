@@ -1,4 +1,5 @@
 ﻿using Css.Api.Admin.Business.Interfaces;
+using Css.Api.Admin.Models.DTO.Request.Variable;
 using Css.Api.Admin.Repository.Interfaces;
 using Css.Api.Core.Models.DTO.Response;
 using System.Net;
@@ -25,10 +26,11 @@ namespace Css.Api.Admin.Business
         /// <summary>
         /// Gets css variables
         /// </summary>
+        /// <param name="variableQueryParams">The variable query parameters.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> GetCssVariables()
+        public async Task<CSSResponse> GetCssVariables(VariableQueryParams variableQueryParams)
         {
-            var menus = await _repository.CssVariable.GetCssVariables();
+            var menus = await _repository.CssVariable.GetCssVariables(variableQueryParams);
             return new CSSResponse(menus, HttpStatusCode.OK);
         }
     }

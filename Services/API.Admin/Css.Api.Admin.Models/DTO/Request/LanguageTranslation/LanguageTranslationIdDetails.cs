@@ -1,6 +1,6 @@
 ﻿namespace Css.Api.Admin.Models.DTO.Request.LanguageTranslation
 {
-    public class TranslationIdDetails
+    public class LanguageTranslationIdDetails
     {
         /// <summary>
         /// Gets or sets the translation identifier.

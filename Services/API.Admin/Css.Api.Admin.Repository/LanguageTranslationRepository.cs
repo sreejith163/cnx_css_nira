@@ -39,20 +39,20 @@ namespace Css.Api.Admin.Repository
         /// <summary>
         /// Gets the language translations.
         /// </summary>
-        /// <param name="translationQueryParameters">The translation query parameters.</param>
+        /// <param name="languageTranslationQueryParameters">The language translation query parameters.</param>
         /// <returns></returns>
-        public async Task<PagedList<Entity>> GetLanguageTranslations(TranslationQueryParameters translationQueryParameters)
+        public async Task<PagedList<Entity>> GetLanguageTranslations(LanguageTranslationQueryParameters languageTranslationQueryParameters)
         {
             var languages = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredLanguages = FilterLanguages(languages, translationQueryParameters.SearchKeyword, translationQueryParameters.LanguageId, 
-                                                    translationQueryParameters.MenuId, translationQueryParameters.VariableId);
+            var filteredLanguages = FilterLanguages(languages, languageTranslationQueryParameters.SearchKeyword, languageTranslationQueryParameters.LanguageId,
+                                                    languageTranslationQueryParameters.MenuId, languageTranslationQueryParameters.VariableId);
 
-            var sortedSchedulingCodes = SortHelper.ApplySort(filteredLanguages, translationQueryParameters.OrderBy);
+            var sortedSchedulingCodes = SortHelper.ApplySort(filteredLanguages, languageTranslationQueryParameters.OrderBy);
 
             var pagedLanguages = sortedSchedulingCodes
-                .Skip((translationQueryParameters.PageNumber - 1) * translationQueryParameters.PageSize)
-                .Take(translationQueryParameters.PageSize)
+                .Skip((languageTranslationQueryParameters.PageNumber - 1) * languageTranslationQueryParameters.PageSize)
+                .Take(languageTranslationQueryParameters.PageSize)
                 .Include(x => x.Language)
                 .Include(x => x.Menu)
                 .Include(x => x.Variable);
@@ -60,21 +60,21 @@ namespace Css.Api.Admin.Repository
             var mappedLanguages = pagedLanguages
                 .ProjectTo<LanguageTranslationDTO>(_mapper.ConfigurationProvider);
 
-            var shapedSchedulingCodes = DataShaper.ShapeData(mappedLanguages, translationQueryParameters.Fields);
+            var shapedSchedulingCodes = DataShaper.ShapeData(mappedLanguages, languageTranslationQueryParameters.Fields);
 
             return await PagedList<Entity>
-                .ToPagedList(shapedSchedulingCodes, filteredLanguages.Count(), translationQueryParameters.PageNumber, translationQueryParameters.PageSize);
+                .ToPagedList(shapedSchedulingCodes, filteredLanguages.Count(), languageTranslationQueryParameters.PageNumber, languageTranslationQueryParameters.PageSize);
 
         }
 
         /// <summary>
         /// Gets the language translation.
         /// </summary>
-        /// <param name="translationIdDetails">The translation identifier details.</param>
+        /// <param name="languageTranslationIdDetails">The translation identifier details.</param>
         /// <returns></returns>
-        public async Task<LanguageTranslation> GetLanguageTranslation(TranslationIdDetails translationIdDetails)
+        public async Task<LanguageTranslation> GetLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails)
         {
-            var language = FindByCondition(x => x.Id == translationIdDetails.TranslationId && x.IsDeleted == false)
+            var language = FindByCondition(x => x.Id == languageTranslationIdDetails.TranslationId && x.IsDeleted == false)
                 .Include(x => x.Language)
                 .Include(x => x.Menu)
                 .Include(x => x.Variable)

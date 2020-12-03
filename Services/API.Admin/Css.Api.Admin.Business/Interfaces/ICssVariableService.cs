@@ -1,4 +1,5 @@
-﻿using Css.Api.Core.Models.DTO.Response;
+﻿using Css.Api.Admin.Models.DTO.Request.Variable;
+using Css.Api.Core.Models.DTO.Response;
 using System.Threading.Tasks;
 
 namespace Css.Api.Admin.Business.Interfaces
@@ -8,7 +9,8 @@ namespace Css.Api.Admin.Business.Interfaces
         /// <summary>
         /// Gets css variables
         /// </summary>
+        /// <param name="variableQueryParams">The variable query parameters.</param>
         /// <returns></returns>
-        Task<CSSResponse> GetCssVariables();
+        Task<CSSResponse> GetCssVariables(VariableQueryParams variableQueryParams);
     }
 }

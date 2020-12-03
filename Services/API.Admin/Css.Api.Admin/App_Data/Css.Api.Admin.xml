@@ -122,10 +122,11 @@
             </summary>
             <param name="cssVariableService">The CSS variable service.</param>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.CssVariablesController.GetCssVariables">
+        <member name="M:Css.Api.Admin.Controllers.CssVariablesController.GetCssVariables(Css.Api.Admin.Models.DTO.Request.Variable.VariableQueryParams)">
             <summary>
             Gets the CSS variables.
             </summary>
+            <param name="variableQueryParams">The variable query parameters.</param>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Admin.Controllers.LanguageTranslationsController">
@@ -145,7 +146,7 @@
             </summary>
             <param name="languageTranslationService">The language translation service.</param>
         </member>
-        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.GetLanguageTranslations(Css.Api.Admin.Models.DTO.Request.LanguageTranslation.TranslationQueryParameters)">
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.GetLanguageTranslations(Css.Api.Admin.Models.DTO.Request.LanguageTranslation.LanguageTranslationQueryParameters)">
             <summary>
             Gets the language translations.
             </summary>

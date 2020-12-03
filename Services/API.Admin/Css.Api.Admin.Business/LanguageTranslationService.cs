@@ -46,11 +46,11 @@ namespace Css.Api.Admin.Business
         /// <summary>
         /// Gets the language translations.
         /// </summary>
-        /// <param name="translationQueryParameters">The translation query parameters.</param>
+        /// <param name="languageTranslationQueryParameters">The language translation query parameters.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> GetLanguageTranslations(TranslationQueryParameters translationQueryParameters)
+        public async Task<CSSResponse> GetLanguageTranslations(LanguageTranslationQueryParameters languageTranslationQueryParameters)
         {
-            var languageTranslations = await _repository.LanguageTranslation.GetLanguageTranslations(translationQueryParameters);
+            var languageTranslations = await _repository.LanguageTranslation.GetLanguageTranslations(languageTranslationQueryParameters);
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(languageTranslations));
 
             return new CSSResponse(languageTranslations, HttpStatusCode.OK);
@@ -59,11 +59,11 @@ namespace Css.Api.Admin.Business
         /// <summary>
         /// Gets the language translation.
         /// </summary>
-        /// <param name="translationIdDetails">The translation identifier details.</param>
+        /// <param name="languageTranslationIdDetails">The translation identifier details.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> GetLanguageTranslation(TranslationIdDetails translationIdDetails)
+        public async Task<CSSResponse> GetLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails)
         {
-            var languageTranslation = await _repository.LanguageTranslation.GetLanguageTranslation(translationIdDetails);
+            var languageTranslation = await _repository.LanguageTranslation.GetLanguageTranslation(languageTranslationIdDetails);
             if (languageTranslation == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -97,18 +97,18 @@ namespace Css.Api.Admin.Business
 
             await _repository.SaveAsync();
 
-            return new CSSResponse(new TranslationIdDetails { TranslationId = languageTranslationRequest.Id }, HttpStatusCode.Created);
+            return new CSSResponse(new LanguageTranslationIdDetails { TranslationId = languageTranslationRequest.Id }, HttpStatusCode.Created);
         }
 
         /// <summary>
         /// Updates the language translation.
         /// </summary>
-        /// <param name="translationIdDetails">The translation identifier details.</param>
+        /// <param name="languageTranslationIdDetails">The translation identifier details.</param>
         /// <param name="translationDetails">The translation details.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> UpdateLanguageTranslation(TranslationIdDetails translationIdDetails, UpdateLanguageTranslation translationDetails)
+        public async Task<CSSResponse> UpdateLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails, UpdateLanguageTranslation translationDetails)
         {
-            var language = await _repository.LanguageTranslation.GetLanguageTranslation(translationIdDetails);
+            var language = await _repository.LanguageTranslation.GetLanguageTranslation(languageTranslationIdDetails);
             if (language == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -119,7 +119,7 @@ namespace Css.Api.Admin.Business
             var variableIdDetails = new VariableIdDetails { VariableId = translationDetails.VariableId };
             var languages = await _repository.LanguageTranslation.GetLanguageTranslationByOtherIds(languageIdDetails, menuIdDetails, variableIdDetails);
 
-            if (languages?.Count > 0 && languages.IndexOf(translationIdDetails.TranslationId) == -1)
+            if (languages?.Count > 0 && languages.IndexOf(languageTranslationIdDetails.TranslationId) == -1)
             {
                 return new CSSResponse($"Translation with language id '{translationDetails.LanguageId}' and " +
                     $"menu id '{translationDetails.MenuId}' and variable id '{translationDetails.VariableId}' already exists.", HttpStatusCode.Conflict);
@@ -137,11 +137,11 @@ namespace Css.Api.Admin.Business
         /// <summary>
         /// Deletes the language translation.
         /// </summary>
-        /// <param name="translationIdDetails">The translation identifier details.</param>
+        /// <param name="languageTranslationIdDetails">The translation identifier details.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> DeleteLanguageTranslation(TranslationIdDetails translationIdDetails)
+        public async Task<CSSResponse> DeleteLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails)
         {
-            var language = await _repository.LanguageTranslation.GetLanguageTranslation(translationIdDetails);
+            var language = await _repository.LanguageTranslation.GetLanguageTranslation(languageTranslationIdDetails);
             if (language == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);

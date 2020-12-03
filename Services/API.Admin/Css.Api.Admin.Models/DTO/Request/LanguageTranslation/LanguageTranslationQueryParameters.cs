@@ -2,12 +2,12 @@
 
 namespace Css.Api.Admin.Models.DTO.Request.LanguageTranslation
 {
-    public class TranslationQueryParameters : QueryStringParameters
+    public class LanguageTranslationQueryParameters : QueryStringParameters
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TranslationQueryParameters"/> class.
+        /// Initializes a new instance of the <see cref="LanguageTranslationQueryParameters"/> class.
         /// </summary>
-        public TranslationQueryParameters()
+        public LanguageTranslationQueryParameters()
         {
             OrderBy = "CreatedDate";
         }
