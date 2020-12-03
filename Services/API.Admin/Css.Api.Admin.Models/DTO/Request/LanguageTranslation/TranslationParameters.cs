@@ -1,7 +1,4 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Css.Api.Admin.Models.DTO.Request.LanguageTranslation
 {
@@ -14,5 +11,20 @@ namespace Css.Api.Admin.Models.DTO.Request.LanguageTranslation
         {
             OrderBy = "CreatedDate";
         }
+
+        /// <summary>
+        /// Gets or sets the language identifier.
+        /// </summary>
+        public int? LanguageId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the menu identifier.
+        /// </summary>
+        public int? MenuId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the variable identifier.
+        /// </summary>
+        public int? VariableId { get; set; }
     }
 }

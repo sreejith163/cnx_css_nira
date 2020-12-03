@@ -1,9 +1,8 @@
 ﻿using Css.Api.Admin.Models.Domain;
 using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
+using Css.Api.Admin.Models.DTO.Request.Menu;
 using Css.Api.Core.Models.Domain;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Css.Api.Admin.Repository.Interfaces
@@ -27,9 +26,11 @@ namespace Css.Api.Admin.Repository.Interfaces
         /// <summary>
         /// Gets the language translation by other ids.
         /// </summary>
-        /// <param name="translationData">The translation data.</param>
+        /// <param name="languageIdDetails">The language identifier details.</param>
+        /// <param name="menuIdDetails">The menu identifier details.</param>
+        /// <param name="variableIdDetails">The variable identifier details.</param>
         /// <returns></returns>
-        Task<List<int>> GetLanguageTranslationByOtherIds(TranslationData translationData);
+        Task<List<int>> GetLanguageTranslationByOtherIds(LanguageIdDetails languageIdDetails, MenuIdDetails menuIdDetails, VariableIdDetails variableIdDetails);
 
         /// <summary>
         /// Creates the language translation.

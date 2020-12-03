@@ -2,6 +2,7 @@
 using Css.Api.Admin.Business.Interfaces;
 using Css.Api.Admin.Models.Domain;
 using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
+using Css.Api.Admin.Models.DTO.Request.Menu;
 using Css.Api.Admin.Models.DTO.Response.LanguageTranslation;
 using Css.Api.Admin.Repository.Interfaces;
 using Css.Api.Core.Models.Domain;
@@ -79,12 +80,15 @@ namespace Css.Api.Admin.Business
         /// <returns></returns>
         public async Task<CSSResponse> CreateLanguageTranslation(CreateLanguageTranslation translationDetails)
         {
-            var languageTranslations = await _repository.LanguageTranslation.GetLanguageTranslationByOtherIds(new TranslationData 
-                { LanguageId= translationDetails.LanguageId,MenuId=translationDetails.MenuId,VariableId=translationDetails.VariableId });
+            var languageIdDetails = new LanguageIdDetails { LanguageId = translationDetails.LanguageId };
+            var menuIdDetails = new MenuIdDetails { MenuId = translationDetails.MenuId };
+            var variableIdDetails = new VariableIdDetails { VariableId = translationDetails.VariableId };
+
+            var languageTranslations = await _repository.LanguageTranslation.GetLanguageTranslationByOtherIds(languageIdDetails, menuIdDetails, variableIdDetails);
             if (languageTranslations?.Count > 0)
             {
-                return new CSSResponse($"Translation with language '{translationDetails.LanguageName}' and " +
-                    $"menu '{translationDetails.MenuName}' and variable '{translationDetails.VariableName}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Translation with language id '{translationDetails.LanguageId}' and " +
+                    $"menu id '{translationDetails.MenuId}' and variable id '{translationDetails.VariableId}' already exists.", HttpStatusCode.Conflict);
             }
 
             var languageTranslationRequest = _mapper.Map<LanguageTranslation>(translationDetails);
@@ -111,12 +115,15 @@ namespace Css.Api.Admin.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var languages = await _repository.LanguageTranslation.GetLanguageTranslationByOtherIds(new TranslationData
-            { LanguageId = translationDetails.LanguageId, MenuId = translationDetails.MenuId, VariableId = translationDetails.VariableId });
+            var languageIdDetails = new LanguageIdDetails { LanguageId = translationDetails.LanguageId };
+            var menuIdDetails = new MenuIdDetails { MenuId = translationDetails.MenuId };
+            var variableIdDetails = new VariableIdDetails { VariableId = translationDetails.VariableId };
+            var languages = await _repository.LanguageTranslation.GetLanguageTranslationByOtherIds(languageIdDetails, menuIdDetails, variableIdDetails);
+
             if (languages?.Count > 0 && languages.IndexOf(translationIdDetails.TranslationId) == -1)
             {
-                return new CSSResponse($"Translation with language '{translationDetails.LanguageName}' and " +
-                    $"menu '{translationDetails.MenuName}' and variable '{translationDetails.VariableName}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Translation with language id '{translationDetails.LanguageId}' and " +
+                    $"menu id '{translationDetails.MenuId}' and variable id '{translationDetails.VariableId}' already exists.", HttpStatusCode.Conflict);
             }
 
             var languageTranslationRequest = _mapper.Map(translationDetails, language);

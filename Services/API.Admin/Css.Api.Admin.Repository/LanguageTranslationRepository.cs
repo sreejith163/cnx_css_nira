@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Css.Api.Admin.Models.Domain;
 using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
+using Css.Api.Admin.Models.DTO.Request.Menu;
 using Css.Api.Admin.Models.DTO.Response.LanguageTranslation;
 using Css.Api.Admin.Repository.DatabaseContext;
 using Css.Api.Admin.Repository.Interfaces;
@@ -43,7 +44,8 @@ namespace Css.Api.Admin.Repository
         {
             var languages = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredLanguages = FilterLanguages(languages, translationQueryParameters.SearchKeyword);
+            var filteredLanguages = FilterLanguages(languages, translationQueryParameters.SearchKeyword, translationQueryParameters.LanguageId, 
+                                                    translationQueryParameters.MenuId, translationQueryParameters.VariableId);
 
             var sortedSchedulingCodes = SortHelper.ApplySort(filteredLanguages, translationQueryParameters.OrderBy);
 
@@ -77,12 +79,14 @@ namespace Css.Api.Admin.Repository
         /// <summary>
         /// Gets the language translation by other ids.
         /// </summary>
-        /// <param name="translationData">The translation data.</param>
+        /// <param name="languageIdDetails">The language identifier details.</param>
+        /// <param name="menuIdDetails">The menu identifier details.</param>
+        /// <param name="variableIdDetails">The variable identifier details.</param>
         /// <returns></returns>
-        public async Task<List<int>> GetLanguageTranslationByOtherIds(TranslationData translationData)
+        public async Task<List<int>> GetLanguageTranslationByOtherIds(LanguageIdDetails languageIdDetails, MenuIdDetails menuIdDetails, VariableIdDetails variableIdDetails)
         {
-            var languages = FindByCondition(x => x.LanguageId == translationData.LanguageId && x.MenuId == translationData.MenuId && 
-                            x.VariableId == translationData.VariableId && x.IsDeleted == false)
+            var languages = FindByCondition(x => x.LanguageId == languageIdDetails.LanguageId && x.MenuId == menuIdDetails.MenuId &&
+                            x.VariableId == variableIdDetails.VariableId && x.IsDeleted == false)
                                   .Select(x => x.Id)
                                   .ToList();
 
@@ -121,15 +125,39 @@ namespace Css.Api.Admin.Repository
         /// </summary>
         /// <param name="languages">The languages.</param>
         /// <param name="keyword">The keyword.</param>
+        /// <param name="languageId">The language identifier.</param>
+        /// <param name="menuId">The menu identifier.</param>
+        /// <param name="variableId">The variable identifier.</param>
         /// <returns></returns>
-        private IQueryable<LanguageTranslation> FilterLanguages(IQueryable<LanguageTranslation> languages, string keyword)
+        private IQueryable<LanguageTranslation> FilterLanguages(IQueryable<LanguageTranslation> languages, string keyword, int? languageId,
+            int? menuId, int? variableId)
         {
-            if (!languages.Any() || string.IsNullOrWhiteSpace(keyword))
+            if (!languages.Any())
             {
                 return languages;
             }
 
-            return languages.Where(o => o.Description.ToLower().Contains(keyword.Trim().ToLower()) || o.Translation.ToLower().Contains(keyword.Trim().ToLower()));
+            if (languageId.HasValue && languageId != default(int))
+            {
+                languages = languages.Where(x => x.LanguageId == languageId);
+            }
+
+            if (menuId.HasValue && menuId != default(int))
+            {
+                languages = languages.Where(x => x.MenuId == menuId);
+            }
+
+            if (variableId.HasValue && variableId != default(int))
+            {
+                languages = languages.Where(x => x.VariableId == variableId);
+            }
+
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                languages = languages.Where(o => o.Description.ToLower().Contains(keyword.Trim().ToLower()) || o.Translation.ToLower().Contains(keyword.Trim().ToLower()));
+
+            }
+            return languages;
         }
     }
 }
