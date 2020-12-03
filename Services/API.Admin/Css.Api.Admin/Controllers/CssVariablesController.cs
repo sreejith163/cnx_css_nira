@@ -34,9 +34,9 @@ namespace Css.Api.Admin.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetCssVariables([FromQuery] CssVariableQueryParameters cssVariableQueryParameters)
+        public async Task<IActionResult> GetCssVariables()
         {
-            var result = await _cssVariableService.GetCssVariables(cssVariableQueryParameters);
+            var result = await _cssVariableService.GetCssVariables();
             return StatusCode((int)result.Code, result.Value);
         }
     }
