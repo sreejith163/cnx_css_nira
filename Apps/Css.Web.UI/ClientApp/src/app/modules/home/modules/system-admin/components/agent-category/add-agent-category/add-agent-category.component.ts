@@ -101,6 +101,65 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
     return ComponentOperation[this.operation];
   }
 
+  rangeRequiredError(parentControl, control) {
+    return this.formSubmitted &&
+      this.agentCategoryForm.get(parentControl).get(control)?.errors?.required;
+  }
+
+  save() {
+    this.formSubmitted = true;
+    if (this.agentCategoryForm.valid) {
+      this.saveAgentCategoryDetailsOnModel();
+      this.operation === ComponentOperation.Edit ? this.updateAgentcategoryDetails() : this.addAgentCategoryDetails();
+    }
+  }
+
+  private addAgentCategoryDetails() {
+    const addAgentCategoryModel = this.agentCategoryModel as AddAgentCategory;
+    addAgentCategoryModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
+
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+    this.addAgentCategorySubscription = this.agentCategoryService.addAgentcategory(addAgentCategoryModel)
+      .subscribe(() => {
+        this.spinnerService.hide(this.spinner);
+        this.activeModal.close({ needRefresh: true });
+        this.showSuccessPopUpMessage('The record has been added!');
+      }, (error) => {
+        this.spinnerService.hide(this.spinner);
+        if (error.status === 409) {
+          this.showErrorWarningPopUpMessage(error.error);
+        }
+      });
+
+    this.subscriptionList.push(this.addAgentCategorySubscription);
+  }
+
+  private updateAgentcategoryDetails() {
+    if (this.hasAgentCategoryDetailsMismatch()) {
+      const updateAgentCategoryModel = this.agentCategoryModel as UpdateAgentCategory;
+      updateAgentCategoryModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
+      this.spinnerService.show(this.spinner, SpinnerOptions);
+
+
+      this.updateAgentCategorySubscription = this.agentCategoryService.updateAgentCategory(
+        this.agentCategoryId, updateAgentCategoryModel)
+        .subscribe(() => {
+          this.spinnerService.hide(this.spinner);
+          this.activeModal.close({ needRefresh: true });
+          this.showSuccessPopUpMessage('The record has been updated!');
+        }, (error) => {
+          this.spinnerService.hide(this.spinner);
+          if (error.status === 409) {
+            this.showErrorWarningPopUpMessage(error.error);
+          }
+        });
+      this.subscriptionList.push(this.updateAgentCategorySubscription);
+    } else {
+      this.activeModal.close({ needRefresh: false });
+      this.showSuccessPopUpMessage('No changes has been made!');
+    }
+  }
+
   addAlphaNumericControl(range?) {
     if (this.agentCategoryForm.get('dateRange')) {
       this.agentCategoryForm.removeControl('dateRange');
@@ -158,39 +217,6 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
     this.dateRangeForm.controls.dateMinRange.patchValue(this.today);
   }
 
-  save() {
-    this.formSubmitted = true;
-    if (this.agentCategoryForm.valid) {
-      this.saveAgentCategoryDetailsOnModel();
-      this.operation === ComponentOperation.Edit ? this.updateAgentcategoryDetails() : this.addAgentCategoryDetails();
-    }
-  }
-
-  rangeRequiredError(parentControl, control) {
-    return this.formSubmitted &&
-      this.agentCategoryForm.get(parentControl).get(control)?.errors?.required;
-  }
-
-  private addAgentCategoryDetails() {
-    const addAgentCategoryModel = this.agentCategoryModel as AddAgentCategory;
-    addAgentCategoryModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
-
-    this.spinnerService.show(this.spinner, SpinnerOptions);
-    this.addAgentCategorySubscription = this.agentCategoryService.addAgentcategory(addAgentCategoryModel)
-      .subscribe(() => {
-        this.spinnerService.hide(this.spinner);
-        this.activeModal.close({ needRefresh: true });
-        this.showSuccessPopUpMessage('The record has been added!');
-      }, (error) => {
-        this.spinnerService.hide(this.spinner);
-        if (error.status === 409) {
-          this.showErrorWarningPopUpMessage(error.error);
-        }
-      });
-
-    this.subscriptionList.push(this.addAgentCategorySubscription);
-  }
-
   private showErrorWarningPopUpMessage(contentMessage: string) {
     const options: NgbModalOptions = { backdrop: false, centered: true, size: 'sm' };
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
@@ -210,32 +236,6 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
         dateMinRange: range.start,
         dateMaxRange: range.end,
       });
-    }
-  }
-
-  private updateAgentcategoryDetails() {
-    if (this.hasAgentCategoryDetailsMismatch()) {
-      const updateAgentCategoryModel = this.agentCategoryModel as UpdateAgentCategory;
-      updateAgentCategoryModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
-      this.spinnerService.show(this.spinner, SpinnerOptions);
-
-
-      this.updateAgentCategorySubscription = this.agentCategoryService.updateAgentCategory(
-        this.agentCategoryId, updateAgentCategoryModel)
-        .subscribe(() => {
-          this.spinnerService.hide(this.spinner);
-          this.activeModal.close({ needRefresh: true });
-          this.showSuccessPopUpMessage('The record has been updated!');
-        }, (error) => {
-          this.spinnerService.hide(this.spinner);
-          if (error.status === 409) {
-            this.showErrorWarningPopUpMessage(error.error);
-          }
-        });
-      this.subscriptionList.push(this.updateAgentCategorySubscription);
-    } else {
-      this.activeModal.close({ needRefresh: false });
-      this.showSuccessPopUpMessage('No changes has been made!');
     }
   }
 
