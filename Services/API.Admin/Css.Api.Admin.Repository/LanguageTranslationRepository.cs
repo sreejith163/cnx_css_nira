@@ -9,6 +9,7 @@ using Css.Api.Admin.Repository.Interfaces;
 using Css.Api.Core.DataAccess.Repository.SQL;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,7 +52,10 @@ namespace Css.Api.Admin.Repository
 
             var pagedLanguages = sortedSchedulingCodes
                 .Skip((translationQueryParameters.PageNumber - 1) * translationQueryParameters.PageSize)
-                .Take(translationQueryParameters.PageSize);
+                .Take(translationQueryParameters.PageSize)
+                .Include(x => x.Language)
+                .Include(x => x.Menu)
+                .Include(x => x.Variable);
 
             var mappedLanguages = pagedLanguages
                 .ProjectTo<LanguageTranslationDTO>(_mapper.ConfigurationProvider);
@@ -71,7 +75,10 @@ namespace Css.Api.Admin.Repository
         public async Task<LanguageTranslation> GetLanguageTranslation(TranslationIdDetails translationIdDetails)
         {
             var language = FindByCondition(x => x.Id == translationIdDetails.TranslationId && x.IsDeleted == false)
-                                 .SingleOrDefault();
+                .Include(x => x.Language)
+                .Include(x => x.Menu)
+                .Include(x => x.Variable)
+                .SingleOrDefault();
 
             return await Task.FromResult(language);
         }

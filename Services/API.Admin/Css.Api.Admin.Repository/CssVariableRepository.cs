@@ -40,6 +40,7 @@ namespace Css.Api.Admin.Repository
         {
             var variables = FindAll()
                 .ProjectTo<KeyValue>(_mapper.ConfigurationProvider).ToList();
+
             return await Task.FromResult(variables);
         }
 

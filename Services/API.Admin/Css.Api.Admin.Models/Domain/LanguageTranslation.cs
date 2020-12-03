@@ -7,11 +7,8 @@ namespace Css.Api.Admin.Models.Domain
     {
         public int Id { get; set; }
         public int LanguageId { get; set; }
-        public string LanguageName { get; set; }
         public int MenuId { get; set; }
-        public string MenuName { get; set; }
         public int VariableId { get; set; }
-        public string VariableName { get; set; }
         public string Translation { get; set; }
         public string Description { get; set; }
         public string CreatedBy { get; set; }

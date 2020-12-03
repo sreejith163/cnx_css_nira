@@ -176,12 +176,6 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                     .HasColumnName("menu_id")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.MenuName)
-                    .IsRequired()
-                    .HasColumnName("menu_name")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name")
@@ -234,19 +228,9 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                     .HasColumnName("language_id")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.LanguageName)
-                    .HasColumnName("language_name")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.MenuId)
                     .HasColumnName("menu_id")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.MenuName)
-                    .HasColumnName("menu_name")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.ModifiedBy)
                     .HasColumnName("modified_by")
@@ -264,11 +248,6 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                 entity.Property(e => e.VariableId)
                     .HasColumnName("variable_id")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.VariableName)
-                    .HasColumnName("variable_name")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Language)
                     .WithMany(p => p.LanguageTranslation)

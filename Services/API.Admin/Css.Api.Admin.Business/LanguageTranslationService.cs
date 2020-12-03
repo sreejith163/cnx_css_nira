@@ -106,8 +106,7 @@ namespace Css.Api.Admin.Business
         /// <param name="translationIdDetails">The translation identifier details.</param>
         /// <param name="translationDetails">The translation details.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> UpdateLanguageTranslation(TranslationIdDetails translationIdDetails, 
-            UpdateLanguageTranslation translationDetails)
+        public async Task<CSSResponse> UpdateLanguageTranslation(TranslationIdDetails translationIdDetails, UpdateLanguageTranslation translationDetails)
         {
             var language = await _repository.LanguageTranslation.GetLanguageTranslation(translationIdDetails);
             if (language == null)
