@@ -164,7 +164,7 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                 entity.ToTable("css_variable");
 
                 entity.HasIndex(e => e.MenuId)
-                    .HasName("d_idx");
+                    .HasName("FK_css_variable_css_menu_idx");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")

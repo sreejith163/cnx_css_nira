@@ -22,6 +22,11 @@ namespace Css.Api.Admin.Repository
         /// </summary>
         private ISchedulingCodeRepository _schedulingCodesRepository { get; set; }
 
+        /// <summary>Gets or sets the agent category repository.</summary>
+        /// <value>The agent category repository.</value>
+        private IAgentCategoryRepository _agentCategoryRepository { get; set; }
+
+
         /// <summary>
         /// Gets or sets the scheduling code icons repository.
         /// </summary>
@@ -49,6 +54,20 @@ namespace Css.Api.Admin.Repository
                     _schedulingCodesRepository = new SchedulingCodeRepository(_repositoryContext, _mapper);
                 }
                 return _schedulingCodesRepository;
+            }
+        }
+
+        /// <summary>Gets the agent categories.</summary>
+        /// <value>The agent categories.</value>
+        public IAgentCategoryRepository AgentCategories
+        {
+            get
+            {
+                if (_agentCategoryRepository == null)
+                {
+                    _agentCategoryRepository = new AgentCategoryRepository(_repositoryContext, _mapper);
+                }
+                return _agentCategoryRepository;
             }
         }
 

@@ -44,7 +44,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   maxLength = Constants.DefaultTextMaxLength;
   orderBy = 'createdDate';
   sortBy = 'desc';
-  spinner = 'agentSchedulingGroup';
+  spinner = 'agentSchedulingGroups';
 
   clientId: number;
   clientLobGroupId: number;

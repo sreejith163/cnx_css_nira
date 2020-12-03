@@ -41,7 +41,12 @@ namespace Css.Api.Admin.Repository
         /// Gets or sets the scheduling type codes repository.
         /// </summary>
         private ISchedulingTypeCodeRepository _schedulingTypeCodesRepository { get; set; }
-        
+
+        /// <summary>Gets or sets the agent category repository.</summary>
+        /// <value>The agent category repository.</value>
+        private IAgentCategoryRepository _agentCategoryRepository { get; set; }
+
+
         /// <summary>
         /// Gets the scheduling codes.
         /// </summary>
@@ -131,6 +136,28 @@ namespace Css.Api.Admin.Repository
                     _schedulingTypeCodesRepository = new SchedulingTypeCodeRepository(_repositoryContext.Object);
                 }
                 return _schedulingTypeCodesRepository;
+            }
+        }
+
+        /// <summary>Gets the agent categories.</summary>
+        /// <value>The agent categories.</value>
+        public IAgentCategoryRepository AgentCategories
+        {
+            get
+            {
+                if (_agentCategoryRepository == null)
+                {
+                    var mockAgentCategory = new Mock<DbSet<AgentCategory>>();
+                    mockAgentCategory.As<IQueryable<AgentCategory>>().Setup(m => m.Provider).Returns(new MockDataContext().agentCategorysDB.Provider);
+                    mockAgentCategory.As<IQueryable<AgentCategory>>().Setup(m => m.Expression).Returns(new MockDataContext().agentCategorysDB.Expression);
+                    mockAgentCategory.As<IQueryable<AgentCategory>>().Setup(m => m.ElementType).Returns(new MockDataContext().agentCategorysDB.ElementType);
+                    mockAgentCategory.As<IQueryable<AgentCategory>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().agentCategorysDB.GetEnumerator());
+
+                    _repositoryContext.Setup(x => x.Set<AgentCategory>()).Returns(mockAgentCategory.Object);
+
+                    _agentCategoryRepository = new AgentCategoryRepository(_repositoryContext.Object, _mapper);
+                }
+                return _agentCategoryRepository;
             }
         }
 

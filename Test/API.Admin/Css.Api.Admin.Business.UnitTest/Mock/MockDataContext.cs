@@ -62,10 +62,18 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
 
         public IQueryable<AgentCategory> agentCategorysDB = new List<AgentCategory>()
         {
+            new AgentCategory{ Id = 1, Name = "AgentCategory1", DataTypeId=1, DataTypeMinValue="Min", DataTypeMaxValue="Max", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new AgentCategory{ Id = 2, Name = "AgentCategory2", DataTypeId=1, DataTypeMinValue="Min", DataTypeMaxValue="Max", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new AgentCategory{ Id = 3, Name = "AgentCategory3", DataTypeId=1, DataTypeMinValue="Min", DataTypeMaxValue="Max", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new AgentCategory{ Id = 4, Name = "AgentCategory4", DataTypeId=1, DataTypeMinValue="Min", DataTypeMaxValue="Max", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new AgentCategory{ Id = 5, Name = "AgentCategory5", DataTypeId=1, DataTypeMinValue="Min", DataTypeMaxValue="Max", CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
         public IQueryable<AgentCategoryDataType> agentCategoryDataTypesDB = new List<AgentCategoryDataType>()
         {
+            new AgentCategoryDataType{Id=1, Value="AlphaNumeric", Description="Describes the data type for AlphaNumeric"},
+            new AgentCategoryDataType{Id=2, Value="Date", Description="Describes the data type for Date"},
+            new AgentCategoryDataType{Id=3, Value="Numeric", Description="Describes the data type for Numeric"}
         }.AsQueryable();
 
         #region Methods

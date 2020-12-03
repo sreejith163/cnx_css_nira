@@ -118,15 +118,17 @@ namespace Css.Api.Setup.Validators.OperationHour
                             return validationFailures;
                         }
 
-                        DateTime fromDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, fromHour, fromMinute, fromMeridiem == "am" ? 0 : 1);
-                        DateTime toDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, toHour, toMinute, toMeridiem == "am" ? 0 : 1);
+                        fromHour = fromMeridiem == "am" ? fromHour : fromHour + 12;
+                        toHour = toMeridiem == "am" ? toHour : toHour + 12;
+
+                        DateTime fromDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, fromHour, fromMinute, 0);
+                        DateTime toDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, toHour, toMinute, 0);
 
                         if (fromDateTime > toDateTime)
                         {
                             validationFailures.Add(new ValidationFailure("Operation Hour", "FROM and TO time range is not valid"));
                             return validationFailures;
                         }
-
                     }
                 }
             }

@@ -1,0 +1,151 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6 col-md-6">
+      <h2>{{ 'Agent Category' | translation: 'lbl_page_title' : translationValues }}</h2>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a>System Admin</a></li>
+        <li class="breadcrumb-item active"><b>Agent Categories List</b> </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="row m-l-r-10">
+    <div class="col-md-3 padding-bottom-5">
+      <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
+        [maxLength]="maxLength"
+        placeholder="{{ 'Agent Category' | translation: 'lbl_agent_category' : translationValues }}" />
+      <ng-container *ngIf="searchKeyword?.length">
+
+      </ng-container>
+    </div>
+    <div class="col-md-2">
+      <button class="form-control" (click)="searchAgentCategories()"><i class="fa fa-search" aria-hidden="true"></i>
+        {{ 'Search' | translation: 'btn_search' : translationValues }}
+      </button>
+    </div>
+    <div class="col-md-7 text-right">
+      <button type="button" class="btn btn-primary float-r" (click)="addAgentCategory()">
+        <i class="fa fa-plus p-1" aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 mt-2 table-responsive">
+      <div class="scrollable-table">
+        <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+          <thead>
+            <tr>
+              <th>
+                {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}</th>
+
+              <th class="sortable-field" (click)="sortAgentCategories('name', sortBy)">
+                {{ 'Description or Name' | translation: 'lbl_table_heading_description_or_name' : translationValues }}
+                <i *ngIf="orderBy !== 'name'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+
+              <th class="sortable-field" (click)="sortAgentCategories('dataTypeId', sortBy)">
+                {{ 'Data Type' | translation: 'lbl_table_heading_data_type' : translationValues }}
+                <i *ngIf="orderBy !== 'dataTypeId'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'dataTypeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th>
+                {{ 'Range' | translation: 'lbl_table_heading_range' : translationValues }}
+
+              </th>
+
+              <th class="sortable-field" (click)="sortAgentCategories('createdBy', sortBy)">
+                {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
+                <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sortAgentCategories('createdDate', sortBy)">
+                {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
+                <i *ngIf="orderBy !== 'createdDate'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sortAgentCategories('modifiedBy', sortBy)">
+                {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
+                <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sortAgentCategories('modifiedDate', sortBy)">
+                {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
+                <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ngx-spinner [name]="spinner"></ngx-spinner>
+            <tr *ngFor="let el of agentCategoryDetails; let i = index">
+              <td><i class="fa fa-edit padding-5 pointer" (click)="editAgentCategory(el)"></i>
+                <i class="fa fa-trash padding-5 pointer" (click)="deleteAgentCategory(el.id)"></i>
+              </td>
+              <td>
+                <span
+                  ngbTooltip="{{ el.name }}">{{el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
+              </td>
+              <td>{{el.dataTypeLabel}}</td>
+              <td>
+                {{el.dataType}}
+                <ng-container [ngSwitch]="el.dataTypeId">
+                  <ng-container *ngSwitchCase="dataType.AlphaNumeric">
+                    <b>Min:</b> >{{ el.dataTypeMinValue }} <b>Max:</b>
+                    {{ '<' }} {{ el.dataTypeMaxValue }}
+                  </ng-container>
+                  <ng-container *ngSwitchCase="dataType.Numeric">
+                    <b>Min:</b> >{{ el.dataTypeMinValue }} <b>Max:</b>
+                    {{ '<' }} {{ el.dataTypeMaxValue }}
+                  </ng-container>
+                  <ng-container *ngSwitchCase="dataType.Date">
+                    <b>Start:</b> {{ el.dataTypeMinValue | date: 'yyyy-MM-dd' }}
+                    <b>End:</b>
+                    {{ el.dataTypeMaxValue | date: 'yyyy-MM-dd' }}
+                  </ng-container>
+                </ng-container>
+              </td>
+              <td>{{el.createdBy}}</td>
+              <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
+              <td>{{el.modifiedBy}}</td>
+              <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end mt-3">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination p-0 float-right">
+          <ngb-pagination class="p-r-5" [collectionSize]="totalAgentCategoryRecord" (pageChange)="changePage($event)"
+            [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+          <select class="form-control" (change)="changePageSize($event.target.value)">
+            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+              {{ x.text }}
+            </option>
+          </select>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

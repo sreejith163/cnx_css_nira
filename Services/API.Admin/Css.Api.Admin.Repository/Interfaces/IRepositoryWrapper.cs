@@ -27,6 +27,10 @@ namespace Css.Api.Admin.Repository.Interfaces
         /// </summary>
         ISchedulingTypeCodeRepository SchedulingTypeCodes { get; }
 
+        /// <summary>Gets the agent categories.</summary>
+        /// <value>The agent categories.</value>
+        IAgentCategoryRepository AgentCategories { get; }        
+
         /// <summary>
         /// Saves the asynchronous.
         /// </summary>

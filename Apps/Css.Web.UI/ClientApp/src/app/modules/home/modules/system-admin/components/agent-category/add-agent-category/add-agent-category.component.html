@@ -1,8 +1,9 @@
 <div class="modal-dialog w-1000 add-edit-modal" role="document">
   <div class="modal-content">
+    <ngx-spinner [name]="spinner"></ngx-spinner>
     <div class="modal-header header-color">
       <h6 class="modal-title w-100 font-weight-bold header">
-        <p>{{title}} {{ 'Agent Category' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
+        <p>{{getTitle()}} {{ 'Agent Category' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
       </h6>
       <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
@@ -20,7 +21,7 @@
             <div class="col-md-8">
               <input type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('descriptionOrName')}"
-                formControlName="descriptionOrName" placeholder="Description or Name" />
+                formControlName="descriptionOrName" placeholder="Description or Name" [maxLength]="maxLength"/>
               <div *ngIf="hasFormControlValidationError('descriptionOrName')" class="valid-error">
                 {{ 'Description is required' | translation: 'lbl_add_edit_description_required_validation_message' : translationValues }}
               </div>
@@ -36,8 +37,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <select class="form-control"
-                [ngClass]="{'valid-border-error': hasFormControlValidationError('dataType')}"
+              <select class="form-control" [ngClass]="{'valid-border-error': hasFormControlValidationError('dataType')}"
                 formControlName="dataType">
                 <option value="">
                   {{ 'Select a data type' | translation: 'drp_default_Select_data_type' : translationValues }}</option>
@@ -101,9 +101,9 @@
               </div>
               <div class="col-md-8">
                 <div class="input-group">
-                  <input type="text" class="form-control" formControlName="dateMinRange" placeholder="Select Start Date" [readonly]="true"
-                    ngbDatepicker [footerTemplate]="startDateTemplate" [minDate]="{year: 1990, month: 1, day: 1}"
-                    #startDate="ngbDatepicker" />
+                  <input type="text" class="form-control" formControlName="dateMinRange" placeholder="Select Start Date"
+                    [readonly]="true" ngbDatepicker [footerTemplate]="startDateTemplate"
+                    [minDate]="{year: 1990, month: 1, day: 1}" #startDate="ngbDatepicker" />
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary calendar"
                       [ngClass]="{'valid-border-error': rangeRequiredError('dateRange', 'dateMinRange')}"
