@@ -51,6 +51,26 @@ namespace Css.Api.Admin.Repository
         private IAgentCategoryRepository _agentCategoryRepository { get; set; }
 
         /// <summary>
+        /// Gets or sets the language repository.
+        /// </summary>
+        private ICssLanguageRepository _languageRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CSS menu repository.
+        /// </summary>
+        private ICssMenuRepository _cssMenuRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CSS variable repository.
+        /// </summary>
+        private ICssVariableRepository _cssVariableRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the language translation repository.
+        /// </summary>
+        private ILanguageTranslationRepository _languageTranslationRepository { get; set; }
+
+        /// <summary>
         /// Gets the scheduling codes.
         /// </summary>
         public ISchedulingCodeRepository SchedulingCodes
@@ -161,6 +181,67 @@ namespace Css.Api.Admin.Repository
                     _agentCategoryRepository = new AgentCategoryRepository(_repositoryContext.Object, _mapper);
                 }
                 return _agentCategoryRepository;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the language.
+        /// </summary>
+        public ICssLanguageRepository CssLanguage
+        {
+            get
+            {
+                if (_languageRepository == null)
+                {
+                    _languageRepository = new CssLanguageRepository(_repositoryContext.Object, _mapper);
+                }
+                return _languageRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the language.
+        /// </summary>
+        public ICssMenuRepository CssMenu
+        {
+            get
+            {
+                if (_cssMenuRepository == null)
+                {
+                    _cssMenuRepository = new CssMenuRepository(_repositoryContext.Object, _mapper);
+                }
+                return _cssMenuRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the CSS variable.
+        /// </summary>
+        public ICssVariableRepository CssVariable
+        {
+            get
+            {
+                if (_cssVariableRepository == null)
+                {
+                    _cssVariableRepository = new CssVariableRepository(_repositoryContext.Object, _mapper);
+                }
+                return _cssVariableRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the language translation.
+        /// </summary>
+        public ILanguageTranslationRepository LanguageTranslation
+        {
+            get
+            {
+                if (_languageTranslationRepository == null)
+                {
+                    _languageTranslationRepository = new LanguageTranslationRepository(_repositoryContext.Object, _mapper);
+                }
+                return _languageTranslationRepository;
             }
         }
 
