@@ -3,7 +3,7 @@ import { AgentCategoryListComponent } from './components/agent-category/agent-ca
 
 import { PermissionsListComponent } from './components/permissions/permissions-list/permissions-list.component';
 import { SchedulingCodeListComponent } from './components/scheduling-code/scheduling-code-list/scheduling-code-list.component';
-import { TranslationListComponent } from './components/translation-list/translation-list.component';
+import { TranslationListComponent } from './components/translation/translation-list/translation-list.component';
 
 export const SystemAdminRoutes: Routes = [
     {

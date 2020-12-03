@@ -2,7 +2,7 @@
   <div class="modal-content">
     <div class="modal-header header-color">
       <h6 class="modal-title w-100 font-weight-bold header">
-        <p>{{title}} {{ 'Translation' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
+        <p>{{getTitle()}} {{ 'Translation' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
       </h6>
       <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
@@ -19,12 +19,12 @@
             </div>
             <div class="col-md-8">
               <select class="form-control"
-                [ngClass]="{'valid-border-error': hasFormControlValidationError('language')}"
-                formControlName="language">
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('languageId')}"
+                formControlName="languageId">
                 <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
-                <option *ngFor="let x of languages" [value]="x">{{x}}</option>
+                <option *ngFor="let x of languages" [value]="x.id">{{x.value}}</option>
               </select>
-              <div *ngIf="hasFormControlValidationError('language')" class="valid-error">
+              <div *ngIf="hasFormControlValidationError('languageId')" class="valid-error">
                 {{ 'Language is required' | translation: 'lbl_add_edit_language_required_validation_message' : translationValues }}
               </div>
             </div>
@@ -38,12 +38,12 @@
               </label>
             </div>
             <div class="col-md-8">
-              <select class="form-control"
-                [ngClass]="{'valid-border-error': hasFormControlValidationError('menu')}" formControlName="menu">
+              <select class="form-control" (change)="setMenuId($event.target.value)"
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('menuId')}" formControlName="menuId">
                 <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
-                <option *ngFor="let x of menus" [value]="x">{{x}}</option>
+                <option *ngFor="let x of menus" [value]="x.id">{{x.value}}</option>
               </select>
-              <div *ngIf="hasFormControlValidationError('menu')" class="valid-error">
+              <div *ngIf="hasFormControlValidationError('menuId')" class="valid-error">
                 {{ 'Menu is required' | translation: 'lbl_add_edit_menu_required_validation_message' : translationValues }}
               </div>
             </div>
@@ -61,7 +61,7 @@
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('variableId')}"
                 formControlName="variableId">
                 <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
-                <option *ngFor="let x of variables" [value]="x">{{x}}</option>
+                <option *ngFor="let x of variables" [value]="x.id">{{x.value}}</option>
               </select>
               <div *ngIf="hasFormControlValidationError('variableId')" class="valid-error">
                 {{ 'Variable is required' | translation: 'lbl_add_edit_variable_required_validation_message' : translationValues }}
@@ -77,10 +77,19 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control" formControlName="description">
-              <div *ngIf="hasFormControlValidationError('description')" class="valid-error">
-                {{ 'Description is required' | translation: 'lbl_add_edit_description_required_validation_message' : translationValues }}
-              </div>
+              <input type="text" class="form-control" formControlName="description" [maxLength]="maxLength">
+              <ng-container *ngIf="formSubmitted && form.description.invalid">
+                <ng-container *ngIf="hasFormControlValidationError('description'); else maxLengthError">
+                  <div *ngIf="hasFormControlValidationError('description')" class="valid-error">
+                    {{ 'Description is required' | translation: 'lbl_add_edit_description_required_validation_message' : translationValues }}
+                  </div>
+                </ng-container>
+                <ng-template #maxLengthError>
+                  <div class="valid-error">
+                    {{ 'Description cannot exceed 50 characters' | translation: 'lbl_add_edit_description_maxlength_validation_message' : translationValues }}
+                  </div>
+                </ng-template>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -93,10 +102,19 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control" formControlName="translation">
-              <div *ngIf="hasFormControlValidationError('translation')" class="valid-error">
-                {{ 'Translation is required' | translation: 'lbl_add_edit_translation_required_validation_message' : translationValues }}
-              </div>
+              <input type="text" class="form-control" formControlName="translation" [maxLength]="maxLength">
+              <ng-container *ngIf="formSubmitted && form.translation.invalid">
+                <ng-container *ngIf="hasFormControlValidationError('translation'); else maxLengthError">
+                  <div *ngIf="hasFormControlValidationError('translation')" class="valid-error">
+                    {{ 'Translation is required' | translation: 'lbl_add_edit_translation_required_validation_message' : translationValues }}
+                  </div>
+                </ng-container>
+                <ng-template #maxLengthError>
+                  <div class="valid-error">
+                    {{ 'Translation cannot exceed 50 characters' | translation: 'lbl_add_edit_translation_maxlength_validation_message' : translationValues }}
+                  </div>
+                </ng-template>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -108,7 +126,7 @@
         <div class="row">
           <div class="col-md-10"></div>
           <div class="col-md-2">
-            <button class="btn btn-primary float-r" data-dismiss="modal" (click)="save()" id="btn_save">
+            <button class="btn btn-primary float-r" data-dismiss="modal" (click)="saveTranslation()" id="btn_save">
               <i class="fa fa-save padding-5"></i>{{ 'Save' | translation: 'btn_save' : translationValues }}
             </button>
           </div>
