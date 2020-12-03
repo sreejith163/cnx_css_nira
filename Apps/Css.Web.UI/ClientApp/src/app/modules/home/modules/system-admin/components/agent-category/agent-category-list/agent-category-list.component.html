@@ -106,7 +106,6 @@
               </td>
               <td>{{el.dataTypeLabel}}</td>
               <td>
-                {{el.dataType}}
                 <ng-container [ngSwitch]="el.dataTypeId">
                   <ng-container *ngSwitchCase="dataType.AlphaNumeric">
                     <b>Min:</b> >{{ el.dataTypeMinValue }} <b>Max:</b>

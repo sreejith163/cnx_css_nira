@@ -26,7 +26,7 @@ import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { DataType } from '../../../enum/data-type.enum';
 import { AddAgentCategory } from '../../../models/add-agent-category.model';
 import { AgentCategoryBase } from '../../../models/agent-category-base.model';
-import { AgentCategoryResponse } from '../../../models/agent-category-response.model';
+import { AgentCategoryDetails } from '../../../models/agent-category-details.model';
 import { UpdateAgentCategory } from '../../../models/update-agent-category.model';
 import { AgentCategoryService } from '../../../services/agent-category.service';
 
@@ -47,7 +47,7 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
   model: NgbDateStruct;
   rangeForm: FormGroup;
   dateRangeForm: FormGroup;
-  agentCategory: AgentCategoryResponse;
+  agentCategory: AgentCategoryDetails;
   maxLength = Constants.DefaultTextMaxLength;
 
   getAgentCategorySubscription: ISubscription;
