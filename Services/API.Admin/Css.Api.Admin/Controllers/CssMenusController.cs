@@ -44,7 +44,7 @@ namespace Css.Api.Admin.Controllers
         /// </summary>
         /// <param name="menuId">The menu identifier.</param>
         /// <returns></returns>
-        [HttpGet("{menuId/variables}")]
+        [HttpGet("{menuId}/variables")]
         public async Task<IActionResult> GetMenuVariables(int menuId)
         {
             var result = await _cssMenuService.GetCssMenuVariables(menuId);

@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Css.Api.Admin.Business.Interfaces;
-using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Css.Api.Admin.Controllers
