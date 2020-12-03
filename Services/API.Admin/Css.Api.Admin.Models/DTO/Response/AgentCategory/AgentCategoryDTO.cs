@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Css.Api.Admin.Models.DTO.Response.AgentCategory
 {
@@ -13,7 +14,6 @@ namespace Css.Api.Admin.Models.DTO.Response.AgentCategory
         /// Gets or sets the name.
         /// </summary>
         public string Name { get; set; }
-
 
         /// <summary>Gets or sets the type of the data.</summary>
         /// <value>The type of the data.</value>
@@ -44,11 +44,13 @@ namespace Css.Api.Admin.Models.DTO.Response.AgentCategory
         /// <summary>
         /// Gets or sets the modified by.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ModifiedBy { get; set; }
 
         /// <summary>
         /// Gets or sets the modified date.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset? ModifiedDate { get; set; }
     }
 }
