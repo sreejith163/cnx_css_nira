@@ -46,6 +46,11 @@ namespace Css.Api.Admin.Extensions
             services.AddTransient<ISchedulingCodeTypeService, SchedulingCodeTypeService>();
             services.AddTransient<IAgentCategoryService, AgentCategoryService>();
 
+            services.AddTransient<ICssLanguageService, CssLanguageService>();
+            services.AddTransient<ICssMenuService, CssMenuService>();
+            services.AddTransient<ICssVariableService, CssVariableService>();
+            services.AddTransient<ILanguageTranslationService, LanguageTranslationService>();
+
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
             return services;

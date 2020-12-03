@@ -43,6 +43,39 @@ namespace Css.Api.Admin.Repository
         private ISchedulingTypeCodeRepository _schedulingTypeCodesRepository { get; set; }
 
         /// <summary>
+        /// Gets or sets the language repository.
+        /// </summary>
+        /// <value>
+        /// The language repository.
+        /// </value>
+        private ICssLanguageRepository _languageRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CSS menu repository.
+        /// </summary>
+        /// <value>
+        /// The CSS menu repository.
+        /// </value>
+        private ICssMenuRepository _cssMenuRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CSS variable repository.
+        /// </summary>
+        /// <value>
+        /// The CSS variable repository.
+        /// </value>
+        private ICssVariableRepository _cssVariableRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the language translation repository.
+        /// </summary>
+        /// <value>
+        /// The language translation repository.
+        /// </value>
+        private ILanguageTranslationRepository _languageTranslationRepository { get; set; }
+
+
+        /// <summary>
         /// Gets the scheduling codes.
         /// </summary>
         public ISchedulingCodeRepository SchedulingCodes
@@ -116,6 +149,77 @@ namespace Css.Api.Admin.Repository
             }
         }
 
+        /// <summary>
+        /// Gets the language.
+        /// </summary>
+        /// <value>
+        /// The language.
+        /// </value>
+        public ICssLanguageRepository CssLanguage
+        {
+            get
+            {
+                if (_languageRepository == null)
+                {
+                    _languageRepository = new CssLanguageRepository(_repositoryContext,_mapper);
+                }
+                return _languageRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the language.
+        /// </summary>
+        /// <value>
+        /// The language.
+        /// </value>
+        public ICssMenuRepository CssMenu
+        {
+            get
+            {
+                if (_cssMenuRepository == null)
+                {
+                    _cssMenuRepository = new CssMenuRepository(_repositoryContext, _mapper);
+                }
+                return _cssMenuRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the CSS variable.
+        /// </summary>
+        /// <value>
+        /// The CSS variable.
+        /// </value>
+        public ICssVariableRepository CssVariable
+        {
+            get
+            {
+                if (_cssVariableRepository == null)
+                {
+                    _cssVariableRepository = new CssVariableRepository(_repositoryContext, _mapper);
+                }
+                return _cssVariableRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the language translation.
+        /// </summary>
+        /// <value>
+        /// The language translation.
+        /// </value>
+        public ILanguageTranslationRepository LanguageTranslation
+        {
+            get
+            {
+                if (_languageTranslationRepository == null)
+                {
+                    _languageTranslationRepository = new LanguageTranslationRepository(_repositoryContext, _mapper);
+                }
+                return _languageTranslationRepository;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryWrapper" /> class.
