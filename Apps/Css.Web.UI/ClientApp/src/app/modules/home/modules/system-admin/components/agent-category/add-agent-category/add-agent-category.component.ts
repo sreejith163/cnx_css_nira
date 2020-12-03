@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -30,13 +30,12 @@ import { AgentCategoryResponse } from '../../../models/agent-category-response.m
 import { UpdateAgentCategory } from '../../../models/update-agent-category.model';
 import { AgentCategoryService } from '../../../services/agent-category.service';
 
-
 @Component({
   selector: 'app-add-agent-category',
   templateUrl: './add-agent-category.component.html',
   styleUrls: ['./add-agent-category.component.scss'],
 })
-export class AddAgentCategoryComponent implements OnInit {
+export class AddAgentCategoryComponent implements OnInit, OnDestroy {
   hasMismatch: boolean;
   formSubmitted: boolean;
   spinner = 'spinner';
@@ -100,19 +99,6 @@ export class AddAgentCategoryComponent implements OnInit {
 
   getTitle() {
     return ComponentOperation[this.operation];
-  }
-
-  addDateRangeControl(range?) {
-    if (this.agentCategoryForm.get('range')) {
-      this.agentCategoryForm.removeControl('range');
-    }
-    this.agentCategoryForm.addControl('dateRange', this.dateRangeForm);
-    if (range) {
-      this.agentCategoryForm.get('dateRange').patchValue({
-        dateMinRange: range.start,
-        dateMaxRange: range.end,
-      });
-    }
   }
 
   addAlphaNumericControl(range?) {
@@ -180,6 +166,11 @@ export class AddAgentCategoryComponent implements OnInit {
     }
   }
 
+  rangeRequiredError(parentControl, control) {
+    return this.formSubmitted &&
+      this.agentCategoryForm.get(parentControl).get(control)?.errors?.required;
+  }
+
   private addAgentCategoryDetails() {
     const addAgentCategoryModel = this.agentCategoryModel as AddAgentCategory;
     addAgentCategoryModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
@@ -209,10 +200,22 @@ export class AddAgentCategoryComponent implements OnInit {
     return modalRef;
   }
 
-  private updateAgentcategoryDetails() {
+  private addDateRangeControl(range?: any) {
+    if (this.agentCategoryForm.get('range')) {
+      this.agentCategoryForm.removeControl('range');
+    }
+    this.agentCategoryForm.addControl('dateRange', this.dateRangeForm);
+    if (range) {
+      this.agentCategoryForm.get('dateRange').patchValue({
+        dateMinRange: range.start,
+        dateMaxRange: range.end,
+      });
+    }
+  }
 
+  private updateAgentcategoryDetails() {
     if (this.hasAgentCategoryDetailsMismatch()) {
-      const updateAgentCategoryModel = this.agentCategoryModel as UpdateAgentCategory
+      const updateAgentCategoryModel = this.agentCategoryModel as UpdateAgentCategory;
       updateAgentCategoryModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
@@ -278,11 +281,6 @@ export class AddAgentCategoryComponent implements OnInit {
     this.agentCategoryModel.name = this.agentCategoryForm.controls.descriptionOrName.value;
   }
 
-  rangeRequiredError(parentControl, control) {
-    return this.formSubmitted &&
-      this.agentCategoryForm.get(parentControl).get(control)?.errors?.required;
-  }
-
   private populateAgentDetailsOnAgentForm() {
     let range;
     this.agentCategoryForm.controls.dataType.setValue(
@@ -306,7 +304,7 @@ export class AddAgentCategoryComponent implements OnInit {
     );
   }
 
-  getDateStruct(value) {
+  private getDateStruct(value) {
     const date = new Date(value);
     const ngbDateStruct: NgbDateStruct = {
       day: date.getUTCDate(),

@@ -21,9 +21,10 @@
             <div class="col-md-8">
               <input type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('descriptionOrName')}"
-                formControlName="descriptionOrName" placeholder="Description or Name" [maxLength]="maxLength"/>
+                formControlName="descriptionOrName" placeholder="Description or Name" [maxLength]="maxLength" />
               <div *ngIf="hasFormControlValidationError('descriptionOrName')" class="valid-error">
-                {{ 'Description is required' | translation: 'lbl_add_edit_description_required_validation_message' : translationValues }}
+                {{ 'Description is required' | translation: 'lbl_add_edit_description_required_validation_message' :
+                translationValues }}
               </div>
             </div>
           </div>
@@ -44,7 +45,8 @@
                 <option *ngFor="let x of dataTypes" [value]="x">{{ dataType[x] }}</option>
               </select>
               <div *ngIf="hasFormControlValidationError('dataType')" class="valid-error">
-                {{ 'Data type is required' | translation: 'lbl_add_edit_data_type_required_validation_message' : translationValues }}
+                {{ 'Data type is required' | translation: 'lbl_add_edit_data_type_required_validation_message' :
+                translationValues }}
               </div>
             </div>
           </div>
@@ -62,10 +64,12 @@
                   [ngClass]="{'valid-border-error': rangeRequiredError('range', 'minRange')}" formControlName="minRange"
                   maxlength="40" (keypress)="checkValidity($event)" />
                 <div *ngIf="rangeRequiredError('range', 'minRange')" class="valid-error">
-                  {{ 'Minimum is required' | translation: 'lbl_add_edit_min_value_required_validation_message' : translationValues }}
+                  {{ 'Minimum is required' | translation: 'lbl_add_edit_min_value_required_validation_message' :
+                  translationValues }}
                 </div>
                 <div *ngIf="formSubmitted && agentCategoryForm.get('range')?.errors?.rangeError" class="valid-error">
-                  {{ 'Minimum value should be lesser than Maximum value' | translation: 'lbl_add_edit_max_value_less_than_validation_message' : translationValues }}
+                  {{ 'Minimum value should be lesser than Maximum value' | translation:
+                  'lbl_add_edit_max_value_less_than_validation_message' : translationValues }}
                 </div>
               </div>
             </div>
@@ -82,10 +86,12 @@
                   [ngClass]="{'valid-border-error': rangeRequiredError('range', 'maxRange')}" formControlName="maxRange"
                   maxlength="40" (keypress)="checkValidity($event)" />
                 <div *ngIf="rangeRequiredError('range', 'maxRange')" class="valid-error">
-                  {{ 'Maximum is required' | translation: 'lbl_add_edit_max_value_required_validation_message' : translationValues }}
+                  {{ 'Maximum is required' | translation: 'lbl_add_edit_max_value_required_validation_message' :
+                  translationValues }}
                 </div>
                 <div *ngIf="formSubmitted && agentCategoryForm.get('range')?.errors?.rangeError" class="valid-error">
-                  {{ 'Maximum value should be greater than Minimum value' | translation: 'lbl_add_edit_min_value_greater_than_validation_message' : translationValues }}
+                  {{ 'Maximum value should be greater than Minimum value' | translation:
+                  'lbl_add_edit_min_value_greater_than_validation_message' : translationValues }}
                 </div>
               </div>
             </div>
@@ -116,10 +122,12 @@
                   </ng-template>
                 </div>
                 <div *ngIf="rangeRequiredError('dateRange', 'dateMinRange')" class="valid-error">
-                  {{ 'Start Date is required' | translation: 'lbl_add_edit_start_date_required_validation_message' : translationValues }}
+                  {{ 'Start Date is required' | translation: 'lbl_add_edit_start_date_required_validation_message' :
+                  translationValues }}
                 </div>
                 <div *ngIf="agentCategoryForm.get('dateRange')?.errors?.dateRangeError" class="valid-error">
-                  {{ 'Start Date should be smaller than end Date' | translation: 'lbl_add_edit_start_date_smaller_than_validation_message' : translationValues }}
+                  {{ 'Start Date should be smaller than end Date' | translation:
+                  'lbl_add_edit_start_date_smaller_than_validation_message' : translationValues }}
                 </div>
               </div>
             </div>
@@ -150,10 +158,12 @@
                   </ng-template>
                 </div>
                 <div *ngIf="rangeRequiredError('dateRange', 'dateMaxRange')" class="valid-error">
-                  {{ 'End Date is required' | translation: 'lbl_add_edit_end_date_required_validation_message' : translationValues }}
+                  {{ 'End Date is required' | translation: 'lbl_add_edit_end_date_required_validation_message' :
+                  translationValues }}
                 </div>
                 <div *ngIf="agentCategoryForm.get('dateRange')?.errors?.dateRangeError" class="valid-error">
-                  {{ 'End Date should be greater than Start Date' | translation: 'lbl_add_edit_end_date_greater_than_validation_message' : translationValues }}
+                  {{ 'End Date should be greater than Start Date' | translation:
+                  'lbl_add_edit_end_date_greater_than_validation_message' : translationValues }}
                 </div>
               </div>
             </div>

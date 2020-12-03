@@ -17,7 +17,6 @@ import { AgentCategoryQueryParams } from '../../../models/agent-category-query-p
 import { AgentCategoryService } from '../../../services/agent-category.service';
 import { AddAgentCategoryComponent } from '../add-agent-category/add-agent-category.component';
 
-
 @Component({
   selector: 'app-agent-category-list',
   templateUrl: './agent-category-list.component.html',

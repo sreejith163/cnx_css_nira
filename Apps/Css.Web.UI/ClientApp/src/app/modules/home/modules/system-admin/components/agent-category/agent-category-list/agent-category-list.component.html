@@ -101,8 +101,8 @@
                 <i class="fa fa-trash padding-5 pointer" (click)="deleteAgentCategory(el.id)"></i>
               </td>
               <td>
-                <span
-                  ngbTooltip="{{ el.name }}">{{el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
+                <span ngbTooltip="{{ el.name }}">{{el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                  append: '...' } }}</span>
               </td>
               <td>{{el.dataTypeLabel}}</td>
               <td>
@@ -110,18 +110,16 @@
                 <ng-container [ngSwitch]="el.dataTypeId">
                   <ng-container *ngSwitchCase="dataType.AlphaNumeric">
                     <b>Min:</b> >{{ el.dataTypeMinValue }} <b>Max:</b>
-                    {{ '<' }} {{ el.dataTypeMaxValue }}
-                  </ng-container>
-                  <ng-container *ngSwitchCase="dataType.Numeric">
-                    <b>Min:</b> >{{ el.dataTypeMinValue }} <b>Max:</b>
-                    {{ '<' }} {{ el.dataTypeMaxValue }}
-                  </ng-container>
-                  <ng-container *ngSwitchCase="dataType.Date">
-                    <b>Start:</b> {{ el.dataTypeMinValue | date: 'yyyy-MM-dd' }}
-                    <b>End:</b>
-                    {{ el.dataTypeMaxValue | date: 'yyyy-MM-dd' }}
-                  </ng-container>
-                </ng-container>
+                    {{ '<' }} {{ el.dataTypeMaxValue }} </ng-container>
+                      <ng-container *ngSwitchCase="dataType.Numeric">
+                        <b>Min:</b> >{{ el.dataTypeMinValue }} <b>Max:</b>
+                        {{ '<' }} {{ el.dataTypeMaxValue }} </ng-container>
+                          <ng-container *ngSwitchCase="dataType.Date">
+                            <b>Start:</b> {{ el.dataTypeMinValue | date: 'yyyy-MM-dd' }}
+                            <b>End:</b>
+                            {{ el.dataTypeMaxValue | date: 'yyyy-MM-dd' }}
+                          </ng-container>
+                      </ng-container>
               </td>
               <td>{{el.createdBy}}</td>
               <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
