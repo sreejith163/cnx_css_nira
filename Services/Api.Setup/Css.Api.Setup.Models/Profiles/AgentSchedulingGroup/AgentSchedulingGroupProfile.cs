@@ -31,10 +31,6 @@ namespace Css.Api.Setup.Models.Profiles.AgentSchedulingGroup
 
 
             CreateMap<Domain.AgentSchedulingGroup, AgentSchedulingGroupDetailsDTO>()
-               .ForMember(x => x.ClientName, opt => opt.MapFrom(o => o.Client.Name ?? ""))
-               .ForMember(x => x.ClientLobGroupName, opt => opt.MapFrom(o => o.ClientLobGroup.Name ?? ""))
-               .ForMember(x => x.SkillGroupName, opt => opt.MapFrom(o => o.SkillGroup.Name ?? ""))
-               .ForMember(x => x.SkillTagName, opt => opt.MapFrom(o => o.SkillTag.Name ?? ""))
                .ForMember(x => x.TimezoneLabel, opt => opt.MapFrom(o => o.Timezone.Name ?? ""))
                .ReverseMap();
         }
