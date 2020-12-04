@@ -80,7 +80,7 @@ export class SchedulingGridComponent implements OnInit {
   schedulingStatus: any[] = [];
   weekDays: Array<string> = [];
 
-  getTranslatioValuesSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
   constructor(
@@ -332,7 +332,7 @@ export class SchedulingGridComponent implements OnInit {
     const languageId = CssLanguages.English;
     const menuId = CssMenus.SchedulingGrid;
 
-    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {
         if (response) {
           this.translationValues = response;
@@ -341,6 +341,6 @@ export class SchedulingGridComponent implements OnInit {
         console.log(error);
       });
 
-    this.subscriptions.push(this.getTranslatioValuesSubscription);
+    this.subscriptions.push(this.getTranslationValuesSubscription);
   }
 }

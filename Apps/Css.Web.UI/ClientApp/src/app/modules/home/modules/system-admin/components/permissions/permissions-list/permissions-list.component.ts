@@ -4,6 +4,11 @@ import { PermissionsService } from '../../../services/permissions.service';
 import { PermissionDetails } from '../../../models/permission-details.model';
 import { UserRole } from '../../../models/user-role.model';
 import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
+import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+import { SubscriptionLike as ISubscription } from 'rxjs';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 @Component({
   selector: 'app-permissions-list',
@@ -22,22 +27,25 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   sortBy = 'desc';
 
   roles: UserRole;
-  translationValues = Constants.permissionsTranslationValues;
   paginationSize = Constants.paginationSize;
   userRoles = Constants.UserRoles;
 
+  translationValues: TranslationDetails[] = [];
   permissions: PermissionDetails[] = [];
   hiddenRolesList: UserRole[] = [];
   hiddenRoles: UserRole[] = [];
 
   getPermissionsSubscription: any;
+  getTranslationValuesSubscription: ISubscription;
   subscriptions: any[] = [];
 
   constructor(
-    private permissionsService: PermissionsService
+    private permissionsService: PermissionsService,
+    private translationService: LanguageTranslationService
   ) { }
 
   ngOnInit(): void {
+    this.loadTranslationValues();
     this.getPermissions();
     this.getUserRolesToHide();
   }
@@ -152,5 +160,21 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.getPermissionsSubscription);
+  }
+
+  private loadTranslationValues() {
+    const languageId = CssLanguages.English;
+    const menuId = CssMenus.Permissions;
+
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getTranslationValuesSubscription);
   }
 }

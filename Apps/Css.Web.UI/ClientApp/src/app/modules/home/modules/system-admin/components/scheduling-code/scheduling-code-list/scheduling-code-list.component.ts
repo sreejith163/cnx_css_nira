@@ -46,7 +46,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
   translationValues: TranslationDetails[];
   schedulingCodes: SchedulingCode[] = [];
 
-  getTranslatioValuesSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   deleteSchedulingCodeSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
@@ -198,7 +198,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     const languageId = CssLanguages.English;
     const menuId = CssMenus.SchedulingCodes;
 
-    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {
         if (response) {
           this.translationValues = response;
@@ -207,6 +207,6 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
         console.log(error);
       });
 
-    this.subscriptionList.push(this.getTranslatioValuesSubscription);
+    this.subscriptionList.push(this.getTranslationValuesSubscription);
   }
 }

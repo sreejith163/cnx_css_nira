@@ -45,7 +45,7 @@ export class TranslationListComponent implements OnInit, OnDestroy {
   translations: TranslationDetails[] = [];
   translationValues: TranslationDetails[] = [];
 
-  getTranslatioValuesSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   getTranslatiosSubscription: ISubscription;
   deleteTranslationSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
@@ -193,7 +193,7 @@ export class TranslationListComponent implements OnInit, OnDestroy {
     const languageId = CssLanguages.English;
     const menuId = CssMenus.Translation;
 
-    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {
         if (response) {
           this.translationValues = response;
@@ -202,6 +202,6 @@ export class TranslationListComponent implements OnInit, OnDestroy {
         console.log(error);
       });
 
-    this.subscriptions.push(this.getTranslatioValuesSubscription);
+    this.subscriptions.push(this.getTranslationValuesSubscription);
   }
 }

@@ -30,7 +30,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
   paginationSize: PaginationSize[] = [];
   totalAgents: AgentAdmin[] = [];
 
-  getTranslatioValuesSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
   constructor(
@@ -110,7 +110,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
     const languageId = CssLanguages.English;
     const menuId = CssMenus.AgentAdmin;
 
-    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {
         if (response) {
           this.translationValues = response;
@@ -119,6 +119,6 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
         console.log(error);
       });
 
-    this.subscriptions.push(this.getTranslatioValuesSubscription);
+    this.subscriptions.push(this.getTranslationValuesSubscription);
   }
 }

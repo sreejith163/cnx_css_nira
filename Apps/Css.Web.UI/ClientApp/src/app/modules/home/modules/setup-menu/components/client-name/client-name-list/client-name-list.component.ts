@@ -47,7 +47,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
   translationValues: TranslationDetails[];
   clientsDetails: ClientDetails[] = [];
 
-  getTranslatioValuesSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   getAllClientDetailsSubscription: ISubscription;
   deleteClientSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
@@ -199,7 +199,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
     const languageId = CssLanguages.English;
     const menuId = CssMenus.ClientName;
 
-    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {
         if (response) {
           this.translationValues = response;
@@ -208,6 +208,6 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
         console.log(error);
       });
 
-    this.subscriptionList.push(this.getTranslatioValuesSubscription);
+    this.subscriptionList.push(this.getTranslationValuesSubscription);
   }
 }

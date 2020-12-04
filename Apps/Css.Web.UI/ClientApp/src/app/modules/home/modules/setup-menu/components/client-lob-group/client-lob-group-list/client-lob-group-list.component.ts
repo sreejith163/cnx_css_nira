@@ -52,7 +52,7 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
   translationValues: TranslationDetails[];
   clientLOBGroupDetails: ClientLOBGroupDetails[] = [];
 
-  getTranslatioValuesSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   getAllClientLOBGroupDetailsSubscription: ISubscription;
   getClientLOBGroupTranslationSubscription: ISubscription;
   deleteClientLOBGroupSubscription: ISubscription;
@@ -210,7 +210,7 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
     const languageId = CssLanguages.English;
     const menuId = CssMenus.ClientLobGroup;
 
-    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {
         if (response) {
           this.translationValues = response;
@@ -219,6 +219,6 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
         console.log(error);
       });
 
-    this.subscriptionList.push(this.getTranslatioValuesSubscription);
+    this.subscriptionList.push(this.getTranslationValuesSubscription);
   }
 }

@@ -44,7 +44,7 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
   translationValues: TranslationDetails[];
   agentCategoryDetails: AgentCategoryDetails[] = [];
 
-  getTranslatioValuesSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   getAllAgentcategorySubscription: ISubscription;
   deleteAgentCategorySubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
@@ -195,7 +195,7 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
     const languageId = CssLanguages.English;
     const menuId = CssMenus.AgentCategories;
 
-    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {
         if (response) {
           this.translationValues = response;
@@ -204,6 +204,6 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
         console.log(error);
       });
 
-    this.subscriptionList.push(this.getTranslatioValuesSubscription);
+    this.subscriptionList.push(this.getTranslationValuesSubscription);
   }
 }

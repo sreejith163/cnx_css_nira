@@ -8,5 +8,6 @@ export enum CssMenus {
     SkillTags = 7,
     AgentSchedulingGroup = 8,
     AgentAdmin = 9,
-    SchedulingGrid = 10
+    SchedulingGrid = 10,
+    Permissions = 11
 }

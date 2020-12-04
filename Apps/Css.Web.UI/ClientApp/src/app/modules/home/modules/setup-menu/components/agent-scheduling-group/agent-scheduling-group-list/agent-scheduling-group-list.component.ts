@@ -63,7 +63,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   agentSchedulingGroups: AgentSchedulingGroupDetails[] = [];
   translationValues: TranslationDetails[] = [];
 
-  getTranslatioValuesSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   getAgentSchedulingGroupsSubscription: ISubscription;
   getAgentSchedulingGroupSubscription: ISubscription;
   deleteAgentSchedulingGroupSubscription: ISubscription;
@@ -269,7 +269,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
     const languageId = CssLanguages.English;
     const menuId = CssMenus.AgentSchedulingGroup;
 
-    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {
         if (response) {
           this.translationValues = response;
@@ -278,6 +278,6 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
         console.log(error);
       });
 
-    this.subscriptions.push(this.getTranslatioValuesSubscription);
+    this.subscriptions.push(this.getTranslationValuesSubscription);
   }
 }

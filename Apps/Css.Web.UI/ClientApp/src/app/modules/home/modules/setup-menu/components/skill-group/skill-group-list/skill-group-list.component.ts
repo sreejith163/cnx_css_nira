@@ -62,7 +62,7 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
   translationValues: TranslationDetails[] = [];
   skillGroupDetails: SkillGroupDetails[] = [];
 
-  getTranslatioValuesSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   getAllSkillGroupDetailsSubscription: ISubscription;
   getSkillGroupSubscription: ISubscription;
   deleteSkillGroupSubscription: ISubscription;
@@ -236,7 +236,7 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
     const languageId = CssLanguages.English;
     const menuId = CssMenus.SkillGroups;
 
-    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {
         if (response) {
           this.translationValues = response;
@@ -245,6 +245,6 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
         console.log(error);
       });
 
-    this.subscriptions.push(this.getTranslatioValuesSubscription);
+    this.subscriptions.push(this.getTranslationValuesSubscription);
   }
 }

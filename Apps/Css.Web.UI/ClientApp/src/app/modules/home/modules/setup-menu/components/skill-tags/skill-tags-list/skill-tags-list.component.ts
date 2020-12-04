@@ -60,7 +60,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
   skillTag: SkillTagResponse;
   skillTags: SkillTagDetails[] = [];
 
-  getTranslatioValuesSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   getSkillTagsSubscription: ISubscription;
   getSkillTagSubscription: ISubscription;
   deleteSkillTagSubscription: ISubscription;
@@ -260,7 +260,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
     const languageId = CssLanguages.English;
     const menuId = CssMenus.SkillTags;
 
-    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {
         if (response) {
           this.translationValues = response;
@@ -269,7 +269,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
         console.log(error);
       });
 
-    this.subscriptions.push(this.getTranslatioValuesSubscription);
+    this.subscriptions.push(this.getTranslationValuesSubscription);
   }
 
 }
