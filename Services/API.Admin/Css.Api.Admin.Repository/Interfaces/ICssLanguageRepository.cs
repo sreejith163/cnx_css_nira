@@ -14,10 +14,10 @@ namespace Css.Api.Admin.Repository.Interfaces
         Task<List<KeyValue>> GetCssLanguages();
 
         /// <summary>
-        /// Gets the CSS languages.
+        /// Gets the CSS language.
         /// </summary>
         /// <param name="languageIdDetails">The language identifier details.</param>
         /// <returns></returns>
-        Task<KeyValue> GetCssLanguages(LanguageIdDetails languageIdDetails);
+        Task<KeyValue> GetCssLanguage(LanguageIdDetails languageIdDetails);
     }
 }

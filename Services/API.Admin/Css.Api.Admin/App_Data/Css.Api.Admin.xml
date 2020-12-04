@@ -160,6 +160,14 @@
             <param name="translationId">The translation identifier.</param>
             <returns></returns>
         </member>
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.GetLanguageTranslationsByMenuAndLanguage(System.Int32,System.Int32)">
+            <summary>
+            Gets the language translations by menu and language.
+            </summary>
+            <param name="languageId">The language identifier.</param>
+            <param name="menuId">The menu identifier.</param>
+            <returns></returns>
+        </member>
         <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.CreateLanguageTranslation(Css.Api.Admin.Models.DTO.Request.LanguageTranslation.CreateLanguageTranslation)">
             <summary>
             Creates the language translation.

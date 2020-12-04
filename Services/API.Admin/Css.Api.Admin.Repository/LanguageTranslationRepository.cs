@@ -86,6 +86,20 @@ namespace Css.Api.Admin.Repository
         }
 
         /// <summary>
+        /// Gets the language translations by menu and language.
+        /// </summary>
+        /// <param name="languageIdDetails">The language identifier details.</param>
+        /// <param name="menuIdDetails">The menu identifier details.</param>
+        /// <returns></returns>
+        public async Task<List<LanguageTranslation>> GetLanguageTranslationsByMenuAndLanguage(LanguageIdDetails languageIdDetails, MenuIdDetails menuIdDetails)
+        {
+            var languages = FindByCondition(x => x.IsDeleted == false && x.LanguageId == languageIdDetails.LanguageId && x.MenuId == menuIdDetails.MenuId)
+                .ToList();
+
+            return await Task.FromResult(languages);
+        }
+
+        /// <summary>
         /// Gets the language translation by other ids.
         /// </summary>
         /// <param name="languageIdDetails">The language identifier details.</param>

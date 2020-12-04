@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Css.Api.Admin.Business.Interfaces;
+using Css.Api.Admin.Models.DTO.Request.Language;
 using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
+using Css.Api.Admin.Models.DTO.Request.Menu;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Css.Api.Admin.Controllers
@@ -50,6 +52,21 @@ namespace Css.Api.Admin.Controllers
         public async Task<IActionResult> GetLanguageTranslation(int translationId)
         {
             var result = await _languageTranslationService.GetLanguageTranslation(new LanguageTranslationIdDetails { TranslationId = translationId });
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+
+        /// <summary>
+        /// Gets the language translations by menu and language.
+        /// </summary>
+        /// <param name="languageId">The language identifier.</param>
+        /// <param name="menuId">The menu identifier.</param>
+        /// <returns></returns>
+        [HttpGet("languages/{languageId}/menus/{menuId}")]
+        public async Task<IActionResult> GetLanguageTranslationsByMenuAndLanguage(int languageId, int menuId)
+        {
+            var result = await _languageTranslationService.GetLanguageTranslationsByMenuAndLanguage(new LanguageIdDetails { LanguageId = languageId }, 
+                                                                                                    new MenuIdDetails { MenuId = menuId });
             return StatusCode((int)result.Code, result.Value);
         }
 

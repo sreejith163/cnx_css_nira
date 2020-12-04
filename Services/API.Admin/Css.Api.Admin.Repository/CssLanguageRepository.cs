@@ -46,11 +46,11 @@ namespace Css.Api.Admin.Repository
         }
 
         /// <summary>
-        /// Gets the CSS languages.
+        /// Gets the CSS language.
         /// </summary>
         /// <param name="languageIdDetails">The language identifier details.</param>
         /// <returns></returns>
-        public async Task<KeyValue> GetCssLanguages(LanguageIdDetails languageIdDetails)
+        public async Task<KeyValue> GetCssLanguage(LanguageIdDetails languageIdDetails)
         {
             var language = FindByCondition(x => x.Id == languageIdDetails.LanguageId)
                 .ProjectTo<KeyValue>(_mapper.ConfigurationProvider).SingleOrDefault();

@@ -10,6 +10,7 @@ using Css.Api.Admin.Repository.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -73,6 +74,31 @@ namespace Css.Api.Admin.Business
 
             var mappedLanguageTranslation = _mapper.Map<LanguageTranslationDTO>(languageTranslation);
             return new CSSResponse(mappedLanguageTranslation, HttpStatusCode.OK);
+        }
+
+        /// <summary>
+        /// Gets the language translations by menu and language.
+        /// </summary>
+        /// <param name="languageIdDetails">The language identifier details.</param>
+        /// <param name="menuIdDetails">The menu identifier details.</param>
+        /// <returns></returns>
+        public async Task<CSSResponse> GetLanguageTranslationsByMenuAndLanguage(LanguageIdDetails languageIdDetails, MenuIdDetails menuIdDetails)
+        {
+            var language = await _repository.CssLanguage.GetCssLanguage(languageIdDetails);
+            if (language == null)
+            {
+                return new CSSResponse($"Language with id '{languageIdDetails.LanguageId}' not found", HttpStatusCode.NotFound);
+            }
+
+            var menu = await _repository.CssMenu.GetCssMenu(menuIdDetails);
+            if (menu == null)
+            {
+                return new CSSResponse($"Menu with id '{menuIdDetails.MenuId}' not found", HttpStatusCode.NotFound);
+            }
+
+            var languageTranslations = await _repository.LanguageTranslation.GetLanguageTranslationsByMenuAndLanguage(languageIdDetails, menuIdDetails);
+            var mappedLanguageTranslations = _mapper.Map<List<LanguageTranslationDTO>>(languageTranslations);
+            return new CSSResponse(mappedLanguageTranslations, HttpStatusCode.OK);
         }
 
         /// <summary>

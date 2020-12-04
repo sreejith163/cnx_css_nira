@@ -26,6 +26,14 @@ namespace Css.Api.Admin.Repository.Interfaces
         Task<LanguageTranslation> GetLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails);
 
         /// <summary>
+        /// Gets the language translations by menu and language.
+        /// </summary>
+        /// <param name="languageIdDetails">The language identifier details.</param>
+        /// <param name="menuIdDetails">The menu identifier details.</param>
+        /// <returns></returns>
+        Task<List<LanguageTranslation>> GetLanguageTranslationsByMenuAndLanguage(LanguageIdDetails languageIdDetails, MenuIdDetails menuIdDetails);
+
+        /// <summary>
         /// Gets the language translation by other ids.
         /// </summary>
         /// <param name="languageIdDetails">The language identifier details.</param>

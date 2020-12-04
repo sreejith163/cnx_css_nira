@@ -1,8 +1,7 @@
-﻿using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
+﻿using Css.Api.Admin.Models.DTO.Request.Language;
+using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
+using Css.Api.Admin.Models.DTO.Request.Menu;
 using Css.Api.Core.Models.DTO.Response;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Css.Api.Admin.Business.Interfaces
@@ -22,6 +21,14 @@ namespace Css.Api.Admin.Business.Interfaces
         /// <param name="languageTranslationIdDetails">The translation identifier details.</param>
         /// <returns></returns>
         Task<CSSResponse> GetLanguageTranslation(LanguageTranslationIdDetails languageTranslationIdDetails);
+
+        /// <summary>
+        /// Gets the language translations by menu and language.
+        /// </summary>
+        /// <param name="languageIdDetails">The language identifier details.</param>
+        /// <param name="menuIdDetails">The menu identifier details.</param>
+        /// <returns></returns>
+        Task<CSSResponse> GetLanguageTranslationsByMenuAndLanguage(LanguageIdDetails languageIdDetails, MenuIdDetails menuIdDetails);
 
         /// <summary>
         /// Creates the language translation.
