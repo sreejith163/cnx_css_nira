@@ -42,7 +42,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
   translationData: TranslationBase;
   languages: KeyValue;
   menus: KeyValue;
-  variables: KeyValue;
+  variables: KeyValue[] = [];
 
   updateLanguageTranslationSubscription: ISubscription;
   addLanguageTranslationSubscription: ISubscription;
@@ -101,7 +101,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
 
   setMenuId(menu: number) {
     this.menuId = menu;
-    this.translationForm.controls.variableId.setValue(null);
+    this.translationForm.controls.variableId.setValue('');
     this.getCssMenuVariables(this.menuId);
   }
 
