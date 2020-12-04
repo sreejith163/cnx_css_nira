@@ -17,6 +17,10 @@ import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-
 import { SkillTagQueryParams } from '../../../models/skill-tag-query-params.model';
 import { SkillTagResponse } from '../../../models/skill-tag-response.model';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 @Component({
   selector: 'app-skill-tags-list',
@@ -39,7 +43,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   characterSplice = 25;
   paginationSize = Constants.paginationSize;
-  translationValues = Constants.skillTagsTranslationValues;
+  translationValues: TranslationDetails[] = [];
   maxLength = Constants.DefaultTextMaxLength;
   orderBy = 'createdDate';
   sortBy = 'desc';
@@ -56,6 +60,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
   skillTag: SkillTagResponse;
   skillTags: SkillTagDetails[] = [];
 
+  getTranslatioValuesSubscription: ISubscription;
   getSkillTagsSubscription: ISubscription;
   getSkillTagSubscription: ISubscription;
   deleteSkillTagSubscription: ISubscription;
@@ -65,9 +70,11 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
     private skillTagSevice: SkillTagService,
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
+    private translationService: LanguageTranslationService
   ) { }
 
   ngOnInit() {
+    this.loadTranslationValues();
     this.loadSkillTags();
   }
 
@@ -188,7 +195,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private setComponentValues(operation: ComponentOperation, translationValues: Array<Translation>) {
+  private setComponentValues(operation: ComponentOperation, translationValues: Array<TranslationDetails>) {
     this.modalRef.componentInstance.operation = operation;
     this.modalRef.componentInstance.translationValues = translationValues;
   }
@@ -247,6 +254,22 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.getSkillTagSubscription);
+  }
+
+  private loadTranslationValues() {
+    const languageId = CssLanguages.English;
+    const menuId = CssMenus.SkillTags;
+
+    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getTranslatioValuesSubscription);
   }
 
 }

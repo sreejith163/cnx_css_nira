@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { SchedulingCodeService } from '../../../services/scheduling-code.service';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 
-import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
-import { Translation } from 'src/app/shared/models/translation.model';
-import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
+import { SchedulingCodeService } from '../../../services/scheduling-code.service';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+
 import { SchedulingCode } from '../../../models/scheduling-code.model';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
+import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
 
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
@@ -17,6 +17,10 @@ import { AddUpdateSchedulingCodeComponent } from '../add-update-scheduling-code/
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
+import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+
 
 @Component({
   selector: 'app-scheduling-code-list',
@@ -36,12 +40,13 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
   spinner = 'schedulingSpinner';
 
   spinnerOptions = SpinnerOptions;
+  paginationSize = Constants.paginationSize;
   modalRef: NgbModalRef;
   headerPaginationValues: HeaderPagination;
-  translationValues: Translation[];
-  paginationSize: PaginationSize[] = [];
+  translationValues: TranslationDetails[];
   schedulingCodes: SchedulingCode[] = [];
 
+  getTranslatioValuesSubscription: ISubscription;
   deleteSchedulingCodeSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
@@ -50,11 +55,11 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private schedulingCodeService: SchedulingCodeService,
     private spinnerService: NgxSpinnerService,
+    private translationService: LanguageTranslationService
   ) { }
 
   ngOnInit(): void {
-    this.translationValues = Constants.schedulingCodeTranslationValues;
-    this.paginationSize = Constants.paginationSize;
+    this.loadTranslationValues();
     this.loadSchedulingCodes();
   }
 
@@ -147,7 +152,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private setComponentValues(operation: ComponentOperation, translationValues: Array<Translation>) {
+  private setComponentValues(operation: ComponentOperation, translationValues: Array<TranslationDetails>) {
     this.modalRef.componentInstance.operation = operation;
     this.modalRef.componentInstance.translationValues = translationValues;
   }
@@ -187,5 +192,21 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptionList.push(this.getSchedulingCodesSubscription);
+  }
+
+  private loadTranslationValues() {
+    const languageId = CssLanguages.English;
+    const menuId = CssMenus.SchedulingCodes;
+
+    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptionList.push(this.getTranslatioValuesSubscription);
   }
 }

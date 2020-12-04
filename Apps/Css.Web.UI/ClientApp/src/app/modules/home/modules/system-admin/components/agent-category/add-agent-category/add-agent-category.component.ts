@@ -17,7 +17,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-import { Translation } from 'src/app/shared/models/translation.model';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { Constants } from 'src/app/shared/util/constants.util';
@@ -57,7 +57,7 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
 
   @Input() agentCategoryId: number;
   @Input() operation: ComponentOperation;
-  @Input() translationValues: Translation[];
+  @Input() translationValues: TranslationDetails[];
 
   constructor(
     private agentCategoryService: AgentCategoryService,

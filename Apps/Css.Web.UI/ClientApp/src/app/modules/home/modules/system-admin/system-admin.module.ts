@@ -18,7 +18,6 @@ import { EmployeeTypeAheadComponent } from './components/permissions/employee-ty
 import { AddUpdatePermissionComponent } from './components/permissions/add-update-permission/add-update-permission.component';
 import { AgentCategoryListComponent } from './components/agent-category/agent-category-list/agent-category-list.component';
 import { AddAgentCategoryComponent } from './components/agent-category/add-agent-category/add-agent-category.component';
-import { LanguageTranslationService } from './services/language-translation.service';
 import { TranslationListComponent } from './components/translation/translation-list/translation-list.component';
 import { AddUpdateTranslationsComponent } from './components/translation/add-update-translations/add-update-translations.component';
 
@@ -47,8 +46,7 @@ const providers = [
   PermissionsService,
   AgentCategoryService,
   CssLanguageService,
-  CssMenuService,
-  LanguageTranslationService];
+  CssMenuService];
 
 @NgModule({
   declarations: components,

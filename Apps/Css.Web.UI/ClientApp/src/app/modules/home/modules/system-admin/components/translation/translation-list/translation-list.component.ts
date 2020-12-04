@@ -8,15 +8,17 @@ import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-p
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
-import { LanguageTranslationService } from '../../../services/language-translation.service';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { TranslationDetails } from '../../../models/translation-details.model';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-import { Translation } from 'src/app/shared/models/translation.model';
-import { TranslationQueryParams } from '../../../models/translation-query-params.model';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { TranslationQueryParams } from 'src/app/shared/models/translation-query-params.model';
+import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+
 
 
 
@@ -39,10 +41,11 @@ export class TranslationListComponent implements OnInit, OnDestroy {
   modalRef: NgbModalRef;
   maxLength = Constants.DefaultTextMaxLength;
   headerPaginationValues: HeaderPagination;
-  translationValues = Constants.translationTranslationValues;
   paginationSize = Constants.paginationSize;
   translations: TranslationDetails[] = [];
+  translationValues: TranslationDetails[] = [];
 
+  getTranslatioValuesSubscription: ISubscription;
   getTranslatiosSubscription: ISubscription;
   deleteTranslationSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
@@ -54,6 +57,7 @@ export class TranslationListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.loadTranslationValues();
     this.loadTranslations();
   }
 
@@ -141,7 +145,7 @@ export class TranslationListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private setComponentValues(operation: ComponentOperation, translationValues: Array<Translation>) {
+  private setComponentValues(operation: ComponentOperation, translationValues: Array<TranslationDetails>) {
     this.modalRef.componentInstance.operation = operation;
     this.modalRef.componentInstance.translationValues = translationValues;
   }
@@ -183,5 +187,21 @@ export class TranslationListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.getTranslatiosSubscription);
+  }
+
+  private loadTranslationValues() {
+    const languageId = CssLanguages.English;
+    const menuId = CssMenus.Translation;
+
+    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getTranslatioValuesSubscription);
   }
 }

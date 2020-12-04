@@ -6,7 +6,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 
-import { Translation } from 'src/app/shared/models/translation.model';
 import { AddClientLobGroup } from '../../../models/add-client-lob-group.model';
 import { ClientLOBGroupDetails } from '../../../models/client-lob-group-details.model';
 import { UpdateClientLobGroup } from '../../../models/update-client-lob-group.model';
@@ -20,6 +19,7 @@ import { TimezoneService } from 'src/app/shared/services/timezone.service';
 import { ClientLobGroupService } from '../../../services/client-lob-group.service';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 @Component({
   selector: 'app-add-update-client-lob-group',
@@ -45,7 +45,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
 
   @Input() operation: ComponentOperation;
   @Input() clientLOBGroupDetails: ClientLOBGroupDetails;
-  @Input() translationValues: Translation[] = [];
+  @Input() translationValues: TranslationDetails[] = [];
 
   constructor(
     private formBuilder: FormBuilder,

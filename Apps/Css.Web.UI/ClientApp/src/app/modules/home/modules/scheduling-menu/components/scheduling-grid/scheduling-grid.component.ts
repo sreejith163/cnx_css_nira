@@ -16,6 +16,13 @@ import { SchedulingInterval } from '../../models/scheduling-interval.model';
 import { ICON_DB } from 'src/app/shared/util/icon.data';
 
 import * as $ from 'jquery';
+import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { SubscriptionLike as ISubscription } from 'rxjs';
+import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -66,25 +73,30 @@ export class SchedulingGridComponent implements OnInit {
   schedulingGridData: SchedulingGrid;
 
   openTimes: Array<any>;
-  translationValues: Translation[];
+  translationValues: TranslationDetails[] = [];
   schedulingIntervals: SchedulingInterval[] = [];
   paginationSize: PaginationSize[] = [];
   totalSchedulingGridData: SchedulingGrid[] = [];
   schedulingStatus: any[] = [];
   weekDays: Array<string> = [];
 
+  getTranslatioValuesSubscription: ISubscription;
+  subscriptions: ISubscription[] = [];
+
   constructor(
     private schedulingGridService: SchedulingGridService,
     private calendar: NgbCalendar,
     private modalService: NgbModal,
     public ngbDateParserFormatter: NgbDateParserFormatter,
+    private translationService: LanguageTranslationService,
+    private spinnerService: NgxSpinnerService,
   ) { }
 
   ngOnInit(): void {
+    this.loadTranslationValues();
     this.endIcon = this.iconCount;
     this.openTimes = this.getOpenTimes();
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
-    this.translationValues = Constants.schedulingGridTranslationValues;
     this.schedulingIntervals = Constants.schedulingIntervals;
     this.schedulingStatus = Object.keys(SchedulingStatus).filter(key => isNaN(SchedulingStatus[key]));
     this.totalSchedulingGridData = this.schedulingGridService.getSchedulingGridData().sort(
@@ -314,5 +326,21 @@ export class SchedulingGridComponent implements OnInit {
       }
     });
     table.find('.' + this.selectedCellClassName).removeClass(this.selectedCellClassName);
+  }
+
+  private loadTranslationValues() {
+    const languageId = CssLanguages.English;
+    const menuId = CssMenus.SchedulingGrid;
+
+    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getTranslatioValuesSubscription);
   }
 }

@@ -3,12 +3,14 @@ import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstr
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
+import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
-import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
-import { Translation } from 'src/app/shared/models/translation.model';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { DataType } from '../../../enum/data-type.enum';
@@ -30,6 +32,7 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
   dataType = DataType;
   totalAgentCategoryRecord: number;
   maxLength = Constants.DefaultTextMaxLength;
+  paginationSize = Constants.paginationSize;
 
   searchKeyword: string;
   orderBy = 'createdDate';
@@ -38,10 +41,10 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
 
   modalRef: NgbModalRef;
   headerPaginationValues: HeaderPagination;
-  paginationSize: PaginationSize[] = [];
-  translationValues: Translation[];
+  translationValues: TranslationDetails[];
   agentCategoryDetails: AgentCategoryDetails[] = [];
 
+  getTranslatioValuesSubscription: ISubscription;
   getAllAgentcategorySubscription: ISubscription;
   deleteAgentCategorySubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
@@ -49,12 +52,12 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
-    private agentCategoryService: AgentCategoryService
+    private agentCategoryService: AgentCategoryService,
+    private translationService: LanguageTranslationService
   ) { }
 
   ngOnInit(): void {
-    this.translationValues = Constants.agentCategoriesTranslationValues;
-    this.paginationSize = Constants.paginationSize;
+    this.loadTranslationValues();
     this.loadAgentcategories();
   }
 
@@ -146,7 +149,7 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private setComponentValues(operation: ComponentOperation, translationValues: Array<Translation>) {
+  private setComponentValues(operation: ComponentOperation, translationValues: Array<TranslationDetails>) {
     this.modalRef.componentInstance.operation = operation;
     this.modalRef.componentInstance.translationValues = translationValues;
   }
@@ -186,5 +189,21 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptionList.push(this.getAllAgentcategorySubscription);
+  }
+
+  private loadTranslationValues() {
+    const languageId = CssLanguages.English;
+    const menuId = CssMenus.AgentCategories;
+
+    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptionList.push(this.getTranslatioValuesSubscription);
   }
 }

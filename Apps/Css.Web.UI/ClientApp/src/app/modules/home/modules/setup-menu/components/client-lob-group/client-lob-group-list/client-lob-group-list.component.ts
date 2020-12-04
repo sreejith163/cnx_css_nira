@@ -1,25 +1,28 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { WeekDay } from '@angular/common';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
+import { AddUpdateClientLobGroupComponent } from '../add-update-client-lob-group/add-update-client-lob-group.component';
+import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
-import { Translation } from 'src/app/shared/models/translation.model';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-
 import { Constants } from 'src/app/shared/util/constants.util';
 import { ClientLOBGroupDetails } from '../../../models/client-lob-group-details.model';
-import { ClientLobGroupService } from '../../../services/client-lob-group.service';
-import { AddUpdateClientLobGroupComponent } from '../add-update-client-lob-group/add-update-client-lob-group.component';
 import { ClientLobGroupQueryParameters } from '../../../models/client-lob-group-query-parameters.model';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { WeekDay } from '@angular/common';
-import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+
+import { ClientLobGroupService } from '../../../services/client-lob-group.service';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 
 @Component({
   selector: 'app-client-lob-group-list',
@@ -46,9 +49,10 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
   modalRef: NgbModalRef;
   headerPaginationValues: HeaderPagination;
   paginationSize: PaginationSize[] = [];
-  translationValues: Translation[];
+  translationValues: TranslationDetails[];
   clientLOBGroupDetails: ClientLOBGroupDetails[] = [];
 
+  getTranslatioValuesSubscription: ISubscription;
   getAllClientLOBGroupDetailsSubscription: ISubscription;
   getClientLOBGroupTranslationSubscription: ISubscription;
   deleteClientLOBGroupSubscription: ISubscription;
@@ -57,13 +61,14 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
-    private clientLOBGroupService: ClientLobGroupService
+    private clientLOBGroupService: ClientLobGroupService,
+    private translationService: LanguageTranslationService
   ) { }
 
   ngOnInit(): void {
     this.sortKeyword = 'asc';
-    this.translationValues = Constants.clientLOBGroupTranslationValues;
     this.paginationSize = Constants.paginationSize;
+    this.loadTranslationValues();
     this.loadClientLOBGroups();
   }
 
@@ -155,18 +160,12 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
     this.loadClientLOBGroups();
   }
 
-  sortClientLOBGroups(orderBy: string) {
-    this.sortKeyword = this.sortKeyword === 'asc' ? 'desc' : 'asc';
-    this.orderBy = `${orderBy} ${this.sortKeyword}`;
-    // this.loadClientLOBGroups();
-  }
-
   private getModalPopup(component: any, size: string) {
     const options: NgbModalOptions = { backdrop: false, centered: true, size };
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private setComponentValues(operation: ComponentOperation, translationValues: Array<Translation>) {
+  private setComponentValues(operation: ComponentOperation, translationValues: Array<TranslationDetails>) {
     this.modalRef.componentInstance.operation = operation;
     this.modalRef.componentInstance.translationValues = translationValues;
   }
@@ -205,5 +204,21 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptionList.push(this.getAllClientLOBGroupDetailsSubscription);
+  }
+
+  private loadTranslationValues() {
+    const languageId = CssLanguages.English;
+    const menuId = CssMenus.ClientLobGroup;
+
+    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptionList.push(this.getTranslatioValuesSubscription);
   }
 }

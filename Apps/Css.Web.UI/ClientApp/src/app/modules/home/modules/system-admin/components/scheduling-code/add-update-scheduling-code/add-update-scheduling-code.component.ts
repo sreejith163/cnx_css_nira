@@ -7,7 +7,6 @@ import { SubscriptionLike as ISubscription } from 'rxjs';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
-import { Translation } from 'src/app/shared/models/translation.model';
 import { SchedulingCodeType } from '../../../models/scheduling-code-type.model';
 import { AddSchedulingCode } from '../../../models/add-scheduling-code.model';
 import { UpdateSchedulingCode } from '../../../models/update-scheduling-code.mode';
@@ -23,6 +22,7 @@ import { SchedulingCodeService } from '../../../services/scheduling-code.service
 import { SchedulingCodeIconsService } from '../../../services/scheduling-code-icons.service';
 import { SchedulingCodeTypesService } from '../../../services/scheduling-code-types.service';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 
 @Component({
@@ -40,7 +40,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
 
   schedulingCodeForm: FormGroup;
   schedulingIcons: KeyValue[] = [];
-  codeList: SchedulingCodeType[] = [];
+  codeList: KeyValue[] = [];
 
   getSchedulingCodeTypesSubscription: ISubscription;
   getSchedulingIconsSubscription: ISubscription;
@@ -50,7 +50,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
 
   @Input() operation: ComponentOperation;
   @Input() schedulingCodeData: SchedulingCode;
-  @Input() translationValues: Translation[];
+  @Input() translationValues: TranslationDetails[];
 
   constructor(
     private formBuilder: FormBuilder,

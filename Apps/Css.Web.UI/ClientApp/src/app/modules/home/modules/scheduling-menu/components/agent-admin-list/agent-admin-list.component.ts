@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { Constants } from 'src/app/shared/util/constants.util';
@@ -7,36 +7,55 @@ import { AgentAdminListService } from '../../services/agent-admin-list.service';
 import { AddAgentProfileComponent } from '../add-agent-profile/add-agent-profile.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
-import { Translation } from 'src/app/shared/models/translation.model';
+import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 
 @Component({
   selector: 'app-agent-admin-list',
   templateUrl: './agent-admin-list.component.html',
   styleUrls: ['./agent-admin-list.component.scss'],
 })
-export class AgentAdminListComponent implements OnInit {
+export class AgentAdminListComponent implements OnInit, OnDestroy {
   currentPage = 1;
   pageSize = 10;
   characterSplice = 25;
   totalAgentRecord: number;
   modalRef: NgbModalRef;
-  translationValues: Translation[];
+  translationValues: TranslationDetails[];
   paginationSize: PaginationSize[] = [];
   totalAgents: AgentAdmin[] = [];
 
+  getTranslatioValuesSubscription: ISubscription;
+  subscriptions: ISubscription[] = [];
+
   constructor(
     private agentAdminListService: AgentAdminListService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private translationService: LanguageTranslationService,
+    private spinnerService: NgxSpinnerService,
   ) { }
 
   ngOnInit(): void {
-    this.translationValues = Constants.agentAdminTranslationValues;
+    this.loadTranslationValues();
     this.totalAgents = this.agentAdminListService.getAgentAdmins().sort(
       (a, b) =>
         new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
     );
     this.totalAgentRecord = this.totalAgents.length;
     this.paginationSize = Constants.paginationSize;
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    });
   }
 
   changePageSize(pageSize: number) {
@@ -77,7 +96,7 @@ export class AgentAdminListComponent implements OnInit {
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private passPopUpTextValues(title: string, translationValues: Array<Translation>) {
+  private passPopUpTextValues(title: string, translationValues: Array<TranslationDetails>) {
     this.modalRef.componentInstance.title = title;
     this.modalRef.componentInstance.translationValues = translationValues;
   }
@@ -85,5 +104,21 @@ export class AgentAdminListComponent implements OnInit {
   private passPopUpMessages(headingMessage: string, contentMessage: string) {
     this.modalRef.componentInstance.headingMessage = headingMessage;
     this.modalRef.componentInstance.contentMessage = contentMessage;
+  }
+
+  private loadTranslationValues() {
+    const languageId = CssLanguages.English;
+    const menuId = CssMenus.AgentAdmin;
+
+    this.getTranslatioValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getTranslatioValuesSubscription);
   }
 }

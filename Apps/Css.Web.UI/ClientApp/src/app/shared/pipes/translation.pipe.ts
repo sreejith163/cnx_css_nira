@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Translation } from '../models/translation.model';
+import { CssLanguages } from '../enums/css-languages.enum';
+import { TranslationDetails } from '../models/translation-details.model';
 
 @Pipe({
   name: 'translation',
@@ -13,9 +14,9 @@ export class TranslationPipe implements PipeTransform {
 
     if (args1.length) {
       const controId = args[0];
-      const language = 'English';
-      const translationData = args[1] as Translation[];
-      const controlName = translationData?.find(x => x.variableId === controId && x.language === language);
+      const language = CssLanguages.English;
+      const translationData = args[1] as TranslationDetails[];
+      const controlName = translationData?.find(x => x.variableName === controId && x.languageId === language);
       return controlName?.translation ?? defaultText;
     }
 

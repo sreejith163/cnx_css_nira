@@ -6,22 +6,23 @@ import { SubscriptionLike as ISubscription } from 'rxjs';
 
 import { CssLanguageService } from '../../../services/css-language.service';
 import { CssMenuService } from '../../../services/css-menu.service';
-import { LanguageTranslationService } from '../../../services/language-translation.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 
-import { UpdateTranslation } from '../../../models/update-translation.model';
+import { UpdateTranslation } from '../../../../../../../shared/models/update-translation.model';
 import { KeyValue } from 'src/app/shared/models/key-value.model';
-import { Translation } from 'src/app/shared/models/translation.model';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-import { TranslationBase } from '../../../models/translation-base.model';
-import { AddTranslation } from '../../../models/add-translation.model';
+import { TranslationBase } from '../../../../../../../shared/models/translation-base.model';
+import { AddTranslation } from '../../../../../../../shared/models/add-translation.model';
 
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+
 
 
 @Component({
@@ -53,7 +54,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
 
   @Input() operation: ComponentOperation;
   @Input() translationId: number;
-  @Input() translationValues: Translation[];
+  @Input() translationValues: TranslationDetails[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -71,7 +72,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
     this.getCssLanguages();
     this.getCssMenus();
     if (this.operation === ComponentOperation.Edit) {
-      this.loadTransaltion();
+      this.loadTranslation();
     }
   }
 
@@ -232,7 +233,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getCssMenusSubscription);
   }
 
-  private loadTransaltion() {
+  private loadTranslation() {
     this.getLanguageTranslationSubscription = this.translationService.getLanguageTranslation(this.translationId)
       .subscribe((response) => {
         if (response) {
@@ -281,4 +282,5 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
         CustomValidators.cannotContainSpace])),
     });
   }
+
 }
