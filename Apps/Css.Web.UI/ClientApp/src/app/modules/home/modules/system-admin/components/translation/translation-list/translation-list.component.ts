@@ -184,5 +184,4 @@ export class TranslationListComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(this.getTranslatiosSubscription);
   }
-
 }

@@ -127,28 +127,6 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private showSuccessPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = {
-      backdrop: false,
-      centered: true,
-      size: 'sm',
-    };
-    const modalRef = this.modalService.open(MessagePopUpComponent, options);
-    modalRef.componentInstance.headingMessage = 'Success';
-    modalRef.componentInstance.contentMessage = contentMessage;
-
-    return modalRef;
-  }
-
-  private showErrorWarningPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = { backdrop: false, centered: true, size: 'sm' };
-    const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
-    modalRef.componentInstance.headingMessage = 'Error';
-    modalRef.componentInstance.contentMessage = contentMessage;
-
-    return modalRef;
-  }
-
   private addTranslation() {
     const addTransaltion = this.translationForm.value as AddTranslation;
     addTransaltion.createdBy = this.authService.getLoggedUserInfo().displayName;
@@ -200,6 +178,28 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
         return true;
       }
     }
+  }
+
+  private showSuccessPopUpMessage(contentMessage: string) {
+    const options: NgbModalOptions = {
+      backdrop: false,
+      centered: true,
+      size: 'sm',
+    };
+    const modalRef = this.modalService.open(MessagePopUpComponent, options);
+    modalRef.componentInstance.headingMessage = 'Success';
+    modalRef.componentInstance.contentMessage = contentMessage;
+
+    return modalRef;
+  }
+
+  private showErrorWarningPopUpMessage(contentMessage: string) {
+    const options: NgbModalOptions = { backdrop: false, centered: true, size: 'sm' };
+    const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
+    modalRef.componentInstance.headingMessage = 'Error';
+    modalRef.componentInstance.contentMessage = contentMessage;
+
+    return modalRef;
   }
 
   private getCssLanguages() {
@@ -281,5 +281,4 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
         CustomValidators.cannotContainSpace])),
     });
   }
-
 }
