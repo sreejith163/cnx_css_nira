@@ -94,6 +94,8 @@ namespace Css.Api.Admin.Repository
         public async Task<List<LanguageTranslation>> GetLanguageTranslationsByMenuAndLanguage(LanguageIdDetails languageIdDetails, MenuIdDetails menuIdDetails)
         {
             var languages = FindByCondition(x => x.IsDeleted == false && x.LanguageId == languageIdDetails.LanguageId && x.MenuId == menuIdDetails.MenuId)
+                .Include(x => x.Language)
+                .Include(x => x.Variable)
                 .ToList();
 
             return await Task.FromResult(languages);
