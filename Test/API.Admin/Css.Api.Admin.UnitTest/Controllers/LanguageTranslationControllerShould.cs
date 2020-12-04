@@ -1,6 +1,8 @@
 ﻿using Css.Api.Admin.Business.Interfaces;
 using Css.Api.Admin.Controllers;
+using Css.Api.Admin.Models.DTO.Request.Language;
 using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
+using Css.Api.Admin.Models.DTO.Request.Menu;
 using Css.Api.Admin.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -56,6 +58,19 @@ namespace Css.Api.Admin.UnitTest.Controllers
         #region GetLanguageTranslation
 
         [Theory]
+        [InlineData(100)]
+        [InlineData(101)]
+        public async void GetLanguageTranslation_ReturnsNotFoundResult(int translationId)
+        {
+            mockTranslationService.Setup(mr => mr.GetLanguageTranslation(It.IsAny<LanguageTranslationIdDetails>())).ReturnsAsync(
+                (LanguageTranslationIdDetails idDetails) => mockTranslationData.GetLanguageTranslation(new LanguageTranslationIdDetails { TranslationId = translationId }));
+
+            var value = await controller.GetLanguageTranslation(translationId);
+
+            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+        }
+
+        [Theory]
         [InlineData(1)]
         [InlineData(2)]
         public async void GetLanguageTranslation_ReturnsOKResult(int translationId)
@@ -68,17 +83,52 @@ namespace Css.Api.Admin.UnitTest.Controllers
             Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
         }
 
-        [Theory]
-        [InlineData(100)]
-        [InlineData(101)]
-        public async void GetLanguageTranslation_ReturnsNotFoundResult(int translationId)
-        {
-            mockTranslationService.Setup(mr => mr.GetLanguageTranslation(It.IsAny<LanguageTranslationIdDetails>())).ReturnsAsync(
-                (LanguageTranslationIdDetails idDetails) => mockTranslationData.GetLanguageTranslation(new LanguageTranslationIdDetails { TranslationId = translationId }));
+        #endregion
 
-            var value = await controller.GetLanguageTranslation(translationId);
+        #region GetLanguageTranslationsByMenuAndLanguage
+
+        [Theory]
+        [InlineData(100, 1)]
+        [InlineData(101, 2)]
+        public async void GetLanguageTranslationsByMenuAndLanguage_ReturnsNotFoundResultForLanguage(int languageId, int menuId)
+        {
+            mockTranslationService.Setup(mr => mr.GetLanguageTranslationsByMenuAndLanguage(It.IsAny<LanguageIdDetails>(), It.IsAny<MenuIdDetails>())).ReturnsAsync(
+                (LanguageIdDetails languageIdDetails, MenuIdDetails menuIdDetails) => mockTranslationData.GetLanguageTranslationsByMenuAndLanguage(
+                    new LanguageIdDetails { LanguageId = languageId }, new MenuIdDetails { MenuId = menuId }));
+
+            var value = await controller.GetLanguageTranslationsByMenuAndLanguage(languageId, menuId);
 
             Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+        }
+
+        [Theory]
+        [InlineData(1, 100)]
+        [InlineData(2, 101)]
+        public async void GetLanguageTranslationsByMenuAndLanguage_ReturnsNotFoundResultForMenu(int languageId, int menuId)
+        {
+            mockTranslationService.Setup(mr => mr.GetLanguageTranslationsByMenuAndLanguage(It.IsAny<LanguageIdDetails>(), It.IsAny<MenuIdDetails>())).ReturnsAsync(
+                (LanguageIdDetails languageIdDetails, MenuIdDetails menuIdDetails) => mockTranslationData.GetLanguageTranslationsByMenuAndLanguage(
+                    new LanguageIdDetails { LanguageId = languageId }, new MenuIdDetails { MenuId = menuId }));
+
+            var value = await controller.GetLanguageTranslationsByMenuAndLanguage(languageId, menuId);
+
+            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+        }
+
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async void GetLanguageTranslationsByMenuAndLanguage_ReturnsOKResult(int languageId, int menuId)
+        {
+            mockTranslationService.Setup(mr => mr.GetLanguageTranslationsByMenuAndLanguage(It.IsAny<LanguageIdDetails>(), It.IsAny<MenuIdDetails>())).ReturnsAsync(
+                (LanguageIdDetails languageIdDetails, MenuIdDetails menuIdDetails) => mockTranslationData.GetLanguageTranslationsByMenuAndLanguage(
+                    new LanguageIdDetails { LanguageId = languageId }, new MenuIdDetails { MenuId = menuId }));
+
+            var value = await controller.GetLanguageTranslationsByMenuAndLanguage(languageId, menuId);
+
+
+            Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
         }
 
         #endregion

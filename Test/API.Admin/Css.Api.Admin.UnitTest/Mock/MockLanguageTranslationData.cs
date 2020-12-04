@@ -1,5 +1,7 @@
 ﻿using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Models.DTO.Request.Language;
 using Css.Api.Admin.Models.DTO.Request.LanguageTranslation;
+using Css.Api.Admin.Models.DTO.Request.Menu;
 using Css.Api.Core.Models.DTO.Response;
 using System;
 using System.Collections.Generic;
@@ -25,6 +27,26 @@ namespace Css.Api.Admin.UnitTest.Mock
         };
 
         /// <summary>
+        /// The CSS menus database
+        /// </summary>
+        public readonly List<CssMenu> cssMenusDB = new List<CssMenu>()
+        {
+            new CssMenu{ Id = 1, Name = "menu1", Description = "menu1"},
+            new CssMenu{ Id = 2, Name = "menu2", Description = "menu2"},
+            new CssMenu{ Id = 3, Name = "menu3", Description = "menu3"}
+        };
+
+        /// <summary>
+        /// The CSS languages database
+        /// </summary>
+        public readonly List<CssLanguage> cssLanguagesDB = new List<CssLanguage>()
+        {
+            new CssLanguage{ Id = 1, Name = "lang1", Description = "lang1"},
+            new CssLanguage{ Id = 2, Name = "lang2", Description = "lang2"},
+            new CssLanguage{ Id = 3, Name = "lang3", Description = "lang3"}
+        };
+
+        /// <summary>
         /// Gets the translation languages.
         /// </summary>
         /// <param name="languageTranslationQueryParameters">The query parameters.</param>
@@ -44,6 +66,30 @@ namespace Css.Api.Admin.UnitTest.Mock
         {
             var translationLanguage = languageTranslationsDB.Where(x => x.Id == languageTranslationIdDetails.TranslationId && x.IsDeleted == false).FirstOrDefault();
             return translationLanguage != null ? new CSSResponse(translationLanguage, HttpStatusCode.OK) : new CSSResponse(HttpStatusCode.NotFound);
+        }
+
+        /// <summary>
+        /// Gets the language translations by menu and language.
+        /// </summary>
+        /// <param name="languageIdDetails">The language identifier details.</param>
+        /// <param name="menuIdDetails">The menu identifier details.</param>
+        /// <returns></returns>
+        public CSSResponse GetLanguageTranslationsByMenuAndLanguage(LanguageIdDetails languageIdDetails, MenuIdDetails menuIdDetails)
+        {
+            var language = cssLanguagesDB.Find(x => x.Id == languageIdDetails.LanguageId);
+            if (language == null)
+            {
+                return new CSSResponse($"Language with id '{languageIdDetails.LanguageId}' not found", HttpStatusCode.NotFound);
+            }
+
+            var menu = cssMenusDB.Find(x => x.Id == menuIdDetails.MenuId);
+            if (menu == null)
+            {
+                return new CSSResponse($"Menu with id '{menuIdDetails.MenuId}' not found", HttpStatusCode.NotFound);
+            }
+
+            var translationLanguages = languageTranslationsDB.Where(x => x.IsDeleted == false && x.LanguageId == languageIdDetails.LanguageId && x.MenuId == menuIdDetails.MenuId).FirstOrDefault();
+            return new CSSResponse(translationLanguages, HttpStatusCode.OK);
         }
 
         /// <summary>

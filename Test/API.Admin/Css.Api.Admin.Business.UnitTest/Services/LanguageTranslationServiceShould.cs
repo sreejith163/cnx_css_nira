@@ -14,6 +14,9 @@ using Css.Api.Admin.Models.DTO.Response.LanguageTranslation;
 using Css.Api.Admin.Models.Profiles.Variable;
 using Css.Api.Admin.Models.Profiles.Menu;
 using Css.Api.Admin.Models.Profiles.Language;
+using Css.Api.Admin.Models.DTO.Request.Language;
+using Css.Api.Admin.Models.DTO.Request.Menu;
+using System.Collections.Generic;
 
 namespace Css.Api.Admin.Business.UnitTest.Services
 {
@@ -60,7 +63,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             translationService = new LanguageTranslationService(repositoryWrapper, mockHttContext.Object, mapper);
         }
 
-        #region LanguageTranslations
+        #region GetLanguageTranslations
 
         /// <summary>
         /// Gets the language translations.
@@ -87,6 +90,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
         /// <param name="translationId">The translation identifier.</param>
         [Theory]
         [InlineData(100)]
+        [InlineData(101)]
         public async void GetLanguageTranslationWithNotFound(int translationId)
         {
             var result = await translationService.GetLanguageTranslation(new LanguageTranslationIdDetails { TranslationId = translationId });
@@ -112,6 +116,60 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             Assert.IsType<LanguageTranslationDTO>(result.Value);
             Assert.Equal(HttpStatusCode.OK, result.Code);
         }
+
+        #endregion
+
+        #region GetLanguageTranslationsByMenuAndLanguage
+
+        /// <summary>
+        /// Gets the language translations by menu and language with not found for language.
+        /// </summary>
+        /// <param name="languageId">The language identifier.</param>
+        /// <param name="menuId">The menu identifier.</param>
+        [Theory]
+        [InlineData(100, 1)]
+        [InlineData(101, 2)]
+        public async void GetLanguageTranslationsByMenuAndLanguageWithNotFoundForLanguage(int languageId, int menuId)
+        {
+            var result = await translationService.GetLanguageTranslationsByMenuAndLanguage(new LanguageIdDetails { LanguageId = languageId },
+                                                                                           new MenuIdDetails { MenuId = menuId });
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+        /// <summary>
+        /// Gets the language translations by menu and language with not found for menu.
+        /// </summary>
+        /// <param name="languageId">The language identifier.</param>
+        /// <param name="menuId">The menu identifier.</param>
+        [Theory]
+        [InlineData(1, 100)]
+        [InlineData(2, 101)]
+        public async void GetLanguageTranslationsByMenuAndLanguageWithNotFoundForMenu(int languageId, int menuId)
+        {
+            var result = await translationService.GetLanguageTranslationsByMenuAndLanguage(new LanguageIdDetails { LanguageId = languageId },
+                                                                                           new MenuIdDetails { MenuId = menuId }); ;
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async void GetLanguageTranslationsByMenuAndLanguage(int languageId, int menuId)
+        {
+            var result = await translationService.GetLanguageTranslationsByMenuAndLanguage(new LanguageIdDetails { LanguageId = languageId },
+                                                                                           new MenuIdDetails { MenuId = menuId }); ;
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.IsType<List<LanguageTranslationDTO>>(result.Value);
+            Assert.Equal(HttpStatusCode.OK, result.Code);
+        }
+
 
         #endregion
 
