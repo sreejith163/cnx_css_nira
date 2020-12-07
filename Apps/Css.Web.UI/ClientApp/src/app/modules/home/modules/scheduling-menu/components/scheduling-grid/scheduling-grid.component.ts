@@ -3,6 +3,7 @@ import { WeekDay } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
+import { Translation } from 'src/app/shared/models/translation.model';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SchedulingStatus } from '../../enums/scheduling-status.enum';
@@ -15,10 +16,10 @@ import { SchedulingInterval } from '../../models/scheduling-interval.model';
 import { ICON_DB } from 'src/app/shared/util/icon.data';
 
 import * as $ from 'jquery';
-import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
+
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
-import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { SubscriptionLike as ISubscription } from 'rxjs';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 
 declare function setRowCellIndex(cell: string);
@@ -43,7 +44,7 @@ declare function highlightCell(cell: string, className: string);
 })
 export class SchedulingGridComponent implements OnInit {
 
-  timeIntervals = 5;
+  timeIntervals = 15;
   currentPage = 1;
   pageSize = 10;
   characterSplice = 25;
@@ -52,10 +53,12 @@ export class SchedulingGridComponent implements OnInit {
   endIcon: number;
   totalSchedulingRecord: number;
 
+  icon: string;
   selectedIconId: string;
   tableClassName = 'schedulingGridTable';
   selectedCellClassName = 'cell-selected';
   hasMismatch: boolean;
+  isMouseDown: boolean;
 
   iconData = ICON_DB;
   hoveredDate: NgbDate | null = null;
@@ -70,7 +73,7 @@ export class SchedulingGridComponent implements OnInit {
   schedulingGridData: SchedulingGrid;
 
   openTimes: Array<any>;
-  translationValues: TranslationDetails[] = [];
+  translationValues: Translation[];
   schedulingIntervals: SchedulingInterval[] = [];
   paginationSize: PaginationSize[] = [];
   totalSchedulingGridData: SchedulingGrid[] = [];
@@ -85,7 +88,7 @@ export class SchedulingGridComponent implements OnInit {
     private schedulingGridService: SchedulingGridService,
     private calendar: NgbCalendar,
     private modalService: NgbModal,
-    public ngbDateParserFormatter: NgbDateParserFormatter,
+    private ngbDateParserFormatter: NgbDateParserFormatter,
     private translationService: LanguageTranslationService,
     private genericStateManagerService: GenericStateManagerService
   ) { }
@@ -163,12 +166,11 @@ export class SchedulingGridComponent implements OnInit {
   }
 
   getIconFromSelectedGrid(week: number, openTime: any) {
-    const meridiem = openTime.split(':')[1].split(' ')[1];
-    const time = openTime.split(' ')[0];
     const weekData = this.selectedGrid.calendar?.weekDays.find(x => x.day === +week);
 
     if (weekData) {
-      const weekTimeData = weekData.times.find(x => x.from === time && x.meridiem === meridiem);
+      const weekTimeData = weekData.times.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x.from) &&
+        this.convertToDateFormat(openTime) < this.convertToDateFormat(x.to));
       if (weekTimeData) {
         return this.unifiedToNative(weekTimeData?.icon);
       }
@@ -203,27 +205,48 @@ export class SchedulingGridComponent implements OnInit {
 
   onIconClick(event) {
     this.selectedIconId = event.target.id;
-    this.saveGridItems(this.selectedIconId);
+    // this.saveGridItems(this.selectedIconId);
   }
 
   isMainMinute(data: any) {
     return data.split(':')[1] === '00 am' || data.split(':')[1] === '00 pm';
   }
 
-  setCellSelected(event) {
-    if (event.shiftKey) {
-      highlightSelectedCells(this.tableClassName, event.currentTarget.id);
-    } else if (!event.ctrlKey) {
-      removeHighlightedCells(this.tableClassName, this.selectedCellClassName);
-    }
+  onMouseUp(event) {
+    // if (event.shiftKey) {
+    //   highlightSelectedCells(this.tableClassName, event.currentTarget.id);
+    // } else if (!event.ctrlKey) {
+    //   removeHighlightedCells(this.tableClassName, this.selectedCellClassName);
+    // }
 
-    setRowCellIndex(event.currentTarget.id);
+    // setRowCellIndex(event.currentTarget.id);
+    this.isMouseDown = false;
     highlightCell(event.currentTarget.id, this.selectedCellClassName);
+    this.saveGridItems();
 
   }
 
+  onMouseDown(event) {
+    this.isMouseDown = true;
+    const time = event.currentTarget.attributes.time.nodeValue;
+    const meridiem = event.currentTarget.attributes.meridiem.nodeValue;
+    const week = event.currentTarget.attributes.week.nodeValue;
+    const days = this.selectedGrid.calendar.weekDays.find(x => x.day === +week);
+    const object = days?.times.find(x => x.from === time + ' ' + meridiem);
+    this.icon = object?.icon ?? undefined;
+    if (this.isMouseDown && this.icon) {
+      setRowCellIndex(event.currentTarget.id);
+    }
+  }
+
+  onMouseOver(event) {
+    if (this.isMouseDown && this.icon) {
+      highlightSelectedCells(this.tableClassName, event.currentTarget.id);
+    }
+  }
+
   dragged(event: CdkDragDrop<any>) {
-    this.saveGridItems(event.item.element.nativeElement.id);
+    this.icon = event.item.element.nativeElement.id;
   }
 
   changeTimeInterval(event) {
@@ -246,7 +269,10 @@ export class SchedulingGridComponent implements OnInit {
   save() {
     this.matchSchedulingGridDataChanges();
     this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
+    this.sortSelectedGridCalendarTimes();
+    this.formatTimeValuesInSchedulingGrid();
     this.showPopUpMessage();
+    console.log('final', this.schedulingGridData);
   }
 
   private showPopUpMessage() {
@@ -285,46 +311,136 @@ export class SchedulingGridComponent implements OnInit {
         ap[Math.floor(hh / 12)];
       tt = tt + x;
     }
-    times.forEach((ele, index) => {
-      if (ele.split(' ')[0] === '00:00') {
-        const meridian = ele.split(' ')[1];
-        times.splice(index, 1, '12:00 ' + meridian);
-      }
-    });
     return times;
   }
 
-  private saveGridItems(icon) {
+  private saveGridItems() {
     const table = $('#' + this.tableClassName);
-    table.find('.' + this.selectedCellClassName).each((index, elem) => {
-      const week = elem.attributes.week.value;
-      const from = elem.attributes.time.value;
-      const minuteValue = Number(from.split(':')[1]) + this.timeIntervals;
-      const minute = minuteValue === 5 ? '05' : minuteValue;
-      const to = from.split(':')[0] + ':' + minute;
-      const meridiem = elem.attributes.meridiem.value;
+    if (this.icon) {
+      table.find('.' + this.selectedCellClassName).each((index, elem) => {
+        let to;
+        let hours;
+        let from;
+        let minute;
+        const week = elem.attributes.week.value;
+        let meridiem = elem.attributes.meridiem.value;
+        from = elem.attributes.time.value + ' ' + meridiem;
+        hours = from.split(':')[0];
+        const minuteValue = Number(from.split(':')[1].split(' ')[0]) + this.timeIntervals;
+        minute = minuteValue === 5 ? '05' : minuteValue;
 
-      const weekDays = this.selectedGrid?.calendar?.weekDays;
-      const weekData = weekDays.find(x => x.day === +week);
+        if (minute === 60) {
+          meridiem = (hours === '11' && meridiem === 'am') ? 'pm' : meridiem;
+          hours = hours !== '11' ? ('0' + (Number(hours) + 1)).slice(-2) : '00';
+          minute = '00';
+        }
 
-      if (weekData) {
-        const timeData = weekData.times.find(x => x.from === from && x.meridiem === meridiem);
-        if (timeData) {
-          timeData.icon = icon;
+        to = hours + ':' + minute + ' ' + meridiem;
+
+        const weekDays = this.selectedGrid?.calendar?.weekDays;
+        const weekData = weekDays.find(x => x.day === +week);
+
+        if (weekData) {
+          const timeData = weekData.times.find(x => x.from === from && x.to.split(':')[1].split(' ')[1] === meridiem);
+          if (timeData) {
+            timeData.icon = this.icon;
+          } else {
+            const calendarTime = new SchedulingCalendarTime(from, to, this.icon);
+            weekData.times.push(calendarTime);
+          }
         } else {
-          const calendarTime = new SchedulingCalendarTime(meridiem, from, to, icon);
-          weekData.times.push(calendarTime);
+          const weekDay = new SchedulingCalendarDays();
+          weekDay.day = +week;
+          const calendarTime = new SchedulingCalendarTime(from, to, this.icon);
+          weekDay.times.push(calendarTime);
+
+          weekDays.push(weekDay);
+        }
+      });
+      this.icon = undefined;
+    }
+    table.find('.' + this.selectedCellClassName).removeClass(this.selectedCellClassName);
+  }
+
+  private adjustSchedulingCalendarTimesRange(times: Array<SchedulingCalendarTime>) {
+    const newTimesarray = new Array<SchedulingCalendarTime>();
+    let calendarTimes = new SchedulingCalendarTime(null, null, null);
+
+    for (const index in times) {
+      if (+index === 0) {
+        calendarTimes = times[index];
+        if (+index === times.length - 1) {
+          break;
+        }
+      } else if (calendarTimes.to === times[index].from && calendarTimes.icon === times[index].icon) {
+        calendarTimes.to = times[index].to;
+        if (+index === times.length - 1) {
+          break;
         }
       } else {
-        const weekDay = new SchedulingCalendarDays();
-        weekDay.day = +week;
-        const calendarTime = new SchedulingCalendarTime(meridiem, from, to, icon);
-        weekDay.times.push(calendarTime);
-
-        weekDays.push(weekDay);
+        const model = new SchedulingCalendarTime(calendarTimes.from, calendarTimes.to, calendarTimes.icon);
+        newTimesarray.push(model);
+        calendarTimes = times[index];
+        if (+index === times.length - 1) {
+          break;
+        }
       }
+    }
+
+    const modelvalue = new SchedulingCalendarTime(calendarTimes.from, calendarTimes.to, calendarTimes.icon);
+    newTimesarray.push(modelvalue);
+
+    return newTimesarray;
+  }
+
+  private formatTimeValuesInSchedulingGrid() {
+    this.schedulingGridData.calendar.weekDays.forEach((element) => {
+      element.times = this.adjustSchedulingCalendarTimesRange(element.times);
     });
-    table.find('.' + this.selectedCellClassName).removeClass(this.selectedCellClassName);
+    console.log(this.schedulingGridData);
+  }
+
+  private sortSelectedGridCalendarTimes() {
+    this.schedulingGridData.calendar.weekDays.forEach((element) => {
+      element.times.sort((a, b): number => {
+        if (this.convertToDateFormat(a.from) < this.convertToDateFormat(b.from)) {
+          return -1;
+        } else if (this.convertToDateFormat(a.from) > this.convertToDateFormat(b.from)) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      });
+    });
+  }
+
+  private convertToDateFormat(time: string) {
+    const now = new Date();
+    const dateTarget = new Date();
+
+    dateTarget.setHours(this.getHours(time));
+    dateTarget.setMinutes(this.getMinutes(time));
+    dateTarget.setSeconds(0);
+    dateTarget.setMilliseconds(0);
+
+    if (dateTarget < now) {
+      dateTarget.setDate(dateTarget.getDate() + 1);
+    }
+    return dateTarget;
+  }
+
+  private getHours(time: string) {
+    const timeArray = time.split(':');
+    if (timeArray[1].split(' ')[1] === 'pm') {
+      return (parseInt(timeArray[0], 10) + 12);
+    } else {
+      return parseInt(timeArray[0], 10);
+    }
+  }
+
+  private getMinutes(time: string) {
+    return +time.split(':')[1].split(' ')[0];
   }
 
   private loadTranslationValues() {

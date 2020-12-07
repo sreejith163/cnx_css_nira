@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { SubscriptionLike as ISubscription } from 'rxjs';
+import { of, SubscriptionLike as ISubscription } from 'rxjs';
 
 import { CssLanguageService } from '../../../../../../../shared/services/css-language.service';
 import { CssMenuService } from '../../../services/css-menu.service';
@@ -21,6 +21,7 @@ import { Constants } from 'src/app/shared/util/constants.util';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { concatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-update-translations',
@@ -232,10 +233,15 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
 
   private loadTranslation() {
     this.getLanguageTranslationSubscription = this.translationService.getLanguageTranslation(this.translationId)
+    .pipe(concatMap((response: TranslationBase) => {
+      this.getCssMenuVariables(response?.menuId);
+      return of(response);
+    }))
       .subscribe((response) => {
         if (response) {
           this.translationData = response;
-          this.getCssMenuVariables(this.translationData?.menuId);
+          this.populateFormDetails();
+          // this.getCssMenuVariables(this.translationData?.menuId);
         }
         this.spinnerService.hide(this.spinner);
       }, (error) => {

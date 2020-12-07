@@ -34,6 +34,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
+  setCsslanguage(languageId: number) {
+    this.genericStateManagerService.setCurrentLanguage(this.cssLanguages.find(x => x.id === +languageId));
+  }
+
   private loadLanguages() {
     this.cssLanguagesSubscription = this.cssLanguageervice.getCssLanguages()
       .subscribe((response) => {

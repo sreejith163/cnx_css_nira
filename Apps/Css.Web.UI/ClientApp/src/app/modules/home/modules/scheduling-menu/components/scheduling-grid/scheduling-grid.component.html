@@ -178,7 +178,7 @@
                                       <ng-container *ngIf="isMainMinute(data); else subMinutes">
                                         <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
                                           class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                                          {{ data.split(':')[0] }}
+                                          {{ data.split(':')[0] === '00' ? '12' : data.split(':')[0] }}
                                         </th>
                                       </ng-container>
                                       <ng-template #subMinutes>
@@ -193,10 +193,11 @@
                                     <td class="jsgrid-cell-week">
                                       {{ weekDay[week] | slice: 0 : 3 }}
                                     </td>
-                                    <td id="grid_col_{{week}}_{{j}}" class="jsgrid-cell"
+                                    <td id="grid_col_{{week}}_{{j}}" class="jsgrid-cell" 
                                       attr.time="{{ openTime.split(' ')[0] }}"
                                       attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}" [attr.week]="week"
-                                      *ngFor="let openTime of openTimes;let j = index" (click)="setCellSelected($event)"
+                                      *ngFor="let openTime of openTimes;let j = index" 
+                                      (mouseup)="onMouseUp($event)" (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
                                       [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : 'night'">
                                       <ng-container *ngIf="getIconFromSelectedGrid(week, openTime).length">
                                         <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime) }}</i>
