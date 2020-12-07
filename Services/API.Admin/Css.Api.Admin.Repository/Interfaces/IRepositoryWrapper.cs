@@ -27,6 +27,30 @@ namespace Css.Api.Admin.Repository.Interfaces
         /// </summary>
         ISchedulingTypeCodeRepository SchedulingTypeCodes { get; }
 
+        /// <summary>Gets the agent categories.</summary>
+        /// <value>The agent categories.</value>
+        IAgentCategoryRepository AgentCategories { get; }       
+		
+		/// <summary>
+        /// Gets the language.
+        /// </summary>
+        ICssLanguageRepository CssLanguage { get; }		
+
+        /// <summary>
+        /// Gets the CSS menu.
+        /// </summary>
+        ICssMenuRepository CssMenu { get; }
+
+        /// <summary>
+        /// Gets the CSS variable.
+        /// </summary>
+        ICssVariableRepository CssVariable { get; }
+
+        /// <summary>
+        /// Gets the language translation.
+        /// </summary>
+        ILanguageTranslationRepository LanguageTranslation { get; }
+
         /// <summary>
         /// Saves the asynchronous.
         /// </summary>

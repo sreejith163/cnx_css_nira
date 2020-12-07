@@ -22,7 +22,7 @@ namespace Css.Api.Setup.Business
         /// <summary>
         /// The HTTP context accessor
         /// </summary>
-        private IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>
         /// The mapper

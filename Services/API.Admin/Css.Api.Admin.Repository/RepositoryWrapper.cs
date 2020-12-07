@@ -23,6 +23,11 @@ namespace Css.Api.Admin.Repository
         private ISchedulingCodeRepository _schedulingCodesRepository { get; set; }
 
         /// <summary>
+        /// Gets or sets the agent category repository.
+        /// </summary>
+        private IAgentCategoryRepository _agentCategoryRepository { get; set; }
+
+        /// <summary>
         /// Gets or sets the scheduling code icons repository.
         /// </summary>
         private ISchedulingCodeIconRepository _schedulingCodeIconsRepository { get; set; }
@@ -38,6 +43,26 @@ namespace Css.Api.Admin.Repository
         private ISchedulingTypeCodeRepository _schedulingTypeCodesRepository { get; set; }
 
         /// <summary>
+        /// Gets or sets the language repository.
+        /// </summary>
+        private ICssLanguageRepository _languageRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CSS menu repository.
+        /// </summary>
+        private ICssMenuRepository _cssMenuRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CSS variable repository.
+        /// </summary>
+        private ICssVariableRepository _cssVariableRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the language translation repository.
+        /// </summary>
+        private ILanguageTranslationRepository _languageTranslationRepository { get; set; }
+
+        /// <summary>
         /// Gets the scheduling codes.
         /// </summary>
         public ISchedulingCodeRepository SchedulingCodes
@@ -49,6 +74,20 @@ namespace Css.Api.Admin.Repository
                     _schedulingCodesRepository = new SchedulingCodeRepository(_repositoryContext, _mapper);
                 }
                 return _schedulingCodesRepository;
+            }
+        }
+
+        /// <summary>Gets the agent categories.</summary>
+        /// <value>The agent categories.</value>
+        public IAgentCategoryRepository AgentCategories
+        {
+            get
+            {
+                if (_agentCategoryRepository == null)
+                {
+                    _agentCategoryRepository = new AgentCategoryRepository(_repositoryContext, _mapper);
+                }
+                return _agentCategoryRepository;
             }
         }
 
@@ -97,6 +136,65 @@ namespace Css.Api.Admin.Repository
             }
         }
 
+        /// <summary>
+        /// Gets the language.
+        /// </summary>
+        public ICssLanguageRepository CssLanguage
+        {
+            get
+            {
+                if (_languageRepository == null)
+                {
+                    _languageRepository = new CssLanguageRepository(_repositoryContext,_mapper);
+                }
+                return _languageRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the language.
+        /// </summary>
+        public ICssMenuRepository CssMenu
+        {
+            get
+            {
+                if (_cssMenuRepository == null)
+                {
+                    _cssMenuRepository = new CssMenuRepository(_repositoryContext, _mapper);
+                }
+                return _cssMenuRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the CSS variable.
+        /// </summary>
+        public ICssVariableRepository CssVariable
+        {
+            get
+            {
+                if (_cssVariableRepository == null)
+                {
+                    _cssVariableRepository = new CssVariableRepository(_repositoryContext, _mapper);
+                }
+                return _cssVariableRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the language translation.
+        /// </summary>
+        public ILanguageTranslationRepository LanguageTranslation
+        {
+            get
+            {
+                if (_languageTranslationRepository == null)
+                {
+                    _languageTranslationRepository = new LanguageTranslationRepository(_repositoryContext, _mapper);
+                }
+                return _languageTranslationRepository;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryWrapper" /> class.

@@ -4,6 +4,192 @@
         <name>Css.Api.Admin</name>
     </assembly>
     <members>
+        <member name="T:Css.Api.Admin.Controllers.AgentCategoriesController">
+            <summary>Controller for handling Agent Categories resource</summary>
+        </member>
+        <member name="F:Css.Api.Admin.Controllers.AgentCategoriesController._agentCategoryService">
+            <summary>The agent category service</summary>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.AgentCategoriesController.#ctor(Css.Api.Admin.Business.Interfaces.IAgentCategoryService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.AgentCategoriesController"/> class.
+            </summary>
+            <param name="agentCategoryService">The agent category service.</param>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.AgentCategoriesController.GetAgentCategories(Css.Api.Admin.Models.DTO.Request.AgentCategory.AgentCategoryQueryParameter)">
+            <summary>
+            Gets the agent categories.
+            </summary>
+            <param name="agentCategoryQueryParameter">The agent category query parameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.AgentCategoriesController.GetAgentCategory(System.Int32)">
+            <summary>
+            Gets the agent category.
+            </summary>
+            <param name="agentCategoryId">The agent category identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.AgentCategoriesController.CreateAgentCategory(Css.Api.Admin.Models.DTO.Request.AgentCategory.CreateAgentCategory)">
+            <summary>
+            Creates the agent category.
+            </summary>
+            <param name="agentCategoryDetails">The agent category details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.AgentCategoriesController.UpdateAgentCategory(System.Int32,Css.Api.Admin.Models.DTO.Request.AgentCategory.UpdateAgentCategory)">
+            <summary>
+            Updates the agent category.
+            </summary>
+            <param name="agentCategoryId">The agent category identifier.</param>
+            <param name="agentCategoryDetails">The agent category details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.AgentCategoriesController.DeleteAgentCategory(System.Int32)">
+            <summary>
+            Deletes the agent category.
+            </summary>
+            <param name="agentCategoryId">The agent category identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Admin.Controllers.CssLanguagesController">
+            <summary>
+            Controller for handling the language resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Admin.Controllers.CssLanguagesController._languageService">
+            <summary>
+            The lanmguage service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.CssLanguagesController.#ctor(Css.Api.Admin.Business.Interfaces.ICssLanguageService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.CssLanguagesController"/> class.
+            </summary>
+            <param name="languageService">The language service.</param>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.CssLanguagesController.GetLanguages">
+            <summary>
+            Gets the languages.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Admin.Controllers.CssMenusController">
+            <summary>
+            Controller for handling the css menu resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Admin.Controllers.CssMenusController._cssMenuService">
+            <summary>
+            The CSS menu service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.CssMenusController.#ctor(Css.Api.Admin.Business.Interfaces.ICssMenuService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.CssMenusController"/> class.
+            </summary>
+            <param name="cssMenuService">The CSS menu service.</param>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.CssMenusController.GetMenus">
+            <summary>
+            Gets the menus.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.CssMenusController.GetMenuVariables(System.Int32)">
+            <summary>
+            Gets the menu variables.
+            </summary>
+            <param name="menuId">The menu identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Admin.Controllers.CssVariablesController">
+            <summary>
+            Controller for handling the css variable resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Admin.Controllers.CssVariablesController._cssVariableService">
+            <summary>
+            The CSS variable service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.CssVariablesController.#ctor(Css.Api.Admin.Business.Interfaces.ICssVariableService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.CssVariablesController"/> class.
+            </summary>
+            <param name="cssVariableService">The CSS variable service.</param>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.CssVariablesController.GetCssVariables(Css.Api.Admin.Models.DTO.Request.Variable.VariableQueryParams)">
+            <summary>
+            Gets the CSS variables.
+            </summary>
+            <param name="variableQueryParams">The variable query parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Admin.Controllers.LanguageTranslationsController">
+            <summary>
+            Controller for handling the language translation resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Admin.Controllers.LanguageTranslationsController._languageTranslationService">
+            <summary>
+            The language translation service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.#ctor(Css.Api.Admin.Business.Interfaces.ILanguageTranslationService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.LanguageTranslationsController" /> class.
+            </summary>
+            <param name="languageTranslationService">The language translation service.</param>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.GetLanguageTranslations(Css.Api.Admin.Models.DTO.Request.LanguageTranslation.LanguageTranslationQueryParameters)">
+            <summary>
+            Gets the language translations.
+            </summary>
+            <param name="translationQueryParameters">The translation query parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.GetLanguageTranslation(System.Int32)">
+            <summary>
+            Gets the language translation.
+            </summary>
+            <param name="translationId">The translation identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.GetLanguageTranslationsByMenuAndLanguage(System.Int32,System.Int32)">
+            <summary>
+            Gets the language translations by menu and language.
+            </summary>
+            <param name="languageId">The language identifier.</param>
+            <param name="menuId">The menu identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.CreateLanguageTranslation(Css.Api.Admin.Models.DTO.Request.LanguageTranslation.CreateLanguageTranslation)">
+            <summary>
+            Creates the language translation.
+            </summary>
+            <param name="translationDetails">The translation details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.UpdateLanguageTranslation(System.Int32,Css.Api.Admin.Models.DTO.Request.LanguageTranslation.UpdateLanguageTranslation)">
+            <summary>
+            Updates the language translation.
+            </summary>
+            <param name="translationId">The translation identifier.</param>
+            <param name="translationDetails">The translation details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.LanguageTranslationsController.DeleteLanguageTranslation(System.Int32)">
+            <summary>
+            Deletes the language translation.
+            </summary>
+            <param name="translationId">The translation identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Admin.Controllers.SchedulingCodeIconsController">
             <summary>
             Controller for handling the scheduling code icons resource
@@ -197,6 +383,26 @@
             </summary>
             <param name="app">The application.</param>
             <param name="env">The env.</param>
+        </member>
+        <member name="T:Css.Api.Admin.Validators.AgentCategory.AddAgentCategoryValidator">
+            <summary>
+            Validator for handling the validation of add AgentCategory object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Admin.Validators.AgentCategory.AddAgentCategoryValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Validators.AgentCategory.AddAgentCategoryValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Admin.Validators.AgentCategory.UpdateAgentCategoryValidator">
+            <summary>
+            Validator for handling the validation of add AgentCategory object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Admin.Validators.AgentCategory.UpdateAgentCategoryValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Validators.AgentCategory.UpdateAgentCategoryValidator"/> class.
+            </summary>
         </member>
         <member name="T:Css.Api.Admin.Validators.SchedulingCode.AddSchedulingCodeValidator">
             <summary>

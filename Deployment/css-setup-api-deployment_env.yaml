@@ -1,0 +1,41 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: cnx-css-api-setup
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cnx-css-api-setup
+  template:
+    metadata:
+      labels:
+        app: cnx-css-api-setup
+    spec:
+      containers:
+        - name: cnx-css-api-setup
+          image: sreejith163/cnx-css:cnx.css.api.setup.s4.3011.v1
+          ports:
+            - name: node-port
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: "ASPNETCORE_ENVIRONMENT"
+              value: "Development"
+            - name: "ConnectionStrings__Database"
+              value: "server=10.87.222.42;user id=cssuser;password=cssuser_DEV;persistsecurityinfo=True;database=css_dev_setup"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cnx-css-api-setup
+spec:
+  ports:
+    - name: client
+      protocol: TCP
+      port: 4204
+      targetPort: 80
+  selector:
+    app: cnx-css-api-setup
+  type: LoadBalancer
+

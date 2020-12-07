@@ -37,7 +37,6 @@ namespace Css.Api.Admin.Repository.DatabaseContext
         public virtual DbSet<SchedulingCode> SchedulingCode { get; set; }
         public virtual DbSet<SchedulingCodeIcon> SchedulingCodeIcon { get; set; }
         public virtual DbSet<SchedulingCodeType> SchedulingCodeType { get; set; }
-        public virtual DbSet<SchedulingStatus> SchedulingStatus { get; set; }
         public virtual DbSet<SchedulingTypeCode> SchedulingTypeCode { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -165,7 +164,7 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                 entity.ToTable("css_variable");
 
                 entity.HasIndex(e => e.MenuId)
-                    .HasName("d_idx");
+                    .HasName("FK_css_variable_css_menu_idx");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
@@ -176,12 +175,6 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                 entity.Property(e => e.MenuId)
                     .HasColumnName("menu_id")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.MenuName)
-                    .IsRequired()
-                    .HasColumnName("menu_name")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -235,19 +228,9 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                     .HasColumnName("language_id")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.LanguageName)
-                    .HasColumnName("language_name")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.MenuId)
                     .HasColumnName("menu_id")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.MenuName)
-                    .HasColumnName("menu_name")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.ModifiedBy)
                     .HasColumnName("modified_by")
@@ -265,11 +248,6 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                 entity.Property(e => e.VariableId)
                     .HasColumnName("variable_id")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.VariableName)
-                    .HasColumnName("variable_name")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Language)
                     .WithMany(p => p.LanguageTranslation)
@@ -365,23 +343,6 @@ namespace Css.Api.Admin.Repository.DatabaseContext
             modelBuilder.Entity<SchedulingCodeType>(entity =>
             {
                 entity.ToTable("scheduling_code_type");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Description).HasColumnName("description");
-
-                entity.Property(e => e.Value)
-                    .IsRequired()
-                    .HasColumnName("value")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<SchedulingStatus>(entity =>
-            {
-                entity.ToTable("scheduling_status");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")

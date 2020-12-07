@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -14,6 +15,7 @@ namespace Css.Api.Admin.Models.DTO.Response.SchedulingCode
         /// <summary>
         /// Gets or sets the reference identifier.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? RefId { get; set; }
 
         /// <summary>
@@ -39,6 +41,8 @@ namespace Css.Api.Admin.Models.DTO.Response.SchedulingCode
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? EmployeeId { get; set; }
 
         /// <summary>
@@ -54,11 +58,13 @@ namespace Css.Api.Admin.Models.DTO.Response.SchedulingCode
         /// <summary>
         /// Gets or sets the modified by.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ModifiedBy { get; set; }
 
         /// <summary>
         /// Gets or sets the modified date.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset? ModifiedDate { get; set; }
     }
 }

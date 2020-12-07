@@ -10,11 +10,11 @@ WORKDIR /src
 COPY ["Services/API.Admin/Css.Api.Admin/Css.Api.Admin.csproj", "Services/API.Admin/Css.Api.Admin/"]
 COPY ["Services/API.Admin/Css.Api.Admin.Business/Css.Api.Admin.Business.csproj", "Services/API.Admin/Css.Api.Admin.Business/"]
 COPY ["Services/API.Core/Css.Api.Core.Models/Css.Api.Core.Models.csproj", "Services/API.Core/Css.Api.Core.Models/"]
-COPY ["Services/API.Admin/Css.Api.Admin.Models/Css.Api.Admin.Models.csproj", "Services/API.Admin/Css.Api.Admin.Models/"]
 COPY ["Services/API.Admin/Css.Api.Admin.Repository/Css.Api.Admin.Repository.csproj", "Services/API.Admin/Css.Api.Admin.Repository/"]
 COPY ["Services/API.Core/Css.Api.Core.Utilities/Css.Api.Core.Utilities.csproj", "Services/API.Core/Css.Api.Core.Utilities/"]
-COPY ["Services/API.Core/Css.Api.Core.DataAccess/Css.Api.Core.DataAccess.csproj", "Services/API.Core/Css.Api.Core.DataAccess/"]
 COPY ["Services/API.Core/Css.Api.Core.ExceptionHandling/Css.Api.Core.ExceptionHandling.csproj", "Services/API.Core/Css.Api.Core.ExceptionHandling/"]
+COPY ["Services/API.Admin/Css.Api.Admin.Models/Css.Api.Admin.Models.csproj", "Services/API.Admin/Css.Api.Admin.Models/"]
+COPY ["Services/API.Core/Css.Api.Core.DataAccess/Css.Api.Core.DataAccess.csproj", "Services/API.Core/Css.Api.Core.DataAccess/"]
 RUN dotnet restore "Services/API.Admin/Css.Api.Admin/Css.Api.Admin.csproj"
 COPY . .
 WORKDIR "/src/Services/API.Admin/Css.Api.Admin"

@@ -27,10 +27,6 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
         {
         }.AsQueryable();
 
-        public IQueryable<SchedulingStatus> schedulingStatusesDB = new List<SchedulingStatus>()
-        {
-        }.AsQueryable();
-
         public IQueryable<SchedulingCodeType> schedulingCodeTypesDB = new List<SchedulingCodeType>()
         {
             new SchedulingCodeType { Id = 1, Description = "test1", Value = "A" },
@@ -50,26 +46,46 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
 
         public IQueryable<LanguageTranslation> languageTranslationsDB = new List<LanguageTranslation>()
         {
+            new LanguageTranslation{ Id = 1, LanguageId = 1, MenuId = 1, VariableId = 1, Description = "test1", Translation = "test1", IsDeleted = false},
+            new LanguageTranslation{ Id = 2, LanguageId = 2, MenuId = 2, VariableId = 2, Description = "test2", Translation = "test2", IsDeleted = false},
+            new LanguageTranslation{ Id = 3, LanguageId = 3, MenuId = 3, VariableId = 3, Description = "test3", Translation = "test3", IsDeleted = false}
         }.AsQueryable();
 
         public IQueryable<CssVariable> cssVariablesDB = new List<CssVariable>()
         {
+            new CssVariable{ Id = 1, Name = "variable1", Description = "variable1", MenuId = 1},
+            new CssVariable{ Id = 2, Name = "variable2", Description = "variable2", MenuId = 1},
+            new CssVariable{ Id = 3, Name = "variable3", Description = "variable3", MenuId = 2}
         }.AsQueryable();
 
         public IQueryable<CssMenu> cssMenusDB = new List<CssMenu>()
         {
+            new CssMenu{ Id = 1, Name = "menu1", Description = "menu1"},
+            new CssMenu{ Id = 2, Name = "menu2", Description = "menu2"},
+            new CssMenu{ Id = 3, Name = "menu3", Description = "menu3"}
         }.AsQueryable();
 
         public IQueryable<CssLanguage> cssLanguagesDB = new List<CssLanguage>()
         {
+            new CssLanguage{ Id = 1, Name = "lang1", Description = "lang1"},
+            new CssLanguage{ Id = 2, Name = "lang2", Description = "lang2"},
+            new CssLanguage{ Id = 3, Name = "lang3", Description = "lang3"}
         }.AsQueryable();
 
         public IQueryable<AgentCategory> agentCategorysDB = new List<AgentCategory>()
         {
+            new AgentCategory{ Id = 1, Name = "AgentCategory1", DataTypeId=1, DataTypeMinValue="Min", DataTypeMaxValue="Max", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new AgentCategory{ Id = 2, Name = "AgentCategory2", DataTypeId=1, DataTypeMinValue="Min", DataTypeMaxValue="Max", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new AgentCategory{ Id = 3, Name = "AgentCategory3", DataTypeId=1, DataTypeMinValue="Min", DataTypeMaxValue="Max", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new AgentCategory{ Id = 4, Name = "AgentCategory4", DataTypeId=1, DataTypeMinValue="Min", DataTypeMaxValue="Max", CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
+            new AgentCategory{ Id = 5, Name = "AgentCategory5", DataTypeId=1, DataTypeMinValue="Min", DataTypeMaxValue="Max", CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
         public IQueryable<AgentCategoryDataType> agentCategoryDataTypesDB = new List<AgentCategoryDataType>()
         {
+            new AgentCategoryDataType{ Id=1, Value="AlphaNumeric", Description="Describes the data type for AlphaNumeric" },
+            new AgentCategoryDataType{ Id=2, Value="Date", Description="Describes the data type for Date" },
+            new AgentCategoryDataType{ Id=3, Value="Numeric", Description="Describes the data type for Numeric" }
         }.AsQueryable();
 
         #region Methods
@@ -136,12 +152,6 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
             mockSchedulingCodeType.As<IQueryable<SchedulingCodeType>>().Setup(m => m.ElementType).Returns(schedulingCodeTypesDB.ElementType);
             mockSchedulingCodeType.As<IQueryable<SchedulingCodeType>>().Setup(m => m.GetEnumerator()).Returns(schedulingCodeTypesDB.GetEnumerator());
 
-            var mockSchedulingStatus = new Mock<DbSet<SchedulingStatus>>();
-            mockSchedulingStatus.As<IQueryable<SchedulingStatus>>().Setup(m => m.Provider).Returns(schedulingStatusesDB.Provider);
-            mockSchedulingStatus.As<IQueryable<SchedulingStatus>>().Setup(m => m.Expression).Returns(schedulingStatusesDB.Expression);
-            mockSchedulingStatus.As<IQueryable<SchedulingStatus>>().Setup(m => m.ElementType).Returns(schedulingStatusesDB.ElementType);
-            mockSchedulingStatus.As<IQueryable<SchedulingStatus>>().Setup(m => m.GetEnumerator()).Returns(schedulingStatusesDB.GetEnumerator());
-
             var mockSchedulingTypeCode = new Mock<DbSet<SchedulingTypeCode>>();
             mockSchedulingTypeCode.As<IQueryable<SchedulingTypeCode>>().Setup(m => m.Provider).Returns(schedulingTypeCodes.Provider);
             mockSchedulingTypeCode.As<IQueryable<SchedulingTypeCode>>().Setup(m => m.Expression).Returns(schedulingTypeCodes.Expression);
@@ -157,7 +167,6 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
             mockAdminContext.Setup(c => c.SchedulingCode).Returns(mockSchedulingCode.Object);
             mockAdminContext.Setup(c => c.SchedulingCodeIcon).Returns(mockSchedulingCodeIcon.Object);
             mockAdminContext.Setup(c => c.SchedulingCodeType).Returns(mockSchedulingCodeType.Object);
-            mockAdminContext.Setup(c => c.SchedulingStatus).Returns(mockSchedulingStatus.Object);
             mockAdminContext.Setup(c => c.SchedulingTypeCode).Returns(mockSchedulingTypeCode.Object);
 
             return mockAdminContext;

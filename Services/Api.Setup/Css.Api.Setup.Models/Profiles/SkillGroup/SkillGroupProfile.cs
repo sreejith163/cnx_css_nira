@@ -28,9 +28,7 @@ namespace Css.Api.Setup.Models.Profiles.SkillGroup
                 .ReverseMap();
 
             CreateMap<Domain.SkillGroup, SkillGroupDetailsDTO>()
-               .ForMember(x => x.ClientName, opt => opt.MapFrom(o => o.Client != null ? o.Client.Name : ""))
-               .ForMember(x => x.ClientLobGroupName, opt => opt.MapFrom(o => o.ClientLobGroup != null ? o.ClientLobGroup.Name : ""))
-               .ForMember(x => x.TimezoneLabel, opt => opt.MapFrom(o => o.Timezone != null ? o.Timezone.Name : ""))
+               .ForMember(x => x.TimezoneLabel, opt => opt.MapFrom(o => o.Timezone.Name ?? ""))
                .ReverseMap();
         }
     }

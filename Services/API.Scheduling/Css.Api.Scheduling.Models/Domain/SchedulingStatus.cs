@@ -1,16 +1,20 @@
-﻿using Css.Api.Core.Models.Domain;
-
-namespace Css.Api.Scheduling.Models.Domain
+﻿namespace Css.Api.Scheduling.Models.Domain
 {
-    [BsonCollection("scheduling_status")]
-    public class SchedulingStatus : BaseDocument
+    public enum SchedulingStatus
     {
         /// <summary>
-        /// Gets or sets the value.
+        /// The approved/
         /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
-        public string Value { get; set; }
+        Approved = 1,
+
+        /// <summary>
+        /// The pending schedule
+        /// </summary>
+        Pending_Schedule = 2,
+
+        /// <summary>
+        /// The rejected
+        /// </summary>
+        Rejected = 3
     }
 }

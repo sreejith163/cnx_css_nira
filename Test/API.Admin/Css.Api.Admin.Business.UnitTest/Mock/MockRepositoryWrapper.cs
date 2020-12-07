@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Css.Api.Admin.Repository
 {
-    public class MockRepositoryWrapper: IRepositoryWrapper
+    public class MockRepositoryWrapper : IRepositoryWrapper
     {
         /// <summary>
         /// Gets or sets the repository context.
@@ -41,7 +41,32 @@ namespace Css.Api.Admin.Repository
         /// Gets or sets the scheduling type codes repository.
         /// </summary>
         private ISchedulingTypeCodeRepository _schedulingTypeCodesRepository { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the agent category repository.
+        /// </summary>
+        private IAgentCategoryRepository _agentCategoryRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CSS language repository.
+        /// </summary>
+        public ICssLanguageRepository _cssLanguageRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CSS menu repository.
+        /// </summary>
+        public ICssMenuRepository _cssMenuRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CSS variable repository.
+        /// </summary>
+        public ICssVariableRepository _cssVariableRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the language translation repository.
+        /// </summary>
+        public ILanguageTranslationRepository _languageTranslationRepository { get; set; }
+
         /// <summary>
         /// Gets the scheduling codes.
         /// </summary>
@@ -131,6 +156,121 @@ namespace Css.Api.Admin.Repository
                     _schedulingTypeCodesRepository = new SchedulingTypeCodeRepository(_repositoryContext.Object);
                 }
                 return _schedulingTypeCodesRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the agent categories.
+        /// </summary>
+        public IAgentCategoryRepository AgentCategories
+        {
+            get
+            {
+                if (_agentCategoryRepository == null)
+                {
+                    var mockAgentCategory = new Mock<DbSet<AgentCategory>>();
+                    mockAgentCategory.As<IQueryable<AgentCategory>>().Setup(m => m.Provider).Returns(new MockDataContext().agentCategorysDB.Provider);
+                    mockAgentCategory.As<IQueryable<AgentCategory>>().Setup(m => m.Expression).Returns(new MockDataContext().agentCategorysDB.Expression);
+                    mockAgentCategory.As<IQueryable<AgentCategory>>().Setup(m => m.ElementType).Returns(new MockDataContext().agentCategorysDB.ElementType);
+                    mockAgentCategory.As<IQueryable<AgentCategory>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().agentCategorysDB.GetEnumerator());
+
+                    _repositoryContext.Setup(x => x.Set<AgentCategory>()).Returns(mockAgentCategory.Object);
+
+                    _agentCategoryRepository = new AgentCategoryRepository(_repositoryContext.Object, _mapper);
+                }
+                return _agentCategoryRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the language.
+        /// </summary>
+        public ICssLanguageRepository CssLanguage
+        {
+            get
+            {
+                if (_cssLanguageRepository == null)
+                {
+                    var mockCssLanguage = new Mock<DbSet<CssLanguage>>();
+                    mockCssLanguage.As<IQueryable<CssLanguage>>().Setup(m => m.Provider).Returns(new MockDataContext().cssLanguagesDB.Provider);
+                    mockCssLanguage.As<IQueryable<CssLanguage>>().Setup(m => m.Expression).Returns(new MockDataContext().cssLanguagesDB.Expression);
+                    mockCssLanguage.As<IQueryable<CssLanguage>>().Setup(m => m.ElementType).Returns(new MockDataContext().cssLanguagesDB.ElementType);
+                    mockCssLanguage.As<IQueryable<CssLanguage>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().cssLanguagesDB.GetEnumerator());
+
+                    _repositoryContext.Setup(x => x.Set<CssLanguage>()).Returns(mockCssLanguage.Object);
+
+                    _cssLanguageRepository = new CssLanguageRepository(_repositoryContext.Object, _mapper);
+                }
+                return _cssLanguageRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the CSS menu.
+        /// </summary>
+        public ICssMenuRepository CssMenu
+        {
+            get
+            {
+                if (_cssMenuRepository == null)
+                {
+                    var mockCssMenu = new Mock<DbSet<CssMenu>>();
+                    mockCssMenu.As<IQueryable<CssMenu>>().Setup(m => m.Provider).Returns(new MockDataContext().cssMenusDB.Provider);
+                    mockCssMenu.As<IQueryable<CssMenu>>().Setup(m => m.Expression).Returns(new MockDataContext().cssMenusDB.Expression);
+                    mockCssMenu.As<IQueryable<CssMenu>>().Setup(m => m.ElementType).Returns(new MockDataContext().cssMenusDB.ElementType);
+                    mockCssMenu.As<IQueryable<CssMenu>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().cssMenusDB.GetEnumerator());
+
+                    _repositoryContext.Setup(x => x.Set<CssMenu>()).Returns(mockCssMenu.Object);
+
+                    _cssMenuRepository = new CssMenuRepository(_repositoryContext.Object, _mapper);
+                }
+                return _cssMenuRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the CSS variable.
+        /// </summary>
+        public ICssVariableRepository CssVariable
+        {
+            get
+            {
+                if (_cssVariableRepository == null)
+                {
+                    var mockCssVariable = new Mock<DbSet<CssVariable>>();
+                    mockCssVariable.As<IQueryable<CssVariable>>().Setup(m => m.Provider).Returns(new MockDataContext().cssVariablesDB.Provider);
+                    mockCssVariable.As<IQueryable<CssVariable>>().Setup(m => m.Expression).Returns(new MockDataContext().cssVariablesDB.Expression);
+                    mockCssVariable.As<IQueryable<CssVariable>>().Setup(m => m.ElementType).Returns(new MockDataContext().cssVariablesDB.ElementType);
+                    mockCssVariable.As<IQueryable<CssVariable>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().cssVariablesDB.GetEnumerator());
+
+                    _repositoryContext.Setup(x => x.Set<CssVariable>()).Returns(mockCssVariable.Object);
+
+                    _cssVariableRepository = new CssVariableRepository(_repositoryContext.Object, _mapper);
+                }
+                return _cssVariableRepository;
+            }
+        }
+
+        /// <summary>
+        /// Gets the language translation.
+        /// </summary>
+        public ILanguageTranslationRepository LanguageTranslation
+        {
+            get
+            {
+                if (_languageTranslationRepository == null)
+                {
+                    var mockLanguageTranslation = new Mock<DbSet<LanguageTranslation>>();
+                    mockLanguageTranslation.As<IQueryable<LanguageTranslation>>().Setup(m => m.Provider).Returns(new MockDataContext().languageTranslationsDB.Provider);
+                    mockLanguageTranslation.As<IQueryable<LanguageTranslation>>().Setup(m => m.Expression).Returns(new MockDataContext().languageTranslationsDB.Expression);
+                    mockLanguageTranslation.As<IQueryable<LanguageTranslation>>().Setup(m => m.ElementType).Returns(new MockDataContext().languageTranslationsDB.ElementType);
+                    mockLanguageTranslation.As<IQueryable<LanguageTranslation>>().Setup(m => m.GetEnumerator()).Returns(new MockDataContext().languageTranslationsDB.GetEnumerator());
+
+                    _repositoryContext.Setup(x => x.Set<LanguageTranslation>()).Returns(mockLanguageTranslation.Object);
+
+                    _languageTranslationRepository = new LanguageTranslationRepository(_repositoryContext.Object, _mapper);
+                }
+                return _languageTranslationRepository;
             }
         }
 

@@ -28,7 +28,7 @@ namespace Css.Api.Setup.Business
         /// <summary>
         /// The HTTP context accessor
         /// </summary>
-        private IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>
         /// The mapper
@@ -170,6 +170,12 @@ namespace Css.Api.Setup.Business
             if (skillTag == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var hasDependency = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupsCountBySkillTagId(skillTagIdDetails) > 0;
+            if (hasDependency)
+            {
+                return new CSSResponse($"The Skill Group {skillTag.Name} has dependency with other modules", HttpStatusCode.FailedDependency);
             }
 
             skillTag.IsDeleted = true;

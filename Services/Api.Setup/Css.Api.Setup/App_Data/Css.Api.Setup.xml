@@ -359,6 +359,26 @@
             <param name="app">The application.</param>
             <param name="env">The env.</param>
         </member>
+        <member name="T:Css.Api.Setup.Validators.AgentSchedulingGroup.AddAgentSchedulingGroupValidator">
+            <summary>
+            Validator for handling the validation of add SchedulingGroup object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Setup.Validators.AgentSchedulingGroup.AddAgentSchedulingGroupValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Setup.Validators.AgentSchedulingGroup.AddAgentSchedulingGroupValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Setup.Validators.AgentSchedulingGroup.UpdateAgentSchedulingGroupValidator">
+            <summary>
+            Validator for handling the validation of update AgentSchedulingGroup object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Setup.Validators.AgentSchedulingGroup.UpdateAgentSchedulingGroupValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Setup.Validators.AgentSchedulingGroup.UpdateAgentSchedulingGroupValidator"/> class.
+            </summary>
+        </member>
         <member name="T:Css.Api.Setup.Validators.ClientLOBGroup.AddClientLOBGroupValidator">
             <summary>Validator for handling the validation of add client lob group object</summary>
         </member>
@@ -390,6 +410,34 @@
             <summary>
             Initializes a new instance of the <see cref="T:Css.Api.Setup.Validators.Client.UpdateClientValidator"/> class.
             </summary>
+        </member>
+        <member name="T:Css.Api.Setup.Validators.OperationHour.OperationHourValidator`1">
+            <summary>
+            Custom validator for operation hours time range
+            </summary>
+            <typeparam name="T"></typeparam>
+            <seealso cref="T:FluentValidation.Validators.PropertyValidator" />
+        </member>
+        <member name="M:Css.Api.Setup.Validators.OperationHour.OperationHourValidator`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Setup.Validators.OperationHour.OperationHourValidator`1" /> class.
+            </summary>
+        </member>
+        <member name="M:Css.Api.Setup.Validators.OperationHour.OperationHourValidator`1.Validate(FluentValidation.Validators.PropertyValidatorContext)">
+            <summary>
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+            <inheritdoc />
+        </member>
+        <member name="M:Css.Api.Setup.Validators.OperationHour.OperationHourValidator`1.IsValid(FluentValidation.Validators.PropertyValidatorContext)">
+            <summary>
+            Returns true if ... is valid.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>
+              <c>true</c> if the specified context is valid; otherwise, <c>false</c>.
+            </returns>
         </member>
         <member name="T:Css.Api.Setup.Validators.SkillGroup.AddSkillGroupValidator">
             <summary>

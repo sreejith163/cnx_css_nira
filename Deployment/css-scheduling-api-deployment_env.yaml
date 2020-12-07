@@ -21,9 +21,9 @@ spec:
               protocol: TCP
           env:
             - name: "ASPNETCORE_ENVIRONMENT"
-              value: "Staging"
-            - name: "TestUrl"
-              value: "true"
+              value: "Development"
+            - name: "ConnectionStrings__Database"
+              value: "server=10.87.222.42;user id=cssuser;password=cssuser_DEV;persistsecurityinfo=True;database=css_dev_scheduling"
 ---
 kind: Service
 apiVersion: v1
@@ -33,7 +33,7 @@ spec:
   ports:
     - name: client
       protocol: TCP
-      port: 4203
+      port: 4205
       targetPort: 80
   selector:
     app: cnx-css-api-scheduling

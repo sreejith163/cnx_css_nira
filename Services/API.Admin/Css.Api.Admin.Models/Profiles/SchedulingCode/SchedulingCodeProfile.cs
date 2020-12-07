@@ -32,8 +32,6 @@ namespace Css.Api.Admin.Models.Profiles.SchedulingCode
                 .ReverseMap();
 
             CreateMap<SchedulingCodeIcon, KeyValue>()
-                .ForMember(x => x.Id, opt => opt.MapFrom(o => o.Id))
-                .ForMember(x => x.Value, opt => opt.MapFrom(o => o.Value))
                 .ReverseMap();
 
             CreateMap<SchedulingTypeCode, KeyValue>()
@@ -42,8 +40,6 @@ namespace Css.Api.Admin.Models.Profiles.SchedulingCode
                .ReverseMap();
 
             CreateMap<SchedulingCodeType, KeyValue>()
-                .ForMember(x => x.Id, opt => opt.MapFrom(o => o.Id))
-                .ForMember(x => x.Value, opt => opt.MapFrom(o => o.Value))
                 .ReverseMap();
         }
     }
