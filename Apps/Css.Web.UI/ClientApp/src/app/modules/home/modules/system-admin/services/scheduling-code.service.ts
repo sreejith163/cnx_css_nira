@@ -24,8 +24,10 @@ export class SchedulingCodeService extends HttpBaseService {
   getSchedulingCodes(schedulingCodeQueryParams: QueryStringParameters) {
     const url = `${this.baseURL}/schedulingCodes`;
 
-    return this.http.get<SchedulingCode>(url, { params: this.convertToHttpParam(schedulingCodeQueryParams), observe: 'response' })
-      .pipe(catchError(this.handleError));
+    return this.http.get<SchedulingCode>(url, {
+      params: this.convertToHttpParam(schedulingCodeQueryParams),
+      observe: 'response'
+    }).pipe(catchError(this.handleError));
   }
 
   getSchedulingCode(schedulingCodeId: number) {

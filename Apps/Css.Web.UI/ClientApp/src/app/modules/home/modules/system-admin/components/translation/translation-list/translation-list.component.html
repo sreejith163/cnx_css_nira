@@ -1,0 +1,141 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-md-12">
+      <h2>{{ 'Translation' | translation: 'lbl_page_title' : translationValues }}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a>System Admin</a></li>
+        <li class="breadcrumb-item active"><b>Translations List</b></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="row m-l-r-10">
+    <div class="col-md-4 padding-bottom-5">
+      <input type="text" class="form-control" placeholder="Enter a text to search" [(ngModel)]="searchKeyword"
+        [maxLength]="maxLength" />
+    </div>
+    <div class="col-md-2 padding-bottom-5">
+      <button class="form-control" id="btn_search" (click)="search()">
+        <i class="fa fa-search" aria-hidden="true"></i>
+        {{ 'Search' | translation: 'btn_search' : translationValues }}
+      </button>
+    </div>
+    <div class="col-md-6 padding-bottom-5">
+      <button type="button" class="btn btn-primary float-r" (click)="addTranslation()" id="btn_add">
+        <i class="fa fa-plus padding-5" aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}
+      </button>
+    </div>
+  </div>
+
+  <div class="row m-r-15">
+    <div class="col-md-12 mt-2 table-responsive">
+      <div class="scrollable-table">
+        <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+          <thead>
+            <tr>
+              <th>{{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}
+              </th>
+              <th class="sortable-field" (click)="sort('Language.Name', sortBy)">
+                {{ 'Language' | translation: 'lbl_table_heading_language' : translationValues }}
+                <i *ngIf="orderBy !== 'Language.Name'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'Language.Name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('Menu.Name', sortBy)">
+                {{ 'Menu' | translation: 'lbl_table_heading_menu' : translationValues }}
+                <i *ngIf="orderBy !== 'Menu.Name'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'Menu.Name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('Variable.Name', sortBy)">
+                {{ 'Variable' | translation: 'lbl_table_heading_variable' : translationValues }}
+                <i *ngIf="orderBy !== 'Variable.Name'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'Variable.Name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('description', sortBy)">
+                {{ 'Description' | translation: 'lbl_table_heading_description' : translationValues }}
+                <i *ngIf="orderBy !== 'description'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'description'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('translation', sortBy)">
+                {{ 'Translation' | translation: 'lbl_table_heading_translation' : translationValues }}
+                <i *ngIf="orderBy !== 'translation'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'translation'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('createdBy', sortBy)">
+                {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
+                <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              <th class="sortable-field" (click)="sort('createdDate', sortBy)">
+                {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
+                <i *ngIf="orderBy !== 'createdDate'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
+                {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
+                <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              <th class="sortable-field" (click)="sort('modifiedDate', sortBy)">
+                {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
+                <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+            </tr>
+          </thead>
+          <tbody>
+            <ngx-spinner [name]="spinner"></ngx-spinner>
+            <tr *ngFor="let el of translations;let i = index">
+              <td>
+                <i class="fa fa-edit padding-5 pointer" (click)="editTranslation(el.id)"></i>
+                <i class="fa fa-trash padding-5 pointer" (click)="deleteTranslation(el.id)"></i>
+              </td>
+              <td>{{ el.languageName }}</td>
+              <td>{{ el.menuName }}</td>
+              <td>{{ el.variableName }}</td>
+              <td>{{ el.description }}</td>
+              <td>{{ el.translation }}</td>
+              <td>{{ el.createdBy }}</td>
+              <td>{{ el.createdDate | date: 'yyyy-MM-dd' }}</td>
+              <td>{{ el.modifiedBy }}</td>
+              <td>{{ el.modifiedDate | date: 'yyyy-MM-dd' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end mt-3">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination p-0 float-right">
+          <ngb-pagination class="p-r-5" [collectionSize]="totalRecord" (pageChange)="changePage($event)"
+            [pageSize]="pageSize" [maxSize]="3" [rotate]="true" [(page)]="currentPage" [boundaryLinks]="true">
+          </ngb-pagination>
+          <select class="form-control" (change)="changePageSize($event.target.value)">
+            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+              {{ x.text }}
+            </option>
+          </select>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

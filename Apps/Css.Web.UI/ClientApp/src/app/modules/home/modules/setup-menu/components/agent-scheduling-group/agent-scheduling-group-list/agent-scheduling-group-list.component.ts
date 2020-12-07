@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Translation } from 'src/app/shared/models/translation.model';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { SubscriptionLike as ISubscription } from 'rxjs';
@@ -17,6 +16,10 @@ import { AgentSchedulingGroupDetails } from '../../../models/agent-scheduling-gr
 import { AgentSchedulingGroupService } from '../../../services/agent-scheduling-group.service';
 import { AddEditAgentSchedulingGroupComponent } from '../add-edit-agent-scheduling-group/add-edit-agent-scheduling-group.component';
 import { AgentSchedulingGroupQueryParams } from '../../../models/agent-scheduling-group-query-params.model';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 
 @Component({
   selector: 'app-agent-scheduling-group-list',
@@ -40,11 +43,10 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   characterSplice = 25;
   paginationSize = Constants.paginationSize;
-  translationValues = Constants.agentSchedulingGroupTranslationValues;
   maxLength = Constants.DefaultTextMaxLength;
   orderBy = 'createdDate';
   sortBy = 'desc';
-  spinner = 'agentSchedulingGroup';
+  spinner = 'agentSchedulingGroups';
 
   clientId: number;
   clientLobGroupId: number;
@@ -58,7 +60,10 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   headerPaginationValues: HeaderPagination;
   agentSchedulingGroup: AgentSchedulingGroupResponse;
   agentSchedulingGroups: AgentSchedulingGroupDetails[] = [];
+  translationValues: TranslationDetails[] = [];
 
+  languageSelectionSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   getAgentSchedulingGroupsSubscription: ISubscription;
   getAgentSchedulingGroupSubscription: ISubscription;
   deleteAgentSchedulingGroupSubscription: ISubscription;
@@ -68,10 +73,14 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
     private agentSchedulingGroupSevice: AgentSchedulingGroupService,
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
+    private translationService: LanguageTranslationService,
+    private genericStateManagerService: GenericStateManagerService
   ) { }
 
   ngOnInit() {
+    this.loadTranslationValues();
     this.loadAgentSchedulingGroups();
+    this.subscribeToUserLanguage();
   }
 
   ngOnDestroy() {
@@ -167,7 +176,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   }
 
   getOpenType(openTypeId) {
-    const agentSchedulingGroup = Constants.operationHours.find(x => x.id === openTypeId);
+    const agentSchedulingGroup = Constants.OperationHourTypes.find(x => x.id === openTypeId);
     return agentSchedulingGroup.open;
   }
 
@@ -196,7 +205,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private setComponentValues(operation: ComponentOperation, translationValues: Array<Translation>) {
+  private setComponentValues(operation: ComponentOperation, translationValues: Array<TranslationDetails>) {
     this.modalRef.componentInstance.operation = operation;
     this.modalRef.componentInstance.translationValues = translationValues;
   }
@@ -256,5 +265,33 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.getAgentSchedulingGroupSubscription);
+  }
+
+  private loadTranslationValues() {
+    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
+    const menuId = CssMenu.AgentSchedulingGroup;
+
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getTranslationValuesSubscription);
+  }
+
+  private subscribeToUserLanguage() {
+    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (languageId: number) => {
+        if (languageId) {
+          this.loadTranslationValues();
+        }
+      }
+    );
+
+    this.subscriptions.push(this.languageSelectionSubscription);
   }
 }

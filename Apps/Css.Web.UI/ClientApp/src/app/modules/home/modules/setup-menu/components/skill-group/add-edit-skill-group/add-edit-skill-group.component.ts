@@ -14,7 +14,6 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { TimeZone } from 'src/app/shared/models/time-zone.model';
-import { Translation } from 'src/app/shared/models/translation.model';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { SubscriptionLike as ISubscription } from 'rxjs';
@@ -29,6 +28,7 @@ import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-
 import { UpdateSkillGroup } from '../../../models/update-skill-group.model';
 import { GenericDataService } from '../../../services/generic-data.service';
 import { SkillGroupResponse } from '../../../models/skill-group-response.model';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 @Component({
   selector: 'app-add-edit-skill-group',
@@ -39,7 +39,7 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
 
   spinner = 'skillGroup';
   maxLength = Constants.DefaultTextMaxLength;
-  openTypes = Constants.operationHours;
+  openTypes = Constants.OperationHourTypes;
 
   formSubmitted: boolean;
   clientId: number;
@@ -60,7 +60,7 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
 
   @Input() operation: ComponentOperation;
   @Input() skillGroupId: number;
-  @Input() translationValues: Translation[];
+  @Input() translationValues: TranslationDetails[];
 
   constructor(
     private formBuilder: FormBuilder,

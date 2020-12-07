@@ -25,9 +25,10 @@ export class SkillTagService extends HttpBaseService {
   getSkillTags(skillTagsQueryParams: SkillTagQueryParams) {
     const url = `${this.baseURL}/skillTags`;
 
-    return this.http.get<SkillTagDetails>(url,
-      { params: this.convertToHttpParam(skillTagsQueryParams), observe: 'response' })
-      .pipe(catchError(this.handleError));
+    return this.http.get<SkillTagDetails>(url, {
+      params: this.convertToHttpParam(skillTagsQueryParams),
+      observe: 'response'
+    }).pipe(catchError(this.handleError));
   }
 
   getSkillTag(skillTagId: number) {

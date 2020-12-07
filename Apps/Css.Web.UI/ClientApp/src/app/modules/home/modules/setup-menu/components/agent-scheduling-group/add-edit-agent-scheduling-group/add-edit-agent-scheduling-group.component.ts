@@ -5,7 +5,6 @@ import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-boot
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-import { Translation } from 'src/app/shared/models/translation.model';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
@@ -19,6 +18,7 @@ import { AddAgentSchedulingGroup } from '../../../models/add-agent-scheduling-gr
 import { UpdateAgentSchedulingGroup } from '../../../models/update-agent-scheduling-group.model';
 import { TimezoneService } from 'src/app/shared/services/timezone.service';
 import { TimeZone } from 'src/app/shared/models/time-zone.model';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 @Component({
   selector: 'app-add-edit-agent-scheduling-group',
@@ -29,7 +29,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
 
   spinner = 'agentSchedulingGroup';
   maxLength = Constants.DefaultTextMaxLength;
-  openTypes = Constants.operationHours;
+  openTypes = Constants.OperationHourTypes;
 
   formSubmitted: boolean;
   clientId: number;
@@ -51,7 +51,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
 
   @Input() operation: ComponentOperation;
   @Input() agentSchedulingGroupId: number;
-  @Input() translationValues: Translation[];
+  @Input() translationValues: TranslationDetails[];
 
   constructor(
     private formBuilder: FormBuilder,

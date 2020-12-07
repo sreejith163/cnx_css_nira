@@ -29,8 +29,7 @@ export class SkillGroupService extends HttpBaseService {
     return this.http.get<SkillGroupDetails>(url, {
       params: this.convertToHttpParam(skillGroupQueryParameters),
       observe: 'response'
-    })
-      .pipe(catchError(this.handleError));
+    }).pipe(catchError(this.handleError));
   }
 
   getSkillGroup(skillGroupId: number) {

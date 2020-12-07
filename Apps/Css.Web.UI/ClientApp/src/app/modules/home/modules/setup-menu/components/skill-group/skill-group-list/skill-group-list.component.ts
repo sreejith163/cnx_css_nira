@@ -3,23 +3,26 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { WeekDay } from '@angular/common';
 
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
-
-import { Translation } from 'src/app/shared/models/translation.model';
-import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
-import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-
-import { Constants } from 'src/app/shared/util/constants.util';
-import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { WeekDay } from '@angular/common';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { SkillGroupDetails } from '../../../models/skill-group-details.model';
-import { SkillGroupService } from '../../../services/skill-group.service';
-import { SkillGroupQueryParameters } from '../../../models/skill-group-query-parameters.model';
 import { AddEditSkillGroupComponent } from '../add-edit-skill-group/add-edit-skill-group.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+
+import { SkillGroupService } from '../../../services/skill-group.service';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
+
+import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
+import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
+import { Constants } from 'src/app/shared/util/constants.util';
+import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+import { SkillGroupDetails } from '../../../models/skill-group-details.model';
+import { SkillGroupQueryParameters } from '../../../models/skill-group-query-parameters.model';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 @Component({
   selector: 'app-skill-group-list',
@@ -56,9 +59,11 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
 
   modalRef: NgbModalRef;
   headerPaginationValues: HeaderPagination;
-  translationValues = Constants.skillGroupsTranslationValues;
+  translationValues: TranslationDetails[] = [];
   skillGroupDetails: SkillGroupDetails[] = [];
 
+  languageSelectionSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   getAllSkillGroupDetailsSubscription: ISubscription;
   getSkillGroupSubscription: ISubscription;
   deleteSkillGroupSubscription: ISubscription;
@@ -67,11 +72,15 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
-    private skillGroupService: SkillGroupService
+    private skillGroupService: SkillGroupService,
+    private translationService: LanguageTranslationService,
+    private genericStateManagerService: GenericStateManagerService
   ) { }
 
   ngOnInit(): void {
+    this.loadTranslationValues();
     this.loadSkillGroups();
+    this.subscribeToUserLanguage();
   }
 
   ngOnDestroy() {
@@ -165,7 +174,7 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
   }
 
   getOpenType(openTypeId) {
-    const skillTag = Constants.operationHours.find(x => x.id === openTypeId);
+    const skillTag = Constants.OperationHourTypes.find(x => x.id === openTypeId);
     return skillTag.open;
   }
 
@@ -184,7 +193,7 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private setComponentValues(operation: ComponentOperation, translationValues: Array<Translation>) {
+  private setComponentValues(operation: ComponentOperation, translationValues: Array<TranslationDetails>) {
     this.modalRef.componentInstance.operation = operation;
     this.modalRef.componentInstance.translationValues = translationValues;
   }
@@ -224,5 +233,33 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.getAllSkillGroupDetailsSubscription);
+  }
+
+  private loadTranslationValues() {
+    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
+    const menuId = CssMenu.SkillGroups;
+
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getTranslationValuesSubscription);
+  }
+
+  private subscribeToUserLanguage() {
+    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (languageId: number) => {
+        if (languageId) {
+          this.loadTranslationValues();
+        }
+      }
+    );
+
+    this.subscriptions.push(this.languageSelectionSubscription);
   }
 }

@@ -1,0 +1,188 @@
+<div class="modal-dialog w-1000 add-edit-modal" role="document">
+  <div class="modal-content">
+    <ngx-spinner [name]="spinner"></ngx-spinner>
+    <div class="modal-header header-color">
+      <h6 class="modal-title w-100 font-weight-bold header">
+        <p>{{getTitle()}} {{ 'Agent Category' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
+      </h6>
+      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body mx-3">
+      <form [formGroup]="agentCategoryForm">
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Description' | translation: 'lbl_add_edit_description' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" class="form-control"
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('descriptionOrName')}"
+                formControlName="descriptionOrName" placeholder="Description or Name" [maxLength]="maxLength" />
+              <div *ngIf="hasFormControlValidationError('descriptionOrName')" class="valid-error">
+                {{ 'Description is required' | translation: 'lbl_add_edit_description_required_validation_message' :
+                translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label> {{ 'Data Type' | translation: 'lbl_add_edit_data_type' : translationValues }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <select class="form-control" [ngClass]="{'valid-border-error': hasFormControlValidationError('dataType')}"
+                formControlName="dataType">
+                <option value="">
+                  {{ 'Select a data type' | translation: 'drp_default_Select_data_type' : translationValues }}</option>
+                <option *ngFor="let x of dataTypes" [value]="x">{{ dataType[x] }}</option>
+              </select>
+              <div *ngIf="hasFormControlValidationError('dataType')" class="valid-error">
+                {{ 'Data type is required' | translation: 'lbl_add_edit_data_type_required_validation_message' :
+                translationValues }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-container [formGroup]="agentCategoryForm.controls.range" *ngIf="agentCategoryForm.controls.range">
+          <div class="col-md-12 m-t-20">
+            <div class="row">
+              <div class="col-md-4">
+                <label> {{ 'Minimum' | translation: 'lbl_add_edit_min_value' : translationValues }}
+                  <span class="required">*</span>
+                </label>
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control" (paste)="canPasteValue()"
+                  [ngClass]="{'valid-border-error': rangeRequiredError('range', 'minRange')}" formControlName="minRange"
+                  maxlength="40" (keypress)="checkValidity($event)" />
+                <div *ngIf="rangeRequiredError('range', 'minRange')" class="valid-error">
+                  {{ 'Minimum is required' | translation: 'lbl_add_edit_min_value_required_validation_message' :
+                  translationValues }}
+                </div>
+                <div *ngIf="formSubmitted && agentCategoryForm.get('range')?.errors?.rangeError" class="valid-error">
+                  {{ 'Minimum value should be lesser than Maximum value' | translation:
+                  'lbl_add_edit_max_value_less_than_validation_message' : translationValues }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 m-t-20">
+            <div class="row">
+              <div class="col-md-4">
+                <label> {{ 'Maximum' | translation: 'lbl_add_edit_max_value' : translationValues }}
+                  <span class="required">*</span>
+                </label>
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control" (paste)="canPasteValue()"
+                  [ngClass]="{'valid-border-error': rangeRequiredError('range', 'maxRange')}" formControlName="maxRange"
+                  maxlength="40" (keypress)="checkValidity($event)" />
+                <div *ngIf="rangeRequiredError('range', 'maxRange')" class="valid-error">
+                  {{ 'Maximum is required' | translation: 'lbl_add_edit_max_value_required_validation_message' :
+                  translationValues }}
+                </div>
+                <div *ngIf="formSubmitted && agentCategoryForm.get('range')?.errors?.rangeError" class="valid-error">
+                  {{ 'Maximum value should be greater than Minimum value' | translation:
+                  'lbl_add_edit_min_value_greater_than_validation_message' : translationValues }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container [formGroup]="agentCategoryForm.controls.dateRange" *ngIf="agentCategoryForm.controls.dateRange">
+          <div class="col-md-12 m-t-20">
+            <div class="row">
+              <div class="col-md-4">
+                <label> {{ 'Start Date' | translation: 'lbl_add_edit_start_date' : translationValues }}
+                  <span class="required">*</span>
+                </label>
+              </div>
+              <div class="col-md-8">
+                <div class="input-group">
+                  <input type="text" class="form-control" formControlName="dateMinRange" placeholder="Select Start Date"
+                    [readonly]="true" ngbDatepicker [footerTemplate]="startDateTemplate"
+                    [minDate]="{year: 1990, month: 1, day: 1}" #startDate="ngbDatepicker" />
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar"
+                      [ngClass]="{'valid-border-error': rangeRequiredError('dateRange', 'dateMinRange')}"
+                      (click)="startDate.toggle()"></button>
+                  </div>
+                  <ng-template #startDateTemplate>
+                    <button class="btn btn-primary btn-sm m-2 float-left"
+                      (click)="setStartDateAsToday(); startDate.close()">Today</button>
+                    <button class="btn btn-secondary btn-sm m-2 float-right" (click)="startDate.close()">Close</button>
+                  </ng-template>
+                </div>
+                <div *ngIf="rangeRequiredError('dateRange', 'dateMinRange')" class="valid-error">
+                  {{ 'Start Date is required' | translation: 'lbl_add_edit_start_date_required_validation_message' :
+                  translationValues }}
+                </div>
+                <div *ngIf="agentCategoryForm.get('dateRange')?.errors?.dateRangeError" class="valid-error">
+                  {{ 'Start Date should be smaller than end Date' | translation:
+                  'lbl_add_edit_start_date_smaller_than_validation_message' : translationValues }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 m-t-20">
+            <div class="row">
+              <div class="col-md-4">
+                <label> {{ 'End Date' | translation: 'lbl_add_edit_end_date' : translationValues }}
+                  <span class="required">*</span>
+                </label>
+              </div>
+              <div class="col-md-8">
+                <div class="input-group">
+                  <input type="text" class="form-control" [readonly]="true"
+                    [ngClass]="{'valid-border-error': rangeRequiredError('dateRange', 'dateMaxRange')}"
+                    formControlName="dateMaxRange" placeholder="Select End Date" ngbDatepicker
+                    [footerTemplate]="endDateTemplate" [minDate]="{year: 1990, month: 1, day: 1}"
+                    #endDate="ngbDatepicker" />
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar"
+                      [ngClass]="{'valid-border-error': rangeRequiredError('dateRange', 'dateMaxRange')}"
+                      (click)="endDate.toggle()"></button>
+                  </div>
+                  <ng-template #endDateTemplate>
+                    <button class="btn btn-primary btn-sm m-2 float-left"
+                      (click)="setEndDateAsToday(); endDate.close()">Today</button>
+                    <button class="btn btn-secondary btn-sm m-2 float-right" (click)="endDate.close()">Close</button>
+                  </ng-template>
+                </div>
+                <div *ngIf="rangeRequiredError('dateRange', 'dateMaxRange')" class="valid-error">
+                  {{ 'End Date is required' | translation: 'lbl_add_edit_end_date_required_validation_message' :
+                  translationValues }}
+                </div>
+                <div *ngIf="agentCategoryForm.get('dateRange')?.errors?.dateRangeError" class="valid-error">
+                  {{ 'End Date should be greater than Start Date' | translation:
+                  'lbl_add_edit_end_date_greater_than_validation_message' : translationValues }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </form>
+    </div>
+
+    <div class="modal-footer d-flex justify-content-center header-color">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-10"></div>
+          <div class="col-md-2">
+            <button class="btn btn-primary float-r" data-dismiss="modal" (click)="save()" id="btn_save">
+              <i class="fa fa-save padding-5"></i>{{ 'Save' | translation: 'btn_save' : translationValues }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

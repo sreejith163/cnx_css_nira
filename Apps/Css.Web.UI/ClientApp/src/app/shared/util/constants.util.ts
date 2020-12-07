@@ -1,5 +1,5 @@
 import { SchedulingInterval } from 'src/app/modules/home/modules/scheduling-menu/models/scheduling-interval.model';
-import { OperationHours } from 'src/app/modules/home/modules/setup-menu/models/operation-hours.model';
+import { OperationHourType } from 'src/app/modules/home/modules/setup-menu/models/operation-hour-type.model';
 import { UserRole } from 'src/app/modules/home/modules/system-admin/models/user-role.model';
 import { KeyValue } from '../models/key-value.model';
 import { PaginationSize } from '../models/pagination-size.model';
@@ -895,11 +895,33 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
+      variableId: 'lbl_add_edit_description_maxlength_validation_message',
+      menu: 'Translation',
+      description: 'text',
+      language: 'English',
+      translation: 'Description cannot exceed 50 characters',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
       variableId: 'lbl_add_edit_translation_required_validation_message',
       menu: 'Translation',
       description: 'text',
       language: 'English',
       translation: 'Translation is required',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
+    {
+      variableId: 'lbl_add_edit_translation_maxlength_validation_message',
+      menu: 'Translation',
+      description: 'text',
+      language: 'English',
+      translation: 'Translation cannot exceed 50 characters',
       createdBy: 'me',
       createdDate: '2020-10-04',
       modifiedBy: 'me',
@@ -4092,7 +4114,7 @@ export class Constants {
     }
   ];
 
-  public static readonly operationHours: OperationHours[] = [
+  public static readonly OperationHourTypes: OperationHourType[] = [
     {
       id: 1,
       open: 'Open All Day'

@@ -5,7 +5,6 @@ import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-boot
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-import { Translation } from 'src/app/shared/models/translation.model';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
@@ -17,6 +16,7 @@ import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { UpdateSkillTag } from '../../../models/update-skill-tag.model';
 import { SkillTagResponse } from '../../../models/skill-tag-response.model';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 @Component({
   selector: 'app-add-update-skill-tag',
@@ -27,7 +27,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
 
   spinner = 'skillTag';
   maxLength = Constants.DefaultTextMaxLength;
-  openTypes = Constants.operationHours;
+  openTypes = Constants.OperationHourTypes;
 
   formSubmitted: boolean;
   clientId: number;
@@ -46,7 +46,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
 
   @Input() operation: ComponentOperation;
   @Input() skillTagId: number;
-  @Input() translationValues: Translation[];
+  @Input() translationValues: TranslationDetails[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -280,6 +280,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
   private rangeValidator(operationHour: FormGroup) {
     const start = operationHour.get('from')?.value ?? '';
     const end = operationHour.get('to')?.value ?? '';
+
     if (start) {
       const operationHourOpenTypeId = operationHour.get('operationHourOpenTypeId')?.value ?? '';
       let startTime;
@@ -298,7 +299,6 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
 
       return (startTime < endTime) ? null : { rangeError: true };
     }
-
   }
 
   private loadSkillTag() {

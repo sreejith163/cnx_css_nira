@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Translation } from 'src/app/shared/models/translation.model';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { SkillTagDetails } from '../../../models/skill-tag-details.model';
@@ -17,6 +16,10 @@ import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-
 import { SkillTagQueryParams } from '../../../models/skill-tag-query-params.model';
 import { SkillTagResponse } from '../../../models/skill-tag-response.model';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 
 @Component({
   selector: 'app-skill-tags-list',
@@ -39,7 +42,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   characterSplice = 25;
   paginationSize = Constants.paginationSize;
-  translationValues = Constants.skillTagsTranslationValues;
+  translationValues: TranslationDetails[] = [];
   maxLength = Constants.DefaultTextMaxLength;
   orderBy = 'createdDate';
   sortBy = 'desc';
@@ -56,6 +59,8 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
   skillTag: SkillTagResponse;
   skillTags: SkillTagDetails[] = [];
 
+  languageSelectionSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   getSkillTagsSubscription: ISubscription;
   getSkillTagSubscription: ISubscription;
   deleteSkillTagSubscription: ISubscription;
@@ -65,10 +70,14 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
     private skillTagSevice: SkillTagService,
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
+    private translationService: LanguageTranslationService,
+    private genericStateManagerService: GenericStateManagerService
   ) { }
 
   ngOnInit() {
+    this.loadTranslationValues();
     this.loadSkillTags();
+    this.subscribeToUserLanguage();
   }
 
   ngOnDestroy() {
@@ -164,7 +173,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
   }
 
   getOpenType(openTypeId) {
-    const skillTag = Constants.operationHours.find(x => x.id === openTypeId);
+    const skillTag = Constants.OperationHourTypes.find(x => x.id === openTypeId);
     return skillTag.open;
   }
 
@@ -188,7 +197,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private setComponentValues(operation: ComponentOperation, translationValues: Array<Translation>) {
+  private setComponentValues(operation: ComponentOperation, translationValues: Array<TranslationDetails>) {
     this.modalRef.componentInstance.operation = operation;
     this.modalRef.componentInstance.translationValues = translationValues;
   }
@@ -247,6 +256,34 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.getSkillTagSubscription);
+  }
+
+  private loadTranslationValues() {
+    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
+    const menuId = CssMenu.SkillTags;
+
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getTranslationValuesSubscription);
+  }
+
+  private subscribeToUserLanguage() {
+    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (languageId: number) => {
+        if (languageId) {
+          this.loadTranslationValues();
+        }
+      }
+    );
+
+    this.subscriptions.push(this.languageSelectionSubscription);
   }
 
 }

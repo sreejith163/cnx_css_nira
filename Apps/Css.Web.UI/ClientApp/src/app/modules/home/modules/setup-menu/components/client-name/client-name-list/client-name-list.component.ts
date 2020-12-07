@@ -9,16 +9,19 @@ import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/mess
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
 import { ClientDetails } from '../../../models/client-details.model';
-import { Translation } from 'src/app/shared/models/translation.model';
 import { ClientNameQueryParameters } from '../../../models/client-name-query-parameters.model';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 
 import { ClientService } from '../../../services/client.service';
+import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 
 @Component({
   selector: 'app-client-name-list',
@@ -41,9 +44,11 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
   modalRef: NgbModalRef;
   headerPaginationValues: HeaderPagination;
   paginationSize: PaginationSize[] = [];
-  translationValues: Translation[];
+  translationValues: TranslationDetails[];
   clientsDetails: ClientDetails[] = [];
 
+  languageSelectionSubscription: ISubscription;
+  getTranslationValuesSubscription: ISubscription;
   getAllClientDetailsSubscription: ISubscription;
   deleteClientSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
@@ -51,13 +56,16 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private translationService: LanguageTranslationService,
+    private genericStateManagerService: GenericStateManagerService
   ) { }
 
   ngOnInit(): void {
-    this.translationValues = Constants.clientNameTranslationValues;
     this.paginationSize = Constants.paginationSize;
+    this.loadTranslationValues();
     this.loadClients();
+    this.subscribeToUserLanguage();
   }
 
   ngOnDestroy() {
@@ -148,7 +156,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private setComponentValues(operation: ComponentOperation, translationValues: Array<Translation>) {
+  private setComponentValues(operation: ComponentOperation, translationValues: Array<TranslationDetails>) {
     this.modalRef.componentInstance.operation = operation;
     this.modalRef.componentInstance.translationValues = translationValues;
   }
@@ -188,5 +196,33 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptionList.push(this.getAllClientDetailsSubscription);
+  }
+
+  private loadTranslationValues() {
+    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
+    const menuId = CssMenu.ClientName;
+
+    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
+      .subscribe((response) => {
+        if (response) {
+          this.translationValues = response;
+        }
+      }, (error) => {
+        console.log(error);
+      });
+
+    this.subscriptionList.push(this.getTranslationValuesSubscription);
+  }
+
+  private subscribeToUserLanguage() {
+    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (languageId: number) => {
+        if (languageId) {
+          this.loadTranslationValues();
+        }
+      }
+    );
+
+    this.subscriptionList.push(this.languageSelectionSubscription);
   }
 }

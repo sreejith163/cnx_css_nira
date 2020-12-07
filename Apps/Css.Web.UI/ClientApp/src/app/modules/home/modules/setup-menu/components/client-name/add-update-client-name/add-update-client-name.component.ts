@@ -10,7 +10,6 @@ import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-
 import { AddClient } from '../../../models/add-client.model';
 import { ClientDetails } from '../../../models/client-details.model';
 import { UpdateClient } from '../../../models/update-client.model';
-import { Translation } from 'src/app/shared/models/translation.model';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 
 import { ClientService } from '../../../services/client.service';
@@ -18,6 +17,7 @@ import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 @Component({
   selector: 'app-add-update-client-list',
@@ -37,7 +37,7 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
 
   @Input() operation: ComponentOperation;
   @Input() clientDetails: ClientDetails;
-  @Input() translationValues: Translation[] = [];
+  @Input() translationValues: TranslationDetails[] = [];
 
   constructor(
     private formBuilder: FormBuilder,

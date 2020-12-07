@@ -13,6 +13,7 @@ import {
   NgbModal,
   NgbModalOptions,
 } from '@ng-bootstrap/ng-bootstrap';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { Translation } from 'src/app/shared/models/translation.model';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
@@ -48,7 +49,7 @@ export class AddAgentProfileComponent implements OnInit {
   @Input() employeeId: number;
   @Input() title: string;
   @Input() agentProfileData: AgentAdmin;
-  @Input() translationValues: Translation[];
+  @Input() translationValues: TranslationDetails[];
 
   constructor(
     private formBuilder: FormBuilder,
