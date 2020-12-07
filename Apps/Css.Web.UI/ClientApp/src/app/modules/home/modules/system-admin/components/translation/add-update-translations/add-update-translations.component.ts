@@ -3,9 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 
-
-import { CssLanguageervice } from '../../../services/css-language.service';
-import { CssMenuervice } from '../../../services/css-menu.service';
+import { CssLanguageService } from '../../../../../../../shared/services/css-language.service';
+import { CssMenuService } from '../../../services/css-menu.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
@@ -22,8 +21,6 @@ import { Constants } from 'src/app/shared/util/constants.util';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
-
-
 
 @Component({
   selector: 'app-add-update-translations',
@@ -58,13 +55,13 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
-    public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     private translationService: LanguageTranslationService,
-    private CssMenuervice: CssMenuervice,
-    private CssLanguageervice: CssLanguageervice,
+    private cssMenuService: CssMenuService,
+    private cssLanguageService: CssLanguageService,
     private spinnerService: NgxSpinnerService,
-    private authService: AuthService
+    private authService: AuthService,
+    public activeModal: NgbActiveModal,
   ) { }
 
   ngOnInit(): void {
@@ -106,7 +103,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
   }
 
   getCssMenuVariables(menu: number) {
-    this.getCssMenuVariablesSubscription = this.CssMenuervice.getCssMenuVariables(menu)
+    this.getCssMenuVariablesSubscription = this.cssMenuService.getCssMenuVariables(menu)
       .subscribe((response) => {
         this.variables = response;
         if (this.operation === ComponentOperation.Edit && !this.menuId) {
@@ -204,7 +201,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
   }
 
   private getCssLanguage() {
-    this.getCssLanguageSubscription = this.CssLanguageervice.getCssLanguage()
+    this.getCssLanguageSubscription = this.cssLanguageService.getCssLanguages()
       .subscribe((response) => {
         if (response) {
           this.languages = response;
@@ -219,7 +216,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
   }
 
   private getCssMenu() {
-    this.getCssMenuSubscription = this.CssMenuervice.getCssMenu()
+    this.getCssMenuSubscription = this.cssMenuService.getCssMenu()
       .subscribe((response) => {
         if (response) {
           this.menus = response;

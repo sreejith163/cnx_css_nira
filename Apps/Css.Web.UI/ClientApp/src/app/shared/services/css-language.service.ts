@@ -7,8 +7,10 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 
-export class CssLanguageervice extends HttpBaseService {
+export class CssLanguageService extends HttpBaseService {
+
   private baseURL = '';
+
   constructor(
     private http: HttpClient
   ) {
@@ -16,8 +18,8 @@ export class CssLanguageervice extends HttpBaseService {
     this.baseURL = environment.services.adminService;
   }
 
-  getCssLanguage() {
-    const url = `${this.baseURL}/CssLanguage`;
+  getCssLanguages() {
+    const url = `${this.baseURL}/CssLanguages`;
     return this.http.get<KeyValue>(url)
       .pipe(catchError(this.handleError));
   }

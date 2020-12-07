@@ -8,8 +8,7 @@ import { AgentAdminDropdownsService } from '../scheduling-menu/services/agent-ad
 import { SchedulingCodeIconsService } from './services/scheduling-code-icons.service';
 import { PermissionsService } from './services/permissions.service';
 import { AgentCategoryService } from './services/agent-category.service';
-import { CssLanguageervice } from './services/css-language.service';
-import { CssMenuervice } from './services/css-menu.service';
+import { CssMenuService } from './services/css-menu.service';
 
 import { SchedulingCodeListComponent } from './components/scheduling-code/scheduling-code-list/scheduling-code-list.component';
 import { AddUpdateSchedulingCodeComponent } from './components/scheduling-code/add-update-scheduling-code/add-update-scheduling-code.component';
@@ -20,8 +19,6 @@ import { AgentCategoryListComponent } from './components/agent-category/agent-ca
 import { AddAgentCategoryComponent } from './components/agent-category/add-agent-category/add-agent-category.component';
 import { TranslationListComponent } from './components/translation/translation-list/translation-list.component';
 import { AddUpdateTranslationsComponent } from './components/translation/add-update-translations/add-update-translations.component';
-
-
 
 const modules = [
   SharedModule,
@@ -45,8 +42,7 @@ const providers = [
   SchedulingCodeIconsService,
   PermissionsService,
   AgentCategoryService,
-  CssLanguageervice,
-  CssMenuervice];
+  CssMenuService];
 
 @NgModule({
   declarations: components,
