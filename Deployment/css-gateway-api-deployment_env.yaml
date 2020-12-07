@@ -1,0 +1,39 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: cnx-css-api-gateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cnx-css-api-gateway
+  template:
+    metadata:
+      labels:
+        app: cnx-css-api-gateway
+    spec:
+      containers:
+        - name: cnx-css-api-gateway
+          image: sreejith163/cnx-css:cnx.css.api.gateway.s4.0712.v1
+          ports:
+            - name: node-port
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: "ASPNETCORE_ENVIRONMENT"
+              value: "Development"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cnx-css-api-gateway
+spec:
+  ports:
+    - name: client
+      protocol: TCP
+      port: 4201
+      targetPort: 80
+  selector:
+    app: cnx-css-api-gateway
+  type: LoadBalancer
+
