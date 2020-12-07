@@ -4,8 +4,8 @@ import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-boot
 import { SubscriptionLike as ISubscription } from 'rxjs';
 
 
-import { CssLanguageService } from '../../../services/css-language.service';
-import { CssMenuService } from '../../../services/css-menu.service';
+import { CssLanguageervice } from '../../../services/css-language.service';
+import { CssMenuervice } from '../../../services/css-menu.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
@@ -48,8 +48,8 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
   addLanguageTranslationSubscription: ISubscription;
   getLanguageTranslationSubscription: ISubscription;
   getCssMenuVariablesSubscription: ISubscription;
-  getCssMenusSubscription: ISubscription;
-  getCssLanguagesSubscription: ISubscription;
+  getCssMenuSubscription: ISubscription;
+  getCssLanguageSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
   @Input() operation: ComponentOperation;
@@ -61,16 +61,16 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     private translationService: LanguageTranslationService,
-    private cssMenuService: CssMenuService,
-    private cssLanguageService: CssLanguageService,
+    private CssMenuervice: CssMenuervice,
+    private CssLanguageervice: CssLanguageervice,
     private spinnerService: NgxSpinnerService,
     private authService: AuthService
   ) { }
 
   ngOnInit(): void {
     this.translationFormIntialization();
-    this.getCssLanguages();
-    this.getCssMenus();
+    this.getCssLanguage();
+    this.getCssMenu();
     if (this.operation === ComponentOperation.Edit) {
       this.loadTranslation();
     }
@@ -106,7 +106,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
   }
 
   getCssMenuVariables(menu: number) {
-    this.getCssMenuVariablesSubscription = this.cssMenuService.getCssMenuVariables(menu)
+    this.getCssMenuVariablesSubscription = this.CssMenuervice.getCssMenuVariables(menu)
       .subscribe((response) => {
         this.variables = response;
         if (this.operation === ComponentOperation.Edit && !this.menuId) {
@@ -203,8 +203,8 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
     return modalRef;
   }
 
-  private getCssLanguages() {
-    this.getCssLanguagesSubscription = this.cssLanguageService.getCssLanguages()
+  private getCssLanguage() {
+    this.getCssLanguageSubscription = this.CssLanguageervice.getCssLanguage()
       .subscribe((response) => {
         if (response) {
           this.languages = response;
@@ -215,11 +215,11 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
         console.log(error);
       });
 
-    this.subscriptions.push(this.getCssLanguagesSubscription);
+    this.subscriptions.push(this.getCssLanguageSubscription);
   }
 
-  private getCssMenus() {
-    this.getCssMenusSubscription = this.cssMenuService.getCssMenus()
+  private getCssMenu() {
+    this.getCssMenuSubscription = this.CssMenuervice.getCssMenu()
       .subscribe((response) => {
         if (response) {
           this.menus = response;
@@ -230,7 +230,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
         console.log(error);
       });
 
-    this.subscriptions.push(this.getCssMenusSubscription);
+    this.subscriptions.push(this.getCssMenuSubscription);
   }
 
   private loadTranslation() {

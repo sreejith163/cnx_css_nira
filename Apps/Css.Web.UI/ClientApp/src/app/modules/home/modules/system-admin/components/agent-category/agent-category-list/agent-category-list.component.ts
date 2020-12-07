@@ -3,8 +3,8 @@ import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstr
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
-import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
@@ -192,8 +192,8 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguages.English;
-    const menuId = CssMenus.AgentCategories;
+    const languageId = CssLanguage.English;
+    const menuId = CssMenu.AgentCategories;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {

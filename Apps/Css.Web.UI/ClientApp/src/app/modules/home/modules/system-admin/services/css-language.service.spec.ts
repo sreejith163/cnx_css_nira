@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CssLanguageService } from './css-language.service';
+import { CssLanguageervice } from './css-language.service';
 
-describe('CssLanguageService', () => {
-  let service: CssLanguageService;
+describe('CssLanguageervice', () => {
+  let service: CssLanguageervice;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CssLanguageService);
+    service = TestBed.inject(CssLanguageervice);
   });
 
   it('should be created', () => {

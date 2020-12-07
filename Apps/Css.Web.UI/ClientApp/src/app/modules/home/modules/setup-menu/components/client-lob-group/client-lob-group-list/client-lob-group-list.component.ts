@@ -17,8 +17,8 @@ import { ClientLOBGroupDetails } from '../../../models/client-lob-group-details.
 import { ClientLobGroupQueryParameters } from '../../../models/client-lob-group-query-parameters.model';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
-import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
+import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 import { ClientLobGroupService } from '../../../services/client-lob-group.service';
@@ -207,8 +207,8 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguages.English;
-    const menuId = CssMenus.ClientLobGroup;
+    const languageId = CssLanguage.English;
+    const menuId = CssMenu.ClientLobGroup;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {

@@ -1,4 +1,4 @@
-export enum CssLanguages {
+export enum CssLanguage {
     English = 1,
     EspañolSpanish = 2,
     French = 3,

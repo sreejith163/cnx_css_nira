@@ -1,4 +1,4 @@
-export enum CssMenus {
+export enum CssMenu {
     SchedulingCodes = 1,
     AgentCategories = 2,
     Translation = 3,

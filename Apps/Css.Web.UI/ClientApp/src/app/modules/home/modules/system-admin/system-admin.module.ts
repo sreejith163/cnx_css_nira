@@ -8,8 +8,8 @@ import { AgentAdminDropdownsService } from '../scheduling-menu/services/agent-ad
 import { SchedulingCodeIconsService } from './services/scheduling-code-icons.service';
 import { PermissionsService } from './services/permissions.service';
 import { AgentCategoryService } from './services/agent-category.service';
-import { CssLanguageService } from './services/css-language.service';
-import { CssMenuService } from './services/css-menu.service';
+import { CssLanguageervice } from './services/css-language.service';
+import { CssMenuervice } from './services/css-menu.service';
 
 import { SchedulingCodeListComponent } from './components/scheduling-code/scheduling-code-list/scheduling-code-list.component';
 import { AddUpdateSchedulingCodeComponent } from './components/scheduling-code/add-update-scheduling-code/add-update-scheduling-code.component';
@@ -45,8 +45,8 @@ const providers = [
   SchedulingCodeIconsService,
   PermissionsService,
   AgentCategoryService,
-  CssLanguageService,
-  CssMenuService];
+  CssLanguageervice,
+  CssMenuervice];
 
 @NgModule({
   declarations: components,

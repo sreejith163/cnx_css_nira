@@ -4,8 +4,8 @@ import { PermissionsService } from '../../../services/permissions.service';
 import { PermissionDetails } from '../../../models/permission-details.model';
 import { UserRole } from '../../../models/user-role.model';
 import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
-import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
-import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
@@ -163,8 +163,8 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguages.English;
-    const menuId = CssMenus.Permissions;
+    const languageId = CssLanguage.English;
+    const menuId = CssMenu.Permissions;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {

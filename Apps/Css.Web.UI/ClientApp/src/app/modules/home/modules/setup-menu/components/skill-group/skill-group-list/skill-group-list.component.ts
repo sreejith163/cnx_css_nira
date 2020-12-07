@@ -20,8 +20,8 @@ import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { SkillGroupDetails } from '../../../models/skill-group-details.model';
 import { SkillGroupQueryParameters } from '../../../models/skill-group-query-parameters.model';
-import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
-import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 @Component({
@@ -233,8 +233,8 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguages.English;
-    const menuId = CssMenus.SkillGroups;
+    const languageId = CssLanguage.English;
+    const menuId = CssMenu.SkillGroups;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {

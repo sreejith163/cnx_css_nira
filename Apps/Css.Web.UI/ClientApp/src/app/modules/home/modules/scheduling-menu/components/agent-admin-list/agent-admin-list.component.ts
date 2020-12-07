@@ -7,9 +7,9 @@ import { AgentAdminListService } from '../../services/agent-admin-list.service';
 import { AddAgentProfileComponent } from '../add-agent-profile/add-agent-profile.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
-import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
-import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
@@ -107,8 +107,8 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguages.English;
-    const menuId = CssMenus.AgentAdmin;
+    const languageId = CssLanguage.English;
+    const menuId = CssMenu.AgentAdmin;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {

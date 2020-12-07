@@ -6,7 +6,7 @@ import { KeyValue } from 'src/app/shared/models/key-value.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
-export class CssMenuService extends HttpBaseService {
+export class CssMenuervice extends HttpBaseService {
   private baseURL = '';
   constructor(
     private http: HttpClient
@@ -15,14 +15,14 @@ export class CssMenuService extends HttpBaseService {
     this.baseURL = environment.services.adminService;
   }
 
-  getCssMenus() {
-    const url = `${this.baseURL}/CssMenus`;
+  getCssMenu() {
+    const url = `${this.baseURL}/CssMenu`;
     return this.http.get<KeyValue>(url)
       .pipe(catchError(this.handleError));
   }
 
   getCssMenuVariables(menuId: number) {
-    const url = `${this.baseURL}/CssMenus/${menuId}/variables`;
+    const url = `${this.baseURL}/CssMenu/${menuId}/variables`;
     return this.http.get<KeyValue>(url)
       .pipe(catchError(this.handleError));
   }

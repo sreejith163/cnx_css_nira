@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 
-export class CssLanguageService extends HttpBaseService {
+export class CssLanguageervice extends HttpBaseService {
   private baseURL = '';
   constructor(
     private http: HttpClient
@@ -16,8 +16,8 @@ export class CssLanguageService extends HttpBaseService {
     this.baseURL = environment.services.adminService;
   }
 
-  getCssLanguages() {
-    const url = `${this.baseURL}/CssLanguages`;
+  getCssLanguage() {
+    const url = `${this.baseURL}/CssLanguage`;
     return this.http.get<KeyValue>(url)
       .pipe(catchError(this.handleError));
   }

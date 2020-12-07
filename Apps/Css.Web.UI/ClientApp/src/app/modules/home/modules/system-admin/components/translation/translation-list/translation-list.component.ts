@@ -16,8 +16,8 @@ import { HeaderPagination } from 'src/app/shared/models/header-pagination.model'
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { TranslationQueryParams } from 'src/app/shared/models/translation-query-params.model';
-import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
-import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 
 
 
@@ -190,8 +190,8 @@ export class TranslationListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguages.English;
-    const menuId = CssMenus.Translation;
+    const languageId = CssLanguage.English;
+    const menuId = CssMenu.Translation;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {

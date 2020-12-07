@@ -17,8 +17,8 @@ import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-
 import { SkillTagQueryParams } from '../../../models/skill-tag-query-params.model';
 import { SkillTagResponse } from '../../../models/skill-tag-response.model';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
-import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
@@ -257,8 +257,8 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguages.English;
-    const menuId = CssMenus.SkillTags;
+    const languageId = CssLanguage.English;
+    const menuId = CssMenu.SkillTags;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {

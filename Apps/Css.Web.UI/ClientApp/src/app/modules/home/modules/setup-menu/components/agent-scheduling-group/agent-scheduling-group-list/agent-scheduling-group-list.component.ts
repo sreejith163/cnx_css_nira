@@ -17,9 +17,9 @@ import { AgentSchedulingGroupService } from '../../../services/agent-scheduling-
 import { AddEditAgentSchedulingGroupComponent } from '../add-edit-agent-scheduling-group/add-edit-agent-scheduling-group.component';
 import { AgentSchedulingGroupQueryParams } from '../../../models/agent-scheduling-group-query-params.model';
 import { TranslationQueryParams } from 'src/app/shared/models/translation-query-params.model';
-import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
-import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 
 @Component({
@@ -266,8 +266,8 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguages.English;
-    const menuId = CssMenus.AgentSchedulingGroup;
+    const languageId = CssLanguage.English;
+    const menuId = CssMenu.AgentSchedulingGroup;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {

@@ -16,8 +16,8 @@ import { SchedulingInterval } from '../../models/scheduling-interval.model';
 import { ICON_DB } from 'src/app/shared/util/icon.data';
 
 import * as $ from 'jquery';
-import { CssMenus } from 'src/app/shared/enums/css-menus.enum';
-import { CssLanguages } from 'src/app/shared/enums/css-languages.enum';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
+import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
@@ -329,8 +329,8 @@ export class SchedulingGridComponent implements OnInit {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguages.English;
-    const menuId = CssMenus.SchedulingGrid;
+    const languageId = CssLanguage.English;
+    const menuId = CssMenu.SchedulingGrid;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
       .subscribe((response) => {
