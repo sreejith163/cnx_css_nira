@@ -3,13 +3,13 @@ import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstr
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
@@ -44,6 +44,7 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
   translationValues: TranslationDetails[];
   agentCategoryDetails: AgentCategoryDetails[] = [];
 
+  languageSelectionSubscription: ISubscription;
   getTranslationValuesSubscription: ISubscription;
   getAllAgentcategorySubscription: ISubscription;
   deleteAgentCategorySubscription: ISubscription;
@@ -53,12 +54,14 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
     private agentCategoryService: AgentCategoryService,
-    private translationService: LanguageTranslationService
+    private translationService: LanguageTranslationService,
+    private genericStateManagerService: GenericStateManagerService
   ) { }
 
   ngOnInit(): void {
     this.loadTranslationValues();
     this.loadAgentcategories();
+    this.subscribeToUserLanguage();
   }
 
   ngOnDestroy() {
@@ -192,7 +195,7 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguage.English;
+    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
     const menuId = CssMenu.AgentCategories;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
@@ -205,5 +208,17 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptionList.push(this.getTranslationValuesSubscription);
+  }
+
+  private subscribeToUserLanguage() {
+    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (languageId: number) => {
+        if (languageId) {
+          this.loadTranslationValues();
+        }
+      }
+    );
+
+    this.subscriptionList.push(this.languageSelectionSubscription);
   }
 }

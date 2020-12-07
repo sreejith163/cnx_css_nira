@@ -1,9 +1,8 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { WeekDay } from '@angular/common';
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
-import { Translation } from 'src/app/shared/models/translation.model';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SchedulingStatus } from '../../enums/scheduling-status.enum';
@@ -17,12 +16,10 @@ import { ICON_DB } from 'src/app/shared/util/icon.data';
 
 import * as $ from 'jquery';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
-import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { SubscriptionLike as ISubscription } from 'rxjs';
-import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -80,6 +77,7 @@ export class SchedulingGridComponent implements OnInit {
   schedulingStatus: any[] = [];
   weekDays: Array<string> = [];
 
+  languageSelectionSubscription: ISubscription;
   getTranslationValuesSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
@@ -89,11 +87,12 @@ export class SchedulingGridComponent implements OnInit {
     private modalService: NgbModal,
     public ngbDateParserFormatter: NgbDateParserFormatter,
     private translationService: LanguageTranslationService,
-    private spinnerService: NgxSpinnerService,
+    private genericStateManagerService: GenericStateManagerService
   ) { }
 
   ngOnInit(): void {
     this.loadTranslationValues();
+    this.subscribeToUserLanguage();
     this.endIcon = this.iconCount;
     this.openTimes = this.getOpenTimes();
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
@@ -204,7 +203,7 @@ export class SchedulingGridComponent implements OnInit {
 
   onIconClick(event) {
     this.selectedIconId = event.target.id;
-    this.saveGridItems( this.selectedIconId);
+    this.saveGridItems(this.selectedIconId);
   }
 
   isMainMinute(data: any) {
@@ -224,7 +223,7 @@ export class SchedulingGridComponent implements OnInit {
   }
 
   dragged(event: CdkDragDrop<any>) {
-      this.saveGridItems(event.item.element.nativeElement.id);
+    this.saveGridItems(event.item.element.nativeElement.id);
   }
 
   changeTimeInterval(event) {
@@ -246,7 +245,7 @@ export class SchedulingGridComponent implements OnInit {
 
   save() {
     this.matchSchedulingGridDataChanges();
-    this.schedulingGridData =  JSON.parse(JSON.stringify(this.selectedGrid));
+    this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
     this.showPopUpMessage();
   }
 
@@ -264,7 +263,7 @@ export class SchedulingGridComponent implements OnInit {
   }
 
   private matchSchedulingGridDataChanges() {
-    if (JSON.stringify(this.schedulingGridData) !== JSON.stringify(this.selectedGrid) ) {
+    if (JSON.stringify(this.schedulingGridData) !== JSON.stringify(this.selectedGrid)) {
       this.hasMismatch = true;
     }
   }
@@ -329,7 +328,7 @@ export class SchedulingGridComponent implements OnInit {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguage.English;
+    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
     const menuId = CssMenu.SchedulingGrid;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
@@ -342,5 +341,17 @@ export class SchedulingGridComponent implements OnInit {
       });
 
     this.subscriptions.push(this.getTranslationValuesSubscription);
+  }
+
+  private subscribeToUserLanguage() {
+    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (languageId: number) => {
+        if (languageId) {
+          this.loadTranslationValues();
+        }
+      }
+    );
+
+    this.subscriptions.push(this.languageSelectionSubscription);
   }
 }

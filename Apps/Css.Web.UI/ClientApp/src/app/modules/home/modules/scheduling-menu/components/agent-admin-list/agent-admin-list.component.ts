@@ -7,13 +7,11 @@ import { AgentAdminListService } from '../../services/agent-admin-list.service';
 import { AddAgentProfileComponent } from '../add-agent-profile/add-agent-profile.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
-import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
-import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { SubscriptionLike as ISubscription } from 'rxjs';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 
 @Component({
   selector: 'app-agent-admin-list',
@@ -30,6 +28,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
   paginationSize: PaginationSize[] = [];
   totalAgents: AgentAdmin[] = [];
 
+  languageSelectionSubscription: ISubscription;
   getTranslationValuesSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
@@ -37,11 +36,12 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
     private agentAdminListService: AgentAdminListService,
     private modalService: NgbModal,
     private translationService: LanguageTranslationService,
-    private spinnerService: NgxSpinnerService,
+    private genericStateManagerService: GenericStateManagerService
   ) { }
 
   ngOnInit(): void {
     this.loadTranslationValues();
+    this.subscribeToUserLanguage();
     this.totalAgents = this.agentAdminListService.getAgentAdmins().sort(
       (a, b) =>
         new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
@@ -107,7 +107,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguage.English;
+    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
     const menuId = CssMenu.AgentAdmin;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
@@ -120,5 +120,17 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.getTranslationValuesSubscription);
+  }
+
+  private subscribeToUserLanguage() {
+    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (languageId: number) => {
+        if (languageId) {
+          this.loadTranslationValues();
+        }
+      }
+    );
+
+    this.subscriptions.push(this.languageSelectionSubscription);
   }
 }

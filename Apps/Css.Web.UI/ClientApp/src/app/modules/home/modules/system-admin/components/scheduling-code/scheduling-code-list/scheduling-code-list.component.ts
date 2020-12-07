@@ -5,6 +5,7 @@ import { SubscriptionLike as ISubscription } from 'rxjs';
 
 import { SchedulingCodeService } from '../../../services/scheduling-code.service';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 
 import { SchedulingCode } from '../../../models/scheduling-code.model';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
@@ -17,10 +18,8 @@ import { AddUpdateSchedulingCodeComponent } from '../add-update-scheduling-code/
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
-
 
 @Component({
   selector: 'app-scheduling-code-list',
@@ -46,6 +45,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
   translationValues: TranslationDetails[];
   schedulingCodes: SchedulingCode[] = [];
 
+  languageSelectionSubscription: ISubscription;
   getTranslationValuesSubscription: ISubscription;
   deleteSchedulingCodeSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
@@ -55,12 +55,14 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private schedulingCodeService: SchedulingCodeService,
     private spinnerService: NgxSpinnerService,
-    private translationService: LanguageTranslationService
+    private translationService: LanguageTranslationService,
+    private genericStateManagerService: GenericStateManagerService
   ) { }
 
   ngOnInit(): void {
     this.loadTranslationValues();
     this.loadSchedulingCodes();
+    this.subscribeToUserLanguage();
   }
 
   ngOnDestroy() {
@@ -195,7 +197,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguage.English;
+    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
     const menuId = CssMenu.SchedulingCodes;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
@@ -208,5 +210,17 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptionList.push(this.getTranslationValuesSubscription);
+  }
+
+  private subscribeToUserLanguage() {
+    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (languageId: number) => {
+        if (languageId) {
+          this.loadTranslationValues();
+        }
+      }
+    );
+
+    this.subscriptionList.push(this.languageSelectionSubscription);
   }
 }

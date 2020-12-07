@@ -13,15 +13,15 @@ import { ClientNameQueryParameters } from '../../../models/client-name-query-par
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 
 import { ClientService } from '../../../services/client.service';
-import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
-import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
-import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 
 @Component({
   selector: 'app-client-name-list',
@@ -47,6 +47,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
   translationValues: TranslationDetails[];
   clientsDetails: ClientDetails[] = [];
 
+  languageSelectionSubscription: ISubscription;
   getTranslationValuesSubscription: ISubscription;
   getAllClientDetailsSubscription: ISubscription;
   deleteClientSubscription: ISubscription;
@@ -56,13 +57,15 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
     private clientService: ClientService,
-    private translationService: LanguageTranslationService
+    private translationService: LanguageTranslationService,
+    private genericStateManagerService: GenericStateManagerService
   ) { }
 
   ngOnInit(): void {
     this.paginationSize = Constants.paginationSize;
     this.loadTranslationValues();
     this.loadClients();
+    this.subscribeToUserLanguage();
   }
 
   ngOnDestroy() {
@@ -196,7 +199,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguage.English;
+    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
     const menuId = CssMenu.ClientName;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
@@ -209,5 +212,17 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptionList.push(this.getTranslationValuesSubscription);
+  }
+
+  private subscribeToUserLanguage() {
+    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (languageId: number) => {
+        if (languageId) {
+          this.loadTranslationValues();
+        }
+      }
+    );
+
+    this.subscriptionList.push(this.languageSelectionSubscription);
   }
 }

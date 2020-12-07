@@ -4,11 +4,11 @@ import { PermissionsService } from '../../../services/permissions.service';
 import { PermissionDetails } from '../../../models/permission-details.model';
 import { UserRole } from '../../../models/user-role.model';
 import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
-import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 
 @Component({
   selector: 'app-permissions-list',
@@ -36,18 +36,21 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   hiddenRoles: UserRole[] = [];
 
   getPermissionsSubscription: any;
+  languageSelectionSubscription: ISubscription;
   getTranslationValuesSubscription: ISubscription;
   subscriptions: any[] = [];
 
   constructor(
     private permissionsService: PermissionsService,
-    private translationService: LanguageTranslationService
+    private translationService: LanguageTranslationService,
+    private genericStateManagerService: GenericStateManagerService
   ) { }
 
   ngOnInit(): void {
     this.loadTranslationValues();
     this.getPermissions();
     this.getUserRolesToHide();
+    this.subscribeToUserLanguage();
   }
 
   ngOnDestroy() {
@@ -163,7 +166,7 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguage.English;
+    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
     const menuId = CssMenu.Permissions;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
@@ -176,5 +179,17 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.getTranslationValuesSubscription);
+  }
+
+  private subscribeToUserLanguage() {
+    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (languageId: number) => {
+        if (languageId) {
+          this.loadTranslationValues();
+        }
+      }
+    );
+
+    this.subscriptions.push(this.languageSelectionSubscription);
   }
 }

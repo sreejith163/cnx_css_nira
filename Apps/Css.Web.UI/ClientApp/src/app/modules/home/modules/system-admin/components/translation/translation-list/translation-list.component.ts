@@ -17,7 +17,6 @@ import { HeaderPagination } from 'src/app/shared/models/header-pagination.model'
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { TranslationQueryParams } from 'src/app/shared/models/translation-query-params.model';
-import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 
 @Component({
