@@ -9,6 +9,7 @@ import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/mess
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
@@ -18,9 +19,6 @@ import { TranslationDetails } from 'src/app/shared/models/translation-details.mo
 import { TranslationQueryParams } from 'src/app/shared/models/translation-query-params.model';
 import { CssLanguage } from 'src/app/shared/enums/css-language.enum';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
-
-
-
 
 @Component({
   selector: 'app-translation-list',
@@ -48,10 +46,12 @@ export class TranslationListComponent implements OnInit, OnDestroy {
   getTranslationValuesSubscription: ISubscription;
   getTranslatiosSubscription: ISubscription;
   deleteTranslationSubscription: ISubscription;
+  languageSelectionSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
   constructor(
     private modalService: NgbModal,
+    private genericStateManagerService: GenericStateManagerService,
     private translationService: LanguageTranslationService,
     private spinnerService: NgxSpinnerService,
   ) { }
@@ -59,6 +59,7 @@ export class TranslationListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadTranslationValues();
     this.loadTranslations();
+    this.subscribeToUserLanguage();
   }
 
   ngOnDestroy() {
@@ -190,7 +191,7 @@ export class TranslationListComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslationValues() {
-    const languageId = CssLanguage.English;
+    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
     const menuId = CssMenu.Translation;
 
     this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
@@ -203,5 +204,17 @@ export class TranslationListComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.getTranslationValuesSubscription);
+  }
+
+  private subscribeToUserLanguage() {
+    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (languageId: number) => {
+        if (languageId) {
+          this.loadTranslationValues();
+        }
+      }
+    );
+
+    this.subscriptions.push(this.languageSelectionSubscription);
   }
 }
