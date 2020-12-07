@@ -99,10 +99,13 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
   setMenuId(menu: number) {
     this.menuId = menu;
     this.translationForm.controls.variableId.setValue('');
+    this.variables = [];
     this.getCssMenuVariables(this.menuId);
   }
 
   getCssMenuVariables(menu: number) {
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+
     this.getCssMenuVariablesSubscription = this.cssMenuService.getCssMenuVariables(menu)
       .subscribe((response) => {
         this.variables = response;
@@ -201,6 +204,8 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
   }
 
   private getCssLanguage() {
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+
     this.getCssLanguageSubscription = this.cssLanguageService.getCssLanguages()
       .subscribe((response) => {
         if (response) {
@@ -216,6 +221,8 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
   }
 
   private getCssMenu() {
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+
     this.getCssMenuSubscription = this.cssMenuService.getCssMenu()
       .subscribe((response) => {
         if (response) {
@@ -231,13 +238,15 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslation() {
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+
     this.getLanguageTranslationSubscription = this.translationService.getLanguageTranslation(this.translationId)
       .subscribe((response) => {
         if (response) {
+          this.spinnerService.hide(this.spinner);
           this.translationData = response;
           this.getCssMenuVariables(this.translationData?.menuId);
         }
-        this.spinnerService.hide(this.spinner);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         console.log(error);
