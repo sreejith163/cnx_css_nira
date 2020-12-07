@@ -15,6 +15,7 @@ export class SchedulingCodeIconsService extends HttpBaseService {
   }
   getSchedulingIcons() {
     const url = `${this.baseURL}/schedulingCodeIcons`;
+
     return this.http.get<KeyValue>(url)
       .pipe(catchError(this.handleError));
   }

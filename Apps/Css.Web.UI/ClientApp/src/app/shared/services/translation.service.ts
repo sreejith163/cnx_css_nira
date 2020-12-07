@@ -19,6 +19,7 @@ export class TranslationService extends HttpBaseService {
 
   getMenuTranslations(menuId: number, languageId: number) {
     const url = `${this.baseURL}/translations/languages/${languageId}/menus/${menuId}`;
+
     return this.http.get<Translation>(url)
       .pipe(catchError(this.handleError));
   }

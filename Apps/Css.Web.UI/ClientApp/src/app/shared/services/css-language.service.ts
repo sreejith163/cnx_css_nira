@@ -20,6 +20,7 @@ export class CssLanguageService extends HttpBaseService {
 
   getCssLanguages() {
     const url = `${this.baseURL}/CssLanguages`;
+
     return this.http.get<KeyValue>(url)
       .pipe(catchError(this.handleError));
   }

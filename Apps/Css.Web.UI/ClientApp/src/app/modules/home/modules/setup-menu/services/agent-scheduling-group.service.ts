@@ -25,9 +25,10 @@ export class AgentSchedulingGroupService extends HttpBaseService {
   getAgentSchedulingGroups(agentSchedulingGroupsQueryParams: AgentSchedulingGroupQueryParams) {
     const url = `${this.baseURL}/agentSchedulingGroups`;
 
-    return this.http.get<AgentSchedulingGroupDetails>(url,
-      { params: this.convertToHttpParam(agentSchedulingGroupsQueryParams), observe: 'response' })
-      .pipe(catchError(this.handleError));
+    return this.http.get<AgentSchedulingGroupDetails>(url, {
+      params: this.convertToHttpParam(agentSchedulingGroupsQueryParams),
+      observe: 'response'
+    }).pipe(catchError(this.handleError));
   }
 
   getAgentSchedulingGroup(agentSchedulingGroupId: number) {

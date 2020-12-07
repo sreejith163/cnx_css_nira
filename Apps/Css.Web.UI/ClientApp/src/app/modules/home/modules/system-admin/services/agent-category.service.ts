@@ -24,9 +24,10 @@ export class AgentCategoryService extends HttpBaseService {
   getAgentcategories(agentCategoryQueryParams: AgentCategoryQueryParams) {
     const url = `${this.baseURL}/AgentCategories`;
 
-    return this.http.get<AgentCategoryDetails>(url,
-      { params: this.convertToHttpParam(agentCategoryQueryParams), observe: 'response' })
-      .pipe(catchError(this.handleError));
+    return this.http.get<AgentCategoryDetails>(url, {
+      params: this.convertToHttpParam(agentCategoryQueryParams),
+      observe: 'response'
+    }).pipe(catchError(this.handleError));
   }
 
   getAgentCategory(agentCategoryId: string) {

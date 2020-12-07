@@ -19,12 +19,14 @@ export class CssMenuService extends HttpBaseService {
 
   getCssMenu() {
     const url = `${this.baseURL}/CssMenus`;
+
     return this.http.get<KeyValue>(url)
       .pipe(catchError(this.handleError));
   }
 
   getCssMenuVariables(menuId: number) {
     const url = `${this.baseURL}/CssMenus/${menuId}/variables`;
+
     return this.http.get<KeyValue>(url)
       .pipe(catchError(this.handleError));
   }

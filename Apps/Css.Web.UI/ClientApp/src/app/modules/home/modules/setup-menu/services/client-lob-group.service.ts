@@ -27,8 +27,7 @@ export class ClientLobGroupService extends HttpBaseService {
     return this.http.get<ClientLOBGroupDetails>(url, {
       params: this.convertToHttpParam(clientLobGroupQueryParameters),
       observe: 'response'
-    })
-      .pipe(catchError(this.handleError));
+    }).pipe(catchError(this.handleError));
   }
 
   getClientLOBGroup(clientLOBGroupId: string) {
