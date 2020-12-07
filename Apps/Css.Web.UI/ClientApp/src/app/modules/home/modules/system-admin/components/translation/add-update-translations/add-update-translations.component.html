@@ -1,5 +1,6 @@
 <div class="modal-dialog w-1000 add-edit-modal" role="document">
   <div class="modal-content">
+    <ngx-spinner [name]="spinner"></ngx-spinner>
     <div class="modal-header header-color">
       <h6 class="modal-title w-100 font-weight-bold header">
         <p>{{getTitle()}} {{ 'Translation' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
