@@ -1,0 +1,15 @@
+﻿1. Go to C:\Program Files\Git\usr\bin
+2. Create a folder ssl (ignore if present) and paste the config file 'css.api.admin.conf' in the folder
+3. Run the openssl.exe in adminstrator mode
+4. Execute command => '
+	req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl\css.api.admin.key -out ssl\css.api.admin.crt -config ssl\css.api.admin.conf -passin pass:cnxcss
+'
+5. Execute command => '
+	pkcs12 -export -out ssl\css.api.admin.pfx -inkey ssl\css.api.admin.key -in ssl\css.api.admin.crt
+'
+6. Use export pass -> cssadmin
+7. Copy the following files into project folder 'App_Data/SSL'
+	- css.api.admin.key
+	- css.api.admin.crt
+	- css.api.admin.pfx
+8. Update the values of the key 'Kestrel' in the appsettings json. 

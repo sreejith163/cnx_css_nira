@@ -1,0 +1,345 @@
+﻿{
+  "Routes": [
+    //********* Clients Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/clients",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.setup",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clients",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/clients/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.setup",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clients/{id}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* ClientLOBGroup Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/clientlobgroups",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.setup",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clientlobgroups",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/clientlobgroups/{clientLOBGroupId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.setup",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clientlobgroups/{clientLOBGroupId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* SkillGroups Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/skillgroups",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.setup",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/skillgroups",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/skillgroups/{skillGroupId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.setup",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/skillgroups/{skillGroupId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* SkillTags Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/skilltags",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.setup",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/skilltags",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/skilltags/{skillTagId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.setup",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/skilltags/{skillTagId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* TimeZones Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/timezones",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.setup",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/timezones",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* AgentSchedulingGroups Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedulinggroups",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.setup",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedulinggroups",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedulinggroups/{agentSchedulingGroupId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.setup",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedulinggroups/{agentSchedulingGroupId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* CSS Languages *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/csslanguages",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/csslanguages",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/csslanguages/{languageId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/csslanguages/{languageId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* CSS Menus *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/cssmenus",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cssmenus",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/cssmenus/{menuId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cssmenus/{menuId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/cssmenus/{menuId}/variables",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cssmenus/{menuId}/variables",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* Language Translations *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/languagetranslations",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/languagetranslations",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/languagetranslations/{translationId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/languagetranslations/{translationId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/languagetranslations/languages/{languageId}/menus/{menuId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/languagetranslations/languages/{languageId}/menus/{menuId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* CSS Variables *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/cssvariables",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cssvariables",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/cssvariables/{variableId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cssvariables/{variableId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* AgentCategories Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentcategories",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentcategories",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentcategories/{agentCategoryId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentcategories/{agentCategoryId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* SchedulingCodes Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/schedulingcodes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedulingcodes",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/schedulingcodes/{schedulingCodeId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedulingcodes/{schedulingCodeId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* SchedulingCodeTypes Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/schedulingcodetypes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedulingcodetypes",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* SchedulingCodeIcons Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/schedulingcodeicons",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.admin",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedulingcodeicons",
+      "UpstreamHttpMethod": [ "Get" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:5001/"
+  }
+}

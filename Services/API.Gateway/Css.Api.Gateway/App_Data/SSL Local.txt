@@ -1,0 +1,5 @@
+﻿1. In windows explorer go to -> %AppData%/ASP.NET/Https
+2. Open cmd
+3. Install the dev-certs dotnet tool (if its not installed)
+4. Execute the command in cmd -> dotnet dev-certs https -ep css.pfx -p cnxcss -t
+5. If a prompt doesn't popup, double-click on the css.pfx and import the certificate in your machine (for trusting the source in your local browser)
