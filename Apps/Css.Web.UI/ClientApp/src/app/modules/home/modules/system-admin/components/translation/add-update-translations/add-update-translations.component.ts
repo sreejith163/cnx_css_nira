@@ -106,8 +106,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
 
   setVariableDescription(variableId: number) {
     const variable = this.variables.find(x => x.id === +variableId);
-    variable ? this.translationForm.controls.description.setValue(variable.description) :
-    this.translationForm.controls.description.setValue('');
+    this.translationForm.controls.description.setValue(variable ? variable.description : '');
   }
 
   saveTranslation() {
