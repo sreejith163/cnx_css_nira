@@ -4,14 +4,10 @@
       <a class="nav-link cursor-pointer" data-widget="pushmenu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></a>
     </li>
   </ul>
-  <select class="form-control w-20p" (change)="setCsslanguage($event.target.value)">
-    <option *ngFor="let x of cssLanguages" [value]="x.id">{{x.value}}</option>
-  </select>
-  <!-- <ul class="navbar-nav">
-      <li class="fa fa-language"></li>
-      <span class="label label-warning">10</span>
-  </ul> -->
-  <ul class="navbar-nav ml-auto">
+  <ul class="navbar-nav ml-auto m-r-n-80">
+    <select class="form-control width" (change)="setCsslanguage($event.target.value)">
+        <option *ngFor="let x of cssLanguages" [value]="x.id">{{x.value}}</option>
+      </select>
     <li class="nav-item">
       <a class="nav-link cursor-pointer" (click)="logout()">
         <i class="fa fa-sign-out"></i>
