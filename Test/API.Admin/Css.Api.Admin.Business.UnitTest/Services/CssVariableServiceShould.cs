@@ -7,6 +7,7 @@ using Css.Api.Admin.Models.Profiles.Menu;
 using Css.Api.Admin.Models.Profiles.Variable;
 using Css.Api.Admin.Repository;
 using Css.Api.Admin.Repository.Interfaces;
+using Css.Api.Core.Models.DTO.Response;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
 
             Assert.NotNull(result);
             Assert.NotNull(result.Value);
-            Assert.IsType<List<VariableDTO>>(result.Value);
+            Assert.IsType<List<KeyValue>>(result.Value);
             Assert.Equal(HttpStatusCode.OK, result.Code);
         }
 
