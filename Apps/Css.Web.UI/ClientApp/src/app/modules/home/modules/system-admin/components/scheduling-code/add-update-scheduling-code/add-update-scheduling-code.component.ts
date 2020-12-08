@@ -4,7 +4,6 @@ import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-boot
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 
-import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
 import { SchedulingCodeType } from '../../../models/scheduling-code-type.model';
@@ -149,7 +148,6 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
         this.activeModal.close({ needRefresh: true });
-        this.showSuccessPopUpMessage('The record has been added!');
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         if (error.status === 409) {
@@ -173,7 +171,6 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
-          this.showSuccessPopUpMessage('The record has been updated!');
         }, (error) => {
           this.spinnerService.hide(this.spinner);
           if (error.status === 409) {
@@ -184,7 +181,6 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
       this.subscriptionList.push(this.updateSchedulingCodeSubscription);
     } else {
       this.activeModal.close({ needRefresh: false });
-      this.showSuccessPopUpMessage('No changes has been made!');
     }
   }
 
@@ -243,19 +239,6 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
     const options: NgbModalOptions = { backdrop: false, centered: true, size: 'sm' };
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
-    modalRef.componentInstance.contentMessage = contentMessage;
-
-    return modalRef;
-  }
-
-  private showSuccessPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = {
-      backdrop: false,
-      centered: true,
-      size: 'sm',
-    };
-    const modalRef = this.modalService.open(MessagePopUpComponent, options);
-    modalRef.componentInstance.headingMessage = 'Success';
     modalRef.componentInstance.contentMessage = contentMessage;
 
     return modalRef;

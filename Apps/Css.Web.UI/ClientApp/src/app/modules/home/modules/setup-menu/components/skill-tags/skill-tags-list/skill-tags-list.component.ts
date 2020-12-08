@@ -104,7 +104,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then(() => {
       this.currentPage = 1;
-      this.loadSkillTags();
+      this.showSuccessPopUpMessage('The record has been added!');
     });
   }
 
@@ -116,7 +116,9 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
     this.modalRef.result.then((result: any) => {
       if (result.needRefresh) {
         this.skillTag = undefined;
-        this.loadSkillTags();
+        this.showSuccessPopUpMessage('The record has been updated!');
+      } else {
+        this.showSuccessPopUpMessage('No changes has been made!', false);
       }
     });
   }
@@ -133,9 +135,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
         this.deleteSkillTagSubscription = this.skillTagSevice.deleteSkillTag(skillTagIndex)
           .subscribe(() => {
             this.spinnerService.hide(this.spinner);
-            this.loadSkillTags();
-            this.getModalPopup(MessagePopUpComponent, 'sm');
-            this.setComponentMessages('Success', 'The record has been deleted!');
+            this.showSuccessPopUpMessage('The record has been deleted!');
           }, (error) => {
             this.spinnerService.hide(this.spinner);
             if (error.status === 424) {
@@ -192,6 +192,16 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
     this.loadSkillTags();
   }
 
+  private showSuccessPopUpMessage(contentMessage: string, needRefresh = true) {
+    this.getModalPopup(MessagePopUpComponent, 'sm');
+    this.setComponentMessages('Success', contentMessage);
+
+    if (needRefresh) {
+      this.modalRef.result.then(() => {
+        this.loadSkillTags();
+      });
+    }
+  }
   private getModalPopup(component: any, size: string) {
     const options: NgbModalOptions = { backdrop: false, centered: true, size };
     this.modalRef = this.modalService.open(component, options);

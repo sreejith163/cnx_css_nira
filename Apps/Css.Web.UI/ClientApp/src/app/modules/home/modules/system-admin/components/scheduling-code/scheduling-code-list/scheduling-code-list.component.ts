@@ -87,7 +87,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     this.setComponentValues(ComponentOperation.Add, this.translationValues);
 
     this.modalRef.result.then(() => {
-      this.loadSchedulingCodes();
+      this.showSuccessPopUpMessage('The record has been added!');
     });
   }
 
@@ -96,9 +96,11 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     this.setComponentValues(ComponentOperation.Edit, this.translationValues);
     this.modalRef.componentInstance.schedulingCodeData = schedulingCodeData;
 
-    this.modalRef.result.then((result) => {
+    this.modalRef.result.then((result: any) => {
       if (result.needRefresh) {
-        this.loadSchedulingCodes();
+        this.showSuccessPopUpMessage('The record has been updated!');
+      } else {
+        this.showSuccessPopUpMessage('No changes has been made!', false);
       }
     });
   }
@@ -115,9 +117,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
         this.deleteSchedulingCodeSubscription = this.schedulingCodeService.deleteSchedulingCode(id)
           .subscribe(() => {
             this.spinnerService.hide(this.spinner);
-            this.loadSchedulingCodes();
-            this.getModalPopup(MessagePopUpComponent, 'sm');
-            this.setComponentMessages('Success', 'The record has been deleted!');
+            this.showSuccessPopUpMessage('The record has been deleted!');
           }, (error) => {
             this.spinnerService.hide(this.spinner);
             console.log(error);
@@ -147,6 +147,17 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     this.orderBy = columnName;
 
     this.loadSchedulingCodes();
+  }
+
+  private showSuccessPopUpMessage(contentMessage: string, needRefresh = true) {
+    this.getModalPopup(MessagePopUpComponent, 'sm');
+    this.setComponentMessages('Success', contentMessage);
+
+    if (needRefresh) {
+      this.modalRef.result.then(() => {
+        this.loadSchedulingCodes();
+      });
+    }
   }
 
   private getModalPopup(component: any, size: string) {

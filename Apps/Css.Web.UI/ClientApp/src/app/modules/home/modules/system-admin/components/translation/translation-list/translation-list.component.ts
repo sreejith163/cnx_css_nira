@@ -96,7 +96,7 @@ export class TranslationListComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then(() => {
       this.currentPage = 1;
-      this.loadTranslations();
+      this.showSuccessPopUpMessage('The record has been added!');
     });
   }
 
@@ -107,7 +107,9 @@ export class TranslationListComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then((result: any) => {
       if (result.needRefresh) {
-        this.loadTranslations();
+        this.showSuccessPopUpMessage('The record has been updated!');
+      } else {
+        this.showSuccessPopUpMessage('No changes has been made!', false);
       }
     });
   }
@@ -124,9 +126,7 @@ export class TranslationListComponent implements OnInit, OnDestroy {
         this.deleteTranslationSubscription = this.translationService.deleteLanguageTranslation(translationIndex)
           .subscribe(() => {
             this.spinnerService.hide(this.spinner);
-            this.loadTranslations();
-            this.getModalPopup(MessagePopUpComponent, 'sm');
-            this.setComponentMessages('Success', 'The record has been deleted!');
+            this.showSuccessPopUpMessage('The record has been deleted!');
           }, (error) => {
             this.spinnerService.hide(this.spinner);
             if (error.status === 424) {
@@ -138,6 +138,17 @@ export class TranslationListComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.deleteTranslationSubscription);
       }
     });
+  }
+
+  private showSuccessPopUpMessage(contentMessage: string, needRefresh = true) {
+    this.getModalPopup(MessagePopUpComponent, 'sm');
+    this.setComponentMessages('Success', contentMessage);
+
+    if (needRefresh) {
+      this.modalRef.result.then(() => {
+        this.loadTranslations();
+      });
+    }
   }
 
   private getModalPopup(component: any, size: string) {

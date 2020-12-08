@@ -14,7 +14,6 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { TimeZone } from 'src/app/shared/models/time-zone.model';
-import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { Constants } from 'src/app/shared/util/constants.util';
@@ -177,7 +176,6 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
         this.activeModal.close({ needRefresh: true });
-        this.showSuccessPopUpMessage('The record has been added!');
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         if (error.status === 409) {
@@ -200,7 +198,6 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
-          this.showSuccessPopUpMessage('The record has been updated!');
         }, (error) => {
           this.spinnerService.hide(this.spinner);
           if (error.status === 409) {
@@ -211,7 +208,6 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
       this.subscriptions.push(this.updateSkillGroupSubscription);
     } else {
       this.activeModal.close({ needRefresh: false });
-      this.showSuccessPopUpMessage('No changes has been made!');
     }
   }
 
@@ -248,15 +244,6 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
       }
     });
     operationHours.updateValueAndValidity();
-  }
-
-  private showSuccessPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = { backdrop: false, centered: true, size: 'sm' };
-    const modalRef = this.modalService.open(MessagePopUpComponent, options);
-    modalRef.componentInstance.headingMessage = 'Success';
-    modalRef.componentInstance.contentMessage = contentMessage;
-
-    return modalRef;
   }
 
   private showErrorWarningPopUpMessage(contentMessage: string) {

@@ -60,7 +60,7 @@
             <div class="col-md-8">
               <select class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('variableId')}"
-                formControlName="variableId">
+                formControlName="variableId" (change)="setVariableDescription($event.target.value)">
                 <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
                 <option *ngFor="let x of variables" [value]="x.id">{{x.value}}</option>
               </select>
@@ -78,7 +78,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control" formControlName="description" [maxLength]="maxLength">
+              <input type="text" class="form-control" readonly formControlName="description" [maxLength]="maxLength">
               <ng-container *ngIf="formSubmitted && form.description.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('description'); else maxLengthError">
                   <div *ngIf="hasFormControlValidationError('description')" class="valid-error">

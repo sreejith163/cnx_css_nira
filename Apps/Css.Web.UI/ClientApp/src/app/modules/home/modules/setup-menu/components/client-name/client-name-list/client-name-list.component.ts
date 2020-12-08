@@ -92,7 +92,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then(() => {
       this.currentPage = 1;
-      this.loadClients();
+      this.showSuccessPopUpMessage('The record has been added!');
     });
   }
 
@@ -103,7 +103,9 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then((result: any) => {
       if (result.needRefresh) {
-        this.loadClients();
+        this.showSuccessPopUpMessage('The record has been updated!');
+      } else {
+        this.showSuccessPopUpMessage('No changes has been made!', false);
       }
     });
   }
@@ -120,9 +122,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
         this.deleteClientSubscription = this.clientService.deleteClient(clientIndex)
           .subscribe(() => {
             this.spinnerService.hide(this.spinner);
-            this.loadClients();
-            this.getModalPopup(MessagePopUpComponent, 'sm');
-            this.setComponentMessages('Success', 'The record has been deleted!');
+            this.showSuccessPopUpMessage('The record has been deleted!');
           }, (error) => {
             this.spinnerService.hide(this.spinner);
             if (error.status === 424) {
@@ -149,6 +149,17 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
 
   clearSearchKeyword() {
     this.searchKeyword = undefined;
+  }
+
+  private showSuccessPopUpMessage(contentMessage: string, needRefresh = true) {
+    this.getModalPopup(MessagePopUpComponent, 'sm');
+    this.setComponentMessages('Success', contentMessage);
+
+    if (needRefresh) {
+      this.modalRef.result.then(() => {
+        this.loadClients();
+      });
+    }
   }
 
   private getModalPopup(component: any, size: string) {

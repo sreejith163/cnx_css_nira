@@ -106,7 +106,7 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
     this.setComponentValues(ComponentOperation.Add, this.translationValues);
 
     this.modalRef.result.then(() => {
-      this.loadSkillGroups();
+      this.showSuccessPopUpMessage('The record has been added!');
     });
   }
 
@@ -117,7 +117,9 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then((result: any) => {
       if (result.needRefresh) {
-        this.loadSkillGroups();
+        this.showSuccessPopUpMessage('The record has been updated!');
+      } else {
+        this.showSuccessPopUpMessage('No changes has been made!', false);
       }
     });
   }
@@ -134,9 +136,7 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
         this.deleteSkillGroupSubscription = this.skillGroupService.deleteSkillGroup(skillGroupIndex)
           .subscribe(() => {
             this.spinnerService.hide(this.spinner);
-            this.loadSkillGroups();
-            this.getModalPopup(MessagePopUpComponent, 'sm');
-            this.setComponentMessages('Success', 'The record has been deleted!');
+            this.showSuccessPopUpMessage('The record has been deleted!');
           }, (error) => {
             this.spinnerService.hide(this.spinner);
             if (error.status === 424) {
@@ -186,6 +186,17 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
   setClientLob(clientLob: number) {
     this.clientLobGroupId = clientLob;
     this.loadSkillGroups();
+  }
+
+  private showSuccessPopUpMessage(contentMessage: string, needRefresh = true) {
+    this.getModalPopup(MessagePopUpComponent, 'sm');
+    this.setComponentMessages('Success', contentMessage);
+
+    if (needRefresh) {
+      this.modalRef.result.then(() => {
+        this.loadSkillGroups();
+      });
+    }
   }
 
   private getModalPopup(component: any, size: string) {

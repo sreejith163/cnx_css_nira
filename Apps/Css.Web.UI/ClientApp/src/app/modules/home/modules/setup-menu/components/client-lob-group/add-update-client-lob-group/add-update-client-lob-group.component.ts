@@ -4,7 +4,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
-import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 
 import { AddClientLobGroup } from '../../../models/add-client-lob-group.model';
 import { ClientLOBGroupDetails } from '../../../models/client-lob-group-details.model';
@@ -117,7 +116,6 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
         this.activeModal.close();
-        this.showSuccessPopUpMessage('The record has been added!');
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         if (error.status === 409) {
@@ -139,8 +137,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
         this.clientLOBGroupDetails.id, updateClientLobGroupModel)
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
-          this.activeModal.close();
-          this.showSuccessPopUpMessage('The record has been updated!');
+          this.activeModal.close({needRefresh: true});
         }, (error) => {
           this.spinnerService.hide(this.spinner);
           if (error.status === 409) {
@@ -150,18 +147,8 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
 
       this.subscriptionList.push(this.updateClientLOBGroupSubscription);
     } else {
-      this.activeModal.close();
-      this.showSuccessPopUpMessage('No changes has been made!');
+      this.activeModal.close({needRefresh: false});
     }
-  }
-
-  private showSuccessPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = { backdrop: false, centered: true, size: 'sm' };
-    const modalRef = this.modalService.open(MessagePopUpComponent, options);
-    modalRef.componentInstance.headingMessage = 'Success';
-    modalRef.componentInstance.contentMessage = contentMessage;
-
-    return modalRef;
   }
 
   private getTimeZones() {

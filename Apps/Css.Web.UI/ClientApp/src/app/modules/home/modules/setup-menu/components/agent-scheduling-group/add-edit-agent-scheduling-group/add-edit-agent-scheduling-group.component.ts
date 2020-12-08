@@ -11,7 +11,6 @@ import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { GenericDataService } from '../../../services/generic-data.service';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
-import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { AgentSchedulingGroupResponse } from '../../../models/agent-scheduling-group-response.model';
 import { AgentSchedulingGroupService } from '../../../services/agent-scheduling-group.service';
 import { AddAgentSchedulingGroup } from '../../../models/add-agent-scheduling-group.model';
@@ -247,7 +246,6 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
         this.activeModal.close({ needRefresh: true });
-        this.showSuccessPopUpMessage('The record has been added!');
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         if (error.status === 409) {
@@ -270,7 +268,6 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
-          this.showSuccessPopUpMessage('The record has been updated!');
         }, (error) => {
           this.spinnerService.hide(this.spinner);
           if (error.status === 409) {
@@ -280,7 +277,6 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
       this.subscriptions.push(this.updateAgentSchedulingGroupSubscription);
     } else {
       this.activeModal.close({ needRefresh: false });
-      this.showSuccessPopUpMessage('No changes has been made!');
     }
   }
 
@@ -317,19 +313,6 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
       }
     });
     operationHours.updateValueAndValidity();
-  }
-
-  private showSuccessPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = {
-      backdrop: false,
-      centered: true,
-      size: 'sm',
-    };
-    const modalRef = this.modalService.open(MessagePopUpComponent, options);
-    modalRef.componentInstance.headingMessage = 'Success';
-    modalRef.componentInstance.contentMessage = contentMessage;
-
-    return modalRef;
   }
 
   private showErrorWarningPopUpMessage(contentMessage: string) {

@@ -107,7 +107,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then(() => {
       this.currentPage = 1;
-      this.loadAgentSchedulingGroups();
+      this.showSuccessPopUpMessage('The record has been added!');
     });
   }
 
@@ -119,7 +119,9 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
     this.modalRef.result.then((result: any) => {
       if (result.needRefresh) {
         this.agentSchedulingGroup = undefined;
-        this.loadAgentSchedulingGroups();
+        this.showSuccessPopUpMessage('The record has been updated!');
+      } else {
+        this.showSuccessPopUpMessage('No changes has been made!', false);
       }
     });
   }
@@ -136,9 +138,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
         this.deleteAgentSchedulingGroupSubscription = this.agentSchedulingGroupSevice.deleteAgentSchedulingGroup(agentSchedulingGroupIndex)
           .subscribe(() => {
             this.spinnerService.hide(this.spinner);
-            this.loadAgentSchedulingGroups();
-            this.getModalPopup(MessagePopUpComponent, 'sm');
-            this.setComponentMessages('Success', 'The record has been deleted!');
+            this.showSuccessPopUpMessage('The record has been deleted!');
           }, (error) => {
             this.spinnerService.hide(this.spinner);
             if (error.status === 424) {
@@ -198,6 +198,17 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   setSkillTag(skillTagId: number) {
     this.skillTagId = skillTagId;
     this.loadAgentSchedulingGroups();
+  }
+
+  private showSuccessPopUpMessage(contentMessage: string, needRefresh = true) {
+    this.getModalPopup(MessagePopUpComponent, 'sm');
+    this.setComponentMessages('Success', contentMessage);
+
+    if (needRefresh) {
+      this.modalRef.result.then(() => {
+        this.loadAgentSchedulingGroups();
+      });
+    }
   }
 
   private getModalPopup(component: any, size: string) {

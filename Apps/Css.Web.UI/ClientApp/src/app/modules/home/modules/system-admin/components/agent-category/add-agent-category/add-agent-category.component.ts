@@ -19,7 +19,6 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
-import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
@@ -63,7 +62,6 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
     private agentCategoryService: AgentCategoryService,
     private authService: AuthService,
     private spinnerService: NgxSpinnerService,
-
     private formBuilder: FormBuilder,
     private calendar: NgbCalendar,
     public activeModal: NgbActiveModal,
@@ -122,8 +120,7 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
     this.addAgentCategorySubscription = this.agentCategoryService.addAgentcategory(addAgentCategoryModel)
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
-        this.activeModal.close({ needRefresh: true });
-        this.showSuccessPopUpMessage('The record has been added!');
+        this.activeModal.close();
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         if (error.status === 409) {
@@ -138,15 +135,13 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
     if (this.hasAgentCategoryDetailsMismatch()) {
       const updateAgentCategoryModel = this.agentCategoryModel as UpdateAgentCategory;
       updateAgentCategoryModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
+
       this.spinnerService.show(this.spinner, SpinnerOptions);
-
-
       this.updateAgentCategorySubscription = this.agentCategoryService.updateAgentCategory(
         this.agentCategoryId, updateAgentCategoryModel)
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
-          this.showSuccessPopUpMessage('The record has been updated!');
         }, (error) => {
           this.spinnerService.hide(this.spinner);
           if (error.status === 409) {
@@ -156,7 +151,6 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
       this.subscriptionList.push(this.updateAgentCategorySubscription);
     } else {
       this.activeModal.close({ needRefresh: false });
-      this.showSuccessPopUpMessage('No changes has been made!');
     }
   }
 
@@ -237,19 +231,6 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
         dateMaxRange: range.end,
       });
     }
-  }
-
-  private showSuccessPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = {
-      backdrop: false,
-      centered: true,
-      size: 'sm',
-    };
-    const modalRef = this.modalService.open(MessagePopUpComponent, options);
-    modalRef.componentInstance.headingMessage = 'Success';
-    modalRef.componentInstance.contentMessage = contentMessage;
-
-    return modalRef;
   }
 
   private hasAgentCategoryDetailsMismatch() {

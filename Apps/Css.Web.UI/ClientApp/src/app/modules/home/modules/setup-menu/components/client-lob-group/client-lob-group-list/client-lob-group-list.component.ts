@@ -107,7 +107,8 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
     this.setComponentValues(ComponentOperation.Add, this.translationValues);
 
     this.modalRef.result.then(() => {
-      this.loadClientLOBGroups();
+      this.currentPage = 1;
+      this.showSuccessPopUpMessage('The record has been added!');
     });
   }
 
@@ -116,8 +117,12 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
     this.setComponentValues(ComponentOperation.Edit, this.translationValues);
     this.modalRef.componentInstance.clientLOBGroupDetails = data;
 
-    this.modalRef.result.then(() => {
-      this.loadClientLOBGroups();
+    this.modalRef.result.then((result: any) => {
+      if (result.needRefresh) {
+        this.showSuccessPopUpMessage('The record has been updated!');
+      } else {
+        this.showSuccessPopUpMessage('No changes has been made!', false);
+      }
     });
   }
 
@@ -132,9 +137,7 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
         this.deleteClientLOBGroupSubscription = this.clientLOBGroupService.deleteClientLOBGroup(clientIndex)
           .subscribe(() => {
             this.spinnerService.hide(this.spinner);
-            this.loadClientLOBGroups();
-            this.getModalPopup(MessagePopUpComponent, 'sm');
-            this.setComponentMessages('Success', 'The record has been deleted!');
+            this.showSuccessPopUpMessage('The record has been deleted!');
           }, (error) => {
             this.spinnerService.hide(this.spinner);
             if (error.status === 424) {
@@ -161,6 +164,17 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
 
   searchClientLOBGroups() {
     this.loadClientLOBGroups();
+  }
+
+  private showSuccessPopUpMessage(contentMessage: string, needRefresh = true) {
+    this.getModalPopup(MessagePopUpComponent, 'sm');
+    this.setComponentMessages('Success', contentMessage);
+
+    if (needRefresh) {
+      this.modalRef.result.then(() => {
+        this.loadClientLOBGroups();
+      });
+    }
   }
 
   private getModalPopup(component: any, size: string) {

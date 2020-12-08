@@ -18,9 +18,9 @@ import { AddTranslation } from '../../../../../../../shared/models/add-translati
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { Constants } from 'src/app/shared/util/constants.util';
-import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { VariableResponse } from '../../../models/variable-response.model';
 
 @Component({
   selector: 'app-add-update-translations',
@@ -37,9 +37,9 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
 
   translationForm: FormGroup;
   translationData: TranslationBase;
-  languages: KeyValue;
-  menus: KeyValue;
-  variables: KeyValue[] = [];
+  languages: KeyValue[] = [];
+  menus: KeyValue[] = [];
+  variables: VariableResponse[] = [];
 
   updateLanguageTranslationSubscription: ISubscription;
   addLanguageTranslationSubscription: ISubscription;
@@ -99,26 +99,15 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
   setMenuId(menu: number) {
     this.menuId = menu;
     this.translationForm.controls.variableId.setValue('');
+    this.translationForm.controls.description.setValue('');
     this.variables = [];
     this.getCssMenuVariables(this.menuId);
   }
 
-  getCssMenuVariables(menu: number) {
-    this.spinnerService.show(this.spinner, SpinnerOptions);
-
-    this.getCssMenuVariablesSubscription = this.cssMenuService.getCssMenuVariables(menu)
-      .subscribe((response) => {
-        this.variables = response;
-        if (this.operation === ComponentOperation.Edit && !this.menuId) {
-          this.populateFormDetails();
-        }
-        this.spinnerService.hide(this.spinner);
-      }, (error) => {
-        this.spinnerService.hide(this.spinner);
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.getCssMenuVariablesSubscription);
+  setVariableDescription(variableId: number) {
+    const variable = this.variables.find(x => x.id === +variableId);
+    variable ? this.translationForm.controls.description.setValue(variable.description) :
+    this.translationForm.controls.description.setValue('');
   }
 
   saveTranslation() {
@@ -136,8 +125,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
     this.addLanguageTranslationSubscription = this.translationService.addLanguageTranslation(addTransaltion)
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
-        this.activeModal.close({ needRefresh: true });
-        this.showSuccessPopUpMessage('The record has been added!');
+        this.activeModal.close();
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         if (error.status === 409) {
@@ -159,7 +147,6 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
-          this.showSuccessPopUpMessage('The record has been updated!');
         }, (error) => {
           this.spinnerService.hide(this.spinner);
           if (error.status === 409) {
@@ -169,7 +156,6 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
       this.subscriptions.push(this.updateLanguageTranslationSubscription);
     } else {
       this.activeModal.close({ needRefresh: false });
-      this.showSuccessPopUpMessage('No changes has been made!');
     }
   }
 
@@ -179,19 +165,6 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
         return true;
       }
     }
-  }
-
-  private showSuccessPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = {
-      backdrop: false,
-      centered: true,
-      size: 'sm',
-    };
-    const modalRef = this.modalService.open(MessagePopUpComponent, options);
-    modalRef.componentInstance.headingMessage = 'Success';
-    modalRef.componentInstance.contentMessage = contentMessage;
-
-    return modalRef;
   }
 
   private showErrorWarningPopUpMessage(contentMessage: string) {
@@ -235,6 +208,24 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.getCssMenuSubscription);
+  }
+
+  private getCssMenuVariables(menu: number) {
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+
+    this.getCssMenuVariablesSubscription = this.cssMenuService.getCssMenuVariables(menu)
+      .subscribe((response) => {
+        this.variables = response;
+        if (this.operation === ComponentOperation.Edit && !this.menuId) {
+          this.populateFormDetails();
+        }
+        this.spinnerService.hide(this.spinner);
+      }, (error) => {
+        this.spinnerService.hide(this.spinner);
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getCssMenuVariablesSubscription);
   }
 
   private loadTranslation() {
