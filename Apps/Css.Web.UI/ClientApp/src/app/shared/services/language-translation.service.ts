@@ -19,7 +19,7 @@ export class LanguageTranslationService extends HttpBaseService {
     private http: HttpClient
   ) {
     super();
-    this.baseURL = environment.services.adminService;
+    this.baseURL = environment.services.gatewayService;
   }
 
   getLanguageTranslations(translationQueryParams: TranslationQueryParams) {

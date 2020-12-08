@@ -48,7 +48,9 @@ namespace Css.Api.Scheduling
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddForwardedHeaders()
                 .AddMVCConfiguration()
+                .AddCors()
                 .AddFluentAbstractValidators()
                 .AddDBContextConfiguration(Configuration)
                 .AddSwaggerConfiguration(Configuration)
@@ -65,6 +67,8 @@ namespace Css.Api.Scheduling
         /// <param name="env">The env.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -79,7 +83,7 @@ namespace Css.Api.Scheduling
             app.ConfigureCustomExceptionMiddleware();
             app.UseMiddleware<SerilogPropertyContext>();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");
             app.UseSwagger();

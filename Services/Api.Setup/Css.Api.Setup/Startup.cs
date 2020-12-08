@@ -49,6 +49,7 @@ namespace Css.Api.Setup
         {
             services
                 .AddMVCConfiguration()
+                .AddCors()
                 .AddFluentAbstractValidators()
                 .AddDBContextConfiguration(Configuration)
                 .AddSwaggerConfiguration(Configuration)
@@ -79,7 +80,7 @@ namespace Css.Api.Setup
             app.ConfigureCustomExceptionMiddleware();
             app.UseMiddleware<SerilogPropertyContext>();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");
             app.UseSwagger();

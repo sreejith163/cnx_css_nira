@@ -14,7 +14,7 @@ export class SchedulingCodeTypesService extends HttpBaseService {
     private http: HttpClient
   ) {
     super();
-    this.baseURL = environment.services.adminService;
+    this.baseURL = environment.services.gatewayService;
   }
 
   getSchedulingCodeTypes() {

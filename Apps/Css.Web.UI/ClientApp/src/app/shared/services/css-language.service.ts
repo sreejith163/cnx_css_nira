@@ -15,7 +15,7 @@ export class CssLanguageService extends HttpBaseService {
     private http: HttpClient
   ) {
     super();
-    this.baseURL = environment.services.adminService;
+    this.baseURL = environment.services.gatewayService;
   }
 
   getCssLanguages() {

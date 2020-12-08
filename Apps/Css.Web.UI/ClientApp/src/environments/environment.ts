@@ -9,9 +9,7 @@ export const environment = {
     authAppToken: 'w6VEeeJ9CdAuCWh8ORi702Es400EXcMnVf1'
   },
   services: {
-    adminService: 'https://localhost:44318/api/v1',
-    setupService: 'https://localhost:44398/api/v1',
-    schedulingService: 'https://localhost:44393/api/v1'
+    gatewayService: 'https://localhost:44397/api'
   },
   settings: {
     applicationUrl: 'http://localhost:4200',

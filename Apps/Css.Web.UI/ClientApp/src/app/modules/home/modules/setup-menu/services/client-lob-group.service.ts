@@ -18,7 +18,7 @@ export class ClientLobGroupService extends HttpBaseService {
     private http: HttpClient
   ) {
     super();
-    this.baseURL = environment.services.setupService;
+    this.baseURL = environment.services.gatewayService;
   }
 
   getClientLOBGroups(clientLobGroupQueryParameters: ClientLobGroupQueryParameters) {

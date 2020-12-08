@@ -17,6 +17,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>App_Data\Css.Api.Scheduling.xml</DocumentationFile>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Validators\**" />
+    <Content Remove="Validators\**" />
+    <EmbeddedResource Remove="Validators\**" />
+    <None Remove="Validators\**" />
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.1.2" />
@@ -50,10 +56,6 @@
     <ProjectReference Include="..\..\API.Core\Css.Api.Core.ExceptionHandling\Css.Api.Core.ExceptionHandling.csproj" />
     <ProjectReference Include="..\Css.Api.Scheduling.Business\Css.Api.Scheduling.Business.csproj" />
     <ProjectReference Include="..\Css.Api.Scheduling.Models\Css.Api.Scheduling.Models.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Validators\" />
   </ItemGroup>
   
 </Project>

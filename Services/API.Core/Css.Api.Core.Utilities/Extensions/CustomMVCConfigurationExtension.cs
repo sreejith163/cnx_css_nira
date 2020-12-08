@@ -14,16 +14,6 @@ namespace Css.Api.Core.Utilities.Extensions
         /// <returns></returns>
         public static IServiceCollection AddMVCConfiguration(this IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder
-                    .SetIsOriginAllowed((host) => true)
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-            });
-
             services.AddMvc().AddNewtonsoftJson();
             services.AddMvcCore().AddApiExplorer();
 

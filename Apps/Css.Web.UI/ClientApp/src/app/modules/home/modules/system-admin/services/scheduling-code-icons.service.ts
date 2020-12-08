@@ -11,7 +11,7 @@ export class SchedulingCodeIconsService extends HttpBaseService {
     private http: HttpClient
   ) {
     super();
-    this.baseURL = environment.services.adminService;
+    this.baseURL = environment.services.gatewayService;
   }
   getSchedulingIcons() {
     const url = `${this.baseURL}/schedulingCodeIcons`;

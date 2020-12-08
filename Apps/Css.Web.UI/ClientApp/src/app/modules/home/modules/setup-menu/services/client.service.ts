@@ -18,7 +18,7 @@ export class ClientService extends HttpBaseService {
     private http: HttpClient
   ) {
     super();
-    this.baseURL = environment.services.setupService;
+    this.baseURL = environment.services.gatewayService;
   }
 
   getClients(clientnameQueryParams: ClientNameQueryParameters) {

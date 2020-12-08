@@ -2,12 +2,14 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
-EXPOSE 80
 EXPOSE 443
+EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Services/API.Gateway/Css.Api.Gateway/Css.Api.Gateway.csproj", "Services/API.Gateway/Css.Api.Gateway/"]
+#COPY ["Services/API.Gateway/Css.Api.Gateway/App_Data/SSL/css.api.gateway.pfx", "/app/publish/"]
+#COPY ["Services/API.Gateway/Css.Api.Gateway/App_Data/SSL/css.api.gateway.crt", "/usr/local/share/ca-certificates/"]
 RUN dotnet restore "Services/API.Gateway/Css.Api.Gateway/Css.Api.Gateway.csproj"
 COPY . .
 WORKDIR "/src/Services/API.Gateway/Css.Api.Gateway"
@@ -15,6 +17,9 @@ RUN dotnet build "Css.Api.Gateway.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "Css.Api.Gateway.csproj" -c Release -o /app/publish
+
+#RUN apt-get update && apt-get install -y curl && apt-get install -y ca-certificates
+#RUN update-ca-certificates --fresh
 
 FROM base AS final
 WORKDIR /app

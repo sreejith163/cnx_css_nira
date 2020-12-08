@@ -18,7 +18,7 @@ export class AgentCategoryService extends HttpBaseService {
     private http: HttpClient
   ) {
     super();
-    this.baseURL = environment.services.adminService;
+    this.baseURL = environment.services.gatewayService;
   }
 
   getAgentcategories(agentCategoryQueryParams: AgentCategoryQueryParams) {

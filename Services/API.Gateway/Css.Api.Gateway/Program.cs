@@ -33,9 +33,10 @@ namespace Css.Api.Gateway
                 {
                     var env = context.HostingEnvironment;
 
-                    config.AddJsonFile(Path.Combine("Configuration", "Configuration.json"), false, false);
                     config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                    config.AddJsonFile(Path.Combine("Configuration", "Configuration.json"), false, false);
+                    config.AddJsonFile(Path.Combine("Configuration", $"Configuration.{env.EnvironmentName}.json"), false, false);
                     config.AddEnvironmentVariables();
                 })
                 .ConfigureLogging((hostingContext, loggingbuilder) =>
