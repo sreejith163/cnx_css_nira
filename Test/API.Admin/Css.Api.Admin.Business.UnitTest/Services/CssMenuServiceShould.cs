@@ -2,18 +2,16 @@
 using Css.Api.Admin.Business.Interfaces;
 using Css.Api.Admin.Business.UnitTest.Mock;
 using Css.Api.Admin.Models.DTO.Request.Menu;
+using Css.Api.Admin.Models.DTO.Response.SchedulingCode;
 using Css.Api.Admin.Models.Profiles.Menu;
-using Css.Api.Admin.Models.Profiles.Translation;
 using Css.Api.Admin.Models.Profiles.Variable;
 using Css.Api.Admin.Repository;
 using Css.Api.Admin.Repository.Interfaces;
 using Css.Api.Core.Models.DTO.Response;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using Xunit;
 
 namespace Css.Api.Admin.Business.UnitTest.Services
@@ -108,7 +106,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
 
             Assert.NotNull(result);
             Assert.NotNull(result.Value);
-            Assert.IsType<List<KeyValue>>(result.Value);
+            Assert.IsType<List<VariableDTO>>(result.Value);
             Assert.Equal(HttpStatusCode.OK, result.Code);
         }
 

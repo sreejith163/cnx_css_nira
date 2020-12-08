@@ -7,7 +7,6 @@ using Css.Api.Admin.Models.DTO.Response.SchedulingCode;
 using Css.Api.Admin.Repository.DatabaseContext;
 using Css.Api.Admin.Repository.Interfaces;
 using Css.Api.Core.DataAccess.Repository.SQL;
-using Css.Api.Core.Models.DTO.Response;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,10 +75,10 @@ namespace Css.Api.Admin.Repository
         /// </summary>
         /// <param name="menuIdDetails">The menu identifier details.</param>
         /// <returns></returns>
-        public async Task<List<KeyValue>> GetCssVariablesbyMenuId(MenuIdDetails menuIdDetails)
+        public async Task<List<VariableDTO>> GetCssVariablesbyMenuId(MenuIdDetails menuIdDetails)
         {
             var variables = FindByCondition(x => x.MenuId == menuIdDetails.MenuId)
-                .ProjectTo<KeyValue>(_mapper.ConfigurationProvider).ToList();
+                .ProjectTo<VariableDTO>(_mapper.ConfigurationProvider).ToList();
 
             return await Task.FromResult(variables);
         }

@@ -13,6 +13,7 @@ namespace Css.Api.Admin.Models.Profiles.Variable
         {
             CreateMap<CssVariable, VariableDTO>()
                 .ForMember(x => x.Value, opt => opt.MapFrom(o => o.Name))
+                .ForMember(x => x.Description, opt => opt.MapFrom(o => o.Description))
                 .ForMember(x => x.MenuName, opt => opt.MapFrom(o => o.Menu != null ? o.Menu.Name : ""))
                 .ReverseMap();
 

@@ -13,6 +13,11 @@
         public string Value { get; set; }
 
         /// <summary>
+        /// Gets or sets the description.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// Gets or sets the menu id.
         /// </summary>
         public int MenuId { get; set; }
