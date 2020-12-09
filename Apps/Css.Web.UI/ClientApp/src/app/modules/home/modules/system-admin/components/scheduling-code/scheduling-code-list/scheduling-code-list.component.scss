@@ -81,3 +81,21 @@
   background-color: #c3cbd2;
   padding: 5px;
 }
+
+.icon {
+  position: absolute;
+  margin-top: -26px;
+  margin-left: calc(8.5em + 7.5em);
+}
+
+.p-r-40 {
+  padding-right: 40px;
+}
+
+@media only screen and (max-width: 992px) {
+  .icon {
+    position: absolute;
+    margin-top: -26px;
+    margin-left: calc(14.5em + 1.5em);
+  }
+}

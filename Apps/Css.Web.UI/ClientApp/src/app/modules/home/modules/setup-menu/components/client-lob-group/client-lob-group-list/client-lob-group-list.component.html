@@ -18,8 +18,9 @@
       <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
     </div>
     <div class="col-md-3 padding-bottom-5">
-      <input type="text" class="form-control  mt-4" [(ngModel)]="searchKeyword"
+      <input type="text" class="form-control  mt-4 p-r-40" [(ngModel)]="searchKeyword"
         placeholder="{{ 'Enter a Client LOB Group Name' | translation: 'lbl_search_text' : translationValues }}" />
+        <i class="fa fa-times icon"></i>
       <ng-container *ngIf="searchKeyword?.length">
         <!-- <i id="input_close_btn" class="fa fa-times-circle cursor-pointer closable-icon" type="button"
           (click)="clearSearchKeyword()"></i> -->

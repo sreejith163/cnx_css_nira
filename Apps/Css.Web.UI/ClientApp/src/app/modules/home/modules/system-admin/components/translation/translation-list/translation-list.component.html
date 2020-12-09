@@ -14,10 +14,10 @@
   </div>
 
   <div class="row m-l-r-10">
-    <div class="col-md-4 padding-bottom-5">
-      <input type="text" class="form-control" placeholder="Enter a text to search" [(ngModel)]="searchKeyword"
+    <div class="col-md-3 padding-bottom-5">
+      <input type="text" class="form-control p-r-40" placeholder="Enter a text to search" [(ngModel)]="searchKeyword"
         [maxLength]="maxLength">
-        <i class="fa fa-times" aria-hidden="true"></i>
+        <i class="fa fa-times icon"></i>
     </div>
     <div class="col-md-2 padding-bottom-5">
       <button class="form-control" id="btn_search" (click)="search()">
@@ -25,7 +25,7 @@
         {{ 'Search' | translation: 'btn_search' : translationValues }}
       </button>
     </div>
-    <div class="col-md-6 padding-bottom-5">
+    <div class="col-md-7 padding-bottom-5">
       <button type="button" class="btn btn-primary float-r" (click)="addTranslation()" id="btn_add">
         <i class="fa fa-plus padding-5" aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}
       </button>

@@ -16,14 +16,15 @@
 
   <div class="row m-l-r-10">
     <div class="col-md-3 padding-bottom-5">
-      <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
+      <input id="search" type="text" class="form-control p-r-40" [(ngModel)]="searchKeyword"
         [maxLength]="maxLength"
         placeholder="{{ 'Agent Category' | translation: 'lbl_agent_category' : translationValues }}" />
+        <i class="fa fa-times icon"></i>
       <ng-container *ngIf="searchKeyword?.length">
 
       </ng-container>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 padding-bottom-5">
       <button class="form-control" (click)="searchAgentCategories()"><i class="fa fa-search" aria-hidden="true"></i>
         {{ 'Search' | translation: 'btn_search' : translationValues }}
       </button>

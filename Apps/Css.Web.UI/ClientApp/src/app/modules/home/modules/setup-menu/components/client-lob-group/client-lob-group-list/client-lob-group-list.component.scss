@@ -1,44 +1,62 @@
 .header-title {
-    span {
-      margin-right: 5px;
-      background: white;
-      border: solid 1px #d2d2d2;
-      border-radius: 20px;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-    }
-  
-    h5 {
-      padding-top: 3px;
-    }
+  span {
+    margin-right: 5px;
+    background: white;
+    border: solid 1px #d2d2d2;
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
   }
-  
-  .float-r {
-    float: right;
+
+  h5 {
+    padding-top: 3px;
   }
-  
-  .padding-5 {
-    padding: 5px;
+}
+
+.float-r {
+  float: right;
+}
+
+.padding-5 {
+  padding: 5px;
+}
+
+.p-r-5 {
+  padding-right: 5px;
+}
+
+.breadcrumb-item.active {
+  color: inherit;
+}
+
+.breadcrumb {
+  background-color: inherit;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.icon {
+  position: absolute;
+  margin-top: -26px;
+  margin-left: calc(8.5em + 7.5em);
+}
+
+.p-r-40 {
+  padding-right: 40px;
+}
+
+@media only screen and (max-width: 992px) {
+  .icon {
+    position: absolute;
+    margin-top: -26px;
+    margin-left: calc(14.5em + 1.5em);
   }
-  
-  .p-r-5 {
-    padding-right: 5px;
-  }
-  
-  .breadcrumb-item.active {
-    color: inherit;
-  }
-  
-  .breadcrumb {
-    background-color: inherit;
-  }
-  
-  .pointer {
-    cursor: pointer;
-  }
-  
-  .overflow-auto {
-    overflow: auto;
-  }
+}

@@ -33,3 +33,21 @@ tr.row-details {
 .breadcrumb {
   background-color: inherit;
 }
+
+.icon {
+  position: absolute;
+  margin-top: 11px;
+  margin-left: calc(12.5em + 9.5em);
+}
+
+.p-r-40 {
+  padding-right: 40px;
+}
+
+@media only screen and (max-width: 992px) {
+  .icon {
+    position: absolute;
+    margin-top: 11px;
+    margin-left: calc(14.5em + 1.5em);
+  }
+}
