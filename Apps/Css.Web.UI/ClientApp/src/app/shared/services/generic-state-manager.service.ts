@@ -10,11 +10,12 @@ export class GenericStateManagerService {
   constructor() { }
 
   getCurrentLanguage() {
-    return +localStorage.getItem('language');
+    const language = localStorage.getItem('language');
+    return JSON.parse(language) as KeyValue;
   }
 
   setCurrentLanguage(language: KeyValue) {
-    localStorage.setItem('language', String(language.id));
+    localStorage.setItem('language', JSON.stringify(language));
     this.userLanguageChanged.next(language.id);
   }
 }
