@@ -225,7 +225,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
   }
 
   private showErrorWarningPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = { backdrop: false, centered: true, size: 'sm' };
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
     modalRef.componentInstance.contentMessage = contentMessage;

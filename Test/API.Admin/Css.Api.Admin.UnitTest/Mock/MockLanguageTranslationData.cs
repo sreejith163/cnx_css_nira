@@ -17,12 +17,12 @@ namespace Css.Api.Admin.UnitTest.Mock
         /// </summary>
         private readonly List<LanguageTranslation> languageTranslationsDB = new List<LanguageTranslation>()
         {
-            new LanguageTranslation{ Id = 1, LanguageId = 1, MenuId = 1, VariableId = 1, Description = "test1",
-                Translation = "test1", IsDeleted = false, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
-            new LanguageTranslation{ Id = 2, LanguageId = 2, MenuId = 2, VariableId = 2, Description = "test2",
-                Translation = "test2", IsDeleted = false, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
-            new LanguageTranslation{ Id = 3, LanguageId = 3, MenuId = 3, VariableId = 3, Description = "test3",
-                Translation = "test3", IsDeleted = false, CreatedBy = "admin", CreatedDate = DateTime.UtcNow }
+            new LanguageTranslation{ Id = 1, LanguageId = 1, MenuId = 1, VariableId = 1, Translation = "test1", IsDeleted = false, CreatedBy = "admin", 
+                                     CreatedDate = DateTime.UtcNow },
+            new LanguageTranslation{ Id = 2, LanguageId = 2, MenuId = 2, VariableId = 2, Translation = "test2", IsDeleted = false, CreatedBy = "admin",
+                                     CreatedDate = DateTime.UtcNow },
+            new LanguageTranslation{ Id = 3, LanguageId = 3, MenuId = 3, VariableId = 3, Translation = "test3", IsDeleted = false, CreatedBy = "admin",
+                                     CreatedDate = DateTime.UtcNow }
 
         };
 
@@ -112,7 +112,6 @@ namespace Css.Api.Admin.UnitTest.Mock
                 LanguageId = languageTranslation.LanguageId,
                 MenuId = languageTranslation.MenuId,
                 VariableId = languageTranslation.VariableId,
-                Description = languageTranslation.Description,
                 Translation = languageTranslation.Translation,
                 CreatedBy = languageTranslation.CreatedBy
             };
@@ -147,7 +146,6 @@ namespace Css.Api.Admin.UnitTest.Mock
             language.LanguageId = languageTranslation.LanguageId;
             language.MenuId = languageTranslation.MenuId;
             language.VariableId = languageTranslation.VariableId;
-            language.Description = languageTranslation.Description;
             language.Translation = languageTranslation.Translation;
             language.ModifiedDate = DateTime.UtcNow;
 

@@ -98,11 +98,7 @@ export class AddAgentProfileComponent implements OnInit {
   }
 
   private showSuccessPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = {
-      backdrop: false,
-      centered: true,
-      size: 'sm',
-    };
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
     const modalRef = this.modalService.open(MessagePopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Success';
     modalRef.componentInstance.contentMessage = contentMessage;

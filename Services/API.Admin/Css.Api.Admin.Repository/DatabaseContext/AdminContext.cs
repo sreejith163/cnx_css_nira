@@ -214,12 +214,6 @@ namespace Css.Api.Admin.Repository.DatabaseContext
 
                 entity.Property(e => e.CreatedDate).HasColumnName("created_date");
 
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasColumnName("description")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")
                     .HasColumnType("tinyint(4)");

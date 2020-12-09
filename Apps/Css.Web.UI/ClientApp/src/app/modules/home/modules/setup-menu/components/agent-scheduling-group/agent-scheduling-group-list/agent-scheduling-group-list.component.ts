@@ -212,7 +212,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   }
 
   private getModalPopup(component: any, size: string) {
-    const options: NgbModalOptions = { backdrop: false, centered: true, size };
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
     this.modalRef = this.modalService.open(component, options);
   }
 

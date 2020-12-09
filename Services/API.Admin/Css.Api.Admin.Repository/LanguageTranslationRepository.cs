@@ -179,7 +179,7 @@ namespace Css.Api.Admin.Repository
 
             if (!string.IsNullOrWhiteSpace(keyword))
             {
-                languages = languages.Where(o => o.Description.ToLower().Contains(keyword.Trim().ToLower()) || o.Translation.ToLower().Contains(keyword.Trim().ToLower()));
+                languages = languages.Where(o => o.Translation.ToLower().Contains(keyword.Trim().ToLower()));
 
             }
             return languages;

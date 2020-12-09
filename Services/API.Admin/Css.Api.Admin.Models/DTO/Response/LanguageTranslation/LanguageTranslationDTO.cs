@@ -41,14 +41,14 @@ namespace Css.Api.Admin.Models.DTO.Response.LanguageTranslation
         public string VariableName { get; set; }
 
         /// <summary>
+        /// Gets or sets the variable description.
+        /// </summary>
+        public string VariableDescription { get; set; }
+
+        /// <summary>
         /// Gets or sets the translation.
         /// </summary>
         public string Translation { get; set; }
-
-        /// <summary>
-        /// Gets or sets the description.
-        /// </summary>
-        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the created by.

@@ -250,11 +250,7 @@ export class SchedulingGridComponent implements OnInit {
   }
 
   private showPopUpMessage() {
-    const options: NgbModalOptions = {
-      backdrop: false,
-      centered: true,
-      size: 'sm',
-    };
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
     const modalRef = this.modalService.open(MessagePopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Success';
     modalRef.componentInstance.contentMessage = (this.hasMismatch) ? 'The record has been updated!' : 'No changes has been made!';

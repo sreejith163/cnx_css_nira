@@ -10,7 +10,6 @@ namespace Css.Api.Admin.Models.Domain
         public int MenuId { get; set; }
         public int VariableId { get; set; }
         public string Translation { get; set; }
-        public string Description { get; set; }
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public string ModifiedBy { get; set; }

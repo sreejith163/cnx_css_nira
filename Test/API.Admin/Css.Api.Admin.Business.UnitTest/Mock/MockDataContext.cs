@@ -46,9 +46,9 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
 
         public IQueryable<LanguageTranslation> languageTranslationsDB = new List<LanguageTranslation>()
         {
-            new LanguageTranslation{ Id = 1, LanguageId = 1, MenuId = 1, VariableId = 1, Description = "test1", Translation = "test1", IsDeleted = false},
-            new LanguageTranslation{ Id = 2, LanguageId = 2, MenuId = 2, VariableId = 2, Description = "test2", Translation = "test2", IsDeleted = false},
-            new LanguageTranslation{ Id = 3, LanguageId = 3, MenuId = 3, VariableId = 3, Description = "test3", Translation = "test3", IsDeleted = false}
+            new LanguageTranslation{ Id = 1, LanguageId = 1, MenuId = 1, VariableId = 1, Translation = "test1", IsDeleted = false},
+            new LanguageTranslation{ Id = 2, LanguageId = 2, MenuId = 2, VariableId = 2, Translation = "test2", IsDeleted = false},
+            new LanguageTranslation{ Id = 3, LanguageId = 3, MenuId = 3, VariableId = 3, Translation = "test3", IsDeleted = false}
         }.AsQueryable();
 
         public IQueryable<CssVariable> cssVariablesDB = new List<CssVariable>()

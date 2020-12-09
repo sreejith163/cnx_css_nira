@@ -13,7 +13,6 @@ namespace Css.Api.Admin.Models.Profiles.Translation
         public TranslationProfile()
         {
             CreateMap<CreateLanguageTranslation, LanguageTranslation>()
-                .ForMember(x => x.Description, opt => opt.MapFrom(o => o.Description.Trim()))
                 .ForMember(x => x.Translation, opt => opt.MapFrom(o => o.Translation.Trim()))
                 .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Trim()))
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
@@ -21,7 +20,6 @@ namespace Css.Api.Admin.Models.Profiles.Translation
 
             CreateMap<UpdateLanguageTranslation, LanguageTranslation>()
                 .ForMember(x => x.Translation, opt => opt.MapFrom(o => o.Translation.Trim()))
-                .ForMember(x => x.Description, opt => opt.MapFrom(o => o.Description.Trim()))
                 .ForMember(x => x.ModifiedBy, opt => opt.MapFrom(o => o.ModifiedBy.Trim()))
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
@@ -30,6 +28,7 @@ namespace Css.Api.Admin.Models.Profiles.Translation
                 .ForMember(x => x.LanguageName, opt => opt.MapFrom(o => o.Language != null ? o.Language.Name : ""))
                 .ForMember(x => x.MenuName, opt => opt.MapFrom(o => o.Menu != null ? o.Menu.Name : ""))
                 .ForMember(x => x.VariableName, opt => opt.MapFrom(o => o.Variable != null ? o.Variable.Name : ""))
+                .ForMember(x => x.VariableDescription, opt => opt.MapFrom(o => o.Variable != null ? o.Variable.Description : ""))
                 .ReverseMap();
         }
     }
