@@ -160,10 +160,19 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
 
   private hasTranslationDetailsMismatch() {
     for (const property in this.translationForm.value) {
-      if (this.translationForm.controls[property].value !== this.translationData[property]) {
-        return true;
+      if (property !== 'description' && property !== 'translation') {
+        if (+this.translationForm.controls[property].value !==
+          this.translationData[property]) {
+          return true;
+        }
+      } else if (property === 'translation') {
+        if (this.translationForm.controls[property].value !==
+          this.translationData[property]) {
+          return true;
+        }
       }
     }
+
   }
 
   private showErrorWarningPopUpMessage(contentMessage: string) {

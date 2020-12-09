@@ -115,7 +115,6 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then((result: any) => {
       if (result.needRefresh) {
-        this.skillTag = undefined;
         this.showSuccessPopUpMessage('The record has been updated!');
       } else {
         this.showSuccessPopUpMessage('No changes has been made!', false);
@@ -198,6 +197,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
 
     if (needRefresh) {
       this.modalRef.result.then(() => {
+        this.skillTag = undefined;
         this.loadSkillTags();
       });
     }
