@@ -108,10 +108,26 @@
                 <i class="fa fa-trash padding-5 pointer" (click)="deleteTranslation(el.id)"></i>
               </td>
               <td>{{ el.languageName }}</td>
-              <td>{{ el.menuName }}</td>
-              <td>{{ el.variableName }}</td>
-              <td>{{ el.description }}</td>
-              <td>{{ el.translation }}</td>
+              <td>
+                <span ngbTooltip="{{ el.menuName }}">{{el.menuName | truncate: { sliceStart: 0, sliceEnd:
+                  characterSplice, append:
+                  '...' } }}</span>
+              </td>
+              <td>
+                <span ngbTooltip="{{ el.variableName }}">{{el.variableName | truncate: { sliceStart: 0, sliceEnd:
+                  characterSplice, append:
+                  '...' } }}</span>
+              </td>
+              <td>
+                <span ngbTooltip="{{ el.variableDescription }}">{{el.variableDescription | truncate: { sliceStart: 0, sliceEnd:
+                  characterSplice, append:
+                  '...' } }}</span>
+              </td>
+              <td>
+                <span ngbTooltip="{{ el.translation }}">{{el.translation | truncate: { sliceStart: 0, sliceEnd:
+                  characterSplice, append:
+                  '...' } }}</span>
+              </td>
               <td>{{ el.createdBy }}</td>
               <td>{{ el.createdDate | date: 'yyyy-MM-dd' }}</td>
               <td>{{ el.modifiedBy }}</td>

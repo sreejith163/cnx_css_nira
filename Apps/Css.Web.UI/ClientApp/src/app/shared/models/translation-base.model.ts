@@ -4,5 +4,5 @@ export class TranslationBase {
     menuId: number;
     variableId: number;
     translation: string;
-    description: string;
+    variableDescription: string;
 }
