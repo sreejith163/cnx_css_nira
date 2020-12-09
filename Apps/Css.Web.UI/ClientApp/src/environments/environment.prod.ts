@@ -5,7 +5,7 @@ export const environment = {
     authAppToken: '9xxo7FxS7IdXQRQpBTaVQtmpgHTZBKxOEhN'
   },
   services: {
-    gatewayService: 'http://10.87.222.30:4201/api'
+    gatewayService: 'http://10.87.221.35:4201/api'
   },
   settings: {
     applicationUrl: 'http://10.87.221.8:4200',

@@ -141,7 +141,7 @@
     //********* CSS Languages *********************
     {
       "DownstreamPathTemplate": "/api/v1/csslanguages",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.6",
@@ -153,7 +153,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/csslanguages/{languageId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.6",
@@ -166,7 +166,7 @@
     //********* CSS Menus *********************
     {
       "DownstreamPathTemplate": "/api/v1/cssmenus",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.6",
@@ -178,7 +178,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/cssmenus/{menuId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.6",
@@ -190,7 +190,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/cssmenus/{menuId}/variables",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.6",
@@ -203,7 +203,7 @@
     //********* Language Translations *********************
     {
       "DownstreamPathTemplate": "/api/v1/languagetranslations",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.6",
@@ -215,7 +215,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/languagetranslations/{translationId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.6",
@@ -227,7 +227,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/languagetranslations/languages/{languageId}/menus/{menuId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.6",
@@ -240,7 +240,7 @@
     //********* CSS Variables *********************
     {
       "DownstreamPathTemplate": "/api/v1/cssvariables",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.6",
@@ -252,7 +252,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/cssvariables/{variableId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.6",
