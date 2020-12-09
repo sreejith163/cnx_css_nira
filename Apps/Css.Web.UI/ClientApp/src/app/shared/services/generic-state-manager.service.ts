@@ -5,18 +5,16 @@ import { KeyValue } from '../models/key-value.model';
 @Injectable()
 export class GenericStateManagerService {
 
-  language: KeyValue;
-
   userLanguageChanged = new BehaviorSubject<number>(undefined);
 
   constructor() { }
 
   getCurrentLanguage() {
-    return this.language;
+    return +localStorage.getItem('language');
   }
 
   setCurrentLanguage(language: KeyValue) {
-    this.language = language;
+    localStorage.setItem('language', String(language.id));
     this.userLanguageChanged.next(language.id);
   }
 }

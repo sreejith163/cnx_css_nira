@@ -26,7 +26,8 @@
                 <option *ngFor="let x of languages" [value]="x.id">{{x.value}}</option>
               </select>
               <div *ngIf="hasFormControlValidationError('languageId')" class="valid-error">
-                {{ 'Language is required' | translation: 'lbl_add_edit_language_required_validation_message' : translationValues }}
+                {{ 'Language is required' | translation: 'lbl_add_edit_language_required_validation_message' :
+                translationValues }}
               </div>
             </div>
           </div>
@@ -45,7 +46,8 @@
                 <option *ngFor="let x of menus" [value]="x.id">{{x.value}}</option>
               </select>
               <div *ngIf="hasFormControlValidationError('menuId')" class="valid-error">
-                {{ 'Menu is required' | translation: 'lbl_add_edit_menu_required_validation_message' : translationValues }}
+                {{ 'Menu is required' | translation: 'lbl_add_edit_menu_required_validation_message' : translationValues
+                }}
               </div>
             </div>
           </div>
@@ -65,7 +67,8 @@
                 <option *ngFor="let x of variables" [value]="x.id">{{x.value}}</option>
               </select>
               <div *ngIf="hasFormControlValidationError('variableId')" class="valid-error">
-                {{ 'Variable is required' | translation: 'lbl_add_edit_variable_required_validation_message' : translationValues }}
+                {{ 'Variable is required' | translation: 'lbl_add_edit_variable_required_validation_message' :
+                translationValues }}
               </div>
             </div>
           </div>
@@ -78,18 +81,12 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control" readonly formControlName="description" [maxLength]="maxLength">
+              <input type="text" class="form-control" readonly formControlName="description">
               <ng-container *ngIf="formSubmitted && form.description.invalid">
-                <ng-container *ngIf="hasFormControlValidationError('description'); else maxLengthError">
-                  <div *ngIf="hasFormControlValidationError('description')" class="valid-error">
-                    {{ 'Description is required' | translation: 'lbl_add_edit_description_required_validation_message' : translationValues }}
-                  </div>
-                </ng-container>
-                <ng-template #maxLengthError>
-                  <div class="valid-error">
-                    {{ 'Description cannot exceed 50 characters' | translation: 'lbl_add_edit_description_maxlength_validation_message' : translationValues }}
-                  </div>
-                </ng-template>
+                <div *ngIf="hasFormControlValidationError('description')" class="valid-error">
+                  {{ 'Description is required' | translation: 'lbl_add_edit_description_required_validation_message' :
+                  translationValues }}
+                </div>
               </ng-container>
             </div>
           </div>
@@ -107,12 +104,14 @@
               <ng-container *ngIf="formSubmitted && form.translation.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('translation'); else maxLengthError">
                   <div *ngIf="hasFormControlValidationError('translation')" class="valid-error">
-                    {{ 'Translation is required' | translation: 'lbl_add_edit_translation_required_validation_message' : translationValues }}
+                    {{ 'Translation is required' | translation: 'lbl_add_edit_translation_required_validation_message' :
+                    translationValues }}
                   </div>
                 </ng-container>
                 <ng-template #maxLengthError>
                   <div class="valid-error">
-                    {{ 'Translation cannot exceed 50 characters' | translation: 'lbl_add_edit_translation_maxlength_validation_message' : translationValues }}
+                    {{ 'Translation cannot exceed 50 characters' | translation:
+                    'lbl_add_edit_translation_maxlength_validation_message' : translationValues }}
                   </div>
                 </ng-template>
               </ng-container>

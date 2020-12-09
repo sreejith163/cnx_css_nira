@@ -268,10 +268,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
       languageId: new FormControl('', Validators.required),
       menuId: new FormControl('', Validators.required),
       variableId: new FormControl('', Validators.required),
-      description: new FormControl('', Validators.compose([
-        Validators.required,
-        Validators.maxLength(Constants.DefaultTextMaxLength),
-        CustomValidators.cannotContainSpace])),
+      description: new FormControl('', Validators.required),
       translation: new FormControl('', Validators.compose([
         Validators.required,
         Validators.maxLength(Constants.DefaultTextMaxLength),

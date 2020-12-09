@@ -895,17 +895,6 @@ export class Constants {
       modifiedDate: '2020-10-04',
     },
     {
-      variableId: 'lbl_add_edit_description_maxlength_validation_message',
-      menu: 'Translation',
-      description: 'text',
-      language: 'English',
-      translation: 'Description cannot exceed 50 characters',
-      createdBy: 'me',
-      createdDate: '2020-10-04',
-      modifiedBy: 'me',
-      modifiedDate: '2020-10-04',
-    },
-    {
       variableId: 'lbl_add_edit_translation_required_validation_message',
       menu: 'Translation',
       description: 'text',
