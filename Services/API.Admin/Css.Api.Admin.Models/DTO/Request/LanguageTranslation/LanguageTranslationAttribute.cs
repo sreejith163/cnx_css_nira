@@ -21,10 +21,5 @@
         /// Gets or sets the translation.
         /// </summary>
         public string Translation { get; set; }
-
-        /// <summary>
-        /// Gets or sets the description.
-        /// </summary>
-        public string Description { get; set; }
     }
 }

@@ -256,7 +256,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
       this.translationData.variableId
     );
     this.translationForm.controls.description.setValue(
-      this.translationData.description
+      this.translationData.variableDescription
     );
     this.translationForm.controls.translation.setValue(
       this.translationData.translation
@@ -278,5 +278,4 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
         CustomValidators.cannotContainSpace])),
     });
   }
-
 }

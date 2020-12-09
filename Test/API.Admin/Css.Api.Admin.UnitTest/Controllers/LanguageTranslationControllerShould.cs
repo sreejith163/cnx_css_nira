@@ -143,7 +143,6 @@ namespace Css.Api.Admin.UnitTest.Controllers
                 LanguageId = 1,
                 MenuId = 1,
                 VariableId = 1,
-                Description = "test",
                 Translation = "test",
                 CreatedBy = "admin"
             };
@@ -164,7 +163,6 @@ namespace Css.Api.Admin.UnitTest.Controllers
                 LanguageId = 4,
                 MenuId = 4,
                 VariableId = 4,
-                Description = "test",
                 Translation = "test",
                 CreatedBy = "admin"
             };
@@ -191,7 +189,6 @@ namespace Css.Api.Admin.UnitTest.Controllers
                 LanguageId = 4,
                 MenuId = 4,
                 VariableId = 4,
-                Description = "test",
                 Translation = "testing",
                 ModifiedBy = "admin"
             };
@@ -214,7 +211,6 @@ namespace Css.Api.Admin.UnitTest.Controllers
                 LanguageId = 2,
                 MenuId = 2,
                 VariableId = 2,
-                Description = "test",
                 Translation = "testing",
                 ModifiedBy = "admin"
             };
@@ -245,7 +241,6 @@ namespace Css.Api.Admin.UnitTest.Controllers
                 LanguageId = languageId,
                 MenuId = menuId,
                 VariableId = variableId,
-                Description = "test",
                 Translation = "testing",
                 ModifiedBy = "admin"
             };

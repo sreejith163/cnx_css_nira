@@ -46,8 +46,7 @@ namespace Css.Api.Gateway
         /// Configures the specified application.
         /// </summary>
         /// <param name="app">The application.</param>
-        /// <param name="env">The env.</param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseForwardedHeaders();
             //app.UseHttpsRedirection();

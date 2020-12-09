@@ -404,6 +404,26 @@
             Initializes a new instance of the <see cref="T:Css.Api.Admin.Validators.AgentCategory.UpdateAgentCategoryValidator"/> class.
             </summary>
         </member>
+        <member name="T:Css.Api.Admin.Validators.AgentCategory.AddTranslationValidator">
+            <summary>
+            Validator for handling the validation of add AgentCategory object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Admin.Validators.AgentCategory.AddTranslationValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Validators.AgentCategory.AddTranslationValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Admin.Validators.AgentCategory.UpdateTranslationValidator">
+            <summary>
+            Validator for handling the validation of add AgentCategory object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Admin.Validators.AgentCategory.UpdateTranslationValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Validators.AgentCategory.UpdateTranslationValidator"/> class.
+            </summary>
+        </member>
         <member name="T:Css.Api.Admin.Validators.SchedulingCode.AddSchedulingCodeValidator">
             <summary>
             Validator for handling the validation of add scheduling code object
