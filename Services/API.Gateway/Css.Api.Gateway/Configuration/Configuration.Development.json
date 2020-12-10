@@ -337,6 +337,31 @@
       ],
       "UpstreamPathTemplate": "/api/schedulingcodeicons",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* Agent Admin Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentadmins",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.13",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentadmins",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentadmins/{agentAdminId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.13",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentadmins/{agentAdminId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
     }
   ],
   "GlobalConfiguration": {
