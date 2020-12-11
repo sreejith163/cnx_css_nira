@@ -254,6 +254,7 @@ namespace Css.Api.Scheduling.Business
             var agentAdminRequest = _mapper.Map<Agent>(agentAdminDetails);
 
             var agentAdminCount = await _repository.GetAgentAdminsCount();
+            agentAdminRequest.AgentAdminId = agentAdminCount + 1;
 
             _repository.CreateAgentAdmin(agentAdminRequest);
 
