@@ -4,6 +4,57 @@
         <name>Css.Api.Scheduling</name>
     </assembly>
     <members>
+        <member name="T:Css.Api.Scheduling.Controllers.AgentAdminsController">
+            <summary>
+            Controller for handling the agent admins resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.AgentAdminsController._agentAdminService">
+            <summary>The agentAdmin service</summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.#ctor(Css.Api.Scheduling.Business.Interfaces.IAgentAdminService)">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.AgentAdminsController" /> class.</summary>
+            <param name="agentAdminService">The agentAdmin service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.GetAgentAdmins(Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.AgentAdminQueryParameter)">
+            <summary>
+            Gets the agent admins.
+            </summary>
+            <param name="agentAdminQueryParameters">The agentAdmin query parameters.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.GetAgentAdmin(System.Int32)">
+            <summary>
+            Gets the agent admin.
+            </summary>
+            <param name="agentAdminId">The agentAdmin identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.CreateAgentAdmin(Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.CreateAgentAdmin)">
+            <summary>
+            Creates the agent admin.
+            </summary>
+            <param name="clientDetails">The client details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.UpdateAgentAdmin(System.Int32,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.UpdateAgentAdmin)">
+            <summary>
+            Updates the agent admin.
+            </summary>
+            <param name="agentAdminId">The agentAdmin identifier.</param>
+            <param name="clientDetails">The client details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.DeleteAgentAdmin(System.Int32)">
+            <summary>
+            Deletes the agent admin.
+            </summary>
+            <param name="agentAdminId">The agentAdmin identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.TimeZonesController">
             <summary>
             Controller for handling the Time zones resource

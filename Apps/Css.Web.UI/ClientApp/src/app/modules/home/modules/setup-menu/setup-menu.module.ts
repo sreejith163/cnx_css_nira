@@ -20,7 +20,6 @@ import { AddUpdateClientLobGroupComponent } from './components/client-lob-group/
 import { SkillGroupListComponent } from './components/skill-group/skill-group-list/skill-group-list.component';
 import { SkillTagsListComponent } from './components/skill-tags/skill-tags-list/skill-tags-list.component';
 import { AddUpdateSkillTagComponent } from './components/skill-tags/add-update-skill-tag/add-update-skill-tag.component';
-import { AgentSchedulingGroupTypeaheadComponent } from './components/agent-scheduling-group/agent-scheduling-group-typeahead/agent-scheduling-group-typeahead.component';
 
 const modules = [SharedModule, SetupMenuRoutingModule];
 const components = [
@@ -30,12 +29,12 @@ const components = [
   AddUpdateClientLobGroupComponent,
   AgentSchedulingGroupListComponent,
   AddEditAgentSchedulingGroupComponent,
-  AgentSchedulingGroupTypeaheadComponent,
   SkillGroupListComponent,
   AddEditSkillGroupComponent,
   SkillTagsListComponent,
   AddUpdateSkillTagComponent
 ];
+
 const providers = [
   ClientService,
   AgentSchedulingGroupService,

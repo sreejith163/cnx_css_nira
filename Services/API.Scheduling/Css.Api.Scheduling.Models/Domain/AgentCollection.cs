@@ -7,6 +7,11 @@ namespace Css.Api.Scheduling.Models.Domain
     [BsonCollection("agent_collection")]
     public class AgentCollection : BaseDocument
     {
+
+        /// <summary>Gets or sets the agent admin identifier.</summary>
+        /// <value>The agent admin identifier.</value>
+        public int AgentAdminId { get; set; }
+
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
@@ -27,6 +32,26 @@ namespace Css.Api.Scheduling.Models.Domain
         /// </summary>
         public string Ssn { get; set; }
 
+        /// <summary>Gets or sets the sso.</summary>
+        /// <value>The sso.</value>
+        public string Sso { get; set; }
+
+        /// <summary>Gets or sets the client identifier.</summary>
+        /// <value>The client identifier.</value>
+        public int ClientId { get; set; }
+
+        /// <summary>Gets or sets the client lob group identifier.</summary>
+        /// <value>The client lob group identifier.</value>
+        public int ClientLobGroupId { get; set; }
+
+        /// <summary>Gets or sets the skill group identifier.</summary>
+        /// <value>The skill group identifier.</value>
+        public int SkillGroupId { get; set; }
+
+        /// <summary>Gets or sets the skill tag identifier.</summary>
+        /// <value>The skill tag identifier.</value>
+        public int SkillTagId { get; set; }    
+
         /// <summary>
         /// Gets or sets the sen date.
         /// </summary>
@@ -36,6 +61,27 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets the sen ext.
         /// </summary>
         public DateTime SenExt { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
+
+        /// <summary>Gets or sets the created by.</summary>
+        /// <value>The created by.</value>
+        public string CreatedBy { get; set; }
+
+        /// <summary>Gets or sets the created date.</summary>
+        /// <value>The created date.</value>
+        public DateTimeOffset CreatedDate { get; set; }
+
+        /// <summary>Gets or sets the modified by.</summary>
+        /// <value>The modified by.</value>
+        public string ModifiedBy { get; set; }
+
+        /// <summary>Gets or sets the modified date.</summary>
+        /// <value>The modified date.</value>
+        public DateTimeOffset? ModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the agent data.
