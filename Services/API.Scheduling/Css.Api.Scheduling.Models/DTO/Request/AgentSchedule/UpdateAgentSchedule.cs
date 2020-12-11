@@ -1,5 +1,6 @@
 ﻿using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
@@ -10,6 +11,21 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
         /// Gets or sets the status.
         /// </summary>
         public SchedulingStatus Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the agent schedule.
+        /// </summary>
+        public AgentScheduleType AgentScheduleType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date from.
+        /// </summary>
+        public DateTimeOffset? DateFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date to.
+        /// </summary>
+        public DateTimeOffset? DateTo { get; set; }
 
         /// <summary>
         /// Gets or sets the charts.
