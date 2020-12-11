@@ -65,40 +65,29 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<Agent> GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails)
         {
-            var query = Builders<Agent>.Filter.Eq(i => i.AgentAdminId, agentAdminIdDetails.AgentAdminId)
-                 & Builders<Agent>.Filter.Eq(i => i.IsDeleted, false);
+            var query = 
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) & 
+                Builders<Agent>.Filter.Eq(i => i.AgentAdminId, agentAdminIdDetails.AgentAdminId);
 
             return await FindByIdAsync(query);
         }
 
         //To be changed
-        /// <summary>Gets the agent admins by employee identifier.</summary>
+        /// <summary>
+        /// Gets the agent admins by employee identifier.
+        /// </summary>
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<Agent> GetAgentAdminIdsByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails)
-        {
-
-            var query = Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id)
-                & Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id);
-
-            //var query = Builders<AgentCollection>.Filter.Eq(i => i.Ssn.ToLower(), agentAdminEmployeeIdDetails.Id.ToLower())
-            //      & Builders<AgentCollection>.Filter.Eq(i => i.IsDeleted, false);
-
-            return await FindByIdAsync(query);
-        }
-
-        //To be changed
-        /// <summary>Gets the agent admin ids by sso.</summary>
         /// <param name="agentAdminSsoDetails">The agent admin sso details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<Agent> GetAgentAdminIdsBySso(AgentAdminSsoDetails agentAdminSsoDetails)
+        public async Task<Agent> GetAgentAdminIdsByEmployeeIdAndSso(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails, AgentAdminSsoDetails agentAdminSsoDetails)
         {
-            var query = Builders<Agent>.Filter.Eq(i => i.Sso, agentAdminSsoDetails.Sso)
-                   & Builders<Agent>.Filter.Eq(i => i.Sso, agentAdminSsoDetails.Sso);
+
+            var query = 
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
+                Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id) |
+                Builders<Agent>.Filter.Eq(i => i.Sso, agentAdminSsoDetails.Sso);
 
             return await FindByIdAsync(query);
         }
@@ -113,6 +102,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var count = FilterBy(x => true)
                 .Count();
+
             return await Task.FromResult(count);
         }
 

@@ -3,7 +3,6 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using System.Threading.Tasks;
 
-
 namespace Css.Api.Scheduling.Repository.Interfaces
 {
     /// <summary>
@@ -25,20 +24,12 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <returns></returns>
         Task<Agent> GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails);
 
-
         /// <summary>Gets the agent admin ids by employee identifier.</summary>
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        Task<Agent> GetAgentAdminIdsByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails);
-
-        /// <summary>Gets the agent admin ids by sso.</summary>
-        /// <param name="agentAdminSsoDetails">The agent admin sso details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        Task<Agent> GetAgentAdminIdsBySso(AgentAdminSsoDetails agentAdminSsoDetails);
+        Task<Agent> GetAgentAdminIdsByEmployeeIdAndSso(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails, AgentAdminSsoDetails agentAdminSsoDetails);
 
         /// <summary>Gets the agent admins count.</summary>
         /// <returns>

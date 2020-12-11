@@ -1,5 +1,4 @@
 ﻿using Css.Api.Scheduling.Models.Domain;
-using Css.Api.Scheduling.Models.DTO.Request.AgentData;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

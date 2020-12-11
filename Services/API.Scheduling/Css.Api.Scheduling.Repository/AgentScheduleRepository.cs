@@ -1,0 +1,138 @@
+﻿using AutoMapper;
+using Css.Api.Core.DataAccess.Repository.NoSQL;
+using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
+using Css.Api.Core.Models.Domain;
+using Css.Api.Core.Utilities.Extensions;
+using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Repository.Interfaces;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Css.Api.Scheduling.Repository
+{
+    public class AgentScheduleRepository : GenericRepository<AgentSchedule>, IAgentScheduleRepository
+    {
+        /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>Initializes a new instance of the <see cref="AgentScheduleRepository" /> class.</summary>
+        /// <param name="mongoContext">The mongo context.</param>
+        /// <param name="mapper">The mapper.</param>
+        public AgentScheduleRepository(IMongoContext mongoContext,
+            IMapper mapper) : base(mongoContext)
+        {
+            _mapper = mapper;
+        }
+
+        /// <summary>
+        /// Filters the agent schedules.
+        /// </summary>
+        /// <param name="agentSchedules">The agent admins.</param>
+        /// <param name="searchKeyWord">Name of the agent admin.</param>
+        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+        /// <returns></returns>
+        private IQueryable<AgentSchedule> FilterAgentSchedules(IQueryable<AgentSchedule> agentSchedules, string searchKeyWord, int? agentSchedulingGroupId)
+        {
+            if (!agentSchedules.Any())
+            {
+                return agentSchedules;
+            }
+
+            if (agentSchedulingGroupId.HasValue && agentSchedulingGroupId != default(int))
+            {
+                agentSchedules = agentSchedules.Where(x => x.AgentSchedulingGroupId == agentSchedulingGroupId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchKeyWord))
+            {
+                agentSchedules = agentSchedules.Where(o => string.Equals(o.ModifiedBy, searchKeyWord, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return agentSchedules;
+        }
+
+        /// <summary>
+        /// Gets the agent schedules.
+        /// </summary>
+        /// <param name="agentScheduleQueryparameter">The agent schedule queryparameter.</param>
+        /// <returns></returns>
+        public async Task<PagedList<Entity>> GetAgentSchedules(AgentScheduleQueryparameter agentScheduleQueryparameter)
+        {
+            var agentSchedules = FilterBy(x => true);
+
+            var filteredAgentSchedules = FilterAgentSchedules(agentSchedules, agentScheduleQueryparameter.SearchKeyword, agentScheduleQueryparameter.AgentSchedulingGroupId);
+
+            var sortedAgentSchedules = SortHelper.ApplySort(filteredAgentSchedules, agentScheduleQueryparameter.OrderBy);
+
+            var pagedAgentSchedules = sortedAgentSchedules
+                .Skip((agentScheduleQueryparameter.PageNumber - 1) * agentScheduleQueryparameter.PageSize)
+                .Take(agentScheduleQueryparameter.PageSize);
+
+            var shapedAgentSchedules = DataShaper.ShapeData(pagedAgentSchedules, agentScheduleQueryparameter.Fields);
+
+            return await PagedList<Entity>
+                .ToPagedList(shapedAgentSchedules, filteredAgentSchedules.Count(), agentScheduleQueryparameter.PageNumber, agentScheduleQueryparameter.PageSize);
+        }
+
+        /// <summary>
+        /// Gets the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <returns></returns>
+        public async Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails)
+        {
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId));
+
+            return await FindByIdAsync(query);
+        }
+
+        /// <summary>
+        /// Gets the agent schedule by employee identifier.
+        /// </summary>
+        /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
+        /// <returns></returns>
+        public async Task<AgentSchedule> GetAgentScheduleByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails)
+        {
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, agentAdminEmployeeIdDetails.Id);
+
+            return await FindByIdAsync(query);
+        }
+
+        /// <summary>
+        /// Creates the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleRequest">The agent schedule request.</param>
+        public void CreateAgentSchedule(AgentSchedule agentScheduleRequest)
+        {
+            InsertOneAsync(agentScheduleRequest);
+        }
+
+        /// <summary>
+        /// Updates the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleRequest">The agent schedule request.</param>
+        public void UpdateAgentSchedule(AgentSchedule agentScheduleRequest)
+        {
+            ReplaceOneAsync(agentScheduleRequest);
+        }
+
+        /// <summary>
+        /// Deletes the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        public void DeleteAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails)
+        {
+            DeleteByIdAsync(agentScheduleIdDetails.AgentScheduleId);
+        }
+    }
+}
+

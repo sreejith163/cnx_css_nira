@@ -32,7 +32,12 @@ namespace Css.Api.Scheduling.Business
         /// <summary>
         /// The repository
         /// </summary>
-        private readonly IAgentAdminRepository _repository;
+        private readonly IAgentAdminRepository _agentAdminRepository;
+
+        /// <summary>
+        /// The agent schedule repository
+        /// </summary>
+        private readonly IAgentScheduleRepository _agentScheduleRepository;
 
         /// <summary>
         /// The skill tag repository
@@ -64,14 +69,22 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IUnitOfWork _uow;
 
-        /// <summary>Initializes a new instance of the <see cref="AgentAdminService" /> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgentAdminService" /> class.
+        /// </summary>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
-        /// <param name="repository">The repository.</param>
+        /// <param name="agentAdminRepository">The agent admin repository.</param>
+        /// <param name="_agentScheduleRepository">The agent schedule repository.</param>
+        /// <param name="clientNameRepository">The client name repository.</param>
+        /// <param name="clientLobGroupRepository">The client lob group repository.</param>
+        /// <param name="skillGroupRepository">The skill group repository.</param>
+        /// <param name="skillTagRepository">The skill tag repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
         public AgentAdminService(
             IHttpContextAccessor httpContextAccessor,
-            IAgentAdminRepository repository,
+            IAgentAdminRepository agentAdminRepository,
+            IAgentScheduleRepository _agentScheduleRepository,
             IClientNameRepository clientNameRepository,
             IClientLobGroupRepository clientLobGroupRepository,
             ISkillGroupRepository skillGroupRepository,
@@ -80,7 +93,8 @@ namespace Css.Api.Scheduling.Business
             IUnitOfWork uow)
         {
             _httpContextAccessor = httpContextAccessor;
-            _repository = repository;
+            _agentAdminRepository = agentAdminRepository;
+            this._agentScheduleRepository = _agentScheduleRepository;
             _clientNameRepository = clientNameRepository;
             _clientLobGroupRepository = clientLobGroupRepository;
             _skillGroupRepository = skillGroupRepository;
@@ -91,6 +105,9 @@ namespace Css.Api.Scheduling.Business
         }
 
         //To be changed
+        /// <summary>
+        /// Seeds the data.
+        /// </summary>
         public async void SeedData()
         {
             var isClientNameSeeded = await _clientNameRepository.GetClientNamesCount() > 0;
@@ -146,7 +163,7 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> GetAgentAdmins(AgentAdminQueryParameter agentAdminQueryParameter)
         {
-            var agentAdmins = await _repository.GetAgentAdmins(agentAdminQueryParameter);
+            var agentAdmins = await _agentAdminRepository.GetAgentAdmins(agentAdminQueryParameter);
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentAdmins));
 
             return new CSSResponse(agentAdmins, HttpStatusCode.OK);
@@ -159,7 +176,7 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails)
         {
-            var agentAdmin = await _repository.GetAgentAdmin(agentAdminIdDetails);
+            var agentAdmin = await _agentAdminRepository.GetAgentAdmin(agentAdminIdDetails);
             if (agentAdmin == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -224,39 +241,25 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> CreateAgentAdmin(CreateAgentAdmin agentAdminDetails)
         {
-            //To be changed
-            //var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentAdminDetails.SkillTagId };
-
-            //var skillTag = await _repository.GetSkillTag(skillTagIdDetails);
-            //if (skillTag == null)
-            //{
-            //    return new CSSResponse($"Skill Tag with id '{skillTagIdDetails.SkillTagId}' not found", HttpStatusCode.NotFound);
-            //}
-
             var agentAdminEmployeeIdDetails = new AgentAdminEmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
+            var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
 
-            var agentAdmins = await _repository.GetAgentAdminIdsByEmployeeId(agentAdminEmployeeIdDetails);
+            var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
 
             if (agentAdmins != null)
             {
-                return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' already exists.", HttpStatusCode.Conflict);
-            }
-
-            var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
-
-            var agentAdminIds = await _repository.GetAgentAdminIdsBySso(agentAdminSsoDetails);
-
-            if (agentAdminIds != null)
-            {
-                return new CSSResponse($"Agent Admin with Sso '{agentAdminSsoDetails.Sso}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' and SSo '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
             var agentAdminRequest = _mapper.Map<Agent>(agentAdminDetails);
 
-            var agentAdminCount = await _repository.GetAgentAdminsCount();
+            var agentAdminCount = await _agentAdminRepository.GetAgentAdminsCount();
             agentAdminRequest.AgentAdminId = agentAdminCount + 1;
 
-            _repository.CreateAgentAdmin(agentAdminRequest);
+            _agentAdminRepository.CreateAgentAdmin(agentAdminRequest);
+
+            var agentScheduleRequest = _mapper.Map<AgentSchedule>(agentAdminDetails);
+            _agentScheduleRepository.CreateAgentSchedule(agentScheduleRequest);
 
             await _uow.Commit();
 
@@ -271,33 +274,25 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> UpdateAgentAdmin(AgentAdminIdDetails agentAdminIdDetails, UpdateAgentAdmin agentAdminDetails)
         {
-            var agentAdmin = await _repository.GetAgentAdmin(agentAdminIdDetails);
+            var agentAdmin = await _agentAdminRepository.GetAgentAdmin(agentAdminIdDetails);
             if (agentAdmin == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
             var agentAdminEmployeeIdDetails = new AgentAdminEmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
-
-            var agentAdmins = await _repository.GetAgentAdminIdsByEmployeeId(agentAdminEmployeeIdDetails);
-
-            if (agentAdmins != null && agentAdmins.AgentAdminId != agentAdminIdDetails.AgentAdminId)
-            {
-                return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' already exists.", HttpStatusCode.Conflict);
-            }
-
             var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
 
-            var agentAdminIds = await _repository.GetAgentAdminIdsBySso(agentAdminSsoDetails);
+            var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
 
-            if (agentAdminIds != null && agentAdminIds.AgentAdminId != agentAdminIdDetails.AgentAdminId)
+            if (agentAdmins != null)
             {
-                return new CSSResponse($"Agent Admin with Sso '{agentAdminSsoDetails.Sso}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' and SSo '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
             var agentAdminRequest = _mapper.Map(agentAdminDetails, agentAdmin);
 
-            _repository.UpdateAgentAdmin(agentAdminRequest);
+            _agentAdminRepository.UpdateAgentAdmin(agentAdminRequest);
 
             await _uow.Commit();
 
@@ -311,7 +306,7 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> DeleteAgentAdmin(AgentAdminIdDetails agentAdminIdDetails)
         {
-            var agentAdmin = await _repository.GetAgentAdmin(agentAdminIdDetails);
+            var agentAdmin = await _agentAdminRepository.GetAgentAdmin(agentAdminIdDetails);
             if (agentAdmin == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -319,7 +314,14 @@ namespace Css.Api.Scheduling.Business
 
             agentAdmin.IsDeleted = true;
 
-            _repository.UpdateAgentAdmin(agentAdmin);
+            _agentAdminRepository.UpdateAgentAdmin(agentAdmin);
+
+            var agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(new AgentAdminEmployeeIdDetails { Id = agentAdmin.Ssn });
+            if (agentAdminIdDetails != null)
+            {
+                agentSchedule.IsDeleted = true;
+                _agentScheduleRepository.UpdateAgentSchedule(agentSchedule);
+            }
 
             await _uow.Commit();
 
