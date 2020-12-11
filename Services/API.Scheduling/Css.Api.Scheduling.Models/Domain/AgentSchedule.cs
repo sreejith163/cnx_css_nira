@@ -76,6 +76,16 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the modified by.
         /// </summary>
+        public string CreatedBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the modified date.
+        /// </summary>
+        public DateTimeOffset? CreatedDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the modified by.
+        /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ModifiedBy { get; set; }
 

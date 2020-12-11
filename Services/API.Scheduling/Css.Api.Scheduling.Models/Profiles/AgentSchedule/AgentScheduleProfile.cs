@@ -12,9 +12,12 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
             CreateMap<CreateAgentAdmin, Domain.AgentSchedule>()
                 .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.EmployeeId.Trim()))
                 .ForMember(x => x.Status, opt => opt.MapFrom(o => SchedulingStatus.Approved))
+                .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
 
             CreateMap<UpdateAgentSchedule, Domain.AgentSchedule>()
+                .ForMember(x => x.AgentScheduleCharts, opt => opt.MapFrom(o => o.AgentScheduleType == AgentScheduleType.SchedulingTab ? o.AgentScheduleCharts : null))
+                .ForMember(x => x.AgentScheduleManager, opt => opt.MapFrom(o => o.AgentScheduleType == AgentScheduleType.SchedulingMangerTab ? o.AgentScheduleManager : null))
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
         }
