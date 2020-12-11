@@ -52,9 +52,11 @@ namespace Css.Api.Scheduling.Extensions
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<ITimezoneService, TimezoneService>();
             services.AddTransient<IAgentAdminService, AgentAdminService>();
+            services.AddTransient<IAgentScheduleService, AgentScheduleService>();
 
             services.AddScoped<ITimezoneRepository, TimezoneRepository>();
             services.AddScoped<IAgentAdminRepository, AgentAdminRepository>();
+            services.AddScoped<IAgentScheduleRepository, AgentScheduleRepository>();
             services.AddScoped<IClientNameRepository, ClientNameRepository>();
             services.AddScoped<IClientLobGroupRepository, ClientLobGroupRepository>();
             services.AddScoped<ISkillGroupRepository, SkillGroupRepository>();

@@ -55,6 +55,45 @@
             <param name="agentAdminId">The agentAdmin identifier.</param>
             <returns></returns>
         </member>
+        <member name="T:Css.Api.Scheduling.Controllers.AgentSchedulesController">
+            <summary>
+            Controller for handling the agent schedules resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.AgentSchedulesController._agentScheduleService">
+            <summary>
+            The agentAdmin service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.#ctor(Css.Api.Scheduling.Business.Interfaces.IAgentScheduleService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.AgentSchedulesController"/> class.
+            </summary>
+            <param name="aagentScheduleService">The aagent schedule service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.GetAgentSchedules(Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.AgentScheduleQueryparameter)">
+            <summary>
+            Gets the agent schedules.
+            </summary>
+            <param name="agentScheduleQueryparameter">The agent schedule queryparameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.GetAgentSchedule(System.String)">
+            <summary>
+            Gets the agent schedule.
+            </summary>
+            <param name="agentScheduleId">The agent schedule identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.UpdateAgentSchedule(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.UpdateAgentSchedule)">
+            <summary>
+            Updates the agent schedule.
+            </summary>
+            <param name="agentScheduleId">The agent schedule identifier.</param>
+            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.TimeZonesController">
             <summary>
             Controller for handling the Time zones resource
