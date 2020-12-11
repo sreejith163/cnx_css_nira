@@ -40,7 +40,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var agentSchedules = FilterBy(x => true);
 
-            var filteredAgentSchedules = FilterAgentSchedules(agentSchedules, agentScheduleQueryparameter.SearchKeyword, agentScheduleQueryparameter.AgentSchedulingGroupId);
+            var filteredAgentSchedules = FilterAgentSchedules(agentSchedules, agentScheduleQueryparameter);
 
             var sortedAgentSchedules = SortHelper.ApplySort(filteredAgentSchedules, agentScheduleQueryparameter.OrderBy);
 
@@ -111,24 +111,23 @@ namespace Css.Api.Scheduling.Repository
         /// Filters the agent schedules.
         /// </summary>
         /// <param name="agentSchedules">The agent admins.</param>
-        /// <param name="searchKeyWord">Name of the agent admin.</param>
-        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+        /// <param name="agentScheduleQueryparameter">The agent schedule queryparameter.</param>
         /// <returns></returns>
-        private IQueryable<AgentSchedule> FilterAgentSchedules(IQueryable<AgentSchedule> agentSchedules, string searchKeyWord, int? agentSchedulingGroupId)
+        private IQueryable<AgentSchedule> FilterAgentSchedules(IQueryable<AgentSchedule> agentSchedules, AgentScheduleQueryparameter agentScheduleQueryparameter)
         {
             if (!agentSchedules.Any())
             {
                 return agentSchedules;
             }
 
-            if (agentSchedulingGroupId.HasValue && agentSchedulingGroupId != default(int))
+            if (agentScheduleQueryparameter.AgentSchedulingGroupId.HasValue && agentScheduleQueryparameter.AgentSchedulingGroupId != default(int))
             {
-                agentSchedules = agentSchedules.Where(x => x.AgentSchedulingGroupId == agentSchedulingGroupId);
+                agentSchedules = agentSchedules.Where(x => x.AgentSchedulingGroupId == agentScheduleQueryparameter.AgentSchedulingGroupId);
             }
 
-            if (!string.IsNullOrWhiteSpace(searchKeyWord))
+            if (!string.IsNullOrWhiteSpace(agentScheduleQueryparameter.SearchKeyword))
             {
-                agentSchedules = agentSchedules.Where(o => string.Equals(o.ModifiedBy, searchKeyWord, StringComparison.OrdinalIgnoreCase));
+                agentSchedules = agentSchedules.Where(o => string.Equals(o.ModifiedBy, agentScheduleQueryparameter.SearchKeyword, StringComparison.OrdinalIgnoreCase));
             }
 
             return agentSchedules;
