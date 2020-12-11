@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, SubscriptionLike as ISubscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { ClientBaseModel } from '../../../models/client-base.model';
-import { ClientNameQueryParameters } from '../../../models/client-name-query-parameters.model';
-import { ClientService } from '../../../services/client.service';
+import { ClientBaseModel } from 'src/app/modules/home/modules/setup-menu/models/client-base.model';
+import { ClientNameQueryParameters } from 'src/app/modules/home/modules/setup-menu/models/client-name-query-parameters.model';
+import { ClientService } from 'src/app/modules/home/modules/setup-menu/services/client.service';
+
 
 @Component({
   selector: 'app-client-name-typeahead',

@@ -15,15 +15,11 @@ import { ClientNameListComponent } from './components/client-name/client-name-li
 import { AddEditAgentSchedulingGroupComponent } from './components/agent-scheduling-group/add-edit-agent-scheduling-group/add-edit-agent-scheduling-group.component';
 import { AgentSchedulingGroupListComponent } from './components/agent-scheduling-group/agent-scheduling-group-list/agent-scheduling-group-list.component';
 import { AddEditSkillGroupComponent } from './components/skill-group/add-edit-skill-group/add-edit-skill-group.component';
-import { ClientNameTypeAheadComponent } from './components/client-name/client-name-typeahead/client-name-typeahead.component';
 import { ClientLobGroupListComponent } from './components/client-lob-group/client-lob-group-list/client-lob-group-list.component';
 import { AddUpdateClientLobGroupComponent } from './components/client-lob-group/add-update-client-lob-group/add-update-client-lob-group.component';
-import { ClientLobGroupTypeaheadComponent } from './components/client-lob-group/client-lob-group-typeahead/client-lob-group-typeahead.component';
 import { SkillGroupListComponent } from './components/skill-group/skill-group-list/skill-group-list.component';
-import { SkillTagTypeaheadComponent } from './components/skill-tags/skill-tag-typeahead/skill-tag-typeahead.component';
 import { SkillTagsListComponent } from './components/skill-tags/skill-tags-list/skill-tags-list.component';
 import { AddUpdateSkillTagComponent } from './components/skill-tags/add-update-skill-tag/add-update-skill-tag.component';
-import { SkillGroupTypeaheadComponent } from './components/skill-group/skill-group-typeahead/skill-group-typeahead.component';
 import { AgentSchedulingGroupTypeaheadComponent } from './components/agent-scheduling-group/agent-scheduling-group-typeahead/agent-scheduling-group-typeahead.component';
 
 const modules = [SharedModule, SetupMenuRoutingModule];
@@ -37,12 +33,8 @@ const components = [
   AgentSchedulingGroupTypeaheadComponent,
   SkillGroupListComponent,
   AddEditSkillGroupComponent,
-  ClientNameTypeAheadComponent,
-  ClientLobGroupTypeaheadComponent,
-  SkillTagTypeaheadComponent,
   SkillTagsListComponent,
-  AddUpdateSkillTagComponent,
-  SkillGroupTypeaheadComponent
+  AddUpdateSkillTagComponent
 ];
 const providers = [
   ClientService,

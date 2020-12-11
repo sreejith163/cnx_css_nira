@@ -7,14 +7,15 @@ import { AgentAdminDropdownsService } from './services/agent-admin-dropdowns.ser
 import { SchedulingGridService } from './services/scheduling-grid.service';
 import { AgentAdminListService } from './services/agent-admin-list.service';
 
-import { AgentAdminListComponent } from './components/agent-admin-list/agent-admin-list.component';
-import { AddAgentProfileComponent } from './components/add-agent-profile/add-agent-profile.component';
+import { AgentAdminListComponent } from './components/agent-admin/agent-admin-list/agent-admin-list.component';
+import { AddAgentProfileComponent } from './components/agent-admin/add-agent-profile/add-agent-profile.component';
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid.component';
 import { HorizontalScrollPipe } from './pipes/horizontal-scroll.pipe';
+import { AgentAdminService } from './services/agent-admin.service';
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
 const components = [AgentAdminListComponent, AddAgentProfileComponent, SchedulingGridComponent, HorizontalScrollPipe];
-const providers = [AgentAdminDropdownsService, AgentAdminListService, SchedulingGridService];
+const providers = [AgentAdminDropdownsService, AgentAdminListService, SchedulingGridService, AgentAdminService];
 
 @NgModule({
   declarations: components,

@@ -1,8 +1,9 @@
 <div class="modal-dialog w-1000 add-edit-modal" role="document">
   <div class="modal-content">
+    <ngx-spinner [name]="spinner"></ngx-spinner>
     <div class="modal-header header-color">
       <h6 class="modal-title w-100 font-weight-bold header">
-        <p>{{title}} {{ 'Agent Admin' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
+        <p>{{ getTitle()}} {{ 'Agent Admin' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
       </h6>
       <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
@@ -18,12 +19,9 @@
               </label>
             </div>
             <div class="col-md-8">
-              <select class="form-control"
+              <input type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('employeeId')}"
-                formControlName="employeeId">
-                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
-                <option *ngFor="let x of employeeIdList" [value]="x.id">{{x.id}}</option>
-              </select>
+                formControlName="employeeId" placeholder="Employee ID" />
               <div *ngIf="hasFormControlValidationError('employeeId')" class="valid-error">
                 {{ 'Employee ID is required' | translation: 'lbl_add_edit_employee_id_required_validation_message' : translationValues }}
               </div>
@@ -64,12 +62,10 @@
               </label>
             </div>
             <div class="col-md-8">
-              <select class="form-control" [ngClass]="{'valid-border-error': hasFormControlValidationError('client')}"
-                formControlName="client">
-                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
-                <option *ngFor="let x of clientNames" [value]="x.clientName">{{x.clientName}}</option>
-              </select>
-              <div *ngIf="hasFormControlValidationError('client')" class="valid-error">
+
+              <app-client-name-typeahead [clientId]="clientId" (clientSelected)="setClient($event)">
+              </app-client-name-typeahead>
+              <div *ngIf="!clientId && formSubmitted" class="valid-error">
                 {{ 'Client Name is required' | translation: 'lbl_add_edit_client_name_required_validation_message' : translationValues }}
               </div>
             </div>
@@ -83,13 +79,10 @@
               </label>
             </div>
             <div class="col-md-8">
-              <select class="form-control"
-                [ngClass]="{'valid-border-error': hasFormControlValidationError('clientLOBGroup')}"
-                formControlName="clientLOBGroup">
-                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
-                <option *ngFor="let x of clientLOB" [value]="x.clientLOBGroup">{{x.clientLOBGroup}}</option>
-              </select>
-              <div *ngIf="hasFormControlValidationError('clientLOBGroup')" class="valid-error">
+
+              <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId"
+                (clientLobSelected)="setClientLobGroup($event)"></app-client-lob-group-typeahead>
+              <div *ngIf="!clientLobGroupId && formSubmitted" class="valid-error">
                 {{ 'Client LOB Group is required' | translation: 'lbl_add_edit_client_lob_group_required_validation_message' : translationValues }}
               </div>
             </div>
@@ -103,13 +96,9 @@
               </label>
             </div>
             <div class="col-md-8">
-              <select class="form-control"
-                [ngClass]="{'valid-border-error': hasFormControlValidationError('skillGroup')}"
-                formControlName="skillGroup">
-                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
-                <option *ngFor="let x of skillGroup" [value]="x.skillGroup">{{x.skillGroup}}</option>
-              </select>
-              <div *ngIf="hasFormControlValidationError('skillGroup')" class="valid-error">
+              <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)" [clientId]="clientId"
+                [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId"></app-skill-group-typeahead>
+              <div *ngIf="!skillGroupId && formSubmitted" class="valid-error">
                 {{ 'Skill Group is required' | translation: 'lbl_add_edit_skill_group_required_validation_message' : translationValues }}
               </div>
             </div>
@@ -123,12 +112,11 @@
               </label>
             </div>
             <div class="col-md-8">
-              <select class="form-control" [ngClass]="{'valid-border-error': hasFormControlValidationError('skillTag')}"
-                formControlName="skillTag">
-                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
-                <option *ngFor="let x of skillTag" [value]="x.skillTag">{{x.skillTag}}</option>
-              </select>
-              <div *ngIf="hasFormControlValidationError('skillTag')" class="valid-error">
+
+              <app-skill-tag-typeahead (skillTagSelected)="setSkillTag($event)" [clientId]="clientId"
+                [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId" [skillTagId]="skillTagId">
+              </app-skill-tag-typeahead>
+              <div *ngIf="!skillTagId && formSubmitted" class="valid-error">
                 {{ 'Skill Tags is required' | translation: 'lbl_add_edit_skill_tag_required_validation_message' : translationValues }}
               </div>
             </div>
@@ -204,7 +192,8 @@
         <div class="row">
           <div class="col-md-10"></div>
           <div class="col-md-2">
-            <button class="btn btn-primary float-r" data-dismiss="modal" (click)="save()" id="btn_save">
+            <button class="btn btn-primary float-r" data-dismiss="modal" (click)="saveAgentAdminDetails()"
+              id="btn_save">
               <i class="fa fa-save padding-5"></i>{{ 'Save' | translation: 'btn_save' : translationValues }}
             </button>
           </div>

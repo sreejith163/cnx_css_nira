@@ -1,19 +1,20 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subject, SubscriptionLike as ISubscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { SkillTagBase } from '../../../models/skill-tag-base.model';
-import { SkillTagQueryParams } from '../../../models/skill-tag-query-params.model';
-import { SkillTagService } from '../../../services/skill-tag.service';
+import { ClientLobGroupBase } from 'src/app/modules/home/modules/setup-menu/models/client-lob-group-base.model';
+import { ClientLobGroupQueryParameters } from 'src/app/modules/home/modules/setup-menu/models/client-lob-group-query-parameters.model';
+import { ClientLobGroupService } from 'src/app/modules/home/modules/setup-menu/services/client-lob-group.service';
 
 @Component({
-  selector: 'app-skill-tag-typeahead',
-  templateUrl: './skill-tag-typeahead.component.html',
-  styleUrls: ['./skill-tag-typeahead.component.scss']
+  selector: 'app-client-lob-group-typeahead',
+  templateUrl: './client-lob-group-typeahead.component.html',
+  styleUrls: ['./client-lob-group-typeahead.component.scss']
 })
-export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges {
+
+export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnChanges {
 
   pageNumber = 1;
-  skillTagItemsBufferSize = 10;
+  clientLobItemsBufferSize = 10;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;
@@ -21,27 +22,24 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
   searchKeyWord = '';
   loading = false;
 
-  skillTagItemsBuffer: SkillTagBase[] = [];
+  clientLobItemsBuffer: ClientLobGroupBase[] = [];
   typeAheadInput$ = new Subject<string>();
 
   typeAheadValueSubscription: ISubscription;
-  getSkillTagsSubscription: ISubscription;
+  getClientLobNamesSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
-
   @Input() clientId: number;
-  @Input() clientLobGroupId: number;
-  @Input() skillGroupId: number;
-  @Input() skillTagId: number;
-  @Output() skillTagSelected = new EventEmitter();
+  @Input() clientLobId: number;
+  @Output() clientLobSelected = new EventEmitter();
 
   constructor(
-    private skillTagService: SkillTagService,
+    private clientLobService: ClientLobGroupService,
   ) { }
 
   ngOnInit(): void {
-    this.subscribeToSkillTags();
-    this.subscribeToSearching();
+      this.subscribeToClientLobs();
+      this.subscribeToSearching();
   }
 
   ngOnDestroy() {
@@ -53,69 +51,69 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   ngOnChanges() {
-    if (this.skillGroupId) {
+    if (this.clientId) {
       this.pageNumber = 1;
-      this.subscribeToSkillTags();
+      this.subscribeToClientLobs();
     } else {
-      this.skillTagItemsBuffer = [];
+      this.clientLobItemsBuffer = [];
       this.totalItems = 0;
     }
   }
 
-  onSkillTagScrollToEnd() {
-    this.fetchMoreSkillTags();
+  onClientLobScrollToEnd() {
+    this.fetchMoreClientLobs();
   }
 
-  onSkillTagScroll({ end }) {
-    if (this.loading || this.skillTagItemsBufferSize <= this.skillTagItemsBuffer.length) {
+  onClientLobScroll({ end }) {
+    if (this.loading || this.clientLobItemsBufferSize <= this.clientLobItemsBuffer.length) {
       return;
     }
 
-    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.skillTagItemsBuffer.length) {
-      this.fetchMoreSkillTags();
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.clientLobItemsBuffer.length) {
+      this.fetchMoreClientLobs();
     }
   }
 
-  onSkillTagChange(event: SkillTagBase) {
-    this.skillTagSelected.emit(event?.id);
+  onClientLobChange(event: ClientLobGroupBase) {
+    this.clientLobSelected.emit(event?.id);
   }
 
-  clearSkillTagValues() {
+  clearSelectedValues() {
     this.searchKeyWord = '';
     this.pageNumber = 1;
-    this.subscribeToSkillTags();
+    this.subscribeToClientLobs();
   }
 
-  private fetchMoreSkillTags() {
+  private fetchMoreClientLobs() {
     if (this.pageNumber < this.totalPages) {
       this.pageNumber += 1;
-      this.subscribeToSkillTags(true);
+      this.subscribeToClientLobs(true);
     }
   }
 
-  private subscribeToSkillTags(needBufferAdd?: boolean) {
+  private subscribeToClientLobs(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getSkillTagsSubscription = this.getSkillTags().subscribe(
+    this.getClientLobNamesSubscription = this.getClientLobs().subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
-          this.skillTagItemsBuffer = needBufferAdd ? this.skillTagItemsBuffer.concat(response.body) : response.body;
+          this.clientLobItemsBuffer = needBufferAdd ? this.clientLobItemsBuffer.concat(response.body) : response.body;
         }
         this.loading = false;
       }, err => this.loading = false);
 
-    this.subscriptions.push(this.getSkillTagsSubscription);
+    this.subscriptions.push(this.getClientLobNamesSubscription);
   }
 
   private subscribeToSearching() {
     this.typeAheadValueSubscription = this.typeAheadInput$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(term => this.getSkillTags(term))
+      switchMap(term => this.getClientLobs(term))
     ).subscribe(response => {
       if (response.body) {
         this.setPaginationValues(response);
-        this.skillTagItemsBuffer = response.body;
+        this.clientLobItemsBuffer = response.body;
       }
     }, (error) => {
       console.log(error);
@@ -133,11 +131,9 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private getQueryParams(searchkeyword?: string) {
-    const queryParams = new SkillTagQueryParams();
+    const queryParams = new ClientLobGroupQueryParameters();
     queryParams.clientId = this.clientId ?? undefined;
-    queryParams.clientLobGroupId = this.clientLobGroupId ?? undefined;
-    queryParams.skillGroupId = this.skillGroupId ?? undefined;
-    queryParams.pageSize = this.skillTagItemsBufferSize;
+    queryParams.pageSize = this.clientLobItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
     queryParams.orderBy = undefined;
@@ -146,9 +142,8 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
     return queryParams;
   }
 
-  private getSkillTags(searchKeyword?: string) {
+  private getClientLobs(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
-    return this.skillTagService.getSkillTags(queryParams);
+    return this.clientLobService.getClientLOBGroups(queryParams);
   }
-
 }
