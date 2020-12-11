@@ -11,13 +11,12 @@ using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository
 {
-    public class SkillGroupRepository : GenericRepository<SkillGroupCollection>, ISkillGroupRepository
+    public class SkillGroupRepository : GenericRepository<SkillGroup>, ISkillGroupRepository
     {
         /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
-
 
         /// <summary>Initializes a new instance of the <see cref="SkillGroupRepository" /> class.</summary>
         /// <param name="mongoContext">The mongo context.</param>
@@ -28,25 +27,31 @@ namespace Css.Api.Scheduling.Repository
             _mapper = mapper;
         }
 
-
         /// <summary>Gets the skill group.</summary>
         /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<SkillGroupCollection> GetSkillGroup(SkillGroupIdDetails skillGroupIdDetails)
+        public async Task<SkillGroup> GetSkillGroup(SkillGroupIdDetails skillGroupIdDetails)
         {
-            var query = Builders<SkillGroupCollection>.Filter.Eq(i => i.SkillGroupId, skillGroupIdDetails.SkillGroupId);
+            var query = Builders<SkillGroup>.Filter.Eq(i => i.SkillGroupId, skillGroupIdDetails.SkillGroupId);
 
             return await FindByIdAsync(query);
         }
 
-
-        public void CreateSkillGroups(ICollection<SkillGroupCollection> skillGroupRequestCollection)
+        /// <summary>
+        /// Creates the skill groups.
+        /// </summary>
+        /// <param name="skillGroupRequestCollection">The skill group request collection.</param>
+        public void CreateSkillGroups(ICollection<SkillGroup> skillGroupRequestCollection)
         {
             InsertManyAsync(skillGroupRequestCollection);
         }
 
+        /// <summary>
+        /// Gets the skill groups count.
+        /// </summary>
+        /// <returns></returns>
         public async Task<int> GetSkillGroupsCount()
         {
             var count = FilterBy(x => true)

@@ -9,7 +9,7 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
         /// <summary>Initializes a new instance of the <see cref="AgentAdminProfile" /> class.</summary>
         public AgentAdminProfile()
         {
-            CreateMap<CreateAgentAdmin, Domain.AgentCollection>()
+            CreateMap<CreateAgentAdmin, Domain.Agent>()
                 .ForMember(x => x.FirstName, opt => opt.MapFrom(o => o.FirstName.Trim()))
                 .ForMember(x => x.LastName, opt => opt.MapFrom(o => o.LastName.Trim()))
                 .ForMember(x => x.Sso, opt => opt.MapFrom(o => o.Sso.Trim()))
@@ -18,7 +18,7 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
 
-            CreateMap<UpdateAgentAdmin, Domain.AgentCollection>()
+            CreateMap<UpdateAgentAdmin, Domain.Agent>()
                 .ForMember(x => x.FirstName, opt => opt.MapFrom(o => o.FirstName.Trim()))
                 .ForMember(x => x.LastName, opt => opt.MapFrom(o => o.LastName.Trim()))
                 .ForMember(x => x.Sso, opt => opt.MapFrom(o => o.Sso.Trim()))
@@ -27,11 +27,11 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
 
-            CreateMap<Domain.AgentCollection, AgentAdminDTO>()
+            CreateMap<Domain.Agent, AgentAdminDTO>()
                 .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.Ssn))
                 .ReverseMap();
 
-            CreateMap<Domain.AgentCollection, AgentAdminDetailsDTO>()
+            CreateMap<Domain.Agent, AgentAdminDetailsDTO>()
             .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.Ssn))
             .ReverseMap();
         }

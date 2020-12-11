@@ -9,12 +9,13 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository
 {
-    public class AgentAdminRepository : GenericRepository<AgentCollection>, IAgentAdminRepository
+    public class AgentAdminRepository : GenericRepository<Agent>, IAgentAdminRepository
     {
         /// <summary>
         /// The mapper
@@ -62,10 +63,10 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentAdminIdDetails">The agent admin identifier details.</param>
         /// <returns></returns>
-        public async Task<AgentCollection> GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails)
+        public async Task<Agent> GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails)
         {
-            var query = Builders<AgentCollection>.Filter.Eq(i => i.AgentAdminId, agentAdminIdDetails.AgentAdminId)
-                 & Builders<AgentCollection>.Filter.Eq(i => i.IsDeleted, false);
+            var query = Builders<Agent>.Filter.Eq(i => i.AgentAdminId, agentAdminIdDetails.AgentAdminId)
+                 & Builders<Agent>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindByIdAsync(query);
         }
@@ -76,11 +77,11 @@ namespace Css.Api.Scheduling.Repository
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<AgentCollection> GetAgentAdminIdsByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails)
+        public async Task<Agent> GetAgentAdminIdsByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails)
         {
 
-            var query = Builders<AgentCollection>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id)
-                & Builders<AgentCollection>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id);
+            var query = Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id)
+                & Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id);
 
             //var query = Builders<AgentCollection>.Filter.Eq(i => i.Ssn.ToLower(), agentAdminEmployeeIdDetails.Id.ToLower())
             //      & Builders<AgentCollection>.Filter.Eq(i => i.IsDeleted, false);
@@ -94,14 +95,20 @@ namespace Css.Api.Scheduling.Repository
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<AgentCollection> GetAgentAdminIdsBySso(AgentAdminSsoDetails agentAdminSsoDetails)
+        public async Task<Agent> GetAgentAdminIdsBySso(AgentAdminSsoDetails agentAdminSsoDetails)
         {
-            var query = Builders<AgentCollection>.Filter.Eq(i => i.Sso, agentAdminSsoDetails.Sso)
-                   & Builders<AgentCollection>.Filter.Eq(i => i.Sso, agentAdminSsoDetails.Sso);
+            var query = Builders<Agent>.Filter.Eq(i => i.Sso, agentAdminSsoDetails.Sso)
+                   & Builders<Agent>.Filter.Eq(i => i.Sso, agentAdminSsoDetails.Sso);
 
             return await FindByIdAsync(query);
         }
 
+        /// <summary>
+        /// Gets the agent admins count.
+        /// </summary>
+        /// <returns>
+        ///   <br />
+        /// </returns>
         public async Task<int> GetAgentAdminsCount()
         {
             var count = FilterBy(x => true)
@@ -113,7 +120,7 @@ namespace Css.Api.Scheduling.Repository
         /// Creates the agent admin.
         /// </summary>
         /// <param name="agentAdminRequest">The agent admin request.</param>
-        public void CreateAgentAdmin(AgentCollection agentAdminRequest)
+        public void CreateAgentAdmin(Agent agentAdminRequest)
         {
             InsertOneAsync(agentAdminRequest);
         }
@@ -122,7 +129,7 @@ namespace Css.Api.Scheduling.Repository
         /// Updates the agent admin.
         /// </summary>
         /// <param name="agentAdminRequest">The agent admin request.</param>
-        public void UpdateAgentAdmin(AgentCollection agentAdminRequest)
+        public void UpdateAgentAdmin(Agent agentAdminRequest)
         {
             ReplaceOneAsync(agentAdminRequest);
         }
@@ -131,11 +138,10 @@ namespace Css.Api.Scheduling.Repository
         /// Deletes the agent admin.
         /// </summary>
         /// <param name="agentAdminRequest">The agent admin request.</param>
-        public void DeleteAgentAdmin(AgentCollection agentAdminRequest)
+        public void DeleteAgentAdmin(Agent agentAdminRequest)
         {
             DeleteOneAsync(x => x.Id == agentAdminRequest.Id);
         }
-
 
         /// <summary>Filters the agent admin.</summary>
         /// <param name="agentAdmins">The agent admins.</param>
@@ -143,7 +149,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns>
         ///   <br />
         /// </returns>
-        private IQueryable<AgentCollection> FilterAgentAdmin(IQueryable<AgentCollection> agentAdmins, string agentAdminName)
+        private IQueryable<Agent> FilterAgentAdmin(IQueryable<Agent> agentAdmins, string agentAdminName)
         {
             if (!agentAdmins.Any())
             {
@@ -152,10 +158,8 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(agentAdminName))
             {
-                agentAdmins = agentAdmins.Where(o =>
-                o.FirstName.ToLower().Contains(agentAdminName.Trim().ToLower()) ||
-                o.LastName.ToLower().Contains(agentAdminName.Trim().ToLower())
-                );
+                agentAdmins = agentAdmins.Where(o => string.Equals(o.FirstName, agentAdminName, StringComparison.OrdinalIgnoreCase) ||
+                                                     string.Equals(o.FirstName, agentAdminName, StringComparison.OrdinalIgnoreCase) );
             }
 
             return agentAdmins;

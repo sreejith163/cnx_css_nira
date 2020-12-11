@@ -1,4 +1,4 @@
-﻿namespace Css.Api.Scheduling.Models.Domain
+﻿namespace Css.Api.Scheduling.Models.Enums
 {
     public enum SchedulingStatus
     {

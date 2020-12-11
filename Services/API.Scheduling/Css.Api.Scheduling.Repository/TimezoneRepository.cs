@@ -8,6 +8,7 @@ using Css.Api.Scheduling.Models.DTO.Request.Timezone;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using System;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -99,7 +100,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(timeZoneName))
             {
-                timezones = timezones.Where(o => o.Name.ToLower().Contains(timeZoneName.Trim().ToLower()));
+                timezones = timezones.Where(o => string.Equals(o.Name, timeZoneName, StringComparison.OrdinalIgnoreCase));
             }
 
             return timezones;

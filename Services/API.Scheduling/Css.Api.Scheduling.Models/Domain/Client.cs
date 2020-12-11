@@ -6,7 +6,7 @@ namespace Css.Api.Scheduling.Models.Domain
     public class Client : BaseDocument
     {
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the client identifier.
         /// </summary>
         public int ClientId { get; set; }
 

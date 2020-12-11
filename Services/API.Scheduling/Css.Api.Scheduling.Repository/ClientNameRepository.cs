@@ -11,13 +11,12 @@ using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository
 {
-    public class ClientNameRepository : GenericRepository<ClientCollection>, IClientNameRepository
+    public class ClientNameRepository : GenericRepository<Client>, IClientNameRepository
     {
         /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
-
 
         /// <summary>Initializes a new instance of the <see cref="ClientNameRepository" /> class.</summary>
         /// <param name="mongoContext">The mongo context.</param>
@@ -28,25 +27,31 @@ namespace Css.Api.Scheduling.Repository
             _mapper = mapper;
         }
 
-
         /// <summary>Gets the client name group.</summary>
         /// <param name="clientNameGroupIdDetails">The client name group identifier details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<ClientCollection> GetClientName(ClientNameIdDetails clientNameGroupIdDetails)
+        public async Task<Client> GetClientName(ClientNameIdDetails clientNameGroupIdDetails)
         {
-            var query = Builders<ClientCollection>.Filter.Eq(i => i.ClientId, clientNameGroupIdDetails.ClientNameId);
+            var query = Builders<Client>.Filter.Eq(i => i.ClientId, clientNameGroupIdDetails.ClientNameId);
 
             return await FindByIdAsync(query);
         }
 
-
-        public void CreateClientNames(ICollection<ClientCollection> clientNameGroupRequestCollection)
+        /// <summary>
+        /// Creates the client names.
+        /// </summary>
+        /// <param name="clientNameGroupRequestCollection">The client name group request collection.</param>
+        public void CreateClientNames(ICollection<Client> clientNameGroupRequestCollection)
         {
             InsertManyAsync(clientNameGroupRequestCollection);
         }
 
+        /// <summary>
+        /// Gets the client names count.
+        /// </summary>
+        /// <returns></returns>
         public async Task<int> GetClientNamesCount()
         {
             var count = FilterBy(x => true)

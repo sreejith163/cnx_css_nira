@@ -1,6 +1,6 @@
 ﻿namespace Css.Api.Scheduling.Models.Domain
 {
-    public class AgentSchedulingChart
+    public class AgentScheduleChart
     {
         /// <summary>
         /// Gets or sets the day.
@@ -18,18 +18,8 @@
         public string EndTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the meridian.
+        /// Gets or sets the scheduling code identifier.
         /// </summary>
-        public string Meridian { get; set; }
-
-        /// <summary>
-        /// Gets or sets the icon identifier.
-        /// </summary>
-        public string IconId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the icon value.
-        /// </summary>
-        public string IconValue { get; set; }
+        public int SchedulingCodeId { get; set; }
     }
 }

@@ -34,16 +34,24 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IAgentAdminRepository _repository;
 
-        /// <summary>The skill tag repository</summary>
+        /// <summary>
+        /// The skill tag repository
+        /// </summary>
         private readonly ISkillTagRepository _skillTagRepository;
 
-        /// <summary>The client name repository</summary>
+        /// <summary>
+        /// The client name repository
+        /// </summary>
         private readonly IClientNameRepository _clientNameRepository;
 
-        /// <summary>The client lob group repository</summary>
+        /// <summary>
+        /// The client lob group repository
+        /// </summary>
         private readonly IClientLobGroupRepository _clientLobGroupRepository;
 
-        /// <summary>The skill group repository</summary>
+        /// <summary>
+        /// The skill group repository
+        /// </summary>
         private readonly ISkillGroupRepository _skillGroupRepository;
 
         /// <summary>
@@ -55,7 +63,6 @@ namespace Css.Api.Scheduling.Business
         /// The uow
         /// </summary>
         private readonly IUnitOfWork _uow;
-
 
         /// <summary>Initializes a new instance of the <see cref="AgentAdminService" /> class.</summary>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
@@ -89,10 +96,10 @@ namespace Css.Api.Scheduling.Business
             var isClientNameSeeded = await _clientNameRepository.GetClientNamesCount() > 0;
             if (!isClientNameSeeded)
             {
-                _clientNameRepository.CreateClientNames(new List<ClientCollection>
+                _clientNameRepository.CreateClientNames(new List<Client>
                 {
-                    new ClientCollection{ClientId=1, Name="Client Name 1"},
-                    new ClientCollection{ClientId=2, Name="Client Name 2"}
+                    new Client{ClientId=1, Name="Client Name 1"},
+                    new Client{ClientId=2, Name="Client Name 2"}
 
                 });
             }
@@ -100,10 +107,10 @@ namespace Css.Api.Scheduling.Business
             var isClientLobSeeded = await _clientLobGroupRepository.GetClientLobGroupsCount() > 0;
             if (!isClientLobSeeded)
             {
-                _clientLobGroupRepository.CreateClientLobGroups(new List<ClientLobCollection>
+                _clientLobGroupRepository.CreateClientLobGroups(new List<ClientLobGroup>
                 {
-                    new ClientLobCollection{ClientId=1, ClientLobGroupId=1, Name="Client Lob 1"},
-                    new ClientLobCollection{ClientId=2, ClientLobGroupId=2, Name="Client Lob 2"}
+                    new ClientLobGroup{ClientId=1, ClientLobGroupId=1, Name="Client Lob 1"},
+                    new ClientLobGroup{ClientId=2, ClientLobGroupId=2, Name="Client Lob 2"}
 
                 });
             }
@@ -111,10 +118,10 @@ namespace Css.Api.Scheduling.Business
             var isSkillGroupSeeded = await _skillGroupRepository.GetSkillGroupsCount() > 0;
             if (!isSkillGroupSeeded)
             {
-                _skillGroupRepository.CreateSkillGroups(new List<SkillGroupCollection>
+                _skillGroupRepository.CreateSkillGroups(new List<SkillGroup>
                 {
-                    new SkillGroupCollection{ClientId=1, ClientLobGroupId=1, SkillGroupId=1, Name="Skill Group 1"},
-                    new SkillGroupCollection{ClientId=2, ClientLobGroupId=2, SkillGroupId=2, Name="Skill Group 2"}
+                    new SkillGroup{ClientId=1, ClientLobGroupId=1, SkillGroupId=1, Name="Skill Group 1"},
+                    new SkillGroup{ClientId=2, ClientLobGroupId=2, SkillGroupId=2, Name="Skill Group 2"}
 
                 });
             }
@@ -122,10 +129,10 @@ namespace Css.Api.Scheduling.Business
             var isSkillTagSeeded = await _skillTagRepository.GetSkillTagsCount() > 0;
             if (!isSkillTagSeeded)
             {
-                _skillTagRepository.CreateSkillTags(new List<SkillTagCollection>
+                _skillTagRepository.CreateSkillTags(new List<SkillTag>
                 {
-                    new SkillTagCollection{ClientId=1, ClientLobGroupId=1, SkillGroupId=1, SkillTagId=1, Name="Skill Tag 1"},
-                    new SkillTagCollection{ClientId=2, ClientLobGroupId=2, SkillGroupId=2, SkillTagId=2, Name="Skill Tag 2"}
+                    new SkillTag{ClientId=1, ClientLobGroupId=1, SkillGroupId=1, SkillTagId=1, Name="Skill Tag 1"},
+                    new SkillTag{ClientId=2, ClientLobGroupId=2, SkillGroupId=2, SkillTagId=2, Name="Skill Tag 2"}
                 });
             }
 
@@ -162,6 +169,7 @@ namespace Css.Api.Scheduling.Business
             {
                 SkillTagId = agentAdmin.SkillTagId
             });
+
             if (skillTag == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -171,6 +179,7 @@ namespace Css.Api.Scheduling.Business
             {
                 SkillGroupId = skillTag.SkillGroupId
             });
+
             if (skillGroup == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -180,6 +189,7 @@ namespace Css.Api.Scheduling.Business
             {
                 ClientLobGroupId = skillGroup.ClientLobGroupId
             });
+
             if (clientLobGroup == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -189,6 +199,7 @@ namespace Css.Api.Scheduling.Business
             {
                 ClientNameId = clientLobGroup.ClientId
             });
+
             if (clientName == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -240,11 +251,9 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse($"Agent Admin with Sso '{agentAdminSsoDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
-            var agentAdminRequest = _mapper.Map<AgentCollection>(agentAdminDetails);
+            var agentAdminRequest = _mapper.Map<Agent>(agentAdminDetails);
 
             var agentAdminCount = await _repository.GetAgentAdminsCount();
-
-            agentAdminRequest.AgentAdminId = agentAdminCount + 1;
 
             _repository.CreateAgentAdmin(agentAdminRequest);
 

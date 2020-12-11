@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.Domain
 {
-    [BsonCollection("agent_collection")]
-    public class AgentCollection : BaseDocument
+    [BsonCollection("agent")]
+    public class Agent : BaseDocument
     {
-
-        /// <summary>Gets or sets the agent admin identifier.</summary>
-        /// <value>The agent admin identifier.</value>
+        /// <summary>
+        /// Gets or sets the agent admin identifier.
+        /// </summary>
         public int AgentAdminId { get; set; }
 
         /// <summary>
@@ -50,7 +50,12 @@ namespace Css.Api.Scheduling.Models.Domain
 
         /// <summary>Gets or sets the skill tag identifier.</summary>
         /// <value>The skill tag identifier.</value>
-        public int SkillTagId { get; set; }    
+        public int SkillTagId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent schedule group identifier.
+        /// </summary>
+        public int AgentScheduleGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the sen date.
@@ -63,29 +68,58 @@ namespace Css.Api.Scheduling.Models.Domain
         public DateTime SenExt { get; set; }
 
         /// <summary>
+        /// Gets or sets the super visor identifier.
+        /// </summary>
+        public string SuperVisorId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the super visor.
+        /// </summary>
+        public string SuperVisorName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the super visor sso.
+        /// </summary>
+        public string SuperVisorSso { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent role.
+        /// </summary>
+        public string AgentRole { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pto.
+        /// </summary>
+        public Pto Pto { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this instance is deleted.
         /// </summary>
         public bool IsDeleted { get; set; }
-
-        /// <summary>Gets or sets the created by.</summary>
-        /// <value>The created by.</value>
-        public string CreatedBy { get; set; }
-
-        /// <summary>Gets or sets the created date.</summary>
-        /// <value>The created date.</value>
-        public DateTimeOffset CreatedDate { get; set; }
-
-        /// <summary>Gets or sets the modified by.</summary>
-        /// <value>The modified by.</value>
-        public string ModifiedBy { get; set; }
-
-        /// <summary>Gets or sets the modified date.</summary>
-        /// <value>The modified date.</value>
-        public DateTimeOffset? ModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the agent data.
         /// </summary>
         public List<AgentData> AgentData { get; set; }
+
+        /// <summary>
+        /// Gets or sets the created by.
+        /// </summary>
+        public string CreatedBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the created date.
+        /// </summary>
+        public DateTimeOffset CreatedDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the modified by.
+        /// </summary>
+        public string ModifiedBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the modified date.
+        /// </summary>
+        public DateTimeOffset? ModifiedDate { get; set; }
     }
 }

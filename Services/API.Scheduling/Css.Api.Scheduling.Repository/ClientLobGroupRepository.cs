@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository
 {
-    public class ClientLobGroupRepository : GenericRepository<ClientLobCollection>, IClientLobGroupRepository
+    public class ClientLobGroupRepository : GenericRepository<ClientLobGroup>, IClientLobGroupRepository
     {
         /// <summary>
         /// The mapper
@@ -28,25 +28,31 @@ namespace Css.Api.Scheduling.Repository
             _mapper = mapper;
         }
 
-
         /// <summary>Gets the client lob group.</summary>
         /// <param name="clientLobGroupIdDetails">The client lob group identifier details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<ClientLobCollection> GetClientLobGroup(ClientLobGroupIdDetails clientLobGroupIdDetails)
+        public async Task<ClientLobGroup> GetClientLobGroup(ClientLobGroupIdDetails clientLobGroupIdDetails)
         {
-            var query = Builders<ClientLobCollection>.Filter.Eq(i => i.ClientLobGroupId, clientLobGroupIdDetails.ClientLobGroupId);
+            var query = Builders<ClientLobGroup>.Filter.Eq(i => i.ClientLobGroupId, clientLobGroupIdDetails.ClientLobGroupId);
 
             return await FindByIdAsync(query);
         }
 
-
-        public void CreateClientLobGroups(ICollection<ClientLobCollection> clientLobGroupRequestCollection)
+        /// <summary>
+        /// Creates the client lob groups.
+        /// </summary>
+        /// <param name="clientLobGroupRequestCollection">The client lob group request collection.</param>
+        public void CreateClientLobGroups(ICollection<ClientLobGroup> clientLobGroupRequestCollection)
         {
             InsertManyAsync(clientLobGroupRequestCollection);
         }
 
+        /// <summary>
+        /// Gets the client lob groups count.
+        /// </summary>
+        /// <returns></returns>
         public async Task<int> GetClientLobGroupsCount()
         {
             var count = FilterBy(x => true)

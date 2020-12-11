@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository.Interfaces
 {
+    /// <summary>
+    /// Repository interface for Agent admin
+    /// </summary>
     public interface IAgentAdminRepository
     {
         /// <summary>
@@ -20,7 +23,7 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="agentAdminIdDetails">The agent admin identifier details.</param>
         /// <returns></returns>
-        Task<AgentCollection> GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails);
+        Task<Agent> GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails);
 
 
         /// <summary>Gets the agent admin ids by employee identifier.</summary>
@@ -28,14 +31,14 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <returns>
         ///   <br />
         /// </returns>
-        Task<AgentCollection> GetAgentAdminIdsByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails);
+        Task<Agent> GetAgentAdminIdsByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails);
 
         /// <summary>Gets the agent admin ids by sso.</summary>
         /// <param name="agentAdminSsoDetails">The agent admin sso details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        Task<AgentCollection> GetAgentAdminIdsBySso(AgentAdminSsoDetails agentAdminSsoDetails);
+        Task<Agent> GetAgentAdminIdsBySso(AgentAdminSsoDetails agentAdminSsoDetails);
 
         /// <summary>Gets the agent admins count.</summary>
         /// <returns>
@@ -43,17 +46,23 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </returns>
         Task<int> GetAgentAdminsCount();
 
-        /// <summary>Creates the agent admin.</summary>
+        /// <summary>
+        /// Creates the agent admin.
+        /// </summary>
         /// <param name="agentAdminRequest">The agent admin request.</param>
-        void CreateAgentAdmin(AgentCollection agentAdminRequest);
+        void CreateAgentAdmin(Agent agentAdminRequest);
 
-        /// <summary>Updates the agent admin.</summary>
+        /// <summary>
+        /// Updates the agent admin.
+        /// </summary>
         /// <param name="agentAdminRequest">The agent admin request.</param>
-        void UpdateAgentAdmin(AgentCollection agentAdminRequest);
+        void UpdateAgentAdmin(Agent agentAdminRequest);
 
-        /// <summary>Deletes the agent admin.</summary>
+        /// <summary>
+        /// Deletes the agent admin.
+        /// </summary>
         /// <param name="agentAdminRequest">The agent admin request.</param>
-        void DeleteAgentAdmin(AgentCollection agentAdminRequest);
+        void DeleteAgentAdmin(Agent agentAdminRequest);
     }
 }
 

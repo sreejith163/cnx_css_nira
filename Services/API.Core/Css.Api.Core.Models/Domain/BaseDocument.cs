@@ -4,6 +4,10 @@ using System;
 
 namespace Css.Api.Core.Models.Domain
 {
+    /// <summary>
+    /// /Implementation for the base document
+    /// </summary>
+    /// <seealso cref="Css.Api.Core.Models.Domain.IBaseDocument" />
     public abstract class BaseDocument : IBaseDocument
     {
         /// <summary>
@@ -17,6 +21,9 @@ namespace Css.Api.Core.Models.Domain
         public DateTime CreatedAt => Id.CreationTime;
     }
 
+    /// <summary>
+    /// Interface for the base document
+    /// </summary>
     public interface IBaseDocument
     {
         /// <summary>
