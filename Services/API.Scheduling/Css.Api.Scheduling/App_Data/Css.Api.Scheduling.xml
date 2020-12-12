@@ -110,6 +110,37 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
+        <member name="T:Css.Api.Scheduling.Controllers.AgentSchedulingGroupController">
+            <summary>
+            Controller for handling the Time zones resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.AgentSchedulingGroupController._agentSchedulingGroupService">
+            <summary>
+            The agent scheduling group service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulingGroupController.#ctor(Css.Api.Scheduling.Business.Interfaces.IAgentSchedulingGroupService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.TimeZonesController" /> class.
+            </summary>
+            <param name="agentSchedulingGroupService">The agent scheduling group service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulingGroupController.GetAgentSchedulingGroups(Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup.AgentSchedulingGroupQueryparameter)">
+            <summary>
+            Gets the agent scheduling groups.
+            </summary>
+            <param name="agentSchedulingGroupQueryparameter">The agent scheduling group queryparameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulingGroupController.GetAgentSchedulingGroup(System.Int32)">
+            <summary>
+            Gets the agent scheduling group.
+            </summary>
+            <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.TimeZonesController">
             <summary>
             Controller for handling the Time zones resource
