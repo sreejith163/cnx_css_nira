@@ -6,6 +6,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
     public class AgentAdminAttribute
     {
         /// <summary>
+        /// Gets or sets the SSN.
+        /// </summary>
+        public string EmployeeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the first name.
         /// </summary>
         public string FirstName { get; set; }
@@ -16,20 +21,29 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
         public string LastName { get; set; }
 
         /// <summary>
-        /// Gets or sets the SSN.
+        /// Gets or sets the sso.
         /// </summary>
-        public string EmployeeId { get; set; }
-
-        /// <summary>Gets or sets the sso.</summary>
-        /// <value>The sso.</value>
         public string Sso { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client identifier.
+        /// </summary>
+        public int ClientId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client lob group identifier.
+        /// </summary>
+        public int ClientLobGroupId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the skill group identifier.
+        /// </summary>
+        public int SkillGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the skill tag identifier.
         /// </summary>
         public int SkillTagId { get; set; }
-
-        public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the agent data.

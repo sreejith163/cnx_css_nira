@@ -146,17 +146,16 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var agentSchedules = await _agentScheduleRepository.GetAgentSchedulesByEmployeeIds(agentScheduleDetails.EmployeeIds);
-            if (agentSchedules?.Count <= 0)
+            var employeeAgentSchedules = await _agentScheduleRepository.GetAgentSchedulesByEmployeeIds(agentScheduleDetails.EmployeeIds);
+            if (employeeAgentSchedules?.Count <= 0)
             {
                 return new CSSResponse("No Agents found", HttpStatusCode.NotFound);
             }
 
-            var aagentSchedulesRequest = _mapper.Map(agentScheduleDetails, agentSchedules);
-
-            foreach (var aagentScheduleRequest in aagentSchedulesRequest)
+            foreach (var employeeAgentSchedule in employeeAgentSchedules)
             {
-                _agentScheduleRepository.UpdateAgentSchedule(aagentScheduleRequest);
+                employeeAgentSchedule.AgentScheduleCharts = agentSchedule.AgentScheduleCharts;
+                _agentScheduleRepository.UpdateAgentSchedule(employeeAgentSchedule);
             }
 
             await _uow.Commit();

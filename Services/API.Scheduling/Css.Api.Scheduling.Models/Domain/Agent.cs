@@ -32,24 +32,29 @@ namespace Css.Api.Scheduling.Models.Domain
         /// </summary>
         public string Ssn { get; set; }
 
-        /// <summary>Gets or sets the sso.</summary>
-        /// <value>The sso.</value>
+        /// <summary>
+        /// Gets or sets the sso.
+        /// </summary>
         public string Sso { get; set; }
 
-        /// <summary>Gets or sets the client identifier.</summary>
-        /// <value>The client identifier.</value>
+        /// <summary>
+        /// Gets or sets the client identifier.
+        /// </summary>
         public int ClientId { get; set; }
 
-        /// <summary>Gets or sets the client lob group identifier.</summary>
-        /// <value>The client lob group identifier.</value>
+        /// <summary>
+        /// Gets or sets the client lob group identifier.
+        /// </summary>
         public int ClientLobGroupId { get; set; }
 
-        /// <summary>Gets or sets the skill group identifier.</summary>
-        /// <value>The skill group identifier.</value>
+        /// <summary>
+        /// Gets or sets the skill group identifier.
+        /// </summary>
         public int SkillGroupId { get; set; }
 
-        /// <summary>Gets or sets the skill tag identifier.</summary>
-        /// <value>The skill tag identifier.</value>
+        /// <summary>
+        /// Gets or sets the skill tag identifier.
+        /// </summary>
         public int SkillTagId { get; set; }
 
         /// <summary>
