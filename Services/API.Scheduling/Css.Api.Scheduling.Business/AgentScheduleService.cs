@@ -100,9 +100,64 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var aagentScheduleRequest = _mapper.Map(agentScheduleDetails, agentSchedule);
+            var agentScheduleRequest = _mapper.Map(agentScheduleDetails, agentSchedule);
 
-            _agentScheduleRepository.UpdateAgentSchedule(aagentScheduleRequest);
+            _agentScheduleRepository.UpdateAgentSchedule(agentScheduleRequest);
+
+            await _uow.Commit();
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Imports the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        public async Task<CSSResponse> ImportAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentSchedule agentScheduleDetails)
+        {
+            var agentSchedule = await _agentScheduleRepository.GetAgentSchedule(agentScheduleIdDetails);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var agentScheduleRequest = _mapper.Map(agentScheduleDetails, agentSchedule);
+
+            _agentScheduleRepository.UpdateAgentSchedule(agentScheduleRequest);
+
+            await _uow.Commit();
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Copies the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        public async Task<CSSResponse> CopyAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule agentScheduleDetails)
+        {
+            var agentSchedule = await _agentScheduleRepository.GetAgentSchedule(agentScheduleIdDetails);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var agentSchedules = await _agentScheduleRepository.GetAgentSchedulesByEmployeeIds(agentScheduleDetails.EmployeeIds);
+            if (agentSchedules?.Count <= 0)
+            {
+                return new CSSResponse("No Agents found", HttpStatusCode.NotFound);
+            }
+
+            var aagentSchedulesRequest = _mapper.Map(agentScheduleDetails, agentSchedules);
+
+            foreach (var aagentScheduleRequest in aagentSchedulesRequest)
+            {
+                _agentScheduleRepository.UpdateAgentSchedule(aagentScheduleRequest);
+            }
 
             await _uow.Commit();
 

@@ -2,6 +2,7 @@
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository.Interfaces
@@ -31,6 +32,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
         /// <returns></returns>
         Task<AgentSchedule> GetAgentScheduleByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails);
+
+        /// <summary>
+        /// Gets the agent schedules by employee ids.
+        /// </summary>
+        /// <param name="employeeIds">The employee ids.</param>
+        /// <returns></returns>
+        Task<List<AgentSchedule>> GetAgentSchedulesByEmployeeIds(List<string> employeeIds);
 
         /// <summary>
         /// Creates the agent schedule.

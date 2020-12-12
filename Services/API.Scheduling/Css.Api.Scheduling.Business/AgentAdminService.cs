@@ -6,7 +6,7 @@ using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
-using Css.Api.Scheduling.Models.DTO.Request.ClientName;
+using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
@@ -40,14 +40,9 @@ namespace Css.Api.Scheduling.Business
         private readonly IAgentScheduleRepository _agentScheduleRepository;
 
         /// <summary>
-        /// The skill tag repository
-        /// </summary>
-        private readonly ISkillTagRepository _skillTagRepository;
-
-        /// <summary>
         /// The client name repository
         /// </summary>
-        private readonly IClientNameRepository _clientNameRepository;
+        private readonly IClientRepository _clientRepository;
 
         /// <summary>
         /// The client lob group repository
@@ -58,6 +53,16 @@ namespace Css.Api.Scheduling.Business
         /// The skill group repository
         /// </summary>
         private readonly ISkillGroupRepository _skillGroupRepository;
+
+        /// <summary>
+        /// The skill tag repository
+        /// </summary>
+        private readonly ISkillTagRepository _skillTagRepository;
+
+        /// <summary>
+        /// The agent scheduling group repository
+        /// </summary>
+        private readonly IAgentSchedulingGroupRepository _agentSchedulingGroupRepository;
 
         /// <summary>
         /// The mapper
@@ -75,30 +80,33 @@ namespace Css.Api.Scheduling.Business
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="agentAdminRepository">The agent admin repository.</param>
         /// <param name="_agentScheduleRepository">The agent schedule repository.</param>
-        /// <param name="clientNameRepository">The client name repository.</param>
+        /// <param name="clientRepository">The client repository.</param>
         /// <param name="clientLobGroupRepository">The client lob group repository.</param>
         /// <param name="skillGroupRepository">The skill group repository.</param>
         /// <param name="skillTagRepository">The skill tag repository.</param>
+        /// <param name="agentSchedulingGroupRepository">The agent scheduling group repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
         public AgentAdminService(
             IHttpContextAccessor httpContextAccessor,
             IAgentAdminRepository agentAdminRepository,
             IAgentScheduleRepository _agentScheduleRepository,
-            IClientNameRepository clientNameRepository,
+            IClientRepository clientRepository,
             IClientLobGroupRepository clientLobGroupRepository,
             ISkillGroupRepository skillGroupRepository,
             ISkillTagRepository skillTagRepository,
+            IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
             IMapper mapper,
             IUnitOfWork uow)
         {
             _httpContextAccessor = httpContextAccessor;
             _agentAdminRepository = agentAdminRepository;
             this._agentScheduleRepository = _agentScheduleRepository;
-            _clientNameRepository = clientNameRepository;
+            _clientRepository = clientRepository;
             _clientLobGroupRepository = clientLobGroupRepository;
             _skillGroupRepository = skillGroupRepository;
             _skillTagRepository = skillTagRepository;
+            _agentSchedulingGroupRepository = agentSchedulingGroupRepository;
             _mapper = mapper;
             _uow = uow;
             SeedData();
@@ -110,47 +118,42 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         public async void SeedData()
         {
-            var isClientNameSeeded = await _clientNameRepository.GetClientNamesCount() > 0;
-            if (!isClientNameSeeded)
+            var isClientSeeded = await _clientRepository.GetClientsCount() > 0;
+            if (!isClientSeeded)
             {
-                _clientNameRepository.CreateClientNames(new List<Client>
-                {
-                    new Client{ClientId=1, Name="Client Name 1"},
-                    new Client{ClientId=2, Name="Client Name 2"}
-
-                });
+                _clientRepository.CreateClient(new Client { ClientId = 1, Name = "Client Name 1", IsDeleted = false });
+                _clientRepository.CreateClient(new Client { ClientId = 2, Name = "Client Name 2", IsDeleted = false });
             }
 
             var isClientLobSeeded = await _clientLobGroupRepository.GetClientLobGroupsCount() > 0;
             if (!isClientLobSeeded)
             {
-                _clientLobGroupRepository.CreateClientLobGroups(new List<ClientLobGroup>
-                {
-                    new ClientLobGroup{ClientId=1, ClientLobGroupId=1, Name="Client Lob 1"},
-                    new ClientLobGroup{ClientId=2, ClientLobGroupId=2, Name="Client Lob 2"}
 
-                });
+                _clientLobGroupRepository.CreateClientLobGroup(new ClientLobGroup { ClientId = 1, ClientLobGroupId = 1, Name = "Client Lob 1", IsDeleted = false });
+                _clientLobGroupRepository.CreateClientLobGroup(new ClientLobGroup { ClientId = 2, ClientLobGroupId = 2, Name = "Client Lob 2", IsDeleted = false });
             }
 
             var isSkillGroupSeeded = await _skillGroupRepository.GetSkillGroupsCount() > 0;
             if (!isSkillGroupSeeded)
             {
-                _skillGroupRepository.CreateSkillGroups(new List<SkillGroup>
-                {
-                    new SkillGroup{ClientId=1, ClientLobGroupId=1, SkillGroupId=1, Name="Skill Group 1"},
-                    new SkillGroup{ClientId=2, ClientLobGroupId=2, SkillGroupId=2, Name="Skill Group 2"}
-
-                });
+                _skillGroupRepository.CreateSkillGroup(new SkillGroup { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, Name = "Skill Group 1", IsDeleted = false });
+                _skillGroupRepository.CreateSkillGroup(new SkillGroup { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, Name = "Skill Group 2", IsDeleted = false });
             }
 
             var isSkillTagSeeded = await _skillTagRepository.GetSkillTagsCount() > 0;
             if (!isSkillTagSeeded)
             {
-                _skillTagRepository.CreateSkillTags(new List<SkillTag>
-                {
-                    new SkillTag{ClientId=1, ClientLobGroupId=1, SkillGroupId=1, SkillTagId=1, Name="Skill Tag 1"},
-                    new SkillTag{ClientId=2, ClientLobGroupId=2, SkillGroupId=2, SkillTagId=2, Name="Skill Tag 2"}
-                });
+                _skillTagRepository.CreateSkillTag(new SkillTag { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, Name = "Skill Tag 1", IsDeleted = false });
+                _skillTagRepository.CreateSkillTag(new SkillTag { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, SkillTagId = 2, Name = "Skill Tag 2", IsDeleted = false });
+            }
+
+            var isagentSchedulingGroupsSeeded = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsCount() > 0;
+            if (!isagentSchedulingGroupsSeeded)
+            {
+                _agentSchedulingGroupRepository.CreateAgentSchedulingGroup(new AgentSchedulingGroup { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1, 
+                                                                                                      Name = "Agent Scheduliung Group 1", IsDeleted = false });
+                _agentSchedulingGroupRepository.CreateAgentSchedulingGroup(new AgentSchedulingGroup { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, SkillTagId = 2, AgentSchedulingGroupId = 2, 
+                                                                                                      Name = "Agent Scheduliung Group 2", IsDeleted = false });
             }
 
             await _uow.Commit();
@@ -212,9 +215,9 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var clientName = await _clientNameRepository.GetClientName(new ClientNameIdDetails
+            var clientName = await _clientRepository.GetClient(new ClientIdDetails
             {
-                ClientNameId = clientLobGroup.ClientId
+                ClientId = clientLobGroup.ClientId
             });
 
             if (clientName == null)

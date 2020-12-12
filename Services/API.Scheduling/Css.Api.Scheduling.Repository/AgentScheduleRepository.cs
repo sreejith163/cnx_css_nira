@@ -10,6 +10,7 @@ using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -78,6 +79,20 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, agentAdminEmployeeIdDetails.Id);
 
             return await FindByIdAsync(query);
+        }
+
+        /// <summary>
+        /// Gets the agent schedules by employee ids.
+        /// </summary>
+        /// <param name="employeeIds">The employee ids.</param>
+        /// <returns></returns>
+        public async Task<List<AgentSchedule>>GetAgentSchedulesByEmployeeIds(List<string> employeeIds)
+        {
+            var query =
+                Builders<AgentSchedule>.Filter.Where(i => employeeIds.Contains(i.EmployeeId));
+
+            var schedules = FilterBy(query);
+            return await Task.FromResult(schedules.ToList());
         }
 
         /// <summary>

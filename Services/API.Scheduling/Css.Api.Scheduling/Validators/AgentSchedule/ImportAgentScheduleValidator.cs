@@ -6,17 +6,16 @@ using FluentValidation;
 namespace Css.Api.Scheduling.Validators.AgentSchedule
 {
     /// <summary>
-    /// Validator for handling the validation of update agent schedule object
+    /// Validator for handling the validation of import agent schedule object
     /// </summary>
-    public class UpdateAgentScheduleValidator : AbstractValidator<UpdateAgentSchedule>
+    public class ImportAgentScheduleValidator : AbstractValidator<ImportAgentSchedule>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UpdateAgentScheduleValidator"/> class.
+        /// Initializes a new instance of the <see cref="ImportAgentScheduleValidator"/> class.
         /// </summary>
-        public UpdateAgentScheduleValidator()
+        public ImportAgentScheduleValidator()
         {
             RuleFor(x => x.EmployeeId).NotEmpty();
-            RuleFor(x => x.Status).NotEmpty();
             RuleFor(x => x.ModifiedBy).NotEmpty();
             RuleFor(x => x.AgentScheduleType).IsInEnum();
             RuleFor(x => x.AgentScheduleCharts).SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>())

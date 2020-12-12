@@ -1,15 +1,22 @@
-﻿using Css.Api.Scheduling.Models.Domain;
+﻿using Css.Api.Core.Models.Domain;
+using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository.Interfaces
 {
     /// <summary>
-    /// Repository interface for Client LOB group
+    /// Repository interface for ClientLobGroup LOB group
     /// </summary>
     public interface IClientLobGroupRepository
     {
+        //// <summary>
+        /// Gets the client lob groups.
+        /// </summary>
+        /// <param name="clientLobGroupQueryparameter">The client lob group queryparameter.</param>
+        /// <returns></returns>
+        Task<PagedList<Entity>> GetClientLobGroups(ClientLobGroupQueryparameter clientLobGroupQueryparameter);
+
         /// <summary>
         /// Gets the client lob group.
         /// </summary>
@@ -18,15 +25,21 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<ClientLobGroup> GetClientLobGroup(ClientLobGroupIdDetails clientLobGroupIdDetails);
 
         /// <summary>
-        /// Creates the client lob groups.
-        /// </summary>
-        /// <param name="clientLobGroupRequestCollection">The client lob group request collection.</param>
-        void CreateClientLobGroups(ICollection<ClientLobGroup> clientLobGroupRequestCollection);
-
-        /// <summary>
         /// Gets the client lob groups count.
         /// </summary>
         /// <returns></returns>
         Task<int> GetClientLobGroupsCount();
+
+        /// <summary>
+        /// Creates the client lob group.
+        /// </summary>
+        /// <param name="clientLobGroupRequest">The client lob group request.</param>
+        void CreateClientLobGroup(ClientLobGroup clientLobGroupRequest);
+
+        /// <summary>
+        /// Updates the client lob group.
+        /// </summary>
+        /// <param name="clientLobGroupRequest">The client lob group request.</param>
+        void UpdateClientLobGroup(ClientLobGroup clientLobGroupRequest);
     }
 }

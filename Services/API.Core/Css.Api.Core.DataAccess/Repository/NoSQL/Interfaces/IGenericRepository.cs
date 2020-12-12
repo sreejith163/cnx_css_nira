@@ -17,16 +17,16 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces
         /// <summary>
         /// Ases the queryable.
         /// </summary>
-        /// <param name="filterExpression">The filter expression.</param>
+        /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        IQueryable<TDocument> FilterBy(Expression<Func<TDocument, bool>> filterExpression);
+        IQueryable<TDocument> FilterBy(Expression<Func<TDocument, bool>> filter);
 
         /// <summary>
         /// Filters the by.
         /// </summary>
-        /// <param name="filterExpression">The filter expression.</param>
+        /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        IEnumerable<TDocument> FilterBy(FilterDefinition<TDocument> filterExpression);
+        IEnumerable<TDocument> FilterBy(FilterDefinition<TDocument> filter);
 
         /// <summary>
         /// Finds the by identifier asynchronous.

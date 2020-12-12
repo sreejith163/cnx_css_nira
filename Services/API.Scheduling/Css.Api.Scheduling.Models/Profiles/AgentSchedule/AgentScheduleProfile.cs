@@ -16,8 +16,14 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
                 .ReverseMap();
 
             CreateMap<UpdateAgentSchedule, Domain.AgentSchedule>()
-                .ForMember(x => x.AgentScheduleCharts, opt => opt.MapFrom(o => o.AgentScheduleType == AgentScheduleType.SchedulingTab ? o.AgentScheduleCharts : null))
-                .ForMember(x => x.AgentScheduleManager, opt => opt.MapFrom(o => o.AgentScheduleType == AgentScheduleType.SchedulingMangerTab ? o.AgentScheduleManager : null))
+                .ForMember(x => x.AgentScheduleCharts, opt => opt.Condition(o => o.AgentScheduleType == AgentScheduleType.SchedulingTab))
+                .ForMember(x => x.AgentScheduleManager, opt => opt.Condition(o => o.AgentScheduleType == AgentScheduleType.SchedulingMangerTab))
+                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
+                .ReverseMap();
+
+            CreateMap<ImportAgentSchedule, Domain.AgentSchedule>()
+                .ForMember(x => x.AgentScheduleCharts, opt => opt.Condition(o => o.AgentScheduleType == AgentScheduleType.SchedulingTab))
+                .ForMember(x => x.AgentScheduleManager, opt => opt.Condition(o => o.AgentScheduleType == AgentScheduleType.SchedulingMangerTab))
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
         }

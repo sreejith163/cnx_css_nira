@@ -66,5 +66,31 @@ namespace Css.Api.Scheduling.Controllers
             var result = await _agentScheduleService.UpdateAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
             return StatusCode((int)result.Code, result.Value);
         }
+
+        /// <summary>
+        /// Imports the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        [HttpPut("{agentScheduleId}/import")]
+        public async Task<IActionResult> ImportAgentSchedule(string agentScheduleId, [FromBody] ImportAgentSchedule agentScheduleDetails)
+        {
+            var result = await _agentScheduleService.ImportAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>
+        /// Copies the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        [HttpPut("{agentScheduleId}/copy")]
+        public async Task<IActionResult> CopyAgentSchedule(string agentScheduleId, [FromBody] CopyAgentSchedule agentScheduleDetails)
+        {
+            var result = await _agentScheduleService.CopyAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
+            return StatusCode((int)result.Code, result.Value);
+        }
     }
 }

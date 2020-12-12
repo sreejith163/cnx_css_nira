@@ -40,20 +40,21 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <summary>
         /// Ases the queryable.
         /// </summary>
+        /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        public virtual IQueryable<TDocument> FilterBy(Expression<Func<TDocument, bool>> filterExpression)
+        public virtual IQueryable<TDocument> FilterBy(Expression<Func<TDocument, bool>> filter)
         {
-            return Collection.AsQueryable().Where(filterExpression);
+            return Collection.AsQueryable().Where(filter);
         }
 
         /// <summary>
         /// Filters the by.
         /// </summary>
-        /// <param name="filterExpression">The filter expression.</param>
+        /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        public virtual IEnumerable<TDocument> FilterBy(FilterDefinition<TDocument> filterExpression)
+        public virtual IEnumerable<TDocument> FilterBy(FilterDefinition<TDocument> filter)
         {
-            return Collection.Find(filterExpression).ToEnumerable();
+            return Collection.Find(filter).ToEnumerable();
         }
 
         /// <summary>

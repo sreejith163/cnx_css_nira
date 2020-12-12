@@ -94,6 +94,22 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.ImportAgentSchedule(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.ImportAgentSchedule)">
+            <summary>
+            Imports the agent schedule.
+            </summary>
+            <param name="agentScheduleId">The agent schedule identifier.</param>
+            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.CopyAgentSchedule(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.CopyAgentSchedule)">
+            <summary>
+            Copies the agent schedule.
+            </summary>
+            <param name="agentScheduleId">The agent schedule identifier.</param>
+            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.TimeZonesController">
             <summary>
             Controller for handling the Time zones resource
@@ -268,9 +284,19 @@
               <c>true</c> if the specified context is valid; otherwise, <c>false</c>.
             </returns>
         </member>
+        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleValidator">
+            <summary>
+            Validator for handling the validation of import agent schedule object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleValidator"/> class.
+            </summary>
+        </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleValidator">
             <summary>
-            Validator for handling the validation of add AgentCategory object
+            Validator for handling the validation of update agent schedule object
             </summary>
         </member>
         <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleValidator.#ctor">
