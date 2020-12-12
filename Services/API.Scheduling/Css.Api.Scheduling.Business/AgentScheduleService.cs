@@ -5,6 +5,7 @@ using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Net;
@@ -154,7 +155,15 @@ namespace Css.Api.Scheduling.Business
 
             foreach (var employeeAgentSchedule in employeeAgentSchedules)
             {
-                employeeAgentSchedule.AgentScheduleCharts = agentSchedule.AgentScheduleCharts;
+                if (agentScheduleDetails.AgentScheduleType == AgentScheduleType.SchedulingTab)
+                {
+                    employeeAgentSchedule.AgentScheduleCharts = agentSchedule.AgentScheduleCharts;
+                }
+                else if (agentScheduleDetails.AgentScheduleType == AgentScheduleType.SchedulingMangerTab)
+                {
+                    employeeAgentSchedule.AgentScheduleManager = agentSchedule.AgentScheduleManager;
+                }
+
                 _agentScheduleRepository.UpdateAgentSchedule(employeeAgentSchedule);
             }
 
