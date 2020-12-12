@@ -7,6 +7,7 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -104,6 +105,11 @@ namespace Css.Api.Scheduling.Repository
             if (!skillGroups.Any())
             {
                 return skillGroups;
+            }
+
+            if (!string.IsNullOrWhiteSpace(skillGroupQueryparameter.SearchKeyword))
+            {
+                skillGroups = skillGroups.Where(o => string.Equals(o.Name, skillGroupQueryparameter.SearchKeyword, StringComparison.OrdinalIgnoreCase));
             }
 
             return skillGroups;

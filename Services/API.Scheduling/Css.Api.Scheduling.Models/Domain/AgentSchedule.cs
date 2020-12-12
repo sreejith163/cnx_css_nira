@@ -56,12 +56,6 @@ namespace Css.Api.Scheduling.Models.Domain
         public int SkillTagId { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int AgentSchedulingGroupId { get; set; }
-
-        /// <summary>
         /// Gets or sets the charts.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

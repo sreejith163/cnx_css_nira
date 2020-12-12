@@ -7,6 +7,7 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -105,6 +106,11 @@ namespace Css.Api.Scheduling.Repository
             if (!skillTags.Any())
             {
                 return skillTags;
+            }
+
+            if (!string.IsNullOrWhiteSpace(skillTagQueryparameter.SearchKeyword))
+            {
+                skillTags = skillTags.Where(o => string.Equals(o.Name, skillTagQueryparameter.SearchKeyword, StringComparison.OrdinalIgnoreCase));
             }
 
             return skillTags;

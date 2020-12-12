@@ -53,11 +53,6 @@ namespace Css.Api.Scheduling.Models.Domain
         public int SkillTagId { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent schedule group identifier.
-        /// </summary>
-        public int AgentScheduleGroupId { get; set; }
-
-        /// <summary>
         /// Gets or sets the sen date.
         /// </summary>
         public DateTime SenDate { get; set; }

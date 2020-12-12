@@ -7,6 +7,7 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -105,6 +106,11 @@ namespace Css.Api.Scheduling.Repository
             if (!clientLobGroups.Any())
             {
                 return clientLobGroups;
+            }
+
+            if (!string.IsNullOrWhiteSpace(clientLobGroupQueryparameter.SearchKeyword))
+            {
+                clientLobGroups = clientLobGroups.Where(o => string.Equals(o.Name, clientLobGroupQueryparameter.SearchKeyword, StringComparison.OrdinalIgnoreCase));
             }
 
             return clientLobGroups;

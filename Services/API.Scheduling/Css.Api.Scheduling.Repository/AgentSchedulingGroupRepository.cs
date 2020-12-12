@@ -7,6 +7,7 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -104,6 +105,11 @@ namespace Css.Api.Scheduling.Repository
             if (!agentSchedulingGroups.Any())
             {
                 return agentSchedulingGroups;
+            }
+
+            if (!string.IsNullOrWhiteSpace(agentSchedulingGroupQueryparameter.SearchKeyword))
+            {
+                agentSchedulingGroups = agentSchedulingGroups.Where(o => string.Equals(o.Name, agentSchedulingGroupQueryparameter.SearchKeyword, StringComparison.OrdinalIgnoreCase));
             }
 
             return agentSchedulingGroups;
