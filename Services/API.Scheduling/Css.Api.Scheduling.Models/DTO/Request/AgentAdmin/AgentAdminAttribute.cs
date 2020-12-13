@@ -1,5 +1,4 @@
-﻿using Css.Api.Scheduling.Models.DTO.Request.AgentData;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
 {

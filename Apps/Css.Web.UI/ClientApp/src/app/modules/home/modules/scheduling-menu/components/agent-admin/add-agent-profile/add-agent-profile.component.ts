@@ -19,7 +19,6 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
-import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
@@ -147,19 +146,6 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     this.skillTagId = skillTagId;
   }
 
-  private showSuccessPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = {
-      backdrop: false,
-      centered: true,
-      size: 'sm',
-    };
-    const modalRef = this.modalService.open(MessagePopUpComponent, options);
-    modalRef.componentInstance.headingMessage = 'Success';
-    modalRef.componentInstance.contentMessage = contentMessage;
-
-    return modalRef;
-  }
-
   private saveAgentProfileDetailsOnModel() {
     this.agentProfileModel = new AgentAdminBase();
     this.agentProfileModel = this.agentProfileForm.value;
@@ -183,7 +169,6 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
         this.activeModal.close({ needRefresh: true });
-        this.showSuccessPopUpMessage('The record has been added!');
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         if (error.status === 409) {
@@ -215,7 +200,6 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
-          this.showSuccessPopUpMessage('The record has been updated!');
         }, (error) => {
           this.spinnerService.hide(this.spinner);
           if (error.status === 409) {
@@ -225,7 +209,6 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       this.subscriptions.push(this.updateAgentAdminSubscription);
     } else {
       this.activeModal.close({ needRefresh: false });
-      this.showSuccessPopUpMessage('No changes has been made!');
     }
   }
 

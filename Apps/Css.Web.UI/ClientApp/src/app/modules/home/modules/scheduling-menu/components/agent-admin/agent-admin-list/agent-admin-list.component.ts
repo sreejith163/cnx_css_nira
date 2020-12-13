@@ -107,7 +107,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then(() => {
       this.currentPage = 1;
-      this.loadAgentAdmins();
+      this.showSuccessPopUpMessage('The record has been added!');
     });
   }
 
@@ -119,7 +119,9 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
     this.modalRef.result.then((result: any) => {
       if (result.needRefresh) {
         this.agentAdmin = undefined;
-        this.loadAgentAdmins();
+        this.showSuccessPopUpMessage('The record has been updated!');
+      } else {
+        this.showSuccessPopUpMessage('No changes has been made!', false);
       }
     });
   }
@@ -135,10 +137,8 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
         this.spinnerService.show(this.spinner, SpinnerOptions);
         this.deleteAgentAdminSubscription = this.agentAdminService.deleteAgentAdmin(agentAdminIndex)
           .subscribe(() => {
-            this.spinnerService.hide(this.spinner);
-            this.loadAgentAdmins();
-            this.getModalPopup(MessagePopUpComponent, 'sm');
-            this.setComponentMessages('Success', 'The record has been deleted!');
+            this.spinnerService.hide(this.spinner); 
+            this.showSuccessPopUpMessage('The record has been deleted!');
           }, (error) => {
             this.spinnerService.hide(this.spinner);
             if (error.status === 424) {
@@ -150,6 +150,17 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.deleteAgentAdminSubscription);
       }
     });
+  }
+
+  private showSuccessPopUpMessage(contentMessage: string, needRefresh = true) {
+    this.getModalPopup(MessagePopUpComponent, 'sm');
+    this.setComponentMessages('Success', contentMessage);
+
+    if (needRefresh) {
+      this.modalRef.result.then(() => {
+        this.loadAgentAdmins();
+      });
+    }
   }
 
   search() {
@@ -201,7 +212,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
   }
 
   private getModalPopup(component: any, size: string) {
-    const options: NgbModalOptions = { backdrop: false, centered: true, size };
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
     this.modalRef = this.modalService.open(component, options);
   }
 

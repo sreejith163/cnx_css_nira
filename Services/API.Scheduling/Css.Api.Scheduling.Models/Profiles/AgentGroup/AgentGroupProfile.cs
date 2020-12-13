@@ -1,4 +1,4 @@
-﻿using Css.Api.Scheduling.Models.DTO.Request.AgentGroup;
+﻿using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 
 namespace Css.Api.Scheduling.Models.Profiles.AgentGroup
 {

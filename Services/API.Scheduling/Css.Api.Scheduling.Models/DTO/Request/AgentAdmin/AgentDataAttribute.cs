@@ -1,6 +1,4 @@
-﻿using Css.Api.Scheduling.Models.DTO.Request.AgentGroup;
-
-namespace Css.Api.Scheduling.Models.DTO.Request.AgentData
+﻿namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
 {
     public class AgentDataAttribute
     {

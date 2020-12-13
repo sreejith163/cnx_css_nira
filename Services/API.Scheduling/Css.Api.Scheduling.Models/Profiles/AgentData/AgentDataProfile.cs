@@ -1,5 +1,5 @@
 ﻿
-using Css.Api.Scheduling.Models.DTO.Request.AgentData;
+using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 
 namespace Css.Api.Scheduling.Models.Profiles.AgentData
 {
