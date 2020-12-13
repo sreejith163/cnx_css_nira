@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { SetupMenuRoutingModule } from './setup-menu-routing.module';
 
-import { DropdownListService } from './services/dropdown-list.service';
 import { AgentSchedulingGroupService } from './services/agent-scheduling-group.service';
 import { ClientService } from './services/client.service';
 import { ClientLobGroupService } from './services/client-lob-group.service';
@@ -38,7 +37,6 @@ const components = [
 const providers = [
   ClientService,
   AgentSchedulingGroupService,
-  DropdownListService,
   SkillGroupService,
   ClientLobGroupService,
   SkillTagService,

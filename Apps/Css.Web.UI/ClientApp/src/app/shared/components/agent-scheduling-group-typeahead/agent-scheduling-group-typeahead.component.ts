@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subject, SubscriptionLike as ISubscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { AgentSchedulingGroupBase } from '../../../models/agent-scheduling-group-base.model';
-import { AgentSchedulingGroupQueryParams } from '../../../models/agent-scheduling-group-query-params.model';
-import { AgentSchedulingGroupService } from '../../../services/agent-scheduling-group.service';
+import { AgentSchedulingGroupBase } from 'src/app/modules/home/modules/setup-menu/models/agent-scheduling-group-base.model';
+import { AgentSchedulingGroupQueryParams } from 'src/app/modules/home/modules/setup-menu/models/agent-scheduling-group-query-params.model';
+import { AgentSchedulingGroupService } from 'src/app/modules/home/modules/setup-menu/services/agent-scheduling-group.service';
 
 @Component({
   selector: 'app-agent-scheduling-group-typeahead',
