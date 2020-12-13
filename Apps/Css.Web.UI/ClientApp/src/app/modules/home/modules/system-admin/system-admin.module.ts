@@ -4,7 +4,6 @@ import { SystemAdminRoutingModule } from './system-admin-routing.module';
 
 import { SchedulingCodeService } from './services/scheduling-code.service';
 import { SchedulingCodeTypesService } from './services/scheduling-code-types.service';
-import { AgentAdminDropdownsService } from '../scheduling-menu/services/agent-admin-dropdowns.service';
 import { SchedulingCodeIconsService } from './services/scheduling-code-icons.service';
 import { PermissionsService } from './services/permissions.service';
 import { AgentCategoryService } from './services/agent-category.service';
@@ -38,7 +37,6 @@ const components = [
 const providers = [
   SchedulingCodeService,
   SchedulingCodeTypesService,
-  AgentAdminDropdownsService,
   SchedulingCodeIconsService,
   PermissionsService,
   AgentCategoryService,

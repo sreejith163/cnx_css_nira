@@ -137,7 +137,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
         this.spinnerService.show(this.spinner, SpinnerOptions);
         this.deleteAgentAdminSubscription = this.agentAdminService.deleteAgentAdmin(agentAdminIndex)
           .subscribe(() => {
-            this.spinnerService.hide(this.spinner); 
+            this.spinnerService.hide(this.spinner);
             this.showSuccessPopUpMessage('The record has been deleted!');
           }, (error) => {
             this.spinnerService.hide(this.spinner);
@@ -173,14 +173,6 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
 
     this.loadAgentAdmins();
   }
-
-  // toggleDetails(agentAdminId: number) {
-  //   if (this.agentAdmin?.id === agentAdminId) {
-  //     this.agentAdmin = undefined;
-  //   } else {
-  //     this.getExpandedDetails(agentAdminId);
-  //   }
-  // }
 
   getWeekDay(weekDay: number) {
     return WeekDay[weekDay];

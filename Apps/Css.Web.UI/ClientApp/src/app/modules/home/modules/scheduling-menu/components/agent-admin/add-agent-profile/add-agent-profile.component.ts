@@ -153,7 +153,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     this.agentProfileModel.skillTagId = this.skillTagId;
     this.agentProfileModel.agentData = [];
     const newGroup = new AgentAdminAgentGroup();
-    newGroup.description = "Hire Date";
+    newGroup.description = 'Hire Date';
     newGroup.value = myDate;
     const adminData = new AgentAdminAgentData();
     adminData.group = newGroup;
