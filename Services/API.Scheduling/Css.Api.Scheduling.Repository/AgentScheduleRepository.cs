@@ -40,7 +40,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<PagedList<Entity>> GetAgentSchedules(AgentScheduleQueryparameter agentScheduleQueryparameter)
         {
-            var agentSchedules = FilterBy(x => true);
+            var agentSchedules = FilterBy(x => x.IsDeleted == false);
 
             var filteredAgentSchedules = FilterAgentSchedules(agentSchedules, agentScheduleQueryparameter);
 
@@ -64,7 +64,8 @@ namespace Css.Api.Scheduling.Repository
         public async Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails)
         {
             var query =
-                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId));
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindByIdAsync(query);
         }
@@ -77,7 +78,8 @@ namespace Css.Api.Scheduling.Repository
         public async Task<long> GetAgentScheduleCount(AgentScheduleIdDetails agentScheduleIdDetails)
         {
             var query =
-                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId));
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindCountByIdAsync(query);
         }
@@ -90,7 +92,8 @@ namespace Css.Api.Scheduling.Repository
         public async Task<AgentSchedule> GetAgentScheduleByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails)
         {
             var query =
-                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, agentAdminEmployeeIdDetails.Id);
+                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, agentAdminEmployeeIdDetails.Id) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindByIdAsync(query);
         }
@@ -103,7 +106,8 @@ namespace Css.Api.Scheduling.Repository
         public async Task<long> GetAgentScheduleCountByEmployeeId(EmployeeIdDetails employeeIdDetails)
         {
             var query =
-                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
+                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindCountByIdAsync(query);
         }
@@ -125,7 +129,8 @@ namespace Css.Api.Scheduling.Repository
         public void UpdateAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule agentScheduleDetails)
         {
             var query =
-                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId));
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false); ;
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.DateFrom, agentScheduleDetails.DateFrom)
@@ -145,7 +150,8 @@ namespace Css.Api.Scheduling.Repository
         public void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails)
         {
             var query =
-                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId));
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false); ;
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
@@ -176,7 +182,8 @@ namespace Css.Api.Scheduling.Repository
         public void CopyAgentSchedules(AgentSchedule agentSchedule, CopyAgentSchedule copyAgentScheduleRequest)
         {
             var filter =
-                Builders<AgentSchedule>.Filter.Where(i => copyAgentScheduleRequest.EmployeeIds.Contains(i.EmployeeId));
+                Builders<AgentSchedule>.Filter.Where(i => copyAgentScheduleRequest.EmployeeIds.Contains(i.EmployeeId)) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false); ;
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.ModifiedBy, agentSchedule.ModifiedBy);
@@ -205,7 +212,8 @@ namespace Css.Api.Scheduling.Repository
         public void DeleteAgentSchedule(EmployeeIdDetails employeeIdDetails)
         {
             var query =
-                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
+                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false); ;
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.IsDeleted, true)

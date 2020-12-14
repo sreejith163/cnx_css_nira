@@ -1,4 +1,5 @@
 ﻿using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using Css.Api.Scheduling.Models.Enums;
 using System;
 
@@ -13,6 +14,12 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
                 .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.EmployeeId.Trim()))
                 .ForMember(x => x.Status, opt => opt.MapFrom(o => SchedulingStatus.Approved))
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
+                .ReverseMap();
+
+            CreateMap<Domain.AgentSchedule, AgentScheduleDTO>()
+                .ReverseMap();
+
+            CreateMap<Domain.AgentSchedule, AgentScheduleDetailsDTO>()
                 .ReverseMap();
         }
     }

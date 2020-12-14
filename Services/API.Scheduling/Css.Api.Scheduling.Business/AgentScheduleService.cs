@@ -5,6 +5,7 @@ using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Net;
@@ -97,9 +98,10 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse($"Employee Id '{agentSchedule.EmployeeId}' not found", HttpStatusCode.NotFound);
             }
 
-            agentSchedule.EmployeeName = $"{agentProfile?.FirstName} {agentProfile?.LastName}";
+            var mappedAgentSchedule = _mapper.Map<AgentScheduleDetailsDTO>(agentSchedule);
+            mappedAgentSchedule.EmployeeName = $"{agentProfile?.FirstName} {agentProfile?.LastName}";
 
-            return new CSSResponse(agentSchedule, HttpStatusCode.OK);
+            return new CSSResponse(mappedAgentSchedule, HttpStatusCode.OK);
         }
 
         /// <summary>
