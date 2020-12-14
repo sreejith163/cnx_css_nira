@@ -10,6 +10,7 @@ using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -83,7 +84,6 @@ namespace Css.Api.Scheduling.Repository
         /// </returns>
         public async Task<Agent> GetAgentAdminIdsByEmployeeIdAndSso(EmployeeIdDetails agentAdminEmployeeIdDetails, AgentAdminSsoDetails agentAdminSsoDetails)
         {
-
             var query = 
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
                 Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id) |
@@ -99,12 +99,27 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<Agent> GetAgentAdminIdsByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails)
         {
-
             var query =
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
                 Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id);
 
             return await FindByIdAsync(query);
+        }
+
+        /// <summary>
+        /// Gets the agent admins by employee ids.
+        /// </summary>
+        /// <param name="agentAdminEmployeeIdsDetails">The agent admin employee ids details.</param>
+        /// <returns></returns>
+        public async Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<string> agentAdminEmployeeIdsDetails)
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
+                Builders<Agent>.Filter.Where(i => agentAdminEmployeeIdsDetails.Contains(i.Ssn));
+
+            var agentAdmins = FilterBy(query);
+
+            return await Task.FromResult(agentAdmins.ToList());
         }
 
         /// <summary>

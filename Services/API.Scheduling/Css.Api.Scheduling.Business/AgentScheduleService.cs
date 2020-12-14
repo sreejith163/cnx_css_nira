@@ -8,6 +8,9 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -73,10 +76,27 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> GetAgentSchedules(AgentScheduleQueryparameter agentScheduleQueryparameter)
         {
-            var agentAdmins = await _agentScheduleRepository.GetAgentSchedules(agentScheduleQueryparameter);
-            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentAdmins));
+            var agentSchedules = await _agentScheduleRepository.GetAgentSchedules(agentScheduleQueryparameter);
+            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentSchedules));
 
-            return new CSSResponse(agentAdmins, HttpStatusCode.OK);
+
+            var serializedAgentSchedules = JsonConvert.SerializeObject(agentSchedules);
+            var deSerializedAgentSchedules = JsonConvert.DeserializeObject<List<AgentScheduleDTO>>(serializedAgentSchedules);
+            var employeeIds = deSerializedAgentSchedules.Select(x => x.EmployeeId).ToList();
+
+            var agentAdmins = await _agentAdminRepository.GetAgentAdminsByEmployeeIds(employeeIds);
+            var mappedAgentSchedules = new List<AgentScheduleDTO>();
+
+            foreach (var deSerializedAgentSchedule in deSerializedAgentSchedules)
+            {
+                var agentAdmin = agentAdmins.Find(x => x.Ssn == deSerializedAgentSchedule.EmployeeId);
+                var mappedAgentSchedule = _mapper.Map<AgentScheduleDTO>(deSerializedAgentSchedule);
+                mappedAgentSchedule.EmployeeName = $"{agentAdmin?.FirstName} {agentAdmin?.LastName}";
+
+                mappedAgentSchedules.Add(mappedAgentSchedule);
+            }
+
+            return new CSSResponse(mappedAgentSchedules, HttpStatusCode.OK);
         }
 
         /// <summary>

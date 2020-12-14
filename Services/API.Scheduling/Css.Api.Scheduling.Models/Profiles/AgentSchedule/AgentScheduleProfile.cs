@@ -1,4 +1,5 @@
-﻿using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+﻿using Css.Api.Core.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using Css.Api.Scheduling.Models.Enums;
 using System;
@@ -20,6 +21,9 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
                 .ReverseMap();
 
             CreateMap<Domain.AgentSchedule, AgentScheduleDetailsDTO>()
+                .ReverseMap();
+
+            CreateMap<PagedList<Entity>, AgentScheduleDTO>()
                 .ReverseMap();
         }
     }
