@@ -77,12 +77,9 @@ namespace Css.Api.Scheduling.Business
         public async Task<CSSResponse> GetAgentSchedules(AgentScheduleQueryparameter agentScheduleQueryparameter)
         {
             var agentSchedules = await _agentScheduleRepository.GetAgentSchedules(agentScheduleQueryparameter);
-            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentSchedules));
 
-
-            var serializedAgentSchedules = JsonConvert.SerializeObject(agentSchedules);
-            var deSerializedAgentSchedules = JsonConvert.DeserializeObject<List<AgentScheduleDTO>>(serializedAgentSchedules);
-            var employeeIds = deSerializedAgentSchedules.Select(x => x.EmployeeId).ToList();
+            var deSerializedAgentSchedules = JsonConvert.DeserializeObject<List<AgentScheduleDTO>>(JsonConvert.SerializeObject(agentSchedules));
+            var employeeIds = deSerializedAgentSchedules.Select(x => x.EmployeeId).Distinct().ToList();
 
             var agentAdmins = await _agentAdminRepository.GetAgentAdminsByEmployeeIds(employeeIds);
             var mappedAgentSchedules = new List<AgentScheduleDTO>();
@@ -95,6 +92,8 @@ namespace Css.Api.Scheduling.Business
 
                 mappedAgentSchedules.Add(mappedAgentSchedule);
             }
+
+            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentSchedules));
 
             return new CSSResponse(mappedAgentSchedules, HttpStatusCode.OK);
         }
