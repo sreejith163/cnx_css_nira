@@ -138,11 +138,11 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
-        /// Imports the agent schedule.
+        /// Updates the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        public void ImportAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentSchedule agentScheduleDetails)
+        public void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentSchedule agentScheduleDetails)
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId));

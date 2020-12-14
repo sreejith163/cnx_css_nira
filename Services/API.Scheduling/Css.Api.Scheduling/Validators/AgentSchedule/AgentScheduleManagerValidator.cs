@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Css.Api.Scheduling.Validators.AgentSchedule
 {
     /// <summary>
-    /// ustom validator for agent schedule manager
+    /// custom validator for agent schedule manager
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="FluentValidation.Validators.PropertyValidator" />

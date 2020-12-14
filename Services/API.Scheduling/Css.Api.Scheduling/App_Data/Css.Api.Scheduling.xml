@@ -94,9 +94,9 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.ImportAgentSchedule(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.ImportAgentSchedule)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.UpdateAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.ImportAgentSchedule)">
             <summary>
-            Imports the agent schedule.
+            Updates the agent schedule chart.
             </summary>
             <param name="agentScheduleId">The agent schedule identifier.</param>
             <param name="agentScheduleDetails">The agent schedule details.</param>
@@ -330,7 +330,7 @@
         </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerValidator`1">
             <summary>
-            ustom validator for agent schedule manager
+            custom validator for agent schedule manager
             </summary>
             <typeparam name="T"></typeparam>
             <seealso cref="T:FluentValidation.Validators.PropertyValidator" />
@@ -356,14 +356,14 @@
               <c>true</c> if the specified context is valid; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleValidator">
+        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleChartValidator">
             <summary>
-            Validator for handling the validation of import agent schedule object
+            Validator for handling the validation of update agent schedule chart
             </summary>
         </member>
-        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleValidator.#ctor">
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleChartValidator.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleValidator"/> class.
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleChartValidator"/> class.
             </summary>
         </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleValidator">

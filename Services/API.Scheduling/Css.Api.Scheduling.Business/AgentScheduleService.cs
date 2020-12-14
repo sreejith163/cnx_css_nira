@@ -124,12 +124,12 @@ namespace Css.Api.Scheduling.Business
         }
 
         /// <summary>
-        /// Imports the agent schedule.
+        /// Updates the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> ImportAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentSchedule agentScheduleDetails)
+        public async Task<CSSResponse> UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentSchedule agentScheduleDetails)
         {
             var agentScheduleCount = await _agentScheduleRepository.GetAgentScheduleCount(agentScheduleIdDetails);
             if (agentScheduleCount < 1)
@@ -137,7 +137,7 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            _agentScheduleRepository.ImportAgentSchedule(agentScheduleIdDetails, agentScheduleDetails);
+            _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
 
             await _uow.Commit();
 
