@@ -33,14 +33,14 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
         public DateTimeOffset? DateTo { get; set; }
 
         /// <summary>
-        /// Gets or sets the charts.
+        /// Gets or sets the agent schedule charts.
         /// </summary>
         public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent schedule manager.
+        /// Gets or sets the agent schedule manager charts.
         /// </summary>
-        public AgentScheduleManager AgentScheduleManager { get; set; }
+        public List<AgentScheduleManagerChart> AgentScheduleManagerCharts { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.

@@ -36,101 +36,93 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
                 validationFailures.Add(new ValidationFailure("Agent Scheduling Manager", "Date should not be empty"));
                 return validationFailures;
             }
-            else if (item.AgentScheduleChart != null)
+            else if (item.SchedulingCodeId == 0)
             {
-                if (item.AgentScheduleChart.Day > 6)
+                validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "SchedulingCodeId should not be empty"));
+                return validationFailures;
+            }
+            else if (string.IsNullOrEmpty(item.StartTime))
+            {
+                validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time is required"));
+                return validationFailures;
+            }
+            else if (string.IsNullOrEmpty(item.EndTime))
+            {
+                validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time is required"));
+                return validationFailures;
+            }
+            else
+            {
+                var startTimeHourString = item.StartTime.Split(":")[0];
+                if (startTimeHourString.Length != 2)
                 {
-                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Day should be of range 0 to 6"));
+                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time hour should be 2 digits (For eg:  hh:mm am)"));
                     return validationFailures;
                 }
-                else if (item.AgentScheduleChart.SchedulingCodeId == 0)
+
+                var startTimeMinuteString = item.StartTime.Split(":")[1]?.Split(" ")[0];
+                if (startTimeMinuteString.Length != 2)
                 {
-                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "SchedulingCodeId should not be empty"));
+                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time minute should be 2 digits (For eg:  hh:mm am)"));
                     return validationFailures;
                 }
-                else if (string.IsNullOrEmpty(item.AgentScheduleChart.StartTime))
+
+                var startTimeMeridiem = item.StartTime.Split(" ")[1]?.ToLower();
+                if (startTimeMeridiem.Length != 2)
                 {
-                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time is required"));
+                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time meridiem should be 'am / pm'  (For eg:  hh:mm am)"));
                     return validationFailures;
                 }
-                else if (string.IsNullOrEmpty(item.AgentScheduleChart.EndTime))
+
+                var startTimeHour = Convert.ToInt32(startTimeHourString);
+                var startTimeMinute = Convert.ToInt32(startTimeMinuteString);
+
+                if (startTimeMinute % 5 != 0)
                 {
-                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time is required"));
+                    validationFailures.Add(new ValidationFailure("OperationHour", "Start time should be an interval of 15 mins"));
                     return validationFailures;
                 }
-                else
+
+                var endTimeHourString = item.EndTime.Split(":")[0];
+                if (endTimeHourString.Length != 2)
                 {
-                    var startTimeHourString = item.AgentScheduleChart.StartTime.Split(":")[0];
-                    if (startTimeHourString.Length != 2)
-                    {
-                        validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time hour should be 2 digits (For eg:  hh:mm am)"));
-                        return validationFailures;
-                    }
+                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time hour should be 2 digits (For eg:  hh:mm am)"));
+                    return validationFailures;
+                }
 
-                    var startTimeMinuteString = item.AgentScheduleChart.StartTime.Split(":")[1]?.Split(" ")[0];
-                    if (startTimeMinuteString.Length != 2)
-                    {
-                        validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time minute should be 2 digits (For eg:  hh:mm am)"));
-                        return validationFailures;
-                    }
+                var endTimeMinuteString = item.EndTime.Split(":")[1].Split(" ")[0];
+                if (endTimeMinuteString.Length != 2)
+                {
+                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time minute should be 2 digits (For eg:  hh:mm am)"));
+                    return validationFailures;
+                }
 
-                    var startTimeMeridiem = item.AgentScheduleChart.StartTime.Split(" ")[1]?.ToLower();
-                    if (startTimeMeridiem.Length != 2)
-                    {
-                        validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time meridiem should be 'am / pm'  (For eg:  hh:mm am)"));
-                        return validationFailures;
-                    }
+                var endTimeMeridiem = item.EndTime.Split(" ")[1];
+                if (startTimeMeridiem.Length != 2)
+                {
+                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time meridiem should be 'am / pm' (For eg:  hh:mm am)"));
+                    return validationFailures;
+                }
 
-                    var startTimeHour = Convert.ToInt32(startTimeHourString);
-                    var startTimeMinute = Convert.ToInt32(startTimeMinuteString);
+                var endTimeHour = Convert.ToInt32(endTimeHourString);
+                var endTimeMinute = Convert.ToInt32(endTimeMinuteString);
 
-                    if (startTimeMinute % 5 != 0)
-                    {
-                        validationFailures.Add(new ValidationFailure("OperationHour", "Start time should be an interval of 15 mins"));
-                        return validationFailures;
-                    }
+                if (endTimeMinute % 5 != 0)
+                {
+                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time should be an interval of 15 mins"));
+                    return validationFailures;
+                }
 
-                    var endTimeHourString = item.AgentScheduleChart.EndTime.Split(":")[0];
-                    if (endTimeHourString.Length != 2)
-                    {
-                        validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time hour should be 2 digits (For eg:  hh:mm am)"));
-                        return validationFailures;
-                    }
+                startTimeHour = startTimeMeridiem == "am" ? startTimeHour : startTimeHour + 12;
+                endTimeHour = endTimeMeridiem == "am" ? endTimeHour : endTimeHour + 12;
 
-                    var endTimeMinuteString = item.AgentScheduleChart.EndTime.Split(":")[1].Split(" ")[0];
-                    if (endTimeMinuteString.Length != 2)
-                    {
-                        validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time minute should be 2 digits (For eg:  hh:mm am)"));
-                        return validationFailures;
-                    }
+                DateTime startTimeDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, startTimeHour, startTimeMinute, 0);
+                DateTime endTimeDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, endTimeHour, endTimeMinute, 0);
 
-                    var endTimeMeridiem = item.AgentScheduleChart.EndTime.Split(" ")[1];
-                    if (startTimeMeridiem.Length != 2)
-                    {
-                        validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time meridiem should be 'am / pm' (For eg:  hh:mm am)"));
-                        return validationFailures;
-                    }
-
-                    var endTimeHour = Convert.ToInt32(endTimeHourString);
-                    var endTimeMinute = Convert.ToInt32(endTimeMinuteString);
-
-                    if (endTimeMinute % 5 != 0)
-                    {
-                        validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time should be an interval of 15 mins"));
-                        return validationFailures;
-                    }
-
-                    startTimeHour = startTimeMeridiem == "am" ? startTimeHour : startTimeHour + 12;
-                    endTimeHour = endTimeMeridiem == "am" ? endTimeHour : endTimeHour + 12;
-
-                    DateTime startTimeDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, startTimeHour, startTimeMinute, 0);
-                    DateTime endTimeDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, endTimeHour, endTimeMinute, 0);
-
-                    if (startTimeDateTime >= endTimeDateTime)
-                    {
-                        validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time and End time range is not valid"));
-                        return validationFailures;
-                    }
+                if (startTimeDateTime >= endTimeDateTime)
+                {
+                    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time and End time range is not valid"));
+                    return validationFailures;
                 }
             }
 

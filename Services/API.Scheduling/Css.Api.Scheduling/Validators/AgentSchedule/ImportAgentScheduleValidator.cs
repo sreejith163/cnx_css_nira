@@ -18,10 +18,10 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
             RuleFor(x => x.EmployeeId).NotEmpty();
             RuleFor(x => x.ModifiedBy).NotEmpty();
             RuleFor(x => x.AgentScheduleType).IsInEnum();
-            RuleFor(x => x.AgentScheduleCharts).SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>())
+            RuleFor(x => x.AgentScheduleCharts).SetValidator(new AgentScheduleChartValidator<ScheduleChart>())
                 .When(x => x.AgentScheduleType == AgentScheduleType.SchedulingTab);
-            RuleFor(x => x.AgentScheduleManager).NotEmpty().When(x => x.AgentScheduleType == AgentScheduleType.SchedulingMangerTab);
-            RuleForEach(x => x.AgentScheduleManager.AgentScheduleManagerCharts).SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>())
+            RuleFor(x => x.AgentScheduleManagerCharts).NotEmpty().When(x => x.AgentScheduleType == AgentScheduleType.SchedulingMangerTab);
+            RuleForEach(x => x.AgentScheduleManagerCharts).SetValidator(new AgentScheduleChartValidator<ScheduleChart>())
                 .When(x => x.AgentScheduleType == AgentScheduleType.SchedulingMangerTab);
         }
     }
