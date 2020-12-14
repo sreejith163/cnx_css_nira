@@ -97,6 +97,16 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         }
 
         /// <summary>
+        /// Updates the many asynchronous.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <param name="update">The update.</param>
+        public virtual void UpdateManyAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update)
+        {
+            Context.AddCommand(() => Collection.UpdateManyAsync(filter, update));
+        }
+
+        /// <summary>
         /// Deletes the one asynchronous.
         /// </summary>
         /// <param name="filterExpression">The filter expression.</param>

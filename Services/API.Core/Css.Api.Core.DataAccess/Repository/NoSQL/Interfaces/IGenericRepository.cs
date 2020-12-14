@@ -57,6 +57,13 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces
         void ReplaceOneAsync(TDocument document);
 
         /// <summary>
+        /// Updates the many asynchronous.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <param name="update">The update.</param>
+        void UpdateManyAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update);
+
+        /// <summary>
         /// Deletes the one asynchronous.
         /// </summary>
         /// <param name="filterExpression">The filter expression.</param>

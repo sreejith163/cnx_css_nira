@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.Domain
 {
-    public class AgentScheduleManager
+    public class AgentScheduleManagerChart
     {
         /// <summary>
         /// Gets or sets the date.
@@ -13,6 +12,6 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the charts.
         /// </summary>
-        public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
+        public AgentScheduleChart AgentScheduleCharts { get; set; }
     }
 }

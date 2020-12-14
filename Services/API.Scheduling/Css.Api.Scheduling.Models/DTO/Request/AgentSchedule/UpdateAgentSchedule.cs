@@ -40,7 +40,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
         /// <summary>
         /// Gets or sets the agent schedule manager.
         /// </summary>
-        public AgentScheduleManager AgentScheduleManager { get; set; }
+        public AgentScheduleManagerChart AgentScheduleManager { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.

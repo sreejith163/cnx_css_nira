@@ -2,6 +2,7 @@
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.Enums;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -51,6 +52,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="agentScheduleRequest">The agent schedule request.</param>
         void UpdateAgentSchedule(AgentSchedule agentScheduleRequest);
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IAgentScheduleRepository" /> interface.
+        /// </summary>
+        /// <param name="agentSchedule">The agent schedule.</param>
+        /// <param name="copyAgentScheduleRequest">The copy agent schedule request.</param>
+        void BulkUpdateAgentScheduleCharts(AgentSchedule agentSchedule, CopyAgentSchedule copyAgentScheduleRequest);
 
         /// <summary>
         /// Deletes the agent schedule.

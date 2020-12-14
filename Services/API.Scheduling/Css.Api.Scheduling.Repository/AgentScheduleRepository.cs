@@ -6,6 +6,7 @@ using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -26,7 +27,8 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>Initializes a new instance of the <see cref="AgentScheduleRepository" /> class.</summary>
         /// <param name="mongoContext">The mongo context.</param>
         /// <param name="mapper">The mapper.</param>
-        public AgentScheduleRepository(IMongoContext mongoContext,
+        public AgentScheduleRepository(
+            IMongoContext mongoContext,
             IMapper mapper) : base(mongoContext)
         {
             _mapper = mapper;
@@ -111,6 +113,36 @@ namespace Css.Api.Scheduling.Repository
         public void UpdateAgentSchedule(AgentSchedule agentScheduleRequest)
         {
             ReplaceOneAsync(agentScheduleRequest);
+        }
+
+        /// <summary>
+        /// Bulks the update agent schedule.
+        /// </summary>
+        /// <param name="agentSchedule">The agent schedule.</param>
+        /// <param name="copyAgentScheduleRequest">The copy agent schedule request.</param>
+        public void BulkUpdateAgentScheduleCharts(AgentSchedule agentSchedule, CopyAgentSchedule copyAgentScheduleRequest)
+        {
+            var filter =
+                Builders<AgentSchedule>.Filter.Where(i => copyAgentScheduleRequest.EmployeeIds.Contains(i.EmployeeId));
+
+            var update = Builders<AgentSchedule>.Update
+                .Set(x => x.ModifiedBy, agentSchedule.ModifiedBy);
+
+            switch (copyAgentScheduleRequest.AgentScheduleType)
+            {
+                case AgentScheduleType.SchedulingTab:
+                    update =  update.Set(x => x.AgentScheduleCharts, agentSchedule.AgentScheduleCharts);
+                    break;
+
+                case AgentScheduleType.SchedulingMangerTab:
+                    update = update.Set(x => x.AgentScheduleManagerCharts, agentSchedule.AgentScheduleManagerCharts);
+                    break;
+
+                default:
+                    break;
+            }
+
+            UpdateManyAsync(filter, update);
         }
 
         /// <summary>
