@@ -93,6 +93,21 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
+        /// Gets the agent admin ids by employee identifier.
+        /// </summary>
+        /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
+        /// <returns></returns>
+        public async Task<Agent> GetAgentAdminIdsByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails)
+        {
+
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
+                Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id)
+
+            return await FindByIdAsync(query);
+        }
+
+        /// <summary>
         /// Gets the agent admins count.
         /// </summary>
         /// <returns>

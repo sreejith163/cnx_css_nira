@@ -12,7 +12,6 @@ using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 

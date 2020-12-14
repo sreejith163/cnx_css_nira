@@ -15,6 +15,11 @@ namespace Css.Api.Scheduling.Models.Domain
         public string EmployeeId { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of the employee.
+        /// </summary>
+        public string EmployeeName { get; set; }
+
+        /// <summary>
         /// Gets or sets the date from.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

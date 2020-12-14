@@ -34,6 +34,12 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
             CreateMap<Domain.Agent, AgentAdminDetailsDTO>()
             .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.Ssn))
             .ReverseMap();
+
+            CreateMap<Domain.AgentData, AgentDataAttribute>()
+               .ReverseMap();
+
+            CreateMap<Domain.AgentGroup, AgentGroupAttribute>()
+              .ReverseMap();
         }
     }
 }

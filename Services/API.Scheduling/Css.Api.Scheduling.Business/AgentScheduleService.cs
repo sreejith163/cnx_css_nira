@@ -30,6 +30,11 @@ namespace Css.Api.Scheduling.Business
         private readonly IAgentScheduleRepository _agentScheduleRepository;
 
         /// <summary>
+        /// The agent admin repository
+        /// </summary>
+        private readonly IAgentAdminRepository _agentAdminRepository;
+
+        /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
@@ -42,18 +47,21 @@ namespace Css.Api.Scheduling.Business
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentAdminService" /> class.
         /// </summary>
-        /// <param name="_httpContextAccessor">The HTTP context accessor.</param>
+        /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="agentScheduleRepository">The agent schedule repository.</param>
+        /// <param name="agentAdminRepository">The agent admin repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
         public AgentScheduleService(
             IHttpContextAccessor httpContextAccessor,
             IAgentScheduleRepository agentScheduleRepository,
+            IAgentAdminRepository agentAdminRepository,
             IMapper mapper,
             IUnitOfWork uow)
         {
             _httpContextAccessor = httpContextAccessor;
             _agentScheduleRepository = agentScheduleRepository;
+            _agentAdminRepository = agentAdminRepository;
             _mapper = mapper;
             _uow = uow;
         }
@@ -83,6 +91,14 @@ namespace Css.Api.Scheduling.Business
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
+
+            var agentProfile = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(new AgentAdminEmployeeIdDetails { Id = agentSchedule.EmployeeId });
+            if (agentProfile == null)
+            {
+                return new CSSResponse($"Employee Id '{agentSchedule.EmployeeId}' not found", HttpStatusCode.NotFound);
+            }
+
+            agentSchedule.EmployeeName = $"{agentProfile?.FirstName} {agentProfile?.LastName}";
 
             return new CSSResponse(agentSchedule, HttpStatusCode.OK);
         }
