@@ -94,7 +94,7 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.UpdateAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.ImportAgentSchedule)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.UpdateAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.UpdateAgentScheduleChart)">
             <summary>
             Updates the agent schedule chart.
             </summary>
