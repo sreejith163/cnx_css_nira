@@ -2,16 +2,16 @@ version: '3.4'
 
 services:
 
-  scheduling.mysql.data:
+  css.mysql.data:
     image: mysql:latest
-    container_name: mysql.data
-
+    container_name: css.mysql.data
+  
   css.web.ui:
-    image: ${DOCKER_REGISTRY:-cnx}/css.web.ui:${PLATFORM:-linux}-${TAG:-latest} 
-    container_name: css.web.ui
-    build:
-      context: .
-      dockerfile: Apps/Css.Web.UI/Dockerfile
+   image: ${DOCKER_REGISTRY:-cnx}/css.web.ui:${PLATFORM:-linux}-${TAG:-latest} 
+   container_name: css.web.ui
+   build:
+     context: .
+     dockerfile: Apps/Css.Web.UI/Dockerfile
 
   css.api.gateway:
     image: ${DOCKER_REGISTRY:-cnx}/css.api.gateway:${PLATFORM:-linux}-${TAG:-latest}
@@ -21,11 +21,11 @@ services:
       dockerfile: Services/API.Gateway/Css.Api.Gateway/Dockerfile
 
   css.api.auth:
-    image: ${DOCKER_REGISTRY:-cnx}/css.api.auth:${PLATFORM:-linux}-${TAG:-latest}
-    container_name: css.api.auth
-    build:
-      context: .
-      dockerfile: Services/API.Identity/Css.Api.Auth/Dockerfile
+   image: ${DOCKER_REGISTRY:-cnx}/css.api.auth:${PLATFORM:-linux}-${TAG:-latest}
+   container_name: css.api.auth
+   build:
+     context: .
+     dockerfile: Services/API.Identity/Css.Api.Auth/Dockerfile
 
   css.api.admin:
     image: ${DOCKER_REGISTRY:-cnx}/css.api.admin:${PLATFORM:-linux}-${TAG:-latest}
@@ -36,6 +36,7 @@ services:
 
   css.api.setup:
     image: ${DOCKER_REGISTRY:-cnx}/css.api.setup:${PLATFORM:-linux}-${TAG:-latest}
+    container_name: css.api.setup
     build:
       context: .
       dockerfile: Services/Api.Setup/Css.Api.Setup/Dockerfile
@@ -48,8 +49,7 @@ services:
       dockerfile: Services/API.Scheduling/Css.Api.Scheduling/Dockerfile
 
   css.api.reporting:
-    image: ${DOCKER_REGISTRY:-cnx}/css.api.reporting:${PLATFORM:-linux}-${TAG:-latest}
-    build:
-      context: .
-      dockerfile: Services/API.Reporting/Css.Api.Reporting/Dockerfile
-
+   image: ${DOCKER_REGISTRY:-cnx}/css.api.reporting:${PLATFORM:-linux}-${TAG:-latest}
+   build:
+     context: .
+     dockerfile: Services/API.Reporting/Css.Api.Reporting/Dockerfile
