@@ -81,7 +81,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<Agent> GetAgentAdminIdsByEmployeeIdAndSso(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails, AgentAdminSsoDetails agentAdminSsoDetails)
+        public async Task<Agent> GetAgentAdminIdsByEmployeeIdAndSso(EmployeeIdDetails agentAdminEmployeeIdDetails, AgentAdminSsoDetails agentAdminSsoDetails)
         {
 
             var query = 
@@ -97,7 +97,7 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
         /// <returns></returns>
-        public async Task<Agent> GetAgentAdminIdsByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails)
+        public async Task<Agent> GetAgentAdminIdsByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails)
         {
 
             var query =

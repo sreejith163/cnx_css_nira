@@ -68,6 +68,16 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         }
 
         /// <summary>
+        /// Finds the count by identifier asynchronous.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <returns></returns>
+        public virtual async Task<long> FindCountByIdAsync(FilterDefinition<TDocument> filter)
+        {
+            return await Collection.CountDocumentsAsync(filter);
+        }
+
+        /// <summary>
         /// Inserts the one asynchronous.
         /// </summary>
         /// <param name="document">The document.</param>
@@ -94,6 +104,16 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         {
             var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, document.Id);
             Context.AddCommand(() => Collection.FindOneAndReplaceAsync(filter, document));
+        }
+
+        /// <summary>
+        /// Updates the one asynchronous.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <param name="update">The update.</param>
+        public virtual void UpdateOneAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update)
+        {
+            Context.AddCommand(() => Collection.UpdateOneAsync(filter, update));
         }
 
         /// <summary>

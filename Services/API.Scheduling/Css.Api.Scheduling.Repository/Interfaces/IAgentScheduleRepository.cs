@@ -28,18 +28,25 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails);
 
         /// <summary>
+        /// Gets the agent schedule count.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <returns></returns>
+        Task<long> GetAgentScheduleCount(AgentScheduleIdDetails agentScheduleIdDetails);
+
+        /// <summary>
         /// Gets the agent schedule by employee identifier.
         /// </summary>
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
         /// <returns></returns>
-        Task<AgentSchedule> GetAgentScheduleByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails);
+        Task<AgentSchedule> GetAgentScheduleByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails);
 
         /// <summary>
-        /// Gets the agent schedules by employee ids.
+        /// Gets the agent schedule count by employee identifier.
         /// </summary>
-        /// <param name="employeeIds">The employee ids.</param>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <returns></returns>
-        Task<List<AgentSchedule>> GetAgentSchedulesByEmployeeIds(List<string> employeeIds);
+        Task<long> GetAgentScheduleCountByEmployeeId(EmployeeIdDetails employeeIdDetails);
 
         /// <summary>
         /// Creates the agent schedule.
@@ -50,21 +57,29 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <summary>
         /// Updates the agent schedule.
         /// </summary>
-        /// <param name="agentScheduleRequest">The agent schedule request.</param>
-        void UpdateAgentSchedule(AgentSchedule agentScheduleRequest);
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        void UpdateAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule agentScheduleDetails);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IAgentScheduleRepository" /> interface.
+        /// Imports the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        void ImportAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentSchedule agentScheduleDetails);
+
+        /// <summary>
+        /// Copies the agent schedules.
         /// </summary>
         /// <param name="agentSchedule">The agent schedule.</param>
         /// <param name="copyAgentScheduleRequest">The copy agent schedule request.</param>
-        void BulkUpdateAgentScheduleCharts(AgentSchedule agentSchedule, CopyAgentSchedule copyAgentScheduleRequest);
+        void CopyAgentSchedules(AgentSchedule agentSchedule, CopyAgentSchedule copyAgentScheduleRequest);
 
         /// <summary>
         /// Deletes the agent schedule.
         /// </summary>
-        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        void DeleteAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails);
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        void DeleteAgentSchedule(EmployeeIdDetails employeeIdDetails);
     }
 }
 

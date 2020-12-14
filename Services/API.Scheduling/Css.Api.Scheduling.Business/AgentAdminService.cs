@@ -149,10 +149,26 @@ namespace Css.Api.Scheduling.Business
             var isagentSchedulingGroupsSeeded = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsCount() > 0;
             if (!isagentSchedulingGroupsSeeded)
             {
-                _agentSchedulingGroupRepository.CreateAgentSchedulingGroup(new AgentSchedulingGroup { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1, 
-                                                                                                      Name = "Agent Scheduliung Group 1", IsDeleted = false });
-                _agentSchedulingGroupRepository.CreateAgentSchedulingGroup(new AgentSchedulingGroup { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, SkillTagId = 2, AgentSchedulingGroupId = 2, 
-                                                                                                      Name = "Agent Scheduliung Group 2", IsDeleted = false });
+                _agentSchedulingGroupRepository.CreateAgentSchedulingGroup(new AgentSchedulingGroup
+                {
+                    ClientId = 1,
+                    ClientLobGroupId = 1,
+                    SkillGroupId = 1,
+                    SkillTagId = 1,
+                    AgentSchedulingGroupId = 1,
+                    Name = "Agent Scheduliung Group 1",
+                    IsDeleted = false
+                });
+                _agentSchedulingGroupRepository.CreateAgentSchedulingGroup(new AgentSchedulingGroup
+                {
+                    ClientId = 2,
+                    ClientLobGroupId = 2,
+                    SkillGroupId = 2,
+                    SkillTagId = 2,
+                    AgentSchedulingGroupId = 2,
+                    Name = "Agent Scheduliung Group 2",
+                    IsDeleted = false
+                });
             }
 
             await _uow.Commit();
@@ -243,7 +259,7 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> CreateAgentAdmin(CreateAgentAdmin agentAdminDetails)
         {
-            var agentAdminEmployeeIdDetails = new AgentAdminEmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
+            var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
             var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
 
             var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
@@ -282,7 +298,7 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var agentAdminEmployeeIdDetails = new AgentAdminEmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
+            var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
             var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
 
             var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
@@ -317,13 +333,7 @@ namespace Css.Api.Scheduling.Business
             agentAdmin.IsDeleted = true;
 
             _agentAdminRepository.UpdateAgentAdmin(agentAdmin);
-
-            var agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(new AgentAdminEmployeeIdDetails { Id = agentAdmin.Ssn });
-            if (agentAdminIdDetails != null)
-            {
-                agentSchedule.IsDeleted = true;
-                _agentScheduleRepository.UpdateAgentSchedule(agentSchedule);
-            }
+            _agentScheduleRepository.DeleteAgentSchedule(new EmployeeIdDetails { Id = agentAdmin.Ssn });
 
             await _uow.Commit();
 

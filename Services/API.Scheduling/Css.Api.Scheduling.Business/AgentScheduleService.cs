@@ -91,7 +91,7 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var agentProfile = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(new AgentAdminEmployeeIdDetails { Id = agentSchedule.EmployeeId });
+            var agentProfile = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(new EmployeeIdDetails { Id = agentSchedule.EmployeeId });
             if (agentProfile == null)
             {
                 return new CSSResponse($"Employee Id '{agentSchedule.EmployeeId}' not found", HttpStatusCode.NotFound);
@@ -110,15 +110,13 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> UpdateAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule agentScheduleDetails)
         {
-            var agentSchedule = await _agentScheduleRepository.GetAgentSchedule(agentScheduleIdDetails);
-            if (agentSchedule == null)
+            var agentScheduleCount = await _agentScheduleRepository.GetAgentScheduleCount(agentScheduleIdDetails);
+            if (agentScheduleCount < 1)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var agentScheduleRequest = _mapper.Map(agentScheduleDetails, agentSchedule);
-
-            _agentScheduleRepository.UpdateAgentSchedule(agentScheduleRequest);
+            _agentScheduleRepository.UpdateAgentSchedule(agentScheduleIdDetails, agentScheduleDetails);
 
             await _uow.Commit();
 
@@ -133,15 +131,13 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> ImportAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentSchedule agentScheduleDetails)
         {
-            var agentSchedule = await _agentScheduleRepository.GetAgentSchedule(agentScheduleIdDetails);
-            if (agentSchedule == null)
+            var agentScheduleCount = await _agentScheduleRepository.GetAgentScheduleCount(agentScheduleIdDetails);
+            if (agentScheduleCount < 1)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var agentScheduleRequest = _mapper.Map(agentScheduleDetails, agentSchedule);
-
-            _agentScheduleRepository.UpdateAgentSchedule(agentScheduleRequest);
+            _agentScheduleRepository.ImportAgentSchedule(agentScheduleIdDetails, agentScheduleDetails);
 
             await _uow.Commit();
 
@@ -162,7 +158,7 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            _agentScheduleRepository.BulkUpdateAgentScheduleCharts(agentSchedule, agentScheduleDetails);
+            _agentScheduleRepository.CopyAgentSchedules(agentSchedule, agentScheduleDetails);
 
             await _uow.Commit();
 

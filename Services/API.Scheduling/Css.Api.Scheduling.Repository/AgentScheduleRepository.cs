@@ -11,7 +11,6 @@ using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -71,11 +70,24 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
+        /// Gets the agent schedule count.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <returns></returns>
+        public async Task<long> GetAgentScheduleCount(AgentScheduleIdDetails agentScheduleIdDetails)
+        {
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId));
+
+            return await FindCountByIdAsync(query);
+        }
+
+        /// <summary>
         /// Gets the agent schedule by employee identifier.
         /// </summary>
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
         /// <returns></returns>
-        public async Task<AgentSchedule> GetAgentScheduleByEmployeeId(AgentAdminEmployeeIdDetails agentAdminEmployeeIdDetails)
+        public async Task<AgentSchedule> GetAgentScheduleByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails)
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, agentAdminEmployeeIdDetails.Id);
@@ -84,17 +96,16 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
-        /// Gets the agent schedules by employee ids.
+        /// Gets the agent schedule count by employee identifier.
         /// </summary>
-        /// <param name="employeeIds">The employee ids.</param>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <returns></returns>
-        public async Task<List<AgentSchedule>>GetAgentSchedulesByEmployeeIds(List<string> employeeIds)
+        public async Task<long> GetAgentScheduleCountByEmployeeId(EmployeeIdDetails employeeIdDetails)
         {
             var query =
-                Builders<AgentSchedule>.Filter.Where(i => employeeIds.Contains(i.EmployeeId));
+                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
 
-            var schedules = FilterBy(query);
-            return await Task.FromResult(schedules.ToList());
+            return await FindCountByIdAsync(query);
         }
 
         /// <summary>
@@ -109,18 +120,60 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>
         /// Updates the agent schedule.
         /// </summary>
-        /// <param name="agentScheduleRequest">The agent schedule request.</param>
-        public void UpdateAgentSchedule(AgentSchedule agentScheduleRequest)
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        public void UpdateAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule agentScheduleDetails)
         {
-            ReplaceOneAsync(agentScheduleRequest);
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId));
+
+            var update = Builders<AgentSchedule>.Update
+                .Set(x => x.DateFrom, agentScheduleDetails.DateFrom)
+                .Set(x => x.DateTo, agentScheduleDetails.DateTo)
+                .Set(x => x.Status, agentScheduleDetails.Status)
+                .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
+                .Set(x => x.ModifiedDate, DateTime.UtcNow);
+
+            UpdateOneAsync(query, update);
         }
 
         /// <summary>
-        /// Bulks the update agent schedule.
+        /// Imports the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        public void ImportAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentSchedule agentScheduleDetails)
+        {
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId));
+
+            var update = Builders<AgentSchedule>.Update
+                .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
+                .Set(x => x.ModifiedDate, DateTime.UtcNow);
+
+            switch (agentScheduleDetails.AgentScheduleType)
+            {
+                case AgentScheduleType.SchedulingTab:
+                    update = update.Set(x => x.AgentScheduleCharts, agentScheduleDetails.AgentScheduleCharts);
+                    break;
+
+                case AgentScheduleType.SchedulingMangerTab:
+                    update = update.Set(x => x.AgentScheduleManagerCharts, agentScheduleDetails.AgentScheduleManagerCharts);
+                    break;
+
+                default:
+                    break;
+            }
+
+            UpdateOneAsync(query, update);
+        }
+
+        /// <summary>
+        /// Copies the agent schedules.
         /// </summary>
         /// <param name="agentSchedule">The agent schedule.</param>
         /// <param name="copyAgentScheduleRequest">The copy agent schedule request.</param>
-        public void BulkUpdateAgentScheduleCharts(AgentSchedule agentSchedule, CopyAgentSchedule copyAgentScheduleRequest)
+        public void CopyAgentSchedules(AgentSchedule agentSchedule, CopyAgentSchedule copyAgentScheduleRequest)
         {
             var filter =
                 Builders<AgentSchedule>.Filter.Where(i => copyAgentScheduleRequest.EmployeeIds.Contains(i.EmployeeId));
@@ -148,10 +201,17 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>
         /// Deletes the agent schedule.
         /// </summary>
-        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        public void DeleteAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails)
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        public void DeleteAgentSchedule(EmployeeIdDetails employeeIdDetails)
         {
-            DeleteByIdAsync(agentScheduleIdDetails.AgentScheduleId);
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
+
+            var update = Builders<AgentSchedule>.Update
+                .Set(x => x.IsDeleted, true)
+                .Set(x => x.ModifiedDate, DateTime.UtcNow);
+
+            UpdateOneAsync(query, update);
         }
 
         /// <summary>

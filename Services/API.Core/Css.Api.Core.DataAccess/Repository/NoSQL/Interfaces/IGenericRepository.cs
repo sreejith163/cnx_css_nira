@@ -36,6 +36,13 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces
         Task<TDocument> FindByIdAsync(FilterDefinition<TDocument> filter);
 
         /// <summary>
+        /// Finds the count by identifier asynchronous.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <returns></returns>
+        Task<long> FindCountByIdAsync(FilterDefinition<TDocument> filter);
+
+        /// <summary>
         /// Inserts the one asynchronous.
         /// </summary>
         /// <param name="document">The document.</param>
@@ -55,6 +62,13 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces
         /// <param name="document">The document.</param>
         /// <returns></returns>
         void ReplaceOneAsync(TDocument document);
+
+        /// <summary>
+        /// Updates the one asynchronous.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <param name="update">The update.</param>
+        void UpdateOneAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update);
 
         /// <summary>
         /// Updates the many asynchronous.
