@@ -79,7 +79,7 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
 
                 if (startTimeMinute % 5 != 0)
                 {
-                    validationFailures.Add(new ValidationFailure("OperationHour", "Start time should be an interval of 15 mins"));
+                    validationFailures.Add(new ValidationFailure("OperationHour", "Start time should be an interval of 5 mins"));
                     return validationFailures;
                 }
 
