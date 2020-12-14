@@ -102,7 +102,7 @@ namespace Css.Api.Scheduling.Repository
 
             var query =
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
-                Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id)
+                Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id);
 
             return await FindByIdAsync(query);
         }
