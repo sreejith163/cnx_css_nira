@@ -70,7 +70,7 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets the agent schedule manager.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public AgentScheduleManager AgentScheduleManagerCharts { get; set; }
+        public AgentScheduleManager AgentScheduleManager { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.

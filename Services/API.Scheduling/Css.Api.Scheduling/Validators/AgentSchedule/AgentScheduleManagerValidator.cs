@@ -1,5 +1,4 @@
-﻿
-using Css.Api.Scheduling.Models.Domain;
+﻿using Css.Api.Scheduling.Models.Domain;
 using FluentValidation.Results;
 using FluentValidation.Validators;
 using System;
@@ -8,16 +7,16 @@ using System.Collections.Generic;
 namespace Css.Api.Scheduling.Validators.AgentSchedule
 {
     /// <summary>
-    /// Custom validator for agent chart time range
+    /// ustom validator for agent schedule manager
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="FluentValidation.Validators.PropertyValidator" />
-    public class AgentScheduleChartValidator<T> : PropertyValidator
+    public class AgentScheduleManagerValidator<T> : PropertyValidator
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentScheduleChartValidator{T}" /> class.
+        /// Initializes a new instance of the <see cref="AgentScheduleManagerValidator{T}" /> class.
         /// </summary>
-        public AgentScheduleChartValidator()
+        public AgentScheduleManagerValidator()
             : base("{PropertyName} must be provided.")
         {
         }
@@ -30,47 +29,52 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context)
         {
             var validationFailures = new List<ValidationFailure>();
-            var list = context.PropertyValue as IList<AgentScheduleChart>;
+            var item = context.PropertyValue as AgentScheduleManagerChart;
 
-            foreach (var item in list)
+            if (item.Date == null)
             {
-                if (item.Day > 6)
+                validationFailures.Add(new ValidationFailure("Agent Scheduling Manager", "Date should not be empty"));
+                return validationFailures;
+            }
+            else if (item.AgentScheduleChart != null)
+            {
+                if (item.AgentScheduleChart.Day > 6)
                 {
                     validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Day should be of range 0 to 6"));
                     return validationFailures;
                 }
-                else if (item.SchedulingCodeId == 0)
+                else if (item.AgentScheduleChart.SchedulingCodeId == 0)
                 {
                     validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "SchedulingCodeId should not be empty"));
                     return validationFailures;
                 }
-                else if (string.IsNullOrEmpty(item.StartTime))
+                else if (string.IsNullOrEmpty(item.AgentScheduleChart.StartTime))
                 {
                     validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time is required"));
                     return validationFailures;
                 }
-                else if (string.IsNullOrEmpty(item.EndTime))
+                else if (string.IsNullOrEmpty(item.AgentScheduleChart.EndTime))
                 {
                     validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time is required"));
                     return validationFailures;
                 }
                 else
                 {
-                    var startTimeHourString = item.StartTime.Split(":")[0];
+                    var startTimeHourString = item.AgentScheduleChart.StartTime.Split(":")[0];
                     if (startTimeHourString.Length != 2)
                     {
                         validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time hour should be 2 digits (For eg:  hh:mm am)"));
                         return validationFailures;
                     }
 
-                    var startTimeMinuteString = item.StartTime.Split(":")[1]?.Split(" ")[0];
+                    var startTimeMinuteString = item.AgentScheduleChart.StartTime.Split(":")[1]?.Split(" ")[0];
                     if (startTimeMinuteString.Length != 2)
                     {
                         validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time minute should be 2 digits (For eg:  hh:mm am)"));
                         return validationFailures;
                     }
 
-                    var startTimeMeridiem = item.StartTime.Split(" ")[1]?.ToLower();
+                    var startTimeMeridiem = item.AgentScheduleChart.StartTime.Split(" ")[1]?.ToLower();
                     if (startTimeMeridiem.Length != 2)
                     {
                         validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time meridiem should be 'am / pm'  (For eg:  hh:mm am)"));
@@ -86,21 +90,21 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
                         return validationFailures;
                     }
 
-                    var endTimeHourString = item.EndTime.Split(":")[0];
+                    var endTimeHourString = item.AgentScheduleChart.EndTime.Split(":")[0];
                     if (endTimeHourString.Length != 2)
                     {
                         validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time hour should be 2 digits (For eg:  hh:mm am)"));
                         return validationFailures;
                     }
 
-                    var endTimeMinuteString = item.EndTime.Split(":")[1].Split(" ")[0];
+                    var endTimeMinuteString = item.AgentScheduleChart.EndTime.Split(":")[1].Split(" ")[0];
                     if (endTimeMinuteString.Length != 2)
                     {
                         validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time minute should be 2 digits (For eg:  hh:mm am)"));
                         return validationFailures;
                     }
 
-                    var endTimeMeridiem = item.EndTime.Split(" ")[1];
+                    var endTimeMeridiem = item.AgentScheduleChart.EndTime.Split(" ")[1];
                     if (startTimeMeridiem.Length != 2)
                     {
                         validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "End time meridiem should be 'am / pm' (For eg:  hh:mm am)"));
@@ -146,4 +150,3 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         }
     }
 }
-

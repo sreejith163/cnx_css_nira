@@ -135,7 +135,7 @@ namespace Css.Api.Scheduling.Repository
                     break;
 
                 case AgentScheduleType.SchedulingMangerTab:
-                    update = update.Set(x => x.AgentScheduleManagerCharts, agentSchedule.AgentScheduleManagerCharts);
+                    update = update.Set(x => x.AgentScheduleManager, agentSchedule.AgentScheduleManager);
                     break;
 
                 default:
