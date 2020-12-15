@@ -386,7 +386,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}",
-      "UpstreamHttpMethod": [ "Get" ]
+      "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/import",
