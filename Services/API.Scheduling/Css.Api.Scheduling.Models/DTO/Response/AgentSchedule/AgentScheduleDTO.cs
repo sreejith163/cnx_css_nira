@@ -1,4 +1,6 @@
 ﻿using Css.Api.Scheduling.Models.Enums;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 
@@ -6,6 +8,12 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
 {
     public class AgentScheduleDTO
     {
+        /// <summary>
+        /// Gets or sets the agent schedule identifier.
+        /// </summary>
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>

@@ -78,19 +78,15 @@ namespace Css.Api.Scheduling.Business
         {
             var agentSchedules = await _agentScheduleRepository.GetAgentSchedules(agentScheduleQueryparameter);
 
-            var deSerializedAgentSchedules = JsonConvert.DeserializeObject<List<AgentScheduleDTO>>(JsonConvert.SerializeObject(agentSchedules));
-            var employeeIds = deSerializedAgentSchedules.Select(x => x.EmployeeId).Distinct().ToList();
+            var mappedAgentSchedules = JsonConvert.DeserializeObject<List<AgentScheduleDTO>>(JsonConvert.SerializeObject(agentSchedules));
+            var employeeIds = mappedAgentSchedules.Select(x => x.EmployeeId).Distinct().ToList();
 
             var agentAdmins = await _agentAdminRepository.GetAgentAdminsByEmployeeIds(employeeIds);
-            var mappedAgentSchedules = new List<AgentScheduleDTO>();
 
-            foreach (var deSerializedAgentSchedule in deSerializedAgentSchedules)
+            foreach (var mappedAgentSchedule in mappedAgentSchedules)
             {
-                var agentAdmin = agentAdmins.Find(x => x.Ssn == deSerializedAgentSchedule.EmployeeId);
-                var mappedAgentSchedule = _mapper.Map<AgentScheduleDTO>(deSerializedAgentSchedule);
+                var agentAdmin = agentAdmins.Find(x => x.Ssn == mappedAgentSchedule.EmployeeId);
                 mappedAgentSchedule.EmployeeName = $"{agentAdmin?.FirstName} {agentAdmin?.LastName}";
-
-                mappedAgentSchedules.Add(mappedAgentSchedule);
             }
 
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentSchedules));
