@@ -297,7 +297,6 @@
           "Port": 44318
         }
       ],
-      "Key": "SchedulingCodes",
       "UpstreamPathTemplate": "/api/schedulingcodes",
       "UpstreamHttpMethod": [ "Get", "Post" ]
     },
@@ -386,7 +385,6 @@
           "Port": 44393
         }
       ],
-      "Key": "AgentSchedule",
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}",
       "UpstreamHttpMethod": [ "Get" ]
     },
@@ -413,16 +411,6 @@
       ],
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
-    }
-  ],
-  "Aggregates": [
-    {
-      "RouteKeys": [
-        "SchedulingCodes",
-        "AgentSchedule"
-      ],
-      "UpstreamPathTemplate": "/api/agentschedulecodes/{agentScheduleId}",
-      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {
