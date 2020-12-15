@@ -297,6 +297,7 @@
           "Port": 4203
         }
       ],
+      "Key": "SchedulingCodes",
       "UpstreamPathTemplate": "/api/schedulingcodes",
       "UpstreamHttpMethod": [ "Get", "Post" ]
     },
@@ -362,6 +363,66 @@
       ],
       "UpstreamPathTemplate": "/api/agentadmins/{agentAdminId}",
       "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* Agent Schedule Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.13",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.13",
+          "Port": 4205
+        }
+      ],
+      "Key": "AgentSchedule",
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/import",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.13",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/import",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/copy",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.13",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
+      "UpstreamHttpMethod": [ "Put" ]
+    }
+  ],
+  "Aggregates": [
+    {
+      "RouteKeys": [
+        "SchedulingCodes",
+        "AgentSchedule"
+      ],
+      "UpstreamPathTemplate": "/api/agentschedulecodes/{agentScheduleId}",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {
