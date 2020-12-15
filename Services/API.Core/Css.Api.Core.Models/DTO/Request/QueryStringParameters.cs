@@ -5,7 +5,7 @@
         /// <summary>
         /// The maximum page size
         /// </summary>
-        const int maxPageSize = 20;
+        const int maxPageSize = 30;
 
         /// <summary>
         /// Gets or sets the page number.

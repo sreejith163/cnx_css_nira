@@ -49,9 +49,16 @@ namespace Css.Api.Admin.Repository
 
             var sortedSchedulingCodes = SortHelper.ApplySort(filteredSchedulingCodes, schedulingCodeParameters.OrderBy);
 
-            var pagedSchedulingCodes = sortedSchedulingCodes
-                .Skip((schedulingCodeParameters.PageNumber - 1) * schedulingCodeParameters.PageSize)
-                .Take(schedulingCodeParameters.PageSize)
+            var pagedSchedulingCodes = sortedSchedulingCodes;
+
+            if (!schedulingCodeParameters.SkipPageSize)
+            {
+                pagedSchedulingCodes = pagedSchedulingCodes
+                    .Skip((schedulingCodeParameters.PageNumber - 1) * schedulingCodeParameters.PageSize)
+                    .Take(schedulingCodeParameters.PageSize);
+            }
+
+            pagedSchedulingCodes = pagedSchedulingCodes
                 .Include(x => x.Icon)
                 .Include(x => x.SchedulingTypeCode)
                 .ThenInclude(x => x.SchedulingCodeType);
