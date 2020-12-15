@@ -235,26 +235,6 @@ namespace Css.Api.Scheduling.Repository
                 return agentSchedules;
             }
 
-            if (agentScheduleQueryparameter.ClientId.HasValue && agentScheduleQueryparameter.ClientId != default(int))
-            {
-                agentSchedules = agentSchedules.Where(x => x.ClientId == agentScheduleQueryparameter.ClientId);
-            }
-
-            if (agentScheduleQueryparameter.ClientLobGroupId.HasValue && agentScheduleQueryparameter.ClientLobGroupId != default(int))
-            {
-                agentSchedules = agentSchedules.Where(x => x.ClientLobGroupId == agentScheduleQueryparameter.ClientLobGroupId);
-            }
-
-            if (agentScheduleQueryparameter.SkillGroupId.HasValue && agentScheduleQueryparameter.SkillGroupId != default(int))
-            {
-                agentSchedules = agentSchedules.Where(x => x.SkillGroupId == agentScheduleQueryparameter.SkillGroupId);
-            }
-
-            if (agentScheduleQueryparameter.SkillTagId.HasValue && agentScheduleQueryparameter.SkillTagId != default(int))
-            {
-                agentSchedules = agentSchedules.Where(x => x.SkillTagId == agentScheduleQueryparameter.SkillTagId);
-            }
-
             if (!string.IsNullOrWhiteSpace(agentScheduleQueryparameter.SearchKeyword))
             {
                 agentSchedules = agentSchedules.Where(o => string.Equals(o.ModifiedBy, agentScheduleQueryparameter.SearchKeyword, StringComparison.OrdinalIgnoreCase));

@@ -37,28 +37,10 @@ namespace Css.Api.Scheduling.Models.Domain
         public SchedulingStatus Status { get; set; }
 
         /// <summary>
-        /// Gets or sets the client identifier.
+        /// Gets or sets the agent scheduling group identifier.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ClientId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the client lob group identifier.
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ClientLobGroupId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the skill group identifier.
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int SkillGroupId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the skill tag identifier.
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int SkillTagId { get; set; }
+        public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the charts.
