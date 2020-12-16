@@ -240,6 +240,11 @@ namespace Css.Api.Scheduling.Repository
                 agentSchedules = agentSchedules.Where(o => string.Equals(o.ModifiedBy, agentScheduleQueryparameter.SearchKeyword, StringComparison.OrdinalIgnoreCase));
             }
 
+            if (agentScheduleQueryparameter.AgentSchedulingGroupId.HasValue && agentScheduleQueryparameter.AgentSchedulingGroupId != default(int))
+            {
+                agentSchedules = agentSchedules.Where(x => x.AgentSchedulingGroupId == agentScheduleQueryparameter.AgentSchedulingGroupId);
+            }
+
             return agentSchedules;
         }
     }

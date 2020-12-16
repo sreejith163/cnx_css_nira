@@ -25,6 +25,11 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         public string EmployeeName { get; set; }
 
         /// <summary>
+        /// Gets or sets the agent scheduling group identifier.
+        /// </summary>
+        public int AgentSchedulingGroupId { get; set; }
+
+        /// <summary>
         /// Gets or sets the date from.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

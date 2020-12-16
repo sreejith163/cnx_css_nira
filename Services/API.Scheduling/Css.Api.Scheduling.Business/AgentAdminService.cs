@@ -241,6 +241,7 @@ namespace Css.Api.Scheduling.Business
             }
 
             var mappedAgentAdmin = _mapper.Map<AgentAdminDetailsDTO>(agentAdmin);
+            mappedAgentAdmin.SkillTagId = skillTag.SkillTagId;
             mappedAgentAdmin.SkillTagName = skillTag.Name;
             mappedAgentAdmin.SkillGroupId = skillGroup.SkillGroupId;
             mappedAgentAdmin.SkillGroupName = skillGroup.Name;
