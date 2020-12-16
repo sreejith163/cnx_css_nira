@@ -12,22 +12,26 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         /// Gets or sets the agent schedule identifier.
         /// </summary>
         [BsonRepresentation(BsonType.ObjectId)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the employee.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string EmployeeName { get; set; }
 
         /// <summary>
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
-        public int AgentSchedulingGroupId { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? AgentSchedulingGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the date from.
@@ -44,16 +48,19 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         /// <summary>
         /// Gets or sets the status.
         /// </summary>
-        public SchedulingStatus Status { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public SchedulingStatus? Status { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string CreatedBy { get; set; }
 
         /// <summary>
         /// Gets or sets the modified date.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset? CreatedDate { get; set; }
 
         /// <summary>

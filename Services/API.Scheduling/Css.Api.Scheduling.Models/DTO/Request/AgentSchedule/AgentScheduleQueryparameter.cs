@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
+using System;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
@@ -11,6 +12,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         {
             OrderBy = "CreatedDate";
         }
+
+        /// <summary>
+        /// Gets or sets from date.
+        /// </summary>
+        public DateTime? FromDate { get; set; }
 
         /// <summary>
         /// Gets or sets the agent scheduling group identifier.

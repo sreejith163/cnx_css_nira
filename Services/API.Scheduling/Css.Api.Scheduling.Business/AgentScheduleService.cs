@@ -9,6 +9,7 @@ using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -76,22 +77,30 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> GetAgentSchedules(AgentScheduleQueryparameter agentScheduleQueryparameter)
         {
+            var fields = agentScheduleQueryparameter.Fields?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.ToString().ToLower());
+            bool needEmployeeName = fields == null || fields.Contains("employeename");
+
             var agentSchedules = await _agentScheduleRepository.GetAgentSchedules(agentScheduleQueryparameter);
-
-            var mappedAgentSchedules = JsonConvert.DeserializeObject<List<AgentScheduleDTO>>(JsonConvert.SerializeObject(agentSchedules));
-            var employeeIds = mappedAgentSchedules.Select(x => x.EmployeeId).Distinct().ToList();
-
-            var agentAdmins = await _agentAdminRepository.GetAgentAdminsByEmployeeIds(employeeIds);
-
-            foreach (var mappedAgentSchedule in mappedAgentSchedules)
-            {
-                var agentAdmin = agentAdmins.Find(x => x.Ssn == mappedAgentSchedule.EmployeeId);
-                mappedAgentSchedule.EmployeeName = $"{agentAdmin?.FirstName} {agentAdmin?.LastName}";
-            }
 
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentSchedules));
 
-            return new CSSResponse(mappedAgentSchedules, HttpStatusCode.OK);
+            if (needEmployeeName)
+            {
+                var mappedAgentSchedules = JsonConvert.DeserializeObject<List<AgentScheduleDTO>>(JsonConvert.SerializeObject(agentSchedules));
+                var employeeIds = mappedAgentSchedules.Select(x => x.EmployeeId).Distinct().ToList();
+
+                var agentAdmins = await _agentAdminRepository.GetAgentAdminsByEmployeeIds(employeeIds);
+
+                foreach (var mappedAgentSchedule in mappedAgentSchedules)
+                {
+                    var agentAdmin = agentAdmins.Find(x => x.Ssn == mappedAgentSchedule.EmployeeId);
+                    mappedAgentSchedule.EmployeeName = $"{agentAdmin?.FirstName} {agentAdmin?.LastName}";
+                }
+
+                return new CSSResponse(mappedAgentSchedules, HttpStatusCode.OK);
+            }
+
+            return new CSSResponse(agentSchedules, HttpStatusCode.OK);
         }
 
         /// <summary>

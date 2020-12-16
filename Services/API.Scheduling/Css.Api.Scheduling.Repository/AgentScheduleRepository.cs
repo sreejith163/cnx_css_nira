@@ -245,6 +245,11 @@ namespace Css.Api.Scheduling.Repository
                 agentSchedules = agentSchedules.Where(x => x.AgentSchedulingGroupId == agentScheduleQueryparameter.AgentSchedulingGroupId);
             }
 
+            if (agentScheduleQueryparameter.FromDate.HasValue && agentScheduleQueryparameter.FromDate != default(DateTime))
+            {
+                agentSchedules = agentSchedules.Where(x => x.DateFrom >= agentScheduleQueryparameter.FromDate);
+            }
+
             return agentSchedules;
         }
     }
