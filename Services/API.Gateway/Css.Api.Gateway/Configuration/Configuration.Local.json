@@ -341,7 +341,7 @@
     //********* Agent Admin Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/agentadmins",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "css.api.scheduling",
@@ -353,7 +353,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentadmins/{agentAdminId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "css.api.scheduling",
@@ -366,7 +366,7 @@
     //********* Agent Schedule Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "css.api.scheduling",
@@ -378,7 +378,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "css.api.scheduling",
@@ -390,7 +390,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/import",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "css.api.scheduling",
@@ -402,7 +402,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/copy",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "css.api.scheduling",
