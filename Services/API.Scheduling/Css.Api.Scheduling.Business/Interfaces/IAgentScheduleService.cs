@@ -38,6 +38,14 @@ namespace Css.Api.Scheduling.Business.Interfaces
         Task<CSSResponse> UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails);
 
         /// <summary>
+        /// Imports the agent schedule chart.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        Task<CSSResponse> ImportAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails);
+
+        /// <summary>
         /// Copies the agent schedule.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>

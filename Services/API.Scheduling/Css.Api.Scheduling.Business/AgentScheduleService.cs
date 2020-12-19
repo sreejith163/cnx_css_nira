@@ -171,6 +171,27 @@ namespace Css.Api.Scheduling.Business
         }
 
         /// <summary>
+        /// Imports the agent schedule chart.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        public async Task<CSSResponse> ImportAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails)
+        {
+            var agentScheduleCount = await _agentScheduleRepository.GetAgentScheduleCount(agentScheduleIdDetails);
+            if (agentScheduleCount < 1)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
+
+            await _uow.Commit();
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
         /// Copies the agent schedule.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>

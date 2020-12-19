@@ -175,6 +175,38 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
+        /// Imports the agent schedule chart.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        public void ImportAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails)
+        {
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false); ;
+
+            var update = Builders<AgentSchedule>.Update
+                .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
+                .Set(x => x.ModifiedDate, DateTime.UtcNow);
+
+            switch (agentScheduleDetails.AgentScheduleType)
+            {
+                case AgentScheduleType.SchedulingTab:
+                    update = update.Set(x => x.AgentScheduleCharts, agentScheduleDetails.AgentScheduleCharts);
+                    break;
+
+                case AgentScheduleType.SchedulingMangerTab:
+                    update = update.Set(x => x.AgentScheduleManagerCharts, agentScheduleDetails.AgentScheduleManagerCharts);
+                    break;
+
+                default:
+                    break;
+            }
+
+            UpdateOneAsync(query, update);
+        }
+
+        /// <summary>
         /// Copies the agent schedules.
         /// </summary>
         /// <param name="agentSchedule">The agent schedule.</param>

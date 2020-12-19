@@ -69,6 +69,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails);
 
         /// <summary>
+        /// Imports the agent schedule chart.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        void ImportAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails);
+
+        /// <summary>
         /// Copies the agent schedules.
         /// </summary>
         /// <param name="agentSchedule">The agent schedule.</param>

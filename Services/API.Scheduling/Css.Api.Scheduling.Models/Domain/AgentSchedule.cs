@@ -80,5 +80,11 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets a value indicating whether this instance is deleted.
         /// </summary>
         public bool IsDeleted { get; set; }
+
+        public AgentSchedule()
+        {
+            AgentScheduleCharts = new List<AgentScheduleChart>();
+            AgentScheduleManagerCharts = new List<AgentScheduleManagerChart>();
+        }
     }
 }

@@ -73,10 +73,23 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
-        [HttpPut("{agentScheduleId}/import")]
+        [HttpPut("{agentScheduleId}/charts")]
         public async Task<IActionResult> UpdateAgentScheduleChart(string agentScheduleId, [FromBody] UpdateAgentScheduleChart agentScheduleDetails)
         {
             var result = await _agentScheduleService.UpdateAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>
+        /// Updates the agent schedule chart.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        [HttpPut("{agentScheduleId}/import")]
+        public async Task<IActionResult> ImportAgentScheduleChart(string agentScheduleId, [FromBody] UpdateAgentScheduleChart agentScheduleDetails)
+        {
+            var result = await _agentScheduleService.ImportAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
             return StatusCode((int)result.Code, result.Value);
         }
 
