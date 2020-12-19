@@ -102,6 +102,14 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.ImportAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.UpdateAgentScheduleChart)">
+            <summary>
+            Updates the agent schedule chart.
+            </summary>
+            <param name="agentScheduleId">The agent schedule identifier.</param>
+            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <returns></returns>
+        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.CopyAgentSchedule(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.CopyAgentSchedule)">
             <summary>
             Copies the agent schedule.
