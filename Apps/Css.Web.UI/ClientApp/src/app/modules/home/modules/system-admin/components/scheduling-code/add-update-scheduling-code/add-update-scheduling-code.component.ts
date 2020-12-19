@@ -17,7 +17,7 @@ import { Constants } from 'src/app/shared/util/constants.util';
 import { KeyValue } from 'src/app/shared/models/key-value.model';
 import { SchedulingCode } from '../../../models/scheduling-code.model';
 
-import { SchedulingCodeService } from '../../../services/scheduling-code.service';
+import { SchedulingCodeService } from '../../../../../../../shared/services/scheduling-code.service';
 import { SchedulingCodeIconsService } from '../../../services/scheduling-code-icons.service';
 import { SchedulingCodeTypesService } from '../../../services/scheduling-code-types.service';
 import { AuthService } from 'src/app/core/services/auth.service';

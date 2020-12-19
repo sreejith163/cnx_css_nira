@@ -12,12 +12,12 @@ import { GenericDataService } from '../../../services/generic-data.service';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { AgentSchedulingGroupResponse } from '../../../models/agent-scheduling-group-response.model';
-import { AgentSchedulingGroupService } from '../../../services/agent-scheduling-group.service';
 import { AddAgentSchedulingGroup } from '../../../models/add-agent-scheduling-group.model';
 import { UpdateAgentSchedulingGroup } from '../../../models/update-agent-scheduling-group.model';
 import { TimezoneService } from 'src/app/shared/services/timezone.service';
 import { TimeZone } from 'src/app/shared/models/time-zone.model';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { AgentSchedulingGroupService } from 'src/app/shared/services/agent-scheduling-group.service';
 
 @Component({
   selector: 'app-add-edit-agent-scheduling-group',

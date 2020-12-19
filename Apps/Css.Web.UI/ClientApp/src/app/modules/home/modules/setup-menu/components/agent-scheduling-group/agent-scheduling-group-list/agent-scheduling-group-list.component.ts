@@ -13,13 +13,13 @@ import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AgentSchedulingGroupResponse } from '../../../models/agent-scheduling-group-response.model';
 import { AgentSchedulingGroupDetails } from '../../../models/agent-scheduling-group-details.model';
-import { AgentSchedulingGroupService } from '../../../services/agent-scheduling-group.service';
 import { AddEditAgentSchedulingGroupComponent } from '../add-edit-agent-scheduling-group/add-edit-agent-scheduling-group.component';
 import { AgentSchedulingGroupQueryParams } from '../../../models/agent-scheduling-group-query-params.model';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
+import { AgentSchedulingGroupService } from 'src/app/shared/services/agent-scheduling-group.service';
 
 @Component({
   selector: 'app-agent-scheduling-group-list',

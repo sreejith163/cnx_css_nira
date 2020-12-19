@@ -13,7 +13,7 @@ export class SchedulingGridService {
 
   createSchedulingGridData() {
     let gridData = new SchedulingGrid();
-    gridData.employeeId = 1;
+    // gridData.employeeId = 1;
     gridData.name = 'Employee 1';
     gridData.fromDate = '2020-09-10';
     gridData.toDate = '2020-09-20';
@@ -26,7 +26,7 @@ export class SchedulingGridService {
     this.gridData.push(gridData);
 
     gridData = new SchedulingGrid();
-    gridData.employeeId = 2;
+    // gridData.employeeId = 2;
     gridData.name = 'Employee 2';
     gridData.fromDate = '2020-09-10';
     gridData.toDate = '2020-09-20';
@@ -39,7 +39,7 @@ export class SchedulingGridService {
     this.gridData.push(gridData);
 
     gridData = new SchedulingGrid();
-    gridData.employeeId = 3;
+    // gridData.employeeId = 3;
     gridData.name = 'Employee 3';
     gridData.fromDate = '2020-09-10';
     gridData.toDate = '2020-09-20';
@@ -66,10 +66,10 @@ export class SchedulingGridService {
   }
 
   deleteSchedulingGridData(employeeId: number) {
-    const gridDataIndex = this.gridData.findIndex(x => x.employeeId === employeeId);
-    if (gridDataIndex !== -1) {
-      this.gridData.splice(gridDataIndex, 1);
-    }
+    // const gridDataIndex = this.gridData.findIndex(x => x.employeeId === employeeId);
+    // if (gridDataIndex !== -1) {
+    //   this.gridData.splice(gridDataIndex, 1);
+    // }
   }
 
   getSchedulingGridData() {

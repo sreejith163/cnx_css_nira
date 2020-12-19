@@ -20,9 +20,11 @@ import { TruncatePipe } from './pipes/truncate.pipe';
 import { ConfirmationPopUpComponent } from './popups/confirmation-pop-up/confirmation-pop-up.component';
 import { ErrorWarningPopUpComponent } from './popups/error-warning-pop-up/error-warning-pop-up.component';
 import { MessagePopUpComponent } from './popups/message-pop-up/message-pop-up.component';
+import { AgentSchedulingGroupService } from './services/agent-scheduling-group.service';
 import { CssLanguageService } from './services/css-language.service';
 import { GenericStateManagerService } from './services/generic-state-manager.service';
 import { LanguageTranslationService } from './services/language-translation.service';
+import { SchedulingCodeService } from './services/scheduling-code.service';
 import { TimezoneService } from './services/timezone.service';
 import { TranslationService } from './services/translation.service';
 
@@ -46,7 +48,8 @@ const modalComponents = [ConfirmationPopUpComponent, MessagePopUpComponent];
 const modules = [CommonModule, FormsModule, ReactiveFormsModule, NgbModule, NgSelectModule, NgxSpinnerModule];
 
 const providers = [GenericStateManagerService, TranslationService, TimezoneService, CssLanguageService, LanguageTranslationService,
-  GenericDataService, ClientService, SkillGroupService, ClientLobGroupService, SkillTagService, ];
+  GenericDataService, ClientService, SkillGroupService, ClientLobGroupService, SkillTagService, AgentSchedulingGroupService,
+  SchedulingCodeService ];
 
 @NgModule({
   imports: modules,

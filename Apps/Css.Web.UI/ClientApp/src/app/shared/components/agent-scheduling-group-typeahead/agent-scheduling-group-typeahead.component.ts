@@ -3,7 +3,7 @@ import { Subject, SubscriptionLike as ISubscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { AgentSchedulingGroupBase } from 'src/app/modules/home/modules/setup-menu/models/agent-scheduling-group-base.model';
 import { AgentSchedulingGroupQueryParams } from 'src/app/modules/home/modules/setup-menu/models/agent-scheduling-group-query-params.model';
-import { AgentSchedulingGroupService } from 'src/app/modules/home/modules/setup-menu/services/agent-scheduling-group.service';
+import { AgentSchedulingGroupService } from '../../services/agent-scheduling-group.service';
 
 @Component({
   selector: 'app-agent-scheduling-group-typeahead',
@@ -53,7 +53,7 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
   }
 
   ngOnChanges() {
-    if (this.skillTagId) {
+    if (this.agentSchedulingGroupId) {
       this.pageNumber = 1;
       this.subscribeToAgentSchedulingGroups();
     } else {

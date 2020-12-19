@@ -4,11 +4,11 @@ import { catchError } from 'rxjs/operators';
 import { HttpBaseService } from 'src/app/core/services/http-base.service';
 import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
 import { environment } from 'src/environments/environment';
-import { AddAgentSchedulingGroup } from '../models/add-agent-scheduling-group.model';
-import { AgentSchedulingGroupDetails } from '../models/agent-scheduling-group-details.model';
-import { AgentSchedulingGroupQueryParams } from '../models/agent-scheduling-group-query-params.model';
-import { AgentSchedulingGroupResponse } from '../models/agent-scheduling-group-response.model';
-import { UpdateAgentSchedulingGroup } from '../models/update-agent-scheduling-group.model';
+import { AddAgentSchedulingGroup } from '../../modules/home/modules/setup-menu/models/add-agent-scheduling-group.model';
+import { AgentSchedulingGroupDetails } from '../../modules/home/modules/setup-menu/models/agent-scheduling-group-details.model';
+import { AgentSchedulingGroupQueryParams } from '../../modules/home/modules/setup-menu/models/agent-scheduling-group-query-params.model';
+import { AgentSchedulingGroupResponse } from '../../modules/home/modules/setup-menu/models/agent-scheduling-group-response.model';
+import { UpdateAgentSchedulingGroup } from '../../modules/home/modules/setup-menu/models/update-agent-scheduling-group.model';
 
 @Injectable()
 export class AgentSchedulingGroupService extends HttpBaseService {

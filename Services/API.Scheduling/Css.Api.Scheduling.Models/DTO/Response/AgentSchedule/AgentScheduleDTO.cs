@@ -61,7 +61,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         /// Gets or sets the modified date.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime? CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.

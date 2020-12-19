@@ -3,13 +3,13 @@ import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstr
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 
-import { SchedulingCodeService } from '../../../services/scheduling-code.service';
+import { SchedulingCodeService } from '../../../../../../../shared/services/scheduling-code.service';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 
 import { SchedulingCode } from '../../../models/scheduling-code.model';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
-import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
+import { SchedulingCodeQueryParams } from '../../../models/scheduling-code-query-params.model';
 
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
@@ -20,6 +20,7 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+
 
 @Component({
   selector: 'app-scheduling-code-list',
@@ -176,7 +177,8 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
   }
 
   private getQueryParams() {
-    const queryParams = new QueryStringParameters();
+    const queryParams = new SchedulingCodeQueryParams();
+    queryParams.skipPageSize = false;
     queryParams.pageNumber = this.currentPage;
     queryParams.pageSize = this.pageSize;
     queryParams.searchKeyword = this.searchKeyword ?? '';

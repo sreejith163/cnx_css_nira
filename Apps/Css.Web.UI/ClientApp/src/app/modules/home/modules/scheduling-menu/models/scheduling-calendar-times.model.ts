@@ -1,11 +1,9 @@
 export class SchedulingCalendarTime {
-    meridiem: 'am' | 'pm';
     from: any;
     to: any;
     icon: string;
 
-    constructor(meridiem: 'am' | 'pm', from: any, to: any, icon: string) {
-        this.meridiem = meridiem;
+    constructor(from: any, to: any, icon: string) {
         this.from = from;
         this.to = to;
         this.icon = icon;

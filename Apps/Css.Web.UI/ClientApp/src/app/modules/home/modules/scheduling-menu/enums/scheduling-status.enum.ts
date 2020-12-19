@@ -1,5 +1,5 @@
 export enum SchedulingStatus {
-    'Approved' = 0,
-    'Pending Schedule' = 1,
-    'Rejected' = 2
+    'Approved' = 1,
+    'Pending Schedule' = 2,
+    'Rejected' = 3
 }

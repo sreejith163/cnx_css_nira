@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { HttpBaseService } from 'src/app/core/services/http-base.service';
 import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
-import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
 import { environment } from 'src/environments/environment';
-import { AddSchedulingCode } from '../models/add-scheduling-code.model';
-import { SchedulingCode } from '../models/scheduling-code.model';
-import { UpdateSchedulingCode } from '../models/update-scheduling-code.mode';
+import { AddSchedulingCode } from '../../modules/home/modules/system-admin/models/add-scheduling-code.model';
+import { SchedulingCodeQueryParams } from '../../modules/home/modules/system-admin/models/scheduling-code-query-params.model';
+import { SchedulingCode } from '../../modules/home/modules/system-admin/models/scheduling-code.model';
+import { UpdateSchedulingCode } from '../../modules/home/modules/system-admin/models/update-scheduling-code.mode';
 
 @Injectable()
 export class SchedulingCodeService extends HttpBaseService {
@@ -21,7 +21,7 @@ export class SchedulingCodeService extends HttpBaseService {
     this.baseURL = environment.services.gatewayService;
   }
 
-  getSchedulingCodes(schedulingCodeQueryParams: QueryStringParameters) {
+  getSchedulingCodes(schedulingCodeQueryParams: SchedulingCodeQueryParams) {
     const url = `${this.baseURL}/schedulingCodes`;
 
     return this.http.get<SchedulingCode>(url, {

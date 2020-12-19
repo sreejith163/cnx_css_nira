@@ -1,18 +1,12 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { WeekDay } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
+import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SchedulingStatus } from '../../enums/scheduling-status.enum';
-import { SchedulingGrid } from '../../models/scheduling-grid.model';
-import { SchedulingGridService } from '../../services/scheduling-grid.service';
-import { SchedulingCalendarDays } from '../../models/scheduling-calendar-days.model';
-import { SchedulingCalendarTime } from '../../models/scheduling-calendar-times.model';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SchedulingInterval } from '../../models/scheduling-interval.model';
-import { ICON_DB } from 'src/app/shared/util/icon.data';
 
 import * as $ from 'jquery';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
@@ -20,6 +14,22 @@ import { LanguageTranslationService } from 'src/app/shared/services/language-tra
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+import { AgentSchedulesService } from '../../services/agent-schedules.service';
+import { AgentSchedulesQueryParams } from '../../models/agent-schedules-query-params.model';
+import { SchedulingCode } from '../../../system-admin/models/scheduling-code.model';
+import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
+import { SchedulingCodeQueryParams } from '../../../system-admin/models/scheduling-code-query-params.model';
+import { UpdateAgentSchedule } from '../../models/update-agent-schedule.model';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { AgentSchedulesResponse } from '../../models/agent-schedules-response.model';
+import { AgentScheduleGridResponse } from '../../models/agent-schedule-grid-response.model';
+import { UpdateAgentschedulechart } from '../../models/update-agent-schedule-chart.model';
+import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
+import { ScheduleChart } from '../../models/schedule-chart.model';
+import { AgentScheduleChart } from '../../models/agent-schedule-chart.model';
+import { AgentScheduleType } from '../../enums/agent-schedule-type.enum';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -43,67 +53,81 @@ declare function highlightCell(cell: string, className: string);
 })
 export class SchedulingGridComponent implements OnInit {
 
-  timeIntervals = 5;
+  timeIntervals = 15;
   currentPage = 1;
   pageSize = 10;
   characterSplice = 25;
-  iconCount = 30;
+  maxIconCount = 30;
+  iconCount: number;
   startIcon = 0;
   endIcon: number;
   totalSchedulingRecord: number;
+  agentSchedulingGroupId: number;
+  agentScheduleId: number;
 
   selectedIconId: string;
+  icon: string;
+  searchKeyword: string;
   tableClassName = 'schedulingGridTable';
   selectedCellClassName = 'cell-selected';
-  hasMismatch: boolean;
+  spinner = 'Scheduling';
+  scheduleSpinner = 'SchedulingSpinner';
+  orderBy = 'createdDate';
+  sortBy = 'desc';
+  isMouseDown: boolean;
+  isDelete: boolean;
+  startDate: any;
 
-  iconData = ICON_DB;
   hoveredDate: NgbDate | null = null;
-  fromDate: NgbDate;
+  fromDate = this.calendar.getToday();
   toDate: NgbDate | null = null;
   today = this.calendar.getToday();
 
+  modalRef: NgbModalRef;
   model: NgbDateStruct;
   weekDay = WeekDay;
   scheduleStatus = SchedulingStatus;
-  selectedGrid: SchedulingGrid;
-  schedulingGridData: SchedulingGrid;
+  selectedGrid: AgentScheduleGridResponse;
+  schedulingGridData: AgentScheduleGridResponse;
+  paginationSize = Constants.paginationSize;
 
   openTimes: Array<any>;
   translationValues: TranslationDetails[] = [];
   schedulingIntervals: SchedulingInterval[] = [];
-  paginationSize: PaginationSize[] = [];
-  totalSchedulingGridData: SchedulingGrid[] = [];
+  totalSchedulingGridData: AgentSchedulesResponse[] = [];
   schedulingStatus: any[] = [];
   weekDays: Array<string> = [];
+  schedulingCodes: SchedulingCode[] = [];
 
+  updateAgentScheduleChartSubscription: ISubscription;
+  getAgentScheduleSubscription: ISubscription;
+  updateAgentScheduleSubscription: ISubscription;
+  getSchedulingCodesSubscription: ISubscription;
+  getAgentSchedulesSubscription: ISubscription;
   languageSelectionSubscription: ISubscription;
   getTranslationValuesSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
   constructor(
-    private schedulingGridService: SchedulingGridService,
     private calendar: NgbCalendar,
     private modalService: NgbModal,
     public ngbDateParserFormatter: NgbDateParserFormatter,
     private translationService: LanguageTranslationService,
-    private genericStateManagerService: GenericStateManagerService
+    private genericStateManagerService: GenericStateManagerService,
+    private spinnerService: NgxSpinnerService,
+    private agentSchedulesService: AgentSchedulesService,
+    private schedulingCodeService: SchedulingCodeService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.loadTranslationValues();
-    this.subscribeToUserLanguage();
-    this.endIcon = this.iconCount;
     this.openTimes = this.getOpenTimes();
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
     this.schedulingIntervals = Constants.schedulingIntervals;
     this.schedulingStatus = Object.keys(SchedulingStatus).filter(key => isNaN(SchedulingStatus[key]));
-    this.totalSchedulingGridData = this.schedulingGridService.getSchedulingGridData().sort(
-      (a, b) =>
-        new Date(b.employeeId).getTime() - new Date(a.employeeId).getTime()
-    );
-    this.totalSchedulingRecord = this.totalSchedulingGridData.length;
-    this.paginationSize = Constants.paginationSize;
+    this.loadTranslationValues();
+    this.subscribeToUserLanguage();
+    this.loadAgentSchedules();
   }
 
   getGridMaxWidth() {
@@ -113,21 +137,20 @@ export class SchedulingGridComponent implements OnInit {
   onDateSelection(date: NgbDate, index: number) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
-      const newDate = this.ngbDateParserFormatter.format(this.fromDate);
-      this.totalSchedulingGridData[index].fromDate = newDate;
-      this.selectedGrid.fromDate = newDate;
-    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
+      this.totalSchedulingGridData[index].dateFrom = newDate;
+    } else if (this.fromDate && !this.toDate && date && !date.before(this.fromDate)) {
       this.toDate = date;
-      const newDate = this.ngbDateParserFormatter.format(this.toDate);
-      this.totalSchedulingGridData[index].toDate = newDate;
-      this.selectedGrid.toDate = newDate;
+      const newDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day, 0, 0, 0, 0);
+      this.totalSchedulingGridData[index].dateTo = newDate;
     } else {
       this.toDate = null;
+      this.totalSchedulingGridData[index].dateTo = null;
       this.fromDate = date;
-      const newDate = this.ngbDateParserFormatter.format(this.fromDate);
-      this.totalSchedulingGridData[index].fromDate = newDate;
-      this.selectedGrid.fromDate = newDate;
+      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
+      this.totalSchedulingGridData[index].dateFrom = newDate;
     }
+    this.updateAgentSchedule(index);
   }
 
   isHovered(date: NgbDate) {
@@ -147,30 +170,24 @@ export class SchedulingGridComponent implements OnInit {
     return String.fromCodePoint(...codePoints);
   }
 
-  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-    const parsed = this.ngbDateParserFormatter.parse(input);
-    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-  }
-
-  toggleDetails(el: SchedulingGrid) {
-    this.schedulingGridData = JSON.parse(JSON.stringify(el));
-
+  toggleDetails(el: AgentSchedulesResponse) {
     if (this.selectedGrid && this.selectedGrid.employeeId === el.employeeId) {
       this.selectedGrid = null;
     } else {
-      this.selectedGrid = el;
+      this.loadSchedulingCodes();
+      this.loadAgentSchedule(el.id);
     }
   }
 
   getIconFromSelectedGrid(week: number, openTime: any) {
-    const meridiem = openTime.split(':')[1].split(' ')[1];
-    const time = openTime.split(' ')[0];
-    const weekData = this.selectedGrid.calendar?.weekDays.find(x => x.day === +week);
+    const weekData = this.selectedGrid.agentScheduleCharts.find(x => x.day === +week);
 
     if (weekData) {
-      const weekTimeData = weekData.times.find(x => x.from === time && x.meridiem === meridiem);
+      const weekTimeData = weekData.charts.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x.startTime) &&
+        this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
       if (weekTimeData) {
-        return this.unifiedToNative(weekTimeData?.icon);
+        const code = this.schedulingCodes.find(x => x.id === weekTimeData.schedulingCodeId);
+        return this.unifiedToNative(code.icon.value);
       }
     }
 
@@ -185,7 +202,7 @@ export class SchedulingGridComponent implements OnInit {
   }
 
   next() {
-    if (this.endIcon < this.iconData.length) {
+    if (this.endIcon < this.schedulingCodes.length) {
       this.startIcon = this.startIcon + 1;
       this.endIcon = this.endIcon + 1;
     }
@@ -197,70 +214,117 @@ export class SchedulingGridComponent implements OnInit {
   }
 
   toEnd() {
-    this.startIcon = this.iconData.length - this.iconCount;
-    this.endIcon = this.iconData.length;
+    this.startIcon = this.schedulingCodes.length - this.iconCount;
+    this.endIcon = this.schedulingCodes.length;
   }
 
   onIconClick(event) {
     this.selectedIconId = event.target.id;
-    this.saveGridItems(this.selectedIconId);
   }
 
   isMainMinute(data: any) {
     return data.split(':')[1] === '00 am' || data.split(':')[1] === '00 pm';
   }
 
-  setCellSelected(event) {
-    if (event.shiftKey) {
-      highlightSelectedCells(this.tableClassName, event.currentTarget.id);
-    } else if (!event.ctrlKey) {
-      removeHighlightedCells(this.tableClassName, this.selectedCellClassName);
+  onMouseUp(event) {
+    this.isMouseDown = false;
+    if (this.isDelete) {
+      this.saveGridItems();
+    } else {
+      highlightCell(event.currentTarget.id, this.selectedCellClassName);
+      this.saveGridItems();
     }
+  }
 
-    setRowCellIndex(event.currentTarget.id);
-    highlightCell(event.currentTarget.id, this.selectedCellClassName);
+  onMouseDown(event) {
+    this.isMouseDown = true;
+    const time = event.currentTarget.attributes.time.nodeValue;
+    const meridiem = event.currentTarget.attributes.meridiem.nodeValue;
+    const week = event.currentTarget.attributes.week.nodeValue;
+    const days = this.selectedGrid.agentScheduleCharts.find(x => x.day === +week);
+    const fromTime = time + ' ' + meridiem;
+    const object = days?.charts.find(x => this.convertToDateFormat(x.startTime) <= this.convertToDateFormat(fromTime) &&
+      this.convertToDateFormat(x.endTime) > this.convertToDateFormat(fromTime));
+    if (object) {
+      const code = this.schedulingCodes.find(x => x.id === object.schedulingCodeId);
+      this.icon = code.icon.value ?? undefined;
+      if (this.isMouseDown && this.icon) {
+        setRowCellIndex(event.currentTarget.id);
+      }
+    }
+    if (this.isMouseDown && !this.icon) {
+      this.isDelete = true;
+      setRowCellIndex(event.currentTarget.id);
+    }
+  }
 
+  onMouseOver(event) {
+    if (this.isMouseDown && this.icon) {
+      highlightSelectedCells(this.tableClassName, event.currentTarget.id);
+    } else if (this.isMouseDown && this.isDelete) {
+      highlightSelectedCells(this.tableClassName, event.currentTarget.id);
+    }
   }
 
   dragged(event: CdkDragDrop<any>) {
-    this.saveGridItems(event.item.element.nativeElement.id);
+    this.icon = event.item.element.nativeElement.id;
   }
 
-  changeTimeInterval(event) {
-    this.timeIntervals = Number(event.target.value);
+  changeTimeInterval(interval: number) {
+    this.timeIntervals = +interval;
     this.openTimes = this.getOpenTimes();
   }
 
   changePageSize(pageSize: number) {
     this.pageSize = pageSize;
+    this.loadAgentSchedules();
   }
 
   changePage(page: number) {
     this.currentPage = page;
+    this.loadAgentSchedules();
   }
 
-  setSchedulingStatus(status: string) {
-    this.selectedGrid.status = Number(status);
+  setSchedulingStatus(status: string, index: number) {
+    this.totalSchedulingGridData[index].status = Number(status);
+    this.updateAgentSchedule(index);
   }
 
-  save() {
-    this.matchSchedulingGridDataChanges();
-    this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
-    this.showPopUpMessage();
+  save(gridChart: AgentScheduleGridResponse) {
+    this.updateAgentScheduleChart(gridChart.id);
   }
 
-  private showPopUpMessage() {
-    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
-    const modalRef = this.modalService.open(MessagePopUpComponent, options);
-    modalRef.componentInstance.headingMessage = 'Success';
-    modalRef.componentInstance.contentMessage = (this.hasMismatch) ? 'The record has been updated!' : 'No changes has been made!';
+  onSchedulingGroupChange(schedulingGroupId: number) {
+    if (schedulingGroupId) {
+      this.agentSchedulingGroupId = +schedulingGroupId;
+      this.loadAgentSchedules();
+    }
+  }
 
-    this.hasMismatch = false;
+  search() {
+    this.loadAgentSchedules();
+  }
+
+  sort(columnName: string, sortBy: string) {
+    this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
+    this.orderBy = columnName;
+
+    this.loadAgentSchedules();
+  }
+
+  onSelectStartDate(date: NgbDate) {
+    this.startDate = date;
+    this.loadAgentSchedules();
+  }
+
+  setStartDateAsToday() {
+    this.startDate = this.today;
+    this.loadAgentSchedules();
   }
 
   private matchSchedulingGridDataChanges() {
     if (JSON.stringify(this.schedulingGridData) !== JSON.stringify(this.selectedGrid)) {
-      this.hasMismatch = true;
+      return true;
     }
   }
 
@@ -281,46 +345,218 @@ export class SchedulingGridComponent implements OnInit {
         ap[Math.floor(hh / 12)];
       tt = tt + x;
     }
-    times.forEach((ele, index) => {
-      if (ele.split(' ')[0] === '00:00') {
-        const meridian = ele.split(' ')[1];
-        times.splice(index, 1, '12:00 ' + meridian);
-      }
-    });
     return times;
   }
 
-  private saveGridItems(icon) {
+  private saveGridItems() {
     const table = $('#' + this.tableClassName);
     table.find('.' + this.selectedCellClassName).each((index, elem) => {
+      this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
+      let to;
+      let hours;
+      let from;
+      let minute;
       const week = elem.attributes.week.value;
-      const from = elem.attributes.time.value;
-      const minuteValue = Number(from.split(':')[1]) + this.timeIntervals;
-      const minute = minuteValue === 5 ? '05' : minuteValue;
-      const to = from.split(':')[0] + ':' + minute;
-      const meridiem = elem.attributes.meridiem.value;
+      let meridiem = elem.attributes.meridiem.value;
+      from = elem.attributes.time.value + ' ' + meridiem;
+      hours = from.split(':')[0];
+      const minuteValue = Number(from.split(':')[1].split(' ')[0]) + this.timeIntervals;
+      minute = minuteValue === 5 ? '05' : minuteValue;
 
-      const weekDays = this.selectedGrid?.calendar?.weekDays;
+      if (minute === 60) {
+        meridiem = (hours === '11' && meridiem === 'am') ? 'pm' : meridiem;
+        hours = hours !== '11' ? ('0' + (Number(hours) + 1)).slice(-2) : '00';
+        minute = '00';
+      }
+
+      to = hours + ':' + minute + ' ' + meridiem;
+      const code = this.schedulingCodes.find(x => x.icon.value === this.icon);
+      const iconModel = new ScheduleChart(from, to, code?.id);
+
+      const weekDays = this.selectedGrid?.agentScheduleCharts;
       const weekData = weekDays.find(x => x.day === +week);
 
-      if (weekData) {
-        const timeData = weekData.times.find(x => x.from === from && x.meridiem === meridiem);
-        if (timeData) {
-          timeData.icon = icon;
-        } else {
-          const calendarTime = new SchedulingCalendarTime(meridiem, from, to, icon);
-          weekData.times.push(calendarTime);
-        }
-      } else {
-        const weekDay = new SchedulingCalendarDays();
-        weekDay.day = +week;
-        const calendarTime = new SchedulingCalendarTime(meridiem, from, to, icon);
-        weekDay.times.push(calendarTime);
+      if (this.icon && !this.isDelete) {
 
-        weekDays.push(weekDay);
+        if (weekData) {
+          this.InsertIconToGrid(weekData, iconModel);
+        } else {
+          const weekDay = new AgentScheduleChart();
+          weekDay.day = +week;
+          const calendarTime = new ScheduleChart(from, to, code.id);
+          weekDay.charts.push(calendarTime);
+          weekDays.push(weekDay);
+        }
+      } else if (this.isDelete) {
+        if (weekData) {
+          this.clearIconFromGrid(weekData, iconModel);
+        }
       }
     });
+    this.spinnerService.hide(this.scheduleSpinner);
+    this.isDelete = false;
+    this.icon = undefined;
+    this.sortSelectedGridCalendarTimes();
+    this.formatTimeValuesInSchedulingGrid();
+
     table.find('.' + this.selectedCellClassName).removeClass(this.selectedCellClassName);
+  }
+
+  private InsertIconToGrid(weekData: AgentScheduleChart, insertIcon: ScheduleChart) {
+    if (weekData.charts.find(x => x.startTime === insertIcon.startTime && x.endTime === insertIcon.endTime)) {
+      const item = weekData.charts.find(x => x.startTime === insertIcon.startTime && x.endTime === insertIcon.endTime);
+      item.schedulingCodeId = insertIcon.schedulingCodeId;
+    } else if (weekData.charts.filter(x => this.convertToDateFormat(x.startTime) >= this.convertToDateFormat(insertIcon.startTime) &&
+      this.convertToDateFormat(x.endTime) <= this.convertToDateFormat(insertIcon.endTime)).length > 0) {
+      const timeDataArray = weekData.charts.filter(x => this.convertToDateFormat(x.startTime) >=
+        this.convertToDateFormat(insertIcon.startTime) &&
+        this.convertToDateFormat(x.endTime) <= this.convertToDateFormat(insertIcon.endTime));
+      timeDataArray.forEach(ele => {
+        ele.schedulingCodeId = insertIcon.schedulingCodeId;
+      });
+      this.sortSelectedGridCalendarTimes();
+      this.formatTimeValuesInSchedulingGrid();
+    }
+    if (!weekData.charts.find(x => x.startTime === insertIcon.startTime && x.endTime ===
+      insertIcon.endTime && x.schedulingCodeId === insertIcon.schedulingCodeId)) {
+      weekData.charts.forEach(ele => {
+        if (this.convertToDateFormat(ele.startTime) < this.convertToDateFormat(insertIcon.startTime) &&
+          this.convertToDateFormat(ele.endTime) === this.convertToDateFormat(insertIcon.startTime)) {
+          ele.endTime = insertIcon.startTime;
+        } else if (this.convertToDateFormat(ele.startTime) > this.convertToDateFormat(insertIcon.startTime) &&
+          this.convertToDateFormat(ele.endTime) <= this.convertToDateFormat(insertIcon.endTime)) {
+          ele.startTime = insertIcon.endTime;
+        } else if (this.convertToDateFormat(ele.startTime) === this.convertToDateFormat(insertIcon.startTime) &&
+          this.convertToDateFormat(ele.endTime) > this.convertToDateFormat(insertIcon.endTime)) {
+          ele.startTime = insertIcon.endTime;
+        } else if (this.convertToDateFormat(ele.startTime) < this.convertToDateFormat(insertIcon.startTime) &&
+          this.convertToDateFormat(insertIcon.endTime) < this.convertToDateFormat(ele.endTime)) {
+          const calendarTime = new ScheduleChart(insertIcon.endTime, ele.endTime, ele.schedulingCodeId);
+          weekData.charts.push(calendarTime);
+          ele.endTime = insertIcon.startTime;
+        } else if (this.convertToDateFormat(ele.endTime) === this.convertToDateFormat(insertIcon.endTime) &&
+          this.convertToDateFormat(ele.startTime) < this.convertToDateFormat(insertIcon.startTime)) {
+          ele.endTime = insertIcon.startTime;
+        }
+      });
+      const timeDataArray = weekData.charts.filter(x => this.convertToDateFormat(x.startTime) >=
+        this.convertToDateFormat(insertIcon.startTime) &&
+        this.convertToDateFormat(x.endTime) <= this.convertToDateFormat(insertIcon.endTime));
+      if (timeDataArray.length > 0) {
+        timeDataArray.forEach(ele => {
+          ele.schedulingCodeId = insertIcon.schedulingCodeId;
+        });
+      } else {
+        const calendarTime = new ScheduleChart(insertIcon.startTime, insertIcon.endTime, insertIcon.schedulingCodeId);
+        weekData.charts.push(calendarTime);
+      }
+    }
+  }
+
+  private clearIconFromGrid(weekData: AgentScheduleChart, icon: ScheduleChart) {
+    if (weekData.charts.findIndex(x => x.startTime === icon.startTime && x.endTime === icon.endTime) > -1) {
+      const startIndex = weekData.charts.findIndex(x => x.startTime === icon.startTime && x.endTime === icon.endTime);
+      weekData.charts.splice(startIndex, 1);
+    } else if (weekData.charts.filter(x => this.convertToDateFormat(x.startTime) >= this.convertToDateFormat(icon.startTime) &&
+      this.convertToDateFormat(x.endTime) <= this.convertToDateFormat(icon.endTime)).length > 0) {
+      const timeDataArray = weekData.charts.filter(x => this.convertToDateFormat(x.startTime) >= this.convertToDateFormat(icon.startTime) &&
+        this.convertToDateFormat(x.endTime) <= this.convertToDateFormat(icon.endTime));
+      timeDataArray.forEach(ele => {
+        const startIndex = weekData.charts.findIndex(x =>
+          this.convertToDateFormat(x.startTime) === this.convertToDateFormat(ele.startTime));
+        if (startIndex > -1) {
+          weekData.charts.splice(startIndex, 1);
+        }
+      });
+    }
+    if (weekData.charts.findIndex(x => x.startTime === icon.startTime && x.endTime === icon.endTime) < 0) {
+      weekData.charts.forEach(ele => {
+        if (this.convertToDateFormat(ele.startTime) < this.convertToDateFormat(icon.startTime) &&
+          this.convertToDateFormat(ele.endTime) === this.convertToDateFormat(icon.startTime)) {
+          ele.endTime = icon.startTime;
+        } else if (this.convertToDateFormat(ele.startTime) > this.convertToDateFormat(icon.startTime) &&
+          this.convertToDateFormat(ele.endTime) <= this.convertToDateFormat(icon.endTime)) {
+          ele.startTime = icon.endTime;
+        } else if (ele.startTime === icon.startTime && this.convertToDateFormat(ele.endTime) > this.convertToDateFormat(icon.endTime)) {
+          ele.startTime = icon.endTime;
+        } else if (this.convertToDateFormat(ele.startTime) < this.convertToDateFormat(icon.startTime) &&
+          this.convertToDateFormat(icon.endTime) < this.convertToDateFormat(ele.endTime)) {
+          const calendarTime = new ScheduleChart(icon.endTime, ele.endTime, ele.schedulingCodeId);
+          weekData.charts.push(calendarTime);
+          ele.endTime = icon.startTime;
+        } else if (this.convertToDateFormat(ele.endTime) === this.convertToDateFormat(icon.endTime) &&
+          this.convertToDateFormat(ele.startTime) < this.convertToDateFormat(icon.startTime)) {
+          ele.endTime = icon.startTime;
+        }
+      });
+      const timeDataArray = weekData.charts.filter(x => this.convertToDateFormat(x.startTime) >= this.convertToDateFormat(icon.startTime) &&
+        this.convertToDateFormat(x.endTime) <= this.convertToDateFormat(icon.endTime));
+      if (timeDataArray.length > 0) {
+        timeDataArray.forEach(ele => {
+          const startIndex = weekData.charts.findIndex(x =>
+            this.convertToDateFormat(x.startTime) === this.convertToDateFormat(ele.startTime));
+          if (startIndex > -1) {
+            weekData.charts.splice(startIndex, 1);
+          }
+        });
+      }
+    }
+
+  }
+
+  private adjustSchedulingCalendarTimesRange(times: Array<ScheduleChart>) {
+    const newTimesarray = new Array<ScheduleChart>();
+    let calendarTimes = new ScheduleChart(null, null, null);
+
+    for (const index in times) {
+      if (+index === 0) {
+        calendarTimes = times[index];
+        if (+index === times.length - 1) {
+          break;
+        }
+      } else if (calendarTimes.endTime === times[index].startTime && calendarTimes.schedulingCodeId === times[index].schedulingCodeId) {
+        calendarTimes.endTime = times[index].endTime;
+        if (+index === times.length - 1) {
+          break;
+        }
+      } else {
+        const model = new ScheduleChart(calendarTimes.startTime, calendarTimes.endTime, calendarTimes.schedulingCodeId);
+        newTimesarray.push(model);
+        calendarTimes = times[index];
+        if (+index === times.length - 1) {
+          break;
+        }
+      }
+    }
+
+    const modelvalue = new ScheduleChart(calendarTimes.startTime, calendarTimes.endTime, calendarTimes.schedulingCodeId);
+    newTimesarray.push(modelvalue);
+
+    return newTimesarray;
+  }
+
+  private formatTimeValuesInSchedulingGrid() {
+    this.selectedGrid.agentScheduleCharts.forEach((element) => {
+      element.charts = this.adjustSchedulingCalendarTimesRange(element.charts);
+    });
+    console.log(this.selectedGrid);
+  }
+
+  private sortSelectedGridCalendarTimes() {
+    this.selectedGrid.agentScheduleCharts.forEach((element) => {
+      if (element.charts.length > 0) {
+        element.charts.sort((a, b): number => {
+          if (this.convertToDateFormat(a.startTime) < this.convertToDateFormat(b.startTime)) {
+            return -1;
+          } else if (this.convertToDateFormat(a.startTime) > this.convertToDateFormat(b.startTime)) {
+            return 1;
+          }
+          else {
+            return 0;
+          }
+        });
+      }
+    });
   }
 
   private loadTranslationValues() {
@@ -350,4 +586,149 @@ export class SchedulingGridComponent implements OnInit {
 
     this.subscriptions.push(this.languageSelectionSubscription);
   }
+
+  private getQueryParams() {
+    const agentSchedulesQueryParams = new AgentSchedulesQueryParams();
+    agentSchedulesQueryParams.agentSchedulingGroupId = this.agentSchedulingGroupId ?? undefined;
+    agentSchedulesQueryParams.fromDate = new Date();
+    agentSchedulesQueryParams.fromDate = this.startDate ?
+      new Date(this.startDate.year, this.startDate.month - 1, this.startDate.day, 0, 0, 0, 0) : undefined;
+    agentSchedulesQueryParams.fromDate = agentSchedulesQueryParams.fromDate ? new Date(agentSchedulesQueryParams.fromDate) : undefined;
+    agentSchedulesQueryParams.pageNumber = this.currentPage;
+    agentSchedulesQueryParams.pageSize = this.pageSize;
+    agentSchedulesQueryParams.searchKeyword = this.searchKeyword ?? '';
+    agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
+    agentSchedulesQueryParams.fields = '';
+
+    return agentSchedulesQueryParams;
+  }
+
+  private loadAgentSchedules() {
+    const queryParams = this.getQueryParams();
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+
+    this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
+      .subscribe((response) => {
+        this.totalSchedulingGridData = response.body;
+        let headerPaginationValues = new HeaderPagination();
+        headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
+        this.totalSchedulingRecord = headerPaginationValues.totalCount;
+        this.spinnerService.hide(this.spinner);
+      }, (error) => {
+        this.spinnerService.hide(this.spinner);
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getAgentSchedulesSubscription);
+  }
+
+  private loadSchedulingCodes() {
+    const queryParams = new SchedulingCodeQueryParams();
+    queryParams.skipPageSize = true;
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+
+    this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)
+      .subscribe((response) => {
+        if (response.body) {
+          this.schedulingCodes = response.body;
+          this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
+          this.endIcon = this.iconCount;
+        }
+        this.spinnerService.hide(this.spinner);
+      }, (error) => {
+        this.spinnerService.hide(this.spinner);
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getSchedulingCodesSubscription);
+  }
+
+  private loadAgentSchedule(agentScheduleId: string) {
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+
+    this.getAgentScheduleSubscription = this.agentSchedulesService.getAgentSchedule(agentScheduleId)
+      .subscribe((response) => {
+        if (response) {
+          this.selectedGrid = response;
+          this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
+        }
+        this.spinnerService.hide(this.spinner);
+      }, (error) => {
+        this.spinnerService.hide(this.spinner);
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getAgentScheduleSubscription);
+  }
+
+  private updateAgentScheduleChart(agentScheduleId: string) {
+    if (this.matchSchedulingGridDataChanges()) {
+      this.spinnerService.show(this.spinner, SpinnerOptions);
+      const chartModel = new UpdateAgentschedulechart();
+      chartModel.agentScheduleType = AgentScheduleType.Scheduling;
+      chartModel.agentScheduleCharts = this.selectedGrid.agentScheduleCharts;
+      chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
+
+      this.updateAgentScheduleChartSubscription = this.agentSchedulesService
+        .updateAgentScheduleChart(agentScheduleId, chartModel)
+        .subscribe(() => {
+          this.spinnerService.hide(this.spinner);
+          this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been updated!');
+          this.modalRef.result.then(() => {
+            this.selectedGrid = undefined;
+            this.loadAgentSchedules();
+          });
+        }, (error) => {
+          this.spinnerService.hide(this.spinner);
+          console.log(error);
+        });
+
+      this.subscriptions.push(this.updateAgentScheduleChartSubscription);
+    } else {
+      this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
+    }
+
+  }
+
+  private updateAgentSchedule(index: number) {
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+    const updateModel = new UpdateAgentSchedule();
+    updateModel.dateFrom = this.totalSchedulingGridData[index].dateFrom;
+    updateModel.dateTo = this.totalSchedulingGridData[index].dateTo;
+    updateModel.status = this.totalSchedulingGridData[index].status;
+    updateModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
+
+    this.updateAgentScheduleSubscription = this.agentSchedulesService.
+      updateAgentSchedule(this.totalSchedulingGridData[index].id, updateModel)
+      .subscribe(() => {
+        this.spinnerService.hide(this.spinner);
+      }, (error) => {
+        this.spinnerService.hide(this.spinner);
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.updateAgentScheduleSubscription);
+  }
+
+  private getModalPopup(component: any, size: string, contentMessage?: string) {
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
+    this.modalRef = this.modalService.open(component, options);
+    this.modalRef.componentInstance.translationValues = this.translationValues;
+    this.modalRef.componentInstance.headingMessage = 'Success';
+    this.modalRef.componentInstance.contentMessage = contentMessage;
+  }
+
+  private convertToDateFormat(time: string) {
+    if (time) {
+      const count = time.split(' ')[1] === 'pm' ? 12 : undefined;
+      if (count) {
+        time = (+time.split(':')[0] + 12) + ':' + time.split(':')[1].split(' ')[0];
+      } else {
+        time = time.split(':')[0] + ':' + time.split(':')[1].split(' ')[0];
+      }
+
+      return time;
+    }
+  }
+
 }

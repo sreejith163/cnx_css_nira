@@ -10,10 +10,12 @@ import { AddAgentProfileComponent } from './components/agent-admin/add-agent-pro
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid.component';
 import { HorizontalScrollPipe } from './pipes/horizontal-scroll.pipe';
 import { AgentAdminService } from './services/agent-admin.service';
+import { AgentSchedulesService } from './services/agent-schedules.service';
+
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
 const components = [AgentAdminListComponent, AddAgentProfileComponent, SchedulingGridComponent, HorizontalScrollPipe];
-const providers = [SchedulingGridService, AgentAdminService];
+const providers = [SchedulingGridService, AgentAdminService, AgentSchedulesService];
 
 @NgModule({
   declarations: components,

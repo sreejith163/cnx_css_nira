@@ -2,7 +2,7 @@ import { SchedulingStatus } from '../enums/scheduling-status.enum';
 import { SchedulingCalendar } from './scheduling-calendar.model';
 
 export class SchedulingGrid {
-    employeeId: number;
+    employeeId: string;
     name: string;
     fromDate: string;
     toDate: string;

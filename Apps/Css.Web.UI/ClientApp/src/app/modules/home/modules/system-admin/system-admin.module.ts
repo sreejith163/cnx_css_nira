@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { SystemAdminRoutingModule } from './system-admin-routing.module';
 
-import { SchedulingCodeService } from './services/scheduling-code.service';
 import { SchedulingCodeTypesService } from './services/scheduling-code-types.service';
 import { SchedulingCodeIconsService } from './services/scheduling-code-icons.service';
 import { PermissionsService } from './services/permissions.service';
@@ -35,7 +34,6 @@ const components = [
   AddAgentCategoryComponent];
 
 const providers = [
-  SchedulingCodeService,
   SchedulingCodeTypesService,
   SchedulingCodeIconsService,
   PermissionsService,
