@@ -13,12 +13,12 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
         /// <summary>
         /// Gets or sets the date from.
         /// </summary>
-        public DateTime? DateFrom { get; set; }
+        public DateTimeOffset? DateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the date to.
         /// </summary>
-        public DateTime DateTo { get; set; }
+        public DateTimeOffset? DateTo { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
