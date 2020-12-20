@@ -351,16 +351,12 @@ export class SchedulingGridComponent implements OnInit {
     const table = $('#' + this.tableClassName);
     table.find('.' + this.selectedCellClassName).each((index, elem) => {
       this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
-      let to;
-      let hours;
-      let from;
-      let minute;
       const week = elem.attributes.week.value;
       let meridiem = elem.attributes.meridiem.value;
-      from = elem.attributes.time.value + ' ' + meridiem;
-      hours = from.split(':')[0];
+      const from = elem.attributes.time.value + ' ' + meridiem;
+      let hours = from.split(':')[0];
       const minuteValue = Number(from.split(':')[1].split(' ')[0]) + this.timeIntervals;
-      minute = minuteValue === 5 ? '05' : minuteValue;
+      let minute = minuteValue === 5 ? '05' : minuteValue;
 
       if (minute === 60) {
         meridiem = (hours === '11' && meridiem === 'am') ? 'pm' : meridiem;
@@ -368,7 +364,7 @@ export class SchedulingGridComponent implements OnInit {
         minute = '00';
       }
 
-      to = hours + ':' + minute + ' ' + meridiem;
+      const to = hours + ':' + minute + ' ' + meridiem;
       const code = this.schedulingCodes.find(x => x.icon.value === this.icon);
       const iconModel = new ScheduleChart(from, to, code?.id);
 
