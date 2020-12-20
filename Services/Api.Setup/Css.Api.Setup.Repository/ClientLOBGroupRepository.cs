@@ -48,7 +48,7 @@ namespace Css.Api.Setup.Repository
         {
             var clientLOBGroups = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredClientLOBGroups = FilterClientLOBGroups(clientLOBGroups, clientLOBGroupParameters.SearchKeyword, clientLOBGroupParameters.ClientId)
+            var filteredClientLOBGroups = FilterClientLOBGroups(clientLOBGroups, clientLOBGroupParameters)
                 .Include(x => x.Timezone);
 
             var sortedClientLOBGroups = SortHelper.ApplySort(filteredClientLOBGroups, clientLOBGroupParameters.OrderBy);
@@ -143,24 +143,23 @@ namespace Css.Api.Setup.Repository
         /// Filters the client lob groups.
         /// </summary>
         /// <param name="clientLOBGroups">The client lob groups.</param>
-        /// <param name="clientLOBGroupName">Name of the client lob group.</param>
-        /// <param name="clientId">The client identifier.</param>
+        /// <param name="clientLOBGroupParameters">The client lob group parameters.</param>
         /// <returns></returns>
-        private IQueryable<ClientLobGroup> FilterClientLOBGroups(IQueryable<ClientLobGroup> clientLOBGroups, string clientLOBGroupName, int? clientId)
+        private IQueryable<ClientLobGroup> FilterClientLOBGroups(IQueryable<ClientLobGroup> clientLOBGroups, ClientLOBGroupQueryParameter clientLOBGroupParameters)
         {
             if (!clientLOBGroups.Any())
             {
                 return clientLOBGroups;
             }
 
-            if (clientId.HasValue && clientId != default(int))
+            if (clientLOBGroupParameters.ClientId.HasValue && clientLOBGroupParameters.ClientId != default(int))
             {
-                clientLOBGroups = clientLOBGroups.Where(x => x.ClientId == clientId);
+                clientLOBGroups = clientLOBGroups.Where(x => x.ClientId == clientLOBGroupParameters.ClientId);
             }
 
-            if (!string.IsNullOrWhiteSpace(clientLOBGroupName))
+            if (!string.IsNullOrWhiteSpace(clientLOBGroupParameters.SearchKeyword))
             {
-                clientLOBGroups = clientLOBGroups.Where(o => o.Name.ToLower().Contains(clientLOBGroupName.Trim().ToLower()));
+                clientLOBGroups = clientLOBGroups.Where(o => o.Name.ToLower().Contains(clientLOBGroupParameters.SearchKeyword.Trim().ToLower()));
             }
 
             return clientLOBGroups;

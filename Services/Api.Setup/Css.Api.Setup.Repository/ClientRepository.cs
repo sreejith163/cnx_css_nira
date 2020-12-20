@@ -44,7 +44,7 @@ namespace Css.Api.Setup.Repository
         {
             var clients = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredClients = FilterClients(clients, clientParameters.SearchKeyword);
+            var filteredClients = FilterClients(clients, clientParameters);
 
             var sortedClients = SortHelper.ApplySort(filteredClients, clientParameters.OrderBy);
 
@@ -119,16 +119,16 @@ namespace Css.Api.Setup.Repository
         /// Filters the clients.
         /// </summary>
         /// <param name="clients">The clients.</param>
-        /// <param name="clientName">Name of the client.</param>
+        /// <param name="clientParameters">The client parameters.</param>
         /// <returns></returns>
-        private IQueryable<Client> FilterClients(IQueryable<Client> clients, string clientName)
+        private IQueryable<Client> FilterClients(IQueryable<Client> clients, ClientQueryParameters clientParameters)
         {
-            if (!clients.Any() || string.IsNullOrWhiteSpace(clientName))
+            if (!clients.Any() || string.IsNullOrWhiteSpace(clientParameters.SearchKeyword))
             {
                 return clients;
             }
 
-            return clients.Where(o => o.Name.ToLower().Contains(clientName.Trim().ToLower()));
+            return clients.Where(o => o.Name.ToLower().Contains(clientParameters.SearchKeyword.Trim().ToLower()));
         }
     }
 }

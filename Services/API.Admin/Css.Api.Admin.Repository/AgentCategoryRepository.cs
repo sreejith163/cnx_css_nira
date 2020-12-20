@@ -45,7 +45,7 @@ namespace Css.Api.Admin.Repository
         {
             var agentCategories = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredAgentCategories = FilterAgentCategories(agentCategories, agentCategoryParameters.SearchKeyword);
+            var filteredAgentCategories = FilterAgentCategories(agentCategories, agentCategoryParameters);
 
             var sortedAgentCategories = SortHelper.ApplySort(filteredAgentCategories, agentCategoryParameters.OrderBy);
 
@@ -121,16 +121,18 @@ namespace Css.Api.Admin.Repository
         /// Filters the agentCategories.
         /// </summary>
         /// <param name="agentCategories">The agentCategories.</param>
-        /// <param name="agentCategoryName">Name of the agentCategory.</param>
+        /// <param name="agentCategoryParameters">The agent category parameters.</param>
         /// <returns></returns>
-        private IQueryable<AgentCategory> FilterAgentCategories(IQueryable<AgentCategory> agentCategories, string agentCategoryName)
+        private IQueryable<AgentCategory> FilterAgentCategories(IQueryable<AgentCategory> agentCategories, AgentCategoryQueryParameter agentCategoryParameters)
         {
-            if (!agentCategories.Any() || string.IsNullOrWhiteSpace(agentCategoryName))
+            if (!agentCategories.Any() || string.IsNullOrWhiteSpace(agentCategoryParameters.SearchKeyword))
             {
                 return agentCategories;
             }
 
-            return agentCategories.Where(o => o.Name.ToLower().Contains(agentCategoryName.Trim().ToLower()));
+            return agentCategories.Where(o => o.Name.ToLower().Contains(agentCategoryParameters.SearchKeyword.Trim().ToLower()) ||
+                                              o.CreatedBy.ToLower().Contains(agentCategoryParameters.SearchKeyword.Trim().ToLower()) ||
+                                              o.ModifiedBy.ToLower().Contains(agentCategoryParameters.SearchKeyword.Trim().ToLower()));
         }
     }
 }

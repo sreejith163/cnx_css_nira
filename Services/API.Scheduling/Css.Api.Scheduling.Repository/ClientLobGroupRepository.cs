@@ -110,7 +110,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(clientLobGroupQueryparameter.SearchKeyword))
             {
-                clientLobGroups = clientLobGroups.Where(o => o.Name.ToLower().Contains(clientLobGroupQueryparameter.SearchKeyword.ToLower()));
+                clientLobGroups = clientLobGroups.Where(o => o.Name.ToLower().Contains(clientLobGroupQueryparameter.SearchKeyword.Trim().ToLower()));
             }
 
             return clientLobGroups;

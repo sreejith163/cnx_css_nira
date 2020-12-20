@@ -109,7 +109,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(clientQueryparameter.SearchKeyword))
             {
-                clients = clients.Where(o => o.Name.ToLower().Contains(clientQueryparameter.SearchKeyword.ToLower()));
+                clients = clients.Where(o => o.Name.ToLower().Contains(clientQueryparameter.SearchKeyword.Trim().ToLower()));
             }
 
             return clients;

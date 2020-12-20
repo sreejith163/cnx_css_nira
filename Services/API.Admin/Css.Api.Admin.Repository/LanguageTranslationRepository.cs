@@ -47,8 +47,7 @@ namespace Css.Api.Admin.Repository
         {
             var languages = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredLanguages = FilterLanguages(languages, languageTranslationQueryParameters.SearchKeyword, languageTranslationQueryParameters.LanguageId,
-                                                    languageTranslationQueryParameters.MenuId, languageTranslationQueryParameters.VariableId);
+            var filteredLanguages = FilterLanguages(languages, languageTranslationQueryParameters);
 
             var sortedSchedulingCodes = SortHelper.ApplySort(filteredLanguages, languageTranslationQueryParameters.OrderBy);
 
@@ -149,37 +148,35 @@ namespace Css.Api.Admin.Repository
         /// Filters the languages.
         /// </summary>
         /// <param name="languages">The languages.</param>
-        /// <param name="keyword">The keyword.</param>
-        /// <param name="languageId">The language identifier.</param>
-        /// <param name="menuId">The menu identifier.</param>
-        /// <param name="variableId">The variable identifier.</param>
+        /// <param name="languageTranslationQueryParameters">The language translation query parameters.</param>
         /// <returns></returns>
-        private IQueryable<LanguageTranslation> FilterLanguages(IQueryable<LanguageTranslation> languages, string keyword, int? languageId,
-            int? menuId, int? variableId)
+        private IQueryable<LanguageTranslation> FilterLanguages(IQueryable<LanguageTranslation> languages, LanguageTranslationQueryParameters languageTranslationQueryParameters)
         {
             if (!languages.Any())
             {
                 return languages;
             }
 
-            if (languageId.HasValue && languageId != default(int))
+            if (languageTranslationQueryParameters.LanguageId.HasValue && languageTranslationQueryParameters.LanguageId != default(int))
             {
-                languages = languages.Where(x => x.LanguageId == languageId);
+                languages = languages.Where(x => x.LanguageId == languageTranslationQueryParameters.LanguageId);
             }
 
-            if (menuId.HasValue && menuId != default(int))
+            if (languageTranslationQueryParameters.MenuId.HasValue && languageTranslationQueryParameters.MenuId != default(int))
             {
-                languages = languages.Where(x => x.MenuId == menuId);
+                languages = languages.Where(x => x.MenuId == languageTranslationQueryParameters.MenuId);
             }
 
-            if (variableId.HasValue && variableId != default(int))
+            if (languageTranslationQueryParameters.VariableId.HasValue && languageTranslationQueryParameters.VariableId != default(int))
             {
-                languages = languages.Where(x => x.VariableId == variableId);
+                languages = languages.Where(x => x.VariableId == languageTranslationQueryParameters.VariableId);
             }
 
-            if (!string.IsNullOrWhiteSpace(keyword))
+            if (!string.IsNullOrWhiteSpace(languageTranslationQueryParameters.SearchKeyword))
             {
-                languages = languages.Where(o => o.Translation.ToLower().Contains(keyword.Trim().ToLower()));
+                languages = languages.Where(o => o.Translation.ToLower().Contains(languageTranslationQueryParameters.SearchKeyword.Trim().ToLower()) ||
+                                                 o.CreatedBy.ToLower().Contains(languageTranslationQueryParameters.SearchKeyword.Trim().ToLower()) ||
+                                                 o.ModifiedBy.ToLower().Contains(languageTranslationQueryParameters.SearchKeyword.Trim().ToLower()));
 
             }
             return languages;

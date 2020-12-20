@@ -46,9 +46,7 @@ namespace Css.Api.Setup.Repository
         {
             var agentSchedulingGroups = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredAgentSchedulingGroups = FilterAgentSchedulingGroup(agentSchedulingGroups, agentSchedulingGroupQueryParameter.SearchKeyword,
-                agentSchedulingGroupQueryParameter.ClientId, agentSchedulingGroupQueryParameter.ClientLobGroupId,
-                agentSchedulingGroupQueryParameter.SkillGroupId, agentSchedulingGroupQueryParameter.SkillTagId)
+            var filteredAgentSchedulingGroups = FilterAgentSchedulingGroup(agentSchedulingGroups, agentSchedulingGroupQueryParameter)
                 .Include(x => x.OperationHour);
 
             var sortedAgentSchedulingGroups = SortHelper.ApplySort(filteredAgentSchedulingGroups, agentSchedulingGroupQueryParameter.OrderBy);
@@ -146,47 +144,44 @@ namespace Css.Api.Setup.Repository
         }
 
 
-        /// <summary>Filters the agent scheduling group.</summary>
+        /// <summary>
+        /// Filters the agent scheduling group.
+        /// </summary>
         /// <param name="agentSchedulingGroups">The agent scheduling groups.</param>
-        /// <param name="agentSchedulingGroupName">Name of the agent scheduling group.</param>
-        /// <param name="clientId">The client identifier.</param>
-        /// <param name="clientLobGroupId">The client lob group identifier.</param>
-        /// <param name="skillGroupId">The skill group identifier.</param>
-        /// <param name="skillTagId">The skill tag identifier.</param>
+        /// <param name="agentSchedulingGroupQueryParameter">The agent scheduling group query parameter.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        private IQueryable<AgentSchedulingGroup> FilterAgentSchedulingGroup(IQueryable<AgentSchedulingGroup> agentSchedulingGroups, string agentSchedulingGroupName,
-            int? clientId, int? clientLobGroupId, int? skillGroupId, int? skillTagId)
+        private IQueryable<AgentSchedulingGroup> FilterAgentSchedulingGroup(IQueryable<AgentSchedulingGroup> agentSchedulingGroups, AgentSchedulingGroupQueryParameter agentSchedulingGroupQueryParameter)
         {
             if (!agentSchedulingGroups.Any())
             {
                 return agentSchedulingGroups;
             }
 
-            if (clientId.HasValue && clientId != default(int))
+            if (agentSchedulingGroupQueryParameter.ClientId.HasValue && agentSchedulingGroupQueryParameter.ClientId != default(int))
             {
-                agentSchedulingGroups = agentSchedulingGroups.Where(x => x.ClientId == clientId);
+                agentSchedulingGroups = agentSchedulingGroups.Where(x => x.ClientId == agentSchedulingGroupQueryParameter.ClientId);
             }
 
-            if (clientLobGroupId.HasValue && clientLobGroupId != default(int))
+            if (agentSchedulingGroupQueryParameter.ClientLobGroupId.HasValue && agentSchedulingGroupQueryParameter.ClientLobGroupId != default(int))
             {
-                agentSchedulingGroups = agentSchedulingGroups.Where(x => x.ClientLobGroupId == clientLobGroupId);
+                agentSchedulingGroups = agentSchedulingGroups.Where(x => x.ClientLobGroupId == agentSchedulingGroupQueryParameter.ClientLobGroupId);
             }
 
-            if (skillGroupId.HasValue && skillGroupId != default(int))
+            if (agentSchedulingGroupQueryParameter.SkillGroupId.HasValue && agentSchedulingGroupQueryParameter.SkillGroupId != default(int))
             {
-                agentSchedulingGroups = agentSchedulingGroups.Where(x => x.SkillGroupId == skillGroupId);
+                agentSchedulingGroups = agentSchedulingGroups.Where(x => x.SkillGroupId == agentSchedulingGroupQueryParameter.SkillGroupId);
             }
 
-            if (skillTagId.HasValue && skillTagId != default(int))
+            if (agentSchedulingGroupQueryParameter.SkillTagId.HasValue && agentSchedulingGroupQueryParameter.SkillTagId != default(int))
             {
-                agentSchedulingGroups = agentSchedulingGroups.Where(x => x.SkillTagId == skillTagId);
+                agentSchedulingGroups = agentSchedulingGroups.Where(x => x.SkillTagId == agentSchedulingGroupQueryParameter.SkillTagId);
             }
 
-            if (!string.IsNullOrWhiteSpace(agentSchedulingGroupName))
+            if (!string.IsNullOrWhiteSpace(agentSchedulingGroupQueryParameter.SearchKeyword))
             {
-                agentSchedulingGroups = agentSchedulingGroups.Where(o => o.Name.ToLower().Contains(agentSchedulingGroupName.Trim().ToLower()));
+                agentSchedulingGroups = agentSchedulingGroups.Where(o => o.Name.ToLower().Contains(agentSchedulingGroupQueryParameter.SearchKeyword.Trim().ToLower()));
             }
 
             return agentSchedulingGroups;

@@ -45,7 +45,7 @@ namespace Css.Api.Admin.Repository
         {
             var schedulingCodes = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredSchedulingCodes = FilterSchedulingCodes(schedulingCodes, schedulingCodeParameters.SearchKeyword);
+            var filteredSchedulingCodes = FilterSchedulingCodes(schedulingCodes, schedulingCodeParameters);
 
             var sortedSchedulingCodes = SortHelper.ApplySort(filteredSchedulingCodes, schedulingCodeParameters.OrderBy);
 
@@ -133,16 +133,18 @@ namespace Css.Api.Admin.Repository
         /// Searches the name of the by.
         /// </summary>
         /// <param name="schedulingCodes">The scheduling codes.</param>
-        /// <param name="schedulingCodeName">Name of the scheduling code.</param>
+        /// <param name="schedulingCodeParameters">The scheduling code parameters.</param>
         /// <returns></returns>
-        private IQueryable<SchedulingCode> FilterSchedulingCodes(IQueryable<SchedulingCode> schedulingCodes, string schedulingCodeName)
+        private IQueryable<SchedulingCode> FilterSchedulingCodes(IQueryable<SchedulingCode> schedulingCodes, SchedulingCodeQueryParameters schedulingCodeParameters)
         {
-            if (!schedulingCodes.Any() || string.IsNullOrWhiteSpace(schedulingCodeName))
+            if (!schedulingCodes.Any() || string.IsNullOrWhiteSpace(schedulingCodeParameters.SearchKeyword))
             {
                 return schedulingCodes;
             }
 
-            return schedulingCodes.Where(o => o.Description.ToLower().Contains(schedulingCodeName.Trim().ToLower()));
+            return schedulingCodes.Where(o => o.Description.ToLower().Contains(schedulingCodeParameters.SearchKeyword.Trim().ToLower()) ||
+                                              o.CreatedBy.ToLower().Contains(schedulingCodeParameters.SearchKeyword.Trim().ToLower()) ||
+                                              o.ModifiedBy.ToLower().Contains(schedulingCodeParameters.SearchKeyword.Trim().ToLower()));
         }
     }
 }

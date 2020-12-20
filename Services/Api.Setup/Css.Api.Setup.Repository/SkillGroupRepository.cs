@@ -46,7 +46,7 @@ namespace Css.Api.Setup.Repository
         {
             var skillGroups = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredSkillGroups = FilterSkillGroups(skillGroups, skillGroupQueryParameter.SearchKeyword, skillGroupQueryParameter.ClientId, skillGroupQueryParameter.ClientLobGroupId)
+            var filteredSkillGroups = FilterSkillGroups(skillGroups, skillGroupQueryParameter)
                 .Include(x => x.Timezone);
 
             var sortedSkillGroups = SortHelper.ApplySort(filteredSkillGroups, skillGroupQueryParameter.OrderBy);
@@ -135,34 +135,34 @@ namespace Css.Api.Setup.Repository
             Delete(skillGroupDetails);
         }
 
-        /// <summary>Filters the skill groups.</summary>
+        /// <summary>
+        /// Filters the skill groups.
+        /// </summary>
         /// <param name="skillGroups">The skill groups.</param>
-        /// <param name="skillGroupName">Name of the skill group.</param>
-        /// <param name="clientId">The client identifier.</param>
-        /// <param name="clientLobGroupId">The client lob group identifier.</param>
+        /// <param name="skillGroupQueryParameter">The skill group query parameter.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        private IQueryable<SkillGroup> FilterSkillGroups(IQueryable<SkillGroup> skillGroups, string skillGroupName, int? clientId, int? clientLobGroupId)
+        private IQueryable<SkillGroup> FilterSkillGroups(IQueryable<SkillGroup> skillGroups, SkillGroupQueryParameter skillGroupQueryParameter)
         {
             if (!skillGroups.Any())
             {
                 return skillGroups;
             }
 
-            if (clientId.HasValue && clientId != default(int))
+            if (skillGroupQueryParameter.ClientId.HasValue && skillGroupQueryParameter.ClientId != default(int))
             {
-                skillGroups = skillGroups.Where(x => x.ClientId == clientId);
+                skillGroups = skillGroups.Where(x => x.ClientId == skillGroupQueryParameter.ClientId);
             }
 
-            if (clientLobGroupId.HasValue && clientLobGroupId != default(int))
+            if (skillGroupQueryParameter.ClientLobGroupId.HasValue && skillGroupQueryParameter.ClientLobGroupId != default(int))
             {
-                skillGroups = skillGroups.Where(x => x.ClientLobGroupId == clientLobGroupId);
+                skillGroups = skillGroups.Where(x => x.ClientLobGroupId == skillGroupQueryParameter.ClientLobGroupId);
             }
 
-            if (!string.IsNullOrWhiteSpace(skillGroupName))
+            if (!string.IsNullOrWhiteSpace(skillGroupQueryParameter.SearchKeyword))
             {
-                skillGroups = skillGroups.Where(o => o.Name.ToLower().Contains(skillGroupName.Trim().ToLower()));
+                skillGroups = skillGroups.Where(o => o.Name.ToLower().Contains(skillGroupQueryParameter.SearchKeyword.Trim().ToLower()));
             }
 
             return skillGroups;

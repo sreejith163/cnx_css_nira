@@ -162,9 +162,11 @@ namespace Css.Api.Scheduling.Repository
             DeleteOneAsync(x => x.Id == agentAdminRequest.Id);
         }
 
-        /// <summary>Filters the agent admin.</summary>
+        /// <summary>
+        /// Filters the agent admin.
+        /// </summary>
         /// <param name="agentAdmins">The agent admins.</param>
-        /// <param name="agentAdminName">Name of the agent admin.</param>
+        /// <param name="agentAdminQueryParameter">The agent admin query parameter.</param>
         /// <returns>
         ///   <br />
         /// </returns>
@@ -177,10 +179,10 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(agentAdminQueryParameter.SearchKeyword))
             {
-                agentAdmins = agentAdmins.Where(o => o.FirstName.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.ToLower()) ||
-                                                     o.LastName.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.ToLower()) ||
-                                                     o.CreatedBy.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.ToLower()) ||
-                                                     o.ModifiedBy.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.ToLower()));
+                agentAdmins = agentAdmins.Where(o => o.FirstName.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()) ||
+                                                     o.LastName.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()) ||
+                                                     o.CreatedBy.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()) ||
+                                                     o.ModifiedBy.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()));
             }
 
             return agentAdmins;

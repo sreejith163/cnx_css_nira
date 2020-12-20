@@ -47,8 +47,7 @@ namespace Css.Api.Setup.Repository
         {
             var skillTags = FindByCondition(x => x.IsDeleted == false);
 
-            var filteredSkillTags = FilterSkillTag(skillTags, skillTagQueryParameter.SearchKeyword, skillTagQueryParameter.SkillGroupId,
-                skillTagQueryParameter.ClientId, skillTagQueryParameter.ClientLobGroupId)
+            var filteredSkillTags = FilterSkillTag(skillTags, skillTagQueryParameter)
                 .Include(x => x.OperationHour);
 
             var sortedSkillTags = SortHelper.ApplySort(filteredSkillTags, skillTagQueryParameter.OrderBy);
@@ -147,37 +146,35 @@ namespace Css.Api.Setup.Repository
         /// Filters the skill tag.
         /// </summary>
         /// <param name="skillTags">The skill tags.</param>
-        /// <param name="skillTagName">Name of the skill tag.</param>
-        /// <param name="skillGroupId">The skill group identifier.</param>
-        /// <param name="clientId">The client identifier.</param>
-        /// <param name="clientLobGroupId">The client lob group identifier.</param>
+        /// <param name="skillTagQueryParameter">The skill tag query parameter.</param>
         /// <returns></returns>
-        private IQueryable<SkillTag> FilterSkillTag(IQueryable<SkillTag> skillTags, string skillTagName, int? skillGroupId,
-             int? clientId, int? clientLobGroupId)
+        private IQueryable<SkillTag> FilterSkillTag(IQueryable<SkillTag> skillTags, SkillTagQueryParameter skillTagQueryParameter)
         {
             if (!skillTags.Any())
             {
                 return skillTags;
             }
 
-            if (clientId.HasValue && clientId != default(int))
+            if (skillTagQueryParameter.ClientId.HasValue && skillTagQueryParameter.ClientId != default(int))
             {
-                skillTags = skillTags.Where(x => x.ClientId == clientId);
+                skillTags = skillTags.Where(x => x.ClientId == skillTagQueryParameter.ClientId);
             }
 
-            if (clientLobGroupId.HasValue && clientLobGroupId != default(int))
+            if (skillTagQueryParameter.ClientLobGroupId.HasValue && skillTagQueryParameter.ClientLobGroupId != default(int))
             {
-                skillTags = skillTags.Where(x => x.ClientLobGroupId == clientLobGroupId);
+                skillTags = skillTags.Where(x => x.ClientLobGroupId == skillTagQueryParameter.ClientLobGroupId);
             }
 
-            if (skillGroupId.HasValue && skillGroupId != default(int))
+            if (skillTagQueryParameter.SkillGroupId.HasValue && skillTagQueryParameter.SkillGroupId != default(int))
             {
-                skillTags = skillTags.Where(x => x.SkillGroupId == skillGroupId);
+                skillTags = skillTags.Where(x => x.SkillGroupId == skillTagQueryParameter.SkillGroupId);
             }
 
-            if (!string.IsNullOrWhiteSpace(skillTagName))
+            if (!string.IsNullOrWhiteSpace(skillTagQueryParameter.SearchKeyword))
             {
-                skillTags = skillTags.Where(o => o.Name.ToLower().Contains(skillTagName.Trim().ToLower()));
+                skillTags = skillTags.Where(o => o.Name.ToLower().Contains(skillTagQueryParameter.SearchKeyword.Trim().ToLower()) ||
+                                                 o.CreatedBy.ToLower().Contains(skillTagQueryParameter.SearchKeyword.Trim().ToLower()) ||
+                                                 o.ModifiedBy.ToLower().Contains(skillTagQueryParameter.SearchKeyword.Trim().ToLower()));
             }
 
             return skillTags;
