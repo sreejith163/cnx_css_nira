@@ -110,7 +110,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(skillTagQueryparameter.SearchKeyword))
             {
-                skillTags = skillTags.Where(o => string.Equals(o.Name, skillTagQueryparameter.SearchKeyword, StringComparison.OrdinalIgnoreCase));
+                skillTags = skillTags.Where(o => o.Name.ToLower().Contains(skillTagQueryparameter.SearchKeyword.ToLower()));
             }
 
             return skillTags;

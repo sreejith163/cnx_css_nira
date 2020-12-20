@@ -270,7 +270,8 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(agentScheduleQueryparameter.SearchKeyword))
             {
-                agentSchedules = agentSchedules.Where(o => string.Equals(o.ModifiedBy, agentScheduleQueryparameter.SearchKeyword, StringComparison.OrdinalIgnoreCase));
+                agentSchedules = agentSchedules.Where(o => o.CreatedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.ToLower()) ||
+                                                           o.ModifiedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.ToLower()));
             }
 
             if (agentScheduleQueryparameter.AgentSchedulingGroupId.HasValue && agentScheduleQueryparameter.AgentSchedulingGroupId != default(int))

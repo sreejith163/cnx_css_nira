@@ -109,7 +109,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(skillGroupQueryparameter.SearchKeyword))
             {
-                skillGroups = skillGroups.Where(o => string.Equals(o.Name, skillGroupQueryparameter.SearchKeyword, StringComparison.OrdinalIgnoreCase));
+                skillGroups = skillGroups.Where(o => o.Name.ToLower().Contains(skillGroupQueryparameter.SearchKeyword.ToLower()));
             }
 
             return skillGroups;

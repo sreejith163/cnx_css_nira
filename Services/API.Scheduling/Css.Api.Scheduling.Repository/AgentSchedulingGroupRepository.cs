@@ -129,7 +129,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(agentSchedulingGroupQueryparameter.SearchKeyword))
             {
-                agentSchedulingGroups = agentSchedulingGroups.Where(o => string.Equals(o.Name, agentSchedulingGroupQueryparameter.SearchKeyword, StringComparison.OrdinalIgnoreCase));
+                agentSchedulingGroups = agentSchedulingGroups.Where(o => o.Name.ToLower().Contains(agentSchedulingGroupQueryparameter.SearchKeyword.ToLower()));
             }
 
             return agentSchedulingGroups;

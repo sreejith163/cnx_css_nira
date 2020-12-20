@@ -9,7 +9,6 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,7 +41,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var agentAdmins = FilterBy(x => x.IsDeleted == false);
 
-            var filteredAgentAdmins = FilterAgentAdmin(agentAdmins, agentAdminQueryParameter.SearchKeyword);
+            var filteredAgentAdmins = FilterAgentAdmin(agentAdmins, agentAdminQueryParameter);
 
             var sortedAgentAdmins = SortHelper.ApplySort(filteredAgentAdmins, agentAdminQueryParameter.OrderBy);
 
@@ -169,17 +168,19 @@ namespace Css.Api.Scheduling.Repository
         /// <returns>
         ///   <br />
         /// </returns>
-        private IQueryable<Agent> FilterAgentAdmin(IQueryable<Agent> agentAdmins, string agentAdminName)
+        private IQueryable<Agent> FilterAgentAdmin(IQueryable<Agent> agentAdmins, AgentAdminQueryParameter agentAdminQueryParameter)
         {
             if (!agentAdmins.Any())
             {
                 return agentAdmins;
             }
 
-            if (!string.IsNullOrWhiteSpace(agentAdminName))
+            if (!string.IsNullOrWhiteSpace(agentAdminQueryParameter.SearchKeyword))
             {
-                agentAdmins = agentAdmins.Where(o => string.Equals(o.FirstName, agentAdminName, StringComparison.OrdinalIgnoreCase) ||
-                                                     string.Equals(o.FirstName, agentAdminName, StringComparison.OrdinalIgnoreCase) );
+                agentAdmins = agentAdmins.Where(o => o.FirstName.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.ToLower()) ||
+                                                     o.LastName.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.ToLower()) ||
+                                                     o.CreatedBy.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.ToLower()) ||
+                                                     o.ModifiedBy.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.ToLower()));
             }
 
             return agentAdmins;
