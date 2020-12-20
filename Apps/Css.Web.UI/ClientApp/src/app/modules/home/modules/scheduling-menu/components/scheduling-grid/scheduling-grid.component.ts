@@ -8,7 +8,6 @@ import { SchedulingStatus } from '../../enums/scheduling-status.enum';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SchedulingInterval } from '../../models/scheduling-interval.model';
 
-import * as $ from 'jquery';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
@@ -30,6 +29,8 @@ import { HeaderPagination } from 'src/app/shared/models/header-pagination.model'
 import { ScheduleChart } from '../../models/schedule-chart.model';
 import { AgentScheduleChart } from '../../models/agent-schedule-chart.model';
 import { AgentScheduleType } from '../../enums/agent-schedule-type.enum';
+
+import * as $ from 'jquery';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -79,8 +80,8 @@ export class SchedulingGridComponent implements OnInit {
   startDate: any;
 
   hoveredDate: NgbDate | null = null;
-  fromDate = this.calendar.getToday();
   toDate: NgbDate | null = null;
+  fromDate = this.calendar.getToday();
   today = this.calendar.getToday();
 
   modalRef: NgbModalRef;
@@ -377,7 +378,7 @@ export class SchedulingGridComponent implements OnInit {
       if (this.icon && !this.isDelete) {
 
         if (weekData) {
-          this.InsertIconToGrid(weekData, iconModel);
+          this.insertIconToGrid(weekData, iconModel);
         } else {
           const weekDay = new AgentScheduleChart();
           weekDay.day = +week;
@@ -400,7 +401,7 @@ export class SchedulingGridComponent implements OnInit {
     table.find('.' + this.selectedCellClassName).removeClass(this.selectedCellClassName);
   }
 
-  private InsertIconToGrid(weekData: AgentScheduleChart, insertIcon: ScheduleChart) {
+  private insertIconToGrid(weekData: AgentScheduleChart, insertIcon: ScheduleChart) {
     if (weekData.charts.find(x => x.startTime === insertIcon.startTime && x.endTime === insertIcon.endTime)) {
       const item = weekData.charts.find(x => x.startTime === insertIcon.startTime && x.endTime === insertIcon.endTime);
       item.schedulingCodeId = insertIcon.schedulingCodeId;
@@ -499,7 +500,6 @@ export class SchedulingGridComponent implements OnInit {
         });
       }
     }
-
   }
 
   private adjustSchedulingCalendarTimesRange(times: Array<ScheduleChart>) {
@@ -684,7 +684,6 @@ export class SchedulingGridComponent implements OnInit {
     } else {
       this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
     }
-
   }
 
   private updateAgentSchedule(index: number) {
@@ -727,5 +726,4 @@ export class SchedulingGridComponent implements OnInit {
       return time;
     }
   }
-
 }
