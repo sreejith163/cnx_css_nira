@@ -218,7 +218,8 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false); ;
 
             var update = Builders<AgentSchedule>.Update
-                .Set(x => x.ModifiedBy, agentSchedule.ModifiedBy);
+                .Set(x => x.ModifiedBy, agentSchedule.ModifiedBy)
+                .Set(x => x.ModifiedDate, DateTime.UtcNow);
 
             switch (copyAgentScheduleRequest.AgentScheduleType)
             {

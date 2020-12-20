@@ -23,13 +23,13 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets the date from.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTimeOffset? DateFrom { get; set; }
+        public DateTime? DateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the date to.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTimeOffset? DateTo { get; set; }
+        public DateTime? DateTo { get; set; }
 
         /// <summary>
         /// Gets or sets the status.
@@ -62,7 +62,7 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the modified date.
         /// </summary>
-        public DateTimeOffset? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
@@ -74,7 +74,7 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets the modified date.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTimeOffset? ModifiedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is deleted.
