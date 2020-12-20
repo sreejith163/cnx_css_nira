@@ -295,10 +295,8 @@ export class SchedulingGridComponent implements OnInit {
   }
 
   onSchedulingGroupChange(schedulingGroupId: number) {
-    if (schedulingGroupId) {
-      this.agentSchedulingGroupId = +schedulingGroupId;
-      this.loadAgentSchedules();
-    }
+    this.agentSchedulingGroupId = schedulingGroupId;
+    this.loadAgentSchedules();
   }
 
   search() {
@@ -539,7 +537,6 @@ export class SchedulingGridComponent implements OnInit {
     this.selectedGrid.agentScheduleCharts.forEach((element) => {
       element.charts = this.adjustSchedulingCalendarTimesRange(element.charts);
     });
-    console.log(this.selectedGrid);
   }
 
   private sortSelectedGridCalendarTimes() {
