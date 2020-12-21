@@ -45,6 +45,13 @@ export class AgentSchedulesService extends HttpBaseService {
   }
 
   updateAgentScheduleChart(agentScheduleId: string, updateAgentScheduleChart: UpdateAgentschedulechart) {
+    const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/charts`;
+
+    return this.http.put<ApiResponseModel>(url, updateAgentScheduleChart)
+    .pipe(catchError(this.handleError));
+  }
+
+  importAgentScheduleChart(agentScheduleId: string, updateAgentScheduleChart: UpdateAgentschedulechart) {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/import`;
 
     return this.http.put<ApiResponseModel>(url, updateAgentScheduleChart)
