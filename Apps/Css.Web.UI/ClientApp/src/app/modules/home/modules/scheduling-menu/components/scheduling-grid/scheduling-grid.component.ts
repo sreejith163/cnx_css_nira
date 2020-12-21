@@ -63,7 +63,7 @@ export class SchedulingGridComponent implements OnInit {
   startIcon = 0;
   endIcon: number;
   totalSchedulingRecord: number;
-  agentSchedulingGroupId: number;
+  agentSchedulingGroupId?: number;
   agentScheduleId: number;
 
   selectedIconId: string;
@@ -582,11 +582,8 @@ export class SchedulingGridComponent implements OnInit {
 
   private getQueryParams() {
     const agentSchedulesQueryParams = new AgentSchedulesQueryParams();
-    agentSchedulesQueryParams.agentSchedulingGroupId = this.agentSchedulingGroupId ?? undefined;
-    agentSchedulesQueryParams.fromDate = new Date();
-    agentSchedulesQueryParams.fromDate = this.startDate ?
-      new Date(this.startDate.year, this.startDate.month - 1, this.startDate.day, 0, 0, 0, 0) : undefined;
-    agentSchedulesQueryParams.fromDate = agentSchedulesQueryParams.fromDate ? new Date(agentSchedulesQueryParams.fromDate) : undefined;
+    agentSchedulesQueryParams.agentSchedulingGroupId = this.agentSchedulingGroupId;
+    agentSchedulesQueryParams.fromDate = this.getDateInStringFormat(this.startDate);
     agentSchedulesQueryParams.pageNumber = this.currentPage;
     agentSchedulesQueryParams.pageSize = this.pageSize;
     agentSchedulesQueryParams.searchKeyword = this.searchKeyword ?? '';
@@ -707,6 +704,15 @@ export class SchedulingGridComponent implements OnInit {
     this.modalRef.componentInstance.translationValues = this.translationValues;
     this.modalRef.componentInstance.headingMessage = 'Success';
     this.modalRef.componentInstance.contentMessage = contentMessage;
+  }
+
+  private getDateInStringFormat(startDate: any): string {
+    if (!startDate) {
+      return undefined;
+    }
+
+    const date = new Date(startDate.year, startDate.month - 1, startDate.day, 0, 0, 0, 0);
+    return date.toDateString();
   }
 
   private convertToDateFormat(time: string) {
