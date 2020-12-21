@@ -6,7 +6,6 @@ import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/mess
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SchedulingStatus } from '../../enums/scheduling-status.enum';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { SchedulingInterval } from '../../models/scheduling-interval.model';
 
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
@@ -31,6 +30,7 @@ import { AgentScheduleChart } from '../../models/agent-schedule-chart.model';
 import { AgentScheduleType } from '../../enums/agent-schedule-type.enum';
 
 import * as $ from 'jquery';
+import { KeyValue } from 'src/app/shared/models/key-value.model';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -94,7 +94,7 @@ export class SchedulingGridComponent implements OnInit {
 
   openTimes: Array<any>;
   translationValues: TranslationDetails[] = [];
-  schedulingIntervals: SchedulingInterval[] = [];
+  schedulingIntervals: KeyValue[] = [];
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
   schedulingStatus: any[] = [];
   weekDays: Array<string> = [];
@@ -668,7 +668,6 @@ export class SchedulingGridComponent implements OnInit {
           this.spinnerService.hide(this.spinner);
           this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been updated!');
           this.modalRef.result.then(() => {
-            this.selectedGrid = undefined;
             this.loadAgentSchedules();
           });
         }, (error) => {

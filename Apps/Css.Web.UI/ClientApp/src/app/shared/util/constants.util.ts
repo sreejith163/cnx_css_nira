@@ -1,4 +1,3 @@
-import { SchedulingInterval } from 'src/app/modules/home/modules/scheduling-menu/models/scheduling-interval.model';
 import { OperationHourType } from 'src/app/modules/home/modules/setup-menu/models/operation-hour-type.model';
 import { UserRole } from 'src/app/modules/home/modules/system-admin/models/user-role.model';
 import { KeyValue } from '../models/key-value.model';
@@ -4087,7 +4086,7 @@ export class Constants {
     }
   ];
 
-  public static readonly schedulingIntervals: SchedulingInterval[] = [
+  public static readonly schedulingIntervals: KeyValue[] = [
     {
       id: 5,
       value: '5'
