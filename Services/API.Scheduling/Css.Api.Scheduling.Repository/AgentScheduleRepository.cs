@@ -275,6 +275,11 @@ namespace Css.Api.Scheduling.Repository
                                                            o.EmployeeId.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()));
             }
 
+            if (agentScheduleQueryparameter.EmployeeIds.Any())
+            {
+                agentSchedules = agentSchedules.Where(x => agentScheduleQueryparameter.EmployeeIds.Contains(x.EmployeeId));
+            }
+
             if (agentScheduleQueryparameter.AgentSchedulingGroupId.HasValue && agentScheduleQueryparameter.AgentSchedulingGroupId != default(int))
             {
                 agentSchedules = agentSchedules.Where(x => x.AgentSchedulingGroupId == agentScheduleQueryparameter.AgentSchedulingGroupId);

@@ -1,5 +1,6 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
 using System;
+using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
@@ -11,6 +12,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         public AgentScheduleQueryparameter()
         {
             OrderBy = "CreatedDate";
+            EmployeeIds = new List<string>();
         }
 
         /// <summary>
@@ -22,5 +24,10 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
         public int? AgentSchedulingGroupId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the employee ids.
+        /// </summary>
+        public List<string> EmployeeIds { get; set; }
     }
 }
