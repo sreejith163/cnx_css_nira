@@ -165,9 +165,19 @@ namespace Css.Api.Scheduling.Repository
                     break;
 
                 case AgentScheduleType.SchedulingMangerTab:
-                    query &= Builders<AgentSchedule>.Filter.ElemMatch(i => i.AgentScheduleManagerCharts, chart => chart.Date == agentScheduleDetails.AgentScheduleManagerChart.Date);
+                    var documentQuery = query & Builders<AgentSchedule>.Filter
+                        .ElemMatch(i => i.AgentScheduleManagerCharts, chart => chart.Date == agentScheduleDetails.AgentScheduleManagerChart.Date);
 
-                    update = update.Set(x => x.AgentScheduleManagerCharts[-1], agentScheduleDetails.AgentScheduleManagerChart);
+                    var documentCount = FindCountByIdAsync(documentQuery).Result;
+                    if (documentCount > 0)
+                    {
+                        query = documentQuery;
+                        update = update.Set(x => x.AgentScheduleManagerCharts[-1], agentScheduleDetails.AgentScheduleManagerChart);
+                    }
+                    else
+                    {
+                        update = update.AddToSet(x => x.AgentScheduleManagerCharts, agentScheduleDetails.AgentScheduleManagerChart);
+                    }
                     break;
 
                 default:

@@ -1,12 +1,11 @@
 ﻿using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Validators.Agent
-{  
+{
+    /// <summary>
+    /// Validator for agent admin
+    /// </summary>
     public class AddAgentAdminValidator : AbstractValidator<CreateAgentAdmin>
     {
         /// <summary>Initializes a new instance of the <see cref="AddAgentAdminValidator" /> class.</summary>

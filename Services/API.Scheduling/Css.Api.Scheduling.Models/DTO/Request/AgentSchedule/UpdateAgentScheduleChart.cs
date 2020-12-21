@@ -5,7 +5,6 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
     public class UpdateAgentScheduleChart : AgentScheduleChartAttributes
     {
-
         /// <summary>
         /// Gets or sets the agent schedule charts.
         /// </summary>
