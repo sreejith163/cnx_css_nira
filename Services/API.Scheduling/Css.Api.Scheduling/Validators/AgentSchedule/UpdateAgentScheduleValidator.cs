@@ -1,4 +1,4 @@
-﻿using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+﻿using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using FluentValidation;
 
 namespace Css.Api.Scheduling.Validators.AgentSchedule

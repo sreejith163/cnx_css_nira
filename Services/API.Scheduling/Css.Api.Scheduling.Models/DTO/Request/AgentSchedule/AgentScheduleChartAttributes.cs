@@ -1,15 +1,9 @@
 ﻿using Css.Api.Scheduling.Models.Enums;
-using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
-    public class CopyAgentSchedule
+    public class AgentScheduleChartAttributes
     {
-        /// <summary>
-        /// Gets or sets the employee identifier.
-        /// </summary>
-        public List<string> EmployeeIds { get; set; }
-
         /// <summary>
         /// Gets or sets the type of the agent schedule.
         /// </summary>

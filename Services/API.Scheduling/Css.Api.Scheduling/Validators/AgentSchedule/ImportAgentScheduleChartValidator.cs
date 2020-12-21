@@ -8,18 +8,18 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
     /// <summary>
     /// Validator for handling the validation of update agent schedule chart
     /// </summary>
-    public class UpdateAgentScheduleChartValidator : AbstractValidator<UpdateAgentScheduleChart>
+    public class ImportAgentScheduleChartValidator : AbstractValidator<ImportAgentScheduleChart>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UpdateAgentScheduleChartValidator"/> class.
+        /// Initializes a new instance of the <see cref="ImportAgentScheduleChartValidator"/> class.
         /// </summary>
-        public UpdateAgentScheduleChartValidator()
+        public ImportAgentScheduleChartValidator()
         {
             RuleFor(x => x.ModifiedBy).NotEmpty();
             RuleFor(x => x.AgentScheduleType).IsInEnum();
             RuleForEach(x => x.AgentScheduleCharts).SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>())
                 .When(x => x.AgentScheduleType == AgentScheduleType.SchedulingTab);
-            RuleFor(x => x.AgentScheduleManagerChart).SetValidator(new AgentScheduleManagerValidator<AgentScheduleManagerChart>())
+            RuleForEach(x => x.AgentScheduleManagerCharts).SetValidator(new AgentScheduleManagerValidator<AgentScheduleManagerChart>())
                 .When(x => x.AgentScheduleType == AgentScheduleType.SchedulingMangerTab);
         }
     }

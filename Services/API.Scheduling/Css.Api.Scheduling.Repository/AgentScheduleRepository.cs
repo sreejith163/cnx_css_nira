@@ -11,6 +11,7 @@ using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -130,7 +131,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
-                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false); ;
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.DateFrom, agentScheduleDetails.DateFrom)
@@ -151,7 +152,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
-                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false); ;
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
@@ -164,7 +165,9 @@ namespace Css.Api.Scheduling.Repository
                     break;
 
                 case AgentScheduleType.SchedulingMangerTab:
-                    update = update.Set(x => x.AgentScheduleManagerCharts, agentScheduleDetails.AgentScheduleManagerCharts);
+                    query &= Builders<AgentSchedule>.Filter.ElemMatch(i => i.AgentScheduleManagerCharts, chart => chart.Date == agentScheduleDetails.AgentScheduleManagerChart.Date);
+
+                    update = update.Set(x => x.AgentScheduleManagerCharts[-1], agentScheduleDetails.AgentScheduleManagerChart);
                     break;
 
                 default:
@@ -179,11 +182,11 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        public void ImportAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails)
+        public void ImportAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentScheduleChart agentScheduleDetails)
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
-                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false); ;
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
@@ -213,9 +216,9 @@ namespace Css.Api.Scheduling.Repository
         /// <param name="copyAgentScheduleRequest">The copy agent schedule request.</param>
         public void CopyAgentSchedules(AgentSchedule agentSchedule, CopyAgentSchedule copyAgentScheduleRequest)
         {
-            var filter =
+            var query =
                 Builders<AgentSchedule>.Filter.Where(i => copyAgentScheduleRequest.EmployeeIds.Contains(i.EmployeeId)) &
-                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false); ;
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.ModifiedBy, agentSchedule.ModifiedBy)
@@ -235,7 +238,7 @@ namespace Css.Api.Scheduling.Repository
                     break;
             }
 
-            UpdateManyAsync(filter, update);
+            UpdateManyAsync(query, update);
         }
 
         /// <summary>
@@ -246,7 +249,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
-                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false); ;
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.IsDeleted, true)

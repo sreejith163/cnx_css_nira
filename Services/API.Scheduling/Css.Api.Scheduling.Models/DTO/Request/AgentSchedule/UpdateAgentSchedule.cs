@@ -1,7 +1,7 @@
 ﻿using Css.Api.Scheduling.Models.Enums;
 using System;
 
-namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
+namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
     public class UpdateAgentSchedule
     {
