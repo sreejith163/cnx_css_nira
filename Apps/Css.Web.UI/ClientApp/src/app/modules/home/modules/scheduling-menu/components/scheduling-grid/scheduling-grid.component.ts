@@ -135,6 +135,13 @@ export class SchedulingGridComponent implements OnInit {
     return window.innerWidth > 1350 ? (window.innerWidth - 350) + 'px' : '1250px';
   }
 
+  onClickDateIcon(index: number) {
+    const from = this.totalSchedulingGridData[index]?.dateFrom;
+    const to = this.totalSchedulingGridData[index]?.dateTo;
+    this.fromDate = this.convertToNgbDate(from) ?? this.today;
+    this.toDate = this.convertToNgbDate(to) ?? this.today;
+  }
+
   onDateSelection(date: NgbDate, index: number) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
@@ -271,6 +278,19 @@ export class SchedulingGridComponent implements OnInit {
     this.icon = event.item.element.nativeElement.id;
   }
 
+  deleteSelectedCell() {
+    // this.isDelete = true;
+    // this.saveGridItems();
+  }
+
+  setCellSelected(event) {
+    // if (!event.ctrlKey) {
+    //   this.removeHighlightedCells();
+    // }
+    // highlightCell(event.currentTarget.id, this.selectedCellClassName);
+  }
+
+
   changeTimeInterval(interval: number) {
     this.timeIntervals = +interval;
     this.openTimes = this.getOpenTimes();
@@ -319,6 +339,14 @@ export class SchedulingGridComponent implements OnInit {
   setStartDateAsToday() {
     this.startDate = this.today;
     this.loadAgentSchedules();
+  }
+
+  private convertToNgbDate(date: Date) {
+    if (date) {
+      date = new Date(date);
+      const newDate: NgbDate = new NgbDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate() + 1);
+      return newDate ?? undefined;
+    }
   }
 
   private matchSchedulingGridDataChanges() {

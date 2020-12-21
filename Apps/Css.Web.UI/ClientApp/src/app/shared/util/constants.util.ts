@@ -3818,7 +3818,18 @@ export class Constants {
       createdDate: '2020-10-04',
       modifiedBy: 'me',
       modifiedDate: '2020-10-04',
-    }
+    },
+    {
+      variableId: 'btn_delete_icon',
+      menu: 'Scheduling Grid',
+      description: 'text',
+      language: 'English',
+      translation: 'Delete',
+      createdBy: 'me',
+      createdDate: '2020-10-04',
+      modifiedBy: 'me',
+      modifiedDate: '2020-10-04',
+    },
   ];
 
   public static readonly permissionsTranslationValues: Translation[] = [

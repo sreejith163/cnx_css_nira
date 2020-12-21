@@ -111,11 +111,11 @@
                 </span>
                 </td>
                 <td>{{el.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="el.dateTo">-</span>  {{ el.dateTo | date: 'yyyy-MM-dd'}}
-                  <i class="fa fa-calendar float-right padding-5" aria-hidden="true" (click)="datepicker.toggle()"></i>
+                  <i class="fa fa-calendar float-right padding-5" aria-hidden="true" (click)="onClickDateIcon(i); datepicker.toggle()"></i>
                   <input name="datepicker" class="hidden-datepicker" ngbDatepicker #datepicker="ngbDatepicker"
                     [autoClose]="'outside'" (dateSelect)="onDateSelection($event, i)" [displayMonths]="2"
                     [dayTemplate]="t" [container]="'body'" [placement]="'bottom'" outsideDays="hidden"
-                    [startDate]="fromDate!">
+                    >
                   <ng-template #t let-date let-focused="focused">
                     <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
                       [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
@@ -140,7 +140,7 @@
                   <td colspan="12">
                     <div class="jsgrid-grid-body">
                       <div class="row">
-                        <div class="col-md-4 col-sm-4">
+                        <div class="col-md-4 col-sm-4 row">
                           <p class="float-left">
                             {{ 'Time Interval' | translation: 'lbl_grid_time_interval' : translationValues }}:
                           </p>
@@ -149,7 +149,10 @@
                             <ng-container *ngFor="let interval of schedulingIntervals; let i = index">
                               <option [value]="interval.id">{{ interval.value }}</option>
                             </ng-container>
-                          </select>
+                          </select> 
+                          <button class="btn btn-default m-l-20" (click)="deleteSelectedCell()">
+                            {{ 'Delete' | translation: 'btn_delete_icon' : translationValues }}
+                          </button>
                         </div>
                         <div class="col-md-4 col-sm-4">
                           <p class="text-center">
@@ -221,8 +224,8 @@
                                       attr.time="{{ openTime.split(' ')[0] }}"
                                       attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}" [attr.week]="week"
                                       *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
-                                      (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
-                                      [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : 'night'">
+                                      (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)" (click)="setCellSelected($event)"
+                                      [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
                                       <ng-container *ngIf="getIconFromSelectedGrid(week, openTime).length">
                                         <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime) }}</i>
                                       </ng-container>
