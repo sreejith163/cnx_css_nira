@@ -4,7 +4,7 @@ export class AgentSchedulesResponse extends AgentScheduleBase {
     dateFrom: Date;
     dateTo: Date;
     createdBy: string;
-    createdDate: string;
+    createdDate: Date;
     modifiedBy: string;
-    modifiedDate: string;
+    modifiedDate: Date;
 }
