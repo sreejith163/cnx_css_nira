@@ -219,7 +219,7 @@ namespace Css.Api.Scheduling.Repository
         public void CopyAgentSchedules(AgentSchedule agentSchedule, CopyAgentSchedule copyAgentScheduleRequest)
         {
             var query =
-                Builders<AgentSchedule>.Filter.Where(i => copyAgentScheduleRequest.EmployeeIds.Contains(i.EmployeeId)) &
+                Builders<AgentSchedule>.Filter.In(i => i.EmployeeId, copyAgentScheduleRequest.EmployeeIds) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
