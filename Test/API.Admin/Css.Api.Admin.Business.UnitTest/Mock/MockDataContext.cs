@@ -83,9 +83,9 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
 
         public IQueryable<AgentCategoryDataType> agentCategoryDataTypesDB = new List<AgentCategoryDataType>()
         {
-            new AgentCategoryDataType{ Id=1, Value="AlphaNumeric", Description="Describes the data type for AlphaNumeric" },
-            new AgentCategoryDataType{ Id=2, Value="Date", Description="Describes the data type for Date" },
-            new AgentCategoryDataType{ Id=3, Value="Numeric", Description="Describes the data type for Numeric" }
+            new AgentCategoryDataType{ Id = 1, Value = "AlphaNumeric", Description = "Describes the data type for AlphaNumeric" },
+            new AgentCategoryDataType{ Id = 2, Value = "Date", Description = "Describes the data type for Date" },
+            new AgentCategoryDataType{ Id = 3, Value = "Numeric", Description = "Describes the data type for Numeric" }
         }.AsQueryable();
 
         #region Methods

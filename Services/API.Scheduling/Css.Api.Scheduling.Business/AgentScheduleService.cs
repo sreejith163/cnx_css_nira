@@ -95,10 +95,6 @@ namespace Css.Api.Scheduling.Business
             }
 
             var agentProfile = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(new EmployeeIdDetails { Id = agentSchedule.EmployeeId });
-            if (agentProfile == null)
-            {
-                return new CSSResponse($"Employee Id '{agentSchedule.EmployeeId}' not found", HttpStatusCode.NotFound);
-            }
 
             var mappedAgentSchedule = _mapper.Map<AgentScheduleDetailsDTO>(agentSchedule);
             mappedAgentSchedule.EmployeeName = $"{agentProfile?.FirstName} {agentProfile?.LastName}";

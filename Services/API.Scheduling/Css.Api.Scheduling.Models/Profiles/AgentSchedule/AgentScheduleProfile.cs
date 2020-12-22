@@ -4,7 +4,7 @@ using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using Css.Api.Scheduling.Models.Enums;
 using System;
 
-namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
+namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
 {
     public class AgentScheduleProfile : AutoMapper.Profile
     {

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Services\API.Scheduling\Css.Api.Scheduling.Business\Css.Api.Scheduling.Business.csproj" />
+    <ProjectReference Include="..\..\..\Services\API.Scheduling\Css.Api.Scheduling.Models\Css.Api.Scheduling.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
