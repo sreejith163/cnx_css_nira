@@ -5,15 +5,21 @@ import { SchedulingMenuRoutingModule } from './scheduling-menu-routing.module';
 
 import { AgentAdminListComponent } from './components/agent-admin/agent-admin-list/agent-admin-list.component';
 import { AddAgentProfileComponent } from './components/agent-admin/add-agent-profile/add-agent-profile.component';
-import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid.component';
 import { HorizontalScrollPipe } from './pipes/horizontal-scroll.pipe';
 
 import { AgentAdminService } from './services/agent-admin.service';
 import { AgentSchedulesService } from './services/agent-schedules.service';
+import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid/scheduling-grid.component';
+import { ImportScheduleComponent } from './components/scheduling-grid/import-schedule/import-schedule.component';
 
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
-const components = [AgentAdminListComponent, AddAgentProfileComponent, SchedulingGridComponent, HorizontalScrollPipe];
+const components =
+  [AgentAdminListComponent,
+    AddAgentProfileComponent,
+    SchedulingGridComponent,
+    ImportScheduleComponent,
+    HorizontalScrollPipe];
 const providers = [AgentAdminService, AgentSchedulesService];
 
 @NgModule({

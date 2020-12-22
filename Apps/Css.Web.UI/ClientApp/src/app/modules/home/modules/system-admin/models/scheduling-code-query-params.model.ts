@@ -2,4 +2,5 @@ import { QueryStringParameters } from 'src/app/shared/models/query-string-parame
 
 export class SchedulingCodeQueryParams extends QueryStringParameters {
     skipPageSize: boolean;
+    activityCodes: string[];
 }

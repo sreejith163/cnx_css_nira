@@ -150,7 +150,7 @@
                               <option [value]="interval.id">{{ interval.value }}</option>
                             </ng-container>
                           </select> 
-                          <button class="btn btn-default m-l-20" (click)="deleteSelectedCell()">
+                          <button class="btn btn-default delete-btn m-l-20" (click)="deleteSelectedCell()">
                             {{ 'Delete' | translation: 'btn_delete_icon' : translationValues }}
                           </button>
                         </div>
@@ -239,11 +239,32 @@
                       </div>
                     </div>
                     <div class="row padding-10">
-                      <div class="col-md-12 padding-12">
-                        <button class="btn btn-primary float-r" data-dismiss="modal" (click)="save(el)" id="btn_save">
-                          <i
-                            class="fa fa-save padding-5"></i>{{ 'Save for later' | translation: 'btn_save_for_later' : translationValues }}
-                        </button>
+                      <div class="col-md-12 padding-12 row">
+                        <div class="col-md-10 m-b-5">
+                          <button class="btn btn-default copy-button" id="btn_copy_schedule">
+                            <i
+                              class="fa fa-copy padding-5 black"></i>{{ 'Copy Schedule' | translation: 'btn_copy_schedule' : translationValues }}
+                          </button>
+                          <button class="btn btn-default copy-button m-l-10" (click)="openImportSchedule(el.id)">
+                            <i
+                              class="fa fa-download padding-5 black"></i>{{ 'Import Schedule' | translation: 'btn_import_schedule' : translationValues }}
+                          </button>
+                          <button class="btn btn-default copy-button m-l-10" (click)="exportToExcel(i)">
+                            <i
+                              class="fa fa-upload padding-5 black"></i>{{ 'Export Schedule' | translation: 'btn_export_schedule' : translationValues }}
+                          </button>
+                        </div>
+                        <div class="col-md-2 row">
+                          <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
+                            id="btn_save">
+                            <i
+                              class="fa fa-save padding-5"></i>{{ 'Save' | translation: 'btn_save' : translationValues }}
+                          </button>
+                          <button class="btn btn-primary m-l-10" data-dismiss="modal" id="btn_draft" disabled>
+                            <i
+                              class="fa fa-save padding-5"></i>{{ 'Draft' | translation: 'btn_draft' : translationValues }}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </td>

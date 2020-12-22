@@ -1,10 +1,10 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { WeekDay } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { Constants } from 'src/app/shared/util/constants.util';
-import { SchedulingStatus } from '../../enums/scheduling-status.enum';
+import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
@@ -14,23 +14,26 @@ import { SubscriptionLike as ISubscription } from 'rxjs';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { AgentSchedulesService } from '../../services/agent-schedules.service';
-import { AgentSchedulesQueryParams } from '../../models/agent-schedules-query-params.model';
-import { SchedulingCode } from '../../../system-admin/models/scheduling-code.model';
+import { AgentSchedulesService } from '../../../services/agent-schedules.service';
+import { AgentSchedulesQueryParams } from '../../../models/agent-schedules-query-params.model';
+import { SchedulingCode } from '../../../../system-admin/models/scheduling-code.model';
 import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
-import { SchedulingCodeQueryParams } from '../../../system-admin/models/scheduling-code-query-params.model';
-import { UpdateAgentSchedule } from '../../models/update-agent-schedule.model';
+import { SchedulingCodeQueryParams } from '../../../../system-admin/models/scheduling-code-query-params.model';
+import { UpdateAgentSchedule } from '../../../models/update-agent-schedule.model';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { AgentSchedulesResponse } from '../../models/agent-schedules-response.model';
-import { AgentScheduleGridResponse } from '../../models/agent-schedule-grid-response.model';
-import { UpdateAgentschedulechart } from '../../models/update-agent-schedule-chart.model';
+import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
+import { AgentScheduleGridResponse } from '../../../models/agent-schedule-grid-response.model';
+import { UpdateAgentschedulechart } from '../../../models/update-agent-schedule-chart.model';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
-import { ScheduleChart } from '../../models/schedule-chart.model';
-import { AgentScheduleChart } from '../../models/agent-schedule-chart.model';
-import { AgentScheduleType } from '../../enums/agent-schedule-type.enum';
+import { ScheduleChart } from '../../../models/schedule-chart.model';
+import { AgentScheduleChart } from '../../../models/agent-schedule-chart.model';
+import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
+import { ExcelService } from 'src/app/shared/services/excel.service';
 
 import * as $ from 'jquery';
 import { KeyValue } from 'src/app/shared/models/key-value.model';
+import { ImportScheduleComponent } from '../import-schedule/import-schedule.component';
+import { ExcelData } from '../../../models/excel-data.model';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -52,7 +55,7 @@ declare function highlightCell(cell: string, className: string);
   templateUrl: './scheduling-grid.component.html',
   styleUrls: ['./scheduling-grid.component.scss']
 })
-export class SchedulingGridComponent implements OnInit {
+export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   timeIntervals = 15;
   currentPage = 1;
@@ -90,6 +93,7 @@ export class SchedulingGridComponent implements OnInit {
   scheduleStatus = SchedulingStatus;
   selectedGrid: AgentScheduleGridResponse;
   schedulingGridData: AgentScheduleGridResponse;
+  importedData: ExcelData[] = [];
   paginationSize = Constants.paginationSize;
 
   openTimes: Array<any>;
@@ -107,6 +111,7 @@ export class SchedulingGridComponent implements OnInit {
   getAgentSchedulesSubscription: ISubscription;
   languageSelectionSubscription: ISubscription;
   getTranslationValuesSubscription: ISubscription;
+  importAgentScheduleChartSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
   constructor(
@@ -118,7 +123,8 @@ export class SchedulingGridComponent implements OnInit {
     private spinnerService: NgxSpinnerService,
     private agentSchedulesService: AgentSchedulesService,
     private schedulingCodeService: SchedulingCodeService,
-    private authService: AuthService
+    private authService: AuthService,
+    private excelService: ExcelService
   ) { }
 
   ngOnInit(): void {
@@ -129,6 +135,14 @@ export class SchedulingGridComponent implements OnInit {
     this.loadTranslationValues();
     this.subscribeToUserLanguage();
     this.loadAgentSchedules();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    });
   }
 
   getGridMaxWidth() {
@@ -339,6 +353,38 @@ export class SchedulingGridComponent implements OnInit {
   setStartDateAsToday() {
     this.startDate = this.today;
     this.loadAgentSchedules();
+  }
+
+  openImportSchedule(agentScheduleId: string) {
+    this.getModalPopup(ImportScheduleComponent, 'lg');
+    this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
+    this.modalRef.result.then((result) => {
+      if (result.needRefresh) {
+        this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been imported!');
+        this.loadAgentSchedule(agentScheduleId);
+      }
+    });
+  }
+
+  exportToExcel(index: number) {
+    const exportSchedule = new Array<ExcelData>();
+    const fromDate = new Date(this.totalSchedulingGridData[index]?.dateFrom);
+    const toDate = new Date(this.totalSchedulingGridData[index]?.dateTo);
+    for (const item of this.selectedGrid.agentScheduleCharts) {
+      item.charts.forEach(ele => {
+        const model = new ExcelData();
+        model.EmployeeId = this.selectedGrid.employeeId;
+        model.StartDate = (fromDate?.getMonth() + 1) + '/' + fromDate?.getDay() + '/' + fromDate?.getFullYear();
+        model.EndDate = (toDate?.getMonth() + 1) + 1 + '/' + toDate?.getDay() + '/' + toDate?.getFullYear();
+        const code = this.schedulingCodes.find(x => x.id === ele.schedulingCodeId);
+        model.ActivityCode = code.description;
+        model.StartTime = ele.startTime;
+        model.Endtime = ele.endTime;
+        exportSchedule.push(model);
+      });
+    }
+
+    this.excelService.exportAsExcelFile( exportSchedule, 'agent_scheduling_data');
   }
 
   private convertToNgbDate(date: Date) {
@@ -617,6 +663,7 @@ export class SchedulingGridComponent implements OnInit {
     agentSchedulesQueryParams.searchKeyword = this.searchKeyword ?? '';
     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentSchedulesQueryParams.fields = '';
+    agentSchedulesQueryParams.employeeIds = undefined;
 
     return agentSchedulesQueryParams;
   }
@@ -643,6 +690,7 @@ export class SchedulingGridComponent implements OnInit {
   private loadSchedulingCodes() {
     const queryParams = new SchedulingCodeQueryParams();
     queryParams.skipPageSize = true;
+    queryParams.fields = '';
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
     this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)

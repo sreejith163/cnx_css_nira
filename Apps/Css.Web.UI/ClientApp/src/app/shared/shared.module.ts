@@ -27,6 +27,8 @@ import { LanguageTranslationService } from './services/language-translation.serv
 import { SchedulingCodeService } from './services/scheduling-code.service';
 import { TimezoneService } from './services/timezone.service';
 import { TranslationService } from './services/translation.service';
+import { ExcelService } from './services/excel.service';
+import { DradAndDropFileDirective } from './directives/drad-and-drop-file.directive';
 
 const components =
   [
@@ -43,13 +45,13 @@ const components =
     TruncatePipe
   ];
 
-const modalComponents = [ConfirmationPopUpComponent, MessagePopUpComponent];
+const modalComponents = [ConfirmationPopUpComponent, MessagePopUpComponent, DradAndDropFileDirective];
 
 const modules = [CommonModule, FormsModule, ReactiveFormsModule, NgbModule, NgSelectModule, NgxSpinnerModule];
 
 const providers = [GenericStateManagerService, TranslationService, TimezoneService, CssLanguageService, LanguageTranslationService,
   GenericDataService, ClientService, SkillGroupService, ClientLobGroupService, SkillTagService, AgentSchedulingGroupService,
-  SchedulingCodeService ];
+  SchedulingCodeService, ExcelService ];
 
 @NgModule({
   imports: modules,
