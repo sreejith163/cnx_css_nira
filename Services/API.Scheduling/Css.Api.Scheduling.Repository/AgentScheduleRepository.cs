@@ -194,6 +194,16 @@ namespace Css.Api.Scheduling.Repository
                 .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
                 .Set(x => x.ModifiedDate, DateTime.UtcNow);
 
+            if (agentScheduleDetails.DateFrom.HasValue && agentScheduleDetails.DateFrom != default(DateTime))
+            {
+                update = update.Set(x => x.DateFrom, agentScheduleDetails.DateFrom);
+            }
+
+            if (agentScheduleDetails.DateTo.HasValue && agentScheduleDetails.DateTo != default(DateTime))
+            {
+                update = update.Set(x => x.DateTo, agentScheduleDetails.DateTo);
+            }
+
             switch (agentScheduleDetails.AgentScheduleType)
             {
                 case AgentScheduleType.SchedulingTab:
