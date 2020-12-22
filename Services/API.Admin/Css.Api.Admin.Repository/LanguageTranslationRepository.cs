@@ -177,8 +177,8 @@ namespace Css.Api.Admin.Repository
                 languages = languages.Where(o => o.Translation.ToLower().Contains(languageTranslationQueryParameters.SearchKeyword.Trim().ToLower()) ||
                                                  o.CreatedBy.ToLower().Contains(languageTranslationQueryParameters.SearchKeyword.Trim().ToLower()) ||
                                                  o.ModifiedBy.ToLower().Contains(languageTranslationQueryParameters.SearchKeyword.Trim().ToLower()));
-
             }
+
             return languages;
         }
     }

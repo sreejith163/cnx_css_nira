@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
+using System.Collections.Generic;
 
 namespace Css.Api.Admin.Models.DTO.Request.SchedulingCode
 {
@@ -10,11 +11,17 @@ namespace Css.Api.Admin.Models.DTO.Request.SchedulingCode
         public SchedulingCodeQueryParameters()
         {
             OrderBy = "CreatedDate";
+            ActivityCodes = new List<string>();
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether [skip page size].
         /// </summary>
         public bool SkipPageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the activity codes.
+        /// </summary>
+        public List<string> ActivityCodes { get; set; }
     }
 }

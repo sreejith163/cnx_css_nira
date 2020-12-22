@@ -137,14 +137,24 @@ namespace Css.Api.Admin.Repository
         /// <returns></returns>
         private IQueryable<SchedulingCode> FilterSchedulingCodes(IQueryable<SchedulingCode> schedulingCodes, SchedulingCodeQueryParameters schedulingCodeParameters)
         {
-            if (!schedulingCodes.Any() || string.IsNullOrWhiteSpace(schedulingCodeParameters.SearchKeyword))
+            if (!schedulingCodes.Any())
             {
                 return schedulingCodes;
             }
 
-            return schedulingCodes.Where(o => o.Description.ToLower().Contains(schedulingCodeParameters.SearchKeyword.Trim().ToLower()) ||
-                                              o.CreatedBy.ToLower().Contains(schedulingCodeParameters.SearchKeyword.Trim().ToLower()) ||
-                                              o.ModifiedBy.ToLower().Contains(schedulingCodeParameters.SearchKeyword.Trim().ToLower()));
+            if (schedulingCodeParameters.ActivityCodes.Any())
+            {
+                schedulingCodes = schedulingCodes.Where(x => schedulingCodeParameters.ActivityCodes.Contains(x.Description));
+            }
+
+            if (!string.IsNullOrWhiteSpace(schedulingCodeParameters.SearchKeyword))
+            {
+                schedulingCodes = schedulingCodes.Where(o => o.Description.ToLower().Contains(schedulingCodeParameters.SearchKeyword.Trim().ToLower()) ||
+                                                  o.CreatedBy.ToLower().Contains(schedulingCodeParameters.SearchKeyword.Trim().ToLower()) ||
+                                                  o.ModifiedBy.ToLower().Contains(schedulingCodeParameters.SearchKeyword.Trim().ToLower()));
+            }
+
+            return schedulingCodes;
         }
     }
 }
