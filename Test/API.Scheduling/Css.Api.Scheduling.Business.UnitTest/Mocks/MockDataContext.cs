@@ -178,6 +178,16 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
             return agentAdminsDB.Where(x => x.IsDeleted == false && agentAdminEmployeeIdsDetails.Contains(x.Ssn)).ToList();
         }
 
+        /// <summary>
+        /// Gets the agent admin ids by employee identifier.
+        /// </summary>
+        /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
+        /// <returns></returns>
+        public Agent GetAgentAdminIdsByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails)
+        {
+            return agentAdminsDB.Where(x => x.IsDeleted == false && x.Ssn == agentAdminEmployeeIdDetails.Id).FirstOrDefault();
+        }
+
         //To be changed
         /// <summary>
         /// Gets the agent admins by employee identifier.

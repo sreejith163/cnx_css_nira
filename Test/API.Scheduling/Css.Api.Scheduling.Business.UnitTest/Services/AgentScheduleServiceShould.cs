@@ -526,7 +526,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
             CopyAgentSchedule copyAgentSchedule = new CopyAgentSchedule
             {
-                AgentScheduleType = AgentScheduleType.SchedulingTab,
+                AgentScheduleType = AgentScheduleType.SchedulingMangerTab,
                 EmployeeIds = new List<int> { 1, 2 },
                 ModifiedBy = "admin"
             };
