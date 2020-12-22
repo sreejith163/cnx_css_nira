@@ -19,12 +19,12 @@ namespace Css.Api.Setup.UnitTest.Controllers
         /// <summary>
         /// The controller
         /// </summary>
-        private ClientsController controller;
+        private readonly ClientsController controller;
 
         /// <summary>
         /// The mock client data
         /// </summary>
-        private MockClientData mockClientData;
+        private readonly MockClientData mockClientData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientControllersShould" /> class.

@@ -13,7 +13,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
 
         /// <summary>Gets or sets the employee identifier.</summary>
         /// <value>The employee identifier.</value>
-        public string EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the name.

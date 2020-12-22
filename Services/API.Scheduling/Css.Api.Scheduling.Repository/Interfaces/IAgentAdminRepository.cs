@@ -44,7 +44,7 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="agentAdminEmployeeIdsDetails">The agent admin employee ids details.</param>
         /// <returns></returns>
-        Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<string> agentAdminEmployeeIdsDetails);
+        Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<int> agentAdminEmployeeIdsDetails);
 
         /// <summary>Gets the agent admins count.</summary>
         /// <returns>

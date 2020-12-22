@@ -12,7 +12,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         public AgentScheduleQueryparameter()
         {
             OrderBy = "CreatedDate";
-            EmployeeIds = new List<string>();
+            EmployeeIds = new List<int>();
         }
 
         /// <summary>
@@ -28,6 +28,6 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the employee ids.
         /// </summary>
-        public List<string> EmployeeIds { get; set; }
+        public List<int> EmployeeIds { get; set; }
     }
 }

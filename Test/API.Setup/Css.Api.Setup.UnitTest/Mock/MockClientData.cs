@@ -13,7 +13,7 @@ namespace Css.Api.Setup.UnitTest.Mock
         /// <summary>
         /// The clients
         /// </summary>
-        private  List<Client> clientsDB = new List<Client>()
+        private readonly List<Client> clientsDB = new List<Client>()
         {
             new Client() { Id = 1, RefId = 1, Name= "A", CreatedBy = "Admin", CreatedDate = DateTime.Now },
             new Client() { Id = 2, RefId = 2, Name= "B", CreatedBy = "Admin", CreatedDate = DateTime.Now },
@@ -25,7 +25,7 @@ namespace Css.Api.Setup.UnitTest.Mock
         /// <summary>
         /// The client lob groups
         /// </summary>
-        private List<ClientLobGroup> clientLOBGroupsDB = new List<ClientLobGroup>()
+        private readonly List<ClientLobGroup> clientLOBGroupsDB = new List<ClientLobGroup>()
         {
             new ClientLobGroup{ Id = 1, ClientId = 1, FirstDayOfWeek = 1, Name = "A", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },
             new ClientLobGroup{ Id = 2, ClientId = 2, FirstDayOfWeek = 1, Name = "B", TimezoneId = 1, RefId = 1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },

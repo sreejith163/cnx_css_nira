@@ -13,7 +13,7 @@ namespace Css.Api.Setup.UnitTest.Mock
         /// <summary>
         /// The AgentSchedulingGroups
         /// </summary>
-        private List<AgentSchedulingGroup> agentSchedulingGroupsDB = new List<AgentSchedulingGroup>()
+        private readonly List<AgentSchedulingGroup> agentSchedulingGroupsDB = new List<AgentSchedulingGroup>()
         {
              new AgentSchedulingGroup { Id = 1, RefId = 1, Name = "agentSchedulingGroup1", ClientId=1, ClientLobGroupId=1,
                   FirstDayOfWeek=1, TimezoneId=1, CreatedBy = "admin", CreatedDate = DateTime.UtcNow },

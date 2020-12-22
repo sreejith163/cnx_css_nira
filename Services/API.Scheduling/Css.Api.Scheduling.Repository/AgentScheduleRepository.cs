@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Css.Api.Core.DataAccess.Repository.NoSQL;
+﻿using Css.Api.Core.DataAccess.Repository.NoSQL;
 using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
@@ -19,18 +18,12 @@ namespace Css.Api.Scheduling.Repository
     public class AgentScheduleRepository : GenericRepository<AgentSchedule>, IAgentScheduleRepository
     {
         /// <summary>
-        /// The mapper
+        /// Initializes a new instance of the <see cref="AgentScheduleRepository" /> class.
         /// </summary>
-        private readonly IMapper _mapper;
-
-        /// <summary>Initializes a new instance of the <see cref="AgentScheduleRepository" /> class.</summary>
         /// <param name="mongoContext">The mongo context.</param>
-        /// <param name="mapper">The mapper.</param>
         public AgentScheduleRepository(
-            IMongoContext mongoContext,
-            IMapper mapper) : base(mongoContext)
+            IMongoContext mongoContext) : base(mongoContext)
         {
-            _mapper = mapper;
         }
 
         /// <summary>
@@ -283,8 +276,7 @@ namespace Css.Api.Scheduling.Repository
             if (!string.IsNullOrWhiteSpace(agentScheduleQueryparameter.SearchKeyword))
             {
                 agentSchedules = agentSchedules.Where(o => o.CreatedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
-                                                           o.ModifiedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
-                                                           o.EmployeeId.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()));
+                                                           o.ModifiedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()));
             }
 
             if (agentScheduleQueryparameter.EmployeeIds.Any())

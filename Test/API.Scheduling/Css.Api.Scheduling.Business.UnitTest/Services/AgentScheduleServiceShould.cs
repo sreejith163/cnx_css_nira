@@ -40,7 +40,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
         /// <summary>
         /// The mock data context
         /// </summary>
-        private MockDataContext mockDataContext;
+        private readonly MockDataContext mockDataContext;
 
         /// <summary>
         /// The mapper
@@ -87,8 +87,8 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedules(It.IsAny<AgentScheduleQueryparameter>())).ReturnsAsync(
                 (AgentScheduleQueryparameter agentScheduleQueryparameter) => mockDataContext.GetAgentSchedules(agentScheduleQueryparameter));
 
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminsByEmployeeIds(It.IsAny<List<string>>())).ReturnsAsync(
-                (List<string> employeeIds) => mockDataContext.GetAgentAdminsByEmployeeIds(employeeIds));
+            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminsByEmployeeIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> employeeIds) => mockDataContext.GetAgentAdminsByEmployeeIds(employeeIds));
 
             var result = await agentScheduleService.GetAgentSchedules(agentScheduleQueryparameter);
 
@@ -473,7 +473,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             CopyAgentSchedule copyAgentSchedule = new CopyAgentSchedule
             {
                 AgentScheduleType = AgentScheduleType.SchedulingTab,
-                EmployeeIds = new List<string> { "1", "2" },
+                EmployeeIds = new List<int> { 1, 2 },
                 ModifiedBy = "admin"
             };
 
@@ -500,7 +500,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             CopyAgentSchedule copyAgentSchedule = new CopyAgentSchedule
             {
                 AgentScheduleType = AgentScheduleType.SchedulingTab,
-                EmployeeIds = new List<string> { "1", "2" },
+                EmployeeIds = new List<int> { 1, 2 },
                 ModifiedBy = "admin"
             };
 
@@ -527,7 +527,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             CopyAgentSchedule copyAgentSchedule = new CopyAgentSchedule
             {
                 AgentScheduleType = AgentScheduleType.SchedulingTab,
-                EmployeeIds = new List<string> { "1", "2" },
+                EmployeeIds = new List<int> { 1, 2 },
                 ModifiedBy = "admin"
             };
 

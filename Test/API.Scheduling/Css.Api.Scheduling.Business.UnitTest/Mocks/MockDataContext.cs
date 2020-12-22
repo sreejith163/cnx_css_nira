@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
-using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
-using Newtonsoft.Json;
 
 namespace Css.Api.Scheduling.Business.UnitTest.Mocks
 {
@@ -17,31 +15,31 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
     {
         #region Data
 
-        IQueryable<Client> clientsDB = new List<Client>() 
+        readonly IQueryable<Client> clientsDB = new List<Client>() 
         {
             new Client { ClientId = 1, Name = "Client Name 1", IsDeleted = false },
             new Client { ClientId = 2, Name = "Client Name 2", IsDeleted = false }
         }.AsQueryable();
 
-        IQueryable<ClientLobGroup> clientLobGroupDB = new List<ClientLobGroup>() 
+        readonly IQueryable<ClientLobGroup> clientLobGroupDB = new List<ClientLobGroup>() 
         {
             new ClientLobGroup { ClientId = 1, ClientLobGroupId = 1, Name = "Client Lob 1", IsDeleted = false },
             new ClientLobGroup { ClientId = 2, ClientLobGroupId = 2, Name = "Client Lob 2", IsDeleted = false }
         }.AsQueryable();
 
-        IQueryable<SkillGroup> skillGroupDB = new List<SkillGroup>()
+        readonly IQueryable<SkillGroup> skillGroupDB = new List<SkillGroup>()
         {
             new SkillGroup { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, Name = "Skill Group 1", IsDeleted = false },
             new SkillGroup { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, Name = "Skill Group 2", IsDeleted = false }
         }.AsQueryable();
 
-        IQueryable<SkillTag> skillTagDB = new List<SkillTag>() 
+        readonly IQueryable<SkillTag> skillTagDB = new List<SkillTag>() 
         {
             new SkillTag { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, Name = "Skill Tag 1", IsDeleted = false },
             new SkillTag { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, SkillTagId = 2, Name = "Skill Tag 2", IsDeleted = false }
         }.AsQueryable();
 
-        IQueryable<AgentSchedulingGroup> agentSchedulingGroupDB = new List<AgentSchedulingGroup>() 
+        readonly IQueryable<AgentSchedulingGroup> agentSchedulingGroupDB = new List<AgentSchedulingGroup>() 
         {
             new AgentSchedulingGroup { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
                                        Name = "Agent Scheduliung Group 1", IsDeleted = false },
@@ -49,18 +47,18 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                                        Name = "Agent Scheduliung Group 2", IsDeleted = false }
         }.AsQueryable();
 
-        IQueryable<Agent> agentAdminsDB = new List<Agent>()
+        readonly IQueryable<Agent> agentAdminsDB = new List<Agent>()
         {
-            new Agent { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), AgentAdminId = 1, FirstName = "abc", LastName = "def", Ssn = "1", 
+            new Agent { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), AgentAdminId = 1, FirstName = "abc", LastName = "def", Ssn = 1, 
                         Sso = "user1@concentrix.com", ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
                         CreatedBy = "Admin", CreatedDate = DateTime.UtcNow },
-            new Agent { Id = new ObjectId("5fe0b5c46a05416894c0718f"), AgentAdminId = 2, FirstName = "lmn", LastName = "pqr", Ssn = "2",
+            new Agent { Id = new ObjectId("5fe0b5c46a05416894c0718f"), AgentAdminId = 2, FirstName = "lmn", LastName = "pqr", Ssn = 2,
                         Sso = "user2@concentrix.com", ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
                         CreatedBy = "Admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
-        IQueryable<AgentSchedule> agentSchedulesDB = new List<AgentSchedule>() {
-            new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718e"), EmployeeId = "1", DateFrom = DateTime.UtcNow, DateTo = DateTime.UtcNow,
+        readonly IQueryable<AgentSchedule> agentSchedulesDB = new List<AgentSchedule>() {
+            new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718e"), EmployeeId = 1, DateFrom = DateTime.UtcNow, DateTo = DateTime.UtcNow,
                                 Status = SchedulingStatus.Approved, AgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow, IsDeleted = false,
                                 AgentScheduleCharts = new List<AgentScheduleChart>
                                 {
@@ -94,7 +92,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                                     }
                                 }
             },
-            new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718f"), EmployeeId = "2", DateFrom = DateTime.UtcNow, DateTo = DateTime.UtcNow,
+            new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718f"), EmployeeId = 2, DateFrom = DateTime.UtcNow, DateTo = DateTime.UtcNow,
                                 Status = SchedulingStatus.Approved, AgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow, IsDeleted = false,
                                 AgentScheduleCharts = new List<AgentScheduleChart>
                                 {
@@ -175,7 +173,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// </summary>
         /// <param name="agentAdminEmployeeIdsDetails">The agent admin employee ids details.</param>
         /// <returns></returns>
-        public List<Agent> GetAgentAdminsByEmployeeIds(List<string> agentAdminEmployeeIdsDetails)
+        public List<Agent> GetAgentAdminsByEmployeeIds(List<int> agentAdminEmployeeIdsDetails)
         {
             return agentAdminsDB.Where(x => x.IsDeleted == false && agentAdminEmployeeIdsDetails.Contains(x.Ssn)).ToList();
         }
@@ -432,8 +430,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
             if (!string.IsNullOrWhiteSpace(agentScheduleQueryparameter.SearchKeyword))
             {
                 agentSchedules = agentSchedules.Where(o => o.CreatedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
-                                                           o.ModifiedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
-                                                           o.EmployeeId.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()));
+                                                           o.ModifiedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()));
             }
 
             if (agentScheduleQueryparameter.EmployeeIds.Any())

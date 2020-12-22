@@ -8,7 +8,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
-        public List<string> EmployeeIds { get; set; }
+        public List<int> EmployeeIds { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the agent schedule.

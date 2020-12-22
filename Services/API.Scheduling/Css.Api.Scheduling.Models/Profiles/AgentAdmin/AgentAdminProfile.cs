@@ -13,7 +13,7 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
                 .ForMember(x => x.FirstName, opt => opt.MapFrom(o => o.FirstName.Trim()))
                 .ForMember(x => x.LastName, opt => opt.MapFrom(o => o.LastName.Trim()))
                 .ForMember(x => x.Sso, opt => opt.MapFrom(o => o.Sso.Trim()))
-                .ForMember(x => x.Ssn, opt => opt.MapFrom(o => o.EmployeeId.Trim()))
+                .ForMember(x => x.Ssn, opt => opt.MapFrom(o => o.EmployeeId))
                 .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Trim()))
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
@@ -22,7 +22,7 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
                 .ForMember(x => x.FirstName, opt => opt.MapFrom(o => o.FirstName.Trim()))
                 .ForMember(x => x.LastName, opt => opt.MapFrom(o => o.LastName.Trim()))
                 .ForMember(x => x.Sso, opt => opt.MapFrom(o => o.Sso.Trim()))
-                .ForMember(x => x.Ssn, opt => opt.MapFrom(o => o.EmployeeId.Trim()))
+                .ForMember(x => x.Ssn, opt => opt.MapFrom(o => o.EmployeeId))
                 .ForMember(x => x.ModifiedBy, opt => opt.MapFrom(o => o.ModifiedBy.Trim()))
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();

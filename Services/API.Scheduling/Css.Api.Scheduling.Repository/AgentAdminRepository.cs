@@ -110,11 +110,11 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentAdminEmployeeIdsDetails">The agent admin employee ids details.</param>
         /// <returns></returns>
-        public async Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<string> agentAdminEmployeeIdsDetails)
+        public async Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<int> agentAdminEmployeeIdsDetails)
         {
             var query =
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
-                Builders<Agent>.Filter.Where(i => agentAdminEmployeeIdsDetails.Contains(i.Ssn));
+                Builders<Agent>.Filter.In(i => i.Ssn, agentAdminEmployeeIdsDetails);
 
             var agentAdmins = FilterBy(query);
 

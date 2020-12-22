@@ -7,7 +7,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
         /// <summary>
         /// Gets or sets the SSN.
         /// </summary>
-        public string EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the first name.

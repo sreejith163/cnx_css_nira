@@ -19,7 +19,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         /// Gets or sets the employee identifier.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the employee.

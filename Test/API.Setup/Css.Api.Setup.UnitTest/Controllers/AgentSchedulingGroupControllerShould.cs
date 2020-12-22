@@ -19,12 +19,12 @@ namespace Css.Api.Setup.UnitTest.Controllers
         /// <summary>
         /// The controller
         /// </summary>
-        AgentSchedulingGroupsController controller;
+        private readonly AgentSchedulingGroupsController controller;
 
         /// <summary>
         /// The mock agent scheduling group data
         /// </summary>
-        private MockAgentSchedulingGroupData mockAgentSchedulingGroupData;
+        private readonly MockAgentSchedulingGroupData mockAgentSchedulingGroupData;
 
         /// <summary>
         /// 

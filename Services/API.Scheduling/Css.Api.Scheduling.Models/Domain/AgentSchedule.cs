@@ -12,7 +12,7 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
-        public string EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the employee.

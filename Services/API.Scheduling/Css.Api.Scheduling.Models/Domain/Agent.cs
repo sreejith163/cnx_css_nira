@@ -30,7 +30,7 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the SSN.
         /// </summary>
-        public string Ssn { get; set; }
+        public int Ssn { get; set; }
 
         /// <summary>
         /// Gets or sets the sso.
