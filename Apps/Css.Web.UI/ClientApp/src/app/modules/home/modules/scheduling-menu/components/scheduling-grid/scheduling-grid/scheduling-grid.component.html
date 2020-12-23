@@ -29,7 +29,7 @@
         <ng-template #footerTemplate>
           <button class="btn btn-primary btn-sm m-2 float-left" (click)="setStartDateAsToday(); d.close()"
             id="btn_today">Today</button>
-          <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()" id="btn_close">Close</button>
+          <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close();clearStartDate();" id="btn_close">Clear</button>
         </ng-template>
       </div>
     </div>
@@ -150,9 +150,6 @@
                               <option [value]="interval.id">{{ interval.value }}</option>
                             </ng-container>
                           </select> 
-                          <button class="btn btn-default delete-btn m-l-20" (click)="deleteSelectedCell()">
-                            {{ 'Delete' | translation: 'btn_delete_icon' : translationValues }}
-                          </button>
                         </div>
                         <div class="col-md-4 col-sm-4">
                           <p class="text-center">
@@ -162,7 +159,7 @@
                         <div class="col-md-4 col-sm-4">
                           <p class="float-right">
                             {{ 'Date' | translation: 'lbl_grid_date' : translationValues }}:
-                            {{ selectedGrid.dateFrom | date: 'yyyy-MM-dd'}} -
+                            {{ selectedGrid.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="selectedGrid.dateTo">-</span>
                             {{selectedGrid.dateTo | date: 'yyyy-MM-dd'}}</p>
                         </div>
                       </div>
@@ -224,10 +221,12 @@
                                       attr.time="{{ openTime.split(' ')[0] }}"
                                       attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}" [attr.week]="week"
                                       *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
-                                      (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)" (click)="setCellSelected($event)"
+                                      (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
                                       [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-                                      <ng-container *ngIf="getIconFromSelectedGrid(week, openTime).length">
+                                      <ng-container *ngIf="getIconFromSelectedGrid(week, openTime).length"> 
+                                        <span ngbTooltip="{{ getIconDescription(week, openTime) }}">
                                         <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime) }}</i>
+                                        </span>
                                       </ng-container>
                                     </td>
                                   </tr>
@@ -240,7 +239,7 @@
                     </div>
                     <div class="row padding-10">
                       <div class="col-md-12 padding-12 row">
-                        <div class="col-md-10 m-b-5">
+                        <div class="col-md-11 m-b-5">
                           <button class="btn btn-default copy-button" id="btn_copy_schedule">
                             <i
                               class="fa fa-copy padding-5 black"></i>{{ 'Copy Schedule' | translation: 'btn_copy_schedule' : translationValues }}
@@ -254,16 +253,16 @@
                               class="fa fa-upload padding-5 black"></i>{{ 'Export Schedule' | translation: 'btn_export_schedule' : translationValues }}
                           </button>
                         </div>
-                        <div class="col-md-2 row">
+                        <div class="col-md-1 row">
                           <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
                             id="btn_save">
                             <i
                               class="fa fa-save padding-5"></i>{{ 'Save' | translation: 'btn_save' : translationValues }}
                           </button>
-                          <button class="btn btn-primary m-l-10" data-dismiss="modal" id="btn_draft" disabled>
+                          <!-- <button class="btn btn-primary m-l-10" data-dismiss="modal" id="btn_draft" disabled>
                             <i
                               class="fa fa-save padding-5"></i>{{ 'Draft' | translation: 'btn_draft' : translationValues }}
-                          </button>
+                          </button> -->
                         </div>
                       </div>
                     </div>

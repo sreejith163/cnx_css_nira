@@ -8,8 +8,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ErrorWarningPopUpComponent implements OnInit {
 
-  @Input() headingMessage = '';
-  @Input() contentMessage = '';
+  @Input() headingMessage: string;
+  @Input() contentMessage: any;
   constructor(
     public activeModal: NgbActiveModal
   ) { }
