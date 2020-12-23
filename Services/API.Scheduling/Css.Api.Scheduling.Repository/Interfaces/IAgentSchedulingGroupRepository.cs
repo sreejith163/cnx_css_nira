@@ -1,6 +1,7 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
+using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository.Interfaces
@@ -29,6 +30,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<int> GetAgentSchedulingGroupsCount();
+
+        /// <summary>Gets the agent scheduling group basedon skill tag.</summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<AgentSchedulingGroup> GetAgentSchedulingGroupBasedonSkillTag(SkillTagIdDetails skillTagIdDetails);
 
         /// <summary>
         /// Creates the agent scheduling group.

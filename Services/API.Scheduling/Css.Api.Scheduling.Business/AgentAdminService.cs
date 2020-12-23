@@ -4,12 +4,14 @@ using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
-using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
+using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
+using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Net;
@@ -63,6 +65,9 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IAgentSchedulingGroupRepository _agentSchedulingGroupRepository;
 
+        /// <summary>The activity log repository</summary>
+        private readonly IActivityLogRepository _activityLogRepository;
+
         /// <summary>
         /// The mapper
         /// </summary>
@@ -95,7 +100,8 @@ namespace Css.Api.Scheduling.Business
             ISkillGroupRepository skillGroupRepository,
             ISkillTagRepository skillTagRepository,
             IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
-            IMapper mapper,
+            IActivityLogRepository activityLogRepository,
+        IMapper mapper,
             IUnitOfWork uow)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -106,6 +112,7 @@ namespace Css.Api.Scheduling.Business
             _skillGroupRepository = skillGroupRepository;
             _skillTagRepository = skillTagRepository;
             _agentSchedulingGroupRepository = agentSchedulingGroupRepository;
+            _activityLogRepository = activityLogRepository;
             _mapper = mapper;
             _uow = uow;
             SeedData();
@@ -120,30 +127,41 @@ namespace Css.Api.Scheduling.Business
             var isClientSeeded = await _clientRepository.GetClientsCount() > 0;
             if (!isClientSeeded)
             {
-                _clientRepository.CreateClient(new Client { ClientId = 1, Name = "Client Name 1", IsDeleted = false });
-                _clientRepository.CreateClient(new Client { ClientId = 2, Name = "Client Name 2", IsDeleted = false });
+                _clientRepository.CreateClient(
+                    new Client { ClientId = 5, Name = "CName1ForAgentAdmin" });
+                _clientRepository.CreateClient(
+                    new Client { ClientId = 6, Name = "CName2ForAgentAdmin" });
             }
 
             var isClientLobSeeded = await _clientLobGroupRepository.GetClientLobGroupsCount() > 0;
             if (!isClientLobSeeded)
             {
-
-                _clientLobGroupRepository.CreateClientLobGroup(new ClientLobGroup { ClientId = 1, ClientLobGroupId = 1, Name = "Client Lob 1", IsDeleted = false });
-                _clientLobGroupRepository.CreateClientLobGroup(new ClientLobGroup { ClientId = 2, ClientLobGroupId = 2, Name = "Client Lob 2", IsDeleted = false });
+                _clientLobGroupRepository.CreateClientLobGroup(
+                    new ClientLobGroup { ClientId = 5, ClientLobGroupId = 5, Name = "Lob1ForAgentAdmin" });
+                _clientLobGroupRepository.CreateClientLobGroup(
+                    new ClientLobGroup { ClientId = 6, ClientLobGroupId = 6, Name = "Lob2ForAgentAdmin" });
             }
 
             var isSkillGroupSeeded = await _skillGroupRepository.GetSkillGroupsCount() > 0;
             if (!isSkillGroupSeeded)
             {
-                _skillGroupRepository.CreateSkillGroup(new SkillGroup { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, Name = "Skill Group 1", IsDeleted = false });
-                _skillGroupRepository.CreateSkillGroup(new SkillGroup { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, Name = "Skill Group 2", IsDeleted = false });
+                _skillGroupRepository.CreateSkillGroup(
+                    new SkillGroup { ClientId = 5, ClientLobGroupId = 5, SkillGroupId = 4, Name = "SG1ForAgentAdmin" }
+                );
+                _skillGroupRepository.CreateSkillGroup(
+                                   new SkillGroup { ClientId = 6, ClientLobGroupId = 6, SkillGroupId = 5, Name = "SG2ForAgentAdmin" }
+               );
             }
 
             var isSkillTagSeeded = await _skillTagRepository.GetSkillTagsCount() > 0;
             if (!isSkillTagSeeded)
             {
-                _skillTagRepository.CreateSkillTag(new SkillTag { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, Name = "Skill Tag 1", IsDeleted = false });
-                _skillTagRepository.CreateSkillTag(new SkillTag { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, SkillTagId = 2, Name = "Skill Tag 2", IsDeleted = false });
+                _skillTagRepository.CreateSkillTag(
+                    new SkillTag { ClientId = 5, ClientLobGroupId = 5, SkillGroupId = 4, SkillTagId = 5, Name = "ST1ForAgentAdmin" }
+                );
+                _skillTagRepository.CreateSkillTag(
+                new SkillTag { ClientId = 6, ClientLobGroupId = 6, SkillGroupId = 5, SkillTagId = 6, Name = "ST2ForAgentAdmin" }
+                );
             }
 
             var isagentSchedulingGroupsSeeded = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsCount() > 0;
@@ -151,22 +169,12 @@ namespace Css.Api.Scheduling.Business
             {
                 _agentSchedulingGroupRepository.CreateAgentSchedulingGroup(new AgentSchedulingGroup
                 {
-                    ClientId = 1,
-                    ClientLobGroupId = 1,
-                    SkillGroupId = 1,
-                    SkillTagId = 1,
+                    ClientId = 5,
+                    ClientLobGroupId = 5,
+                    SkillGroupId = 4,
+                    SkillTagId = 5,
                     AgentSchedulingGroupId = 1,
                     Name = "Agent Scheduliung Group 1",
-                    IsDeleted = false
-                });
-                _agentSchedulingGroupRepository.CreateAgentSchedulingGroup(new AgentSchedulingGroup
-                {
-                    ClientId = 2,
-                    ClientLobGroupId = 2,
-                    SkillGroupId = 2,
-                    SkillTagId = 2,
-                    AgentSchedulingGroupId = 2,
-                    Name = "Agent Scheduliung Group 2",
                     IsDeleted = false
                 });
             }
@@ -262,6 +270,7 @@ namespace Css.Api.Scheduling.Business
         {
             var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
             var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
+            var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentAdminDetails.SkillTagId };
 
             var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
 
@@ -270,10 +279,18 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' and SSo '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
+            var agentSchedulingGroupBasedonSkillTag = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBasedonSkillTag(skillTagIdDetails);
+
+            if (agentSchedulingGroupBasedonSkillTag == null)
+            {
+                return new CSSResponse($"No Scheduling Group match to this record. Please create before you proceed.", HttpStatusCode.NotFound);
+            }
+
             var agentAdminRequest = _mapper.Map<Agent>(agentAdminDetails);
 
             var agentAdminCount = await _agentAdminRepository.GetAgentAdminsCount();
             agentAdminRequest.AgentAdminId = agentAdminCount + 1;
+            agentAdminRequest.AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId;
 
             _agentAdminRepository.CreateAgentAdmin(agentAdminRequest);
 
@@ -301,15 +318,25 @@ namespace Css.Api.Scheduling.Business
 
             var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
             var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
+            var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentAdminDetails.SkillTagId };
+
 
             var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
 
-            if (agentAdmins != null)
+            if (agentAdmins != null && agentAdminIdDetails.AgentAdminId != agentAdmins.AgentAdminId)
             {
                 return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' and SSo '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
+            var agentSchedulingGroupBasedonSkillTag = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBasedonSkillTag(skillTagIdDetails);
+
+            if (agentSchedulingGroupBasedonSkillTag == null)
+            {
+                return new CSSResponse($"No Scheduling Group match to this record. Please create before you proceed.", HttpStatusCode.NotFound);
+            }
+
             var agentAdminRequest = _mapper.Map(agentAdminDetails, agentAdmin);
+            agentAdminRequest.AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId;
 
             _agentAdminRepository.UpdateAgentAdmin(agentAdminRequest);
 
@@ -339,6 +366,46 @@ namespace Css.Api.Scheduling.Business
             await _uow.Commit();
 
             return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>Creates the agent activity log.</summary>
+        /// <param name="agentActivityLogDetails">The agent activity log details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<CSSResponse> CreateAgentActivityLog(CreateAgentActivityLog agentActivityLogDetails)
+        {
+            var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = agentActivityLogDetails.EmployeeId };
+
+            var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(agentAdminEmployeeIdDetails);
+
+            if (agentAdmins == null)
+            {
+                return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' does not exists.", HttpStatusCode.NotFound);
+            }
+
+            var activityLogRequest = _mapper.Map<ActivityLog>(agentActivityLogDetails);
+            activityLogRequest.ActivityType = ActivityType.AgentAdmin;
+
+            _activityLogRepository.CreateActivityLogs(activityLogRequest);
+
+            await _uow.Commit();
+
+            return new CSSResponse(new AgentActivityLogIdDetails { AgentActivityLogId = activityLogRequest.Id }, HttpStatusCode.Created);
+        }
+
+        /// <summary>Gets the agent activity logs.</summary>
+        /// <param name="agentActivityLogQueryParameter">The agent activity log query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<CSSResponse> GetAgentActivityLogs(ActivityLogQueryParameter agentActivityLogQueryParameter)
+        {
+            agentActivityLogQueryParameter.ActivityType = ActivityType.AgentAdmin;
+            var agentActivityLogs = await _activityLogRepository.GetActivityLogs(agentActivityLogQueryParameter);
+            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentActivityLogs));
+
+            return new CSSResponse(agentActivityLogs, HttpStatusCode.OK);
         }
     }
 }

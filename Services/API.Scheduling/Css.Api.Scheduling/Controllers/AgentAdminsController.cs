@@ -1,4 +1,5 @@
 ﻿using Css.Api.Scheduling.Business.Interfaces;
+using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -85,6 +86,31 @@ namespace Css.Api.Scheduling.Controllers
         public async Task<IActionResult> DeleteAgentAdmin(int agentAdminId)
         {
             var result = await _agentAdminService.DeleteAgentAdmin(new AgentAdminIdDetails { AgentAdminId = agentAdminId });
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>Creates the agent activity logs.</summary>
+        /// <param name="agentAdminId">The agent admin identifier.</param>
+        /// <param name="agentActivityLogDetails">The agent activity log details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        [HttpPost("{agentAdminId}/create")]
+        public async Task<IActionResult> CreateAgentActivityLogs(string agentAdminId, [FromBody] CreateAgentActivityLog agentActivityLogDetails)
+        {
+            var result = await _agentAdminService.CreateAgentActivityLog(agentActivityLogDetails);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>Gets the agent activity logs.</summary>
+        /// <param name="activityLogQueryParameter">The activity log query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        [HttpGet("logs")]
+        public async Task<IActionResult> GetAgentActivityLogs([FromQuery] ActivityLogQueryParameter activityLogQueryParameter)
+        {
+            var result = await _agentAdminService.GetAgentActivityLogs(activityLogQueryParameter);
             return StatusCode((int)result.Code, result.Value);
         }
     }

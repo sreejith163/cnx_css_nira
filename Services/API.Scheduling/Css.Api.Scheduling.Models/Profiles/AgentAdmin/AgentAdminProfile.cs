@@ -1,4 +1,5 @@
 ﻿using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Response.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using System;
 
@@ -40,6 +41,15 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
 
             CreateMap<Domain.AgentGroup, AgentGroupAttribute>()
               .ReverseMap();
+
+            CreateMap<Domain.AgentPto, AgentPtoAttribute>()
+              .ReverseMap();
+
+            CreateMap<Domain.ActivityLog, CreateAgentActivityLog>()
+             .ReverseMap();
+
+            CreateMap<Domain.ActivityLog, ActivityLogDTO>()
+            .ReverseMap();
         }
     }
 }

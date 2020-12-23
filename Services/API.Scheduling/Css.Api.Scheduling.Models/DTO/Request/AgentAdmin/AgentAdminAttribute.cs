@@ -44,9 +44,25 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
         /// </summary>
         public int SkillTagId { get; set; }
 
+        /// <summary>Gets or sets the supervisor identifier.</summary>
+        /// <value>The supervisor identifier.</value>
+        public string SupervisorId { get; set; }
+
+        /// <summary>Gets or sets the name of the supervisor.</summary>
+        /// <value>The name of the supervisor.</value>
+        public string SupervisorName { get; set; }
+
+        /// <summary>Gets or sets the supervisor sso.</summary>
+        /// <value>The supervisor sso.</value>
+        public string SupervisorSso { get; set; }
+
         /// <summary>
         /// Gets or sets the agent data.
         /// </summary>
         public List<AgentDataAttribute> AgentData { get; set; }
+
+        /// <summary>Gets or sets the pto.</summary>
+        /// <value>The pto.</value>
+        public AgentPtoAttribute Pto { get; set; }
     }
 }

@@ -94,12 +94,11 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Skill Tag with id '{skillTagIdDetails.SkillTagId}' not found", HttpStatusCode.NotFound);
             }
 
-            var agentSchedulingGroups = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupIdBySkillTagIdAndTagName(skillTagIdDetails, agentSchedulingGroupNameDetails);
-
-            if (agentSchedulingGroups?.Count > 0)
+            var isSchedulingGroupExistsForSkillTag = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupsCountBySkillTagId(skillTagIdDetails) > 0;
+            if (isSchedulingGroupExistsForSkillTag)
             {
-                return new CSSResponse($"Agent Scheduling Group with name '{agentSchedulingGroupNameDetails.Name}' already exists.", HttpStatusCode.Conflict);
-            }
+                return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
+            }            
 
             var agentSchedulingGroupRequest = _mapper.Map<AgentSchedulingGroup>(agentSchedulingGroupDetails);
 
@@ -137,10 +136,10 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Skill Tag with id '{skillTagIdDetails.SkillTagId}' not found", HttpStatusCode.NotFound);
             }
 
-            var agentSchedulingGroups = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupIdBySkillTagIdAndTagName(skillTagIdDetails, agentSchedulingGroupNameDetails);
-            if (agentSchedulingGroups?.Count > 0 && agentSchedulingGroups.IndexOf(agentSchedulingGroupIdDetails.AgentSchedulingGroupId) == -1)
+            var isSchedulingGroupExistsForSkillTag = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupsCountBySkillTagId(skillTagIdDetails) > 0;
+            if (isSchedulingGroupExistsForSkillTag)
             {
-                return new CSSResponse($"Agent Scheduling Group with name '{agentSchedulingGroupDetails.Name}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
             }
 
             _repository.OperationHours.RemoveOperatingHours(agentSchedulingGroup.OperationHour.ToList());

@@ -67,6 +67,11 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
     if (this.operation === ComponentOperation.Edit) {
       this.populateClientLobGroupFormDetails();
     }
+    else {
+      this.clientLOBGroupForm.controls.firstDayOfWeek.setValue(
+        WeekDay.Sunday
+      );
+    }
     if (this.clientLOBGroupDetails !== undefined && this.clientLOBGroupDetails.clientId !== undefined) {
       this.clientId = this.clientLOBGroupDetails.clientId;
     }
@@ -137,7 +142,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
         this.clientLOBGroupDetails.id, updateClientLobGroupModel)
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
-          this.activeModal.close({needRefresh: true});
+          this.activeModal.close({ needRefresh: true });
         }, (error) => {
           this.spinnerService.hide(this.spinner);
           if (error.status === 409) {
@@ -147,7 +152,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
 
       this.subscriptionList.push(this.updateClientLOBGroupSubscription);
     } else {
-      this.activeModal.close({needRefresh: false});
+      this.activeModal.close({ needRefresh: false });
     }
   }
 

@@ -1,6 +1,9 @@
-﻿namespace Css.Api.Scheduling.Models.Domain
+﻿namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
 {
-    public class Pto
+    /// <summary>
+    ///   <br />
+    /// </summary>
+    public class AgentPtoAttribute
     {
         /// <summary>
         /// Gets or sets the earned.
@@ -43,3 +46,5 @@
         public string Remaining { get; set; }
     }
 }
+
+

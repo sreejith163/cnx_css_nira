@@ -35,9 +35,29 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
         public string LastName { get; set; }
 
         /// <summary>
+        /// Gets or sets the agent scheduling group identifier.
+        /// </summary>
+        public int AgentSchedulingGroupId { get; set; }
+
+        /// <summary>
         /// Gets or sets the agent data.
         /// </summary>
         public List<AgentData> AgentData { get; set; }
+
+        /// <summary>
+        /// Gets or sets the super visor identifier.
+        /// </summary>
+        public string SupervisorId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the super visor.
+        /// </summary>
+        public string SupervisorName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the super visor sso.
+        /// </summary>
+        public string SupervisorSso { get; set; }
 
         /// <summary>
         /// Gets or sets the created by.

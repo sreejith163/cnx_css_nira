@@ -5,29 +5,29 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 import {
   NgbActiveModal,
   NgbModal,
-  NgbModalOptions,
+  NgbModalOptions
 } from '@ng-bootstrap/ng-bootstrap';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { SubscriptionLike as ISubscription } from 'rxjs';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { TimeZone } from 'src/app/shared/models/time-zone.model';
-import { CustomValidators } from 'src/app/shared/util/validations.util';
-import { SubscriptionLike as ISubscription } from 'rxjs';
-import { Constants } from 'src/app/shared/util/constants.util';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { SkillGroupService } from '../../../services/skill-group.service';
-import { TimezoneService } from 'src/app/shared/services/timezone.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { AddSkillGroup } from '../../../models/add-skill-group.model';
+import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { TimezoneService } from 'src/app/shared/services/timezone.service';
+import { Constants } from 'src/app/shared/util/constants.util';
+import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+import { CustomValidators } from 'src/app/shared/util/validations.util';
+import { AddSkillGroup } from '../../../models/add-skill-group.model';
+import { SkillGroupResponse } from '../../../models/skill-group-response.model';
 import { UpdateSkillGroup } from '../../../models/update-skill-group.model';
 import { GenericDataService } from '../../../services/generic-data.service';
-import { SkillGroupResponse } from '../../../models/skill-group-response.model';
-import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { SkillGroupService } from '../../../services/skill-group.service';
 
 @Component({
   selector: 'app-add-edit-skill-group',
@@ -81,6 +81,9 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
 
     if (this.operation === ComponentOperation.Edit) {
       this.loadSkillGroup();
+    }
+    else {
+      this.skillGroupForm.controls.firstDayOfWeek.setValue(WeekDay.Sunday);
     }
   }
 

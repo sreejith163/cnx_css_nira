@@ -9,6 +9,7 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var agentAdmins = FilterBy(x => x.IsDeleted == false);
 
-            var filteredAgentAdmins = FilterAgentAdmin(agentAdmins, agentAdminQueryParameter);
+            var filteredAgentAdmins = FilterAgentAdmin(agentAdmins, agentAdminQueryParameter.SearchKeyword, agentAdminQueryParameter.AgentSchedulingGroupId);
 
             var sortedAgentAdmins = SortHelper.ApplySort(filteredAgentAdmins, agentAdminQueryParameter.OrderBy);
 
@@ -170,19 +171,22 @@ namespace Css.Api.Scheduling.Repository
         /// <returns>
         ///   <br />
         /// </returns>
-        private IQueryable<Agent> FilterAgentAdmin(IQueryable<Agent> agentAdmins, AgentAdminQueryParameter agentAdminQueryParameter)
+        private IQueryable<Agent> FilterAgentAdmin(IQueryable<Agent> agentAdmins, string searchKeyword, int? agentSchedulingGroupId)
         {
             if (!agentAdmins.Any())
             {
                 return agentAdmins;
             }
 
-            if (!string.IsNullOrWhiteSpace(agentAdminQueryParameter.SearchKeyword))
+            if (agentSchedulingGroupId!=null && agentSchedulingGroupId != default(int))
             {
-                agentAdmins = agentAdmins.Where(o => o.FirstName.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()) ||
-                                                     o.LastName.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()) ||
-                                                     o.CreatedBy.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()) ||
-                                                     o.ModifiedBy.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()));
+                agentAdmins = agentAdmins.Where(x => x.AgentSchedulingGroupId == agentSchedulingGroupId);
+            }
+            
+            if (!string.IsNullOrWhiteSpace(searchKeyword))
+            {
+                agentAdmins = agentAdmins.ToList().Where(o => o.Sso.Contains( searchKeyword, StringComparison.OrdinalIgnoreCase) ||
+                                                    o.Sso.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase)).AsQueryable();
             }
 
             return agentAdmins;

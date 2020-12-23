@@ -72,6 +72,9 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
     if (this.operation === ComponentOperation.Edit) {
       this.loadAgentSchedulingGroup();
     }
+    else {
+      this.agentSchedulingGroupForm.controls.firstDayOfWeek.setValue(WeekDay.Sunday);
+    }
   }
 
   ngOnDestroy() {

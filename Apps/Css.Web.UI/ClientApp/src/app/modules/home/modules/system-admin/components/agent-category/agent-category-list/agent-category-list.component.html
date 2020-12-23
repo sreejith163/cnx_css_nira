@@ -106,13 +106,17 @@
               </td>
               <td>{{el.dataTypeLabel}}</td>
               <td>
-                <ng-container [ngSwitch]="el.dataTypeId">
-                  <ng-container *ngSwitchCase="dataType.AlphaNumeric">
-                    <b>Min:</b> >{{ el.dataTypeMinValue }} <b>Max:</b>
-                    {{ '<' }} {{ el.dataTypeMaxValue }} </ng-container>
-                      <ng-container *ngSwitchCase="dataType.Numeric">
-                        <b>Min:</b> >{{ el.dataTypeMinValue }} <b>Max:</b>
-                        {{ '<' }} {{ el.dataTypeMaxValue }} </ng-container>
+                <ng-container [ngSwitch]="el.dataTypeId">                  
+                        <ng-container *ngSwitchCase="dataType.AlphaNumeric">
+                          <b>Min:</b> > <span ngbTooltip="{{ el.dataTypeMinValue }}">{{el.dataTypeMinValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                            append: '...' } }}</span> <b>Max:</b>
+                          {{ '<' }} <span ngbTooltip="{{ el.dataTypeMaxValue }}">{{el.dataTypeMaxValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                            append: '...' } }}</span> </ng-container>
+                            <ng-container *ngSwitchCase="dataType.Numeric">
+                              <b>Min:</b> > <span ngbTooltip="{{ el.dataTypeMinValue }}">{{el.dataTypeMinValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                                append: '...' } }}</span> <b>Max:</b>
+                              {{ '<' }}  <span ngbTooltip="{{ el.dataTypeMaxValue }}">{{el.dataTypeMaxValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                                append: '...' } }}</span> </ng-container>
                           <ng-container *ngSwitchCase="dataType.Date">
                             <b>Start:</b> {{ el.dataTypeMinValue | date: 'yyyy-MM-dd' }}
                             <b>End:</b>

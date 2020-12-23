@@ -75,17 +75,17 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the super visor identifier.
         /// </summary>
-        public string SuperVisorId { get; set; }
+        public string SupervisorId { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the super visor.
         /// </summary>
-        public string SuperVisorName { get; set; }
+        public string SupervisorName { get; set; }
 
         /// <summary>
         /// Gets or sets the super visor sso.
         /// </summary>
-        public string SuperVisorSso { get; set; }
+        public string SupervisorSso { get; set; }
 
         /// <summary>
         /// Gets or sets the agent role.
@@ -95,7 +95,7 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the pto.
         /// </summary>
-        public Pto Pto { get; set; }
+        public AgentPto Pto { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is deleted.

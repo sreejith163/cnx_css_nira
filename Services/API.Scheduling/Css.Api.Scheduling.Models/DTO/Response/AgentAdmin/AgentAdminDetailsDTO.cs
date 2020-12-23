@@ -1,4 +1,6 @@
-﻿namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
+﻿using Css.Api.Scheduling.Models.Domain;
+
+namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
 {
     public class AgentAdminDetailsDTO : AgentAdminDTO
     {
@@ -34,7 +36,11 @@
 
         /// <summary>Gets or sets the name of the skill tag.</summary>
         /// <value>The name of the skill tag.</value>
-        public string SkillTagName { get; set; }
+        public string SkillTagName { get; set; }       
+
+        /// <summary>Gets or sets the pto.</summary>
+        /// <value>The pto.</value>
+        public AgentPto Pto { get; set; }
     }
 }
 

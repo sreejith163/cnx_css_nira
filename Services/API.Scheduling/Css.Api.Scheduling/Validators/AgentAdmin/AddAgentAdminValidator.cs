@@ -15,9 +15,6 @@ namespace Css.Api.Scheduling.Validators.Agent
             RuleFor(x => x.FirstName).NotEmpty();
             RuleFor(x => x.LastName).NotEmpty();
             RuleFor(x => x.Sso).NotEmpty();
-            RuleFor(x => x.ClientId).NotEmpty();
-            RuleFor(x => x.ClientLobGroupId).NotEmpty();
-            RuleFor(x => x.SkillGroupId).NotEmpty();
             RuleFor(x => x.SkillTagId).NotEmpty();
         }
     }

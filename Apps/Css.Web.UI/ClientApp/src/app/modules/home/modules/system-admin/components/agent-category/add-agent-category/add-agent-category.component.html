@@ -101,13 +101,13 @@
           <div class="col-md-12 m-t-20">
             <div class="row">
               <div class="col-md-4">
-                <label> {{ 'Start Date' | translation: 'lbl_add_edit_start_date' : translationValues }}
+                <label> {{ 'Date' | translation: 'lbl_add_edit_start_date' : translationValues }}
                   <span class="required">*</span>
                 </label>
               </div>
               <div class="col-md-8">
                 <div class="input-group">
-                  <input type="text" class="form-control" formControlName="dateMinRange" placeholder="Select Start Date"
+                  <input type="text" class="form-control" formControlName="dateMinRange" placeholder="Select Date"
                     [readonly]="true" ngbDatepicker [footerTemplate]="startDateTemplate"
                     [minDate]="{year: 1990, month: 1, day: 1}" #startDate="ngbDatepicker" />
                   <div class="input-group-append">
@@ -122,52 +122,12 @@
                   </ng-template>
                 </div>
                 <div *ngIf="rangeRequiredError('dateRange', 'dateMinRange')" class="valid-error">
-                  {{ 'Start Date is required' | translation: 'lbl_add_edit_start_date_required_validation_message' :
+                  {{ 'Date is required' | translation: 'lbl_add_edit_start_date_required_validation_message' :
                   translationValues }}
-                </div>
-                <div *ngIf="agentCategoryForm.get('dateRange')?.errors?.dateRangeError" class="valid-error">
-                  {{ 'Start Date should be smaller than end Date' | translation:
-                  'lbl_add_edit_start_date_smaller_than_validation_message' : translationValues }}
-                </div>
+                </div>                
               </div>
             </div>
-          </div>
-          <div class="col-md-12 m-t-20">
-            <div class="row">
-              <div class="col-md-4">
-                <label> {{ 'End Date' | translation: 'lbl_add_edit_end_date' : translationValues }}
-                  <span class="required">*</span>
-                </label>
-              </div>
-              <div class="col-md-8">
-                <div class="input-group">
-                  <input type="text" class="form-control" [readonly]="true"
-                    [ngClass]="{'valid-border-error': rangeRequiredError('dateRange', 'dateMaxRange')}"
-                    formControlName="dateMaxRange" placeholder="Select End Date" ngbDatepicker
-                    [footerTemplate]="endDateTemplate" [minDate]="{year: 1990, month: 1, day: 1}"
-                    #endDate="ngbDatepicker" />
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar"
-                      [ngClass]="{'valid-border-error': rangeRequiredError('dateRange', 'dateMaxRange')}"
-                      (click)="endDate.toggle()"></button>
-                  </div>
-                  <ng-template #endDateTemplate>
-                    <button class="btn btn-primary btn-sm m-2 float-left"
-                      (click)="setEndDateAsToday(); endDate.close()">Today</button>
-                    <button class="btn btn-secondary btn-sm m-2 float-right" (click)="endDate.close()">Close</button>
-                  </ng-template>
-                </div>
-                <div *ngIf="rangeRequiredError('dateRange', 'dateMaxRange')" class="valid-error">
-                  {{ 'End Date is required' | translation: 'lbl_add_edit_end_date_required_validation_message' :
-                  translationValues }}
-                </div>
-                <div *ngIf="agentCategoryForm.get('dateRange')?.errors?.dateRangeError" class="valid-error">
-                  {{ 'End Date should be greater than Start Date' | translation:
-                  'lbl_add_edit_end_date_greater_than_validation_message' : translationValues }}
-                </div>
-              </div>
-            </div>
-          </div>
+          </div>         
         </ng-container>
       </form>
     </div>

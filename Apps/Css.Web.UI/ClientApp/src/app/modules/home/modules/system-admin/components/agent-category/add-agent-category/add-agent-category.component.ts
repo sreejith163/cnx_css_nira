@@ -195,6 +195,15 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
         return false;
       }
     } else {
+      if (+this.agentCategoryForm.get('dataType').value === 1)
+      {
+        const charCode = (event.which) ? event.which : event.keyCode;
+        if ((!(charCode > 47 && charCode < 58) &&
+        !(charCode > 64 && charCode < 91) &&
+        !(charCode > 96 && charCode < 123))) {
+          return false;
+        }
+      }
       return true;
     }
   }
@@ -255,7 +264,7 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
           .get('dateMinRange').value);
       this.agentCategoryModel.dataTypeMaxValue = this.ngbDateParserFormatter
         .format(this.agentCategoryForm.get('dateRange')
-          .get('dateMaxRange').value);
+          .get('dateMinRange').value);
     }
 
     this.agentCategoryModel.dataTypeId = +this.agentCategoryForm.controls.dataType.value;
@@ -326,13 +335,9 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
     });
 
     this.dateRangeForm = this.formBuilder.group({
-      dateMinRange: new FormControl('', Validators.required),
-      dateMaxRange: new FormControl('', Validators.required)
-    }, {
-      validator: [
-        CustomValidators.fromToDate('dateMinRange', 'dateMaxRange')
-      ]
-    });
+      dateMinRange: new FormControl('', Validators.required)
+    }
+    );
 
     this.rangeForm = this.formBuilder.group({
       minRange: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(40)])),

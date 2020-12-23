@@ -5,6 +5,7 @@ using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
+using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
 using System;
@@ -74,6 +75,20 @@ namespace Css.Api.Scheduling.Repository
                 .Count();
 
             return await Task.FromResult(count);
+        }
+
+        /// <summary>Gets the agent scheduling group basedon skill tag.</summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<AgentSchedulingGroup> GetAgentSchedulingGroupBasedonSkillTag(SkillTagIdDetails skillTagIdDetails)
+        {   
+            var query =
+               Builders<AgentSchedulingGroup>.Filter.Eq(i => i.IsDeleted, false) &
+               Builders<AgentSchedulingGroup>.Filter.Eq(i => i.SkillTagId, skillTagIdDetails.SkillTagId);
+
+            return await FindByIdAsync(query);
         }
 
         /// <summary>

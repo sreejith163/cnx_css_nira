@@ -38,7 +38,7 @@
             <div class="col-md-8">
               <input type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('sso')}" formControlName="sso"
-                placeholder="SSO Email" />
+                placeholder="SSO" />
               <ng-container *ngIf="formSubmitted && form.sso.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('sso'); else invalidCOntrol">
                   <div *ngIf="hasFormControlValidationError('sso')" class="valid-error">
