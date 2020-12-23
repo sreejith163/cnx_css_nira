@@ -11,7 +11,13 @@ export class HttpBaseService {
     let httpParams = new HttpParams();
     Object.keys(data).forEach((key) => {
       if (data[key] !== undefined && data[key] !== null) {
-        httpParams = httpParams.append(key, data[key]);
+        if (Array.isArray(data[key])) {
+          data[key].forEach(arr => {
+            httpParams = httpParams.append(key, arr);
+          });
+        } else {
+          httpParams = httpParams.append(key, data[key]);
+        }
       }
     });
     return httpParams;
