@@ -16,6 +16,8 @@ import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { ScheduleChart } from '../../../models/schedule-chart.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { MessageType } from 'src/app/shared/enums/message-type.enum';
+import { WeekDay } from '@angular/common';
 
 @Component({
   selector: 'app-import-schedule',
@@ -91,48 +93,51 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   private validateDuplicateRecord() {
+    let validation = false;
     this.jsonData.forEach(ele => {
       if (this.jsonData.filter(x => x.ActivityCode === ele.ActivityCode && x.StartTime === ele.StartTime &&
         x.Endtime === ele.Endtime && x.Day === ele.Day).length > 1) {
-          return true;
+          validation = true;
       } else {
-        return false;
+        validation = false;
       }
     });
 
-    return false;
+    return validation;
   }
 
   private validateTimeFormat() {
+    let validation = false;
     this.jsonData.forEach(ele => {
       if (ele.StartTime && ele.Endtime) {
         if (ele.StartTime.indexOf(':') > -1 && ele.StartTime.indexOf(' ') > -1 &&
           ele.Endtime.indexOf(':') > -1 && ele.Endtime.indexOf(' ') > -1) {
           if (ele.StartTime.split(':')[0] && ele.StartTime.split(':')[1].split(' ')[0] &&
             ele.Endtime.split(':')[0] && ele.Endtime.split(':')[1].split(' ')[0]) {
-              return false;
+              validation =  false;
           } else {
-            return true;
+            validation =  true;
           }
         } else {
-          return true;
+          validation =  true;
         }
       }
     });
 
-    return false;
+    return validation;
   }
 
   private validateDataModel() {
+    let validation = false;
     const columns = ['EmployeeId', 'Day', 'StartDate', 'EndDate', 'ActivityCode', 'StartTime', 'Endtime'];
     this.jsonData.forEach(data => {
       for (const property in data) {
         if (columns.findIndex(x => x === property) === -1 ) {
-          return true;
+          validation = true;
         }
       }
     });
-    return false;
+    return validation;
 
   }
 
@@ -189,21 +194,25 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   private getImportAgentScheduleChartModel() {
-    const chartArray = new Array<AgentScheduleChart>();
     const chartModel = new UpdateAgentschedulechart();
+    chartModel.agentScheduleCharts = [];
     chartModel.agentScheduleType = AgentScheduleType.Scheduling;
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
-    this.jsonData.forEach((ele, index) => {
-      const data = this.schedulingCodes.find(x => x.description === ele.ActivityCode);
-      if (data) {
+    for (let i = 0; i < 7; i++) {
+      const weekdays = this.jsonData.filter(x => x.Day === WeekDay[i]);
+      if (weekdays.length > 0) {
         const chartData = new AgentScheduleChart();
-        const chart = new ScheduleChart(ele.StartTime, ele.Endtime, data.id);
-        chartData.day = 0;
-        chartData.charts.push(chart);
-        chartArray.push(chartData);
+        chartData.day = i;
+        weekdays.forEach((ele, index) => {
+          const data = this.schedulingCodes.find(x => x.description === ele.ActivityCode);
+          if (data) {
+            const chart = new ScheduleChart(ele.StartTime, ele.Endtime, data.id);
+            chartData.charts.push(chart);
+          }
+        });
+        chartModel.agentScheduleCharts.push(chartData);
       }
-    });
-    chartModel.agentScheduleCharts = chartArray;
+    }
 
     return chartModel;
 
@@ -231,6 +240,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
     modalRef.componentInstance.contentMessage = contentMessage;
+    modalRef.componentInstance.messageType = MessageType.html;
 
     return modalRef;
   }
