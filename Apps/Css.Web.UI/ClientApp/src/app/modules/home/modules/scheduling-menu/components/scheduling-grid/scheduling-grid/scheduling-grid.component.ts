@@ -593,6 +593,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         });
       }
     }
+    if (weekData.charts.length === 0) {
+      const index = this.selectedGrid?.agentScheduleCharts.findIndex(x => x.day === weekData.day);
+      this.selectedGrid.agentScheduleCharts.splice(index, 1);
+    }
   }
 
   private adjustSchedulingCalendarTimesRange(times: Array<ScheduleChart>) {
