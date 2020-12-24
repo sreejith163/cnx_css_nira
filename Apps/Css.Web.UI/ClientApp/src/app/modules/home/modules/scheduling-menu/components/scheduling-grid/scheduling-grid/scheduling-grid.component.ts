@@ -373,16 +373,19 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       const toDate = new Date(this.totalSchedulingGridData[index]?.dateTo);
       for (const item of this.schedulingGridData.agentScheduleCharts) {
         item.charts.forEach(ele => {
-          const model = new ExcelData();
-          model.EmployeeId = this.schedulingGridData.employeeId;
-          model.Day = WeekDay[item.day];
-          model.StartDate = fromDate?.getMonth() ? (fromDate?.getMonth() + 1) + '/' + fromDate?.getDay() + '/' + fromDate?.getFullYear() : '';
-          model.EndDate = toDate?.getMonth() ? (toDate?.getMonth() + 1) + 1 + '/' + toDate?.getDay() + '/' + toDate?.getFullYear() : '';
           const code = this.schedulingCodes.find(x => x.id === ele.schedulingCodeId);
-          model.ActivityCode = code.description;
-          model.StartTime = ele.startTime;
-          model.Endtime = ele.endTime;
-          exportSchedule.push(model);
+          if (code) {
+            const model = new ExcelData();
+            model.EmployeeId = this.schedulingGridData.employeeId;
+            model.Day = WeekDay[item.day];
+            model.StartDate = fromDate?.getMonth() ? (fromDate?.getMonth() + 1) + '/' + fromDate?.getDay() + '/' + fromDate?.getFullYear() : '';
+            model.EndDate = toDate?.getMonth() ? (toDate?.getMonth() + 1) + 1 + '/' + toDate?.getDay() + '/' + toDate?.getFullYear() : '';
+            model.ActivityCode = code?.description;
+            model.StartTime = ele.startTime;
+            model.Endtime = ele.endTime;
+            exportSchedule.push(model);
+          }
+
         });
       }
       const today = new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getDay();
@@ -398,7 +401,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
       if (weekTimeData) {
         const code = this.schedulingCodes.find(x => x.id === weekTimeData.schedulingCodeId);
-        return code.description;
+        return code?.description;
       }
     }
 
