@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { MessageType } from '../../enums/message-type.enum';
+import { ContentType } from '../../enums/content-type.enum';
 
 @Component({
   selector: 'app-error-warning-pop-up',
@@ -9,14 +9,16 @@ import { MessageType } from '../../enums/message-type.enum';
 })
 export class ErrorWarningPopUpComponent implements OnInit {
 
+  renderType = ContentType;
+
   @Input() headingMessage: string;
   @Input() contentMessage: any;
-  @Input() messageType: MessageType;
+  @Input() messageType: ContentType;
+
   constructor(
     public activeModal: NgbActiveModal
   ) { }
 
   ngOnInit(): void {
   }
-
 }

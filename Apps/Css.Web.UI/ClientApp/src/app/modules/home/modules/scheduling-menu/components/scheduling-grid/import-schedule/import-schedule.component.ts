@@ -16,7 +16,7 @@ import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { ScheduleChart } from '../../../models/schedule-chart.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
-import { MessageType } from 'src/app/shared/enums/message-type.enum';
+import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { WeekDay } from '@angular/common';
 
 @Component({
@@ -240,7 +240,8 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
     modalRef.componentInstance.contentMessage = contentMessage;
-    modalRef.componentInstance.messageType = MessageType.html;
+    // modalRef.componentInstance.contentMessage = 'dfdf<br>df';
+    modalRef.componentInstance.messageType = ContentType.Html;
 
     return modalRef;
   }

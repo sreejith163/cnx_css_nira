@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CssLanguage } from '../enums/css-language.enum';
 import { TranslationDetails } from '../models/translation-details.model';
 
 @Pipe({

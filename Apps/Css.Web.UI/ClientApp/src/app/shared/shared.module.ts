@@ -15,8 +15,11 @@ import { ClientNameTypeAheadComponent } from './components/client-name-typeahead
 import { SkillGroupTypeaheadComponent } from './components/skill-group-typeahead/skill-group-typeahead.component';
 import { SkillTagTypeaheadComponent } from './components/skill-tag-typeahead/skill-tag-typeahead.component';
 import { SortDirective } from './directives/sort.directive';
+
 import { TranslationPipe } from './pipes/translation.pipe';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
+
 import { ConfirmationPopUpComponent } from './popups/confirmation-pop-up/confirmation-pop-up.component';
 import { ErrorWarningPopUpComponent } from './popups/error-warning-pop-up/error-warning-pop-up.component';
 import { MessagePopUpComponent } from './popups/message-pop-up/message-pop-up.component';
@@ -42,6 +45,7 @@ const components =
     AgentSchedulingGroupTypeaheadComponent,
     SortDirective,
     TranslationPipe,
+    SafeHtmlPipe,
     TruncatePipe
   ];
 

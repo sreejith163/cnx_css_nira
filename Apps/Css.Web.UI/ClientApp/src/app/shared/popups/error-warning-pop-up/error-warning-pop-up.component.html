@@ -12,7 +12,14 @@
           <p class="text-center confirm-message font-20"><b>{{headingMessage}}</b></p>
         </div>
         <div class="col-md-12">
-          <p class="text-center confirm-message">{{contentMessage}}</p>
+          <ng-container [ngSwitch]="messageType">
+            <ng-container *ngSwitchCase="renderType.String">
+              <p class="text-center confirm-message">{{contentMessage}}</p>
+            </ng-container>
+            <ng-container *ngSwitchCase="renderType.Html">
+              <p [innerHtml]="contentMessage | safeHtml" class="text-center confirm-message"></p>
+            </ng-container>
+          </ng-container>
         </div>
       </div>
       <div class="row">
