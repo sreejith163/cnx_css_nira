@@ -18,6 +18,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { WeekDay } from '@angular/common';
+import { Papa } from 'ngx-papaparse';
 
 @Component({
   selector: 'app-import-schedule',
@@ -34,6 +35,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   fileFormatValidation: boolean;
   jsonData: ExcelData[] = [];
   schedulingCodes: SchedulingCode[] = [];
+  columns = ['EmployeeId', 'Day', 'StartDate', 'EndDate', 'ActivityCode', 'StartTime', 'Endtime'];
 
   getSchedulingCodesSubscription: ISubscription;
   importAgentScheduleChartSubscription: ISubscription;
@@ -51,6 +53,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     private agentSchedulesService: AgentSchedulesService,
     private authService: AuthService,
     private modalService: NgbModal,
+    private papa: Papa
   ) { }
 
   ngOnInit(): void {
@@ -66,15 +69,14 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   import() {
     if (this.uploadFile && !this.fileFormatValidation) {
-      this.jsonData = XLSX.utils.sheet_to_json(this.worksheet, { raw: false });
       const activityCodes = Array<string>();
       this.jsonData.forEach(element => {
         activityCodes.push(element.ActivityCode);
       });
-      if (!this.validateDuplicateRecord() && !this.validateTimeFormat() && !this.validateDataModel()) {
+      if (!this.validateInputRecord()) {
         this.loadSchedulingCodes(activityCodes);
       } else {
-        const errorMessage = this.recordErrorMsg;
+        const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
         this.showErrorWarningPopUpMessage(errorMessage);
       }
 
@@ -87,58 +89,70 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     if (this.uploadFile.split('.')[1] === 'xlsx') {
       this.fileFormatValidation = false;
       this.readExcel();
+    } else if (this.uploadFile.split('.')[1] === 'csv') {
+      this.fileFormatValidation = false;
+      this.readCsvFile();
     } else {
       this.fileFormatValidation = true;
     }
   }
 
-  private validateDuplicateRecord() {
-    let validation = false;
-    this.jsonData.forEach(ele => {
-      if (this.jsonData.filter(x => x.ActivityCode === ele.ActivityCode && x.StartTime === ele.StartTime &&
-        x.Endtime === ele.Endtime && x.Day === ele.Day).length > 1) {
-          validation = true;
-      } else {
-        validation = false;
-      }
-    });
-
-    return validation;
-  }
-
-  private validateTimeFormat() {
-    let validation = false;
-    this.jsonData.forEach(ele => {
-      if (ele.StartTime && ele.Endtime) {
-        if (ele.StartTime.indexOf(':') > -1 && ele.StartTime.indexOf(' ') > -1 &&
-          ele.Endtime.indexOf(':') > -1 && ele.Endtime.indexOf(' ') > -1) {
-          if (ele.StartTime.split(':')[0] && ele.StartTime.split(':')[1].split(' ')[0] &&
-            ele.Endtime.split(':')[0] && ele.Endtime.split(':')[1].split(' ')[0]) {
-              validation =  false;
-          } else {
-            validation =  true;
+  private readCsvFile() {
+    const reader: FileReader = new FileReader();
+    reader.readAsText(this.fileUploaded);
+    reader.onload = e => {
+      const csv = reader.result;
+      const results = this.papa.parse(csv as string, { header: false });
+      if (results !== null && results !== undefined && results.data !== null &&
+        results.data !== undefined && results.data.length > 0 && results.errors.length === 0) {
+        const csvTableHeader = results.data[0];
+        const csvTableData = [...results.data.slice(1, results.data.length)];
+        csvTableData.forEach((ele, index) => {
+          const csvJson = new ExcelData();
+          if (ele.length > 0) {
+            for (let i = 0; i < ele.length; i++) {
+              csvJson[csvTableHeader[i]] = ele[i];
+            }
           }
-        } else {
-          validation =  true;
-        }
+          if (csvJson.ActivityCode) {
+            this.jsonData.push(csvJson);
+          }
+        });
       }
-    });
-
-    return validation;
+    };
   }
 
-  private validateDataModel() {
-    let validation = false;
-    const columns = ['EmployeeId', 'Day', 'StartDate', 'EndDate', 'ActivityCode', 'StartTime', 'Endtime'];
-    this.jsonData.forEach(data => {
-      for (const property in data) {
-        if (columns.findIndex(x => x === property) === -1 ) {
-          validation = true;
+  private validateInputRecord() {
+    for (const item of this.jsonData) {
+      if (this.jsonData.filter(x => x.ActivityCode === item.ActivityCode && x.StartTime === item.StartTime &&
+        x.Endtime === item.Endtime && x.Day === item.Day).length > 1) {
+        return true;
+      } else if (this.jsonData.filter(x => x.Day === item.Day && x.StartTime >= item.StartTime &&
+        x.Endtime < item.Endtime || x.Endtime > item.Endtime).length > 1) {
+        return true;
+      } else if (item.StartTime || item.Endtime) {
+        this.validateTimeFormat(item?.StartTime);
+        this.validateTimeFormat(item?.Endtime);
+      } else if (item) {
+        for (const property in item) {
+          if (this.columns.findIndex(x => x === property) === -1) {
+            return true;
+          }
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
+  private validateTimeFormat(time: string) {
+    if (time) {
+      if (time.indexOf(':') > -1 && time.indexOf(' ') > -1) {
+        if (time.split(':')[0] && time.split(':')[1].split(' ')[0]) {
+          return false;
         }
       }
-    });
-    return validation;
-
+    }
   }
 
   private loadSchedulingCodes(activityCodes?: Array<string>) {
@@ -233,6 +247,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       this.worksheet = workbook.Sheets[firstSheetName];
     };
     readFile.readAsArrayBuffer(this.fileUploaded);
+    this.jsonData = XLSX.utils.sheet_to_json(this.worksheet, { raw: false });
   }
 
   private showErrorWarningPopUpMessage(contentMessage: any) {
@@ -240,7 +255,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
     modalRef.componentInstance.contentMessage = contentMessage;
-    // modalRef.componentInstance.contentMessage = 'dfdf<br>df';
     modalRef.componentInstance.messageType = ContentType.Html;
 
     return modalRef;
