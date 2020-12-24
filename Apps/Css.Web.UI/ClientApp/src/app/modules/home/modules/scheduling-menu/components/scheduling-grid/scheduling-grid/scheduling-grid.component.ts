@@ -190,8 +190,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   unifiedToNative(unified: string) {
-    const codePoints = unified.split('-').map(u => parseInt(`0x${u}`, 16));
-    return String.fromCodePoint(...codePoints);
+    if (unified) {
+      const codePoints = unified.split('-').map(u => parseInt(`0x${u}`, 16));
+      return String.fromCodePoint(...codePoints);
+    }
   }
 
   toggleDetails(el: AgentSchedulesResponse) {
@@ -211,7 +213,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
       if (weekTimeData) {
         const code = this.schedulingCodes.find(x => x.id === weekTimeData.schedulingCodeId);
-        return this.unifiedToNative(code?.icon?.value);
+        return code ? this.unifiedToNative(code?.icon?.value) : '';
       }
     }
 

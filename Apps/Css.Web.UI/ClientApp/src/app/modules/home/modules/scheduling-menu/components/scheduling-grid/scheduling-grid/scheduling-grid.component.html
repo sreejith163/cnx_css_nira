@@ -223,7 +223,7 @@
                                       *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
                                       (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
                                       [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-                                      <ng-container *ngIf="getIconFromSelectedGrid(week, openTime).length"> 
+                                      <ng-container *ngIf="getIconFromSelectedGrid(week, openTime)?.length"> 
                                         <span ngbTooltip="{{ getIconDescription(week, openTime) }}">
                                         <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime) }}</i>
                                         </span>
