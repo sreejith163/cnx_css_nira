@@ -301,28 +301,40 @@ namespace Css.Api.Scheduling.Business
             if (agentScheduleDetails is UpdateAgentScheduleChart)
             {
                 var details = agentScheduleDetails as UpdateAgentScheduleChart;
-                foreach (var agentScheduleChart in details.AgentScheduleCharts)
+                if (details.AgentScheduleType == Models.Enums.AgentScheduleType.SchedulingTab)
                 {
-                    var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
-                    codes.AddRange(scheduleCodes);
+                    foreach (var agentScheduleChart in details.AgentScheduleCharts)
+                    {
+                        var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                        codes.AddRange(scheduleCodes);
+                    }
                 }
-
-                var scheduleManagerCodes = details.AgentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList().ToList();
-                codes.AddRange(scheduleManagerCodes);
+                else
+                {
+                    var scheduleManagerCodes = details.AgentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList().ToList();
+                    codes.AddRange(scheduleManagerCodes);
+                }
             }
             else if (agentScheduleDetails is ImportAgentScheduleChart)
             {
 
                 var details = agentScheduleDetails as ImportAgentScheduleChart;
-                foreach (var agentScheduleChart in details.AgentScheduleCharts)
+                if (details.AgentScheduleType == Models.Enums.AgentScheduleType.SchedulingTab)
                 {
-                    var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
-                    codes.AddRange(scheduleCodes);
+                    foreach (var agentScheduleChart in details.AgentScheduleCharts)
+                    {
+                        var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                        codes.AddRange(scheduleCodes);
+                    }
+
                 }
-                foreach (var agentScheduleManagerChart in details.AgentScheduleManagerCharts)
+                else
                 {
-                    var scheduleManagerCodes = agentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList();
-                    codes.AddRange(scheduleManagerCodes);
+                    foreach (var agentScheduleManagerChart in details.AgentScheduleManagerCharts)
+                    {
+                        var scheduleManagerCodes = agentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                        codes.AddRange(scheduleManagerCodes);
+                    }
                 }
             }
 

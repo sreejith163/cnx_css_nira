@@ -266,6 +266,9 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                 ModifiedBy = "admin"
             };
 
+            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
+
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
 
@@ -277,12 +280,10 @@ namespace Css.Api.Admin.Business.UnitTest.Services
         }
 
         /// <summary>
-        /// Updates the agent schedule chart.
+        /// Updates the agent schedule chart for scheduling tab with not found for scheduling code.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        /// <param name="scheduling">The scheduling.</param>
-        /// <param name="">The .</param>
-        /// <returns></returns>
+        /// <param name="schedulingCode">The scheduling code.</param>
         [Theory]
         [InlineData("5fe0b5ad6a05416894c0718e", 100)]
         [InlineData("5fe0b5ad6a05416894c0718f", 101)]
@@ -306,18 +307,21 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                 ModifiedBy = "admin"
             };
 
+            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
+
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
 
             var result = await agentScheduleService.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleChart);
 
             Assert.NotNull(result);
-            Assert.Null(result.Value);
+            Assert.NotNull(result.Value);
             Assert.Equal(HttpStatusCode.NotFound, result.Code);
         }
 
         /// <summary>
-        /// Updates the agent schedule chart.
+        /// Updates the agent schedule chart for scheduling manager tab with not found for scheduling code.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
         /// <param name="schedulingCode">The scheduling code.</param>
@@ -341,14 +345,17 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                 ModifiedBy = "admin"
             };
 
+            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
+
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
 
             var result = await agentScheduleService.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleChart);
 
             Assert.NotNull(result);
-            Assert.Null(result.Value);
-            Assert.Equal(HttpStatusCode.NoContent, result.Code);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
         }
 
         /// <summary>
@@ -377,6 +384,9 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                 },
                 ModifiedBy = "admin"
             };
+
+            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
@@ -411,6 +421,9 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                 },
                 ModifiedBy = "admin"
             };
+
+            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
@@ -453,6 +466,9 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                 ModifiedBy = "admin"
             };
 
+            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
+
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
 
@@ -464,7 +480,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
         }
 
         /// <summary>
-        /// Imports the agent schedule chart for scheduling tab.
+        /// Imports the agent schedule chart for scheduling tab with not found for scheduling code.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
         /// <param name="schedulingCode">The scheduling code.</param>
@@ -491,18 +507,21 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                 ModifiedBy = "admin"
             };
 
+            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
+
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
 
             var result = await agentScheduleService.ImportAgentScheduleChart(agentScheduleIdDetails, importAgentScheduleChart);
 
             Assert.NotNull(result);
-            Assert.Null(result.Value);
-            Assert.Equal(HttpStatusCode.NoContent, result.Code);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
         }
 
         /// <summary>
-        /// Imports the agent schedule chart for scheduling manager tab.
+        /// Imports the agent schedule chart for scheduling manager tab with not found for scheduling code.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
         /// <param name="schedulingCode">The scheduling code.</param>
@@ -529,14 +548,17 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                 ModifiedBy = "admin"
             };
 
+            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
+
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
 
             var result = await agentScheduleService.ImportAgentScheduleChart(agentScheduleIdDetails, importAgentScheduleChart);
 
             Assert.NotNull(result);
-            Assert.Null(result.Value);
-            Assert.Equal(HttpStatusCode.NoContent, result.Code);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
         }
 
         /// <summary>
@@ -565,6 +587,9 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                 },
                 ModifiedBy = "admin"
             };
+
+            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
@@ -602,6 +627,9 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                 },
                 ModifiedBy = "admin"
             };
+
+            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
