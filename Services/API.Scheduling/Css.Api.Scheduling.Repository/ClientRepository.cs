@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Css.Api.Core.DataAccess.Repository.NoSQL;
+﻿using Css.Api.Core.DataAccess.Repository.NoSQL;
 using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
@@ -7,7 +6,6 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,18 +13,13 @@ namespace Css.Api.Scheduling.Repository
 {
     public class ClientRepository : GenericRepository<Client>, IClientRepository
     {
-        /// <summary>
-        /// The mapper
-        /// </summary>
-        private readonly IMapper _mapper;
 
-        /// <summary>Initializes a new instance of the <see cref="ClientRepository" /> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClientRepository" /> class.
+        /// </summary>
         /// <param name="mongoContext">The mongo context.</param>
-        /// <param name="mapper">The mapper.</param>
-        public ClientRepository(IMongoContext mongoContext,
-            IMapper mapper) : base(mongoContext)
+        public ClientRepository(IMongoContext mongoContext) : base(mongoContext)
         {
-            _mapper = mapper;
         }
 
         /// <summary>

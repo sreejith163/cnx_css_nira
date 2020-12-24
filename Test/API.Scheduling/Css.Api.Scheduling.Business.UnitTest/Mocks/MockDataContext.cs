@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 
 namespace Css.Api.Scheduling.Business.UnitTest.Mocks
 {
@@ -33,7 +34,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
             new SkillGroup { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, Name = "Skill Group 2", IsDeleted = false }
         }.AsQueryable();
 
-        readonly IQueryable<SkillTag> skillTagDB = new List<SkillTag>() 
+        readonly IQueryable<SkillTag> skillTagDB = new List<SkillTag>()
         {
             new SkillTag { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, Name = "Skill Tag 1", IsDeleted = false },
             new SkillTag { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, SkillTagId = 2, Name = "Skill Tag 2", IsDeleted = false }
@@ -126,6 +127,13 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                                     }
                                 }
             }
+        }.AsQueryable();
+
+
+        readonly IQueryable<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
+        {
+            new SchedulingCode { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), SchedulingCodeId = 1, Name = "lunch", IsDeleted = false},
+            new SchedulingCode { Id = new ObjectId("5fe0b5c46a05416894c0718f"), SchedulingCodeId = 2, Name = "lunch", IsDeleted = false},
         }.AsQueryable();
 
         #endregion
@@ -459,6 +467,105 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
             }
 
             return agentSchedules;
+        }
+
+        #endregion
+
+        #region Scheduling Codes
+
+        /// <summary>
+        /// Gets the schedulingCodes.
+        /// </summary>
+        /// <param name="schedulingCodeQueryparameter">The schedulingCode queryparameter.</param>
+        /// <returns></returns>
+        public PagedList<Entity> GetSchedulingCodes(SchedulingCodeQueryparameter schedulingCodeQueryparameter)
+        {
+            var schedulingCodes = schedulingCodesDB.Where(x => x.IsDeleted == false);
+
+            var filteredSchedulingCodes = FilterSchedulingCodes(schedulingCodes, schedulingCodeQueryparameter);
+
+            var sortedSchedulingCodes = SortHelper.ApplySort(filteredSchedulingCodes, schedulingCodeQueryparameter.OrderBy);
+
+            var pagedSchedulingCodes = sortedSchedulingCodes
+                .Skip((schedulingCodeQueryparameter.PageNumber - 1) * schedulingCodeQueryparameter.PageSize)
+                .Take(schedulingCodeQueryparameter.PageSize);
+
+            var shapedSchedulingCodes = DataShaper.ShapeData(pagedSchedulingCodes, schedulingCodeQueryparameter.Fields);
+
+            return PagedList<Entity>
+                .ToPagedList(shapedSchedulingCodes, filteredSchedulingCodes.Count(), schedulingCodeQueryparameter.PageNumber, schedulingCodeQueryparameter.PageSize).Result;
+        }
+
+        /// <summary>
+        /// Gets the schedulingCode.
+        /// </summary>
+        /// <param name="schedulingCodeIdDetails">The schedulingCode identifier details.</param>
+        /// <returns></returns>
+        public SchedulingCode GetSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails)
+        {
+            return schedulingCodesDB.Where(x => x.IsDeleted == false && x.SchedulingCodeId == schedulingCodeIdDetails.SchedulingCodeId).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the scheduling codes by ids.
+        /// </summary>
+        /// <param name="codes">The codes.</param>
+        /// <returns></returns>
+        public long GetSchedulingCodesCountByIds(List<int> codes)
+        {
+            return schedulingCodesDB.Where(x => x.IsDeleted == false && codes.Contains(x.SchedulingCodeId)).Count();
+        }
+
+        /// <summary>
+        /// Gets the schedulingCodes count.
+        /// </summary>
+        /// <returns></returns>
+        public int GetSchedulingCodesCount()
+        {
+            return schedulingCodesDB.Where(x => x.IsDeleted == false).Count();
+        }
+
+        /// <summary>
+        /// Creates the schedulingCode.
+        /// </summary>
+        /// <param name="schedulingCodeRequest">The schedulingCode request.</param>
+        public void CreateSchedulingCode(SchedulingCode schedulingCodeRequest)
+        {
+            schedulingCodesDB.ToList().Add(schedulingCodeRequest);
+        }
+
+        /// <summary>
+        /// Updates the schedulingCode.
+        /// </summary>
+        /// <param name="schedulingCodeRequest">The schedulingCode request.</param>
+        public void UpdateSchedulingCode(SchedulingCode schedulingCodeRequest)
+        {
+            var schedulingCode = schedulingCodesDB.Where(x => x.SchedulingCodeId == schedulingCodeRequest.SchedulingCodeId).FirstOrDefault();
+            if (schedulingCode != null)
+            {
+                schedulingCode = schedulingCodeRequest;
+            }
+        }
+
+        /// <summary>
+        /// Filters the schedulingCodes.
+        /// </summary>
+        /// <param name="schedulingCodes">The schedulingCodes.</param>
+        /// <param name="schedulingCodeQueryparameter">The schedulingCode queryparameter.</param>
+        /// <returns></returns>
+        private IQueryable<SchedulingCode> FilterSchedulingCodes(IQueryable<SchedulingCode> schedulingCodes, SchedulingCodeQueryparameter schedulingCodeQueryparameter)
+        {
+            if (!schedulingCodes.Any())
+            {
+                return schedulingCodes;
+            }
+
+            if (!string.IsNullOrWhiteSpace(schedulingCodeQueryparameter.SearchKeyword))
+            {
+                schedulingCodes = schedulingCodes.Where(o => o.Name.ToLower().Contains(schedulingCodeQueryparameter.SearchKeyword.Trim().ToLower()));
+            }
+
+            return schedulingCodes;
         }
 
         #endregion

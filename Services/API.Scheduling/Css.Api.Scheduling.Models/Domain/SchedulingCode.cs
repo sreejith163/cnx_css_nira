@@ -11,18 +11,13 @@ namespace Css.Api.Scheduling.Models.Domain
         public int SchedulingCodeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the value.
+        /// Gets or sets the anme.
         /// </summary>
-        public string value { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the icon identifier.
+        /// Gets or sets a value indicating whether this instance is deleted.
         /// </summary>
-        public int IconId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the icon value.
-        /// </summary>
-        public string IconValue { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

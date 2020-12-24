@@ -40,6 +40,11 @@ namespace Css.Api.Scheduling.Business
         private readonly IAgentAdminRepository _agentAdminRepository;
 
         /// <summary>
+        /// The scheduling code repository
+        /// </summary>
+        private readonly ISchedulingCodeRepository _schedulingCodeRepository;
+
+        /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
@@ -55,18 +60,21 @@ namespace Css.Api.Scheduling.Business
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="agentScheduleRepository">The agent schedule repository.</param>
         /// <param name="agentAdminRepository">The agent admin repository.</param>
+        /// <param name="_schedulingCodeRepository">The scheduling code repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
         public AgentScheduleService(
             IHttpContextAccessor httpContextAccessor,
             IAgentScheduleRepository agentScheduleRepository,
             IAgentAdminRepository agentAdminRepository,
+            ISchedulingCodeRepository schedulingCodeRepository,
             IMapper mapper,
             IUnitOfWork uow)
         {
             _httpContextAccessor = httpContextAccessor;
             _agentScheduleRepository = agentScheduleRepository;
             _agentAdminRepository = agentAdminRepository;
+            _schedulingCodeRepository = schedulingCodeRepository;
             _mapper = mapper;
             _uow = uow;
         }
@@ -137,6 +145,12 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
+            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            }
+
             _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
 
             await _uow.Commit();
@@ -156,6 +170,12 @@ namespace Css.Api.Scheduling.Business
             if (agentScheduleCount < 1)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
             }
 
             _agentScheduleRepository.ImportAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
@@ -264,6 +284,58 @@ namespace Css.Api.Scheduling.Business
             }
 
             return new CSSResponse(agentSchedulesData, HttpStatusCode.OK);
+        }
+
+        /// <summary>
+        /// Determines whether [has valid scheduling codes] [the specified agent schedule details].
+        /// </summary>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns>
+        ///   <c>true</c> if [has valid scheduling codes] [the specified agent schedule details]; otherwise, <c>false</c>.
+        /// </returns>
+        private async Task<bool> HasValidSchedulingCodes(object agentScheduleDetails)
+        {
+            bool isValid = true;
+            List<int> codes = new List<int>();
+
+            if (agentScheduleDetails is UpdateAgentScheduleChart)
+            {
+                var details = agentScheduleDetails as UpdateAgentScheduleChart;
+                foreach (var agentScheduleChart in details.AgentScheduleCharts)
+                {
+                    var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                    codes.AddRange(scheduleCodes);
+                }
+
+                var scheduleManagerCodes = details.AgentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList().ToList();
+                codes.AddRange(scheduleManagerCodes);
+            }
+            else if (agentScheduleDetails is ImportAgentScheduleChart)
+            {
+
+                var details = agentScheduleDetails as ImportAgentScheduleChart;
+                foreach (var agentScheduleChart in details.AgentScheduleCharts)
+                {
+                    var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                    codes.AddRange(scheduleCodes);
+                }
+                foreach (var agentScheduleManagerChart in details.AgentScheduleManagerCharts)
+                {
+                    var scheduleManagerCodes = agentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                    codes.AddRange(scheduleManagerCodes);
+                }
+            }
+
+            if (codes.Any())
+            {
+                var schedulingCodesCount = await _schedulingCodeRepository.GetSchedulingCodesCountByIds(codes);
+                if (schedulingCodesCount != codes.Count())
+                {
+                    isValid = false;
+                }
+            }
+
+            return isValid;
         }
     }
 }
