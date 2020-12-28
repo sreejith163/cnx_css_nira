@@ -230,6 +230,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var query =
                 Builders<AgentSchedule>.Filter.In(i => i.EmployeeId, copyAgentScheduleRequest.EmployeeIds) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.AgentSchedulingGroupId, copyAgentScheduleRequest.AgentSchedulingGroupId) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
@@ -301,7 +302,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (agentScheduleQueryparameter.FromDate.HasValue && agentScheduleQueryparameter.FromDate != default(DateTime))
             {
-                agentSchedules = agentSchedules.Where(x => x.DateFrom >= agentScheduleQueryparameter.FromDate);
+                agentSchedules = agentSchedules.Where(x => x.DateFrom >= agentScheduleQueryparameter.FromDate.Value.ToUniversalTime());
             }
 
             return agentSchedules;
