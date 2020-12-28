@@ -145,11 +145,11 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
-            if (!hasValidCodes)
-            {
-                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
-            }
+            // var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
+            // if (!hasValidCodes)
+            // {
+                // return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            // }
 
             _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
 
@@ -172,11 +172,11 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
-            if (!hasValidCodes)
-            {
-                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
-            }
+            // var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
+            // if (!hasValidCodes)
+            // {
+                // return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            // }
 
             _agentScheduleRepository.ImportAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
 
