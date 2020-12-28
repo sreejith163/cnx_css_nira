@@ -36,6 +36,7 @@ import { ImportScheduleComponent } from '../import-schedule/import-schedule.comp
 import { ExcelData } from '../../../models/excel-data.model';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
+import { ExcelExportData } from '../../../constants/excel-export-data';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -366,28 +367,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   exportToExcel(index: number) {
-    const exportSchedule = new Array<ExcelData>();
-    const fromDate = new Date(this.totalSchedulingGridData[index]?.dateFrom);
-    const toDate = new Date(this.totalSchedulingGridData[index]?.dateTo);
-    for (const item of this.schedulingGridData.agentScheduleCharts) {
-      item.charts.forEach(ele => {
-        const code = this.schedulingCodes.find(x => x.id === ele.schedulingCodeId);
-        if (code) {
-          const model = new ExcelData();
-          model.EmployeeId = this.schedulingGridData.employeeId;
-          model.Day = WeekDay[item.day];
-          model.StartDate = fromDate?.getMonth() ? (fromDate?.getMonth() + 1) + '/' + fromDate?.getDay() + '/' + fromDate?.getFullYear() : '';
-          model.EndDate = toDate?.getMonth() ? (toDate?.getMonth() + 1) + 1 + '/' + toDate?.getDay() + '/' + toDate?.getFullYear() : '';
-          model.ActivityCode = code?.description;
-          model.StartTime = ele.startTime;
-          model.Endtime = ele.endTime;
-          exportSchedule.push(model);
-        }
-
-      });
-    }
     const today = new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getDay();
-    this.excelService.exportAsExcelFile(exportSchedule, this.exportFileName + today);
+    this.excelService.exportAsExcelFile(ExcelExportData, this.exportFileName + today);
   }
 
   getIconDescription(week: number, openTime: any) {

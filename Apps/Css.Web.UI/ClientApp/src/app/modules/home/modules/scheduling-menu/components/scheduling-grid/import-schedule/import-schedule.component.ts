@@ -17,8 +17,8 @@ import { ScheduleChart } from '../../../models/schedule-chart.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
-import { WeekDay } from '@angular/common';
 import { Papa } from 'ngx-papaparse';
+import { AgentSchedulesQueryParams } from '../../../models/agent-schedules-query-params.model';
 
 @Component({
   selector: 'app-import-schedule',
@@ -36,8 +36,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   fileSubmitted: boolean;
   jsonData: ExcelData[] = [];
   schedulingCodes: SchedulingCode[] = [];
-  columns = ['EmployeeId', 'Day', 'StartDate', 'EndDate', 'ActivityCode', 'StartTime', 'Endtime'];
+  columns = ['EmployeeId', 'StartDate', 'EndDate', 'ActivityCode', 'StartTime', 'EndTime'];
 
+  getAgentSchedulesSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
   importAgentScheduleChartSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
@@ -68,17 +69,11 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   import() {
     this.fileSubmitted = true;
-    if (this.uploadFile && !this.fileFormatValidation) {
-      if (!this.validateInputRecord()) {
-        const activityCodes = Array<string>();
-        this.jsonData.forEach(element => {
-          activityCodes.push(element.ActivityCode);
-        });
-        this.loadSchedulingCodes(activityCodes);
-      } else {
-        const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
-        this.showErrorWarningPopUpMessage(errorMessage);
-      }
+    if (this.uploadFile && !this.fileFormatValidation && this.jsonData.length > 0 && !this.validateInputRecord()) {
+      this.loadAgentSchedules(this.jsonData[0].EmployeeId);
+    } else {
+      const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
+      this.showErrorWarningPopUpMessage(errorMessage);
     }
   }
 
@@ -131,17 +126,39 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private validateInputRecord() {
     if (this.jsonData.length > 0) {
       for (const item of this.jsonData) {
-        if (this.jsonData.filter(x => x.ActivityCode === item.ActivityCode && x.StartTime === item.StartTime &&
-          x.Endtime === item.Endtime && x.Day === item.Day).length > 1) {
+        if (item.StartDate && item.EndDate) {
+          if (item.StartDate !== item.EndDate) {
+            return true;
+          }
+          if (!this.jsonData.every(x => x.StartDate === item.StartDate &&
+          x.EndDate === item.EndDate)) {
+            return true;
+          }
+        } else {
           return true;
         }
-        if (this.jsonData.filter(x => x.Day === item.Day && x.StartTime >= item.StartTime &&
-          x.Endtime < item.Endtime || x.Endtime > item.Endtime).length > 1) {
+        if (!this.jsonData.every(x => x.EmployeeId === item.EmployeeId)) {
           return true;
         }
-        if (item.StartTime || item.Endtime) {
-          this.validateTimeFormat(item?.StartTime);
-          this.validateTimeFormat(item?.Endtime);
+        if (this.jsonData.filter(x => this.convertToDateFormat(x.StartTime) === this.convertToDateFormat(item.StartTime) &&
+        this.convertToDateFormat(x.EndTime) === this.convertToDateFormat(item.EndTime)).length > 1) {
+          return true;
+        }
+        if (this.jsonData.filter(x => this.convertToDateFormat(x.StartTime) >= this.convertToDateFormat(item.StartTime) &&
+        this.convertToDateFormat(x.StartTime) < this.convertToDateFormat(item.EndTime)).length > 1) {
+          return true;
+        }
+        if (this.jsonData.filter(x => this.convertToDateFormat(x.StartTime) > this.convertToDateFormat(item.StartTime) &&
+        this.convertToDateFormat(x.EndTime) <= this.convertToDateFormat(item.EndTime)).length > 1) {
+          return true;
+        }
+        if (this.jsonData.find(x => this.convertToDateFormat(x.StartTime) < this.convertToDateFormat(item.StartTime) &&
+        this.convertToDateFormat(x.EndTime) >= this.convertToDateFormat(item.EndTime))) {
+          return true;
+        }
+        if (this.jsonData.find(x => this.convertToDateFormat(x.StartTime) < this.convertToDateFormat(item.StartTime) &&
+        this.convertToDateFormat(x.EndTime) === this.convertToDateFormat(item.EndTime))) {
+          return true;
         }
         if (item) {
           for (const property in item) {
@@ -150,19 +167,29 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
             }
           }
         }
+        if (!this.jsonData.every(x => x.EmployeeId === this.jsonData[0].EmployeeId)) {
+          return false;
+        }
+        return this.validateTimeFormat(item);
       }
     } else {
       return true;
     }
   }
 
-  private validateTimeFormat(time: string) {
-    if (time) {
-      if (time.indexOf(':') > -1 && time.indexOf(' ') > -1) {
-        if (time.split(':')[0] && time.split(':')[1].split(' ')[0]) {
-          return false;
+  private validateTimeFormat(data: ExcelData) {
+    if (data.StartTime && data.EndTime) {
+      if (data.StartTime.indexOf(':') > -1 && data.StartTime.indexOf(' ') > -1 &&
+        data.EndTime.indexOf(':') > -1 && data.EndTime.indexOf(' ') > -1) {
+        if (!data.StartTime.split(':')[0] && !data.StartTime.split(':')[1].split(' ')[0] &&
+          !data.EndTime.split(':')[0] && !data.EndTime.split(':')[1].split(' ')[0]) {
+          return true;
         }
+      } else {
+        return true;
       }
+    } else {
+      return true;
     }
   }
 
@@ -218,25 +245,51 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.importAgentScheduleChartSubscription);
   }
 
+  private loadAgentSchedules(employeeId: number) {
+    const queryParams = new AgentSchedulesQueryParams();
+    queryParams.employeeIds = [];
+    const employee = +employeeId ?? 0;
+    queryParams.employeeIds.push(employee);
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+
+    this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
+      .subscribe((response) => {
+        this.spinnerService.hide(this.spinner);
+        if (response.body.length > 0) {
+          const activityCodes = Array<string>();
+          this.jsonData.forEach(element => {
+            activityCodes.push(element.ActivityCode);
+          });
+          this.loadSchedulingCodes(activityCodes);
+        } else {
+          const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
+          this.showErrorWarningPopUpMessage(errorMessage);
+        }
+
+      }, (error) => {
+        this.spinnerService.hide(this.spinner);
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getAgentSchedulesSubscription);
+  }
+
   private getImportAgentScheduleChartModel() {
     const chartModel = new UpdateAgentschedulechart();
     chartModel.agentScheduleCharts = [];
     chartModel.agentScheduleType = AgentScheduleType.Scheduling;
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     for (let i = 0; i < 7; i++) {
-      const weekdays = this.jsonData.filter(x => x.Day === WeekDay[i]);
-      if (weekdays.length > 0) {
-        const chartData = new AgentScheduleChart();
-        chartData.day = i;
-        weekdays.forEach((ele, index) => {
-          const data = this.schedulingCodes.find(x => x.description === ele.ActivityCode);
-          if (data) {
-            const chart = new ScheduleChart(ele.StartTime, ele.Endtime, data.id);
-            chartData.charts.push(chart);
-          }
-        });
-        chartModel.agentScheduleCharts.push(chartData);
-      }
+      const chartData = new AgentScheduleChart();
+      chartData.day = i;
+      this.jsonData.forEach((ele, index) => {
+        const data = this.schedulingCodes.find(x => x.description === ele.ActivityCode);
+        if (data) {
+          const chart = new ScheduleChart(ele.StartTime, ele.EndTime, data.id);
+          chartData.charts.push(chart);
+        }
+      });
+      chartModel.agentScheduleCharts.push(chartData);
     }
 
     return chartModel;
@@ -269,5 +322,18 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.messageType = ContentType.Html;
 
     return modalRef;
+  }
+
+  private convertToDateFormat(time: string) {
+    if (time) {
+      const count = time.split(' ')[1] === 'pm' ? 12 : undefined;
+      if (count) {
+        time = (+time.split(':')[0] + 12) + ':' + time.split(':')[1].split(' ')[0];
+      } else {
+        time = time.split(':')[0] + ':' + time.split(':')[1].split(' ')[0];
+      }
+
+      return time;
+    }
   }
 }
