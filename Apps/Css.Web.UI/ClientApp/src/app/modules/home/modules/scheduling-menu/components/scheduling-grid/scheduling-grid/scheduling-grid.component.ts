@@ -35,6 +35,7 @@ import { KeyValue } from 'src/app/shared/models/key-value.model';
 import { ImportScheduleComponent } from '../import-schedule/import-schedule.component';
 import { ExcelData } from '../../../models/excel-data.model';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { ContentType } from 'src/app/shared/enums/content-type.enum';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -356,41 +357,37 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.getModalPopup(ImportScheduleComponent, 'lg');
     this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
     this.modalRef.result.then((result) => {
-        const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
-        this.getModalPopup(MessagePopUpComponent, 'sm', message);
-        this.modalRef.result.then(() => {
-          this.loadAgentSchedule(agentScheduleId);
-        });
+      const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
+      this.getModalPopup(MessagePopUpComponent, 'sm', message);
+      this.modalRef.result.then(() => {
+        this.loadAgentSchedule(agentScheduleId);
+      });
     });
   }
 
   exportToExcel(index: number) {
-    if (this.matchSchedulingGridDataChanges()) {
-      this.getWarningPopup('Please save the grid before export!');
-    } else {
-      const exportSchedule = new Array<ExcelData>();
-      const fromDate = new Date(this.totalSchedulingGridData[index]?.dateFrom);
-      const toDate = new Date(this.totalSchedulingGridData[index]?.dateTo);
-      for (const item of this.schedulingGridData.agentScheduleCharts) {
-        item.charts.forEach(ele => {
-          const code = this.schedulingCodes.find(x => x.id === ele.schedulingCodeId);
-          if (code) {
-            const model = new ExcelData();
-            model.EmployeeId = this.schedulingGridData.employeeId;
-            model.Day = WeekDay[item.day];
-            model.StartDate = fromDate?.getMonth() ? (fromDate?.getMonth() + 1) + '/' + fromDate?.getDay() + '/' + fromDate?.getFullYear() : '';
-            model.EndDate = toDate?.getMonth() ? (toDate?.getMonth() + 1) + 1 + '/' + toDate?.getDay() + '/' + toDate?.getFullYear() : '';
-            model.ActivityCode = code?.description;
-            model.StartTime = ele.startTime;
-            model.Endtime = ele.endTime;
-            exportSchedule.push(model);
-          }
+    const exportSchedule = new Array<ExcelData>();
+    const fromDate = new Date(this.totalSchedulingGridData[index]?.dateFrom);
+    const toDate = new Date(this.totalSchedulingGridData[index]?.dateTo);
+    for (const item of this.schedulingGridData.agentScheduleCharts) {
+      item.charts.forEach(ele => {
+        const code = this.schedulingCodes.find(x => x.id === ele.schedulingCodeId);
+        if (code) {
+          const model = new ExcelData();
+          model.EmployeeId = this.schedulingGridData.employeeId;
+          model.Day = WeekDay[item.day];
+          model.StartDate = fromDate?.getMonth() ? (fromDate?.getMonth() + 1) + '/' + fromDate?.getDay() + '/' + fromDate?.getFullYear() : '';
+          model.EndDate = toDate?.getMonth() ? (toDate?.getMonth() + 1) + 1 + '/' + toDate?.getDay() + '/' + toDate?.getFullYear() : '';
+          model.ActivityCode = code?.description;
+          model.StartTime = ele.startTime;
+          model.Endtime = ele.endTime;
+          exportSchedule.push(model);
+        }
 
-        });
-      }
-      const today = new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getDay();
-      this.excelService.exportAsExcelFile(exportSchedule, this.exportFileName + today);
+      });
     }
+    const today = new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getDay();
+    this.excelService.exportAsExcelFile(exportSchedule, this.exportFileName + today);
   }
 
   getIconDescription(week: number, openTime: any) {
@@ -819,8 +816,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
     this.modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     this.modalRef.componentInstance.translationValues = this.translationValues;
-    this.modalRef.componentInstance.headingMessage = 'Success';
+    this.modalRef.componentInstance.headingMessage = 'Error';
     this.modalRef.componentInstance.contentMessage = contentMessage;
+    this.modalRef.componentInstance.messageType = ContentType.String;
   }
 
   private getDateInStringFormat(startDate: any): string {

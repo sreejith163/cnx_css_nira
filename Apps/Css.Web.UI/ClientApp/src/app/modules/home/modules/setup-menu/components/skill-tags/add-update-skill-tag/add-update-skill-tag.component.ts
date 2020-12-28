@@ -16,6 +16,7 @@ import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-
 import { UpdateSkillTag } from '../../../models/update-skill-tag.model';
 import { SkillTagResponse } from '../../../models/skill-tag-response.model';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { ContentType } from 'src/app/shared/enums/content-type.enum';
 
 @Component({
   selector: 'app-add-update-skill-tag',
@@ -229,6 +230,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
     modalRef.componentInstance.contentMessage = contentMessage;
+    modalRef.componentInstance.messageType = ContentType.String;
 
     return modalRef;
   }

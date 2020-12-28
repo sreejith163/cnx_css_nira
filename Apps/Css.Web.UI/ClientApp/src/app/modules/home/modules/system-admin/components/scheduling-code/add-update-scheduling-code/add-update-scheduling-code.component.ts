@@ -22,6 +22,7 @@ import { SchedulingCodeIconsService } from '../../../services/scheduling-code-ic
 import { SchedulingCodeTypesService } from '../../../services/scheduling-code-types.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { ContentType } from 'src/app/shared/enums/content-type.enum';
 
 
 @Component({
@@ -240,6 +241,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
     modalRef.componentInstance.contentMessage = contentMessage;
+    modalRef.componentInstance.messageType = ContentType.String;
 
     return modalRef;
   }

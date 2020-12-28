@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
@@ -33,6 +33,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   storeData: any;
   worksheet: any;
   fileFormatValidation: boolean;
+  fileSubmitted: boolean;
   jsonData: ExcelData[] = [];
   schedulingCodes: SchedulingCode[] = [];
   columns = ['EmployeeId', 'Day', 'StartDate', 'EndDate', 'ActivityCode', 'StartTime', 'Endtime'];
@@ -43,8 +44,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   @Input() translationValues: TranslationDetails[];
   @Input() agentScheduleId: string;
-
-  @ViewChild('recordErrorMsg') recordErrorMsg: ElementRef;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -68,19 +67,26 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   import() {
+    this.fileSubmitted = true;
     if (this.uploadFile && !this.fileFormatValidation) {
-      const activityCodes = Array<string>();
-      this.jsonData.forEach(element => {
-        activityCodes.push(element.ActivityCode);
-      });
       if (!this.validateInputRecord()) {
+        const activityCodes = Array<string>();
+        this.jsonData.forEach(element => {
+          activityCodes.push(element.ActivityCode);
+        });
         this.loadSchedulingCodes(activityCodes);
       } else {
         const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
         this.showErrorWarningPopUpMessage(errorMessage);
       }
-
     }
+  }
+
+  hasFileSelected() {
+    if (this.fileSubmitted) {
+      return this.uploadFile ? true : false;
+    }
+    return true;
   }
 
   browse(files: any) {
@@ -123,25 +129,30 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   private validateInputRecord() {
-    for (const item of this.jsonData) {
-      if (this.jsonData.filter(x => x.ActivityCode === item.ActivityCode && x.StartTime === item.StartTime &&
-        x.Endtime === item.Endtime && x.Day === item.Day).length > 1) {
-        return true;
-      } else if (this.jsonData.filter(x => x.Day === item.Day && x.StartTime >= item.StartTime &&
-        x.Endtime < item.Endtime || x.Endtime > item.Endtime).length > 1) {
-        return true;
-      } else if (item.StartTime || item.Endtime) {
-        this.validateTimeFormat(item?.StartTime);
-        this.validateTimeFormat(item?.Endtime);
-      } else if (item) {
-        for (const property in item) {
-          if (this.columns.findIndex(x => x === property) === -1) {
-            return true;
+    if (this.jsonData.length > 0) {
+      for (const item of this.jsonData) {
+        if (this.jsonData.filter(x => x.ActivityCode === item.ActivityCode && x.StartTime === item.StartTime &&
+          x.Endtime === item.Endtime && x.Day === item.Day).length > 1) {
+          return true;
+        }
+        if (this.jsonData.filter(x => x.Day === item.Day && x.StartTime >= item.StartTime &&
+          x.Endtime < item.Endtime || x.Endtime > item.Endtime).length > 1) {
+          return true;
+        }
+        if (item.StartTime || item.Endtime) {
+          this.validateTimeFormat(item?.StartTime);
+          this.validateTimeFormat(item?.Endtime);
+        }
+        if (item) {
+          for (const property in item) {
+            if (this.columns.findIndex(x => x === property) === -1) {
+              return true;
+            }
           }
         }
-      } else {
-        return false;
       }
+    } else {
+      return true;
     }
   }
 
@@ -245,9 +256,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       const workbook = XLSX.read(bstr, { type: 'binary' });
       const firstSheetName = workbook.SheetNames[0];
       this.worksheet = workbook.Sheets[firstSheetName];
+      this.jsonData = XLSX.utils.sheet_to_json(this.worksheet, { raw: false });
     };
     readFile.readAsArrayBuffer(this.fileUploaded);
-    this.jsonData = XLSX.utils.sheet_to_json(this.worksheet, { raw: false });
   }
 
   private showErrorWarningPopUpMessage(contentMessage: any) {

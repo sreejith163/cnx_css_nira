@@ -18,6 +18,7 @@ import { TimezoneService } from 'src/app/shared/services/timezone.service';
 import { TimeZone } from 'src/app/shared/models/time-zone.model';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { AgentSchedulingGroupService } from 'src/app/shared/services/agent-scheduling-group.service';
+import { ContentType } from 'src/app/shared/enums/content-type.enum';
 
 @Component({
   selector: 'app-add-edit-agent-scheduling-group',
@@ -323,6 +324,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
     modalRef.componentInstance.contentMessage = contentMessage;
+    modalRef.componentInstance.messageType = ContentType.String;
 
     return modalRef;
   }

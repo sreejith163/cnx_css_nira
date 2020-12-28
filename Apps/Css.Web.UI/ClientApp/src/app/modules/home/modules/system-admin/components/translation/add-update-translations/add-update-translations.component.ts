@@ -21,6 +21,7 @@ import { Constants } from 'src/app/shared/util/constants.util';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { VariableResponse } from '../../../models/variable-response.model';
+import { ContentType } from 'src/app/shared/enums/content-type.enum';
 
 @Component({
   selector: 'app-add-update-translations',
@@ -180,6 +181,7 @@ export class AddUpdateTranslationsComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
     modalRef.componentInstance.contentMessage = contentMessage;
+    modalRef.componentInstance.messageType = ContentType.String;
 
     return modalRef;
   }

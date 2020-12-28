@@ -16,6 +16,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
+import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { TimeZone } from 'src/app/shared/models/time-zone.model';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
@@ -254,6 +255,7 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
     modalRef.componentInstance.contentMessage = contentMessage;
+    modalRef.componentInstance.messageType = ContentType.String;
     return modalRef;
   }
 

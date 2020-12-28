@@ -19,6 +19,7 @@ import { ClientLobGroupService } from '../../../services/client-lob-group.servic
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { ContentType } from 'src/app/shared/enums/content-type.enum';
 
 @Component({
   selector: 'app-add-update-client-lob-group',
@@ -191,6 +192,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
     modalRef.componentInstance.contentMessage = contentMessage;
+    modalRef.componentInstance.messageType = ContentType.String;
 
     return modalRef;
   }
