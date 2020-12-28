@@ -228,10 +228,15 @@ namespace Css.Api.Scheduling.Repository
         /// <param name="copyAgentScheduleRequest">The copy agent schedule request.</param>
         public void CopyAgentSchedules(AgentSchedule agentSchedule, CopyAgentSchedule copyAgentScheduleRequest)
         {
-            var query =
-                Builders<AgentSchedule>.Filter.In(i => i.EmployeeId, copyAgentScheduleRequest.EmployeeIds) &
+
+            var query = 
                 Builders<AgentSchedule>.Filter.Eq(i => i.AgentSchedulingGroupId, copyAgentScheduleRequest.AgentSchedulingGroupId) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            if (copyAgentScheduleRequest.EmployeeIds.Any())
+            {
+                query &= Builders<AgentSchedule>.Filter.In(i => i.EmployeeId, copyAgentScheduleRequest.EmployeeIds);
+            }
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.ModifiedBy, agentSchedule.ModifiedBy)
