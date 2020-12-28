@@ -130,7 +130,7 @@ namespace Css.Api.Scheduling.Repository
                 .Set(x => x.DateTo, agentScheduleDetails.DateTo)
                 .Set(x => x.Status, agentScheduleDetails.Status)
                 .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
-                .Set(x => x.ModifiedDate, DateTime.UtcNow);
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 
             UpdateOneAsync(query, update);
         }
@@ -148,7 +148,7 @@ namespace Css.Api.Scheduling.Repository
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
-                .Set(x => x.ModifiedDate, DateTime.UtcNow);
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 
             switch (agentScheduleDetails.AgentScheduleType)
             {
@@ -192,7 +192,7 @@ namespace Css.Api.Scheduling.Repository
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
-                .Set(x => x.ModifiedDate, DateTime.UtcNow);
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 
             if (agentScheduleDetails.DateFrom.HasValue && agentScheduleDetails.DateFrom != default(DateTime))
             {
@@ -234,7 +234,7 @@ namespace Css.Api.Scheduling.Repository
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.ModifiedBy, agentSchedule.ModifiedBy)
-                .Set(x => x.ModifiedDate, DateTime.UtcNow);
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 
             switch (copyAgentScheduleRequest.AgentScheduleType)
             {
@@ -265,7 +265,7 @@ namespace Css.Api.Scheduling.Repository
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.IsDeleted, true)
-                .Set(x => x.ModifiedDate, DateTime.UtcNow);
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 
             UpdateOneAsync(query, update);
         }

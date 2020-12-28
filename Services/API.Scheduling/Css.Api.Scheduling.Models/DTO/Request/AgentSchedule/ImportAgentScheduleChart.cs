@@ -1,4 +1,6 @@
 ﻿using Css.Api.Scheduling.Models.Domain;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 
@@ -9,12 +11,14 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the date from.
         /// </summary>
-        public DateTime? DateFrom { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public DateTimeOffset? DateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the date to.
         /// </summary>
-        public DateTime? DateTo { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public DateTimeOffset? DateTo { get; set; }
 
         /// <summary>
         /// Gets or sets the charts.

@@ -1,5 +1,7 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Scheduling.Models.Enums;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,13 +20,15 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets the date from.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime? DateFrom { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public DateTimeOffset? DateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the date to.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime? DateTo { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public DateTimeOffset? DateTo { get; set; }
 
         /// <summary>
         /// Gets or sets the status.
@@ -57,7 +61,8 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the modified date.
         /// </summary>
-        public DateTime CreatedDate { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public DateTimeOffset CreatedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
@@ -69,7 +74,8 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets the modified date.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime? ModifiedDate { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public DateTimeOffset? ModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is deleted.

@@ -171,7 +171,7 @@ namespace Css.Api.Scheduling.Business
                 {
                     ClientId = 5,
                     ClientLobGroupId = 5,
-                    SkillGroupId = 4,
+                    SkillGroupId = 5,
                     SkillTagId = 5,
                     AgentSchedulingGroupId = 1,
                     Name = "Agent Scheduliung Group 1",
