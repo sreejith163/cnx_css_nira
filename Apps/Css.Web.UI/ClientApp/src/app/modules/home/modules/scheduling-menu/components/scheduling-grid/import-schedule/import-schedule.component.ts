@@ -69,11 +69,27 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   import() {
     this.fileSubmitted = true;
-    if (this.uploadFile && !this.fileFormatValidation && this.jsonData.length > 0 && !this.validateInputRecord()) {
-      this.loadAgentSchedules(this.jsonData[0].EmployeeId);
-    } else {
-      const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
-      this.showErrorWarningPopUpMessage(errorMessage);
+    if (this.uploadFile && this.jsonData.length > 0) {
+      this.jsonData.map(ele => {
+        if (ele.StartTime.split(':')[0].length === 1) {
+          ele.StartTime = '0' + ele.StartTime.split(':')[0] + ':' + ele.StartTime.split(':')[1];
+        }
+        if (ele.StartTime.split(':')[0] === '12') {
+          ele.StartTime = '00' + ':' + ele.StartTime.split(':')[1];
+        }
+        if (ele.EndTime.split(':')[0].length === 1) {
+          ele.EndTime = '0' + ele.EndTime.split(':')[0] + ':' + ele.EndTime.split(':')[1];
+        }
+        if (ele.EndTime.split(':')[0] === '12') {
+          ele.EndTime = '00' + ':' + ele.EndTime.split(':')[1];
+        }
+      });
+      if (!this.fileFormatValidation && !this.validateInputRecord()) {
+        this.loadAgentSchedules(this.jsonData[0].EmployeeId);
+      } else {
+        const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
+        this.showErrorWarningPopUpMessage(errorMessage);
+      }
     }
   }
 
@@ -131,7 +147,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
             return true;
           }
           if (!this.jsonData.every(x => x.StartDate === item.StartDate &&
-          x.EndDate === item.EndDate)) {
+            x.EndDate === item.EndDate)) {
             return true;
           }
         } else {
@@ -141,23 +157,23 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           return true;
         }
         if (this.jsonData.filter(x => this.convertToDateFormat(x.StartTime) === this.convertToDateFormat(item.StartTime) &&
-        this.convertToDateFormat(x.EndTime) === this.convertToDateFormat(item.EndTime)).length > 1) {
+          this.convertToDateFormat(x.EndTime) === this.convertToDateFormat(item.EndTime)).length > 1) {
           return true;
         }
         if (this.jsonData.filter(x => this.convertToDateFormat(x.StartTime) >= this.convertToDateFormat(item.StartTime) &&
-        this.convertToDateFormat(x.StartTime) < this.convertToDateFormat(item.EndTime)).length > 1) {
+          this.convertToDateFormat(x.StartTime) < this.convertToDateFormat(item.EndTime)).length > 1) {
           return true;
         }
         if (this.jsonData.filter(x => this.convertToDateFormat(x.StartTime) > this.convertToDateFormat(item.StartTime) &&
-        this.convertToDateFormat(x.EndTime) <= this.convertToDateFormat(item.EndTime)).length > 1) {
+          this.convertToDateFormat(x.EndTime) <= this.convertToDateFormat(item.EndTime)).length > 1) {
           return true;
         }
         if (this.jsonData.find(x => this.convertToDateFormat(x.StartTime) < this.convertToDateFormat(item.StartTime) &&
-        this.convertToDateFormat(x.EndTime) >= this.convertToDateFormat(item.EndTime))) {
+          this.convertToDateFormat(x.EndTime) >= this.convertToDateFormat(item.EndTime))) {
           return true;
         }
         if (this.jsonData.find(x => this.convertToDateFormat(x.StartTime) < this.convertToDateFormat(item.StartTime) &&
-        this.convertToDateFormat(x.EndTime) === this.convertToDateFormat(item.EndTime))) {
+          this.convertToDateFormat(x.EndTime) === this.convertToDateFormat(item.EndTime))) {
           return true;
         }
         if (item) {
