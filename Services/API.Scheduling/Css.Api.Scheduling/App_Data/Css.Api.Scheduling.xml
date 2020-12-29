@@ -412,6 +412,26 @@
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleChartValidator"/> class.
             </summary>
         </member>
+        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.ScheduleChartUniqueDaysCollectionValidator">
+            <summary>
+            Validator for checking the uniqueness of schedulign chart
+            </summary>
+            <seealso cref="T:FluentValidation.Validators.PropertyValidator" />
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.ScheduleChartUniqueDaysCollectionValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.ScheduleChartUniqueDaysCollectionValidator"/> class.
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.ScheduleChartUniqueDaysCollectionValidator.IsValid(FluentValidation.Validators.PropertyValidatorContext)">
+            <summary>
+            Returns true if ... is valid.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>
+              <c>true</c> if the specified context is valid; otherwise, <c>false</c>.
+            </returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleChartValidator">
             <summary>
             Validator for handling the validation of update agent schedule chart

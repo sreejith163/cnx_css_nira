@@ -17,6 +17,8 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         {
             RuleFor(x => x.ModifiedBy).NotEmpty();
             RuleFor(x => x.AgentScheduleType).IsInEnum();
+            RuleFor(x => x.AgentScheduleCharts).SetValidator(new ScheduleChartUniqueDaysCollectionValidator())
+                .When(x => x.AgentScheduleType == AgentScheduleType.SchedulingTab);
             RuleForEach(x => x.AgentScheduleCharts).SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>())
                 .When(x => x.AgentScheduleType == AgentScheduleType.SchedulingTab);
             RuleForEach(x => x.AgentScheduleManagerCharts).SetValidator(new AgentScheduleManagerValidator<AgentScheduleManagerChart>())
