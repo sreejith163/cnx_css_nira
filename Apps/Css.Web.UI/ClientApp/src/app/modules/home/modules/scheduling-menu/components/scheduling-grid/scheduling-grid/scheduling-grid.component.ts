@@ -800,6 +800,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       updateAgentSchedule(this.totalSchedulingGridData[index].id, updateModel)
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
+        this.totalSchedulingGridData[index].modifiedBy = updateModel.modifiedBy;
+        this.totalSchedulingGridData[index].modifiedDate = new Date();
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         console.log(error);
