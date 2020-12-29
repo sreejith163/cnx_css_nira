@@ -359,6 +359,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.getModalPopup(ImportScheduleComponent, 'lg');
     this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
     this.modalRef.componentInstance.translationValues = this.translationValues;
+    this.modalRef.componentInstance.agentScheudleType = AgentScheduleType.Scheduling;
 
     this.modalRef.result.then((result) => {
       const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
@@ -724,7 +725,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     const queryParams = new SchedulingCodeQueryParams();
     queryParams.skipPageSize = true;
     queryParams.fields = 'id, description, icon';
-    this.spinnerService.show(this.spinner, SpinnerOptions);
+    this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
 
     this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)
       .subscribe((response) => {
@@ -733,9 +734,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
           this.endIcon = this.iconCount;
         }
-        this.spinnerService.hide(this.spinner);
+        this.spinnerService.hide(this.scheduleSpinner);
       }, (error) => {
-        this.spinnerService.hide(this.spinner);
+        this.spinnerService.hide(this.scheduleSpinner);
         console.log(error);
       });
 
@@ -743,7 +744,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private loadAgentSchedule(agentScheduleId: string) {
-    this.spinnerService.show(this.spinner, SpinnerOptions);
+    this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
 
     this.getAgentScheduleSubscription = this.agentSchedulesService.getAgentSchedule(agentScheduleId)
       .subscribe((response) => {
@@ -751,9 +752,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           this.selectedGrid = response;
           this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
         }
-        this.spinnerService.hide(this.spinner);
+        this.spinnerService.hide(this.scheduleSpinner);
       }, (error) => {
-        this.spinnerService.hide(this.spinner);
+        this.spinnerService.hide(this.scheduleSpinner);
         console.log(error);
       });
 

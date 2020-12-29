@@ -43,8 +43,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   importAgentScheduleChartSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
-  @Input() translationValues: TranslationDetails[];
   @Input() agentScheduleId: string;
+  @Input() agentScheudleType: AgentScheduleType;
+  @Input() translationValues: TranslationDetails[];
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -293,7 +294,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private getImportAgentScheduleChartModel() {
     const chartModel = new UpdateAgentschedulechart();
     chartModel.agentScheduleCharts = [];
-    chartModel.agentScheduleType = AgentScheduleType.Scheduling;
+    chartModel.agentScheduleType = this.agentScheudleType;
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     for (let i = 0; i < 7; i++) {
       const chartData = new AgentScheduleChart();
