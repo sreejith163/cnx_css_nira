@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.Domain;
+using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using Css.Api.Scheduling.Models.Enums;
@@ -11,8 +12,8 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
         /// <summary>Initializes a new instance of the <see cref="AgentScheduleProfile" /> class.</summary>
         public AgentScheduleProfile()
         {
-            CreateMap<CreateAgentAdmin, Domain.AgentSchedule>()
-                .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.EmployeeId))
+            CreateMap<Agent, Domain.AgentSchedule>()
+                .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.Ssn))
                 .ForMember(x => x.Status, opt => opt.MapFrom(o => SchedulingStatus.Approved))
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTimeOffset.UtcNow))
                 .ReverseMap();

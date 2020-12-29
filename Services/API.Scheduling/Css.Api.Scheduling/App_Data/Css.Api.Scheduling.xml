@@ -392,6 +392,16 @@
               <c>true</c> if the specified context is valid; otherwise, <c>false</c>.
             </returns>
         </member>
+        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.CopyAgentScheduleValidator">
+            <summary>
+            Validator for handling the validation of update agent schedule object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.CopyAgentScheduleValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.CopyAgentScheduleValidator"/> class.
+            </summary>
+        </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleChartValidator">
             <summary>
             Validator for handling the validation of update agent schedule chart

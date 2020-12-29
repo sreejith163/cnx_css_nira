@@ -294,7 +294,7 @@ namespace Css.Api.Scheduling.Business
 
             _agentAdminRepository.CreateAgentAdmin(agentAdminRequest);
 
-            var agentScheduleRequest = _mapper.Map<AgentSchedule>(agentAdminDetails);
+            var agentScheduleRequest = _mapper.Map<AgentSchedule>(agentAdminRequest);
             _agentScheduleRepository.CreateAgentSchedule(agentScheduleRequest);
 
             await _uow.Commit();

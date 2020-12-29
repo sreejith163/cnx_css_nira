@@ -31,7 +31,7 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
             var validationFailures = new List<ValidationFailure>();
             var item = context.PropertyValue as AgentScheduleChart;
 
-            if (item.Day > 6)
+            if (item.Day <0 && item.Day > 6)
             {
                 validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Day should be of range 0 to 6"));
                 return validationFailures;
