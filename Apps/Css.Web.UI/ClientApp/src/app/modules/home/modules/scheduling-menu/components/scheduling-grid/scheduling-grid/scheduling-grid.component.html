@@ -240,7 +240,7 @@
                     <div class="row padding-10">
                       <div class="col-md-12 padding-12 row">
                         <div class="col-md-11 m-b-5">
-                          <button class="btn btn-default copy-button" id="btn_copy_schedule">
+                          <button class="btn btn-default copy-button" id="btn_copy_schedule" (click)="openCopySchedule(el.id)">
                             <i
                               class="fa fa-copy padding-5 black"></i>{{ 'Copy Schedule' | translation: 'btn_copy_schedule' : translationValues }}
                           </button>

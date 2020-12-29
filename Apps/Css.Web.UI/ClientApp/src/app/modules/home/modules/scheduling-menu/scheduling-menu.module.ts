@@ -11,6 +11,7 @@ import { AgentAdminService } from './services/agent-admin.service';
 import { AgentSchedulesService } from './services/agent-schedules.service';
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid/scheduling-grid.component';
 import { ImportScheduleComponent } from './components/scheduling-grid/import-schedule/import-schedule.component';
+import { CopyScheduleComponent } from './components/scheduling-grid/copy-schedule/copy-schedule.component';
 
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
@@ -19,6 +20,7 @@ const components =
     AddAgentProfileComponent,
     SchedulingGridComponent,
     ImportScheduleComponent,
+    CopyScheduleComponent,
     HorizontalScrollPipe];
 const providers = [AgentAdminService, AgentSchedulesService];
 

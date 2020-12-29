@@ -8,6 +8,7 @@ import { AgentSchedulesQueryParams } from '../models/agent-schedules-query-param
 import { UpdateAgentSchedule } from '../models/update-agent-schedule.model';
 import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
 import { UpdateAgentschedulechart } from '../models/update-agent-schedule-chart.model';
+import { CopyAgentSchedulechart } from '../models/copy-agent-schedule-chart.model';
 
 @Injectable()
 export class AgentSchedulesService extends HttpBaseService {
@@ -55,6 +56,13 @@ export class AgentSchedulesService extends HttpBaseService {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/import`;
 
     return this.http.put<ApiResponseModel>(url, updateAgentScheduleChart)
+    .pipe(catchError(this.handleError));
+  }
+
+  copyAgentScheduleChart(agentScheduleId: string, copyAgentScheduleChart: CopyAgentSchedulechart) {
+    const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/copy`;
+
+    return this.http.put<ApiResponseModel>(url, copyAgentScheduleChart)
     .pipe(catchError(this.handleError));
   }
 }

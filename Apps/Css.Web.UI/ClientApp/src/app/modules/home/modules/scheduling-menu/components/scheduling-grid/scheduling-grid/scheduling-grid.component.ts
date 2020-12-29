@@ -37,6 +37,7 @@ import { ExcelData } from '../../../models/excel-data.model';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { ExcelExportData } from '../../../constants/excel-export-data';
+import { CopyScheduleComponent } from '../copy-schedule/copy-schedule.component';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -357,6 +358,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   openImportSchedule(agentScheduleId: string) {
     this.getModalPopup(ImportScheduleComponent, 'lg');
     this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
+    this.modalRef.componentInstance.translationValues = this.translationValues;
+
     this.modalRef.result.then((result) => {
       const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
       this.getModalPopup(MessagePopUpComponent, 'sm', message);
@@ -364,6 +367,26 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         this.loadAgentSchedule(agentScheduleId);
       });
     });
+  }
+
+  openCopySchedule(agentScheduleId: string) {
+    this.getModalPopup(CopyScheduleComponent, 'lg');
+    this.modalRef.componentInstance.agentSchedulingGroupId = this.schedulingGridData?.agentSchedulingGroupId;
+    this.modalRef.componentInstance.translationValues = this.translationValues;
+    this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
+    this.modalRef.componentInstance.agentScheudleType = AgentScheduleType.Scheduling;
+
+    this.modalRef.result.then((result) => {
+      if (result.needRefresh) {
+        this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been copied!');
+        this.modalRef.result.then(() => {
+          this.loadAgentSchedule(agentScheduleId);
+        });
+      } else {
+        this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
+      }
+    });
+
   }
 
   exportToExcel(index: number) {

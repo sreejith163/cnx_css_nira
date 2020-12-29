@@ -1,0 +1,91 @@
+<div class="modal-dialog w-1000 add-edit-modal" role="document">
+    <div class="modal-content">
+      <ngx-spinner [name]="spinner"></ngx-spinner>
+      <div class="modal-header header-color">
+        <h6 class="modal-title w-100 font-weight-bold header">
+          <p>{{ 'Copy Schedules' | translation: 'lbl_copy_schedules_page_title' : translationValues }}
+          </p>
+        </h6>
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3 modal-style">
+          <div class="col-md-12 m-t-20">
+            <div class="row">
+              <div class="col-md-4">
+                <label class="my-2">{{ 'Scheduling Group' | translation: 'lbl_copy_schedules_scheduling_group' : translationValues }}
+                  <span class="required">*</span>
+                </label>
+              </div>
+              <div class="col-md-8">
+                <app-agent-scheduling-group-typeahead [agentSchedulingGroupId]="agentSchedulingGroupId"
+                 (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
+                </app-agent-scheduling-group-typeahead>
+                <div *ngIf="!agentSchedulingGroupId && formSubmitted" class="valid-error">
+                  {{ 'Scheduling Group is required' | translation: 'lbl_copy_schedules_scheduling_group_required_validation_message' :
+                  translationValues }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 m-t-20">
+            <div class="scrollable-table">
+                <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+                    <thead>
+                        <tr>
+                            <th >
+                                <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
+                            </th>
+                            <th>
+                                {{ 'Employee ID' | translation: 'lbl_table_heading_employee_id' : translationValues }}
+                            </th>
+                            <th>
+                                {{ 'Name' | translation: 'lbl_table_heading_name' : translationValues }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ngx-spinner [name]="spinner"></ngx-spinner>
+                            <tr *ngFor="let x of agents | slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize">
+                                <td>
+                                    <input type="checkbox" [(ngModel)]="x.isChecked" [value]="x.employeeId" (change)="isAllSelected()">
+                                </td>
+                                <td>{{x.employeeId}}</td>
+                                <td>{{x.employeeName}}</td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 d-flex justify-content-end mt-3">
+          <nav aria-label="Page navigation example" class="m-r-20">
+            <ul class="pagination p-0 float-right">
+              <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalAgents"
+                (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
+              </ngb-pagination>
+              <select class="form-control" (change)="changePageSize($event.target.value)">
+                <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+                  {{ x.text }}
+                </option>
+              </select>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center header-color">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-10"></div>
+            <div class="col-md-2">
+              <button class="btn btn-primary float-r" data-dismiss="modal" (click)="copySchedule()">
+                {{ 'Copy' | translation: 'btn_copy' : translationValues }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
