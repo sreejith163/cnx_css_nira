@@ -157,6 +157,8 @@ namespace Css.Api.Scheduling.Repository
                     break;
 
                 case AgentScheduleType.SchedulingMangerTab:
+                    agentScheduleDetails.AgentScheduleManagerChart.Date = new DateTimeOffset(agentScheduleDetails.AgentScheduleManagerChart.Date.Date, TimeSpan.Zero);
+
                     var documentQuery = query & Builders<AgentSchedule>.Filter
                         .ElemMatch(i => i.AgentScheduleManagerCharts, chart => chart.Date == agentScheduleDetails.AgentScheduleManagerChart.Date);
 
@@ -211,6 +213,7 @@ namespace Css.Api.Scheduling.Repository
                     break;
 
                 case AgentScheduleType.SchedulingMangerTab:
+                    agentScheduleDetails.AgentScheduleManagerCharts.ForEach(x => x.Date = new DateTimeOffset(x.Date.Date, TimeSpan.Zero));
                     update = update.Set(x => x.AgentScheduleManagerCharts, agentScheduleDetails.AgentScheduleManagerCharts);
                     break;
 
