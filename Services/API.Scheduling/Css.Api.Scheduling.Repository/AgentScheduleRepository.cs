@@ -238,7 +238,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (copyAgentScheduleRequest.EmployeeIds.Any())
             {
-                query &= Builders<AgentSchedule>.Filter.In(i => i.EmployeeId, copyAgentScheduleRequest.EmployeeIds);
+                query &= Builders<AgentSchedule>.Filter.In(i => i.EmployeeId, copyAgentScheduleRequest.EmployeeIds.Distinct().ToList());
             }
 
             var update = Builders<AgentSchedule>.Update
@@ -300,7 +300,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (agentScheduleQueryparameter.EmployeeIds.Any())
             {
-                agentSchedules = agentSchedules.Where(x => agentScheduleQueryparameter.EmployeeIds.Contains(x.EmployeeId));
+                agentSchedules = agentSchedules.Where(x => agentScheduleQueryparameter.EmployeeIds.Distinct().ToList().Contains(x.EmployeeId));
             }
 
             if (agentScheduleQueryparameter.AgentSchedulingGroupId.HasValue && agentScheduleQueryparameter.AgentSchedulingGroupId != default(int))

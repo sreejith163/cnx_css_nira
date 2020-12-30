@@ -1,12 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import * as XLSX from 'xlsx';
 import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ExcelData } from '../../../models/excel-data.model';
 import { SchedulingCodeQueryParams } from '../../../../system-admin/models/scheduling-code-query-params.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { SubscriptionLike as ISubscription } from 'rxjs';
+import { forkJoin, SubscriptionLike as ISubscription } from 'rxjs';
 import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
 import { SchedulingCode } from '../../../../system-admin/models/scheduling-code.model';
 import { AgentSchedulesService } from '../../../services/agent-schedules.service';
@@ -19,6 +18,8 @@ import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { Papa } from 'ngx-papaparse';
 import { AgentSchedulesQueryParams } from '../../../models/agent-schedules-query-params.model';
+import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-import-schedule',
@@ -35,7 +36,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   fileFormatValidation: boolean;
   fileSubmitted: boolean;
   jsonData: ExcelData[] = [];
-  schedulingCodes: SchedulingCode[] = [];
   columns = ['EmployeeId', 'StartDate', 'EndDate', 'ActivityCode', 'StartTime', 'EndTime'];
 
   getAgentSchedulesSubscription: ISubscription;
@@ -210,44 +210,22 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadSchedulingCodes(activityCodes?: Array<string>) {
-    const queryParams = new SchedulingCodeQueryParams();
-    queryParams.skipPageSize = true;
-    queryParams.fields = activityCodes?.length > 0 ? 'id, description' : undefined;
-    queryParams.activityCodes = activityCodes?.length > 0 ? activityCodes : undefined;
-    this.spinnerService.show(this.spinner, SpinnerOptions);
-
-    this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)
-      .subscribe((response) => {
-        if (response.body) {
-          this.schedulingCodes = response.body;
-          this.matchActivitycodes(activityCodes);
-        }
-        this.spinnerService.hide(this.spinner);
-      }, (error) => {
-        this.spinnerService.hide(this.spinner);
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.getSchedulingCodesSubscription);
-  }
-
-  private matchActivitycodes(activityCodes: Array<string>) {
+  private matchActivitycodes(activityCodes: Array<string>, schedulingCodes: SchedulingCode[]) {
     let hasMismatch = false;
     if (activityCodes.length > 0) {
       for (const index in activityCodes) {
-        if (this.schedulingCodes.findIndex(x => x.description === activityCodes[index]) === -1) {
+        if (schedulingCodes.findIndex(x => x.description === activityCodes[index]) === -1) {
           hasMismatch = true;
           break;
         }
       }
     }
 
-    this.importAgentScheduleChart(hasMismatch);
+    this.importAgentScheduleChart(schedulingCodes, hasMismatch);
   }
 
-  private importAgentScheduleChart(hasMismatch?: boolean) {
-    const model = this.getImportAgentScheduleChartModel();
+  private importAgentScheduleChart(schedulingCodes: SchedulingCode[], hasMismatch?: boolean) {
+    const model = this.getImportAgentScheduleChartModel(schedulingCodes);
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
     this.importAgentScheduleChartSubscription = this.agentSchedulesService.importAgentScheduleChart(this.agentScheduleId, model)
@@ -263,35 +241,50 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   private loadAgentSchedules(employeeId: number) {
-    const queryParams = new AgentSchedulesQueryParams();
-    queryParams.employeeIds = [];
-    const employee = +employeeId ?? 0;
-    queryParams.employeeIds.push(employee);
+    const activityCodes = Array<string>();
+    this.jsonData.forEach(element => {
+      activityCodes.push(element.ActivityCode);
+    });
+
+    const agentScheduleQueryParams = new AgentSchedulesQueryParams();
+    if (employeeId !== 0) {
+      agentScheduleQueryParams.employeeIds = [];
+      agentScheduleQueryParams.employeeIds.push(+employeeId);
+    }
+
+    const schedulingCodeQueryParams = new SchedulingCodeQueryParams();
+    schedulingCodeQueryParams.skipPageSize = true;
+    schedulingCodeQueryParams.fields = activityCodes?.length > 0 ? 'id, description' : undefined;
+    schedulingCodeQueryParams.activityCodes = activityCodes?.length > 0 ? activityCodes : undefined;
+
+    const agentSchedule = this.agentSchedulesService.getAgentSchedules(agentScheduleQueryParams);
+    const schedulingCodes = this.schedulingCodeService.getSchedulingCodes(schedulingCodeQueryParams);
+
     this.spinnerService.show(this.spinner, SpinnerOptions);
+    forkJoin([agentSchedule, schedulingCodes]).subscribe((data: any) => {
+      let scheduleRepsonse;
+      let schedulingCodesResponse;
 
-    this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
-      .subscribe((response) => {
-        this.spinnerService.hide(this.spinner);
-        if (response.body.length > 0) {
-          const activityCodes = Array<string>();
-          this.jsonData.forEach(element => {
-            activityCodes.push(element.ActivityCode);
-          });
-          this.loadSchedulingCodes(activityCodes);
-        } else {
-          const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
-          this.showErrorWarningPopUpMessage(errorMessage);
-        }
+      if (data[0] && Object.entries(data[0]).length !== 0 && data[0].body) {
+        scheduleRepsonse = data[0].body as AgentSchedulesResponse;
+      }
+      if (data[1] && Object.entries(data[1]).length !== 0 && data[1].body) {
+        schedulingCodesResponse = data[1].body as SchedulingCode;
+      }
 
-      }, (error) => {
-        this.spinnerService.hide(this.spinner);
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.getAgentSchedulesSubscription);
+      this.spinnerService.hide(this.spinner);
+      if (scheduleRepsonse && schedulingCodesResponse) {
+        this.matchActivitycodes(activityCodes, schedulingCodesResponse);
+      } else {
+        const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
+        this.showErrorWarningPopUpMessage(errorMessage);
+      }
+    }, error => {
+      this.spinnerService.hide(this.spinner); console.log(error);
+    });
   }
 
-  private getImportAgentScheduleChartModel() {
+  private getImportAgentScheduleChartModel(schedulingCodes: SchedulingCode[]) {
     const chartModel = new UpdateAgentschedulechart();
     chartModel.agentScheduleCharts = [];
     chartModel.agentScheduleType = this.agentScheudleType;
@@ -300,7 +293,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       const chartData = new AgentScheduleChart();
       chartData.day = i;
       this.jsonData.forEach((ele, index) => {
-        const data = this.schedulingCodes.find(x => x.description === ele.ActivityCode);
+        const data = schedulingCodes.find(x => x.description === ele.ActivityCode);
         if (data) {
           const chart = new ScheduleChart(ele.StartTime, ele.EndTime, data.id);
           chartData.charts.push(chart);
