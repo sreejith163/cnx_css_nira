@@ -73,13 +73,13 @@
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('status', sortBy)">
-                {{ 'Satus' | translation: 'lbl_table_heading_status' : translationValues }}
+                {{ 'Status' | translation: 'lbl_table_heading_status' : translationValues }}
                 <i *ngIf="orderBy !== 'status'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'status'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field" (click)="sort('createdBy', sortBy)">
+              <!-- <th class="sortable-field" (click)="sort('createdBy', sortBy)">
                 {{ 'Created By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
                 <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
@@ -92,7 +92,7 @@
                 <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
-              </th>
+              </th> -->
               <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
                 {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
                 <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
@@ -145,8 +145,8 @@
                     </option>
                   </select>
                 </td>
-                <td>{{el.createdBy}}</td>
-                <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
+                <!-- <td>{{el.createdBy}}</td>
+                <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td> -->
                 <td>{{el.modifiedBy}}</td>
                 <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
               </tr>
