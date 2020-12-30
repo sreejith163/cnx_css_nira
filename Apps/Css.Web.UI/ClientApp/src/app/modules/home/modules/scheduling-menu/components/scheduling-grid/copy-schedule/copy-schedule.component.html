@@ -35,21 +35,21 @@
                     <thead>
                         <tr>
                             <th >
-                                <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
+                                <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll($event)">
                             </th>
                             <th>
-                                {{ 'Employee ID' | translation: 'lbl_table_heading_employee_id' : translationValues }}
+                                {{ 'Employee ID' | translation: 'lbl_copy_schedule_table_heading_employee_id' : translationValues }}
                             </th>
                             <th>
-                                {{ 'Name' | translation: 'lbl_table_heading_name' : translationValues }}
+                                {{ 'Name' | translation: 'lbl_copy_schedule_table_heading_name' : translationValues }}
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <ngx-spinner [name]="spinner"></ngx-spinner>
-                            <tr *ngFor="let x of agents | slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize">
+                            <tr *ngFor="let x of agents">
                                 <td>
-                                    <input type="checkbox" [(ngModel)]="x.isChecked" [value]="x.employeeId" (change)="isAllSelected()">
+                                    <input type="checkbox" [(ngModel)]="x.isChecked" [value]="x.employeeId" (change)="isAllSelected($event)">
                                 </td>
                                 <td>{{x.employeeId}}</td>
                                 <td>{{x.employeeName}}</td>

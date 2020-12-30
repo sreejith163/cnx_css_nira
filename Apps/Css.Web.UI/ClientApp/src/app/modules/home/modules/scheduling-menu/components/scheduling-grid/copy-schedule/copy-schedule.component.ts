@@ -28,9 +28,10 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   sortBy = 'asc';
   formSubmitted: boolean;
   masterSelected: boolean;
+  checkAll: boolean;
 
   agents: SchedulingAgents[] = [];
-  copiedAgents: number[] = [];
+  checkedAgents: SchedulingAgents[] = [];
 
   paginationSize = Constants.paginationSize;
 
@@ -51,7 +52,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.loadAgents(true);
+    this.loadAgents();
   }
 
   ngOnDestroy() {
@@ -63,7 +64,10 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   }
 
   onSchedulingGroupChange(schedulingGroupId: number) {
+    this.masterSelected = false;
+    this.checkAll = false;
     if (schedulingGroupId) {
+      this.checkedAgents = [];
       this.agentSchedulingGroupId = +schedulingGroupId;
       this.loadAgents();
     } else {
@@ -81,25 +85,46 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     this.loadAgents();
   }
 
-  checkUncheckAll() {
+  checkUncheckAll(e) {
     for (const agent of this.agents) {
       agent.isChecked = this.masterSelected;
     }
+    this.checkedAgents = this.agents.filter(x => x.isChecked === true);
+    this.checkAll = e.target.checked ? true : false;
   }
 
-  isAllSelected() {
-    this.masterSelected = this.agents.every(x => x.isChecked === true);
+  isAllSelected(e) {
+    if (e.target.checked) {
+      const index = this.checkedAgents.findIndex(x => x.employeeId === +e.target.value);
+      if (index !== -1) {
+        this.checkedAgents[index].isChecked = true;
+      } else {
+        this.checkedAgents.push(this.agents.find(x => x.employeeId === +e.target.value));
+      }
+    } else {
+      const index = this.checkedAgents.findIndex(x => x.employeeId === +e.target.value);
+      if (index !== -1) {
+        this.checkedAgents[index].isChecked = false;
+      }
+    }
+    if (this.checkedAgents.filter(x => x.isChecked === true).length === this.totalAgents) {
+      this.masterSelected = true;
+    } else {
+      this.masterSelected = false;
+    }
+
   }
 
   copySchedule() {
     this.formSubmitted = true;
-    for (const index in this.agents) {
-      if (this.agents[index].isChecked === true) {
-        this.copiedAgents.push(this.agents[index].employeeId);
+    const copiedAgents = [];
+    if (this.checkedAgents.length > 0 || this.masterSelected) {
+      if (this.checkedAgents.length > 0 && this.checkedAgents.filter(x => x.isChecked === true).length !== this.totalAgents) {
+        for (const item of this.checkedAgents.filter(x => x.isChecked === true)) {
+          copiedAgents.push(item.employeeId);
+        }
       }
-    }
-    if (this.agents.some(x => x.isChecked === true)) {
-      this.copyAgentSchedule();
+      this.copyAgentSchedule(copiedAgents);
     } else {
       this.activeModal.close({ needRefresh: false });
     }
@@ -117,7 +142,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     return agentSchedulesQueryParams;
   }
 
-  private loadAgents(unCheckAll?: boolean) {
+  private loadAgents() {
     const queryParams = this.getQueryParams();
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
@@ -127,11 +152,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
         let headerPaginationValues = new HeaderPagination();
         headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
         this.totalAgents = headerPaginationValues.totalCount;
-        if (unCheckAll) {
-          this.agents.forEach(ele => {
-            ele.isChecked = false;
-          });
-        }
+        this.showSelecteddEmployees();
         this.spinnerService.hide(this.spinner);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
@@ -140,13 +161,52 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getAgentsSubscription);
   }
 
-  private copyAgentSchedule() {
+  private showSelecteddEmployees() {
+    if (this.masterSelected || this.checkAll && this.checkedAgents.length === 0 ||
+      this.checkedAgents.filter(x => x.isChecked === true).length === this.totalAgents) {
+      this.agents.forEach(ele => {
+        ele.isChecked = true;
+      });
+    }
+    else if (!this.masterSelected && this.checkAll) {
+      const distinct = this.checkedAgents;
+      this.agents.forEach(ele => {
+        if (distinct.findIndex(x => x.employeeId === ele.employeeId) === -1) {
+          ele.isChecked = true;
+          this.checkedAgents.push(ele);
+        }
+      });
+      if (this.checkedAgents.length > 0) {
+        this.checkedAgents.forEach(ele => {
+          if (ele.isChecked === true) {
+            const index = this.agents.findIndex(x => x.employeeId === ele.employeeId);
+            if (index !== -1) {
+              this.agents[index].isChecked = true;
+            }
+          }
+        });
+      }
+    } else {
+      if (this.checkedAgents.length > 0) {
+        this.checkedAgents.forEach(ele => {
+          if (ele.isChecked === true) {
+            const index = this.agents.findIndex(x => x.employeeId === ele.employeeId);
+            if (index !== -1) {
+              this.agents[index].isChecked = true;
+            }
+          }
+        });
+      }
+    }
+  }
+
+  private copyAgentSchedule(copiedAgents: Array<number>) {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const copyData = new CopyAgentSchedulechart();
     copyData.agentSchedulingGroupId = this.agentSchedulingGroupId;
     copyData.agentScheduleType = this.agentScheudleType;
     copyData.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
-    copyData.employeeIds = this.masterSelected ? [] : this.copiedAgents;
+    copyData.employeeIds = this.masterSelected ? [] : copiedAgents;
 
     this.copyAgentScheduleChartSubscription = this.agentSchedulesService.copyAgentScheduleChart(this.agentScheduleId, copyData)
       .subscribe(() => {

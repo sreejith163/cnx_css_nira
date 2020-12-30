@@ -243,7 +243,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private loadAgentSchedules(employeeId: number) {
     const activityCodes = Array<string>();
     this.jsonData.forEach(element => {
-      activityCodes.push(element.ActivityCode);
+      if (activityCodes.findIndex(x => x === element.ActivityCode) === -1) {
+        activityCodes.push(element.ActivityCode);
+      }
     });
 
     const agentScheduleQueryParams = new AgentSchedulesQueryParams();

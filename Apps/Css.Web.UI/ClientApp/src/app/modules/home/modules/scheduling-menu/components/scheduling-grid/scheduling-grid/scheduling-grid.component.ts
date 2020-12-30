@@ -382,6 +382,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been copied!');
         this.modalRef.result.then(() => {
           this.loadAgentSchedule(agentScheduleId);
+          this.loadAgentSchedules();
         });
       } else {
         this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');

@@ -112,7 +112,7 @@
           <tbody>
             <ngx-spinner [name]="spinner"></ngx-spinner>
             <ng-container
-              *ngFor="let el of totalSchedulingGridData  | slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize; let i = index">
+              *ngFor="let el of totalSchedulingGridData; let i = index">
               <tr class="table-row">
                 <td>
                   <i class="expand-icon fa padding-5 pointer"
