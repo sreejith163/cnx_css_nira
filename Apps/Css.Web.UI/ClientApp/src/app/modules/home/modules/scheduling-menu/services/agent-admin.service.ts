@@ -23,7 +23,7 @@ export class AgentAdminService extends HttpBaseService {
   }
 
   getAgentAdmins(agentAdminsQueryParams: AgentAdminQueryParameter) {
-    const url = `${this.baseURL}/agentAdmins`;
+    const url = `${this.baseURL}/agentadmins`;
 
     return this.http.get<AgentAdminDetails>(url, {
       params: this.convertToHttpParam(agentAdminsQueryParams),
@@ -32,28 +32,28 @@ export class AgentAdminService extends HttpBaseService {
   }
 
   getAgentAdmin(agentAdminId: number) {
-    const url = `${this.baseURL}/agentAdmins/${agentAdminId}`;
+    const url = `${this.baseURL}/agentadmins/${agentAdminId}`;
 
     return this.http.get<AgentAdminResponse>(url)
       .pipe(catchError(this.handleError));
   }
 
   addAgentAdmin(agentAdmin: AddAgentAdmin) {
-    const url = `${this.baseURL}/agentAdmins`;
+    const url = `${this.baseURL}/agentadmins`;
 
     return this.http.post<ApiResponseModel>(url, agentAdmin)
       .pipe(catchError(this.handleError));
   }
 
   updateAgentAdmin(agentAdminId: number, agentAdmin: UpdateAgentAdmin) {
-    const url = `${this.baseURL}/agentAdmins/${agentAdminId}`;
+    const url = `${this.baseURL}/agentadmins/${agentAdminId}`;
 
     return this.http.put<ApiResponseModel>(url, agentAdmin)
       .pipe(catchError(this.handleError));
   }
 
   deleteAgentAdmin(agentAdminId: number) {
-    const url = `${this.baseURL}/agentAdmins/${agentAdminId}`;
+    const url = `${this.baseURL}/agentadmins/${agentAdminId}`;
 
     return this.http.delete<ApiResponseModel>(url)
       .pipe(catchError(this.handleError));
