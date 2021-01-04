@@ -23,7 +23,9 @@ spec:
             - name: "ASPNETCORE_ENVIRONMENT"
               value: "Development"
             - name: "MongoDbSettings__ConnectionString"
-              value: "mongodb://localhost:27017"
+              value: "mongodb://cssuser:cssuser_DEV@10.87.222.44:27017,10.87.222.45:27017,10.87.222.46:27017/admin?replicaSet=rs0&ssl=false"
+            - name: "MongoDbSettings__DatabaseName"
+              value: "css_dev"
 ---
 kind: Service
 apiVersion: v1

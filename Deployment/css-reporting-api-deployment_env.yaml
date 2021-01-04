@@ -22,8 +22,10 @@ spec:
           env:
             - name: "ASPNETCORE_ENVIRONMENT"
               value: "Development"
-            - name: "ConnectionStrings__Database"
-              value: "server=10.87.222.42;user id=cssuser;password=cssuser_DEV;persistsecurityinfo=True;database=css_dev_admin"
+            - name: "MongoDbSettings__ConnectionString"
+              value: "mongodb://cssuser:cssuser_DEV@10.87.222.44:27017,10.87.222.45:27017,10.87.222.46:27017/admin?replicaSet=rs0&ssl=false"
+            - name: "MongoDbSettings__DatabaseName"
+              value: "css_dev"
 ---
 kind: Service
 apiVersion: v1
