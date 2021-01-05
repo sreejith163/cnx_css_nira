@@ -1,25 +1,25 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-12 col-md-12">
-      <h2>{{ 'Client LOB Group' | translation: 'lbl_page_title' : translationValues }}</h2>
+      <h2>{{ 'Client_lob_group' | translate }}</h2>
     </div>
   </div>
   <div class="row">
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-left">
-        <li class="breadcrumb-item"><a>Setup Menu</a></li>
-        <li class="breadcrumb-item active"><b>Client LOB Group List</b> </li>
+        <li class="breadcrumb-item"><a>{{ 'Setup_menu' | translate }}</a></li>
+        <li class="breadcrumb-item active"><b>{{ 'Client_lob_group_list' | translate }}</b> </li>
       </ol>
     </div>
   </div>
   <div class="row m-l-r-10">
     <div class="col-md-3">
-      {{ 'Client Name' | translation: 'lbl_client_name' : translationValues }}
+      {{ 'Client_name' | translate }}
       <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
     </div>
     <div class="col-md-3 padding-bottom-5">
       <input type="text" class="form-control  mt-4" [(ngModel)]="searchKeyword"
-        placeholder="{{ 'Enter a Client LOB Group Name' | translation: 'lbl_search_text' : translationValues }}" />
+        placeholder="{{ 'Enter_a_client_lob_group_name' | translate }}" />
       <ng-container *ngIf="searchKeyword?.length">
         <!-- <i id="input_close_btn" class="fa fa-times-circle cursor-pointer closable-icon" type="button"
           (click)="clearSearchKeyword()"></i> -->
@@ -28,13 +28,12 @@
     <div class="col-md-2">
       <button class="form-control mt-4" (click)="searchClientLOBGroups()" id="btn_search"><i class="fa fa-search"
           aria-hidden="true"></i>
-        {{ 'Search' | translation: 'btn_search' : translationValues }}
+          {{ 'Search' | translate }}
       </button>
     </div>
     <div class="col-md-4 text-right">
       <button type="button" class="btn btn-primary float-r mt-4" (click)="addClientLOBGroup()" id="btn_add"><i
-          class="fa fa-plus padding-5" aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues
-        }}</button>
+          class="fa fa-plus padding-5" aria-hidden="true"></i>{{ 'Add' | translate }}</button>
     </div>
   </div>
 
@@ -45,67 +44,66 @@
           <thead>
             <tr>
               <th>
-                {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}</th>
+                {{ 'Action' | translate }}</th>
 
               <th class="sortable-field" (click)="sort('Id', sortBy)">
-                {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
+                {{ 'ID' | translate }}
                 <i *ngIf="orderBy !== 'Id'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'Id'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('RefId', sortBy)">
-                {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
+                {{ 'Reference_id' | translate }}
                 <i *ngIf="orderBy !== 'RefId'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'RefId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('Name', sortBy)">
-                {{ 'LOB Group Name' | translation: 'lbl_table_heading_lob_group_name' : translationValues }}
+                {{ 'LOB_group_name' | translate }}
                 <i *ngIf="orderBy !== 'Name'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'Name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('FirstDayOfWeek', sortBy)">
-                {{ 'First day of week' | translation: 'lbl_table_heading_first_day_of_week' : translationValues }}
+                {{ 'First_day_of_week' | translate }}
                 <i *ngIf="orderBy !== 'FirstDayOfWeek'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'FirstDayOfWeek'" class="fa"
                   [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('Timezone.Name', sortBy)">
-                {{ 'Time zone for reporting' | translation: 'lbl_table_heading_time_zone_for_reporting' :
-                translationValues }}
+                {{ 'Timezone for reporting' | translate }}
                 <i *ngIf="orderBy !== 'Timezone.Name'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'Timezone.Name'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('CreatedBy', sortBy)">
-                {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
+                {{ 'Created_by' | translate }}
                 <i *ngIf="orderBy !== 'CreatedBy'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'CreatedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('CreatedDate', sortBy)">
-                {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
+                {{ 'Created_date' | translate }}
                 <i *ngIf="orderBy !== 'CreatedDate'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'CreatedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('ModifiedBy', sortBy)">
-                {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
+                {{ 'Modified_by' | translate }}
                 <i *ngIf="orderBy !== 'ModifiedBy'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'ModifiedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('ModifiedDate', sortBy)">
-                {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
+                {{ 'Modified_date' | translate }}
                 <i *ngIf="orderBy !== 'ModifiedDate'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'ModifiedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
@@ -131,11 +129,10 @@
                       <i class="fa fa-ellipsis-h"></i>
                     </a>
                     <ng-template #popContent>
-                      <b>Client Name : </b> {{ el.clientName }}
+                      <b>{{ 'Client_name' | translate }} : </b> {{ el.clientName }}
                     </ng-template>
                     <ng-template #popTitle>
-                      {{ 'Hierarchy' | translation: 'lbl_table_heading_client_lob_group_hierarchy' : translationValues
-                      }}
+                      {{ 'Hierarchy' | translate}}
                     </ng-template>
                   </span>
                 </div>
@@ -159,7 +156,7 @@
           <ngb-pagination class="p-r-5" [collectionSize]="totalClientLOBGroupRecord" (pageChange)="changePage($event)"
             [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
           <select class="form-control" (change)="changePageSize($event.target.value)">
-            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">{{x.text}}
+            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">{{x.text | translate}}
             </option>
           </select>
         </ul>

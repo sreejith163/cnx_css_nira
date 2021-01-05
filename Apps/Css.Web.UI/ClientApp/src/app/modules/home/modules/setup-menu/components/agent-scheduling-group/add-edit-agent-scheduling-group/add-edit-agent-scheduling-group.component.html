@@ -3,7 +3,7 @@
     <ngx-spinner [name]="spinner"></ngx-spinner>
     <div class="modal-header header-color">
       <h6 class="modal-title w-100 font-weight-bold header">
-        <p>{{ getTitle()}} {{ 'Agent Scheduling Groups' | translation: 'lbl_add_edit_page_title' : translationValues }}
+        <p>{{ getTitle() | translate}} {{ 'Agent_scheduling_groups' | translate }}
         </p>
       </h6>
       <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
@@ -15,7 +15,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label class="my-2">{{ 'Client Name' | translation: 'lbl_add_edit_client_name' : translationValues }}
+              <label class="my-2"> {{ 'Client_name' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -23,8 +23,7 @@
               <app-client-name-typeahead [clientId]="clientId" (clientSelected)="setClient($event)">
               </app-client-name-typeahead>
               <div *ngIf="!clientId && formSubmitted" class="valid-error">
-                {{ 'Client Name is required' | translation: 'lbl_add_edit_client_name_required_validation_message' :
-                translationValues }}
+                {{ 'Client Name is required' | translate }}
               </div>
             </div>
           </div>
@@ -32,8 +31,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label for="" class="my-2">{{ 'LOB Group Name' | translation: 'lbl_table_heading_lob_group_name' :
-                translationValues }}
+              <label for="" class="my-2">{{ 'LOB_group_name' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -41,8 +39,7 @@
               <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId"
                 (clientLobSelected)="setClientLobGroup($event)"></app-client-lob-group-typeahead>
               <div *ngIf="!clientLobGroupId && formSubmitted" class="valid-error">
-                {{ 'LOB Group Name is required' | translation: 'lbl_add_edit_lob_group_name_required_validation_message'
-                : translationValues }}
+                {{ 'LOB Group Name is required' | translate }}
               </div>
             </div>
           </div>
@@ -50,8 +47,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label for="" class="my-2">{{ 'Skill Group Name' | translation: 'lbl_add_edit_skill_group_name' :
-                translationValues }}
+              <label for="" class="my-2">{{ 'Skill_group_name' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -59,8 +55,7 @@
               <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)" [clientId]="clientId"
                 [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId"></app-skill-group-typeahead>
               <div *ngIf="!skillGroupId && formSubmitted" class="valid-error">
-                {{ 'Skill Group Name is required' | translation:
-                'lbl_add_edit_skill_group_name_required_validation_message' : translationValues }}
+                {{ 'Skill Group Name is required' | translate }}
               </div>
             </div>
 
@@ -69,8 +64,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label for="" class="my-2">{{ 'Skill Tag Name' | translation: 'lbl_add_edit_skill_tag_name' :
-                translationValues }}
+              <label for="" class="my-2">{{ 'Skill_tag_name' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -79,8 +73,7 @@
                 [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId" [skillTagId]="skillTagId">
               </app-skill-tag-typeahead>
               <div *ngIf="!skillTagId && formSubmitted" class="valid-error">
-                {{ 'Skill Tag Name is required' | translation: 'lbl_add_edit_skill_tag_name_required_validation_message'
-                : translationValues }}
+                {{ 'Skill Tag Name is required' | translate }}
               </div>
             </div>
 
@@ -89,8 +82,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label for="" class="my-2">{{ 'Agent Scheduling Group Name' | translation:
-                'lbl_table_heading_scheduling_group_name' : translationValues }}
+              <label for="" class="my-2">{{ 'Agent_scheduling_group_name' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -101,14 +93,12 @@
               <ng-container *ngIf="formSubmitted && form.name.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('name'); else maxLengthError">
                   <div *ngIf="hasFormControlValidationError('name')" class="valid-error">
-                    {{ 'Agent Scheduling Group Name is required' | translation:
-                    'lbl_add_edit_agent_scheduling_group_name_required_validation_message' : translationValues }}
+                    {{ 'Agent Scheduling Group Name is required' | translate }}
                   </div>
                 </ng-container>
                 <ng-template #maxLengthError>
                   <div class="valid-error">
-                    {{ 'Scheduling Group Name cannot exceed 50 characters' | translation:
-                    'lbl_agent_scheduling_name_maxlength_validation' : translationValues }}
+                    {{ 'Agent Scheduling Group Name cannot exceed 50 characters' | translate }}
                   </div>
                 </ng-template>
               </ng-container>
@@ -118,7 +108,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'First day of week' | translation: 'lbl_add_edit_first_day_of_week' : translationValues }}
+              <label>{{ 'First_day_of_week' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -130,15 +120,14 @@
                       <input type="radio" id="{{ 'radio_lob_group_' + getWeekDay(day) }}" name="firstDayOfWeek"
                         [value]="day" formControlName="firstDayOfWeek" (change)="changeOperatingHoursDays(day)">
                       <label for="{{ 'radio_lob_group_' + getWeekDay(day) }}">
-                        {{ getWeekDay(day) | translation: getTranslationIdForWeek(day) : translationValues }}
+                        {{ getWeekDay(day) | translate }}
                       </label>
                     </div>
                   </div>
                 </ng-container>
               </div>
               <div *ngIf="hasFormControlValidationError('firstDayOfWeek')" class="valid-error">
-                {{ 'First day of week is required' | translation:
-                'lbl_add_edit_first_day_of_week_required_validation_message' : translationValues }}
+                {{ 'First day of week is required' | translate }}
               </div>
             </div>
           </div>
@@ -146,8 +135,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label for="" id="lbl_add_edit_time_zone_for_reporting">{{ 'Time zone for reporting' | translation:
-                'lbl_add_edit_time_zone_for_reporting' : translationValues }}
+              <label for="" id="lbl_add_edit_time_zone_for_reporting">{{ 'Timezone for reporting' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -155,12 +143,11 @@
               <select class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('timezoneId')}"
                 formControlName="timezoneId">
-                <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}</option>
-                <option value="" *ngFor="let x of timeZoneList" [value]="x.id">{{x.value}}</option>
+                <option value="">{{ 'Select' | translate }}</option>
+                <option value="" *ngFor="let x of timeZoneList" [value]="x.id">{{x.value | translate}}</option>
               </select>
               <div *ngIf="hasFormControlValidationError('timezoneId')" class="valid-error">
-                {{ 'Time zone for reporting is required' | translation:
-                'lbl_add_edit_time_zone_required_validation_message' : translationValues }}
+                {{ 'Timezone for reporting is required' | translate }}
               </div>
             </div>
           </div>
@@ -171,8 +158,7 @@
               <ng-template ngbPanelHeader let-opened="opened">
                 <button ngbPanelToggle class="d-flex w-100
                     align-items-center justify-content-between btn btn-link p-0">
-                  <label class="text-bold">{{ 'Operation hours for group' | translation: 'lbl_operation_hours_for_group'
-                    : translationValues }}</label>
+                  <label class="text-bold">{{ 'Operation_hours_for_group' | translate }}</label>
                   <i class="fa" [ngClass]="opened ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                 </button>
               </ng-template>
@@ -182,31 +168,30 @@
                     <div class="w-100 open-hours table-bordered expanding-table">
                       <thead>
                         <tr>
-                          <th>{{ 'Day' | translation: 'lbl_day' : translationValues }}</th>
-                          <th>{{ 'Open' | translation: 'lbl_open' : translationValues }}<span class="required">*</span>
+                          <th>{{ 'Day' | translate }}</th>
+                          <th>{{ 'Open' | translate }}<span class="required">*</span>
                           </th>
-                          <th>{{ 'From' | translation: 'lbl_from' : translationValues }}</th>
-                          <th>{{ 'To' | translation: 'lbl_to' : translationValues }}</th>
+                          <th>{{ 'From' | translate }}</th>
+                          <th>{{ 'To' | translate }}</th>
                         </tr>
                       </thead>
                       <tbody>
                         <ng-container formArrayName="operationHour">
                           <tr *ngFor="let details of operationHour.controls index as i">
                             <ng-container [formGroupName]="i">
-                              <td class="text-bold days">{{getWeekDay(details.value.day)}}</td>
+                              <td class="text-bold days">{{getWeekDay(details.value.day) | translate}}</td>
                               <td>
                                 <select class="form-control" (change)="onOptionTypeChange(i)"
                                   formControlName="operationHourOpenTypeId">
                                   <option value="">
-                                    {{ 'Select' | translation: 'drp_default_Select' : translationValues }}
+                                    {{ 'Select' | translate }}
                                   </option>
-                                  <option *ngFor="let x of openTypes" [value]="x.id">{{x.open}}</option>
+                                  <option *ngFor="let x of openTypes" [value]="x.id">{{x.open | translate}}</option>
                                 </select>
                                 <span
                                   *ngIf="formSubmitted && operationHour.controls[i].get('operationHourOpenTypeId').errors?.required"
                                   class="valid-error">
-                                  {{ 'Please select open type' | translation:
-                                  'lbl_add_edit_open_type_required_validation_message' : translationValues }}
+                                  {{ 'Please select open type' | translate }}
                                 </span>
                               </td>
                               <td>
@@ -214,8 +199,7 @@
                                   <option *ngFor="let x of openTime" [value]="x">{{x}}</option>
                                 </select>
                                 <span *ngIf="hasOpenHoursValidationError('from', i)" class="valid-error">
-                                  {{ 'Time range is required' | translation:
-                                  'lbl_add_edit_time_range_required_validation_message' : translationValues }}
+                                  {{ 'Time range is required' | translate }}
                                 </span>
                               </td>
                               <td>
@@ -223,14 +207,12 @@
                                   <option *ngFor="let x of openTime" [value]="x">{{x}}</option>
                                 </select>
                                 <span *ngIf="hasOpenHoursValidationError('to', i)" class="valid-error">
-                                  {{ 'Time range is required' | translation:
-                                  'lbl_add_edit_time_range_required_validation_message' : translationValues }}
+                                  {{ 'Time range is required' | translate }}
                                 </span>
                                 <span
                                   *ngIf="formSubmitted && operationHour.controls[i].errors?.rangeError && !hasOpenHoursValidationError('to', i)"
                                   class="valid-error">
-                                  {{ 'Enter a valid time range' | translation:
-                                  'lbl_add_edit_time_range_invalid_validation_message' : translationValues }}
+                                  {{ 'Enter a valid time range' | translate }}
                                 </span>
                               </td>
                             </ng-container>
@@ -252,7 +234,7 @@
           <div class="col-md-10"></div>
           <div class="col-md-2">
             <button class="btn btn-primary float-r" data-dismiss="modal" (click)="saveAgentSchedulingGroupDetails()">
-              <i class="fa fa-save padding-5"></i>Save
+              <i class="fa fa-save padding-5"></i> {{ 'Save' | translate }}
             </button>
           </div>
         </div>

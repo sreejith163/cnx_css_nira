@@ -3,7 +3,7 @@
       <ngx-spinner [name]="spinner"></ngx-spinner>
       <div class="modal-header header-color">
         <h6 class="modal-title w-100 font-weight-bold header">
-          <p>{{ 'Import Schedules' | translation: 'lbl_import_schedules_page_title' : translationValues }}
+          <p>{{ 'Import Schedules' | translate }}
           </p>
         </h6>
         <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
@@ -20,15 +20,15 @@
             </div>
             <div class="col-md-2 col-sm-2 p-l-0">
               <button class="btn btn-style" (click)="file.click()">
-                {{ 'Browse' | translation: 'btn_browse' : translationValues }}
+                {{ 'Browse' | translate }}
               </button>
             </div>
           </div>
           <div *ngIf="fileFormatValidation" class="valid-error">
-            {{'Please select an excel or csv file' | translation: 'lbl_input_file_format_validation' : translationValues}}
+            {{'Please select an excel or csv file' | translate}}
           </div>
           <div *ngIf="!hasFileSelected()" class="valid-error">
-            {{'Please select a file' | translation: 'lbl_input_file_validation  ' : translationValues}}
+            {{'Please select a file'  | translate}}
           </div>
         </div>
       </div>
@@ -38,7 +38,7 @@
             <div class="col-md-8"></div>
             <div class="col-md-4">
               <button class="btn btn-primary float-r" data-dismiss="modal" (click)="import()">
-                {{ 'Import' | translation: 'btn_import' : translationValues }}
+                {{ 'Import' | translate }}
               </button>
             </div>
           </div>

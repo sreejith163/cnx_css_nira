@@ -22,6 +22,7 @@ import { SchedulingCodeIconsService } from '../../../services/scheduling-code-ic
 import { SchedulingCodeTypesService } from '../../../services/scheduling-code-types.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { TranslateService } from '@ngx-translate/core';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 
 
@@ -53,6 +54,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   @Input() translationValues: TranslationDetails[];
 
   constructor(
+    public translate: TranslateService,
     private formBuilder: FormBuilder,
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
@@ -79,7 +81,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   }
 
   getTitle() {
-    return ComponentOperation[this.operation];
+    return this.translate.instant(`${ComponentOperation[(this.operation)]}`);
   }
 
   hasValueSelected(value) {

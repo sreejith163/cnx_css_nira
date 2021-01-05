@@ -20,7 +20,8 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
-
+import { TranslateService } from '@ngx-translate/core';
+import { Language } from 'src/app/shared/models/language-value.model';
 
 @Component({
   selector: 'app-scheduling-code-list',
@@ -28,6 +29,7 @@ import { TranslationDetails } from 'src/app/shared/models/translation-details.mo
   styleUrls: ['./scheduling-code-list.component.scss']
 })
 export class SchedulingCodeListComponent implements OnInit, OnDestroy {
+  currentLanguage: Language;
 
   currentPage = 1;
   pageSize = 10;
@@ -43,27 +45,28 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
   paginationSize = Constants.paginationSize;
   modalRef: NgbModalRef;
   headerPaginationValues: HeaderPagination;
-  translationValues: TranslationDetails[];
   schedulingCodes: SchedulingCode[] = [];
 
-  languageSelectionSubscription: ISubscription;
-  getTranslationValuesSubscription: ISubscription;
+  getTranslationSubscription: ISubscription;
   deleteSchedulingCodeSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
 
   constructor(
+    public translate: TranslateService,
     private modalService: NgbModal,
     private schedulingCodeService: SchedulingCodeService,
     private spinnerService: NgxSpinnerService,
     private translationService: LanguageTranslationService,
     private genericStateManagerService: GenericStateManagerService
-  ) { }
+  ) {
+
+   }
 
   ngOnInit(): void {
-    this.loadTranslationValues();
     this.loadSchedulingCodes();
-    this.subscribeToUserLanguage();
+    this.subscribeToTranslations();
+    this.loadTranslations();
   }
 
   ngOnDestroy() {
@@ -85,7 +88,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
 
   addSchedulingCode() {
     this.getModalPopup(AddUpdateSchedulingCodeComponent, 'lg');
-    this.setComponentValues(ComponentOperation.Add, this.translationValues);
+    this.setComponentValues(ComponentOperation.Add);
 
     this.modalRef.result.then(() => {
       this.showSuccessPopUpMessage('The record has been added!');
@@ -94,7 +97,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
 
   editSchedulingCode(schedulingCodeData: SchedulingCode) {
     this.getModalPopup(AddUpdateSchedulingCodeComponent, 'lg');
-    this.setComponentValues(ComponentOperation.Edit, this.translationValues);
+    this.setComponentValues(ComponentOperation.Edit);
     this.modalRef.componentInstance.schedulingCodeData = schedulingCodeData;
 
     this.modalRef.result.then((result: any) => {
@@ -166,9 +169,8 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private setComponentValues(operation: ComponentOperation, translationValues: Array<TranslationDetails>) {
+  private setComponentValues(operation: ComponentOperation) {
     this.modalRef.componentInstance.operation = operation;
-    this.modalRef.componentInstance.translationValues = translationValues;
   }
 
   private setComponentMessages(headingMessage: string, contentMessage: string) {
@@ -209,31 +211,21 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     this.subscriptionList.push(this.getSchedulingCodesSubscription);
   }
 
-  private loadTranslationValues() {
-    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
-    const menuId = CssMenu.SchedulingCodes;
-
-    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
-      .subscribe((response) => {
-        if (response) {
-          this.translationValues = response;
-        }
-      }, (error) => {
-        console.log(error);
-      });
-
-    this.subscriptionList.push(this.getTranslationValuesSubscription);
-  }
-
-  private subscribeToUserLanguage() {
-    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
-      (languageId: number) => {
-        if (languageId) {
-          this.loadTranslationValues();
+  private subscribeToTranslations(){
+    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
+          this.loadTranslations();
         }
       }
     );
-
-    this.subscriptionList.push(this.languageSelectionSubscription);
+    this.subscriptionList.push(this.getTranslationSubscription);
   }
+
+  private loadTranslations(){
+    const browserLang = this.genericStateManagerService.getLanguage();
+    this.currentLanguage = browserLang;
+    this.translate.use(browserLang ? browserLang : 'en');
+  }
+
 }

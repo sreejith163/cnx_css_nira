@@ -23,6 +23,8 @@ import { TranslationDetails } from 'src/app/shared/models/translation-details.mo
 import { ClientLobGroupService } from '../../../services/client-lob-group.service';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
+import { Language } from 'src/app/shared/models/language-value.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-client-lob-group-list',
@@ -31,6 +33,7 @@ import { GenericStateManagerService } from 'src/app/shared/services/generic-stat
 })
 
 export class ClientLobGroupListComponent implements OnInit, OnDestroy {
+  currentLanguage: Language;
 
   currentPage = 1;
   pageSize = 10;
@@ -52,14 +55,14 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
   translationValues: TranslationDetails[];
   clientLOBGroupDetails: ClientLOBGroupDetails[] = [];
 
-  languageSelectionSubscription: ISubscription;
-  getTranslationValuesSubscription: ISubscription;
+  getTranslationSubscription: ISubscription;
   getAllClientLOBGroupDetailsSubscription: ISubscription;
   getClientLOBGroupTranslationSubscription: ISubscription;
   deleteClientLOBGroupSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
 
   constructor(
+    public translate: TranslateService,
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
     private clientLOBGroupService: ClientLobGroupService,
@@ -70,9 +73,9 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sortKeyword = 'asc';
     this.paginationSize = Constants.paginationSize;
-    this.loadTranslationValues();
+    this.loadTranslations();
     this.loadClientLOBGroups();
-    this.subscribeToUserLanguage();
+    this.subscribeToTranslations();
   }
 
   ngOnDestroy() {
@@ -223,31 +226,20 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
     this.subscriptionList.push(this.getAllClientLOBGroupDetailsSubscription);
   }
 
-  private loadTranslationValues() {
-    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
-    const menuId = CssMenu.ClientLobGroup;
-
-    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
-      .subscribe((response) => {
-        if (response) {
-          this.translationValues = response;
-        }
-      }, (error) => {
-        console.log(error);
-      });
-
-    this.subscriptionList.push(this.getTranslationValuesSubscription);
-  }
-
-  private subscribeToUserLanguage() {
-    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
-      (languageId: number) => {
-        if (languageId) {
-          this.loadTranslationValues();
+  private subscribeToTranslations(){
+    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
+          this.loadTranslations();
         }
       }
     );
+    this.subscriptionList.push(this.getTranslationSubscription);
+  }
 
-    this.subscriptionList.push(this.languageSelectionSubscription);
+  private loadTranslations(){
+    const browserLang = this.genericStateManagerService.getLanguage();
+    this.currentLanguage = browserLang;
+    this.translate.use(browserLang ? browserLang : 'en');
   }
 }

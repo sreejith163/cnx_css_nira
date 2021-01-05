@@ -3,7 +3,7 @@
       <ngx-spinner [name]="spinner" bdColor="rgba(255, 0, 0, 0.8)"></ngx-spinner>
       <div class="modal-header header-color">
         <h6 class="modal-title w-100 font-weight-bold header">
-          <p>{{ getTitle()}} {{ 'Client LOB Group' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
+          <p>{{ getTitle() | translate }} {{ 'Client_lob_group' | translate }}</p>
         </h6>
         <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
           <span aria-hidden="true">&times;</span>
@@ -14,7 +14,7 @@
           <div class="col-md-12 m-t-20">
             <div class="row">
               <div class="col-md-4">
-                <label>{{ 'Client Name' | translation: 'lbl_add_edit_client_name' : translationValues }}
+                <label>{{ 'Client_name' | translate }}
                   <span class="required">*</span>
                 </label>
               </div>
@@ -22,7 +22,7 @@
                 <app-client-name-typeahead (clientSelected)="setClient($event)"
                  [clientId]="editClientId"></app-client-name-typeahead>
                  <div *ngIf="!clientId && formSubmitted" class="valid-error">
-                  {{ 'Client Name is required' | translation: 'lbl_add_edit_client_name_required_validation_message' : translationValues }}
+                  {{ 'Client Name is required' | translate }}
                 </div>
               </div>
             </div>
@@ -30,7 +30,7 @@
           <div class="col-md-12 m-t-20">
             <div class="row">
               <div class="col-md-4">
-                <label>{{ 'LOB Group Name' | translation: 'lbl_add_edit_lob_group_name' : translationValues }}
+                <label>{{ 'LOB_group_name' | translate }}
                   <span class="required">*</span>
                 </label>
               </div>
@@ -41,12 +41,12 @@
                 <ng-container *ngIf="formSubmitted && form.name.invalid">
                   <ng-container *ngIf="hasFormControlValidationError('name'); else maxLengthError">
                 <div *ngIf="hasFormControlValidationError('name')" class="valid-error">
-                  {{ 'LOB Group Name is required' | translation: 'lbl_add_edit_lob_group_name_required_validation_message' : translationValues }}
+                  {{ 'LOB Group Name is required' | translate }}
                 </div>
               </ng-container>
               <ng-template #maxLengthError>
                 <div class="valid-error">
-                  {{ 'Client LOB group name cannot exceed 50 characters' | translation: 'lbl_add_edit_client_lob_group_maxlength_validation_message' : translationValues }}
+                  {{ 'Client LOB group name cannot exceed 50 characters' | translate }}
                 </div>
               </ng-template>
             </ng-container>
@@ -56,7 +56,7 @@
           <div class="col-md-12 m-t-20">
             <div class="row">
               <div class="col-md-4">
-                <label>{{ 'First day of week' | translation: 'lbl_add_edit_first_day_of_week' : translationValues }}
+                <label>{{ 'First_day_of_week' | translate }}
                   <span class="required">*</span>
                 </label>
               </div>
@@ -68,14 +68,14 @@
                         <input type="radio" id="{{ 'radio_lob_group_' + getWeekDay(day) }}" name="firstDayOfWeek"
                           [value]="day" formControlName="firstDayOfWeek">
                         <label for="{{ 'radio_lob_group_' + getWeekDay(day) }}">
-                          {{ getWeekDay(day) | translation: getTranslationIdForWeek(day) : translationValues }}
+                          {{ getWeekDay(day) | translate }}
                         </label>
                       </div>
                     </div>
                   </ng-container>
                 </div>
                 <div *ngIf="hasFormControlValidationError('firstDayOfWeek')" class="valid-error">
-                  {{ 'First day of week is required' | translation: 'lbl_add_edit_first_day_of_week_required_validation_message' : translationValues }}
+                  {{ 'First day of week is required' | translate }}
                 </div>
               </div>
             </div>
@@ -83,7 +83,7 @@
           <div class="col-md-12 m-t-20">
             <div class="row">
               <div class="col-md-4">
-                <label>{{ 'Time zone for reporting' | translation: 'lbl_add_edit_time_zone_for_reporting' : translationValues }}
+                <label>{{ 'Timezone for reporting' | translate }}
                   <span class="required">*</span>
                 </label>
               </div>
@@ -91,12 +91,12 @@
                 <select class="form-control"
                   [ngClass]="{'valid-border-error': hasFormControlValidationError('timeZoneId')}"
                   formControlName="timeZoneId">
-                  <option value="">{{ 'Select' | translation: 'drp_default_Select' : translationValues }}
+                  <option value="">{{ 'Select' | translate }}
                   </option>
                   <option value="" *ngFor="let x of timeZones" [value]="x.id">{{x.value}}</option>
                 </select>
                 <div *ngIf="hasFormControlValidationError('timeZoneId')" class="valid-error">
-                  {{ 'Time zone for reporting is required' | translation: 'lbl_add_edit_time_zone_required_validation_message' : translationValues }}
+                  {{ 'Timezone for reporting is required' | translate }}
                 </div>
               </div>
             </div>
@@ -109,7 +109,7 @@
             <div class="col-md-10"></div>
             <div class="col-md-2">
               <button class="btn btn-primary float-r" data-dismiss="modal" (click)="saveClientLobGroupDetails()" id="btn_save">
-                <i class="fa fa-save padding-5"></i>{{ 'Save' | translation: 'btn_save' : translationValues }}
+                <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
               </button>
             </div>
           </div>

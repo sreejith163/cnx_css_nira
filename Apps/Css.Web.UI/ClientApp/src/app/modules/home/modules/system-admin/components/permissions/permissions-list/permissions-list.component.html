@@ -1,20 +1,20 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-12 col-md-12">
-      <h2>{{ 'Permissions' | translation: 'lbl_page_title' : translationValues }}</h2>
+      <h2>{{ 'Permissions' | translate }}</h2>
     </div>
   </div>
 
   <div class="row">
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-left">
-        <li class="breadcrumb-item"><a>System Admin</a></li>
-        <li class="breadcrumb-item active"><b>Permissions List</b> </li>
+        <li class="breadcrumb-item"><a>{{ 'System_admin' | translate }}</a></li>
+        <li class="breadcrumb-item active"><b>{{ 'Permissions_list' | translate }}</b> </li>
       </ol>
     </div>
   </div>
 
-  <app-add-update-permission [employeeId]="employeeId" [translationValues]="translationValues"
+  <app-add-update-permission [employeeId]="employeeId"
     (employeeSelected)="onEmployeeSelected($event)" (permissionCleared)="onPermissionCleared()"
     (permissionUpdated)="onPermissionUpdated()" (permissionAdded)="onPermissionAdded()">
   </app-add-update-permission>
@@ -22,11 +22,11 @@
   <div class="row m-l-r-10">
     <div class="col-md-3 p-b-5">
       <input type="text" class="form-control" [(ngModel)]="searchKeyword"
-        placeholder="{{ 'Type here to search an Employee' | translation: 'lbl_search_employee' : translationValues }}" />
+        placeholder="{{ 'Search_employee' | translate }}" />
     </div>
     <div class="col-md-2">
       <button class="form-control" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
-        {{ 'Search' | translation: 'btn_search' : translationValues }}
+        {{ 'Search' | translate }}
       </button>
     </div>
     <div class="col-md-7 text-right">
@@ -40,13 +40,13 @@
               <input type="checkbox" id="{{ role.id }}" [value]="role.role" [checked]="hasHideRoleSelected(role.role)"
                 (change)="onCheckRolesToHide($event)">
               <label for="{{ role.id }}">
-                {{ role.role }}
+                {{ role.role | translate }}
               </label>
             </div>
           </div>
         </ng-template>
         <ng-template #popTitle>
-          {{ 'Select columns to hide' | translation: 'lbl_table_heading_user_roles' : translationValues }}
+          {{ 'Select_columns_to_hide' | translate }}
         </ng-template>
       </button>
     </div>
@@ -58,53 +58,53 @@
           <thead>
             <tr>
               <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="employeeId">
-                {{ 'Employee ID' | translation: 'lbl_table_heading_employee_id' : translationValues }}
+                {{ 'Employee_id' | translate }}
                 <i class="fa fa-sort"></i>
               </th>
               <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="firstName">
-                {{ 'First Name' | translation: 'lbl_table_heading_first_name' : translationValues }}
+                {{ 'First_name' | translate }}
                 <i class="fa fa-sort"></i>
               </th>
               <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="lastName">
-                {{ 'Last Name' | translation: 'lbl_table_heading_last_name' : translationValues }}
+                {{ 'Last_name' | translate }}
                 <i class="fa fa-sort"></i>
               </th>
               <th *ngIf="hasRoleHidden('System Admin')" class="sortable-field" [appSort]="permissions"
                 data-order="asc" data-name="roles" data-type="array">
-                {{ 'System Admin' | translation: 'lbl_table_heading_system_admin' : translationValues }}
+                {{ 'System_admin' | translate }}
                 <i class="fa fa-sort"></i>
               </th>
               <th *ngIf="hasRoleHidden('WFM Admin')" class="sortable-field" [appSort]="permissions"
                 data-order="asc" data-name="roles" data-type="array">
-                {{ 'WFM Admin' | translation: 'lbl_table_heading_wfm_admin' : translationValues }}
+                {{ 'WFM_admin' | translate }}
                 <i class="fa fa-sort"></i>
               </th>
               <th *ngIf="hasRoleHidden('WFM Scheduling Team')" class="sortable-field" [appSort]="permissions"
                 data-order="asc" data-name="roles" data-type="array">
-                {{ 'WFM Scheduling Team' | translation: 'lbl_table_heading_wfm_scheduling_team' : translationValues }}
+                {{ 'WFM_scheduling_team' | translate }}
                 <i class="fa fa-sort"></i>
               </th>
               <th *ngIf="hasRoleHidden('Delivery Team')" class="sortable-field" [appSort]="permissions"
                 data-order="asc" data-name="roles" data-type="array">
-                {{ 'Delivery Team' | translation: 'lbl_table_heading_delivery_team' : translationValues }}
+                {{ 'Delivery_team' | translate }}
                 <i class="fa fa-sort"></i>
               </th>
               <th *ngIf="hasRoleHidden('Active')" class="sortable-field" [appSort]="permissions"
                 data-order="asc" data-name="roles" data-type="array">
-                {{ 'Active' | translation: 'lbl_table_heading_active' : translationValues }}
+                {{ 'Active' | translate }}
                 <i class="fa fa-sort"></i>
               </th>
               <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="createdBy">
-                {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
+                {{ 'Created_by' | translate }}
                 <i class="fa fa-sort"></i></th>
               <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="createdDate">
-                {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
+                {{ 'Created_date' | translate }}
                 <i class="fa fa-sort"></i></th>
               <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="modifiedBy">
-                {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
+                {{ 'Modified_by' | translate }}
                 <i class="fa fa-sort"></i></th>
               <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="modifiedDate">
-                {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
+                {{ 'Modified_date' | translate }}
                 <i class="fa fa-sort"></i></th>
             </tr>
           </thead>
@@ -139,7 +139,7 @@
             [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
           <select class="form-control" (change)="changePageSize($event.target.value)">
             <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
-              {{ x.text }}
+              {{ x.text | translate }}
             </option>
           </select>
         </ul>

@@ -22,6 +22,8 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { ClientService } from '../../../services/client.service';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
+import { TranslateService } from '@ngx-translate/core';
+import { Language } from 'src/app/shared/models/language-value.model';
 
 @Component({
   selector: 'app-client-name-list',
@@ -29,6 +31,7 @@ import { GenericStateManagerService } from 'src/app/shared/services/generic-stat
   styleUrls: ['./client-name-list.component.css']
 })
 export class ClientNameListComponent implements OnInit, OnDestroy {
+  currentLanguage: Language;
 
   currentPage = 1;
   pageSize = 10;
@@ -47,13 +50,13 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
   translationValues: TranslationDetails[];
   clientsDetails: ClientDetails[] = [];
 
-  languageSelectionSubscription: ISubscription;
-  getTranslationValuesSubscription: ISubscription;
+  getTranslationSubscription: ISubscription;
   getAllClientDetailsSubscription: ISubscription;
   deleteClientSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
 
   constructor(
+    public translate: TranslateService,
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
     private clientService: ClientService,
@@ -63,9 +66,11 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.paginationSize = Constants.paginationSize;
-    this.loadTranslationValues();
+    // this.loadTranslationValues();
+    this.loadTranslations();
     this.loadClients();
-    this.subscribeToUserLanguage();
+    this.subscribeToTranslations();
+    // this.subscribeToUserLanguage();
   }
 
   ngOnDestroy() {
@@ -88,7 +93,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
 
   addClient() {
     this.getModalPopup(AddUpdateClientNameComponent, 'lg');
-    this.setComponentValues(ComponentOperation.Add, this.translationValues);
+    this.setComponentValues(ComponentOperation.Add);
 
     this.modalRef.result.then(() => {
       this.currentPage = 1;
@@ -98,7 +103,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
 
   editClient(data: ClientDetails) {
     this.getModalPopup(AddUpdateClientNameComponent, 'lg');
-    this.setComponentValues(ComponentOperation.Edit, this.translationValues);
+    this.setComponentValues(ComponentOperation.Edit);
     this.modalRef.componentInstance.clientDetails = data;
 
     this.modalRef.result.then((result: any) => {
@@ -167,9 +172,8 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
-  private setComponentValues(operation: ComponentOperation, translationValues: Array<TranslationDetails>) {
+  private setComponentValues(operation: ComponentOperation) {
     this.modalRef.componentInstance.operation = operation;
-    this.modalRef.componentInstance.translationValues = translationValues;
   }
 
   private setComponentMessages(headingMessage: string, contentMessage: string) {
@@ -209,31 +213,21 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
     this.subscriptionList.push(this.getAllClientDetailsSubscription);
   }
 
-  private loadTranslationValues() {
-    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
-    const menuId = CssMenu.ClientName;
-
-    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
-      .subscribe((response) => {
-        if (response) {
-          this.translationValues = response;
-        }
-      }, (error) => {
-        console.log(error);
-      });
-
-    this.subscriptionList.push(this.getTranslationValuesSubscription);
-  }
-
-  private subscribeToUserLanguage() {
-    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
-      (languageId: number) => {
-        if (languageId) {
-          this.loadTranslationValues();
+  private subscribeToTranslations(){
+    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
+          this.loadTranslations();
         }
       }
     );
-
-    this.subscriptionList.push(this.languageSelectionSubscription);
+    this.subscriptionList.push(this.getTranslationSubscription);
   }
+
+  private loadTranslations(){
+    const browserLang = this.genericStateManagerService.getLanguage();
+    this.currentLanguage = browserLang;
+    this.translate.use(browserLang ? browserLang : 'en');
+  }
+
 }

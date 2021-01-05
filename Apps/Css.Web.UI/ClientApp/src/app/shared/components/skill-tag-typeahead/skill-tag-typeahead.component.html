@@ -1,8 +1,8 @@
-<ng-select [items]="skillTagItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="All"
+<ng-select [items]="skillTagItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="{{'All' | translate}}"
   [typeahead]="typeAheadInput$" (scroll)="onSkillTagScroll($event)" (scrollToEnd)="onSkillTagScrollToEnd()"
   (change)="onSkillTagChange($event)" (clear)="clearSkillTagValues()" [(ngModel)]="skillTagId">
   <ng-template ng-header-tmp>
-    <small class="form-text text-muted">Loaded {{skillTagItemsBuffer.length}} of
+    <small class="form-text text-muted">{{'Loaded' | translate }} {{skillTagItemsBuffer.length}} {{'of' | translate}}
       {{totalItems}}</small>
   </ng-template>
   <ng-template ng-option-tmp let-item="item" let-index="index">

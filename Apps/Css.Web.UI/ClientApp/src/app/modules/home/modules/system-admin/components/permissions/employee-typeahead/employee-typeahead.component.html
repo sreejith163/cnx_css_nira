@@ -1,10 +1,10 @@
 <ng-select [items]="employeeItemsBuffer" [loading]="loading" bindLabel="firstName" bindValue="employeeId"
   [typeahead]="typeAheadInput$"
-  placeholder="{{ 'Click here to search an Employee' | translation: 'drp_select_an_employee' : translationValues }}"
+  placeholder="{{ 'Click_here_to_search_an_employee' | translate }}"
   (scroll)="onEmployeeScroll($event)" (scrollToEnd)="onEmployeeScrollToEnd()" (change)="onEmployeeChange($event)"
   (clear)="clearSelectedEmployee()" [(ngModel)]="employeeId">
   <ng-template ng-header-tmp>
-    <small class="form-text text-muted">Loaded {{employeeItemsBuffer.length}} of
+    <small class="form-text text-muted">{{ 'Loaded' | translate }} {{employeeItemsBuffer.length}} {{ 'of' | translate }}
       {{totalItems}} </small>
   </ng-template>
   <ng-template ng-option-tmp let-item="item" let-index="index">

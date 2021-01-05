@@ -3,8 +3,10 @@
     <ngx-spinner [name]="spinner"></ngx-spinner>
     <div class="modal-header header-color">
       <h6 class="modal-title w-100 font-weight-bold header">
-        <p>{{ getTitle() }} {{ 'Scheduling Code' | translation: 'lbl_add_edit_page_title' : translationValues }}
-        </p>
+        <!-- <p>{{ getTitle() }} {{ 'Scheduling Code' | translation: 'lbl_add_edit_page_title' : translationValues }}
+        </p> -->
+        <p>{{ getTitle() }} {{ 'Scheduling_codes' | translate }}</p>
+        
       </h6>
       <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
@@ -15,7 +17,8 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Description' | translation: 'lbl_add_edit_description' : translationValues }}
+              <label>
+                {{ 'Description' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -24,12 +27,12 @@
               <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.description.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('description'); else maxLengthError">
                   <div *ngIf="hasFormControlValidationError('description')" class="valid-error">
-                    {{ 'Description is required' | translation: 'lbl_add_edit_description_required_validation_message' : translationValues }}
+                    {{ 'Description is required' | translate }}
                   </div>
                 </ng-container>
                 <ng-template #maxLengthError>
                   <div class="valid-error">
-                    {{ 'Description cannot exceed 50 characters' | translation: 'lbl_add_edit_description_maxlength_validation_message' : translationValues }}
+                    {{ 'Description cannot exceed 50 characters' | translate }}
                   </div>
                 </ng-template>
               </ng-container>
@@ -39,7 +42,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Priority #' | translation: 'lbl_add_edit_priority_no' : translationValues }}
+              <label>{{ 'Priority' | translate }} #
                 <span class="required">*</span>
               </label>
             </div>
@@ -49,12 +52,12 @@
                <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.priorityNumber.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('priorityNumber'); else maxLengthError">
                   <div *ngIf="hasFormControlValidationError('priorityNumber')" class="valid-error">
-                    {{ 'Priority # is required' | translation: 'lbl_add_edit_priority_required_validation_message' : translationValues }}
+                    {{ 'Priority # is required' | translate }}
                   </div>
                 </ng-container>
                 <ng-template #maxLengthError>
                   <div class="valid-error">
-                    {{ 'Priority # cannot exceed 10 characters' | translation: 'lbl_add_edit_priority_maxlength_validation_message' : translationValues }}
+                    {{ 'Priority # cannot exceed 10 characters' | translate }}
                   </div>
                 </ng-template>
               </ng-container>
@@ -65,8 +68,10 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Type of Codes' | translation: 'lbl_add_edit_code_type' : translationValues }}</label>
-              <span class="required">*</span>
+              <label>
+                {{ 'Type_of_code' | translate }} 
+              </label> 
+               <span class="required"> *</span>
             </div>
             <div class="col-md-8 grid">
               <div class="form-group clearfix margin-b-05-rem" *ngFor="let data of codeList; let i = index">
@@ -79,7 +84,7 @@
                 </div>
               </div>
               <div *ngIf="hasFormControlValidationError('schedulingTypeCode')" class="valid-error">
-                {{ 'Type of Codes is required' | translation: 'lbl_add_edit_type_of_codes_required_validation_message' : translationValues }}
+                {{ 'Type of Code is required' | translate }}
               </div>
             </div>
           </div>
@@ -87,7 +92,8 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Schedule Icon' | translation: 'lbl_add_edit_icon' : translationValues }}
+              <label>
+                {{ 'Schedule_icon' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -102,7 +108,7 @@
                             <i class="icon-style icon">{{ unifiedToNative(iconId) }}</i>
                           </ng-container>
                           <ng-template #noIcon>
-                            {{ 'Select Icon' | translation: 'lbl_add_edit_default_icon' : translationValues }}
+                            {{ 'Select_icon' | translate }}
                           </ng-template>
                         </h3>
                         <div class="card-tools">
@@ -122,7 +128,7 @@
                       </div>
                     </div>
                     <div *ngIf="hasFormControlValidationError('iconId')" class="valid-error">
-                      {{ 'Schedule Icon is required' | translation: 'lbl_add_edit_schedule_icon_required_validation_message' : translationValues }}
+                      {{ 'Schedule Icon is required' | translate }}
                     </div>
                   </div>
                 </div>
@@ -139,7 +145,8 @@
           <div class="col-md-2">
             <button class="btn btn-primary float-r" data-dismiss="modal" (click)="saveSchedulingCodeDetails()"
               id="btn_save">
-              <i class="fa fa-save padding-5"></i>{{ 'Save' | translation: 'btn_save' : translationValues }}
+              <i class="fa fa-save padding-5"></i>
+              {{ 'Save' | translate }}
             </button>
           </div>
         </div>

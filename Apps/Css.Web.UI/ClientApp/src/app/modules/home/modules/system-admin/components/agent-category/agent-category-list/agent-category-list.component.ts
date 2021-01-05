@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
+import { Language } from 'src/app/shared/models/language-value.model';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
@@ -25,6 +27,7 @@ import { AddAgentCategoryComponent } from '../add-agent-category/add-agent-categ
   styleUrls: ['./agent-category-list.component.scss']
 })
 export class AgentCategoryListComponent implements OnInit, OnDestroy {
+  currentLanguage: Language;
 
   currentPage = 1;
   pageSize = 10;
@@ -45,12 +48,13 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
   agentCategoryDetails: AgentCategoryDetails[] = [];
 
   languageSelectionSubscription: ISubscription;
-  getTranslationValuesSubscription: ISubscription;
+  getTranslationSubscription: ISubscription;
   getAllAgentcategorySubscription: ISubscription;
   deleteAgentCategorySubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
 
   constructor(
+    public translate: TranslateService,
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
     private agentCategoryService: AgentCategoryService,
@@ -59,9 +63,9 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.loadTranslationValues();
+    this.loadTranslations();
     this.loadAgentcategories();
-    this.subscribeToUserLanguage();
+    this.subscribeToTranslations();
   }
 
   ngOnDestroy() {
@@ -205,31 +209,21 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
     this.subscriptionList.push(this.getAllAgentcategorySubscription);
   }
 
-  private loadTranslationValues() {
-    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
-    const menuId = CssMenu.AgentCategories;
-
-    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
-      .subscribe((response) => {
-        if (response) {
-          this.translationValues = response;
-        }
-      }, (error) => {
-        console.log(error);
-      });
-
-    this.subscriptionList.push(this.getTranslationValuesSubscription);
-  }
-
-  private subscribeToUserLanguage() {
-    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
-      (languageId: number) => {
-        if (languageId) {
-          this.loadTranslationValues();
+  private subscribeToTranslations(){
+    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
+          this.loadTranslations();
         }
       }
     );
-
-    this.subscriptionList.push(this.languageSelectionSubscription);
+    this.subscriptionList.push(this.getTranslationSubscription);
   }
+
+  private loadTranslations(){
+    const browserLang = this.genericStateManagerService.getLanguage();
+    this.currentLanguage = browserLang;
+    this.translate.use(browserLang ? browserLang : 'en');
+  }
+
 }

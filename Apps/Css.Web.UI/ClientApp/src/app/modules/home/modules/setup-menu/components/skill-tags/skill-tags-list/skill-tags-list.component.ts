@@ -20,6 +20,8 @@ import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
+import { Language } from 'src/app/shared/models/language-value.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-skill-tags-list',
@@ -37,6 +39,7 @@ import { GenericStateManagerService } from 'src/app/shared/services/generic-stat
   styleUrls: ['./skill-tags-list.component.scss']
 })
 export class SkillTagsListComponent implements OnInit, OnDestroy {
+  currentLanguage: Language;
 
   currentPage = 1;
   pageSize = 10;
@@ -59,14 +62,14 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
   skillTag: SkillTagResponse;
   skillTags: SkillTagDetails[] = [];
 
-  languageSelectionSubscription: ISubscription;
-  getTranslationValuesSubscription: ISubscription;
+  getTranslationSubscription: ISubscription;
   getSkillTagsSubscription: ISubscription;
   getSkillTagSubscription: ISubscription;
   deleteSkillTagSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
   constructor(
+    public translate: TranslateService,
     private skillTagSevice: SkillTagService,
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
@@ -75,9 +78,9 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.loadTranslationValues();
+    this.loadTranslations();
     this.loadSkillTags();
-    this.subscribeToUserLanguage();
+    this.subscribeToTranslations();
   }
 
   ngOnDestroy() {
@@ -268,32 +271,22 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getSkillTagSubscription);
   }
 
-  private loadTranslationValues() {
-    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
-    const menuId = CssMenu.SkillTags;
-
-    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
-      .subscribe((response) => {
-        if (response) {
-          this.translationValues = response;
-        }
-      }, (error) => {
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.getTranslationValuesSubscription);
-  }
-
-  private subscribeToUserLanguage() {
-    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
-      (languageId: number) => {
-        if (languageId) {
-          this.loadTranslationValues();
+  private subscribeToTranslations(){
+    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
+          this.loadTranslations();
         }
       }
     );
-
-    this.subscriptions.push(this.languageSelectionSubscription);
+    this.subscriptions.push(this.getTranslationSubscription);
   }
+
+  private loadTranslations(){
+    const browserLang = this.genericStateManagerService.getLanguage();
+    this.currentLanguage = browserLang;
+    this.translate.use(browserLang ? browserLang : 'en');
+  }
+  
 
 }

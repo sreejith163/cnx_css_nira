@@ -1,35 +1,35 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-6 col-md-6">
-            <h2>{{ 'Agent Scheduling Group' | translation: 'lbl_page_title' : translationValues }}</h2>
+            <h2>{{ 'Agent_scheduling_group' | translate }}</h2>
         </div>
 
     </div>
     <div class="row">
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-left">
-                <li class="breadcrumb-item"><a>Setup Menu</a></li>
-                <li class="breadcrumb-item active">Agent Scheduling Group List</li>
+                <li class="breadcrumb-item"><a>{{ 'Setup_menu' | translate }}</a></li>
+                <li class="breadcrumb-item active">{{ 'Agent_scheduling_group_list' | translate }}</li>
             </ol>
         </div>
     </div>
 
     <div class="row m-l-r-10">
         <div class="col-md-3 d-flex flex-column">
-            {{ 'Client Name' | translation: 'lbl_client_name' : translationValues }}
+            {{ 'Client_name' | translate }}
             <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
         </div>
         <div class="col-md-3 d-flex flex-column">
-            {{ 'Client LOB Name' | translation: 'lbl_client_lob_name' : translationValues }}
+            {{ 'Client_lob_group_name' | translate }}
             <app-client-lob-group-typeahead (clientLobSelected)="setClientLobgroup($event)">
             </app-client-lob-group-typeahead>
         </div>
         <div class="col-md-3 d-flex flex-column">
-            {{ 'Skill Groups' | translation: 'lbl_skill_groups' : translationValues }}
+            {{ 'Skill_groups' | translate }}
             <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)"></app-skill-group-typeahead>
         </div>
         <div class="col-md-3 d-flex flex-column">
-            {{ 'Skill Tags' | translation: 'lbl_skill_tags' : translationValues }}
+            {{ 'Skill_tags' | translate }}
             <app-skill-tag-typeahead (skillTagSelected)="setSkillTag($event)"></app-skill-tag-typeahead>
         </div>     
         
@@ -38,17 +38,17 @@
         <div class="col-md-4 d-flex flex-column m-t-10">
             <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
                 [maxLength]="maxLength"
-                placeholder="{{ 'Enter a Agent Scheduling Group Name' | translation: 'search_hint' : translationValues }}" />
+                placeholder="{{ 'Enter_an_agent_scheduling_group_name' | translate }}" />
         </div>
         <div class="col-md-2 col-sm-6">
             <button class="form-control m-t-10" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
-                {{ 'Search' | translation: 'btn_search' : translationValues }}
+                {{ 'Search' | translate }}
             </button>
         </div>
         <div class="col-md-6 text-right">
             <button type="button" class="btn btn-primary float-r m-t-10" (click)="addAgentSchedulingGroup()"><i
                     class="fa fa-plus pr-1"
-                    aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}</button>
+                    aria-hidden="true"></i>{{ 'Add' | translate }}</button>
         </div>
     </div>
     <div class="row m-r-15 m-t-10">
@@ -59,64 +59,64 @@
                         <tr>
                             <th></th>
                             <th >
-                                {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}</th>
+                                {{ 'Action' | translate }}</th>
                             <th class="sortable-field" (click)="sort('id', sortBy)">
-                                {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
+                                {{ 'ID' | translate }}
                                 <i *ngIf="orderBy !== 'id'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field" (click)="sort('refId', sortBy)">
-                                {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
+                                {{ 'Reference_id' | translate }}
                                 <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field width-15-p" (click)="sort('name', sortBy)">
-                                {{ 'Scheduling Group Name' | translation: 'lbl_table_heading_agent_scheduling_group_name' : translationValues }}
+                                {{ 'Scheduling_group_name' | translate }}
                                 <i *ngIf="orderBy !== 'name'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'name'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field" (click)="sort('FirstDayOfWeek', sortBy)">
-                                {{ 'First day of week' | translation: 'lbl_table_heading_first_day_of_week' : translationValues }}
+                                {{ 'First_day_of_week' | translate }}
                                 <i *ngIf="orderBy !== 'FirstDayOfWeek'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'FirstDayOfWeek'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field" (click)="sort('Timezone.Name', sortBy)">
-                                {{ 'Time zone for reporting' | translation: 'lbl_table_heading_time_zone_for_lob_group' : translationValues }}
+                                {{ 'Timezone for reporting' | translate }}
                                 <i *ngIf="orderBy !== 'Timezone.Name'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'Timezone.Name'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field" (click)="sort('createdBy', sortBy)">
-                                {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
+                                {{ 'Created_by' | translate }}
                                 <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field" (click)="sort('createdDate', sortBy)">
-                                {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
+                                {{ 'Created_date' | translate }}
                                 <i *ngIf="orderBy !== 'createdDate'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i></th>
                             <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
-                                {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
+                                {{ 'Modified_by' | translate }}
                                 <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field" (click)="sort('modifiedDate', sortBy)">
-                                {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
+                                {{ 'Modified_date' | translate }}
                                 <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
@@ -150,20 +150,20 @@
                                             <i class="fa fa-ellipsis-h"></i>
                                         </a>
                                         <ng-template #popContent>
-                                            <b>Client Name : </b> {{ el.clientName }}
+                                            <b>{{ 'Client_name' | translate }} : </b> {{ el.clientName }}
                                             <br />
-                                            <b>Client LOB group Name : </b> {{ el.clientLobGroupName }}
+                                            <b>{{ 'Client_lob_group_name' | translate }} : </b> {{ el.clientLobGroupName }}
                                             <br>
-                                            <b>Skill Group Name :</b> {{el.skillGroupName}}
+                                            <b>{{ 'Skill_group_name' | translate }} :</b> {{el.skillGroupName}}
                                             <br>
-                                            <b>Skill Tag Name :</b> {{el.skillTagName}}
+                                            <b>{{ 'Skill_tag_name' | translate }} :</b> {{el.skillTagName}}
                                         </ng-template>
                                         <ng-template #popTitle>
-                                            {{ 'Hierarchy' | translation: 'lbl_table_heading_scheduling_group_hierarchy' : translationValues }}
+                                            {{ 'Hierarchy' | translate }}
                                         </ng-template>
                                     </span>
                                 </td>
-                                <td>{{weekDay[el.firstDayOfWeek]}}</td>
+                                <td>{{weekDay[el.firstDayOfWeek] | translate}}</td>
                                 <td>{{el.timezoneLabel}}</td>
                                 <td>{{el.createdBy}}</td>
                                 <td>{{el.createdDate | date: 'yyyy-MM-dd' }}</td>
@@ -176,27 +176,27 @@
                                     <td [attr.colspan]="12">
                                         <div class="px-3">
                                             <div class="py-2 open-hours-title">
-                                                {{ 'Operation hours for group' | translation: 'lbl_operation_hours_for_group' : translationValues }}
+                                                {{ 'Operation_hours_for_group' | translate }}
                                             </div>
                                             <table class="w-100 open-hours expanding-table">
                                                 <thead>
                                                     <tr>
-                                                        <th>{{ 'Day' | translation: 'lbl_day' : translationValues }}
+                                                        <th>{{ 'Day' | translate }}
                                                         </th>
-                                                        <th>{{ 'Open' | translation: 'lbl_open' : translationValues }}
+                                                        <th>{{ 'Open' | translate }}
                                                         </th>
-                                                        <th>{{ 'From' | translation: 'lbl_from' : translationValues }}
+                                                        <th>{{ 'From' | translate}}
                                                         </th>
-                                                        <th>{{ 'To' | translation: 'lbl_to' : translationValues }}
+                                                        <th>{{ 'To' | translate }}
                                                         </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let details of agentSchedulingGroup?.operationHour">
-                                                        <td>{{getWeekDay(details.day)}}</td>
-                                                        <td>{{getOpenType(details.operationHourOpenTypeId)}}</td>
-                                                        <td>{{details.from}}</td>
-                                                        <td>{{details.to}}</td>
+                                                        <td>{{getWeekDay(details.day) | translate}}</td>
+                                                        <td>{{getOpenType(details.operationHourOpenTypeId) | translate}}</td>
+                                                        <td>{{details.from | translate}}</td>
+                                                        <td>{{details.to | translate}}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -219,7 +219,7 @@
                         [boundaryLinks]="true"></ngb-pagination>
                     <select class="form-control" (change)="changePageSize($event.target.value)">
                         <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
-                            {{x.text}}</option>
+                            {{x.text | translate}}</option>
                     </select>
                 </ul>
             </nav>

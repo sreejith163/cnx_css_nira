@@ -1,9 +1,9 @@
-<ng-select [items]="clientItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="All"
+<ng-select [items]="clientItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="{{ 'All' | translate }}"
   [typeahead]="typeAheadInput$" (scroll)="onClientScroll($event)" (scrollToEnd)="onClientScrollToEnd()"
   (change)="onClientChange($event)" (clear)="clearSelectedValues()"
   [(ngModel)]="clientId">
   <ng-template ng-header-tmp>
-    <small class="form-text text-muted">Loaded {{clientItemsBuffer.length}} of
+    <small class="form-text text-muted">{{ 'Loaded' | translate }} {{clientItemsBuffer.length}} {{ 'of' | translate }}
       {{totalItems}}</small>
   </ng-template>
   <ng-template ng-option-tmp let-item="item" let-index="index">

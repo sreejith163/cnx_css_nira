@@ -34,6 +34,8 @@ import * as $ from 'jquery';
 import { KeyValue } from 'src/app/shared/models/key-value.model';
 import { ImportScheduleComponent } from '../import-schedule/import-schedule.component';
 import { ExcelData } from '../../../models/excel-data.model';
+import { Language } from 'src/app/shared/models/language-value.model';
+import { TranslateService } from '@ngx-translate/core';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { ExcelExportData } from '../../../constants/excel-export-data';
@@ -60,6 +62,7 @@ declare function highlightCell(cell: string, className: string);
   styleUrls: ['./scheduling-grid.component.scss']
 })
 export class SchedulingGridComponent implements OnInit, OnDestroy {
+  currentLanguage: Language;
 
   timeIntervals = 15;
   currentPage = 1;
@@ -114,12 +117,12 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   updateAgentScheduleSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
   getAgentSchedulesSubscription: ISubscription;
-  languageSelectionSubscription: ISubscription;
-  getTranslationValuesSubscription: ISubscription;
+  getTranslationSubscription: ISubscription;
   importAgentScheduleChartSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
   constructor(
+    public translate: TranslateService,
     private calendar: NgbCalendar,
     private modalService: NgbModal,
     public ngbDateParserFormatter: NgbDateParserFormatter,
@@ -137,8 +140,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
     this.schedulingIntervals = Constants.schedulingIntervals;
     this.schedulingStatus = Object.keys(SchedulingStatus).filter(key => isNaN(SchedulingStatus[key]));
-    this.loadTranslationValues();
-    this.subscribeToUserLanguage();
+    this.loadTranslations();
+    this.subscribeToTranslations();
     this.loadAgentSchedules();
   }
 
@@ -661,32 +664,21 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadTranslationValues() {
-    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
-    const menuId = CssMenu.SchedulingGrid;
-
-    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
-      .subscribe((response) => {
-        if (response) {
-          this.translationValues = response;
-        }
-      }, (error) => {
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.getTranslationValuesSubscription);
-  }
-
-  private subscribeToUserLanguage() {
-    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
-      (languageId: number) => {
-        if (languageId) {
-          this.loadTranslationValues();
+  private subscribeToTranslations(){
+    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
+          this.loadTranslations();
         }
       }
     );
+    this.subscriptions.push(this.getTranslationSubscription);
+  }
 
-    this.subscriptions.push(this.languageSelectionSubscription);
+  private loadTranslations(){
+    const browserLang = this.genericStateManagerService.getLanguage();
+    this.currentLanguage = browserLang;
+    this.translate.use(browserLang ? browserLang : 'en');
   }
 
   private getQueryParams() {

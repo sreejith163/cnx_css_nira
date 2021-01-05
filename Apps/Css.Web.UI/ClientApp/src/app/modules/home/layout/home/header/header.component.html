@@ -1,4 +1,4 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav [ngClass]="{'long-sidebar-menu': menu_length==='long'}" class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
         <li class="nav-item">
             <a class="nav-link cursor-pointer" data-widget="pushmenu" onclick="toggleSidebar()"><i
@@ -7,10 +7,42 @@
     </ul>
 
     <ul class="navbar-nav ml-auto">
+        <!-- <li class="nav-item">
+          <select #langSelect (change)="changeLanguage(langSelect.value)">
+            <option *ngFor="let language of translate.getLangs()" [value]="language">{{language}}</option>
+          </select>
+        </li> -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true">
+              {{ 'Language' | translate }}
+              <i
+                class="fa fa-fw fa-globe"
+              ></i>
+            </a>
+            <!-- <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right text-xs">
+              <span class="dropdown-item dropdown-header">Change Language</span>
+              <ng-container *ngFor="let language of cssLanguages">
+                <div class="dropdown-divider"></div>
+                <a [ngStyle]="{ cursor: 'pointer' }" (click)="changeCSSLanguage(language.id, language.value)" [ngClass]="{'active': currentLanguage.id === language.id }" class="dropdown-item">
+                  {{language.value}}
+                </a>
+              </ng-container>
+            </div> -->
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right text-xs">
+              <span class="dropdown-item dropdown-header">{{ 'Change_language' | translate }}</span>
+              <ng-container *ngFor="let language of cssLanguages">
+                <div class="dropdown-divider"></div>
+                <a [ngStyle]="{ cursor: 'pointer' }" (click)="confirmChangeLanguage(language)" [ngClass]="{'disabled active': currentLanguage === language.code}" class="dropdown-item">
+                  {{language.name}}
+                </a>
+              </ng-container>
+            </div>            
+            
+          </li>
         <li class="nav-item">
             <a class="nav-link cursor-pointer" (click)="logout()">
                 <i class="fa fa-sign-out"></i>
-                Log out
+                {{ 'Log_out' | translate }}
             </a>
         </li>
     </ul>

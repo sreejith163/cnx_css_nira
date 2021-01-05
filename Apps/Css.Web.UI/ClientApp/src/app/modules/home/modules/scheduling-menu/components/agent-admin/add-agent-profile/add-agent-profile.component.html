@@ -3,7 +3,7 @@
     <ngx-spinner [name]="spinner"></ngx-spinner>
     <div class="modal-header header-color">
       <h6 class="modal-title w-100 font-weight-bold header">
-        <p>{{ getTitle()}} {{ 'Agent Admin' | translation: 'lbl_add_edit_page_title' : translationValues }}</p>
+        <p>{{ getTitle() | translate}} {{ 'Agent_admin' | translate }}</p>
       </h6>
       <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
@@ -14,16 +14,16 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Employee ID' | translation: 'lbl_add_edit_employee_id' : translationValues }}
+              <label>{{ 'Employee_id' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
               <input type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('employeeId')}"
-                formControlName="employeeId" placeholder="Employee ID" />
+                formControlName="employeeId" placeholder="{{ 'Employee_id' | translate }}" />
               <div *ngIf="hasFormControlValidationError('employeeId')" class="valid-error">
-                {{ 'Employee ID is required' | translation: 'lbl_add_edit_employee_id_required_validation_message' : translationValues }}
+                {{ 'Employee ID is required' | translate }}
               </div>
             </div>
           </div>
@@ -31,7 +31,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'SSO' | translation: 'lbl_add_edit_sso' : translationValues }}
+              <label>{{ 'SSO' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -42,12 +42,12 @@
               <ng-container *ngIf="formSubmitted && form.sso.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('sso'); else invalidCOntrol">
                   <div *ngIf="hasFormControlValidationError('sso')" class="valid-error">
-                    {{ 'SSO is required' | translation: 'lbl_add_edit_sso_required_validation_message' : translationValues }}
+                    {{ 'SSO is required' | translate }}
                   </div>
                 </ng-container>
                 <ng-template #invalidCOntrol>
                   <div class="valid-error">
-                    {{ 'SSO is invalid' | translation: 'lbl_add_edit_sso_invalid_validation_message' : translationValues }}
+                    {{ 'SSO is invalid' | translate }}
                   </div>
                 </ng-template>
               </ng-container>
@@ -57,7 +57,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Client Name' | translation: 'lbl_add_edit_client_name' : translationValues }}
+              <label>{{ 'Client_name' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -66,7 +66,7 @@
               <app-client-name-typeahead [clientId]="clientId" (clientSelected)="setClient($event)">
               </app-client-name-typeahead>
               <div *ngIf="!clientId && formSubmitted" class="valid-error">
-                {{ 'Client Name is required' | translation: 'lbl_add_edit_client_name_required_validation_message' : translationValues }}
+                {{ 'Client Name is required' | translate }}
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Client LOB Group' | translation: 'lbl_add_edit_client_lob_group' : translationValues }}
+              <label>{{ 'Client_lob_group' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -83,7 +83,7 @@
               <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId"
                 (clientLobSelected)="setClientLobGroup($event)"></app-client-lob-group-typeahead>
               <div *ngIf="!clientLobGroupId && formSubmitted" class="valid-error">
-                {{ 'Client LOB Group is required' | translation: 'lbl_add_edit_client_lob_group_required_validation_message' : translationValues }}
+                {{ 'Client LOB Group is required' | translate }}
               </div>
             </div>
           </div>
@@ -91,7 +91,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Skill Group' | translation: 'lbl_add_edit_skill_group' : translationValues }}
+              <label>{{ 'Skill_group' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -99,7 +99,7 @@
               <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)" [clientId]="clientId"
                 [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId"></app-skill-group-typeahead>
               <div *ngIf="!skillGroupId && formSubmitted" class="valid-error">
-                {{ 'Skill Group is required' | translation: 'lbl_add_edit_skill_group_required_validation_message' : translationValues }}
+                {{ 'Skill Group is required' | translate }}
               </div>
             </div>
           </div>
@@ -107,7 +107,7 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Skill Tag' | translation: 'lbl_add_edit_skill_tag' : translationValues }}
+              <label>{{ 'Skill_tag' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
@@ -117,7 +117,7 @@
                 [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId" [skillTagId]="skillTagId">
               </app-skill-tag-typeahead>
               <div *ngIf="!skillTagId && formSubmitted" class="valid-error">
-                {{ 'Skill Tags is required' | translation: 'lbl_add_edit_skill_tag_required_validation_message' : translationValues }}
+                {{ 'Skill Tags is required' | translate }}
               </div>
             </div>
           </div>
@@ -125,16 +125,16 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'First Name' | translation: 'lbl_add_edit_first_name' : translationValues }}
+              <label>{{ 'First_name' | translate }}
                 <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
               <input type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('firstName')}"
-                formControlName="firstName" placeholder="First Name" />
+                formControlName="firstName" placeholder="{{ 'First_name' | translate }}" />
               <div *ngIf="hasFormControlValidationError('firstName')" class="valid-error">
-                {{ 'First Name is required' | translation: 'lbl_add_edit_first_name_required_validation_message' : translationValues }}
+                {{ 'First Name is required' | translate }}
               </div>
             </div>
           </div>
@@ -142,15 +142,15 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Last Name' | translation: 'lbl_add_edit_last_name' : translationValues }}
+              <label>{{ 'Last_name' | translate }}
                 <span class="required">*</span></label>
             </div>
             <div class="col-md-8">
               <input type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('lastName')}" formControlName="lastName"
-                placeholder="Last Name" />
+                placeholder="{{ 'Last_name' | translate }}" />
               <div *ngIf="hasFormControlValidationError('lastName')" class="valid-error">
-                {{ 'Last Name is required' | translation: 'lbl_add_edit_last_name_required_validation_message' : translationValues }}
+                {{ 'Last Name is required' | translate }}
               </div>
             </div>
           </div>
@@ -158,12 +158,12 @@
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
-              <label>{{ 'Hire Date' | translation: 'lbl_add_edit_hire_date' : translationValues }}
+              <label>{{ 'Hire_date' | translate }}
                 <span class="required">*</span></label>
             </div>
             <div class="col-md-8">
               <div class="input-group">
-                <input class="form-control" placeholder="Select Hire Date" name="dp" [readonly]="true"
+                <input class="form-control" placeholder="{{ 'Select_hire_date' | translate }}" name="dp" [readonly]="true"
                   [ngClass]="{'valid-border-error': hasFormControlValidationError('hireDate')}"
                   formControlName="hireDate" ngbDatepicker [footerTemplate]="footerTemplate"
                   [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
@@ -174,13 +174,13 @@
                 </div>
                 <ng-template #footerTemplate>
                   <button class="btn btn-primary btn-sm m-2 float-left" (click)="setHireDateAsToday(); d.close()"
-                    id="btn_today">Today</button>
+                    id="btn_today">{{ 'Today' | translate }}</button>
                   <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()"
-                    id="btn_close">Close</button>
+                    id="btn_close">{{ 'Close' | translate }}</button>
                 </ng-template>
               </div>
               <div *ngIf="hasFormControlValidationError('hireDate')" class="valid-error">
-                {{ 'Hire Date is required' | translation: 'lbl_add_edit_hire_date_required_validation_message' : translationValues }}
+                {{ 'Hire Date is required' | translate }}
               </div>
             </div>
           </div>
@@ -194,7 +194,7 @@
           <div class="col-md-2">
             <button class="btn btn-primary float-r" data-dismiss="modal" (click)="saveAgentAdminDetails()"
               id="btn_save">
-              <i class="fa fa-save padding-5"></i>{{ 'Save' | translation: 'btn_save' : translationValues }}
+              <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
             </button>
           </div>
         </div>

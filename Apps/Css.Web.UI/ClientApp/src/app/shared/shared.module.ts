@@ -32,6 +32,15 @@ import { TimezoneService } from './services/timezone.service';
 import { TranslationService } from './services/translation.service';
 import { ExcelService } from './services/excel.service';
 import { DradAndDropFileDirective } from './directives/drad-and-drop-file.directive';
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
+import { GenericPopUpComponent } from './popups/generic-pop-up/generic-pop-up.component';
+
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 import { PapaParseModule } from 'ngx-papaparse';
 
 const components =
@@ -39,6 +48,8 @@ const components =
     ConfirmationPopUpComponent,
     ConfirmationPopUpComponent,
     ErrorWarningPopUpComponent,
+    GenericPopUpComponent,
+    MessagePopUpComponent,
     ClientNameTypeAheadComponent,
     ClientLobGroupTypeaheadComponent,
     SkillTagTypeaheadComponent,
@@ -52,7 +63,14 @@ const components =
 
 const modalComponents = [ConfirmationPopUpComponent, MessagePopUpComponent, DradAndDropFileDirective];
 
-const modules = [CommonModule, FormsModule, ReactiveFormsModule, NgbModule, NgSelectModule, NgxSpinnerModule, PapaParseModule];
+
+const modules = [CommonModule, FormsModule, ReactiveFormsModule, NgbModule, NgSelectModule, NgxSpinnerModule, PapaParseModule, TranslateModule.forRoot({
+  loader: {
+      provide: TranslateLoader,
+      useFactory: (HttpLoaderFactory),
+      deps: [HttpClient]
+  }
+})];
 
 const providers = [GenericStateManagerService, TranslationService, TimezoneService, CssLanguageService, LanguageTranslationService,
   GenericDataService, ClientService, SkillGroupService, ClientLobGroupService, SkillTagService, AgentSchedulingGroupService,

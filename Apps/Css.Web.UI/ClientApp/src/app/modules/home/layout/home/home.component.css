@@ -1,3 +1,7 @@
 .user-panel .user-info {
     color: #C2C7D0;
 }
+
+.long-content-wrapper{
+    margin-left: 400px !important;
+}

@@ -9,6 +9,8 @@ import { LanguageTranslationService } from 'src/app/shared/services/language-tra
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
+import { TranslateService } from '@ngx-translate/core';
+import { Language } from 'src/app/shared/models/language-value.model';
 
 @Component({
   selector: 'app-permissions-list',
@@ -16,6 +18,7 @@ import { GenericStateManagerService } from 'src/app/shared/services/generic-stat
   styleUrls: ['./permissions-list.component.scss']
 })
 export class PermissionsListComponent implements OnInit, OnDestroy {
+  currentLanguage: Language;
 
   currentPage = 1;
   pageSize = 10;
@@ -30,27 +33,26 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   paginationSize = Constants.paginationSize;
   userRoles = Constants.UserRoles;
 
-  translationValues: TranslationDetails[] = [];
   permissions: PermissionDetails[] = [];
   hiddenRolesList: UserRole[] = [];
   hiddenRoles: UserRole[] = [];
 
   getPermissionsSubscription: any;
-  languageSelectionSubscription: ISubscription;
-  getTranslationValuesSubscription: ISubscription;
+  getTranslationSubscription: ISubscription;
   subscriptions: any[] = [];
 
   constructor(
+    public translate: TranslateService,
     private permissionsService: PermissionsService,
     private translationService: LanguageTranslationService,
     private genericStateManagerService: GenericStateManagerService
   ) { }
 
   ngOnInit(): void {
-    this.loadTranslationValues();
+    this.loadTranslations();
+    this.subscribeToTranslations();
     this.getPermissions();
     this.getUserRolesToHide();
-    this.subscribeToUserLanguage();
   }
 
   ngOnDestroy() {
@@ -165,31 +167,21 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getPermissionsSubscription);
   }
 
-  private loadTranslationValues() {
-    const languageId = this.genericStateManagerService.getCurrentLanguage()?.id;
-    const menuId = CssMenu.Permissions;
-
-    this.getTranslationValuesSubscription = this.translationService.getMenuTranslations(languageId, menuId)
-      .subscribe((response) => {
-        if (response) {
-          this.translationValues = response;
-        }
-      }, (error) => {
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.getTranslationValuesSubscription);
-  }
-
-  private subscribeToUserLanguage() {
-    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
-      (languageId: number) => {
-        if (languageId) {
-          this.loadTranslationValues();
+  private subscribeToTranslations(){
+    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
+          this.loadTranslations();
         }
       }
     );
-
-    this.subscriptions.push(this.languageSelectionSubscription);
+    this.subscriptions.push(this.getTranslationSubscription);
   }
+
+  private loadTranslations(){
+    const browserLang = this.genericStateManagerService.getLanguage();
+    this.currentLanguage = browserLang;
+    this.translate.use(browserLang ? browserLang : 'en');
+  }
+  
 }

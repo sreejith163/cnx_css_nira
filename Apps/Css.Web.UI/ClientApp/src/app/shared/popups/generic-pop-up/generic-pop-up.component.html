@@ -1,0 +1,30 @@
+
+<div class="modal-dialog custom-alert" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <!-- <div class="swal2-icon swal2-question swal2-icon-show" style="display: flex;">
+                <div class="swal2-icon-content">?</div>
+            </div> -->
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center confirm-message font-20"><b>{{headingMessage | translate }}</b></p>
+                </div>
+                <div class="col-md-12">
+                    <p class="text-center confirm-message">{{contentMessage | translate }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="confirm-button text-center">    
+                        <a class="mr-2">    
+                            <button class="btn btn-primary" (click)="accept()">{{confirmButton | translate }}</button>    
+                        </a>  
+                        <a class="mr-2">    
+                            <button class="btn btn-secondary" (click)="dismiss()">{{cancelButton | translate }}</button>    
+                        </a>   
+                    </p> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

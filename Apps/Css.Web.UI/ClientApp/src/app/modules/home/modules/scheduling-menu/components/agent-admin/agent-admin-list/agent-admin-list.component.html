@@ -1,15 +1,15 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-6 col-md-6">
-            <h2 id="page_title">{{ 'Agent Admin' | translation: 'lbl_page_title' : translationValues }}</h2>
+            <h2 id="page_title">{{ 'Agent_admin' | translate }}</h2>
         </div>
 
     </div>
     <div class="row">
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-left">
-                <li class="breadcrumb-item"><a>Scheduling Menu</a></li>
-                <li class="breadcrumb-item active"><b>Agent Admin List</b> </li>
+                <li class="breadcrumb-item"><a>{{ 'Scheduling_menu' | translate }}</a></li>
+                <li class="breadcrumb-item active"><b>{{ 'Agent_admin_list' | translate }}</b> </li>
             </ol>
         </div>
     </div>
@@ -25,17 +25,17 @@
         <div class="col-md-3 d-flex flex-column m-t-10">
             <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
                 [maxLength]="maxLength"
-                placeholder="{{ 'Enter Employee' | translation: 'drp_list_employee' : translationValues }}" />
+                placeholder="{{ 'Enter_employee' | translate }}" />
         </div>
         <div class="col-md-2 col-sm-6">
             <button class="form-control m-t-10" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
-                {{ 'Search' | translation: 'btn_search' : translationValues }}
+                {{ 'Search' | translate }}
             </button>
         </div>
         <div class="col-md-7 text-right">
             <button type="button" class="btn btn-primary float-r m-t-10" (click)="addAgentAdmin()"><i
                     class="fa fa-plus pr-1"
-                    aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}</button>
+                    aria-hidden="true"></i>{{ 'Add' | translate }}</button>
         </div>
     </div>
     <div class="row m-r-15 m-t-10">
@@ -45,30 +45,30 @@
                     <thead>
                         <tr>
                             <th>
-                                {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}</th>
+                                {{ 'Action' | translate }}</th>
                             <th class="sortable-field" (click)="sort('ssn', sortBy)">
-                                {{ 'Employee ID' | translation: 'lbl_table_heading_employee_id' : translationValues }}
+                                {{ 'Employee_id' | translate }}
                                 <i *ngIf="orderBy !== 'ssn'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'ssn'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field" (click)="sort('sso', sortBy)">
-                                {{ 'SSO' | translation: 'lbl_table_heading_sso' : translationValues }}
+                                {{ 'SSO' | translate }}
                                 <i *ngIf="orderBy !== 'sso'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'sso'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field width-15-p" (click)="sort('firstName', sortBy)">
-                                {{ 'First Name' | translation: 'lbl_table_heading_first_name' : translationValues }}
+                                {{ 'First_name' | translate }}
                                 <i *ngIf="orderBy !== 'firstName'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'firstName'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field" (click)="sort('lastName', sortBy)">
-                                {{ 'Last Name' | translation: 'lbl_table_heading_last_name' : translationValues }}
+                                {{ 'Last_name' | translate }}
                                 <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
@@ -82,30 +82,30 @@
                                 </i>
                             </th> -->
                             <th class="sortable-field">
-                                {{ 'Hire Date' | translation: 'lbl_table_heading_hire_date' : translationValues }}
+                                {{ 'Hire_date' | translate }}
                             </th>
                             <th class="sortable-field" (click)="sort('createdBy', sortBy)">
-                                {{ 'Created By' | translation: 'lbl_table_heading_created_by' : translationValues }}
+                                {{ 'Created_by' | translate }}
                                 <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field" (click)="sort('createdDate', sortBy)">
-                                {{ 'Created Date' | translation: 'lbl_table_heading_created_date' : translationValues }}
+                                {{ 'Created_date' | translate }}
                                 <i *ngIf="orderBy !== 'createdDate'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i></th>
                             <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
-                                {{ 'Modified By' | translation: 'lbl_table_heading_modified_by' : translationValues }}
+                                {{ 'Modified_by' | translate }}
                                 <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th>
                             <th class="sortable-field" (click)="sort('modifiedDate', sortBy)">
-                                {{ 'Modified Date' | translation: 'lbl_table_heading_modified_date' : translationValues }}
+                                {{ 'Modified_date' | translate }}
                                 <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
@@ -169,7 +169,7 @@
                         [boundaryLinks]="true"></ngb-pagination>
                     <select class="form-control" (change)="changePageSize($event.target.value)">
                         <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
-                            {{x.text}}</option>
+                            {{x.text | translate}}</option>
                     </select>
                 </ul>
             </nav>

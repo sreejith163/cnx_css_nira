@@ -1,14 +1,14 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-12 col-md-12">
-      <h2>{{ 'Scheduling Codes' | translation: 'lbl_page_title' : translationValues }}</h2>
+      <h2>{{ 'Scheduling_codes' | translate }}</h2>
     </div>
   </div>
   <div class="row">
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-left">
-        <li class="breadcrumb-item"><a>System Admin</a></li>
-        <li class="breadcrumb-item active"><b>Scheduling Code List</b></li>
+        <li class="breadcrumb-item"><a>{{ 'System_admin' | translate }}</a></li>
+        <li class="breadcrumb-item active"><b>{{ 'Scheduling_code_list' | translate }}</b></li>
       </ol>
     </div>
   </div>
@@ -16,7 +16,7 @@
   <div class="row m-l-r-10">
     <div class="col-md-3 padding-bottom-5">
       <input type="text" class="form-control"
-        placeholder="{{ 'Enter a Description' | translation: 'lbl_search_place_holder' : translationValues }}"
+        placeholder="{{ 'Enter_a_description' | translate }}"
         [(ngModel)]="searchKeyword" />
       <ng-container *ngIf="searchKeyword?.length">
         <!-- <i id="input_close_btn" class="fa fa-times-circle cursor-pointer closable-icon" type="button"
@@ -26,12 +26,13 @@
     <div class="col-md-2 padding-bottom-5">
       <button class="form-control" id="btn_search" (click)="searchSchedulingCode()">
         <i class="fa fa-search" aria-hidden="true"></i>
-        {{ 'Search' | translation: 'btn_search' : translationValues }}
+        {{ 'Search' | translate }}
       </button>
     </div>
     <div class="col-md-7 padding-bottom-5">
       <button type="button" class="btn btn-primary float-r" (click)="addSchedulingCode()" id="btn_add">
-        <i class="fa fa-plus padding-5" aria-hidden="true"></i>{{ 'Add' | translation: 'btn_add' : translationValues }}
+        <i class="fa fa-plus padding-5" aria-hidden="true"></i>
+        {{ 'Add' | translate }}
       </button>
     </div>
   </div>
@@ -43,41 +44,41 @@
           <thead>
             <tr>
               <th>
-                {{ 'Action' | translation: 'lbl_table_heading_action' : translationValues }}
+                {{ 'Action' | translate }}
               </th>
               <th class="sortable-field" (click)="sort('id', sortBy)">
-                {{ 'ID' | translation: 'lbl_table_heading_id' : translationValues }}
+                {{ 'ID' | translate }}
                 <i *ngIf="orderBy !== 'id'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('refId', sortBy)">
-                {{ 'Reference ID' | translation: 'lbl_table_heading_ref_id' : translationValues }}
+                {{ 'Reference_id' | translate }}
                 <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('description', sortBy)">
-                {{ 'Description' | translation: 'lbl_table_heading_description' : translationValues }}
+                {{ 'Description' | translate }}
                 <i *ngIf="orderBy !== 'description'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'description'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field" (click)="sort('priorityNumber', sortBy)">
-                {{ 'Priority No.' | translation: 'lbl_table_heading_priority_no' : translationValues }}
+                {{ 'Priority' | translate }} #
                 <i *ngIf="orderBy !== 'priorityNumber'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'priorityNumber'" class="fa"
                   [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
               <th class="sortable-field">
-                {{ 'Type of Code' | translation: 'lbl_table_heading_code_type' : translationValues }}
+                {{ 'Type_of_code' | translate }}
               </th>
               <th class="sortable-field">
-                {{ 'Icon' | translation: 'lbl_table_heading_icon' : translationValues }}
+                {{ 'Icon' | translate }}
               </th>
             </tr>
           </thead>
@@ -114,7 +115,7 @@
                     </ul>
                   </ng-template>
                   <ng-template #popTitle>
-                    {{ 'Type of Code' | translation: 'lbl_table_heading_code_type' : translationValues }}
+                    {{ 'Type_of_code' | translate }}
                   </ng-template>
                 </span>
               </td>
@@ -132,7 +133,7 @@
               </ngb-pagination>
               <select class="form-control" (change)="changePageSize($event.target.value)">
                 <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
-                  {{ x.text }}
+                  {{ x.text | translate }}
                 </option>
               </select>
             </ul>
