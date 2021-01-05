@@ -1,0 +1,28 @@
+﻿using Css.Api.Scheduling.Models.Enums;
+using System.Collections.Generic;
+
+namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
+{
+    public class CopyAgentSchedule
+    {
+        /// <summary>
+        /// Gets or sets the employee identifier.
+        /// </summary>
+        public List<int> EmployeeIds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent scheduling group identifier.
+        /// </summary>
+        public int AgentSchedulingGroupId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the agent schedule.
+        /// </summary>
+        public AgentScheduleType AgentScheduleType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the modified by.
+        /// </summary>
+        public string ModifiedBy { get; set; }
+    }
+}
