@@ -49,6 +49,7 @@ namespace Css.Api.Scheduling
         {
             services
                 .AddForwardedHeaders()
+                .AddServiceBus(Configuration)
                 .AddMVCConfiguration()
                 .AddCors()
                 .AddFluentAbstractValidators()

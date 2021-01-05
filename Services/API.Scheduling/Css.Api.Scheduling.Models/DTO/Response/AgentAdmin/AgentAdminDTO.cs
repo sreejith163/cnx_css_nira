@@ -1,4 +1,5 @@
 ﻿using Css.Api.Scheduling.Models.Domain;
+using MongoDB.Bson;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,9 +8,10 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
 {
     public class AgentAdminDTO
     {
-        /// <summary>Gets or sets the agent admin identifier.</summary>
-        /// <value>The agent admin identifier.</value>
-        public int AgentAdminId { get; set; }
+        /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        public ObjectId Id { get; set; }
 
         /// <summary>Gets or sets the employee identifier.</summary>
         /// <value>The employee identifier.</value>

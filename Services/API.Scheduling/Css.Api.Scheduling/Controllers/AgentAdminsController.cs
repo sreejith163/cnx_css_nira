@@ -2,6 +2,7 @@
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Controllers
@@ -46,9 +47,9 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="agentAdminId">The agentAdmin identifier.</param>
         /// <returns></returns>
         [HttpGet("{agentAdminId}")]
-        public async Task<IActionResult> GetAgentAdmin(int agentAdminId)
+        public async Task<IActionResult> GetAgentAdmin(string agentAdminId)
         {
-            var result = await _agentAdminService.GetAgentAdmin(new AgentAdminIdDetails { AgentAdminId = agentAdminId });
+            var result = await _agentAdminService.GetAgentAdmin(new AgentAdminIdDetails { AgentAdminId = new ObjectId(agentAdminId) });
             return StatusCode((int)result.Code, result.Value);
         }
 
@@ -71,9 +72,9 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="clientDetails">The client details.</param>
         /// <returns></returns>
         [HttpPut("{agentAdminId}")]
-        public async Task<IActionResult> UpdateAgentAdmin(int agentAdminId, [FromBody] UpdateAgentAdmin clientDetails)
+        public async Task<IActionResult> UpdateAgentAdmin(string agentAdminId, [FromBody] UpdateAgentAdmin clientDetails)
         {
-            var result = await _agentAdminService.UpdateAgentAdmin(new AgentAdminIdDetails { AgentAdminId = agentAdminId }, clientDetails);
+            var result = await _agentAdminService.UpdateAgentAdmin(new AgentAdminIdDetails { AgentAdminId = new ObjectId(agentAdminId) }, clientDetails);
             return StatusCode((int)result.Code, result.Value);
         }
 
@@ -83,9 +84,9 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="agentAdminId">The agentAdmin identifier.</param>
         /// <returns></returns>
         [HttpDelete("{agentAdminId}")]
-        public async Task<IActionResult> DeleteAgentAdmin(int agentAdminId)
+        public async Task<IActionResult> DeleteAgentAdmin(string agentAdminId)
         {
-            var result = await _agentAdminService.DeleteAgentAdmin(new AgentAdminIdDetails { AgentAdminId = agentAdminId });
+            var result = await _agentAdminService.DeleteAgentAdmin(new AgentAdminIdDetails { AgentAdminId = new ObjectId(agentAdminId) });
             return StatusCode((int)result.Code, result.Value);
         }
 

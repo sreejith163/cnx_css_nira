@@ -1,17 +1,13 @@
-﻿using Css.Api.Core.Models.Domain;
+﻿using Css.Api.Core.Models.Contracts;
+using Css.Api.Core.Models.Domain;
 using System;
 using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.Domain
 {
     [BsonCollection("agent")]
-    public class Agent : BaseDocument
-    {
-        /// <summary>
-        /// Gets or sets the agent admin identifier.
-        /// </summary>
-        public int AgentAdminId { get; set; }
-
+    public class Agent : BaseDocument, IAgentContract
+    {      
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>

@@ -26,7 +26,7 @@
               <br />
             </returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.GetAgentAdmin(System.Int32)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.GetAgentAdmin(System.String)">
             <summary>
             Gets the agent admin.
             </summary>
@@ -40,7 +40,7 @@
             <param name="clientDetails">The client details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.UpdateAgentAdmin(System.Int32,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.UpdateAgentAdmin)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.UpdateAgentAdmin(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.UpdateAgentAdmin)">
             <summary>
             Updates the agent admin.
             </summary>
@@ -48,7 +48,7 @@
             <param name="clientDetails">The client details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.DeleteAgentAdmin(System.Int32)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.DeleteAgentAdmin(System.String)">
             <summary>
             Deletes the agent admin.
             </summary>
@@ -99,14 +99,6 @@
             Gets the agent schedule.
             </summary>
             <param name="agentScheduleId">The agent schedule identifier.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.GetAgentScheduleCharts(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.AgentScheduleChartQueryparameter)">
-            <summary>
-            Gets the agent schedule.
-            </summary>
-            <param name="agentScheduleId">The agent schedule identifier.</param>
-            <param name="agentScheduleChartQueryparameter">The agent schedule chart queryparameter.</param>
             <returns></returns>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.UpdateAgentSchedule(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.UpdateAgentSchedule)">
@@ -215,6 +207,19 @@
             Adds the fluent abstract validators.
             </summary>
             <param name="services">The services.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Scheduling.Extensions.ServiceBusExtension">
+            <summary>
+             A service extension class to configure the service bus
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Extensions.ServiceBusExtension.AddServiceBus(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+             Extension method to configure RabbitMQ service bus and the consumers using MassTransit
+            </summary>
+            <param name="services"></param>
+            <param name="configuration"></param>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Scheduling.Extensions.ServicesScopeExtension">

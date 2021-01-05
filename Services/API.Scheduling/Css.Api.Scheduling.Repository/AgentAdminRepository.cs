@@ -68,7 +68,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var query = 
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) & 
-                Builders<Agent>.Filter.Eq(i => i.AgentAdminId, agentAdminIdDetails.AgentAdminId);
+                Builders<Agent>.Filter.Eq(i => i.Id, agentAdminIdDetails.AgentAdminId);
 
             return await FindByIdAsync(query);
         }

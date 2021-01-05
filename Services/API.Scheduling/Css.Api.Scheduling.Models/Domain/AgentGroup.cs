@@ -1,6 +1,8 @@
-﻿namespace Css.Api.Scheduling.Models.Domain
+﻿using Css.Api.Core.Models.Contracts;
+
+namespace Css.Api.Scheduling.Models.Domain
 {
-    public class AgentGroup
+    public class AgentGroup : IAgentGroupContract
     {
         /// <summary>
         /// Gets or sets the employee identifier.

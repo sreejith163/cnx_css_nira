@@ -287,9 +287,7 @@ namespace Css.Api.Scheduling.Business
             }
 
             var agentAdminRequest = _mapper.Map<Agent>(agentAdminDetails);
-
-            var agentAdminCount = await _agentAdminRepository.GetAgentAdminsCount();
-            agentAdminRequest.AgentAdminId = agentAdminCount + 1;
+            
             agentAdminRequest.AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId;
 
             _agentAdminRepository.CreateAgentAdmin(agentAdminRequest);
@@ -299,7 +297,7 @@ namespace Css.Api.Scheduling.Business
 
             await _uow.Commit();
 
-            return new CSSResponse(new AgentAdminIdDetails { AgentAdminId = agentAdminRequest.AgentAdminId }, HttpStatusCode.Created);
+            return new CSSResponse(new AgentAdminIdDetails { AgentAdminId = agentAdminRequest.Id }, HttpStatusCode.Created);
         }
 
         /// <summary>
@@ -323,7 +321,7 @@ namespace Css.Api.Scheduling.Business
 
             var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
 
-            if (agentAdmins != null && agentAdminIdDetails.AgentAdminId != agentAdmins.AgentAdminId)
+            if (agentAdmins != null && agentAdminIdDetails.AgentAdminId != agentAdmins.Id)
             {
                 return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' and SSo '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
