@@ -389,6 +389,18 @@
       "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/charts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.13",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/charts",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/import",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
