@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Css.Api.Job</name>
+    </assembly>
+    <members>
+        <member name="T:Css.Api.Job.Extensions.ScheduledJobsExtension">
+            <summary>
+            An extension class to add scheduled jobs within the project
+            </summary>
+        </member>
+        <member name="M:Css.Api.Job.Extensions.ScheduledJobsExtension.AddJobs(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            An extension  method to add all jobs in the application
+            </summary>
+            <param name="services">The app service collection</param>
+            <param name="configuration">The app configuration</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Job.Extensions.ScheduledJobsExtension.ConfigureCronJobs(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Collections.Generic.List{Css.Api.Job.Models.DTO.Configurations.CronJob})">
+            <summary>
+            A extension method to configure the cron jobs using the configuration json values
+            </summary>
+            <param name="services">The app service collection</param>
+            <param name="cronJobs">the list of cron jobs read from the configuration json</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Job.Extensions.ScheduledJobsExtension.GetCronExpression(System.String,System.Collections.Generic.List{Css.Api.Job.Models.DTO.Configurations.CronJob})">
+            <summary>
+            A method to get the cron expression mapped in the configuration json for the key
+            </summary>
+            <param name="key">The key</param>
+            <param name="cronJobs">The list of all cron jobs present in the configuration json</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Job.Extensions.ScheduledJobsExtension.GetTimeZoneInfo(System.String,System.Collections.Generic.List{Css.Api.Job.Models.DTO.Configurations.CronJob})">
+            <summary>
+            A method to get the timezone mapped in the configuration json for the key
+            </summary>
+            <param name="key">The key</param>
+            <param name="cronJobs">The list of all cron jobs present in the configuration json</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Job.Program">
+            <summary>
+            Program starts here
+            </summary>
+        </member>
+        <member name="M:Css.Api.Job.Program.Main(System.String[])">
+            <summary>
+            Defines the entry point of the application.
+            </summary>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="M:Css.Api.Job.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Creates the host builder.
+            </summary>
+            <param name="args">The arguments.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Job.Startup">
+            <summary>
+            Base class for intilaizing the services and middlewares
+            </summary>
+        </member>
+        <member name="M:Css.Api.Job.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Job.Startup"/> class.
+            </summary>
+            <param name="configuration">The configuration.</param>
+        </member>
+        <member name="P:Css.Api.Job.Startup.Configuration">
+            <summary>
+            Gets the configuration.
+            </summary>
+            <value>
+            The configuration.
+            </value>
+        </member>
+        <member name="M:Css.Api.Job.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures the services.
+            </summary>
+            <param name="services">The services.</param>
+        </member>
+        <member name="M:Css.Api.Job.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Configures the specified application.
+            </summary>
+            <param name="app">The application.</param>
+            <param name="env">The env.</param>
+        </member>
+    </members>
+</doc>

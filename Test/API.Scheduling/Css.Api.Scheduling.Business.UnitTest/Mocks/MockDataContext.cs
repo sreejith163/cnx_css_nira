@@ -50,10 +50,10 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
 
         readonly IQueryable<Agent> agentAdminsDB = new List<Agent>()
         {
-            new Agent { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), AgentAdminId = 1, FirstName = "abc", LastName = "def", Ssn = 1, 
+            new Agent { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), FirstName = "abc", LastName = "def", Ssn = 1, 
                         Sso = "user1@concentrix.com", ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
                         CreatedBy = "Admin", CreatedDate = DateTime.UtcNow },
-            new Agent { Id = new ObjectId("5fe0b5c46a05416894c0718f"), AgentAdminId = 2, FirstName = "lmn", LastName = "pqr", Ssn = 2,
+            new Agent { Id = new ObjectId("5fe0b5c46a05416894c0718f"), FirstName = "lmn", LastName = "pqr", Ssn = 2,
                         Sso = "user2@concentrix.com", ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
                         CreatedBy = "Admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
@@ -173,7 +173,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// <returns></returns>
         public Agent GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails)
         {
-            return agentAdminsDB.Where(x => x.IsDeleted == false && x.AgentAdminId == agentAdminIdDetails.AgentAdminId).FirstOrDefault();
+            return agentAdminsDB.Where(x => x.IsDeleted == false && x.Id == agentAdminIdDetails.AgentAdminId).FirstOrDefault();
         }
 
         /// <summary>

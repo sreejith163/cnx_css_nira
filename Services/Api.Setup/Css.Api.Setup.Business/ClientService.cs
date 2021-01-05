@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Css.Api.Core.EventBus;
+using Css.Api.Core.EventBus.Commands.Client;
+using Css.Api.Core.EventBus.Services;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Setup.Business.Interfaces;
@@ -29,6 +32,8 @@ namespace Css.Api.Setup.Business
         /// </summary>
         private readonly IMapper _mapper;
 
+        private readonly IBusService _bus;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientService" /> class.
         /// </summary>
@@ -38,11 +43,13 @@ namespace Css.Api.Setup.Business
         public ClientService(
             IRepositoryWrapper repository, 
             IHttpContextAccessor httpContextAccessor, 
-            IMapper mapper)
+            IMapper mapper,
+            IBusService bus)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+            _bus = bus;
         }
 
         /// <summary>
@@ -92,6 +99,8 @@ namespace Css.Api.Setup.Business
             _repository.Clients.CreateClient(clientRequest);
 
             await _repository.SaveAsync();
+
+            await _bus.SendCommand<CreateClientCommand>(MassTransitConstants.ClientCreateCommandRouteKey, new { Id = clientRequest.Id, Name = clientDetails.Name });
 
             return new CSSResponse(new ClientIdDetails { ClientId = clientRequest.Id }, HttpStatusCode.Created);
         }

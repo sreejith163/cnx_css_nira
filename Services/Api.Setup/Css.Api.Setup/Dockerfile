@@ -15,6 +15,8 @@ COPY ["Services/Api.Setup/Css.Api.Setup.Business/Css.Api.Setup.Business.csproj",
 COPY ["Services/Api.Setup/Css.Api.Setup.Repository/Css.Api.Setup.Repository.csproj", "Services/Api.Setup/Css.Api.Setup.Repository/"]
 COPY ["Services/API.Core/Css.Api.Core.Utilities/Css.Api.Core.Utilities.csproj", "Services/API.Core/Css.Api.Core.Utilities/"]
 COPY ["Services/API.Core/Css.Api.Core.DataAccess/Css.Api.Core.DataAccess.csproj", "Services/API.Core/Css.Api.Core.DataAccess/"]
+COPY ["Services/Api.Setup/Css.Api.Setup.EventHandlers/Css.Api.Setup.EventHandlers.csproj", "Services/Api.Setup/Css.Api.Setup.EventHandlers/"]
+COPY ["Services/API.Core/Css.Api.Core.EventBus/Css.Api.Core.EventBus.csproj", "Services/API.Core/Css.Api.Core.EventBus/"]
 RUN dotnet restore "Services/Api.Setup/Css.Api.Setup/Css.Api.Setup.csproj"
 COPY . .
 WORKDIR "/src/Services/Api.Setup/Css.Api.Setup"

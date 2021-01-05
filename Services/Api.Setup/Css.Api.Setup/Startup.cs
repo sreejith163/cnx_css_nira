@@ -50,6 +50,7 @@ namespace Css.Api.Setup
             services
                 .AddMVCConfiguration()
                 .AddCors()
+                .AddServiceBus(Configuration)
                 .AddFluentAbstractValidators()
                 .AddDBContextConfiguration(Configuration)
                 .AddSwaggerConfiguration(Configuration)

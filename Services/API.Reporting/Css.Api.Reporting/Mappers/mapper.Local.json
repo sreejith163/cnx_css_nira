@@ -1,0 +1,25 @@
+{
+  "Mappers": {
+    "GlobalSettings": {
+      "FTPServer": "sftp://cssftp:test@10.87.222.47", // sftp://{username}:{pwd}@{host/ip}
+      "FTPInbox": "/ftp/{0}/Inbox",
+      "FTPOutbox": "/ftp/{0}/Outbox"
+    },
+    "Imports": [
+      {
+        "Key": "UDW",
+        "Service": "UDWImporter",
+        "FTPServer": "",
+        "FTPFolder": ""
+      }
+    ],
+    "Exports": [
+      {
+        "Key": "UDW",
+        "Service": "",
+        "FTPServer": "",
+        "FTPFolder": ""
+      }
+    ]
+  }
+}

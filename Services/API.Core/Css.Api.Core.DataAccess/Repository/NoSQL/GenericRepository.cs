@@ -111,9 +111,9 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <param name="update">The update.</param>
-        public virtual void UpdateOneAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update)
+        public virtual void UpdateOneAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update, UpdateOptions options = null)
         {
-            Context.AddCommand(() => Collection.UpdateOneAsync(filter, update));
+            Context.AddCommand(() => Collection.UpdateOneAsync(filter, update, options));
         }
 
         /// <summary>
@@ -121,9 +121,10 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <param name="update">The update.</param>
-        public virtual void UpdateManyAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update)
+        /// <param name="options">The update options.</param>
+        public virtual void UpdateManyAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update, UpdateOptions options = null)
         {
-            Context.AddCommand(() => Collection.UpdateManyAsync(filter, update));
+            Context.AddCommand(() => Collection.UpdateManyAsync(filter, update, options));
         }
 
         /// <summary>

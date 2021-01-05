@@ -68,14 +68,14 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <param name="update">The update.</param>
-        void UpdateOneAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update);
+        void UpdateOneAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update, UpdateOptions options = null);
 
         /// <summary>
         /// Updates the many asynchronous.
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <param name="update">The update.</param>
-        void UpdateManyAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update);
+        void UpdateManyAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update, UpdateOptions options = null);
 
         /// <summary>
         /// Deletes the one asynchronous.

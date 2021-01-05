@@ -5,6 +5,26 @@ services:
   css.mysql.data:
     image: mysql:latest
     container_name: css.mysql.data
+
+  css.mongo1:
+    image: mongo:4.0.10
+    container_name: css.mongo1
+
+  css.mongo2:
+    image: mongo:4.0.10
+    container_name: css.mongo2
+
+  css.mongo3:
+    image: mongo:4.0.10
+    container_name: css.mongo3
+    
+  css.mongo.cluster:
+    container_name: css.mongo.cluster
+    image: mongo:4.0.10
+
+  css.service.bus:
+    image: rabbitmq:3-management
+    container_name: css.service.bus
   
   css.web.ui:
    image: ${DOCKER_REGISTRY:-cnx}/css.web.ui:${PLATFORM:-linux}-${TAG:-latest} 
@@ -53,3 +73,9 @@ services:
    build:
      context: .
      dockerfile: Services/API.Reporting/Css.Api.Reporting/Dockerfile
+
+  css.api.job:
+   image: ${DOCKER_REGISTRY:-cnx}/css.api.job:${PLATFORM:-linux}-${TAG:-latest}
+   build:
+     context: .
+     dockerfile: Services/API.Job/Css.Api.Job/Dockerfile

@@ -1,0 +1,17 @@
+{
+  "Jobs": {
+    "Cron": [
+      {
+        "Key": "UDWImport",
+        "CronExpression": "* * * * *",
+        "Url": "https://localhost:44397/api/import",
+        "Method": "POST",
+        "Headers": {
+          "importKey": "UDW"
+        },
+        "Content": "",
+        "TimeZone": "UTC"
+      }
+    ]
+  }
+}

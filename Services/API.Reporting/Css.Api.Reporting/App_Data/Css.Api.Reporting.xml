@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Css.Api.Reporting</name>
+    </assembly>
+    <members>
+        <member name="T:Css.Api.Reporting.Controllers.ImportController">
+            <summary>
+            Controller for handling the all imports
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Reporting.Controllers.ImportController._importStrategy">
+            <summary>
+            The strategy for import
+            </summary>
+        </member>
+        <member name="M:Css.Api.Reporting.Controllers.ImportController.#ctor(Css.Api.Reporting.Business.Interfaces.IImportStrategy)">
+            <summary>
+            Constructor to initialize all properties
+            </summary>
+            <param name="importStrategy"></param>
+        </member>
+        <member name="M:Css.Api.Reporting.Controllers.ImportController.Post(System.String)">
+            <summary>
+            The import method using the HTTP POST call
+            </summary>
+            <param name="importKey">the key for import source </param>
+        </member>
+        <member name="T:Css.Api.Reporting.Extensions.DBContextExtension">
+            <summary>
+            Extension for adding the DB Context
+            </summary>
+        </member>
+        <member name="M:Css.Api.Reporting.Extensions.DBContextExtension.AddDBContextConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Adds the database context configuration.
+            </summary>
+            <param name="services">The services.</param>
+            <param name="configuration">The configuration.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Reporting.Extensions.ServiceScopeExtension">
+            <summary>
+            The extension service for all service additions and configurations
+            </summary>
+        </member>
+        <member name="M:Css.Api.Reporting.Extensions.ServiceScopeExtension.AddServicesScope(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            An extension method to configure all the reporting business services
+            </summary>
+            <param name="services"></param>
+            <param name="HostingEnvironment"></param>
+            <param name="configuration"></param>
+            <returns>The same instance of IServiceCollection</returns>
+        </member>
+        <member name="M:Css.Api.Reporting.Extensions.ServiceScopeExtension.AddFactories(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            The extension method to configure all factories
+            </summary>
+            <param name="services"></param>
+            <returns>The same instance of IServiceCollection</returns>
+        </member>
+        <member name="M:Css.Api.Reporting.Extensions.ServiceScopeExtension.AddStrategies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            The extension method to configure all strategies
+            </summary>
+            <param name="services"></param>
+            <returns>The same instance of IServiceCollection</returns>
+        </member>
+        <member name="M:Css.Api.Reporting.Extensions.ServiceScopeExtension.AddImportServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            The extension method to configure all import services
+            </summary>
+            <param name="services"></param>
+            <returns>The same instance of IServiceCollection</returns>
+        </member>
+        <member name="T:Css.Api.Reporting.Program">
+            <summary>
+            Program starts here
+            </summary>
+        </member>
+        <member name="M:Css.Api.Reporting.Program.Main(System.String[])">
+            <summary>
+            Defines the entry point of the application.
+            </summary>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="M:Css.Api.Reporting.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Creates the host builder.
+            </summary>
+            <param name="args">The arguments.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Reporting.Startup">
+            <summary>
+            Base method for intilaizing the services and middlewares
+            </summary>
+        </member>
+        <member name="M:Css.Api.Reporting.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Reporting.Startup"/> class.
+            </summary>
+            <param name="configuration">The configuration.</param>
+            <param name="hostingEnvironment">The hosting environment.</param>
+        </member>
+        <member name="P:Css.Api.Reporting.Startup.Configuration">
+            <summary>
+            Gets the configuration.
+            </summary>
+            <value>
+            The configuration.
+            </value>
+        </member>
+        <member name="P:Css.Api.Reporting.Startup.HostingEnvironment">
+            <summary>
+            Gets the hosting environment.
+            </summary>
+        </member>
+        <member name="M:Css.Api.Reporting.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures the services.
+            </summary>
+            <param name="services">The services.</param>
+        </member>
+        <member name="M:Css.Api.Reporting.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Configures the specified application.
+            </summary>
+            <param name="app">The application.</param>
+            <param name="env">The env.</param>
+        </member>
+    </members>
+</doc>

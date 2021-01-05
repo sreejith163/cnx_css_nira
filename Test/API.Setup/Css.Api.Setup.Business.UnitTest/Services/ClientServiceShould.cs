@@ -10,6 +10,7 @@ using Css.Api.Setup.Business.UnitTest.Mock;
 using Css.Api.Setup.Models.DTO.Request.Client;
 using Css.Api.Setup.Models.DTO.Response.Client;
 using Microsoft.AspNetCore.Http;
+using Css.Api.Core.EventBus.Services;
 
 namespace Css.Api.Setup.Business.UnitTest.Services
 {
@@ -44,13 +45,16 @@ namespace Css.Api.Setup.Business.UnitTest.Services
 
             var context = new DefaultHttpContext();
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
+
+            Mock<IBusService> bus = new Mock<IBusService>();
+
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
             var mockSchedulingContext = new MockDataContext().IntializeMockData();
 
             repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper);
 
-            clientService = new ClientService(repositoryWrapper, mockHttContext.Object, mapper);
+            clientService = new ClientService(repositoryWrapper, mockHttContext.Object, mapper, bus.Object);
         }
 
         #region GetClients

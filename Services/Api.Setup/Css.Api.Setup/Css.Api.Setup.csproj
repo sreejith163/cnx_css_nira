@@ -23,6 +23,9 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="9.2.0" />
+    <PackageReference Include="MassTransit" Version="7.0.7" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.0.7" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -48,6 +51,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\API.Core\Css.Api.Core.ExceptionHandling\Css.Api.Core.ExceptionHandling.csproj" />
     <ProjectReference Include="..\Css.Api.Setup.Business\Css.Api.Setup.Business.csproj" />
+    <ProjectReference Include="..\Css.Api.Setup.EventHandlers\Css.Api.Setup.EventHandlers.csproj" />
     <ProjectReference Include="..\Css.Api.Setup.Models\Css.Api.Setup.Models.csproj" />
   </ItemGroup>
 

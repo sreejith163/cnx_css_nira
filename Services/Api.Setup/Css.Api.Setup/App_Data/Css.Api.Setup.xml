@@ -289,6 +289,19 @@
             <param name="services">The services.</param>
             <returns></returns>
         </member>
+        <member name="T:Css.Api.Setup.Extensions.ServiceBusExtension">
+            <summary>
+             A service extension class to configure the service bus
+            </summary>
+        </member>
+        <member name="M:Css.Api.Setup.Extensions.ServiceBusExtension.AddServiceBus(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+             Extension method to configure RabbitMQ service bus and the consumers using MassTransit
+            </summary>
+            <param name="services"></param>
+            <param name="configuration"></param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Setup.Extensions.ServicesScopeExtension">
             <summary>
             Extension for adding service lide scopes
