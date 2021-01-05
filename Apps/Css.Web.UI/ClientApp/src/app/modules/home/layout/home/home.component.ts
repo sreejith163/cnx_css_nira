@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class HomeComponent implements OnInit {
   currentLanguage: string;
-  menu_length: string;
+  menuLength: string;
   getTranslationSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
 
@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['add-agent-profile']);
   }
 
-  private subscribeToTranslations(){
+  private subscribeToTranslations() {
     this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
       (language) => {
         if (language) {
@@ -47,13 +47,13 @@ export class HomeComponent implements OnInit {
     this.subscriptionList.push(this.getTranslationSubscription);
   }
 
-  private loadTranslations(){
+  private loadTranslations() {
     const browserLang = this.genericStateManagerService.getLanguage();
     this.currentLanguage = browserLang ? browserLang : 'en';
     this.translate.use(this.currentLanguage);
 
-    this.menu_length = CSS_LANGUAGES.find(x=>x.code == this.currentLanguage).sidebar_length;
-    
+    this.menuLength = CSS_LANGUAGES.find(x => x.code === this.currentLanguage).sidebarLength;
+
   }
 
 }

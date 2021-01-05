@@ -18,7 +18,7 @@ import { GenericPopUpComponent } from 'src/app/shared/popups/generic-pop-up/gene
 export class HeaderComponent implements OnInit {
 
   modalRef: NgbModalRef;
-  menu_length: string;;
+  menuLength: string;
   cssLanguages: Language[];
   getTranslationSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
@@ -31,14 +31,14 @@ export class HeaderComponent implements OnInit {
     private genericStateManagerService: GenericStateManagerService,
     private cookieService: CookieService,
     private router: Router
-  ) { 
+  ) {
 
     this.cssLanguages = CSS_LANGUAGES;
     // translate.setDefaultLang('en');
     const browserLang = this.genericStateManagerService.getLanguage();
     this.currentLanguage = browserLang;
     translate.use(browserLang ? browserLang : 'en');
-    this.menu_length = CSS_LANGUAGES.find(x=>x.code == this.currentLanguage).sidebar_length;
+    this.menuLength = CSS_LANGUAGES.find(x => x.code === this.currentLanguage)?.sidebarLength;
   }
 
   ngOnInit(): void {
@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit {
   }
 
 
-  changeLanguage(language){
+  changeLanguage(language) {
     this.genericStateManagerService.setLanguage(language.code);
     this.currentLanguage = language.code;
     this.translate.use(language.code);
@@ -77,12 +77,12 @@ export class HeaderComponent implements OnInit {
     this.setComponentMessages(`${this.translate.instant('Change_language_to')} ${language.name}?`, ``, `Yes`, `No`);
     this.modalRef.result.then((result) => {
       if (result && result === true) {
-          this.changeLanguage(language);
+        this.changeLanguage(language);
       }
     });
   }
 
-  private subscribeToTranslations(){
+  private subscribeToTranslations() {
     this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
       (language) => {
         if (language) {
@@ -93,13 +93,13 @@ export class HeaderComponent implements OnInit {
     this.subscriptionList.push(this.getTranslationSubscription);
   }
 
-  private loadTranslations(){
+  private loadTranslations() {
     const browserLang = this.genericStateManagerService.getLanguage();
     this.currentLanguage = browserLang ? browserLang : 'en';
     this.translate.use(this.currentLanguage);
 
-    this.menu_length = CSS_LANGUAGES.find(x=>x.code == this.currentLanguage).sidebar_length;
-    
+    this.menuLength = CSS_LANGUAGES.find(x => x.code === this.currentLanguage)?.sidebarLength;
+
   }
 
 }

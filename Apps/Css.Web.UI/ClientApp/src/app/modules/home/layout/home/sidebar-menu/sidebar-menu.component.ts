@@ -13,7 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class SidebarMenuComponent implements OnInit {
   currentLanguage: string;
-  menu_length: string;
+  menuLength: string;
   loggedUser: LoggedUserInfo;
   getTranslationSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
@@ -30,7 +30,7 @@ export class SidebarMenuComponent implements OnInit {
     this.subscribeToTranslations();
   }
 
-  private subscribeToTranslations(){
+  private subscribeToTranslations() {
     this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
       (language) => {
         if (language) {
@@ -41,13 +41,13 @@ export class SidebarMenuComponent implements OnInit {
     this.subscriptionList.push(this.getTranslationSubscription);
   }
 
-  private loadTranslations(){
+  private loadTranslations() {
     const browserLang = this.genericStateManagerService.getLanguage();
     this.currentLanguage = browserLang ? browserLang : 'en';
     this.translate.use(this.currentLanguage);
 
-    this.menu_length = CSS_LANGUAGES.find(x=>x.code == this.currentLanguage).sidebar_length;
-    
+    this.menuLength = CSS_LANGUAGES.find(x => x.code === this.currentLanguage).sidebarLength;
+
   }
 
 }
