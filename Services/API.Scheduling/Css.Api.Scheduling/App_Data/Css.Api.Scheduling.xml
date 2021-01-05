@@ -101,6 +101,14 @@
             <param name="agentScheduleId">The agent schedule identifier.</param>
             <returns></returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.GetAgentScheduleCharts(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.AgentScheduleChartQueryparameter)">
+            <summary>
+            Gets the agent schedule.
+            </summary>
+            <param name="agentScheduleId">The agent schedule identifier.</param>
+            <param name="agentScheduleChartQueryparameter">The agent schedule chart queryparameter.</param>
+            <returns></returns>
+        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.UpdateAgentSchedule(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.UpdateAgentSchedule)">
             <summary>
             Updates the agent schedule.

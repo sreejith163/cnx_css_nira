@@ -1,6 +1,7 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.Enums;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Business.Interfaces
@@ -20,6 +21,14 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <returns></returns>
         Task<CSSResponse> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails);
+
+        /// <summary>
+        /// Gets the agent schedule charts.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleChartQueryparameter">The agent schedule chart queryparameter.</param>
+        /// <returns></returns>
+        Task<CSSResponse> GetAgentScheduleCharts(AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter);
 
         /// <summary>
         /// Updates the Agent Admin.

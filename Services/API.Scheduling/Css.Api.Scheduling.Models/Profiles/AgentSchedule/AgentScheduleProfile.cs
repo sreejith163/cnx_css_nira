@@ -23,6 +23,12 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
             CreateMap<Domain.AgentSchedule, AgentScheduleDetailsDTO>()
                 .ReverseMap();
 
+            CreateMap<Domain.AgentSchedule, AgentScheduleChartDetailsDTO>()
+                .ReverseMap();
+
+            CreateMap<Domain.AgentSchedule, AgentScheduleManagerChartDetailsDTO>()
+                .ReverseMap();
+
             CreateMap<PagedList<Entity>, AgentScheduleDTO>()
                 .ReverseMap();
         }

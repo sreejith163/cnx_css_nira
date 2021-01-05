@@ -7,6 +7,7 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
+using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -108,6 +109,32 @@ namespace Css.Api.Scheduling.Business
             mappedAgentSchedule.EmployeeName = $"{agentProfile?.FirstName} {agentProfile?.LastName}";
 
             return new CSSResponse(mappedAgentSchedule, HttpStatusCode.OK);
+        }
+
+        /// <summary>
+        /// Gets the agent schedule charts.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleChartQueryparameter">The agent schedule chart queryparameter.</param>
+        /// <returns></returns>
+        public async Task<CSSResponse> GetAgentScheduleCharts(AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter)
+        {
+            var agentSchedule = await _agentScheduleRepository.GetAgentSchedule(agentScheduleIdDetails);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            if (agentScheduleChartQueryparameter.AgentScheduleType == AgentScheduleType.SchedulingTab)
+            {
+                var mappedAgentScheduleChart = _mapper.Map<AgentScheduleChartDetailsDTO>(agentSchedule);
+                return new CSSResponse(mappedAgentScheduleChart, HttpStatusCode.OK);
+            }
+            else
+            {
+                var mappedAgentScheduleChart = _mapper.Map<AgentScheduleManagerChartDetailsDTO>(agentSchedule);
+                return new CSSResponse(mappedAgentScheduleChart, HttpStatusCode.OK);
+            }
         }
 
         /// <summary>

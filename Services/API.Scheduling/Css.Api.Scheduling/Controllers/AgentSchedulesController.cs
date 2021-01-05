@@ -1,6 +1,7 @@
 ﻿using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -51,6 +52,19 @@ namespace Css.Api.Scheduling.Controllers
         public async Task<IActionResult> GetAgentSchedule(string agentScheduleId)
         {
             var result = await _agentScheduleService.GetAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId });
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>
+        /// Gets the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="agentScheduleChartQueryparameter">The agent schedule chart queryparameter.</param>
+        /// <returns></returns>
+        [HttpGet("{agentScheduleId}/charts")]
+        public async Task<IActionResult> GetAgentScheduleCharts(string agentScheduleId, [FromQuery] AgentScheduleChartQueryparameter agentScheduleChartQueryparameter)
+        {
+            var result = await _agentScheduleService.GetAgentScheduleCharts(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChartQueryparameter);
             return StatusCode((int)result.Code, result.Value);
         }
 
