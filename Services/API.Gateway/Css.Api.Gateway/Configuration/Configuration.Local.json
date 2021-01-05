@@ -423,9 +423,22 @@
       ],
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
+    },
+    //********* Import Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/import",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.reporting",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/import",
+      "UpstreamHttpMethod": [ "Post" ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5001/"
+    "BaseUrl": "https://localhost:5001/"
   }
 }

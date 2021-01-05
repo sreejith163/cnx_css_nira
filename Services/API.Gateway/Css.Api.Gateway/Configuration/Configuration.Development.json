@@ -390,7 +390,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/charts",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.13",
@@ -423,9 +423,22 @@
       ],
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
+    },
+    //********* Import Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/import",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.34",
+          "Port": 4206
+        }
+      ],
+      "UpstreamPathTemplate": "/api/import",
+      "UpstreamHttpMethod": [ "Post" ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://10.87.222.30:4201/"
+    "BaseUrl": "http://10.87.221.35:4201/"
   }
 }
