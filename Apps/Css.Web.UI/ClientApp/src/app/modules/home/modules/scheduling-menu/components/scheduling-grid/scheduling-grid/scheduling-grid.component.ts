@@ -7,7 +7,6 @@ import { Constants } from 'src/app/shared/util/constants.util';
 import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
-import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { SubscriptionLike as ISubscription } from 'rxjs';
@@ -794,6 +793,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       updateAgentSchedule(this.totalSchedulingGridData[index].id, updateModel)
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
+        if (this.selectedGrid) {
+          this.selectedGrid.dateFrom = updateModel.dateFrom;
+          this.selectedGrid.dateTo = updateModel.dateTo;
+        }
         this.totalSchedulingGridData[index].modifiedBy = updateModel.modifiedBy;
         this.totalSchedulingGridData[index].modifiedDate = new Date();
       }, (error) => {
