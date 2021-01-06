@@ -15,6 +15,7 @@ using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -298,7 +299,7 @@ namespace Css.Api.Scheduling.Business
 
             await _uow.Commit();
 
-            return new CSSResponse(new AgentAdminIdDetails { AgentAdminId = agentAdminRequest.Id }, HttpStatusCode.Created);
+            return new CSSResponse(new AgentAdminIdDetails { AgentAdminId = agentAdminRequest.Id.ToString() }, HttpStatusCode.Created);
         }
 
         /// <summary>
@@ -318,11 +319,12 @@ namespace Css.Api.Scheduling.Business
             var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
             var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
             var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentAdminDetails.SkillTagId };
+            var employeeIdDetails = new EmployeeIdDetails { Id = agentAdmin.Ssn };
 
 
             var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
 
-            if (agentAdmins != null && agentAdminIdDetails.AgentAdminId != agentAdmins.Id)
+            if (agentAdmins != null && !string.Equals(agentAdminIdDetails.AgentAdminId, agentAdmins.Id.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' and SSo '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
@@ -342,10 +344,11 @@ namespace Css.Api.Scheduling.Business
             var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
             {
                 EmployeeId = agentAdminDetails.EmployeeId,
+                AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId,
                 ModifiedBy = agentAdminDetails.ModifiedBy
             };
 
-            _agentScheduleRepository.UpdateAgentSchedule(new EmployeeIdDetails { Id = agentAdmin.Ssn }, updateAgentScheduleEmployeeDetails);
+            _agentScheduleRepository.UpdateAgentSchedule(employeeIdDetails, updateAgentScheduleEmployeeDetails);
 
             await _uow.Commit();
 

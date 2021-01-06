@@ -56,7 +56,9 @@
             <returns></returns>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.CreateAgentActivityLogs(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.CreateAgentActivityLog)">
-            <summary>Creates the agent activity logs.</summary>
+            <summary>
+            Creates the agent activity logs.
+            </summary>
             <param name="agentAdminId">The agent admin identifier.</param>
             <param name="agentActivityLogDetails">The agent activity log details.</param>
             <returns>

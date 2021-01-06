@@ -8,6 +8,7 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var query = 
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) & 
-                Builders<Agent>.Filter.Eq(i => i.Id, agentAdminIdDetails.AgentAdminId);
+                Builders<Agent>.Filter.Eq(i => i.Id, new ObjectId(agentAdminIdDetails.AgentAdminId));
 
             return await FindByIdAsync(query);
         }

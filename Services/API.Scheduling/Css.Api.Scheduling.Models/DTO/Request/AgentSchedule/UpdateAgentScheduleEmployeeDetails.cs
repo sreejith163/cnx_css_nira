@@ -8,6 +8,11 @@
         public int EmployeeId { get; set; }
 
         /// <summary>
+        /// Gets or sets the agent scheduling group identifier.
+        /// </summary>
+        public int AgentSchedulingGroupId { get; set; }
+
+        /// <summary>
         /// Gets or sets the modified by.
         /// </summary>
         public string ModifiedBy { get; set; }

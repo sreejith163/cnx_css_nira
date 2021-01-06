@@ -19,7 +19,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control"
+              <input type="text" class="form-control" (keypress)="isNumberKey($event)" onpaste="return false;"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('employeeId')}"
                 formControlName="employeeId" placeholder="{{ 'Employee_id' | translate }}" />
               <div *ngIf="hasFormControlValidationError('employeeId')" class="valid-error">

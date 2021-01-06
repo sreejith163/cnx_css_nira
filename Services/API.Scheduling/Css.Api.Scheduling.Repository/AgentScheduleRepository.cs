@@ -148,6 +148,7 @@ namespace Css.Api.Scheduling.Repository
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.EmployeeId, updateAgentScheduleEmployeeDetails.EmployeeId)
+                .Set(x => x.AgentSchedulingGroupId, updateAgentScheduleEmployeeDetails.AgentSchedulingGroupId)
                 .Set(x => x.ModifiedBy, updateAgentScheduleEmployeeDetails.ModifiedBy)
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 

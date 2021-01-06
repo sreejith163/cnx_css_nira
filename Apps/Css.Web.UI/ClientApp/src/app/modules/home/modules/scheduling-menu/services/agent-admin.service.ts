@@ -31,7 +31,7 @@ export class AgentAdminService extends HttpBaseService {
     }).pipe(catchError(this.handleError));
   }
 
-  getAgentAdmin(agentAdminId: number) {
+  getAgentAdmin(agentAdminId: string) {
     const url = `${this.baseURL}/agentadmins/${agentAdminId}`;
 
     return this.http.get<AgentAdminResponse>(url)
@@ -45,14 +45,14 @@ export class AgentAdminService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
 
-  updateAgentAdmin(agentAdminId: number, agentAdmin: UpdateAgentAdmin) {
+  updateAgentAdmin(agentAdminId: string, agentAdmin: UpdateAgentAdmin) {
     const url = `${this.baseURL}/agentadmins/${agentAdminId}`;
 
     return this.http.put<ApiResponseModel>(url, agentAdmin)
       .pipe(catchError(this.handleError));
   }
 
-  deleteAgentAdmin(agentAdminId: number) {
+  deleteAgentAdmin(agentAdminId: string) {
     const url = `${this.baseURL}/agentadmins/${agentAdminId}`;
 
     return this.http.delete<ApiResponseModel>(url)

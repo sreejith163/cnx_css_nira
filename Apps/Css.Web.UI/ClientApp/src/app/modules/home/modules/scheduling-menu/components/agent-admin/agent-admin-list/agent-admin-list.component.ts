@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
-import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { Language } from 'src/app/shared/models/language-value.model';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
@@ -115,7 +114,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
     });
   }
 
-  editAgentAdmin(agentAdminId: number) {
+  editAgentAdmin(agentAdminId: string) {
     this.getModalPopup(AddAgentProfileComponent, 'lg');
     this.setComponentValues(ComponentOperation.Edit, this.translationValues);
     this.modalRef.componentInstance.agentAdminId = agentAdminId;
@@ -130,7 +129,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteAgentAdmin(agentAdminIndex: number) {
+  deleteAgentAdmin(agentAdminIndex: string) {
     this.getModalPopup(ConfirmationPopUpComponent, 'sm');
     this.setComponentMessages('Are you sure?', 'You won’t be able to revert this!');
     this.modalRef.componentInstance.deleteRecordIndex = agentAdminIndex;
@@ -253,7 +252,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getAgentAdminsSubscription);
   }
 
-  private getExpandedDetails(agentAdminId: number) {
+  private getExpandedDetails(agentAdminId: string) {
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
     this.getAgentAdminSubscription = this.agentAdminService.getAgentAdmin(agentAdminId)

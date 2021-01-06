@@ -23,12 +23,12 @@ namespace Css.Api.Admin.UnitTest.Controllers
         /// <summary>
         /// The controller
         /// </summary>
-        private AgentSchedulesController controller;
+        private readonly AgentSchedulesController controller;
 
         /// <summary>
         /// The mock agent schedule data
         /// </summary>
-        private MockAgentScheduleData mockAgentScheduleData;
+        private readonly MockAgentScheduleData mockAgentScheduleData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentCategoryControllerShould" /> class.

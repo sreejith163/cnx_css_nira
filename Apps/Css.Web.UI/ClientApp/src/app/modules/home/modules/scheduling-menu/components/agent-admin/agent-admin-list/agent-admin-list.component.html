@@ -118,8 +118,8 @@
                         <ng-container *ngFor="let el of agentAdmins; let i = index">
                             <tr>
                                 <td>
-                                    <i class="fa fa-edit padding-5 pointer" (click)="editAgentAdmin(el.agentAdminId)"></i>
-                                    <i class="fa fa-trash padding-5 pointer" (click)="deleteAgentAdmin(el.agentAdminId)"></i>
+                                    <i class="fa fa-edit padding-5 pointer" (click)="editAgentAdmin(el.id)"></i>
+                                    <i class="fa fa-trash padding-5 pointer" (click)="deleteAgentAdmin(el.id)"></i>
                                 </td>
                                 <td>{{el.employeeId}}</td>
                                 <td>{{el.sso}}</td>

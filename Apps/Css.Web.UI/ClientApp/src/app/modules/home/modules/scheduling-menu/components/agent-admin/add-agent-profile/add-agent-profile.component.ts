@@ -32,7 +32,6 @@ import { AgentAdminResponse } from '../../../models/agent-admin-response.model';
 import { UpdateAgentAdmin } from '../../../models/update-agent-admin.model';
 import { AgentAdminService } from '../../../services/agent-admin.service';
 
-
 @Component({
   selector: 'app-add-agent-profile',
   templateUrl: './add-agent-profile.component.html',
@@ -48,8 +47,6 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
   model: NgbDateStruct;
   agentAdminDetails: AgentAdminResponse;
 
-
-
   spinner = 'agentAdmin';
   maxLength = Constants.DefaultTextMaxLength;
 
@@ -58,8 +55,6 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
   skillGroupId: number;
   skillTagId: number;
 
-
-
   getAgentAdminSubscription: ISubscription;
   addAgentAdminSubscription: ISubscription;
   updateAgentAdminSubscription: ISubscription;
@@ -67,7 +62,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
   subscriptions: ISubscription[] = [];
 
   @Input() operation: ComponentOperation;
-  @Input() agentAdminId: number;
+  @Input() agentAdminId: string;
   @Input() translationValues: TranslationDetails[];
 
   constructor(
@@ -112,6 +107,14 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       this.saveAgentProfileDetailsOnModel();
       this.operation === ComponentOperation.Edit ? this.updateAgentAdminProfileDetails() : this.addAgentAdminProfileDetails();
     }
+  }
+
+  isNumberKey(event) {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
   }
 
   hasFormControlValidationError(control: string) {
