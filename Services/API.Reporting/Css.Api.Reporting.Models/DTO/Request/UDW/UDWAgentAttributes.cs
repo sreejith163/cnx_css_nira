@@ -28,7 +28,7 @@ namespace Css.Api.Reporting.Models.DTO.Request.UDW
         [XmlElement(ElementName = "mu")]
         public string MU { get; set; }
 
-        [XmlElement(ElementName = "startID")]
+        [XmlElement(ElementName = "startID", IsNullable = true)]
         public long? StartId { get; set; }
 
 

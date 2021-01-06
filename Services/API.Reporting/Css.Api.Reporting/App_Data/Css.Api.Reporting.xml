@@ -54,27 +54,6 @@
             <param name="configuration"></param>
             <returns>The same instance of IServiceCollection</returns>
         </member>
-        <member name="M:Css.Api.Reporting.Extensions.ServiceScopeExtension.AddFactories(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            The extension method to configure all factories
-            </summary>
-            <param name="services"></param>
-            <returns>The same instance of IServiceCollection</returns>
-        </member>
-        <member name="M:Css.Api.Reporting.Extensions.ServiceScopeExtension.AddStrategies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            The extension method to configure all strategies
-            </summary>
-            <param name="services"></param>
-            <returns>The same instance of IServiceCollection</returns>
-        </member>
-        <member name="M:Css.Api.Reporting.Extensions.ServiceScopeExtension.AddImportServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            The extension method to configure all import services
-            </summary>
-            <param name="services"></param>
-            <returns>The same instance of IServiceCollection</returns>
-        </member>
         <member name="T:Css.Api.Reporting.Program">
             <summary>
             Program starts here

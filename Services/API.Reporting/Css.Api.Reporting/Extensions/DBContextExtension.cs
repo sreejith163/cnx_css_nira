@@ -24,8 +24,8 @@ namespace Css.Api.Reporting.Extensions
         /// <returns></returns>
         public static IServiceCollection AddDBContextConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<IMongoContext, MongoContext>();
-            services.AddSingleton<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IMongoContext, MongoContext>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

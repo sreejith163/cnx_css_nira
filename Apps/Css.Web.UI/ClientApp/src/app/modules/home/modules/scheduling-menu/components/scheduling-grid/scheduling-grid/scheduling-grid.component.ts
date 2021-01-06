@@ -125,7 +125,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     private calendar: NgbCalendar,
     private modalService: NgbModal,
     public ngbDateParserFormatter: NgbDateParserFormatter,
-    private translationService: LanguageTranslationService,
     private genericStateManagerService: GenericStateManagerService,
     private spinnerService: NgxSpinnerService,
     private agentSchedulesService: AgentSchedulesService,

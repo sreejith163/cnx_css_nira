@@ -12,7 +12,8 @@ namespace Css.Api.Reporting.Models.DTO.Request.UDW
         
         [XmlElement(ElementName = "logon")]
         public string LogOn { get; set; }
-        
-        //public string AgentGroup { get; set; }
+
+        [XmlElement(ElementName = "agentGroup")]
+        public string AgentGroup { get; set; }
     }
 }

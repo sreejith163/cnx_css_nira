@@ -10,6 +10,9 @@ using System.Text;
 
 namespace Css.Api.Reporting.Repository
 {
+    /// <summary>
+    /// The repository for agent collection
+    /// </summary>
     public class AgentRepository : GenericRepository<Agent>, IAgentRepository
     {
         /// <summary>Initializes a new instance of the <see cref="AgentRepository" /> class.</summary>
@@ -19,11 +22,16 @@ namespace Css.Api.Reporting.Repository
 
         }
 
+        /// <summary>
+        /// The method to upsert agents to the mongo collection
+        /// </summary>
+        /// <param name="agents"></param>
         public void UpsertAsync(List<Agent> agents)
         {
             agents.ForEach(agent =>
             {
                 var query = Builders<Agent>.Filter.Eq(i => i.Ssn, agent.Ssn);
+                
                 UpdateDefinition<Agent> update = Builders<Agent>.Update.Set(x => x.ModifiedDate, DateTime.UtcNow);
                 update = update.Set(x => x.ModifiedBy, agent.ModifiedBy);
 

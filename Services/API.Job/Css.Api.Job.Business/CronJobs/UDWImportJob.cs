@@ -77,8 +77,7 @@ namespace Css.Api.Job.Business.CronJobs
         {
             var client = _httpClient.CreateClient();
             try
-            {
-                
+            { 
                 var reqMessage = CreateHttpRequestMessage();
                 var responseMessage = await client.SendAsync(reqMessage);
                 var response = await responseMessage.Content.ReadAsStringAsync();
@@ -114,6 +113,12 @@ namespace Css.Api.Job.Business.CronJobs
         }
         #endregion
 
+        #region Private Methods
+
+        /// <summary>
+        /// Method to create the HTTPRequestMessage using the job attributes
+        /// </summary>
+        /// <returns></returns>
         private HttpRequestMessage CreateHttpRequestMessage()
         {
             var reqMessage = new HttpRequestMessage();
@@ -135,5 +140,6 @@ namespace Css.Api.Job.Business.CronJobs
 
             return reqMessage;
         }
+        #endregion
     }
 }

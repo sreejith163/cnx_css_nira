@@ -80,6 +80,7 @@ namespace Css.Api.Reporting.Business.Services
 					feeds.Add(feed);
 				}
 				sftp.Disconnect();
+				sftp.Dispose();
 				if(feeds.Count == 0)
                 {
 					throw new FileNotFoundException(Messages.EmptyFTPDirectory);
@@ -287,7 +288,7 @@ namespace Css.Api.Reporting.Business.Services
 		{
 			int index = sourcePath.LastIndexOf(".xml");
 			string file = sourcePath.Substring(0, index);
-			return file + "_partial.txt";
+			return file + "_partial.xml";
 		}
 
 		/// <summary>

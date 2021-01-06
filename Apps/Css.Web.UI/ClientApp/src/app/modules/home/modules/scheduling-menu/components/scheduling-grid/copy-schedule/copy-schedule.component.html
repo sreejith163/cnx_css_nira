@@ -3,7 +3,7 @@
       <ngx-spinner [name]="spinner"></ngx-spinner>
       <div class="modal-header header-color">
         <h6 class="modal-title w-100 font-weight-bold header">
-          <p>{{ 'Copy Schedules' | translation: 'lbl_copy_schedules_page_title' : translationValues }}
+          <p>{{ 'Copy Schedules' | translate }}
           </p>
         </h6>
         <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
@@ -14,7 +14,7 @@
           <div class="col-md-12 m-t-20">
             <div class="row">
               <div class="col-md-4">
-                <label class="my-2">{{ 'Scheduling Group' | translation: 'lbl_copy_schedules_scheduling_group' : translationValues }}
+                <label class="my-2">{{ 'Scheduling Group' | translate }}
                   <span class="required">*</span>
                 </label>
               </div>
@@ -23,8 +23,7 @@
                  (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
                 </app-agent-scheduling-group-typeahead>
                 <div *ngIf="!agentSchedulingGroupId && formSubmitted" class="valid-error">
-                  {{ 'Scheduling Group is required' | translation: 'lbl_copy_schedules_scheduling_group_required_validation_message' :
-                  translationValues }}
+                  {{ 'Scheduling Group is required' | translate }}
                 </div>
               </div>
             </div>
@@ -38,10 +37,10 @@
                                 <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll($event)">
                             </th>
                             <th>
-                                {{ 'Employee ID' | translation: 'lbl_copy_schedule_table_heading_employee_id' : translationValues }}
+                                {{ 'Employee_id' | translate }}
                             </th>
                             <th>
-                                {{ 'Name' | translation: 'lbl_copy_schedule_table_heading_name' : translationValues }}
+                                {{ 'Name' | translate }}
                             </th>
                         </tr>
                     </thead>
@@ -68,7 +67,7 @@
               </ngb-pagination>
               <select class="form-control" (change)="changePageSize($event.target.value)">
                 <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
-                  {{ x.text }}
+                  {{ x.text | translate }}
                 </option>
               </select>
             </ul>
@@ -81,7 +80,7 @@
             <div class="col-md-10"></div>
             <div class="col-md-2">
               <button class="btn btn-primary float-r" data-dismiss="modal" (click)="copySchedule()">
-                {{ 'Copy' | translation: 'btn_copy' : translationValues }}
+                {{ 'Copy' | translate }}
               </button>
             </div>
           </div>

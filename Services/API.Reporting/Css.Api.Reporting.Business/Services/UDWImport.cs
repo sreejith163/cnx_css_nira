@@ -133,16 +133,25 @@ namespace Css.Api.Reporting.Business.Services
                              || (ag.AgentData.Count != up.AgentData.Count)
                              select ag).ToList();
 
+            var mismatch = new UDWAgentList();
             if(newAgents.Any())
             {
-                metadata += JsonConvert.SerializeObject(newAgents) + "\n";
+                mismatch.NewAgents = newAgents;
             }
 
             if(changeAgents.Any())
             {
-                metadata += JsonConvert.SerializeObject(changeAgents) + "\n";
+                mismatch.ChangedAgents = changeAgents;
             }
 
+            if( (mismatch.NewAgents != null && mismatch.NewAgents.Any()) 
+                || (mismatch.ChangedAgents != null && mismatch.ChangedAgents.Any())
+            )
+            {
+                XMLParser<UDWAgentList> parser = new XMLParser<UDWAgentList>();
+                metadata = parser.Serialize(mismatch);
+            }
+            
             return metadata;
         }
         #endregion

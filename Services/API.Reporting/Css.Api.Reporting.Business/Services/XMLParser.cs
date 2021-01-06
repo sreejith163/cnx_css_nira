@@ -26,9 +26,7 @@ namespace Css.Api.Reporting.Business.Services
         public T Deserialize(byte[] bytes)
         {
             MemoryStream stream = new MemoryStream(bytes);
-            var str = Encoding.Default.GetString(bytes);
             XmlSerializer serializer = new XmlSerializer(typeof(T));
-
             return (T) serializer.Deserialize(stream);
         }
 
@@ -41,6 +39,20 @@ namespace Css.Api.Reporting.Business.Services
         {
             byte[] bytes = Encoding.Default.GetBytes(data);
             return Deserialize(bytes);
+        }
+
+        /// <summary>
+        /// The generic serializer for the input data of type T
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public string Serialize(T data)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            StringBuilder sb = new StringBuilder();
+            StringWriter sw = new StringWriter(sb);
+            serializer.Serialize(sw, data);
+            return sb.ToString();
         }
         #endregion
     }

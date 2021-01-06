@@ -1,10 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
-import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
+import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
@@ -35,6 +36,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
 
   paginationSize = Constants.paginationSize;
 
+  getTranslationSubscription: ISubscription;
   copyAgentScheduleChartSubscription: ISubscription;
   getAgentsSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
@@ -42,9 +44,10 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   @Input() agentSchedulingGroupId: number;
   @Input() agentScheduleId: string;
   @Input() agentScheudleType: AgentScheduleType;
-  @Input() translationValues: TranslationDetails[];
 
   constructor(
+    private genericStateManagerService: GenericStateManagerService,
+    public translate: TranslateService,
     public activeModal: NgbActiveModal,
     private spinnerService: NgxSpinnerService,
     private agentSchedulesService: AgentSchedulesService,
@@ -218,6 +221,22 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.copyAgentScheduleChartSubscription);
+  }
+
+  private subscribeToTranslations(){
+    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
+          this.loadTranslations();
+        }
+      }
+    );
+    this.subscriptions.push(this.getTranslationSubscription);
+  }
+
+  private loadTranslations(){
+    const browserLang = this.genericStateManagerService.getLanguage();
+    this.translate.use(browserLang ? browserLang : 'en');
   }
 
 }

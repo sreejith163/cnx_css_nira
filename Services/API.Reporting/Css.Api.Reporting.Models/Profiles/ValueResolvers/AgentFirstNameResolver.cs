@@ -14,6 +14,12 @@ namespace Css.Api.Reporting.Models.Profiles.ValueResolvers
             {
                 return context.Mapper.Map<string>(source.FirstName);
             }
+
+            if(source.Name.Contains(','))
+            {
+                var name_split = source.Name.Split(',');
+                return context.Mapper.Map<string>(name_split.Length > 1 ?name_split[1] : string.Empty);
+            }
             return context.Mapper.Map<string>(source.Name.Split().Length > 1 ? source.Name.Split()[0] : string.Empty);
         }
     }

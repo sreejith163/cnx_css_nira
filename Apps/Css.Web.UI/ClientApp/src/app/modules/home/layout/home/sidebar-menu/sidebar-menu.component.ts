@@ -45,9 +45,6 @@ export class SidebarMenuComponent implements OnInit {
     const browserLang = this.genericStateManagerService.getLanguage();
     this.currentLanguage = browserLang ? browserLang : 'en';
     this.translate.use(this.currentLanguage);
-
-    this.menuLength = CSS_LANGUAGES.find(x => x.code === this.currentLanguage).sidebarLength;
-
   }
 
 }

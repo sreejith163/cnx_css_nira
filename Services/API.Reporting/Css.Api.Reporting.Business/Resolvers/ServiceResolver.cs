@@ -1,13 +1,12 @@
 ﻿using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Models.DTO.Processing;
-using Css.Api.Reporting.Models.DTO.Response;
 using Css.Api.Reporting.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Css.Api.Reporting.Business.Factories
+namespace Css.Api.Reporting.Business.Resolvers
 {
     /// <summary>
     /// A class to resolve all the requested services
@@ -79,7 +78,7 @@ namespace Css.Api.Reporting.Business.Factories
         public async Task Finalize(int status, DataFeed feed)
         {
             List<int> processed = new List<int>() { (int)ProcessStatus.Success, (int)ProcessStatus.Partial };
-            if(processed.Contains(status))
+            if (processed.Contains(status))
             {
                 await _ftp.MoveToProcessedFolder(feed);
             }
