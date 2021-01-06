@@ -159,43 +159,51 @@ namespace Css.Api.Scheduling.Repository
         /// Updates the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        public void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails)
+        /// <param name="agentScheduleChart">The agent schedule chart.</param>
+        public void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleChart)
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
-                .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
+                .Set(x => x.ModifiedBy, agentScheduleChart.ModifiedBy)
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow)
+                .Set(x => x.AgentScheduleCharts, agentScheduleChart.AgentScheduleCharts);
+
+            UpdateOneAsync(query, update);
+        }
+
+        /// <summary>
+        /// Updates the agent schedule manger chart.
+        /// </summary>
+        /// <param name="agentScheduleManagerChart">The agent schedule manager chart.</param>
+        /// <param name="modifiedUserDetails">The modified user details.</param>
+        public void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManagerChart agentScheduleManagerChart,
+                                                   ModifiedUserDetails modifiedUserDetails)
+        {
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            var update = Builders<AgentSchedule>.Update
+                .Set(x => x.ModifiedBy, modifiedUserDetails.ModifiedBy)
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 
-            switch (agentScheduleDetails.AgentScheduleType)
+            agentScheduleManagerChart.Date = new DateTimeOffset(agentScheduleManagerChart.Date.Date, TimeSpan.Zero);
+
+            var documentQuery = query & Builders<AgentSchedule>.Filter
+                .ElemMatch(i => i.AgentScheduleManagerCharts, chart => chart.Date == agentScheduleManagerChart.Date);
+
+            var documentCount = FindCountByIdAsync(documentQuery).Result;
+            if (documentCount > 0)
             {
-                case AgentScheduleType.SchedulingTab:
-                    update = update.Set(x => x.AgentScheduleCharts, agentScheduleDetails.AgentScheduleCharts);
-                    break;
-
-                case AgentScheduleType.SchedulingMangerTab:
-                    agentScheduleDetails.AgentScheduleManagerChart.Date = new DateTimeOffset(agentScheduleDetails.AgentScheduleManagerChart.Date.Date, TimeSpan.Zero);
-
-                    var documentQuery = query & Builders<AgentSchedule>.Filter
-                        .ElemMatch(i => i.AgentScheduleManagerCharts, chart => chart.Date == agentScheduleDetails.AgentScheduleManagerChart.Date);
-
-                    var documentCount = FindCountByIdAsync(documentQuery).Result;
-                    if (documentCount > 0)
-                    {
-                        query = documentQuery;
-                        update = update.Set(x => x.AgentScheduleManagerCharts[-1], agentScheduleDetails.AgentScheduleManagerChart);
-                    }
-                    else
-                    {
-                        update = update.AddToSet(x => x.AgentScheduleManagerCharts, agentScheduleDetails.AgentScheduleManagerChart);
-                    }
-                    break;
-
-                default:
-                    break;
+                query = documentQuery;
+                update = update.Set(x => x.AgentScheduleManagerCharts[-1], agentScheduleManagerChart);
+            }
+            else
+            {
+                update = update.AddToSet(x => x.AgentScheduleManagerCharts, agentScheduleManagerChart);
             }
 
             UpdateOneAsync(query, update);

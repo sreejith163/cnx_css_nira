@@ -127,6 +127,13 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.UpdateAgentScheduleManagerChart(Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.UpdateAgentScheduleManagerChart)">
+            <summary>
+            Updates the agent schedule manager chart.
+            </summary>
+            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <returns></returns>
+        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.ImportAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.ImportAgentScheduleChart)">
             <summary>
             Updates the agent schedule chart.
@@ -432,6 +439,16 @@
         <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleChartValidator.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleChartValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleManagerChartValidator">
+            <summary>
+            Validator for handling the validation of update agent schedule chart
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleManagerChartValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleManagerChartValidator"/> class.
             </summary>
         </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleValidator">

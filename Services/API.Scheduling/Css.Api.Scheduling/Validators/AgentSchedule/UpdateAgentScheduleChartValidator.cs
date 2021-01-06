@@ -1,6 +1,5 @@
 ﻿using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
-using Css.Api.Scheduling.Models.Enums;
 using FluentValidation;
 
 namespace Css.Api.Scheduling.Validators.AgentSchedule
@@ -16,13 +15,9 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         public UpdateAgentScheduleChartValidator()
         {
             RuleFor(x => x.ModifiedBy).NotEmpty();
-            RuleFor(x => x.AgentScheduleType).IsInEnum();
-            RuleFor(x => x.AgentScheduleCharts).SetValidator(new ScheduleChartUniqueDaysCollectionValidator())
-                .When(x => x.AgentScheduleType == AgentScheduleType.SchedulingTab);
-            RuleForEach(x => x.AgentScheduleCharts).SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>())
-                .When(x => x.AgentScheduleType == AgentScheduleType.SchedulingTab);
-            RuleFor(x => x.AgentScheduleManagerChart).SetValidator(new AgentScheduleManagerValidator<AgentScheduleManagerChart>())
-                .When(x => x.AgentScheduleType == AgentScheduleType.SchedulingMangerTab);
+            RuleFor(x => x.AgentScheduleCharts).NotEmpty();
+            RuleFor(x => x.AgentScheduleCharts).SetValidator(new ScheduleChartUniqueDaysCollectionValidator());
+            RuleForEach(x => x.AgentScheduleCharts).SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>());
         }
     }
 }

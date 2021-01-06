@@ -104,6 +104,23 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         }
 
         /// <summary>
+        /// Updates the agent schedule manger chart.
+        /// </summary>
+        /// <param name="agentScheduleManagerChartDetails">The agent schedule manager chart details.</param>
+        /// <returns></returns>
+        public CSSResponse UpdateAgentScheduleMangerChart(UpdateAgentScheduleManagerChart agentScheduleManagerChartDetails)
+        {
+            foreach (var agentScheduleManager in agentScheduleManagerChartDetails.AgentScheduleManagers)
+            {
+                var employeeIdDetails = new EmployeeIdDetails { Id = agentScheduleManager.EmployeeId };
+                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleManagerChartDetails.ModifiedBy };
+                new MockDataContext().UpdateAgentScheduleMangerChart(employeeIdDetails, agentScheduleManager.AgentScheduleManagerChart, modifiedUserDetails);
+            }
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
         /// Imports the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>

@@ -16,31 +16,31 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
     {
         #region Data
 
-        readonly IQueryable<Client> clientsDB = new List<Client>() 
+        private readonly IQueryable<Client> clientsDB = new List<Client>() 
         {
             new Client { ClientId = 1, Name = "Client Name 1", IsDeleted = false },
             new Client { ClientId = 2, Name = "Client Name 2", IsDeleted = false }
         }.AsQueryable();
 
-        readonly IQueryable<ClientLobGroup> clientLobGroupDB = new List<ClientLobGroup>() 
+        private readonly IQueryable<ClientLobGroup> clientLobGroupDB = new List<ClientLobGroup>() 
         {
             new ClientLobGroup { ClientId = 1, ClientLobGroupId = 1, Name = "Client Lob 1", IsDeleted = false },
             new ClientLobGroup { ClientId = 2, ClientLobGroupId = 2, Name = "Client Lob 2", IsDeleted = false }
         }.AsQueryable();
 
-        readonly IQueryable<SkillGroup> skillGroupDB = new List<SkillGroup>()
+        private readonly IQueryable<SkillGroup> skillGroupDB = new List<SkillGroup>()
         {
             new SkillGroup { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, Name = "Skill Group 1", IsDeleted = false },
             new SkillGroup { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, Name = "Skill Group 2", IsDeleted = false }
         }.AsQueryable();
 
-        readonly IQueryable<SkillTag> skillTagDB = new List<SkillTag>()
+        private readonly IQueryable<SkillTag> skillTagDB = new List<SkillTag>()
         {
             new SkillTag { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, Name = "Skill Tag 1", IsDeleted = false },
             new SkillTag { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, SkillTagId = 2, Name = "Skill Tag 2", IsDeleted = false }
         }.AsQueryable();
 
-        readonly IQueryable<AgentSchedulingGroup> agentSchedulingGroupDB = new List<AgentSchedulingGroup>() 
+        private readonly IQueryable<AgentSchedulingGroup> agentSchedulingGroupDB = new List<AgentSchedulingGroup>() 
         {
             new AgentSchedulingGroup { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
                                        Name = "Agent Scheduliung Group 1", IsDeleted = false },
@@ -48,7 +48,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                                        Name = "Agent Scheduliung Group 2", IsDeleted = false }
         }.AsQueryable();
 
-        readonly IQueryable<Agent> agentAdminsDB = new List<Agent>()
+        private readonly IQueryable<Agent> agentAdminsDB = new List<Agent>()
         {
             new Agent { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), FirstName = "abc", LastName = "def", Ssn = 1, 
                         Sso = "user1@concentrix.com", ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
@@ -58,7 +58,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                         CreatedBy = "Admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
-        readonly IQueryable<AgentSchedule> agentSchedulesDB = new List<AgentSchedule>() {
+        private readonly IQueryable<AgentSchedule> agentSchedulesDB = new List<AgentSchedule>() {
             new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718e"), EmployeeId = 1, DateFrom = DateTime.UtcNow, DateTo = DateTime.UtcNow,
                                 Status = SchedulingStatus.Approved, AgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow, IsDeleted = false,
                                 AgentScheduleCharts = new List<AgentScheduleChart>
@@ -130,7 +130,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         }.AsQueryable();
 
 
-        readonly IQueryable<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
+        private readonly IQueryable<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
         {
             new SchedulingCode { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), SchedulingCodeId = 1, Name = "lunch", IsDeleted = false},
             new SchedulingCode { Id = new ObjectId("5fe0b5c46a05416894c0718f"), SchedulingCodeId = 2, Name = "lunch", IsDeleted = false},
@@ -173,7 +173,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// <returns></returns>
         public Agent GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails)
         {
-            return agentAdminsDB.Where(x => x.IsDeleted == false && x.Id == agentAdminIdDetails.AgentAdminId).FirstOrDefault();
+            return agentAdminsDB.Where(x => x.IsDeleted == false && x.Id == new ObjectId(agentAdminIdDetails.AgentAdminId)).FirstOrDefault();
         }
 
         /// <summary>
@@ -355,28 +355,25 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
             {
                 agentSchedule.ModifiedBy = agentScheduleDetails.ModifiedBy;
                 agentSchedule.ModifiedDate = DateTime.UtcNow;
+                agentSchedule.AgentScheduleCharts = agentScheduleDetails.AgentScheduleCharts;
             }
+        }
 
-            switch (agentScheduleDetails.AgentScheduleType)
+        /// <summary>
+        /// Updates the agent schedule manger chart.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="agentScheduleManagerChart">The agent schedule manager chart.</param>
+        /// <param name="modifiedUserDetails">The modified user details.</param>
+        public void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManagerChart agentScheduleManagerChart,
+                                                   ModifiedUserDetails modifiedUserDetails)
+        {
+            var agentSchedule = agentSchedulesDB.Where(x => x.IsDeleted == false && x.EmployeeId == employeeIdDetails.Id).FirstOrDefault();
+            if (agentSchedule != null)
             {
-                case AgentScheduleType.SchedulingTab:
-                    agentSchedule.AgentScheduleCharts = agentScheduleDetails.AgentScheduleCharts;
-                    break;
-
-                case AgentScheduleType.SchedulingMangerTab:
-                    var agentScheduleManagerChart = agentSchedule.AgentScheduleManagerCharts.Where(x => x.Date == agentScheduleDetails.AgentScheduleManagerChart.Date).FirstOrDefault();
-                    if (agentScheduleManagerChart != null)
-                    {
-                        agentScheduleManagerChart = agentScheduleDetails.AgentScheduleManagerChart;
-                    }
-                    else
-                    {
-                        agentSchedule.AgentScheduleManagerCharts.Add(agentScheduleDetails.AgentScheduleManagerChart);
-                    }
-                    break;
-
-                default:
-                    break;
+                agentSchedule.ModifiedBy = modifiedUserDetails.ModifiedBy;
+                agentSchedule.ModifiedDate = DateTime.UtcNow;
+                agentSchedule.AgentScheduleManagerCharts.Add(agentScheduleManagerChart);
             }
         }
 

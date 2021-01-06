@@ -312,15 +312,15 @@ namespace Css.Api.Admin.Business.UnitTest.Services
         /// Updates the agent schedule chart with not found.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="schedulingCode">The scheduling code.</param>
         [Theory]
-        [InlineData("6fe0b5ad6a05416894c0718e")]
-        [InlineData("6fe0b5ad6a05416894c0718f")]
-        public async void UpdateAgentScheduleChartWithNotFound(string agentScheduleId)
+        [InlineData("6fe0b5ad6a05416894c0718e", 100)]
+        [InlineData("6fe0b5ad6a05416894c0718f", 101)]
+        public async void UpdateAgentScheduleChartWithNotFound(string agentScheduleId, int schedulingCode)
         {
             AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
             UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
             {
-                AgentScheduleType = AgentScheduleType.SchedulingTab,
                 AgentScheduleCharts = new List<AgentScheduleChart>
                 {
                     new AgentScheduleChart
@@ -328,7 +328,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                         Day = 1,
                         Charts = new List<ScheduleChart>
                         {
-                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = 1 }
+                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
                         }
                     }
                 },
@@ -361,7 +361,6 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
             UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
             {
-                AgentScheduleType = AgentScheduleType.SchedulingTab,
                 AgentScheduleCharts = new List<AgentScheduleChart>
                 {
                     new AgentScheduleChart
@@ -390,56 +389,18 @@ namespace Css.Api.Admin.Business.UnitTest.Services
         }
 
         /// <summary>
-        /// Updates the agent schedule chart for scheduling manager tab with not found for scheduling code.
+        /// Updates the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
         /// <param name="schedulingCode">The scheduling code.</param>
         [Theory]
-        [InlineData("5fe0b5ad6a05416894c0718e", 100)]
-        [InlineData("5fe0b5ad6a05416894c0718f", 101)]
-        public async void UpdateAgentScheduleChartForSchedulingManagerTabWithNotFoundForSchedulingCode(string agentScheduleId, int schedulingCode)
+        [InlineData("5fe0b5ad6a05416894c0718e", 1)]
+        [InlineData("5fe0b5ad6a05416894c0718f", 2)]
+        public async void UpdateAgentScheduleChartForSchedulingTab(string agentScheduleId, int schedulingCode)
         {
             AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
             UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
             {
-                AgentScheduleType = AgentScheduleType.SchedulingMangerTab,
-                AgentScheduleManagerChart = new AgentScheduleManagerChart
-                {
-                    Date = DateTime.UtcNow,
-                    Charts = new List<ScheduleChart>
-                    {
-                        new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
-                    }
-                },
-                ModifiedBy = "admin"
-            };
-
-            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
-                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
-
-            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
-                (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
-
-            var result = await agentScheduleService.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleChart);
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.Value);
-            Assert.Equal(HttpStatusCode.NotFound, result.Code);
-        }
-
-        /// <summary>
-        /// Updates the agent schedule chart.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        [Theory]
-        [InlineData("5fe0b5ad6a05416894c0718e")]
-        [InlineData("5fe0b5ad6a05416894c0718f")]
-        public async void UpdateAgentScheduleChartForSchedulingTab(string agentScheduleId)
-        {
-            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
-            UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
-            {
-                AgentScheduleType = AgentScheduleType.SchedulingTab,
                 AgentScheduleCharts = new List<AgentScheduleChart>
                 {
                     new AgentScheduleChart
@@ -447,7 +408,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                         Day = 1,
                         Charts = new List<ScheduleChart>
                         {
-                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = 1 }
+                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
                         }
                     }
                 },
@@ -467,25 +428,35 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             Assert.Equal(HttpStatusCode.NoContent, result.Code);
         }
 
+        #endregion
+
+        #region UpdateAgentScheduleMangerChart
+
         /// <summary>
-        /// Updates the agent schedule chart.
+        /// Updates the agent schedule chart for scheduling manger tab with not found for scheduling code.
         /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="schedulingCode">The scheduling code.</param>
+        /// <param name="employeeId">The employee identifier.</param>
         [Theory]
-        [InlineData("5fe0b5ad6a05416894c0718e")]
-        [InlineData("5fe0b5ad6a05416894c0718f")]
-        public async void UpdateAgentScheduleChartForSchedulingManagerTab(string agentScheduleId)
+        [InlineData(100, 1)]
+        [InlineData(101, 2)]
+        public async void UpdateAgentScheduleChartForSchedulingMangerTabWithNotFoundForSchedulingCode(int schedulingCode, int employeeId)
         {
-            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
-            UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
+            UpdateAgentScheduleManagerChart agentScheduleChart = new UpdateAgentScheduleManagerChart
             {
-                AgentScheduleType = AgentScheduleType.SchedulingMangerTab,
-                AgentScheduleManagerChart = new AgentScheduleManagerChart 
+                AgentScheduleManagers = new List<AgentScheduleManager>()
                 {
-                    Date = DateTime.UtcNow,
-                    Charts = new List<ScheduleChart>
+                    new AgentScheduleManager
                     {
-                        new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = 1 }
+                        EmployeeId = employeeId,
+                        AgentScheduleManagerChart = new AgentScheduleManagerChart
+                        {
+                             Date = DateTime.UtcNow,
+                             Charts = new List<ScheduleChart>
+                             {
+                                new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
+                             }
+                        }
                     }
                 },
                 ModifiedBy = "admin"
@@ -494,10 +465,47 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
                 (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
-            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
-                (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
+            var result = await agentScheduleService.UpdateAgentScheduleMangerChart(agentScheduleChart);
 
-            var result = await agentScheduleService.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleChart);
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        /// <summary>
+        /// Updates the agent schedule chart.
+        /// </summary>
+        /// <param name="schedulingCode">The scheduling code.</param>
+        /// <param name="employeeId">The employee identifier.</param>
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async void UpdateAgentScheduleChartForSchedulingManagerTab(int schedulingCode, int employeeId)
+        {
+            UpdateAgentScheduleManagerChart agentScheduleChart = new UpdateAgentScheduleManagerChart
+            {
+                AgentScheduleManagers = new List<AgentScheduleManager>()
+                {
+                    new AgentScheduleManager
+                    {
+                        EmployeeId = employeeId,
+                        AgentScheduleManagerChart = new AgentScheduleManagerChart
+                        {
+                             Date = DateTime.UtcNow,
+                             Charts = new List<ScheduleChart>
+                             {
+                                new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
+                             }
+                        }
+                    }
+                },
+                ModifiedBy = "admin"
+            };
+
+            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
+
+            var result = await agentScheduleService.UpdateAgentScheduleMangerChart(agentScheduleChart);
 
             Assert.NotNull(result);
             Assert.Null(result.Value);

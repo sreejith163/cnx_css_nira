@@ -172,13 +172,38 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            // var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
-            // if (!hasValidCodes)
-            // {
-                // return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
-            // }
+            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            }
 
             _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
+
+            await _uow.Commit();
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Updates the agent schedule manger chart.
+        /// </summary>
+        /// <param name="agentScheduleManagerChartDetails">The agent schedule manager chart details.</param>
+        /// <returns></returns>
+        public async Task<CSSResponse> UpdateAgentScheduleMangerChart(UpdateAgentScheduleManagerChart agentScheduleManagerChartDetails)
+        {
+            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleManagerChartDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            }
+
+            foreach (var agentScheduleManager in agentScheduleManagerChartDetails.AgentScheduleManagers)
+            {
+                var employeeIdDetails = new EmployeeIdDetails { Id = agentScheduleManager.EmployeeId };
+                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleManagerChartDetails.ModifiedBy };
+                _agentScheduleRepository.UpdateAgentScheduleMangerChart(employeeIdDetails, agentScheduleManager.AgentScheduleManagerChart, modifiedUserDetails);
+            }
 
             await _uow.Commit();
 
@@ -199,11 +224,11 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            // var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
-            // if (!hasValidCodes)
-            // {
-                // return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
-            // }
+            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            }
 
             _agentScheduleRepository.ImportAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
 
@@ -328,17 +353,18 @@ namespace Css.Api.Scheduling.Business
             if (agentScheduleDetails is UpdateAgentScheduleChart)
             {
                 var details = agentScheduleDetails as UpdateAgentScheduleChart;
-                if (details.AgentScheduleType == Models.Enums.AgentScheduleType.SchedulingTab)
+                foreach (var agentScheduleChart in details.AgentScheduleCharts)
                 {
-                    foreach (var agentScheduleChart in details.AgentScheduleCharts)
-                    {
-                        var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
-                        codes.AddRange(scheduleCodes);
-                    }
+                    var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                    codes.AddRange(scheduleCodes);
                 }
-                else
+            }
+            else if (agentScheduleDetails is UpdateAgentScheduleManagerChart)
+            {
+                var details = agentScheduleDetails as UpdateAgentScheduleManagerChart;
+                foreach (var agentScheduleManager in details.AgentScheduleManagers)
                 {
-                    var scheduleManagerCodes = details.AgentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList().ToList();
+                    var scheduleManagerCodes = agentScheduleManager.AgentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList().ToList();
                     codes.AddRange(scheduleManagerCodes);
                 }
             }

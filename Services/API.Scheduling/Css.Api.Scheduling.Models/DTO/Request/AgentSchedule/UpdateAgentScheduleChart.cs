@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
-    public class UpdateAgentScheduleChart : AgentScheduleChartAttributes
+    public class UpdateAgentScheduleChart
     {
         /// <summary>
         /// Gets or sets the agent schedule charts.
@@ -11,8 +11,8 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent schedule manager chart.
+        /// Gets or sets the modified by.
         /// </summary>
-        public AgentScheduleManagerChart AgentScheduleManagerChart { get; set; }
+        public string ModifiedBy { get; set; }
     }
 }
