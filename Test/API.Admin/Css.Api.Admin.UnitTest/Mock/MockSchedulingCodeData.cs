@@ -52,7 +52,7 @@ namespace Css.Api.Admin.UnitTest.Mock
         /// <returns></returns>
         public CSSResponse CreateSchedulingCode(CreateSchedulingCode createSchedulingCode)
         {
-            if (schedulingCodesDB.Exists(x => x.IsDeleted == false && x.Description == createSchedulingCode.Description))
+            if (schedulingCodesDB.Exists(x => x.IsDeleted == false && (x.Description == createSchedulingCode.Description || x.IconId == createSchedulingCode.IconId)))
             {
                 return new CSSResponse($"Scheduling Code with name '{createSchedulingCode.Description}' already exists.", HttpStatusCode.Conflict);
             }
@@ -80,7 +80,7 @@ namespace Css.Api.Admin.UnitTest.Mock
         /// <returns></returns>
         public CSSResponse UpdateSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails, UpdateSchedulingCode updateSchedulingCode)
         {
-            if (!schedulingCodesDB.Exists(x => x.IsDeleted == false && x.Id == schedulingCodeIdDetails.SchedulingCodeId))
+            if (schedulingCodesDB.Exists(x => x.IsDeleted == false && (x.Description == updateSchedulingCode.Description || x.IconId == updateSchedulingCode.IconId)))
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }

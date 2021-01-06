@@ -80,10 +80,13 @@ namespace Css.Api.Admin.Business
         /// <returns></returns>
         public async Task<CSSResponse> CreateSchedulingCode(CreateSchedulingCode schedulingCodeDetails)
         {
-            var schedulingCodes = await _repository.SchedulingCodes.GetSchedulingCodesByDescription(new SchedulingCodeNameDetails { Name = schedulingCodeDetails.Description });
+            var schedulingCodeNameDetails = new SchedulingCodeNameDetails { Name = schedulingCodeDetails.Description };
+            var schedulingIconIdDetails = new SchedulingIconIdDetails { SchedulingIconId = schedulingCodeDetails.IconId };
+
+            var schedulingCodes = await _repository.SchedulingCodes.GetSchedulingCodesByDescriptionAndIcon(schedulingCodeNameDetails, schedulingIconIdDetails);
             if (schedulingCodes?.Count > 0)
             {
-                return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' or Icon already exists.", HttpStatusCode.Conflict);
             }
 
             var schedulingCodeRequest = _mapper.Map<SchedulingCode>(schedulingCodeDetails);
@@ -109,7 +112,10 @@ namespace Css.Api.Admin.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var schedulingCodes = await _repository.SchedulingCodes.GetSchedulingCodesByDescription(new SchedulingCodeNameDetails { Name = schedulingCodeDetails.Description });
+            var schedulingCodeNameDetails = new SchedulingCodeNameDetails { Name = schedulingCodeDetails.Description };
+            var schedulingIconIdDetails = new SchedulingIconIdDetails { SchedulingIconId = schedulingCodeDetails.IconId };
+
+            var schedulingCodes = await _repository.SchedulingCodes.GetSchedulingCodesByDescriptionAndIcon(schedulingCodeNameDetails, schedulingIconIdDetails);
             if (schedulingCodes?.Count > 0 && schedulingCodes.IndexOf(schedulingCodeIdDetails.SchedulingCodeId) == -1)
             {
                 return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' already exists.", HttpStatusCode.Conflict);

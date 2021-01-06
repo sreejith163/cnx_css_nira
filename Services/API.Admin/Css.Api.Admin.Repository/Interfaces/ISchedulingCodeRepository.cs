@@ -23,11 +23,12 @@ namespace Css.Api.Admin.Repository.Interfaces
         Task<SchedulingCode> GetSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails);
 
         /// <summary>
-        /// Gets the scheduling codes by description.
+        /// Gets the scheduling codes by description and icon.
         /// </summary>
         /// <param name="schedulingCodeNameDetails">The scheduling code name details.</param>
+        /// <param name="schedulingIconIdDetails">The scheduling icon identifier details.</param>
         /// <returns></returns>
-        Task<List<int>> GetSchedulingCodesByDescription(SchedulingCodeNameDetails schedulingCodeNameDetails);
+        Task<List<int>> GetSchedulingCodesByDescriptionAndIcon(SchedulingCodeNameDetails schedulingCodeNameDetails, SchedulingIconIdDetails schedulingIconIdDetails);
 
         /// <summary>
         /// Creates the scheduling code.

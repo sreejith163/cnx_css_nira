@@ -92,10 +92,12 @@ namespace Css.Api.Admin.Repository
         /// Gets the scheduling codes by description.
         /// </summary>
         /// <param name="schedulingCodeNameDetails">The scheduling code name details.</param>
+        /// <param name="schedulingIconIdDetails">The scheduling icon identifier details.</param>
         /// <returns></returns>
-        public async Task<List<int>> GetSchedulingCodesByDescription(SchedulingCodeNameDetails schedulingCodeNameDetails)
+        public async Task<List<int>> GetSchedulingCodesByDescriptionAndIcon(SchedulingCodeNameDetails schedulingCodeNameDetails, SchedulingIconIdDetails schedulingIconIdDetails)
         {
-            var schedulingCodes = FindByCondition(x => string.Equals(x.Description.Trim(), schedulingCodeNameDetails.Name.Trim(), StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
+            var schedulingCodes = FindByCondition(x => x.IsDeleted == false && (x.IconId == schedulingIconIdDetails.SchedulingIconId ||
+                                                       string.Equals(x.Description.Trim(), schedulingCodeNameDetails.Name.Trim(), StringComparison.OrdinalIgnoreCase)))
                 .Select(x => x.Id)
                 .ToList();
 
