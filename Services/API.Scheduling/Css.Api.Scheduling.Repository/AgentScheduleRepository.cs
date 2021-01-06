@@ -212,17 +212,18 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>
         /// Imports the agent schedule chart.
         /// </summary>
-        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        public void ImportAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentScheduleChart agentScheduleDetails)
+        /// <param name="modifiedUserDetails">The modified user details.</param>
+        public void ImportAgentScheduleChart(ImportAgentScheduleChart agentScheduleDetails, ModifiedUserDetails modifiedUserDetails)
         {
             var query =
-                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, agentScheduleDetails.EmployeeId) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
-                .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
-                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
+                .Set(x => x.ModifiedBy, modifiedUserDetails.ModifiedBy)
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow)
+                .Set(x => x.AgentScheduleCharts, agentScheduleDetails.AgentScheduleCharts);
 
             if (agentScheduleDetails.DateFrom.HasValue && agentScheduleDetails.DateFrom != default(DateTime))
             {
@@ -232,21 +233,6 @@ namespace Css.Api.Scheduling.Repository
             if (agentScheduleDetails.DateTo.HasValue && agentScheduleDetails.DateTo != default(DateTime))
             {
                 update = update.Set(x => x.DateTo, agentScheduleDetails.DateTo);
-            }
-
-            switch (agentScheduleDetails.AgentScheduleType)
-            {
-                case AgentScheduleType.SchedulingTab:
-                    update = update.Set(x => x.AgentScheduleCharts, agentScheduleDetails.AgentScheduleCharts);
-                    break;
-
-                case AgentScheduleType.SchedulingMangerTab:
-                    agentScheduleDetails.AgentScheduleManagerCharts.ForEach(x => x.Date = new DateTimeOffset(x.Date.Date, TimeSpan.Zero));
-                    update = update.Set(x => x.AgentScheduleManagerCharts, agentScheduleDetails.AgentScheduleManagerCharts);
-                    break;
-
-                default:
-                    break;
             }
 
             UpdateOneAsync(query, update);

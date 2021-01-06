@@ -134,11 +134,10 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.ImportAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.ImportAgentScheduleChart)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.ImportAgentScheduleChart(Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.ImportAgentSchedule)">
             <summary>
             Updates the agent schedule chart.
             </summary>
-            <param name="agentScheduleId">The agent schedule identifier.</param>
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
@@ -401,14 +400,14 @@
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.CopyAgentScheduleValidator"/> class.
             </summary>
         </member>
-        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleChartValidator">
+        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleValidator">
             <summary>
             Validator for handling the validation of update agent schedule chart
             </summary>
         </member>
-        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleChartValidator.#ctor">
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleValidator.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleChartValidator"/> class.
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleValidator"/> class.
             </summary>
         </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.ScheduleChartUniqueDaysCollectionValidator">

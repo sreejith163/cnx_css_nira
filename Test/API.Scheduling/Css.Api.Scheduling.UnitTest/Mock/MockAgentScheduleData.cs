@@ -1,15 +1,25 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.UnitTest.Mocks;
+using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using Css.Api.Scheduling.Models.Enums;
+using MongoDB.Bson;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {
     public class MockAgentScheduleData
     {
+        List<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
+        {
+            new SchedulingCode { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), SchedulingCodeId = 1, Name = "lunch", IsDeleted = false},
+            new SchedulingCode { Id = new ObjectId("5fe0b5c46a05416894c0718f"), SchedulingCodeId = 2, Name = "lunch", IsDeleted = false},
+        };
+
         /// <summary>
         /// Gets the agent schedules.
         /// </summary>
@@ -98,6 +108,12 @@ namespace Css.Api.Scheduling.UnitTest.Mock
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
+            var hasValidCodes = HasValidSchedulingCodes(agentScheduleDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            }
+
             new MockDataContext().UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
 
             return new CSSResponse(HttpStatusCode.NoContent);
@@ -110,6 +126,12 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// <returns></returns>
         public CSSResponse UpdateAgentScheduleMangerChart(UpdateAgentScheduleManagerChart agentScheduleManagerChartDetails)
         {
+            var hasValidCodes = HasValidSchedulingCodes(agentScheduleManagerChartDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            }
+
             foreach (var agentScheduleManager in agentScheduleManagerChartDetails.AgentScheduleManagers)
             {
                 var employeeIdDetails = new EmployeeIdDetails { Id = agentScheduleManager.EmployeeId };
@@ -126,15 +148,19 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
-        public CSSResponse ImportAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentScheduleChart agentScheduleDetails)
+        public CSSResponse ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails)
         {
-            var agentScheduleCount = new MockDataContext().GetAgentScheduleCount(agentScheduleIdDetails);
-            if (agentScheduleCount < 1)
+            var hasValidCodes = HasValidSchedulingCodes(agentScheduleDetails);
+            if (!hasValidCodes)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
             }
 
-            new MockDataContext().ImportAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
+            foreach (var importAgentScheduleChart in agentScheduleDetails.ImportAgentScheduleCharts)
+            {
+                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
+                new MockDataContext().ImportAgentScheduleChart(importAgentScheduleChart, modifiedUserDetails);
+            }
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }
@@ -156,6 +182,62 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             new MockDataContext().CopyAgentSchedules(agentSchedule, agentScheduleDetails);
 
             return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Determines whether [has valid scheduling codes] [the specified agent schedule details].
+        /// </summary>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns>
+        ///   <c>true</c> if [has valid scheduling codes] [the specified agent schedule details]; otherwise, <c>false</c>.
+        /// </returns>
+        private bool HasValidSchedulingCodes(object agentScheduleDetails)
+        {
+            bool isValid = true;
+            List<int> codes = new List<int>();
+
+            if (agentScheduleDetails is UpdateAgentScheduleChart)
+            {
+                var details = agentScheduleDetails as UpdateAgentScheduleChart;
+                foreach (var agentScheduleChart in details.AgentScheduleCharts)
+                {
+                    var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                    codes.AddRange(scheduleCodes);
+                }
+            }
+            else if (agentScheduleDetails is UpdateAgentScheduleManagerChart)
+            {
+                var details = agentScheduleDetails as UpdateAgentScheduleManagerChart;
+                foreach (var agentScheduleManager in details.AgentScheduleManagers)
+                {
+                    var scheduleManagerCodes = agentScheduleManager.AgentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList().ToList();
+                    codes.AddRange(scheduleManagerCodes);
+                }
+            }
+            else if (agentScheduleDetails is ImportAgentSchedule)
+            {
+
+                var details = agentScheduleDetails as ImportAgentSchedule;
+                foreach (var importAgentScheduleChart in details.ImportAgentScheduleCharts)
+                {
+                    foreach (var agentScheduleChart in importAgentScheduleChart.AgentScheduleCharts)
+                    {
+                        var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                        codes.AddRange(scheduleCodes);
+                    }
+                }
+            }
+
+            if (codes.Any())
+            {
+                var schedulingCodesCount = schedulingCodesDB.FindAll(x => x.IsDeleted == false && codes.Contains(x.SchedulingCodeId))?.Count();
+                if (schedulingCodesCount != codes.Count())
+                {
+                    isValid = false;
+                }
+            }
+
+            return isValid;
         }
     }
 }

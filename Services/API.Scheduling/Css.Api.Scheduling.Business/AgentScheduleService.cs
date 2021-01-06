@@ -213,24 +213,21 @@ namespace Css.Api.Scheduling.Business
         /// <summary>
         /// Imports the agent schedule chart.
         /// </summary>
-        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> ImportAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentScheduleChart agentScheduleDetails)
+        public async Task<CSSResponse> ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails)
         {
-            var agentScheduleCount = await _agentScheduleRepository.GetAgentScheduleCount(agentScheduleIdDetails);
-            if (agentScheduleCount < 1)
-            {
-                return new CSSResponse(HttpStatusCode.NotFound);
-            }
-
             var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
             if (!hasValidCodes)
             {
                 return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
             }
 
-            _agentScheduleRepository.ImportAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
+            foreach (var importAgentScheduleChart in agentScheduleDetails.ImportAgentScheduleCharts)
+            {
+                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
+                _agentScheduleRepository.ImportAgentScheduleChart(importAgentScheduleChart, modifiedUserDetails);
+            }
 
             await _uow.Commit();
 
@@ -368,25 +365,16 @@ namespace Css.Api.Scheduling.Business
                     codes.AddRange(scheduleManagerCodes);
                 }
             }
-            else if (agentScheduleDetails is ImportAgentScheduleChart)
+            else if (agentScheduleDetails is ImportAgentSchedule)
             {
 
-                var details = agentScheduleDetails as ImportAgentScheduleChart;
-                if (details.AgentScheduleType == Models.Enums.AgentScheduleType.SchedulingTab)
+                var details = agentScheduleDetails as ImportAgentSchedule;
+                foreach (var importAgentScheduleChart in details.ImportAgentScheduleCharts)
                 {
-                    foreach (var agentScheduleChart in details.AgentScheduleCharts)
+                    foreach (var agentScheduleChart in importAgentScheduleChart.AgentScheduleCharts)
                     {
                         var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
                         codes.AddRange(scheduleCodes);
-                    }
-
-                }
-                else
-                {
-                    foreach (var agentScheduleManagerChart in details.AgentScheduleManagerCharts)
-                    {
-                        var scheduleManagerCodes = agentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList();
-                        codes.AddRange(scheduleManagerCodes);
                     }
                 }
             }

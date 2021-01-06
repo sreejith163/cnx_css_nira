@@ -129,7 +129,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
             }
         }.AsQueryable();
 
-
         private readonly IQueryable<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
         {
             new SchedulingCode { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), SchedulingCodeId = 1, Name = "lunch", IsDeleted = false},
@@ -380,29 +379,16 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// <summary>
         /// Imports the agent schedule chart.
         /// </summary>
-        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        public void ImportAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, ImportAgentScheduleChart agentScheduleDetails)
+        /// <param name="modifiedUserDetails">The modified user details.</param>
+        public void ImportAgentScheduleChart(ImportAgentScheduleChart agentScheduleDetails, ModifiedUserDetails modifiedUserDetails)
         {
-            var agentSchedule = agentSchedulesDB.Where(x => x.IsDeleted == false && x.Id == new ObjectId(agentScheduleIdDetails.AgentScheduleId)).FirstOrDefault();
+            var agentSchedule = agentSchedulesDB.Where(x => x.IsDeleted == false && x.EmployeeId == agentScheduleDetails.EmployeeId).FirstOrDefault();
             if (agentSchedule != null)
             {
-                agentSchedule.ModifiedBy = agentScheduleDetails.ModifiedBy;
+                agentSchedule.ModifiedBy = modifiedUserDetails.ModifiedBy;
                 agentSchedule.ModifiedDate = DateTime.UtcNow;
-            }
-
-            switch (agentScheduleDetails.AgentScheduleType)
-            {
-                case AgentScheduleType.SchedulingTab:
-                    agentSchedule.AgentScheduleCharts = agentScheduleDetails.AgentScheduleCharts;
-                    break;
-
-                case AgentScheduleType.SchedulingMangerTab:
-                    agentSchedule.AgentScheduleManagerCharts = agentScheduleDetails.AgentScheduleManagerCharts;
-                    break;
-
-                default:
-                    break;
+                agentSchedule.AgentScheduleCharts = agentScheduleDetails.AgentScheduleCharts;
             }
         }
 

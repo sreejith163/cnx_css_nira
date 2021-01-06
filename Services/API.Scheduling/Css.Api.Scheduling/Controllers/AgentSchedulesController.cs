@@ -1,7 +1,5 @@
 ﻿using Css.Api.Scheduling.Business.Interfaces;
-using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
-using Css.Api.Scheduling.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -109,13 +107,12 @@ namespace Css.Api.Scheduling.Controllers
         /// <summary>
         /// Updates the agent schedule chart.
         /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
-        [HttpPut("{agentScheduleId}/import")]
-        public async Task<IActionResult> ImportAgentScheduleChart(string agentScheduleId, [FromBody] ImportAgentScheduleChart agentScheduleDetails)
+        [HttpPut("import")]
+        public async Task<IActionResult> ImportAgentScheduleChart([FromBody] ImportAgentSchedule agentScheduleDetails)
         {
-            var result = await _agentScheduleService.ImportAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
+            var result = await _agentScheduleService.ImportAgentScheduleChart(agentScheduleDetails);
             return StatusCode((int)result.Code, result.Value);
         }
 
