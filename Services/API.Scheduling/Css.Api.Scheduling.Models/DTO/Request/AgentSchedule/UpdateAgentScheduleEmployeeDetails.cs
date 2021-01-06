@@ -1,0 +1,15 @@
+﻿namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
+{
+    public class UpdateAgentScheduleEmployeeDetails
+    {
+        /// <summary>
+        /// Gets or sets the employee identifier.
+        /// </summary>
+        public int EmployeeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the modified by.
+        /// </summary>
+        public string ModifiedBy { get; set; }
+    }
+}

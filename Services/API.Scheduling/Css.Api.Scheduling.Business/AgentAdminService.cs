@@ -6,6 +6,7 @@ using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
@@ -338,6 +339,14 @@ namespace Css.Api.Scheduling.Business
 
             _agentAdminRepository.UpdateAgentAdmin(agentAdminRequest);
 
+            var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
+            {
+                EmployeeId = agentAdminDetails.EmployeeId,
+                ModifiedBy = agentAdminDetails.ModifiedBy
+            };
+
+            _agentScheduleRepository.UpdateAgentSchedule(new EmployeeIdDetails { Id = agentAdmin.Ssn }, updateAgentScheduleEmployeeDetails);
+
             await _uow.Commit();
 
             return new CSSResponse(HttpStatusCode.NoContent);
@@ -359,6 +368,7 @@ namespace Css.Api.Scheduling.Business
             agentAdmin.IsDeleted = true;
 
             _agentAdminRepository.UpdateAgentAdmin(agentAdmin);
+
             _agentScheduleRepository.DeleteAgentSchedule(new EmployeeIdDetails { Id = agentAdmin.Ssn });
 
             await _uow.Commit();

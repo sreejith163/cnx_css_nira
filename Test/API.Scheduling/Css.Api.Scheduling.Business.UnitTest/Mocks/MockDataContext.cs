@@ -328,6 +328,22 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         }
 
         /// <summary>
+        /// Updates the agent schedule.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="updateAgentScheduleEmployeeDetails">The update agent schedule employee details.</param>
+        public void UpdateAgentSchedule(EmployeeIdDetails employeeIdDetails, UpdateAgentScheduleEmployeeDetails updateAgentScheduleEmployeeDetails)
+        {
+            var agentSchedule = agentSchedulesDB.Where(x => x.IsDeleted == false && x.EmployeeId == employeeIdDetails.Id).FirstOrDefault();
+            if (agentSchedule != null)
+            {
+                agentSchedule.EmployeeId = employeeIdDetails.Id;
+                agentSchedule.ModifiedBy = updateAgentScheduleEmployeeDetails.ModifiedBy;
+                agentSchedule.ModifiedDate = DateTime.UtcNow;
+            }
+        }
+
+        /// <summary>
         /// Updates the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>

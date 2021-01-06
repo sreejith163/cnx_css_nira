@@ -60,6 +60,70 @@ namespace Css.Api.Admin.UnitTest.Controllers
 
         #endregion
 
+        #region GetAgentScheduleCharts
+
+        /// <summary>
+        /// Gets the agent schedule charts returns not found result.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        [Theory]
+        [InlineData("6fe0b5ad6a05416894c0718e")]
+        [InlineData("6fe0b5ad6a05416894c0718f")]
+        public async void GetAgentScheduleCharts_ReturnsNotFoundResult(string agentScheduleId)
+        {
+            var agentScheduleChartQueryparameter = new AgentScheduleChartQueryparameter();
+
+            mockAgentScheduleService.Setup(mr => mr.GetAgentScheduleCharts(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<AgentScheduleChartQueryparameter>()))
+                .ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter) =>
+                mockAgentScheduleData.GetAgentScheduleCharts(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChartQueryparameter));
+
+            var value = await controller.GetAgentScheduleCharts(agentScheduleId, agentScheduleChartQueryparameter);
+
+            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+        }
+
+        /// <summary>
+        /// Gets the agent schedule charts for scheduling tab returns ok result.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        [Theory]
+        [InlineData("5fe0b5ad6a05416894c0718e")]
+        [InlineData("5fe0b5ad6a05416894c0718f")]
+        public async void GetAgentScheduleChartsForSchedulingTab_ReturnsOKResult(string agentScheduleId)
+        {
+            var agentScheduleChartQueryparameter = new AgentScheduleChartQueryparameter() { AgentScheduleType = AgentScheduleType.SchedulingTab };
+
+            mockAgentScheduleService.Setup(mr => mr.GetAgentScheduleCharts(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<AgentScheduleChartQueryparameter>()))
+                .ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter) =>
+                mockAgentScheduleData.GetAgentScheduleCharts(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChartQueryparameter));
+
+            var value = await controller.GetAgentScheduleCharts(agentScheduleId, agentScheduleChartQueryparameter);
+
+            Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
+        }
+
+        /// <summary>
+        /// Gets the agent schedule charts for scheduling manager tab returns ok result.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        [Theory]
+        [InlineData("5fe0b5ad6a05416894c0718e")]
+        [InlineData("5fe0b5ad6a05416894c0718f")]
+        public async void GetAgentScheduleChartsForSchedulingManagerTab_ReturnsOKResult(string agentScheduleId)
+        {
+            var agentScheduleChartQueryparameter = new AgentScheduleChartQueryparameter() { AgentScheduleType = AgentScheduleType.SchedulingMangerTab };
+
+            mockAgentScheduleService.Setup(mr => mr.GetAgentScheduleCharts(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<AgentScheduleChartQueryparameter>()))
+                .ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter) =>
+                mockAgentScheduleData.GetAgentScheduleCharts(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChartQueryparameter));
+
+            var value = await controller.GetAgentScheduleCharts(agentScheduleId, agentScheduleChartQueryparameter);
+
+            Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
+        }
+
+        #endregion
+
         #region GetAgentSchedule
 
         /// <summary>

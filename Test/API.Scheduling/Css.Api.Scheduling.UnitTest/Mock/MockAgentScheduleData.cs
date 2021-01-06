@@ -2,9 +2,8 @@
 using Css.Api.Scheduling.Business.UnitTest.Mocks;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
-using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
+using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
+using Css.Api.Scheduling.Models.Enums;
 using System.Net;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
@@ -37,6 +36,33 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 
             var agentProfile = new MockDataContext().GetAgentAdminIdsByEmployeeId(new EmployeeIdDetails { Id = agentSchedule.EmployeeId });
             return new CSSResponse(agentProfile, HttpStatusCode.OK);
+        }
+
+        public CSSResponse GetAgentScheduleCharts(AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter)
+        {
+            var agentSchedule = new MockDataContext().GetAgentSchedule(agentScheduleIdDetails);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            if (agentScheduleChartQueryparameter.AgentScheduleType == AgentScheduleType.SchedulingTab)
+            {
+                var mappedAgentScheduleChart = new AgentScheduleChartDetailsDTO {
+                    Id = agentSchedule.Id.ToString(),
+                    AgentScheduleCharts = agentSchedule.AgentScheduleCharts
+                };
+                return new CSSResponse(mappedAgentScheduleChart, HttpStatusCode.OK);
+            }
+            else
+            {
+                var mappedAgentScheduleChart = new AgentScheduleManagerChartDetailsDTO
+                {
+                    Id = agentSchedule.Id.ToString(),
+                    AgentScheduleManagerCharts = agentSchedule.AgentScheduleManagerCharts
+                };
+                return new CSSResponse(mappedAgentScheduleChart, HttpStatusCode.OK);
+            }
         }
 
         /// <summary>
