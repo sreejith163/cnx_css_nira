@@ -15,14 +15,12 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         public UpdateAgentScheduleManagerChartValidator()
         {
             RuleFor(x => x.ModifiedBy).NotEmpty();
-            RuleForEach(x => x.AgentScheduleManagers).NotEmpty();
+            RuleFor(x => x.AgentScheduleManagers).NotEmpty();
             RuleForEach(x => x.AgentScheduleManagers)
-                .ChildRules(x => x.RuleForEach(x => x.EmployeeId).NotEmpty());
-            //RuleForEach(x => x.AgentScheduleManagers)
-            //    .ChildRules(x => x.RuleFor(x => x.EmployeeId).NotEmpty());
-            //RuleForEach(x => x.AgentScheduleManagers)
-            //    .ChildRules(x => x.RuleFor(x => x.AgentScheduleManagerChart))
-            //    .SetValidator(new AgentScheduleManagerValidator<AgentScheduleManagerChart>());
+                .ChildRules(x => x.RuleFor(x => x.EmployeeId).NotEmpty());
+            RuleForEach(x => x.AgentScheduleManagers)
+                .ChildRules(x => x.RuleFor(x => x.AgentScheduleManagerChart)
+                .SetValidator(new AgentScheduleManagerValidator<AgentScheduleManagerChart>()));
         }
     }
 }
