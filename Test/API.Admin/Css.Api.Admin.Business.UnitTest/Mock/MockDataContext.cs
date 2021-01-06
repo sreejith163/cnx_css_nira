@@ -38,10 +38,10 @@ namespace Css.Api.Admin.Business.UnitTest.Mock
         public IQueryable<SchedulingCodeIcon> schedulingCodeIconsDB = new List<SchedulingCodeIcon>()
         {
             new SchedulingCodeIcon { Id = 1, Value = "1F30D", Description = "Earth Globe Europe-Africa" },
-            new SchedulingCodeIcon { Id = 1, Value = "1F347", Description = "Grapes" },
-            new SchedulingCodeIcon { Id = 1, Value = "1F383", Description = "Jack-O-Lantern" },
-            new SchedulingCodeIcon { Id = 1, Value = "1F3C1", Description = "Chequered Flag" },
-            new SchedulingCodeIcon { Id = 1, Value = "1F3E7", Description = "Automated Teller Machine" }
+            new SchedulingCodeIcon { Id = 2, Value = "1F347", Description = "Grapes" },
+            new SchedulingCodeIcon { Id = 3, Value = "1F383", Description = "Jack-O-Lantern" },
+            new SchedulingCodeIcon { Id = 4, Value = "1F3C1", Description = "Chequered Flag" },
+            new SchedulingCodeIcon { Id = 5, Value = "1F3E7", Description = "Automated Teller Machine" }
         }.AsQueryable();
 
         public IQueryable<LanguageTranslation> languageTranslationsDB = new List<LanguageTranslation>()

@@ -80,12 +80,12 @@ namespace Css.Api.Admin.UnitTest.Mock
         /// <returns></returns>
         public CSSResponse UpdateSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails, UpdateSchedulingCode updateSchedulingCode)
         {
-            if (schedulingCodesDB.Exists(x => x.IsDeleted == false && (x.Description == updateSchedulingCode.Description || x.IconId == updateSchedulingCode.IconId)))
+            if (!schedulingCodesDB.Exists(x => x.IsDeleted == false && x.Id == schedulingCodeIdDetails.SchedulingCodeId))
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            if (schedulingCodesDB.Exists(x => x.IsDeleted == false && x.Description == updateSchedulingCode.Description && x.Id != schedulingCodeIdDetails.SchedulingCodeId))
+            if (schedulingCodesDB.Exists(x => x.IsDeleted == false && (x.Description == updateSchedulingCode.Description || x.IconId == updateSchedulingCode.IconId) && x.Id != schedulingCodeIdDetails.SchedulingCodeId))
             {
                 return new CSSResponse($"Scheduling Code with name '{updateSchedulingCode.Description}' already exists.", HttpStatusCode.Conflict);
             }

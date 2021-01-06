@@ -117,7 +117,7 @@ namespace Css.Api.Admin.UnitTest.Controllers
                 PriorityNumber = 4,
                 CreatedBy = "admin",
                 Description = "test",
-                IconId = 1
+                IconId = 5
             };
 
             mockSchedulingCodeService.Setup(mr => mr.CreateSchedulingCode(It.IsAny<CreateSchedulingCode>())).ReturnsAsync(
@@ -164,7 +164,7 @@ namespace Css.Api.Admin.UnitTest.Controllers
             {
                 SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 Description = description,
-                IconId = 2,
+                IconId = 5,
                 PriorityNumber = 4,
                 ModifiedBy = "admin"
             };
@@ -187,7 +187,7 @@ namespace Css.Api.Admin.UnitTest.Controllers
             {
                 SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 Description = "test",
-                IconId = 2,
+                IconId = 5,
                 PriorityNumber = 4,
                 ModifiedBy = "admin"
             };

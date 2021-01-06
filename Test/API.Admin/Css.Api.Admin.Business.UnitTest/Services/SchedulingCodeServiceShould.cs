@@ -148,7 +148,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
                 PriorityNumber = 4,
                 CreatedBy = "admin",
                 Description = "test",
-                IconId = 1
+                IconId = 4
             };
             var result = await schedulingCodeService.CreateSchedulingCode(schedulingCode);
 
@@ -221,7 +221,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             {
                 PriorityNumber = 4,
                 Description = "test",
-                IconId = 2,
+                IconId = 4,
                 SchedulingTypeCode = new List<SchedulingCodeTypes>(),
                 ModifiedBy = "admin"
             };
