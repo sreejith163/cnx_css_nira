@@ -29,7 +29,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<PagedList<Entity>> GetClients(ClientQueryparameter clientQueryparameter)
         {
-            var clients = FilterBy(x => true);
+            var clients = FilterBy(x => x.IsDeleted == false);
 
             var filteredClients = FilterClients(clients, clientQueryparameter);
 
@@ -52,7 +52,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<Client> GetClient(ClientIdDetails clientIdDetails)
         {
-            var query = Builders<Client>.Filter.Eq(i => i.ClientId, clientIdDetails.ClientId);
+            var query = Builders<Client>.Filter.Eq(i => i.ClientId, clientIdDetails.ClientId) &
+               Builders<Client>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindByIdAsync(query);
         }

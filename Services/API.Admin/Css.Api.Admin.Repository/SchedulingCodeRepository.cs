@@ -1,18 +1,18 @@
-﻿using Css.Api.Core.Models.Domain;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Css.Api.Admin.Models.Domain;
+using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
+using Css.Api.Admin.Models.DTO.Response.SchedulingCode;
 using Css.Api.Admin.Repository.DatabaseContext;
 using Css.Api.Admin.Repository.Interfaces;
+using Css.Api.Core.DataAccess.Repository.SQL;
+using Css.Api.Core.Models.Domain;
+using Css.Api.Core.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
-using AutoMapper;
-using Css.Api.Admin.Models.DTO.Response.SchedulingCode;
-using AutoMapper.QueryableExtensions;
-using System.Collections.Generic;
-using System;
-using Css.Api.Core.Utilities.Extensions;
-using Css.Api.Core.DataAccess.Repository.SQL;
 
 namespace Css.Api.Admin.Repository
 {
@@ -88,6 +88,22 @@ namespace Css.Api.Admin.Repository
             return await Task.FromResult(schedulingCode);
         }
 
+        /// <summary>Gets all scheduling code.</summary>
+        /// <param name="schedulingCodeIdDetails">The scheduling code identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<SchedulingCode> GetAllSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails)
+        {
+            var schedulingCode = FindByCondition(x => x.Id == schedulingCodeIdDetails.SchedulingCodeId)
+                .Include(x => x.Icon)
+                .Include(x => x.SchedulingTypeCode)
+                .ThenInclude(x => x.SchedulingCodeType)
+                .SingleOrDefault();
+
+            return await Task.FromResult(schedulingCode);
+        }
+
         /// <summary>
         /// Gets the scheduling codes by description.
         /// </summary>
@@ -98,6 +114,20 @@ namespace Css.Api.Admin.Repository
         {
             var schedulingCodes = FindByCondition(x => x.IsDeleted == false && (x.IconId == schedulingIconIdDetails.SchedulingIconId ||
                                                        string.Equals(x.Description.Trim(), schedulingCodeNameDetails.Name.Trim(), StringComparison.OrdinalIgnoreCase)))
+                .Select(x => x.Id)
+                .ToList();
+
+            return await Task.FromResult(schedulingCodes);
+        }
+
+        /// <summary>Gets all scheduling codes by description.</summary>
+        /// <param name="schedulingCodeNameDetails">The scheduling code name details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<List<int>> GetAllSchedulingCodesByDescription(SchedulingCodeNameDetails schedulingCodeNameDetails)
+        {
+            var schedulingCodes = FindByCondition(x => string.Equals(x.Description.Trim(), schedulingCodeNameDetails.Name.Trim(), StringComparison.OrdinalIgnoreCase))
                 .Select(x => x.Id)
                 .ToList();
 

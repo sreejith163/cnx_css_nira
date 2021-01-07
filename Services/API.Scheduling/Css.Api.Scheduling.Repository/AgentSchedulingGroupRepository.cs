@@ -37,7 +37,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<PagedList<Entity>> GetAgentSchedulingGroups(AgentSchedulingGroupQueryparameter agentSchedulingGroupQueryparameter)
         {
-            var agentSchedulingGroups = FilterBy(x => true);
+            var agentSchedulingGroups = FilterBy(x => x.IsDeleted == false);
 
             var filteredAgentSchedulingGroups = FilterAgentSchedulingGroups(agentSchedulingGroups, agentSchedulingGroupQueryparameter);
 
@@ -60,7 +60,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<AgentSchedulingGroup> GetAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
         {
-            var query = Builders<AgentSchedulingGroup>.Filter.Eq(i => i.AgentSchedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
+            var query = Builders<AgentSchedulingGroup>.Filter.Eq(i => i.AgentSchedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId) &
+               Builders<AgentSchedulingGroup>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindByIdAsync(query);
         }

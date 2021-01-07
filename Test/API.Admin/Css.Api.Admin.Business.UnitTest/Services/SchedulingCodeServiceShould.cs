@@ -12,6 +12,7 @@ using Css.Api.Admin.Models.Profiles.SchedulingCode;
 using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
 using Css.Api.Admin.Models.DTO.Response.SchedulingCode;
 using Microsoft.AspNetCore.Http;
+using Css.Api.Core.EventBus.Services;
 
 namespace Css.Api.Admin.Business.UnitTest.Services
 {
@@ -44,6 +45,8 @@ namespace Css.Api.Admin.Business.UnitTest.Services
 
             mapper = new Mapper(mapperConfig);
 
+            var busService = new Mock<IBusService>();
+
             var context = new DefaultHttpContext();
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
@@ -52,7 +55,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
 
             repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper);
 
-            schedulingCodeService = new SchedulingCodeService(repositoryWrapper, mockHttContext.Object, mapper);
+            schedulingCodeService = new SchedulingCodeService(repositoryWrapper, mockHttContext.Object, mapper, busService.Object);
         }
 
         #region GetSchedulingCodes

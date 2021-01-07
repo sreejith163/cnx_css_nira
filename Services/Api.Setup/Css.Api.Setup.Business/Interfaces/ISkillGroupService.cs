@@ -42,6 +42,14 @@ namespace Css.Api.Setup.Business.Interfaces
         /// </returns>
         Task<CSSResponse> UpdateSkillGroup(SkillGroupIdDetails skillIdDetails, UpdateSkillGroup skillDetails);
 
+        /// <summary>Reverts the skill group.</summary>
+        /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
+        /// <param name="skillGroupDetails">The skill group details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<CSSResponse> RevertSkillGroup(SkillGroupIdDetails skillGroupIdDetails, UpdateSkillGroup skillGroupDetails);
+
         /// <summary>
         /// Deletes the skill group.
         /// </summary>

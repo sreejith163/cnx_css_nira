@@ -117,72 +117,7 @@ namespace Css.Api.Scheduling.Business
             _activityLogRepository = activityLogRepository;
             _mapper = mapper;
             _uow = uow;
-            SeedData();
-        }
-
-        //To be changed
-        /// <summary>
-        /// Seeds the data.
-        /// </summary>
-        public async void SeedData()
-        {
-            var isClientSeeded = await _clientRepository.GetClientsCount() > 0;
-            if (!isClientSeeded)
-            {
-                _clientRepository.CreateClient(
-                    new Client { ClientId = 5, Name = "CName1ForAgentAdmin" });
-                _clientRepository.CreateClient(
-                    new Client { ClientId = 6, Name = "CName2ForAgentAdmin" });
-            }
-
-            var isClientLobSeeded = await _clientLobGroupRepository.GetClientLobGroupsCount() > 0;
-            if (!isClientLobSeeded)
-            {
-                _clientLobGroupRepository.CreateClientLobGroup(
-                    new ClientLobGroup { ClientId = 5, ClientLobGroupId = 5, Name = "Lob1ForAgentAdmin" });
-                _clientLobGroupRepository.CreateClientLobGroup(
-                    new ClientLobGroup { ClientId = 6, ClientLobGroupId = 6, Name = "Lob2ForAgentAdmin" });
-            }
-
-            var isSkillGroupSeeded = await _skillGroupRepository.GetSkillGroupsCount() > 0;
-            if (!isSkillGroupSeeded)
-            {
-                _skillGroupRepository.CreateSkillGroup(
-                    new SkillGroup { ClientId = 5, ClientLobGroupId = 5, SkillGroupId = 4, Name = "SG1ForAgentAdmin" }
-                );
-                _skillGroupRepository.CreateSkillGroup(
-                                   new SkillGroup { ClientId = 6, ClientLobGroupId = 6, SkillGroupId = 5, Name = "SG2ForAgentAdmin" }
-               );
-            }
-
-            var isSkillTagSeeded = await _skillTagRepository.GetSkillTagsCount() > 0;
-            if (!isSkillTagSeeded)
-            {
-                _skillTagRepository.CreateSkillTag(
-                    new SkillTag { ClientId = 5, ClientLobGroupId = 5, SkillGroupId = 4, SkillTagId = 5, Name = "ST1ForAgentAdmin" }
-                );
-                _skillTagRepository.CreateSkillTag(
-                new SkillTag { ClientId = 6, ClientLobGroupId = 6, SkillGroupId = 5, SkillTagId = 6, Name = "ST2ForAgentAdmin" }
-                );
-            }
-
-            var isagentSchedulingGroupsSeeded = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsCount() > 0;
-            if (!isagentSchedulingGroupsSeeded)
-            {
-                _agentSchedulingGroupRepository.CreateAgentSchedulingGroup(new AgentSchedulingGroup
-                {
-                    ClientId = 5,
-                    ClientLobGroupId = 5,
-                    SkillGroupId = 5,
-                    SkillTagId = 5,
-                    AgentSchedulingGroupId = 1,
-                    Name = "Agent Scheduliung Group 1",
-                    IsDeleted = false
-                });
-            }
-
-            await _uow.Commit();
-        }
+        }      
 
         /// <summary>
         /// Gets the agent admins.
@@ -274,11 +209,18 @@ namespace Css.Api.Scheduling.Business
             var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
             var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentAdminDetails.SkillTagId };
 
-            var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
+            var agentAdminsBasedOnEmployeeId = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(agentAdminEmployeeIdDetails);
 
-            if (agentAdmins != null)
+            if (agentAdminsBasedOnEmployeeId != null)
             {
-                return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' and SSo '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' already exists.", HttpStatusCode.Conflict);
+            }
+
+            var agentAdminsBasedonSSO = await _agentAdminRepository.GetAgentAdminIdsBySso(agentAdminSsoDetails);
+
+            if (agentAdminsBasedonSSO != null)
+            {
+                return new CSSResponse($"Agent Admin with SSo '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
             var agentSchedulingGroupBasedonSkillTag = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBasedonSkillTag(skillTagIdDetails);
@@ -321,12 +263,20 @@ namespace Css.Api.Scheduling.Business
             var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentAdminDetails.SkillTagId };
             var employeeIdDetails = new EmployeeIdDetails { Id = agentAdmin.Ssn };
 
+            var agentAdminsBasedOnEmployeeId = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(agentAdminEmployeeIdDetails);
 
-            var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
-
-            if (agentAdmins != null && !string.Equals(agentAdminIdDetails.AgentAdminId, agentAdmins.Id.ToString(), StringComparison.OrdinalIgnoreCase))
+            if (agentAdminsBasedOnEmployeeId != null && 
+                !string.Equals(agentAdminsBasedOnEmployeeId.Id.ToString(), agentAdminIdDetails.AgentAdminId))
             {
-                return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' and SSo '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Agent Admin with Employee id '{agentAdminEmployeeIdDetails.Id}' already exists.", HttpStatusCode.Conflict);
+            }
+
+            var agentAdminsBasedonSSO = await _agentAdminRepository.GetAgentAdminIdsBySso(agentAdminSsoDetails);
+
+            if (agentAdminsBasedonSSO != null &&
+                !string.Equals(agentAdminsBasedonSSO.Id.ToString(), agentAdminIdDetails.AgentAdminId))
+            {
+                return new CSSResponse($"Agent Admin with SSo '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
             var agentSchedulingGroupBasedonSkillTag = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBasedonSkillTag(skillTagIdDetails);

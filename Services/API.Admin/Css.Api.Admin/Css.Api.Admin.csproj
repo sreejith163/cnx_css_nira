@@ -48,6 +48,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\API.Core\Css.Api.Core.ExceptionHandling\Css.Api.Core.ExceptionHandling.csproj" />
     <ProjectReference Include="..\Css.Api.Admin.Business\Css.Api.Admin.Business.csproj" />
+    <ProjectReference Include="..\Css.Api.Admin.EventHandlers\Css.Api.Admin.EventHandlers.csproj" />
     <ProjectReference Include="..\Css.Api.Admin.Models\Css.Api.Admin.Models.csproj" />
   </ItemGroup>
   

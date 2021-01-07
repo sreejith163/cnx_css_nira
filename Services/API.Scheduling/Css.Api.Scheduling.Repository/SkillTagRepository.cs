@@ -37,7 +37,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<PagedList<Entity>> GetSkillTags(SkillTagQueryparameter skillTagQueryparameter)
         {
-            var skillTags = FilterBy(x => true);
+            var skillTags = FilterBy(x => x.IsDeleted == false);
 
             var filteredSkillTags = FilterSkillTags(skillTags, skillTagQueryparameter);
 
@@ -60,7 +60,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<SkillTag> GetSkillTag(SkillTagIdDetails skillTagIdDetails)
         {
-            var query = Builders<SkillTag>.Filter.Eq(i => i.SkillTagId, skillTagIdDetails.SkillTagId);
+            var query = Builders<SkillTag>.Filter.Eq(i => i.SkillTagId, skillTagIdDetails.SkillTagId) &
+               Builders<SkillTag>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindByIdAsync(query);
         }

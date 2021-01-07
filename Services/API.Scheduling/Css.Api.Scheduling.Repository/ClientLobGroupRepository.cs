@@ -37,7 +37,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<PagedList<Entity>> GetClientLobGroups(ClientLobGroupQueryparameter clientLobGroupQueryparameter)
         {
-            var clientLobGroups = FilterBy(x => true);
+            var clientLobGroups = FilterBy(x => x.IsDeleted == false);
 
             var filteredClientLobGroups = FilterClientLobGroups(clientLobGroups, clientLobGroupQueryparameter);
 
@@ -60,7 +60,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<ClientLobGroup> GetClientLobGroup(ClientLobGroupIdDetails clientLobGroupIdDetails)
         {
-            var query = Builders<ClientLobGroup>.Filter.Eq(i => i.ClientLobGroupId, clientLobGroupIdDetails.ClientLobGroupId);
+            var query = Builders<ClientLobGroup>.Filter.Eq(i => i.ClientLobGroupId, clientLobGroupIdDetails.ClientLobGroupId) &
+               Builders<ClientLobGroup>.Filter.Eq(i => i.IsDeleted, false); 
 
             return await FindByIdAsync(query);
         }

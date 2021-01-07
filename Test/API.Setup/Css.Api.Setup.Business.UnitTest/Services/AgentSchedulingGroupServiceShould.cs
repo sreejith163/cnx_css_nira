@@ -12,6 +12,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Net;
 using Xunit;
+using Css.Api.Core.EventBus.Services;
 
 namespace Css.Api.Setup.Business.UnitTest.Services
 {
@@ -44,6 +45,8 @@ namespace Css.Api.Setup.Business.UnitTest.Services
 
             mapper = new Mapper(mapperConfig);
 
+            var busService = new Mock<IBusService>();
+
             var context = new DefaultHttpContext();
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
@@ -52,7 +55,7 @@ namespace Css.Api.Setup.Business.UnitTest.Services
 
             repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper);
 
-            agentSchedulingGroupService = new AgentSchedulingGroupService(repositoryWrapper, mockHttContext.Object, mapper);
+            agentSchedulingGroupService = new AgentSchedulingGroupService(repositoryWrapper, mockHttContext.Object, mapper, busService.Object);
         }
 
         #region GetAgentSchedulingGroups

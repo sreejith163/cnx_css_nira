@@ -61,6 +61,132 @@ namespace Css.Api.Core.EventBus {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.commands.
+        /// </summary>
+        public static string AgentSchedulingGroupCommandQueue {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupCommandQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.commands.#.
+        /// </summary>
+        public static string AgentSchedulingGroupCommandQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupCommandQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.commands.create.agentschedulinggroup.
+        /// </summary>
+        public static string AgentSchedulingGroupCreateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupCreateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.events.create.failed.
+        /// </summary>
+        public static string AgentSchedulingGroupCreateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupCreateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.events.create.success.
+        /// </summary>
+        public static string AgentSchedulingGroupCreateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupCreateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.commands.delete.agentschedulinggroup.
+        /// </summary>
+        public static string AgentSchedulingGroupDeleteCommandRouteKey {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupDeleteCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.events.delete.failed.
+        /// </summary>
+        public static string AgentSchedulingGroupDeleteFailedRouteKey {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupDeleteFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.events.delete.success.
+        /// </summary>
+        public static string AgentSchedulingGroupDeleteSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupDeleteSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.events.
+        /// </summary>
+        public static string AgentSchedulingGroupEventQueue {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupEventQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.events.#.
+        /// </summary>
+        public static string AgentSchedulingGroupEventQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupEventQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.
+        /// </summary>
+        public static string AgentSchedulingGroupExchange {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupExchange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.commands.update.agentschedulinggroup.
+        /// </summary>
+        public static string AgentSchedulingGroupUpdateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupUpdateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.events.update.failed.
+        /// </summary>
+        public static string AgentSchedulingGroupUpdateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupUpdateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentschedulinggroup.events.update.success.
+        /// </summary>
+        public static string AgentSchedulingGroupUpdateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("AgentSchedulingGroupUpdateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to css.client.commands.
         /// </summary>
         public static string ClientCommandQueue {
@@ -106,6 +232,33 @@ namespace Css.Api.Core.EventBus {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to css.client.commands.delete.client.
+        /// </summary>
+        public static string ClientDeleteCommandRouteKey {
+            get {
+                return ResourceManager.GetString("ClientDeleteCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.client.events.delete.failed.
+        /// </summary>
+        public static string ClientDeleteFailedRouteKey {
+            get {
+                return ResourceManager.GetString("ClientDeleteFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.client.events.delete.success.
+        /// </summary>
+        public static string ClientDeleteSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("ClientDeleteSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to css.client.events.
         /// </summary>
         public static string ClientEventQueue {
@@ -129,6 +282,537 @@ namespace Css.Api.Core.EventBus {
         public static string ClientExchange {
             get {
                 return ResourceManager.GetString("ClientExchange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.commands.
+        /// </summary>
+        public static string ClientLOBCommandQueue {
+            get {
+                return ResourceManager.GetString("ClientLOBCommandQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.commands.#.
+        /// </summary>
+        public static string ClientLOBCommandQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("ClientLOBCommandQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.commands.create.clientlob.
+        /// </summary>
+        public static string ClientLOBCreateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("ClientLOBCreateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.events.create.failed.
+        /// </summary>
+        public static string ClientLOBCreateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("ClientLOBCreateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.events.create.success.
+        /// </summary>
+        public static string ClientLOBCreateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("ClientLOBCreateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.commands.delete.clientlob.
+        /// </summary>
+        public static string ClientLOBDeleteCommandRouteKey {
+            get {
+                return ResourceManager.GetString("ClientLOBDeleteCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.events.delete.failed.
+        /// </summary>
+        public static string ClientLOBDeleteFailedRouteKey {
+            get {
+                return ResourceManager.GetString("ClientLOBDeleteFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.events.delete.success.
+        /// </summary>
+        public static string ClientLOBDeleteSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("ClientLOBDeleteSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.events.
+        /// </summary>
+        public static string ClientLOBEventQueue {
+            get {
+                return ResourceManager.GetString("ClientLOBEventQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.events.#.
+        /// </summary>
+        public static string ClientLOBEventQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("ClientLOBEventQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.
+        /// </summary>
+        public static string ClientLOBExchange {
+            get {
+                return ResourceManager.GetString("ClientLOBExchange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.commands.update.clientlob.
+        /// </summary>
+        public static string ClientLOBUpdateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("ClientLOBUpdateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.events.update.failed.
+        /// </summary>
+        public static string ClientLOBUpdateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("ClientLOBUpdateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.clientlob.events.update.success.
+        /// </summary>
+        public static string ClientLOBUpdateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("ClientLOBUpdateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.client.commands.update.client.
+        /// </summary>
+        public static string ClientUpdateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("ClientUpdateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.client.events.update.failed.
+        /// </summary>
+        public static string ClientUpdateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("ClientUpdateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.client.events.update.success.
+        /// </summary>
+        public static string ClientUpdateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("ClientUpdateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.commands.
+        /// </summary>
+        public static string SchedulingCodeCommandQueue {
+            get {
+                return ResourceManager.GetString("SchedulingCodeCommandQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.commands.#.
+        /// </summary>
+        public static string SchedulingCodeCommandQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("SchedulingCodeCommandQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.commands.create.schedulingcode.
+        /// </summary>
+        public static string SchedulingCodeCreateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("SchedulingCodeCreateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.events.create.failed.
+        /// </summary>
+        public static string SchedulingCodeCreateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("SchedulingCodeCreateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.events.create.success.
+        /// </summary>
+        public static string SchedulingCodeCreateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("SchedulingCodeCreateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.commands.delete.schedulingcode.
+        /// </summary>
+        public static string SchedulingCodeDeleteCommandRouteKey {
+            get {
+                return ResourceManager.GetString("SchedulingCodeDeleteCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.events.delete.failed.
+        /// </summary>
+        public static string SchedulingCodeDeleteFailedRouteKey {
+            get {
+                return ResourceManager.GetString("SchedulingCodeDeleteFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.events.delete.success.
+        /// </summary>
+        public static string SchedulingCodeDeleteSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("SchedulingCodeDeleteSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.events.
+        /// </summary>
+        public static string SchedulingCodeEventQueue {
+            get {
+                return ResourceManager.GetString("SchedulingCodeEventQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.events.#.
+        /// </summary>
+        public static string SchedulingCodeEventQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("SchedulingCodeEventQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.
+        /// </summary>
+        public static string SchedulingCodeExchange {
+            get {
+                return ResourceManager.GetString("SchedulingCodeExchange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.commands.update.schedulingcode.
+        /// </summary>
+        public static string SchedulingCodeUpdateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("SchedulingCodeUpdateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.events.update.failed.
+        /// </summary>
+        public static string SchedulingCodeUpdateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("SchedulingCodeUpdateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.schedulingcode.events.update.success.
+        /// </summary>
+        public static string SchedulingCodeUpdateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("SchedulingCodeUpdateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.commands.
+        /// </summary>
+        public static string SkillGroupCommandQueue {
+            get {
+                return ResourceManager.GetString("SkillGroupCommandQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.commands.#.
+        /// </summary>
+        public static string SkillGroupCommandQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("SkillGroupCommandQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.commands.create.skillgroup.
+        /// </summary>
+        public static string SkillGroupCreateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("SkillGroupCreateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.events.create.failed.
+        /// </summary>
+        public static string SkillGroupCreateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("SkillGroupCreateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.events.create.success.
+        /// </summary>
+        public static string SkillGroupCreateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("SkillGroupCreateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.commands.delete.skillgroup.
+        /// </summary>
+        public static string SkillGroupDeleteCommandRouteKey {
+            get {
+                return ResourceManager.GetString("SkillGroupDeleteCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.events.delete.failed.
+        /// </summary>
+        public static string SkillGroupDeleteFailedRouteKey {
+            get {
+                return ResourceManager.GetString("SkillGroupDeleteFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.events.delete.success.
+        /// </summary>
+        public static string SkillGroupDeleteSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("SkillGroupDeleteSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.events.
+        /// </summary>
+        public static string SkillGroupEventQueue {
+            get {
+                return ResourceManager.GetString("SkillGroupEventQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.events.#.
+        /// </summary>
+        public static string SkillGroupEventQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("SkillGroupEventQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.
+        /// </summary>
+        public static string SkillGroupExchange {
+            get {
+                return ResourceManager.GetString("SkillGroupExchange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.commands.update.skillgroup.
+        /// </summary>
+        public static string SkillGroupUpdateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("SkillGroupUpdateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.events.update.failed.
+        /// </summary>
+        public static string SkillGroupUpdateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("SkillGroupUpdateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skillgroup.events.update.success.
+        /// </summary>
+        public static string SkillGroupUpdateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("SkillGroupUpdateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.commands.
+        /// </summary>
+        public static string SkillTagCommandQueue {
+            get {
+                return ResourceManager.GetString("SkillTagCommandQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.commands.#.
+        /// </summary>
+        public static string SkillTagCommandQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("SkillTagCommandQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.commands.create.skilltag.
+        /// </summary>
+        public static string SkillTagCreateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("SkillTagCreateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.events.create.failed.
+        /// </summary>
+        public static string SkillTagCreateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("SkillTagCreateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.events.create.success.
+        /// </summary>
+        public static string SkillTagCreateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("SkillTagCreateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.commands.delete.skilltag.
+        /// </summary>
+        public static string SkillTagDeleteCommandRouteKey {
+            get {
+                return ResourceManager.GetString("SkillTagDeleteCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.events.delete.failed.
+        /// </summary>
+        public static string SkillTagDeleteFailedRouteKey {
+            get {
+                return ResourceManager.GetString("SkillTagDeleteFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.events.delete.success.
+        /// </summary>
+        public static string SkillTagDeleteSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("SkillTagDeleteSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.events.
+        /// </summary>
+        public static string SkillTagEventQueue {
+            get {
+                return ResourceManager.GetString("SkillTagEventQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.events.#.
+        /// </summary>
+        public static string SkillTagEventQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("SkillTagEventQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.
+        /// </summary>
+        public static string SkillTagExchange {
+            get {
+                return ResourceManager.GetString("SkillTagExchange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.commands.update.skilltag.
+        /// </summary>
+        public static string SkillTagUpdateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("SkillTagUpdateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.events.update.failed.
+        /// </summary>
+        public static string SkillTagUpdateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("SkillTagUpdateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.skilltag.events.update.success.
+        /// </summary>
+        public static string SkillTagUpdateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("SkillTagUpdateSuccessRouteKey", resourceCulture);
             }
         }
     }

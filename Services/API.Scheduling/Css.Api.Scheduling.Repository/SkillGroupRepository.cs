@@ -36,7 +36,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<PagedList<Entity>> GetSkillGroups(SkillGroupQueryparameter skillGroupQueryparameter)
         {
-            var skillGroups = FilterBy(x => true);
+            var skillGroups = FilterBy(x => x.IsDeleted == false);
 
             var filteredSkillGroups = FilterSkillGroups(skillGroups, skillGroupQueryparameter);
 
@@ -59,7 +59,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<SkillGroup> GetSkillGroup(SkillGroupIdDetails skillGroupIdDetails)
         {
-            var query = Builders<SkillGroup>.Filter.Eq(i => i.SkillGroupId, skillGroupIdDetails.SkillGroupId);
+            var query = Builders<SkillGroup>.Filter.Eq(i => i.SkillGroupId, skillGroupIdDetails.SkillGroupId) &
+               Builders<SkillGroup>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindByIdAsync(query);
         }
