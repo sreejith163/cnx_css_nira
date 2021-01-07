@@ -111,10 +111,10 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
 
   isNumberKey(event) {
     const charCode = (event.which) ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    if ((charCode < 48 || charCode > 57)) {
       return false;
     }
-    return true;
+    return true;    
   }
 
   hasFormControlValidationError(control: string) {
@@ -175,7 +175,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
         this.activeModal.close({ needRefresh: true });
       }, (error) => {
         this.spinnerService.hide(this.spinner);
-        if (error.status === 409) {
+        if (error.status === 409 || error.status === 404) {
           this.showErrorWarningPopUpMessage(error.error);
         }
       });
@@ -199,7 +199,6 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       updateAgentAdminModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
-
       this.updateAgentAdminSubscription = this.agentService.updateAgentAdmin(
         this.agentAdminId, updateAgentAdminModel)
         .subscribe(() => {
@@ -207,7 +206,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
           this.activeModal.close({ needRefresh: true });
         }, (error) => {
           this.spinnerService.hide(this.spinner);
-          if (error.status === 409) {
+          if (error.status === 409 || error.status === 404) {
             this.showErrorWarningPopUpMessage(error.error);
           }
         });
