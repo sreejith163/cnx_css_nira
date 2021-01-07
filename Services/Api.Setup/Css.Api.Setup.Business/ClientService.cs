@@ -41,8 +41,8 @@ namespace Css.Api.Setup.Business
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="mapper">The mapper.</param>
         public ClientService(
-            IRepositoryWrapper repository, 
-            IHttpContextAccessor httpContextAccessor, 
+            IRepositoryWrapper repository,
+            IHttpContextAccessor httpContextAccessor,
             IMapper mapper,
             IBusService bus)
         {
@@ -113,7 +113,8 @@ namespace Css.Api.Setup.Business
         /// <returns></returns>
         public async Task<CSSResponse> UpdateClient(ClientIdDetails clientIdDetails, UpdateClient clientDetails)
         {
-            var client = await _repository.Clients.GetClient(clientIdDetails);
+            Client client = await _repository.Clients.GetClient(clientIdDetails);
+
             if (client == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -125,7 +126,62 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Client with name '{clientDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
 
+            var clientDetailsPreUpdate = new Client
+            {
+                Name = client.Name,
+                ModifiedBy = client.ModifiedBy,
+                IsDeleted = client.IsDeleted,
+                ModifiedDate = client.ModifiedDate
+            };
+
             var clientRequest = _mapper.Map(clientDetails, client);
+            _repository.Clients.UpdateClient(clientRequest);
+
+            await _repository.SaveAsync();
+
+            if (!clientDetails.IsUpdateRevert)
+            {
+                await _bus.SendCommand<UpdateClientCommand>(
+                    MassTransitConstants.ClientUpdateCommandRouteKey,
+                    new
+                    {
+                        Id = clientRequest.Id,
+                        NameOldValue = clientDetailsPreUpdate.Name,
+                        ModifiedByOldValue = clientDetailsPreUpdate.ModifiedBy,
+                        IsDeletedOldValue = clientDetailsPreUpdate.IsDeleted,
+                        ModifiedDateOldValue = clientDetailsPreUpdate.ModifiedDate,
+                        NameNewValue = clientRequest.Name,
+                        IsDeletedNewValue = clientRequest.IsDeleted
+                    });
+            }
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+
+        /// <summary>Reverts the client.</summary>
+        /// <param name="clientIdDetails">The client identifier details.</param>
+        /// <param name="clientDetails">The client details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<CSSResponse> RevertClient(ClientIdDetails clientIdDetails, UpdateClient clientDetails)
+        {
+            Client client = await _repository.Clients.GetAllClient(clientIdDetails);
+
+            if (client == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var clients = await _repository.Clients.GetAllClientsByName(new ClientNameDetails { Name = clientDetails.Name });
+            if (clients?.Count > 0 && clients.IndexOf(clientIdDetails.ClientId) == -1)
+            {
+                return new CSSResponse($"Client with name '{clientDetails.Name}' already exists.", HttpStatusCode.Conflict);
+            }
+
+            var clientRequest = _mapper.Map(clientDetails, client);
+            clientRequest.ModifiedDate = clientDetails.ModifiedDate;
             _repository.Clients.UpdateClient(clientRequest);
 
             await _repository.SaveAsync();
@@ -152,10 +208,30 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"The Client {client.Name} has dependency with other modules", HttpStatusCode.FailedDependency);
             }
 
+            var clientDetailsPreUpdate = new Client
+            {
+                Name = client.Name,
+                ModifiedBy = client.ModifiedBy,
+                IsDeleted = client.IsDeleted,
+                ModifiedDate = client.ModifiedDate
+            };
+
             client.IsDeleted = true;
 
             _repository.Clients.UpdateClient(client);
             await _repository.SaveAsync();
+
+            await _bus.SendCommand<DeleteClientCommand>(
+                MassTransitConstants.ClientDeleteCommandRouteKey,
+                new
+                {
+                    Id = client.Id,
+                    Name = client.Name,
+                    ModifiedByOldValue = clientDetailsPreUpdate.ModifiedBy,
+                    IsDeletedOldValue = clientDetailsPreUpdate.IsDeleted,
+                    ModifiedDateOldValue = clientDetailsPreUpdate.ModifiedDate,
+                    IsDeletedNewValue = client.IsDeleted
+                });
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }

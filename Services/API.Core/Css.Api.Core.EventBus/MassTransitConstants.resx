@@ -132,6 +132,15 @@
   <data name="ClientCreateSuccessRouteKey" xml:space="preserve">
     <value>css.client.events.create.success</value>
   </data>
+  <data name="ClientDeleteCommandRouteKey" xml:space="preserve">
+    <value>css.client.commands.delete.client</value>
+  </data>
+  <data name="ClientDeleteFailedRouteKey" xml:space="preserve">
+    <value>css.client.events.delete.failed</value>
+  </data>
+  <data name="ClientDeleteSuccessRouteKey" xml:space="preserve">
+    <value>css.client.events.delete.success</value>
+  </data>
   <data name="ClientEventQueue" xml:space="preserve">
     <value>css.client.events</value>
   </data>
@@ -140,5 +149,140 @@
   </data>
   <data name="ClientExchange" xml:space="preserve">
     <value>css.client</value>
+  </data>
+  <data name="ClientUpdateCommandRouteKey" xml:space="preserve">
+    <value>css.client.commands.update.client</value>
+  </data>
+  <data name="ClientUpdateFailedRouteKey" xml:space="preserve">
+    <value>css.client.events.update.failed</value>
+  </data>
+  <data name="ClientUpdateSuccessRouteKey" xml:space="preserve">
+    <value>css.client.events.update.success</value>
+  </data>
+  <data name="ClientLOBCommandQueue" xml:space="preserve">
+    <value>css.clientlob.commands</value>
+  </data>
+  <data name="ClientLOBCommandQueueBindingPattern" xml:space="preserve">
+    <value>css.clientlob.commands.#</value>
+  </data>
+  <data name="ClientLOBCreateCommandRouteKey" xml:space="preserve">
+    <value>css.clientlob.commands.create.clientlob</value>
+  </data>
+  <data name="ClientLOBCreateFailedRouteKey" xml:space="preserve">
+    <value>css.clientlob.events.create.failed</value>
+  </data>
+  <data name="ClientLOBCreateSuccessRouteKey" xml:space="preserve">
+    <value>css.clientlob.events.create.success</value>
+  </data>
+  <data name="ClientLOBDeleteCommandRouteKey" xml:space="preserve">
+    <value>css.clientlob.commands.delete.clientlob</value>
+  </data>
+  <data name="ClientLOBDeleteFailedRouteKey" xml:space="preserve">
+    <value>css.clientlob.events.delete.failed</value>
+  </data>
+  <data name="ClientLOBDeleteSuccessRouteKey" xml:space="preserve">
+    <value>css.clientlob.events.delete.success</value>
+  </data>
+  <data name="ClientLOBEventQueue" xml:space="preserve">
+    <value>css.clientlob.events</value>
+  </data>
+  <data name="ClientLOBEventQueueBindingPattern" xml:space="preserve">
+    <value>css.clientlob.events.#</value>
+  </data>
+  <data name="ClientLOBExchange" xml:space="preserve">
+    <value>css.clientlob</value>
+  </data>
+  <data name="ClientLOBUpdateCommandRouteKey" xml:space="preserve">
+    <value>css.clientlob.commands.update.clientlob</value>
+  </data>
+  <data name="ClientLOBUpdateFailedRouteKey" xml:space="preserve">
+    <value>css.clientlob.events.update.failed</value>
+  </data>
+  <data name="ClientLOBUpdateSuccessRouteKey" xml:space="preserve">
+    <value>css.clientlob.events.update.success</value>
+  </data>
+  <data name="SkillGroupCommandQueue" xml:space="preserve">
+    <value>css.skillgroup.commands</value>
+  </data>
+  <data name="SkillGroupCommandQueueBindingPattern" xml:space="preserve">
+    <value>css.skillgroup.commands.#</value>
+  </data>
+  <data name="SkillGroupCreateCommandRouteKey" xml:space="preserve">
+    <value>css.skillgroup.commands.create.skillgroup</value>
+  </data>
+  <data name="SkillGroupCreateFailedRouteKey" xml:space="preserve">
+    <value>css.skillgroup.events.create.failed</value>
+  </data>
+  <data name="SkillGroupCreateSuccessRouteKey" xml:space="preserve">
+    <value>css.skillgroup.events.create.success</value>
+  </data>
+  <data name="SkillGroupDeleteCommandRouteKey" xml:space="preserve">
+    <value>css.skillgroup.commands.delete.skillgroup</value>
+  </data>
+  <data name="SkillGroupDeleteFailedRouteKey" xml:space="preserve">
+    <value>css.skillgroup.events.delete.failed</value>
+  </data>
+  <data name="SkillGroupDeleteSuccessRouteKey" xml:space="preserve">
+    <value>css.skillgroup.events.delete.success</value>
+  </data>
+  <data name="SkillGroupEventQueue" xml:space="preserve">
+    <value>css.skillgroup.events</value>
+  </data>
+  <data name="SkillGroupEventQueueBindingPattern" xml:space="preserve">
+    <value>css.skillgroup.events.#</value>
+  </data>
+  <data name="SkillGroupExchange" xml:space="preserve">
+    <value>css.skillgroup</value>
+  </data>
+  <data name="SkillGroupUpdateCommandRouteKey" xml:space="preserve">
+    <value>css.skillgroup.commands.update.skillgroup</value>
+  </data>
+  <data name="SkillGroupUpdateFailedRouteKey" xml:space="preserve">
+    <value>css.skillgroup.events.update.failed</value>
+  </data>
+  <data name="SkillGroupUpdateSuccessRouteKey" xml:space="preserve">
+    <value>css.skillgroup.events.update.success</value>
+  </data>
+  <data name="SkillTagCommandQueue" xml:space="preserve">
+    <value>css.skilltag.commands</value>
+  </data>
+  <data name="SkillTagCommandQueueBindingPattern" xml:space="preserve">
+    <value>css.skilltag.commands.#</value>
+  </data>
+  <data name="SkillTagCreateCommandRouteKey" xml:space="preserve">
+    <value>css.skilltag.commands.create.skilltag</value>
+  </data>
+  <data name="SkillTagCreateFailedRouteKey" xml:space="preserve">
+    <value>css.skilltag.events.create.failed</value>
+  </data>
+  <data name="SkillTagCreateSuccessRouteKey" xml:space="preserve">
+    <value>css.skilltag.events.create.success</value>
+  </data>
+  <data name="SkillTagDeleteCommandRouteKey" xml:space="preserve">
+    <value>css.skilltag.commands.delete.skilltag</value>
+  </data>
+  <data name="SkillTagDeleteFailedRouteKey" xml:space="preserve">
+    <value>css.skilltag.events.delete.failed</value>
+  </data>
+  <data name="SkillTagDeleteSuccessRouteKey" xml:space="preserve">
+    <value>css.skilltag.events.delete.success</value>
+  </data>
+  <data name="SkillTagEventQueue" xml:space="preserve">
+    <value>css.skilltag.events</value>
+  </data>
+  <data name="SkillTagEventQueueBindingPattern" xml:space="preserve">
+    <value>css.skilltag.events.#</value>
+  </data>
+  <data name="SkillTagExchange" xml:space="preserve">
+    <value>css.skilltag</value>
+  </data>
+  <data name="SkillTagUpdateCommandRouteKey" xml:space="preserve">
+    <value>css.skilltag.commands.update.skilltag</value>
+  </data>
+  <data name="SkillTagUpdateFailedRouteKey" xml:space="preserve">
+    <value>css.skilltag.events.update.failed</value>
+  </data>
+  <data name="SkillTagUpdateSuccessRouteKey" xml:space="preserve">
+    <value>css.skilltag.events.update.success</value>
   </data>
 </root>

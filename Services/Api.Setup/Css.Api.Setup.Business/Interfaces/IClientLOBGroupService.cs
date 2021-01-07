@@ -44,6 +44,14 @@ namespace Css.Api.Setup.Business.Interfaces
         /// </returns>
         Task<CSSResponse> UpdateClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupIdDetails, UpdateClientLOBGroup clientLOBGroupDetails);
 
+        /// <summary>Reverts the client lob group.</summary>
+        /// <param name="clientLOBGroupIdDetails">The client lob group identifier details.</param>
+        /// <param name="clientLOBGroupDetails">The client lob group details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<CSSResponse> RevertClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupIdDetails, UpdateClientLOBGroup clientLOBGroupDetails);
+
         /// <summary>
         /// Deletes the client lob group.
         /// </summary>

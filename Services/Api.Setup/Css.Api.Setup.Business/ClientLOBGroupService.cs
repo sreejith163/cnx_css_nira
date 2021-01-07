@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Css.Api.Core.EventBus;
+using Css.Api.Core.EventBus.Commands.ClientLOB;
+using Css.Api.Core.EventBus.Services;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Setup.Business.Interfaces;
@@ -31,6 +34,10 @@ namespace Css.Api.Setup.Business
         /// </summary>
         private readonly IMapper _mapper;
 
+        /// <summary>The bus</summary>
+        private readonly IBusService _bus;
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientLOBGroupService" /> class.
         /// </summary>
@@ -38,13 +45,15 @@ namespace Css.Api.Setup.Business
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="mapper">The mapper.</param>
         public ClientLOBGroupService(
-            IRepositoryWrapper repository, 
+            IRepositoryWrapper repository,
             IHttpContextAccessor httpContextAccessor,
-            IMapper mapper)
+            IMapper mapper,
+            IBusService bus)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+            _bus = bus;
         }
 
         /// <summary>
@@ -102,6 +111,16 @@ namespace Css.Api.Setup.Business
 
             await _repository.SaveAsync();
 
+            await _bus.SendCommand<CreateClientLOBCommand>(MassTransitConstants.ClientLOBCreateCommandRouteKey,
+                new
+                {
+                    Id = clientLOBGroupRequest.Id,
+                    Name = clientLOBGroupRequest.Name,
+                    ClientId = clientLOBGroupRequest.ClientId,
+                    TimezoneId = clientLOBGroupRequest.TimezoneId,
+                    ModifiedDate = clientLOBGroupRequest.ModifiedDate
+                });
+
             return new CSSResponse(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupRequest.Id }, HttpStatusCode.Created);
         }
 
@@ -126,13 +145,78 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Client LOB Group with name '{clientLOBGroupDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
 
+            ClientLobGroup clientLOBDetailsPreUpdate = null;
+            if (!clientLOBGroupDetails.IsUpdateRevert)
+            {
+                clientLOBDetailsPreUpdate = new ClientLobGroup
+                {
+                    Name = clientLOBGroup.Name,
+                    ClientId = clientLOBGroup.ClientId,
+                    FirstDayOfWeek = clientLOBGroup.FirstDayOfWeek,
+                    TimezoneId = clientLOBGroup.TimezoneId,
+                    ModifiedBy = clientLOBGroup.ModifiedBy,
+                    IsDeleted = clientLOBGroup.IsDeleted,
+                    ModifiedDate = clientLOBGroup.ModifiedDate
+                };
+            }
+
             var clientLOBGroupRequest = _mapper.Map(clientLOBGroupDetails, clientLOBGroup);
+            if (clientLOBGroupDetails.IsUpdateRevert)
+            {
+                clientLOBGroupRequest.ModifiedDate = clientLOBGroupDetails.ModifiedDate;
+            }
+            _repository.ClientLOBGroups.UpdateClientLOBGroup(clientLOBGroupRequest);
+
+            await _repository.SaveAsync();
+
+            if (!clientLOBGroupDetails.IsUpdateRevert)
+            {
+                await _bus.SendCommand<UpdateClientLOBCommand>(
+                    MassTransitConstants.ClientLOBUpdateCommandRouteKey,
+                    new
+                    {
+                        Id = clientLOBGroupRequest.Id,
+                        NameOldValue = clientLOBDetailsPreUpdate.Name,
+                        ClientIdOldValue = clientLOBDetailsPreUpdate.ClientId,
+                        TimezoneIdOldValue = clientLOBDetailsPreUpdate.TimezoneId,
+                        FirstDayOfWeekOldValue = clientLOBDetailsPreUpdate.FirstDayOfWeek,
+                        ModifiedByOldValue = clientLOBDetailsPreUpdate.ModifiedBy,
+                        ModifiedDateOldValue = clientLOBDetailsPreUpdate.ModifiedDate,
+                        IsDeletedOldValue = clientLOBDetailsPreUpdate.IsDeleted,
+                        NameNewValue = clientLOBGroupRequest.Name,
+                        ClientIdNewValue = clientLOBGroupRequest.ClientId,
+                        IsDeletedNewValue = clientLOBGroupRequest.IsDeleted
+                    });
+            }
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        public async Task<CSSResponse> RevertClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupIdDetails, UpdateClientLOBGroup clientLOBGroupDetails)
+        {
+            var clientLOBGroup = await _repository.ClientLOBGroups.GetAllClientLOBGroup(clientLOBGroupIdDetails);
+            if (clientLOBGroup == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var clientLOBGroups = await _repository.ClientLOBGroups.GetAllClientLOBGroupsIdByClientIdAndGroupName(
+               new ClientIdDetails { ClientId = clientLOBGroupDetails.ClientId }, new ClientLOBGroupNameDetails { Name = clientLOBGroupDetails.Name });
+            if (clientLOBGroups?.Count > 0 && clientLOBGroups.IndexOf(clientLOBGroupIdDetails.ClientLOBGroupId) == -1)
+            {
+                return new CSSResponse($"Client LOB Group with name '{clientLOBGroupDetails.Name}' already exists.", HttpStatusCode.Conflict);
+            }
+
+            var clientLOBGroupRequest = _mapper.Map(clientLOBGroupDetails, clientLOBGroup);
+            clientLOBGroupRequest.ModifiedDate = clientLOBGroupDetails.ModifiedDate;
+
             _repository.ClientLOBGroups.UpdateClientLOBGroup(clientLOBGroupRequest);
 
             await _repository.SaveAsync();
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }
+
 
         /// <summary>Deletes the client lob group.</summary>
         /// <param name="clientLOBGroupIdDetails">The client lob group identifier details.</param>
@@ -153,10 +237,36 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"The Client LOB Group {clientLOBGroup.Name} has dependency with other modules", HttpStatusCode.FailedDependency);
             }
 
+            var clientLOBDetailsPreUpdate = new ClientLobGroup
+            {
+                Name = clientLOBGroup.Name,
+                ClientId = clientLOBGroup.ClientId,
+                FirstDayOfWeek = clientLOBGroup.FirstDayOfWeek,
+                TimezoneId = clientLOBGroup.TimezoneId,
+                ModifiedBy = clientLOBGroup.ModifiedBy,
+                IsDeleted = clientLOBGroup.IsDeleted,
+                ModifiedDate = clientLOBGroup.ModifiedDate
+            };
+
             clientLOBGroup.IsDeleted = true;
 
             _repository.ClientLOBGroups.UpdateClientLOBGroup(clientLOBGroup);
             await _repository.SaveAsync();
+
+            await _bus.SendCommand<DeleteClientLOBCommand>(
+                MassTransitConstants.ClientLOBDeleteCommandRouteKey,
+                new
+                {
+                    Id = clientLOBGroup.Id,
+                    Name = clientLOBDetailsPreUpdate.Name,
+                    ClientId = clientLOBDetailsPreUpdate.ClientId,
+                    TimezoneId = clientLOBDetailsPreUpdate.TimezoneId,
+                    FirstDayOfWeek = clientLOBDetailsPreUpdate.FirstDayOfWeek,
+                    ModifiedByOldValue = clientLOBDetailsPreUpdate.ModifiedBy,
+                    IsDeletedOldValue = clientLOBDetailsPreUpdate.IsDeleted,
+                    ModifiedDateOldValue = clientLOBDetailsPreUpdate.ModifiedDate,
+                    IsDeletedNewValue = clientLOBGroup.IsDeleted
+                });
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }

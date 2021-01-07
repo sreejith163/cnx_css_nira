@@ -22,12 +22,26 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// <returns></returns>
         Task<List<int>> GetClientsByName(ClientNameDetails clientNameDetails);
 
+        /// <summary>Gets the name of all clients by.</summary>
+        /// <param name="clientNameDetails">The client name details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<List<int>> GetAllClientsByName(ClientNameDetails clientNameDetails);
+
         /// <summary>
         /// Gets the client.
         /// </summary>
         /// <param name="clientIdDetails">The client identifier details.</param>
         /// <returns></returns>
         Task<Client> GetClient(ClientIdDetails clientIdDetails);
+
+        /// <summary>Gets all client.</summary>
+        /// <param name="clientIdDetails">The client identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<Client> GetAllClient(ClientIdDetails clientIdDetails);
 
         /// <summary>
         /// Creates the client.
