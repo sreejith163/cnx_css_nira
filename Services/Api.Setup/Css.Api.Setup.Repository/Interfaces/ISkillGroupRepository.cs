@@ -23,13 +23,6 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// <returns></returns>
         Task<SkillGroup> GetSkillGroup(SkillGroupIdDetails skillGroupIdDetails);
 
-        /// <summary>Gets all skill group.</summary>
-        /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        Task<SkillGroup> GetAllSkillGroup(SkillGroupIdDetails skillGroupIdDetails);
-
         /// <summary>
         /// Gets the skill groups count by client lob identifier.
         /// </summary>
@@ -45,16 +38,6 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// <returns></returns>
         Task<List<int>> GetSkillGroupIdsByClientLobIdAndSkillGroupName(ClientLOBGroupIdDetails clientLOBGroupIdDetails,
                     SkillGroupNameDetails skillGroupNameDetails);
-
-
-        /// <summary>Gets the name of all skill group ids by client lob identifier and skill group.</summary>
-        /// <param name="clientLOBGroupIdDetails">The client lob group identifier details.</param>
-        /// <param name="skillGroupNameDetails">The skill group name details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        Task<List<int>> GetAllSkillGroupIdsByClientLobIdAndSkillGroupName(ClientLOBGroupIdDetails clientLOBGroupIdDetails,
-                   SkillGroupNameDetails skillGroupNameDetails);
 
         /// <summary>
         /// Creates the skill group.

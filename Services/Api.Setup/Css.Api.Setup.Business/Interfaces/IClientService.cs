@@ -35,14 +35,6 @@ namespace Css.Api.Setup.Business.Interfaces
         /// <returns></returns>
         Task<CSSResponse> UpdateClient(ClientIdDetails clientIdDetails, UpdateClient clientDetails);
 
-        /// <summary>Reverts the client.</summary>
-        /// <param name="clientIdDetails">The client identifier details.</param>
-        /// <param name="clientDetails">The client details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        Task<CSSResponse> RevertClient(ClientIdDetails clientIdDetails, UpdateClient clientDetails);
-
         /// <summary>
         /// Deletes the client.
         /// </summary>

@@ -1,8 +1,12 @@
 ﻿using Css.Api.Core.EventBus.Events.Client;
 using MassTransit;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Css.Api.Setup.EventHandlers.Consumers.Client
+namespace Css.Api.Setup.EventHandlers.Consumers
 {
     /// <summary>
     /// The consumer class that consumes the event IClientCreateSuccess

@@ -84,21 +84,6 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(clientLOBGroup);
         }
 
-        /// <summary>Gets all client lob group.</summary>
-        /// <param name="clientLOBGroupIdDetails">The client lob group identifier details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<ClientLobGroup> GetAllClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupIdDetails)
-        {
-            var clientLOBGroup = FindByCondition(x => x.Id == clientLOBGroupIdDetails.ClientLOBGroupId )
-                .Include(x => x.Client)
-                .Include(x => x.Timezone)
-                .SingleOrDefault();
-
-            return await Task.FromResult(clientLOBGroup);
-        }     
-
         /// <summary>
         /// Gets the client lob groups count by client identifier.
         /// </summary>
@@ -129,23 +114,6 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(count);
         }
 
-        /// <summary>Gets the name of all client lob groups identifier by client identifier and group.</summary>
-        /// <param name="clientIdDetails">The client identifier details.</param>
-        /// <param name="clientLOBGroupNameDetails">The client lob group name details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<List<int>> GetAllClientLOBGroupsIdByClientIdAndGroupName(ClientIdDetails clientIdDetails, ClientLOBGroupNameDetails clientLOBGroupNameDetails)
-        {
-            var count = FindByCondition
-                (x => x.ClientId == clientIdDetails.ClientId && string.Equals(x.Name.Trim(), clientLOBGroupNameDetails.Name.Trim(),
-                      StringComparison.OrdinalIgnoreCase) )
-                .Select(x => x.Id)
-                .ToList();
-
-            return await Task.FromResult(count);
-        }
-        
         /// <summary>
         /// Creates the client lob group.
         /// </summary>

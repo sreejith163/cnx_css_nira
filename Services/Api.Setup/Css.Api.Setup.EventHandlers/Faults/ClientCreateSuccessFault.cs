@@ -3,7 +3,7 @@ using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-namespace Css.Api.Setup.EventHandlers.Faults.Client
+namespace Css.Api.Setup.EventHandlers.Faults
 {
     /// <summary>
     /// The consumer class that consumes the fault of the event IClientCreateFailed

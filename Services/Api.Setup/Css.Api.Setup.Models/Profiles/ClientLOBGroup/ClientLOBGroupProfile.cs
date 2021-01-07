@@ -18,7 +18,7 @@ namespace Css.Api.Setup.Models.Profiles.ClientLOBGroup
             CreateMap<UpdateClientLOBGroup, Domain.ClientLobGroup>()
                 .ForMember(x => x.Name, opt => opt.MapFrom(o => o.Name.Trim()))
                 .ForMember(x => x.ModifiedBy, opt => opt.MapFrom(o => o.ModifiedBy.Trim()))
-                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => o.ModifiedDate.HasValue? o.ModifiedDate: DateTime.UtcNow))
+                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
 
             CreateMap<Domain.ClientLobGroup, ClientLOBGroupDTO>()

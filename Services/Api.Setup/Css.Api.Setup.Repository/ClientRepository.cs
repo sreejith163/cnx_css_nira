@@ -74,19 +74,6 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(client);
         }
 
-        /// <summary>Gets all client.</summary>
-        /// <param name="clientIdDetails">The client identifier details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<Client> GetAllClient(ClientIdDetails clientIdDetails)
-        {
-            var client = FindByCondition(x => x.Id == clientIdDetails.ClientId )
-                .SingleOrDefault();
-
-            return await Task.FromResult(client);
-        }
-
         /// <summary>
         /// Gets the name of the client by.
         /// </summary>
@@ -100,20 +87,6 @@ namespace Css.Api.Setup.Repository
 
             return await Task.FromResult(clients);
         }
-
-        /// <summary>Gets the name of all clients by.</summary>
-        /// <param name="clientNameDetails">The client name details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<List<int>> GetAllClientsByName(ClientNameDetails clientNameDetails)
-        {
-            var clients = FindByCondition(x => string.Equals(x.Name.Trim(), clientNameDetails.Name.Trim(), StringComparison.OrdinalIgnoreCase) )
-                .Select(x => x.Id)
-                .ToList();
-
-            return await Task.FromResult(clients);
-        }   
 
         /// <summary>
         /// Creates the client.

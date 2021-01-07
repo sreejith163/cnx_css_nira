@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Css.Api.Setup.Repository
@@ -84,29 +85,12 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(skillTag);
         }
 
-        /// <summary>Gets all skill tag.</summary>
-        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<SkillTag> GetAllSkillTag(SkillTagIdDetails skillTagIdDetails)
-        {
-            var skillTag = FindByCondition(x => x.Id == skillTagIdDetails.SkillTagId)
-                            .Include(x => x.OperationHour)
-                            .Include(x => x.Client)
-                            .Include(x => x.ClientLobGroup)
-                            .Include(x => x.SkillGroup)
-                            .SingleOrDefault();
-
-            return await Task.FromResult(skillTag);
-        }
-
         /// <summary>
         /// Gets the skill tags count by skill group identifier.
         /// </summary>
         /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
         /// <returns></returns>
-        public async Task<int> GetSkillTagsCountBySkillGroupId(SkillGroupIdDetails skillGroupIdDetails)
+        public async Task<int>  GetSkillTagsCountBySkillGroupId(SkillGroupIdDetails skillGroupIdDetails)
         {
             var count = FindByCondition(x => x.SkillGroupId == skillGroupIdDetails.SkillGroupId && x.IsDeleted == false)
                 .Count();
@@ -125,23 +109,6 @@ namespace Css.Api.Setup.Repository
             var count = FindByCondition
                 (x => x.SkillGroupId == skillGroupIdDetails.SkillGroupId && string.Equals(x.Name.Trim(), skillTagNameDetails.Name.Trim(),
                       StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
-                .Select(x => x.Id)
-                .ToList();
-
-            return await Task.FromResult(count);
-        }
-
-        /// <summary>Gets the name of all skill tag identifier by skill group identifier and group.</summary>
-        /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
-        /// <param name="skillTagNameDetails">The skill tag name details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<List<int>> GetAllSkillTagIdBySkillGroupIdAndGroupName(SkillGroupIdDetails skillGroupIdDetails, SkillTagNameDetails skillTagNameDetails)
-        {
-            var count = FindByCondition
-                (x => x.SkillGroupId == skillGroupIdDetails.SkillGroupId && string.Equals(x.Name.Trim(), skillTagNameDetails.Name.Trim(),
-                      StringComparison.OrdinalIgnoreCase))
                 .Select(x => x.Id)
                 .ToList();
 

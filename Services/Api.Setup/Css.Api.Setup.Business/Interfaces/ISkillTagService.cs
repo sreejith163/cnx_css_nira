@@ -36,14 +36,6 @@ namespace Css.Api.Setup.Business.Interfaces
         /// <returns></returns>
         Task<CSSResponse> UpdateSkillTag(SkillTagIdDetails skillTagIdDetails, UpdateSkillTag skillTagDetails);
 
-        /// <summary>Reverts the skill tag.</summary>
-        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
-        /// <param name="skillTagDetails">The skill tag details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        Task<CSSResponse> RevertSkillTag(SkillTagIdDetails skillTagIdDetails, UpdateSkillTag skillTagDetails);
-
         /// <summary>
         /// Deletes the skill tag.
         /// </summary>

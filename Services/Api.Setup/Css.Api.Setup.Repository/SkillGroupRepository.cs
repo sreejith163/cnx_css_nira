@@ -83,23 +83,6 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(skillGroup);
         }
 
-        /// <summary>Gets all skill group.</summary>
-        /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<SkillGroup> GetAllSkillGroup(SkillGroupIdDetails skillGroupIdDetails)
-        {
-            var skillGroup = FindByCondition(x => x.Id == skillGroupIdDetails.SkillGroupId )
-                .Include(x => x.Client)
-                .Include(x => x.ClientLobGroup)
-                .Include(x => x.Timezone)
-                .Include(x => x.OperationHour)
-                .SingleOrDefault();
-
-            return await Task.FromResult(skillGroup);
-        }
-
         /// <summary>Gets the skill groups count by client lob identifier.</summary>
         /// <param name="clientLOBGroupIdDetails">The client lob group identifier details.</param>
         /// <returns>
@@ -125,25 +108,6 @@ namespace Css.Api.Setup.Repository
             var count = FindByCondition
                 (x => x.ClientLobGroupId == clientLOBGroupIdDetails.ClientLOBGroupId && string.Equals(x.Name.Trim(), skillGroupNameDetails.Name.Trim(), 
                       StringComparison.OrdinalIgnoreCase) && x.IsDeleted == false)
-                .Select(x => x.Id)
-                .ToList();
-
-            return await Task.FromResult(count);
-        }
-
-
-        /// <summary>Gets the name of all skill group ids by client lob identifier and skill group.</summary>
-        /// <param name="clientLOBGroupIdDetails">The client lob group identifier details.</param>
-        /// <param name="skillGroupNameDetails">The skill group name details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<List<int>> GetAllSkillGroupIdsByClientLobIdAndSkillGroupName(ClientLOBGroupIdDetails clientLOBGroupIdDetails,
-           SkillGroupNameDetails skillGroupNameDetails)
-        {
-            var count = FindByCondition
-                (x => x.ClientLobGroupId == clientLOBGroupIdDetails.ClientLOBGroupId && string.Equals(x.Name.Trim(), skillGroupNameDetails.Name.Trim(),
-                      StringComparison.OrdinalIgnoreCase) )
                 .Select(x => x.Id)
                 .ToList();
 
