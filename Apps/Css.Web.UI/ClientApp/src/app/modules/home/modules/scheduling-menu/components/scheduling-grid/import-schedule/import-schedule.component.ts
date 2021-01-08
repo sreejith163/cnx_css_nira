@@ -307,7 +307,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     for (const employee of schedules) {
       const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);
       const importData = new ImportScheduleData();
-      const chartData = new AgentScheduleChart();
       const chartArray = new Array<ScheduleChart>();
       importData.employeeId = employee.employeeId;
       importData.dateFrom = new Date(employeeDetails[0].StartDate) ;
@@ -320,6 +319,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         }
       });
       for (let i = 0; i < 7; i++) {
+        const chartData = new AgentScheduleChart();
         chartData.day = i;
         chartData.charts = chartArray;
         importData.agentScheduleCharts.push(chartData);
