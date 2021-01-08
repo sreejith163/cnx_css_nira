@@ -48,7 +48,7 @@
                         <ngx-spinner [name]="spinner"></ngx-spinner>
                             <tr *ngFor="let x of agents">
                                 <td>
-                                    <input type="checkbox" [(ngModel)]="x.isChecked" [value]="x.employeeId" (change)="isAllSelected($event)">
+                                    <input type="checkbox" [disabled]="masterSelected" [(ngModel)]="x.isChecked" [value]="x.employeeId" (change)="isAllSelected($event)">
                                 </td>
                                 <td>{{x.employeeId}}</td>
                                 <td>{{x.employeeName}}</td>

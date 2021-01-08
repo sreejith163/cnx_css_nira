@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
 import { SubscriptionLike as ISubscription } from 'rxjs';
-import { CssLanguageService } from '../../../../../shared/services/css-language.service';
-import { KeyValue } from 'src/app/shared/models/key-value.model';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Language, CSS_LANGUAGES } from 'src/app/shared/models/language-value.model';
@@ -18,7 +16,6 @@ import { GenericPopUpComponent } from 'src/app/shared/popups/generic-pop-up/gene
 export class HeaderComponent implements OnInit {
 
   modalRef: NgbModalRef;
-  menuLength: string;
   cssLanguages: Language[];
   getTranslationSubscription: ISubscription;
   subscriptionList: ISubscription[] = [];
@@ -27,7 +24,6 @@ export class HeaderComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     public translate: TranslateService,
-    private cssLanguageservice: CssLanguageService,
     private genericStateManagerService: GenericStateManagerService,
     private cookieService: CookieService,
     private router: Router

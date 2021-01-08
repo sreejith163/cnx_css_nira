@@ -9,6 +9,8 @@ import { UpdateAgentSchedule } from '../models/update-agent-schedule.model';
 import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
 import { UpdateAgentschedulechart } from '../models/update-agent-schedule-chart.model';
 import { CopyAgentSchedulechart } from '../models/copy-agent-schedule-chart.model';
+import { AgentChartResponse } from '../models/agent-chart-response.model';
+import { ImportShceduleChart } from '../models/import-schedule-chart.model';
 
 @Injectable()
 export class AgentSchedulesService extends HttpBaseService {
@@ -38,6 +40,13 @@ export class AgentSchedulesService extends HttpBaseService {
     .pipe(catchError(this.handleError));
   }
 
+  getCharts(agentScheduleId: string) {
+    const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/charts`;
+
+    return this.http.get<AgentChartResponse>(url)
+    .pipe(catchError(this.handleError));
+  }
+
   updateAgentSchedule(agentScheduleId: string, updateAgent: UpdateAgentSchedule) {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}`;
 
@@ -52,10 +61,10 @@ export class AgentSchedulesService extends HttpBaseService {
     .pipe(catchError(this.handleError));
   }
 
-  importAgentScheduleChart(agentScheduleId: string, updateAgentScheduleChart: UpdateAgentschedulechart) {
-    const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/import`;
+  importAgentScheduleChart(importAgentScheduleChart: ImportShceduleChart) {
+    const url = `${this.baseURL}/AgentSchedules/import`;
 
-    return this.http.put<ApiResponseModel>(url, updateAgentScheduleChart)
+    return this.http.put<ApiResponseModel>(url, importAgentScheduleChart)
     .pipe(catchError(this.handleError));
   }
 

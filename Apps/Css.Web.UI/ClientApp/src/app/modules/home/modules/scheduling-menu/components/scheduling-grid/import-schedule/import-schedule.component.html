@@ -15,7 +15,7 @@
           <div class="row">
             <div class="col-md-10 col-sm-10 p-r-0">
               <input #file id="fileLoader" type="file" (change)="browse($event.target.files)">
-              <input class="form-control" placeholder="Choose file..." accept=".xlsx" #fileDropRef appDradAndDropFile
+              <input class="form-control" placeholder="Choose file..." #fileDropRef appDradAndDropFile
                 (change)="browse($event)" (fileDropped)="browse($event)" [(ngModel)]="uploadFile">
             </div>
             <div class="col-md-2 col-sm-2 p-l-0">
@@ -25,7 +25,7 @@
             </div>
           </div>
           <div *ngIf="fileFormatValidation" class="valid-error">
-            {{'Please select an excel or csv file' | translate}}
+            {{'Please select a csv file' | translate}}
           </div>
           <div *ngIf="!hasFileSelected()" class="valid-error">
             {{'Please select a file'  | translate}}

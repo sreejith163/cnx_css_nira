@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+
 import { ClientLobGroupService } from '../modules/home/modules/setup-menu/services/client-lob-group.service';
 import { ClientService } from '../modules/home/modules/setup-menu/services/client.service';
 import { GenericDataService } from '../modules/home/modules/setup-menu/services/generic-data.service';
@@ -32,8 +34,8 @@ import { TimezoneService } from './services/timezone.service';
 import { TranslationService } from './services/translation.service';
 import { ExcelService } from './services/excel.service';
 import { DradAndDropFileDirective } from './directives/drad-and-drop-file.directive';
-import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { GenericPopUpComponent } from './popups/generic-pop-up/generic-pop-up.component';
 
@@ -64,17 +66,26 @@ const components =
 const modalComponents = [ConfirmationPopUpComponent, MessagePopUpComponent, DradAndDropFileDirective];
 
 
-const modules = [CommonModule, FormsModule, ReactiveFormsModule, NgbModule, NgSelectModule, NgxSpinnerModule, PapaParseModule, TranslateModule.forRoot({
-  loader: {
+const modules = [
+  CommonModule,
+  FormsModule,
+  ReactiveFormsModule,
+  NgbModule,
+  NgSelectModule,
+  NgxSpinnerModule,
+  PapaParseModule,
+  TabsModule,
+  TranslateModule.forRoot({
+    loader: {
       provide: TranslateLoader,
       useFactory: (HttpLoaderFactory),
       deps: [HttpClient]
-  }
-})];
+    }
+  })];
 
 const providers = [GenericStateManagerService, TranslationService, TimezoneService, CssLanguageService, LanguageTranslationService,
   GenericDataService, ClientService, SkillGroupService, ClientLobGroupService, SkillTagService, AgentSchedulingGroupService,
-  SchedulingCodeService, ExcelService ];
+  SchedulingCodeService, ExcelService];
 
 @NgModule({
   imports: modules,

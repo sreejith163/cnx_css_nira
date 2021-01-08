@@ -225,3 +225,98 @@ p.float-left {
 .m-l-10 {
   margin-left: 10px;
 }
+
+.w-6p {
+  width: 6%;
+}
+
+.w-15p {
+  width: 15%;
+}
+
+.w-30p {
+  width: 30%;
+}
+
+.margin-4 {
+  margin: 4px;
+}
+
+.border {
+  border: 2px solid #dfdfeb;
+}
+
+.bg-color {
+  background-color: #dfdfeb;
+}
+
+input:focus {
+  outline: unset;
+}
+
+select:focus {
+  outline: unset;
+}
+
+.label-color {
+  color: #007bff;
+}
+
+.m-t-20 {
+  margin-top: 20px;
+}
+
+.p-t-10 {
+  padding-top: 10px;
+}
+
+.label {
+  font-weight: 100;
+}
+
+label:not(.form-check-label):not(.custom-file-label) {
+  font-weight: 400;
+}
+
+.agent-info-lbl {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+input.manager {
+  height: calc(1.5em + .75rem + 0px) !important;
+  font-size: 0.9rem !important;
+}
+
+.test {
+  margin-top: 5px;
+  margin-left: 6px;
+  margin-right: 0px;
+  background-color: #f6f6f69e;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 4px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.m-b-10 {
+  margin-bottom: 10px !important;
+}
+
+.width-43p {
+  width: 43% !important;
+}
+
+tr.selected td {
+  background-color: #c4e2ff54;
+}
+
+.copy-button {
+  border: #4fb398cc solid 2px;
+  color: #4fb398cc;
+}
+
+.black {
+  color: black !important;
+}

@@ -42,6 +42,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   subscriptions: ISubscription[] = [];
 
   @Input() agentSchedulingGroupId: number;
+  @Input() employeeId: number;
   @Input() agentScheduleId: string;
   @Input() agentScheudleType: AgentScheduleType;
 
@@ -152,6 +153,8 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     this.getAgentsSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
       .subscribe((response) => {
         this.agents = response.body;
+        const index = this.agents.findIndex(x => x.employeeId === this.employeeId);
+        this.agents.splice(index, 1);
         let headerPaginationValues = new HeaderPagination();
         headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
         this.totalAgents = headerPaginationValues.totalCount;
@@ -223,7 +226,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.copyAgentScheduleChartSubscription);
   }
 
-  private subscribeToTranslations(){
+  private subscribeToTranslations() {
     this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
       (language) => {
         if (language) {
@@ -234,7 +237,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getTranslationSubscription);
   }
 
-  private loadTranslations(){
+  private loadTranslations() {
     const browserLang = this.genericStateManagerService.getLanguage();
     this.translate.use(browserLang ? browserLang : 'en');
   }
