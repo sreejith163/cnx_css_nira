@@ -225,12 +225,12 @@ namespace Css.Api.Scheduling.Repository
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow)
                 .Set(x => x.AgentScheduleCharts, agentScheduleDetails.AgentScheduleCharts);
 
-            if (agentScheduleDetails.DateFrom.HasValue && agentScheduleDetails.DateFrom != default(DateTime))
+            if (agentScheduleDetails.DateFrom.HasValue && agentScheduleDetails.DateFrom != default(DateTimeOffset))
             {
                 update = update.Set(x => x.DateFrom, agentScheduleDetails.DateFrom);
             }
 
-            if (agentScheduleDetails.DateTo.HasValue && agentScheduleDetails.DateTo != default(DateTime))
+            if (agentScheduleDetails.DateTo.HasValue && agentScheduleDetails.DateTo != default(DateTimeOffset))
             {
                 update = update.Set(x => x.DateTo, agentScheduleDetails.DateTo);
             }

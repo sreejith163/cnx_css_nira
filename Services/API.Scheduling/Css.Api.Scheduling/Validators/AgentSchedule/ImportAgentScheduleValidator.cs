@@ -22,7 +22,7 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
                 .ChildRules(x => x.RuleFor(x => x.AgentScheduleCharts)
                 .SetValidator(new ScheduleChartUniqueDaysCollectionValidator()));
             RuleForEach(x => x.ImportAgentScheduleCharts)
-                .ChildRules(x => x.RuleFor(x => x.AgentScheduleCharts)
+                .ChildRules(x => x.RuleForEach(x => x.AgentScheduleCharts)
                 .SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>()));
         }
     }
