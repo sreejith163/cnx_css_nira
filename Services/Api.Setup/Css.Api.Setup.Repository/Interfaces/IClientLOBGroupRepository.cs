@@ -27,6 +27,13 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// </returns>
         Task<ClientLobGroup> GetClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupIdDetails);
 
+        /// <summary>Gets all client lob group.</summary>
+        /// <param name="clientLOBGroupIdDetails">The client lob group identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<ClientLobGroup> GetAllClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupIdDetails);
+
         /// <summary>
         /// Gets the client lob groups count by client identifier.
         /// </summary>
@@ -41,6 +48,14 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// <param name="clientLOBGroupNameDetails">The client lob group name details.</param>
         /// <returns></returns>
         Task<List<int>> GetClientLOBGroupsIdByClientIdAndGroupName(ClientIdDetails clientIdDetails, ClientLOBGroupNameDetails clientLOBGroupNameDetails);
+
+        /// <summary>Gets the name of all client lob groups identifier by client identifier and group.</summary>
+        /// <param name="clientIdDetails">The client identifier details.</param>
+        /// <param name="clientLOBGroupNameDetails">The client lob group name details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<List<int>> GetAllClientLOBGroupsIdByClientIdAndGroupName(ClientIdDetails clientIdDetails, ClientLOBGroupNameDetails clientLOBGroupNameDetails);
 
         /// <summary>
         /// Creates the client lob group.

@@ -23,12 +23,33 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// <returns></returns>
         Task<AgentSchedulingGroup> GetAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
 
+        /// <summary>Gets all agent scheduling group.</summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<AgentSchedulingGroup> GetAllAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
+
         /// <summary>
         /// Gets the agent scheduling groups count by skill tag identifier.
         /// </summary>
         /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
         /// <returns></returns>
         Task<int> GetAgentSchedulingGroupsCountBySkillTagId(SkillTagIdDetails skillTagIdDetails);
+
+        /// <summary>Gets all agent scheduling groups count by skill tag identifier.</summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<int> GetAllAgentSchedulingGroupsCountBySkillTagId(SkillTagIdDetails skillTagIdDetails);
+
+        /// <summary>Gets the agent scheduling groups by skill tag identifier.</summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupsBySkillTagId(SkillTagIdDetails skillTagIdDetails);
 
         /// <summary>
         /// Gets the name of the agent scheduling group identifier by skill tag identifier and group.

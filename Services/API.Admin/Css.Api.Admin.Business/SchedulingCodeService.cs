@@ -1,12 +1,17 @@
 ﻿using AutoMapper;
-using Css.Api.Core.Models.Domain;
-using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Admin.Business.Interfaces;
 using Css.Api.Admin.Models.Domain;
 using Css.Api.Admin.Models.DTO.Request.SchedulingCode;
 using Css.Api.Admin.Models.DTO.Response.SchedulingCode;
 using Css.Api.Admin.Repository.Interfaces;
+using Css.Api.Core.EventBus;
+using Css.Api.Core.EventBus.Commands.SchedulingCode;
+using Css.Api.Core.EventBus.Services;
+using Css.Api.Core.Models.Domain;
+using Css.Api.Core.Models.DTO.Response;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -30,17 +35,22 @@ namespace Css.Api.Admin.Business
         /// </summary>
         private readonly IMapper _mapper;
 
+        /// <summary>The bus</summary>
+        private readonly IBusService _bus;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SchedulingCodeService" /> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="mapper">The mapper.</param>
-        public SchedulingCodeService(IRepositoryWrapper repository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+        public SchedulingCodeService(IRepositoryWrapper repository,
+            IHttpContextAccessor httpContextAccessor, IMapper mapper, IBusService bus)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+            _bus = bus;
         }
 
         /// <summary>
@@ -95,6 +105,17 @@ namespace Css.Api.Admin.Business
 
             await _repository.SaveAsync();
 
+            await _bus.SendCommand<CreateSchedulingCodeCommand>(MassTransitConstants.SchedulingCodeCreateCommandRouteKey,
+               new
+               {
+                   Id = schedulingCodeRequest.Id,
+                   Name = schedulingCodeRequest.Description,
+                   PriorityNumber = schedulingCodeRequest.PriorityNumber,
+                   IconId = schedulingCodeRequest.IconId,
+                   SchedulingTypeCode = JsonConvert.SerializeObject(schedulingCodeDetails.SchedulingTypeCode),
+                   ModifiedDate = schedulingCodeRequest.ModifiedDate
+               });
+
             return new CSSResponse(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeRequest.Id }, HttpStatusCode.Created);
         }
 
@@ -121,9 +142,84 @@ namespace Css.Api.Admin.Business
                 return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' already exists.", HttpStatusCode.Conflict);
             }
 
+            SchedulingCode schedulingCodeDetailsPreUpdate = null;
+            if (!schedulingCodeDetails.IsUpdateRevert)
+            {
+                List<SchedulingTypeCode> schedulingTypeCodePreUpdated =
+                    new List<SchedulingTypeCode>(schedulingCode.SchedulingTypeCode);
+                schedulingCodeDetailsPreUpdate = new SchedulingCode
+                {
+                    Description = schedulingCode.Description,
+                    PriorityNumber = schedulingCode.PriorityNumber,
+                    IconId = schedulingCode.IconId,
+                    SchedulingTypeCode = schedulingTypeCodePreUpdated,
+                    ModifiedBy = schedulingCode.ModifiedBy,
+                    IsDeleted = schedulingCode.IsDeleted,
+                    ModifiedDate = schedulingCode.ModifiedDate
+                };
+            }
+
             _repository.SchedulingTypeCodes.RemoveSchedulingTypeCodes(schedulingCode.SchedulingTypeCode.ToList());
 
             var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);
+
+            if (schedulingCodeDetails.IsUpdateRevert)
+            {
+                schedulingCodeRequest.ModifiedDate = schedulingCodeDetails.ModifiedDate;
+            }
+
+            _repository.SchedulingCodes.UpdateSchedulingCode(schedulingCodeRequest);
+
+            await _repository.SaveAsync();
+
+            if (!schedulingCodeDetails.IsUpdateRevert)
+            {
+                UpdateSchedulingCode schedulingCodePreUpdate = null;
+                var schedulingCodePreRequest = _mapper.Map(schedulingCodeDetailsPreUpdate, schedulingCodePreUpdate);
+
+                await _bus.SendCommand<UpdateSchedulingCodeCommand>(
+                    MassTransitConstants.SchedulingCodeUpdateCommandRouteKey,
+                    new
+                    {
+                        Id = schedulingCodeRequest.Id,
+                        NameOldValue = schedulingCodeDetailsPreUpdate.Description,
+                        PriorityNumberOldValue = schedulingCodeDetailsPreUpdate.PriorityNumber,
+                        IconIdOldValue = schedulingCodeDetailsPreUpdate.IconId,
+                        SchedulingTypeCodeOldValue =
+                            JsonConvert.SerializeObject(schedulingCodePreRequest.SchedulingTypeCode),
+                        ModifiedByOldValue = schedulingCodeDetailsPreUpdate.ModifiedBy,
+                        ModifiedDateOldValue = schedulingCodeDetailsPreUpdate.ModifiedDate,
+                        IsDeletedOldValue = schedulingCodeDetailsPreUpdate.IsDeleted,
+                        NameNewValue = schedulingCodeRequest.Description,
+                        IsDeletedNewValue = schedulingCodeRequest.IsDeleted
+                    });
+            }
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+
+        public async Task<CSSResponse> RevertSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails, UpdateSchedulingCode schedulingCodeDetails)
+        {
+            var schedulingCode = await _repository.SchedulingCodes.GetAllSchedulingCode(schedulingCodeIdDetails);
+            if (schedulingCode == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var schedulingCodes = await _repository.SchedulingCodes.GetAllSchedulingCodesByDescription(new SchedulingCodeNameDetails { Name = schedulingCodeDetails.Description });
+            if (schedulingCodes?.Count > 0 && schedulingCodes.IndexOf(schedulingCodeIdDetails.SchedulingCodeId) == -1)
+            {
+                return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' already exists.", HttpStatusCode.Conflict);
+            }
+
+            _repository.SchedulingTypeCodes.RemoveSchedulingTypeCodes(schedulingCode.SchedulingTypeCode.ToList());
+
+            var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);
+
+
+            schedulingCodeRequest.ModifiedDate = schedulingCodeDetails.ModifiedDate;
+
 
             _repository.SchedulingCodes.UpdateSchedulingCode(schedulingCodeRequest);
 
@@ -131,6 +227,7 @@ namespace Css.Api.Admin.Business
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }
+
 
         /// <summary>
         /// Deletes the scheduling code.
@@ -145,10 +242,42 @@ namespace Css.Api.Admin.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
+            SchedulingCode schedulingCodeDetailsPreUpdate = null;
+
+            schedulingCodeDetailsPreUpdate = new SchedulingCode
+            {
+                Description = schedulingCode.Description,
+                PriorityNumber = schedulingCode.PriorityNumber,
+                IconId = schedulingCode.IconId,
+                SchedulingTypeCode = schedulingCode.SchedulingTypeCode,
+                ModifiedBy = schedulingCode.ModifiedBy,
+                IsDeleted = schedulingCode.IsDeleted,
+                ModifiedDate = schedulingCode.ModifiedDate
+            };
+
             schedulingCode.IsDeleted = true;
 
             _repository.SchedulingCodes.UpdateSchedulingCode(schedulingCode);
             await _repository.SaveAsync();
+
+            UpdateSchedulingCode schedulingCodePreUpdate = null;
+            var schedulingCodePreRequest = _mapper.Map(schedulingCodeDetailsPreUpdate, schedulingCodePreUpdate);
+
+
+            await _bus.SendCommand<DeleteSchedulingCodeCommand>(
+               MassTransitConstants.SchedulingCodeDeleteCommandRouteKey,
+               new
+               {
+                   Id = schedulingCode.Id,
+                   Name = schedulingCodeDetailsPreUpdate.Description,
+                   PriorityNumber = schedulingCodeDetailsPreUpdate.PriorityNumber,
+                   IconId = schedulingCodeDetailsPreUpdate.IconId,
+                   SchedulingTypeCode = JsonConvert.SerializeObject(schedulingCodePreRequest.SchedulingTypeCode),
+                   ModifiedByOldValue = schedulingCodeDetailsPreUpdate.ModifiedBy,
+                   IsDeletedOldValue = schedulingCodeDetailsPreUpdate.IsDeleted,
+                   ModifiedDateOldValue = schedulingCodeDetailsPreUpdate.ModifiedDate,
+                   IsDeletedNewValue = schedulingCode.IsDeleted
+               });
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }

@@ -32,6 +32,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </returns>
         Task<Agent> GetAgentAdminIdsByEmployeeIdAndSso(EmployeeIdDetails agentAdminEmployeeIdDetails, AgentAdminSsoDetails agentAdminSsoDetails);
 
+        /// <summary>Gets the agent admin ids by sso.</summary>
+        /// <param name="agentAdminSsoDetails">The agent admin sso details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<Agent> GetAgentAdminIdsBySso(AgentAdminSsoDetails agentAdminSsoDetails);
+
         /// <summary>
         /// Gets the agent admin ids by employee identifier.
         /// </summary>

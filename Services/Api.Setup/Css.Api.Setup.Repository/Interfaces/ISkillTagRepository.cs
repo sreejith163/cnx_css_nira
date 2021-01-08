@@ -23,6 +23,13 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// <returns></returns>
         Task<SkillTag> GetSkillTag(SkillTagIdDetails skillTagIdDetails);
 
+        /// <summary>Gets all skill tag.</summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<SkillTag> GetAllSkillTag(SkillTagIdDetails skillTagIdDetails);
+
         /// <summary>
         /// Gets the skill tags count by skill group identifier.
         /// </summary>
@@ -37,6 +44,14 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// <param name="skillTagNameDetails">The skill tag name details.</param>
         /// <returns></returns>
         Task<List<int>> GetSkillTagIdBySkillGroupIdAndGroupName(SkillGroupIdDetails skillGroupIdDetails, SkillTagNameDetails skillTagNameDetails);
+
+        /// <summary>Gets the name of all skill tag identifier by skill group identifier and group.</summary>
+        /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
+        /// <param name="skillTagNameDetails">The skill tag name details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<List<int>> GetAllSkillTagIdBySkillGroupIdAndGroupName(SkillGroupIdDetails skillGroupIdDetails, SkillTagNameDetails skillTagNameDetails);
 
         /// <summary>
         /// Creates the skill tag.

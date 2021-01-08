@@ -43,10 +43,10 @@ namespace Css.Api.Setup.Business.UnitTest.Services
 
             mapper = new Mapper(mapperConfig);
 
+            var busService = new Mock<IBusService>();
+
             var context = new DefaultHttpContext();
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
-
-            Mock<IBusService> bus = new Mock<IBusService>();
 
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
@@ -54,7 +54,7 @@ namespace Css.Api.Setup.Business.UnitTest.Services
 
             repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper);
 
-            clientService = new ClientService(repositoryWrapper, mockHttContext.Object, mapper, bus.Object);
+            clientService = new ClientService(repositoryWrapper, mockHttContext.Object, mapper, busService.Object);
         }
 
         #region GetClients

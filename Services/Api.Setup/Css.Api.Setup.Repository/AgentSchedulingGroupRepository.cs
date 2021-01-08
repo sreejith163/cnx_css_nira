@@ -87,6 +87,25 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(agentSchedulingGroup);
         }
 
+        /// <summary>Gets all agent scheduling group.</summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<AgentSchedulingGroup> GetAllAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        {
+            var agentSchedulingGroup = FindByCondition(x => x.Id == agentSchedulingGroupIdDetails.AgentSchedulingGroupId)
+                            .Include(x => x.OperationHour)
+                            .Include(x => x.Client)
+                            .Include(x => x.ClientLobGroup)
+                            .Include(x => x.SkillGroup)
+                            .Include(x => x.SkillTag)
+                            .Include(x => x.Timezone)
+                            .SingleOrDefault();
+
+            return await Task.FromResult(agentSchedulingGroup);
+        }
+
         /// <summary>
         /// Gets the agent scheduling groups count by skill tag identifier.
         /// </summary>
@@ -98,6 +117,31 @@ namespace Css.Api.Setup.Repository
                 .Count();
 
             return await Task.FromResult(count);
+        }
+
+        /// <summary>Gets all agent scheduling groups count by skill tag identifier.</summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<int> GetAllAgentSchedulingGroupsCountBySkillTagId(SkillTagIdDetails skillTagIdDetails)
+        {
+            var count = FindByCondition(x => x.SkillTagId == skillTagIdDetails.SkillTagId)
+                .Count();
+
+            return await Task.FromResult(count);
+        }
+
+        /// <summary>Gets the agent scheduling groups by skill tag identifier.</summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupsBySkillTagId(SkillTagIdDetails skillTagIdDetails)
+        {
+            var agentSchedulingGroups = FindByCondition(x => x.SkillTagId == skillTagIdDetails.SkillTagId && x.IsDeleted == false);
+
+            return await Task.FromResult(agentSchedulingGroups.ToList());
         }
 
         /// <summary>

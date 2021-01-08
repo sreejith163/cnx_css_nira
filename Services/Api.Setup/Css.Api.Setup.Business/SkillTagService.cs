@@ -1,16 +1,21 @@
 ﻿using AutoMapper;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Css.Api.Core.EventBus;
+using Css.Api.Core.EventBus.Commands.SkillTag;
+using Css.Api.Core.EventBus.Services;
 using Css.Api.Core.Models.Domain;
-using Css.Api.Setup.Models.Domain;
 using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Setup.Business.Interfaces;
-using Css.Api.Setup.Repository.Interfaces;
-using Css.Api.Setup.Models.DTO.Request.SkillTag;
+using Css.Api.Setup.Models.Domain;
 using Css.Api.Setup.Models.DTO.Request.SkillGroup;
-using System.Linq;
+using Css.Api.Setup.Models.DTO.Request.SkillTag;
 using Css.Api.Setup.Models.DTO.Response.SkillTag;
+using Css.Api.Setup.Repository.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Css.Api.Setup.Business
 {
@@ -35,6 +40,9 @@ namespace Css.Api.Setup.Business
         /// </summary>
         private readonly IMapper _mapper;
 
+        /// <summary>The bus</summary>
+        private readonly IBusService _bus;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SkillTagService"/> class.
         /// </summary>
@@ -42,13 +50,15 @@ namespace Css.Api.Setup.Business
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="mapper">The mapper.</param>
         public SkillTagService(
-            IRepositoryWrapper repository, 
-            IHttpContextAccessor httpContextAccessor, 
-            IMapper mapper)
+            IRepositoryWrapper repository,
+            IHttpContextAccessor httpContextAccessor,
+            IMapper mapper,
+            IBusService bus)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+            _bus = bus;
         }
 
         /// <summary>
@@ -113,6 +123,18 @@ namespace Css.Api.Setup.Business
 
             await _repository.SaveAsync();
 
+            await _bus.SendCommand<CreateSkillTagCommand>(MassTransitConstants.SkillTagCreateCommandRouteKey,
+               new
+               {
+                   Id = skillTagRequest.Id,
+                   Name = skillTagRequest.Name,
+                   ClientId = skillTagRequest.ClientId,
+                   ClientLobGroupId = skillTagRequest.ClientLobGroupId,
+                   SkillGroupId = skillTagRequest.SkillGroupId,
+                   OperationHour = JsonConvert.SerializeObject(skillTagDetails.OperationHour),
+                   ModifiedDate = skillTagRequest.ModifiedDate
+               });
+
             return new CSSResponse(new SkillTagIdDetails { SkillTagId = skillTagRequest.Id }, HttpStatusCode.Created);
         }
 
@@ -145,9 +167,100 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Skill tag with name '{skillTagDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
 
+            SkillTag skillTagDetailsPreUpdate = null;
+            if (!skillTagDetails.IsUpdateRevert)
+            {
+                List<OperationHour> operationHourPreUpdated =
+                    new List<OperationHour>(skillTag.OperationHour);
+                skillTagDetailsPreUpdate = new SkillTag
+                {
+                    Name = skillTag.Name,
+                    ClientId = skillTag.ClientId,
+                    ClientLobGroupId = skillTag.ClientLobGroupId,
+                    SkillGroupId = skillTag.SkillGroupId,
+                    OperationHour = operationHourPreUpdated,
+                    ModifiedBy = skillTag.ModifiedBy,
+                    IsDeleted = skillTag.IsDeleted,
+                    ModifiedDate = skillTag.ModifiedDate
+                };
+            }
+
             _repository.OperationHours.RemoveOperatingHours(skillTag.OperationHour.ToList());
 
             var skillTagRequest = _mapper.Map(skillTagDetails, skillTag);
+
+            if (skillTagDetails.IsUpdateRevert)
+            {
+                skillTagRequest.ModifiedDate = skillTagDetails.ModifiedDate;
+            }
+
+            skillTagRequest.ClientId = skillGroup.ClientId;
+            skillTagRequest.ClientLobGroupId = skillGroup.ClientLobGroupId;
+
+            _repository.SkillTags.UpdateSkillTag(skillTagRequest);
+
+            await _repository.SaveAsync();
+
+            if (!skillTagDetails.IsUpdateRevert)
+            {
+                UpdateSkillTag skillTagPreUpdate = null;
+                var skillTagPreRequest = _mapper.Map(skillTagDetailsPreUpdate, skillTagPreUpdate);
+
+                await _bus.SendCommand<UpdateSkillTagCommand>(
+                    MassTransitConstants.SkillTagUpdateCommandRouteKey,
+                    new
+                    {
+                        Id = skillTagRequest.Id,
+                        NameOldValue = skillTagDetailsPreUpdate.Name,
+                        ClientIdOldValue = skillTagDetailsPreUpdate.ClientId,
+                        ClientLobGroupIdOldvalue = skillTagDetailsPreUpdate.ClientLobGroupId,
+                        SkillGroupIdOldValue = skillTagDetailsPreUpdate.SkillGroupId,
+                        OperationHourOldValue =
+                            JsonConvert.SerializeObject(skillTagPreRequest.OperationHour),
+                        ModifiedByOldValue = skillTagDetailsPreUpdate.ModifiedBy,
+                        ModifiedDateOldValue = skillTagDetailsPreUpdate.ModifiedDate,
+                        IsDeletedOldValue = skillTagDetailsPreUpdate.IsDeleted,
+                        NameNewValue = skillTagRequest.Name,
+                        ClientIdNewValue = skillTagRequest.ClientId,
+                        ClientLobGroupIdNewValue = skillTagRequest.ClientLobGroupId,
+                        SkillGroupIdNewValue = skillTagRequest.SkillGroupId,
+                        IsDeletedNewValue = skillTagRequest.IsDeleted
+                    });
+            }
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        public async Task<CSSResponse> RevertSkillTag(SkillTagIdDetails skillTagIdDetails, UpdateSkillTag skillTagDetails)
+        {
+            var skillTag = await _repository.SkillTags.GetAllSkillTag(skillTagIdDetails);
+            if (skillTag == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var skillGroupIdDetails = new SkillGroupIdDetails { SkillGroupId = skillTagDetails.SkillGroupId };
+            var skillTagNameDetails = new SkillTagNameDetails { Name = skillTagDetails.Name };
+
+            var skillGroup = await _repository.SkillGroups.GetSkillGroup(skillGroupIdDetails);
+            if (skillGroup == null)
+            {
+                return new CSSResponse($"Skill Group with id '{skillGroupIdDetails.SkillGroupId}' not found", HttpStatusCode.NotFound);
+            }
+
+            var skillTags = await _repository.SkillTags.GetAllSkillTagIdBySkillGroupIdAndGroupName(skillGroupIdDetails, skillTagNameDetails);
+            if (skillTags?.Count > 0 && skillTags.IndexOf(skillTagIdDetails.SkillTagId) == -1)
+            {
+                return new CSSResponse($"Skill tag with name '{skillTagDetails.Name}' already exists.", HttpStatusCode.Conflict);
+            }
+
+            _repository.OperationHours.RemoveOperatingHours(skillTag.OperationHour.ToList());
+
+            var skillTagRequest = _mapper.Map(skillTagDetails, skillTag);
+
+
+            skillTagRequest.ModifiedDate = skillTagDetails.ModifiedDate;
+
 
             skillTagRequest.ClientId = skillGroup.ClientId;
             skillTagRequest.ClientLobGroupId = skillGroup.ClientLobGroupId;
@@ -178,10 +291,44 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"The Skill Group {skillTag.Name} has dependency with other modules", HttpStatusCode.FailedDependency);
             }
 
+            SkillTag skillTagDetailsPreUpdate = null;
+
+            skillTagDetailsPreUpdate = new SkillTag
+            {
+                Name = skillTag.Name,
+                ClientId = skillTag.ClientId,
+                ClientLobGroupId = skillTag.ClientLobGroupId,
+                SkillGroupId = skillTag.SkillGroupId,
+                OperationHour = skillTag.OperationHour,
+                ModifiedBy = skillTag.ModifiedBy,
+                IsDeleted = skillTag.IsDeleted,
+                ModifiedDate = skillTag.ModifiedDate
+            };
+
             skillTag.IsDeleted = true;
 
             _repository.SkillTags.UpdateSkillTag(skillTag);
             await _repository.SaveAsync();
+
+            UpdateSkillTag skillTagPreUpdate = null;
+            var skillTagPreRequest = _mapper.Map(skillTagDetailsPreUpdate, skillTagPreUpdate);
+
+
+            await _bus.SendCommand<DeleteSkillTagCommand>(
+               MassTransitConstants.SkillTagDeleteCommandRouteKey,
+               new
+               {
+                   Id = skillTag.Id,
+                   Name = skillTagDetailsPreUpdate.Name,
+                   ClientId = skillTagDetailsPreUpdate.ClientId,
+                   ClientLobGroupId = skillTagDetailsPreUpdate.ClientLobGroupId,
+                   SkillGroupId = skillTagDetailsPreUpdate.SkillGroupId,
+                   OperationHour = JsonConvert.SerializeObject(skillTagPreRequest.OperationHour),
+                   ModifiedByOldValue = skillTagDetailsPreUpdate.ModifiedBy,
+                   IsDeletedOldValue = skillTagDetailsPreUpdate.IsDeleted,
+                   ModifiedDateOldValue = skillTagDetailsPreUpdate.ModifiedDate,
+                   IsDeletedNewValue = skillTag.IsDeleted
+               });
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }

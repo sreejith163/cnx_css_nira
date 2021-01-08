@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\API.Core\Css.Api.Core.EventBus\Css.Api.Core.EventBus.csproj" />
+    <ProjectReference Include="..\Css.Api.Setup.Business\Css.Api.Setup.Business.csproj" />
+    <ProjectReference Include="..\Css.Api.Setup.Repository\Css.Api.Setup.Repository.csproj" />
   </ItemGroup>
 
 </Project>

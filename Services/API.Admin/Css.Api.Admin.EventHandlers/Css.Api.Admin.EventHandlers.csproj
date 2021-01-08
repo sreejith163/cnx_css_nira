@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\API.Core\Css.Api.Core.EventBus\Css.Api.Core.EventBus.csproj" />
+    <ProjectReference Include="..\Css.Api.Admin.Business\Css.Api.Admin.Business.csproj" />
+    <ProjectReference Include="..\Css.Api.Admin.Repository\Css.Api.Admin.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

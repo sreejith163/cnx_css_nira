@@ -35,6 +35,14 @@ namespace Css.Api.Admin.Business.Interfaces
         /// <returns></returns>
         Task<CSSResponse> UpdateSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails, UpdateSchedulingCode schedulingCodeDetails);
 
+        /// <summary>Reverts the scheduling code.</summary>
+        /// <param name="schedulingCodeIdDetails">The scheduling code identifier details.</param>
+        /// <param name="schedulingCodeDetails">The scheduling code details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<CSSResponse> RevertSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails, UpdateSchedulingCode schedulingCodeDetails);
+
         /// <summary>
         /// Deletes the scheduling code.
         /// </summary>

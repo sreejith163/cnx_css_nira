@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Css.Api.Core.EventBus.Services;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Setup.Business.Interfaces;
 using Css.Api.Setup.Business.UnitTest.Mock;
@@ -46,6 +47,8 @@ namespace Css.Api.Setup.Business.UnitTest.Services
 
             mapper = new Mapper(mapperConfig);
 
+            var busService = new Mock<IBusService>();
+
             var context = new DefaultHttpContext();
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
@@ -54,7 +57,7 @@ namespace Css.Api.Setup.Business.UnitTest.Services
 
             repositoryWrapper = new MockRepositoryWrapper(mockSchedulingContext, mapper);
 
-            skillGroupService = new SkillGroupService(repositoryWrapper, mockHttContext.Object, mapper);
+            skillGroupService = new SkillGroupService(repositoryWrapper, mockHttContext.Object, mapper, busService.Object);
         }
 
         #region GetSkillGroups

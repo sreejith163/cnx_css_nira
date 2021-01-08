@@ -36,6 +36,14 @@ namespace Css.Api.Setup.Business.Interfaces
         /// <returns></returns>
         Task<CSSResponse> UpdateAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails, UpdateAgentSchedulingGroup agentSchedulingGroupDetails);
 
+        /// <summary>Reverts the agent scheduling group.</summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <param name="agentSchedulingGroupDetails">The agent scheduling group details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<CSSResponse> RevertAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails, UpdateAgentSchedulingGroup agentSchedulingGroupDetails);
+
         /// <summary>
         /// Deletes the agent scheduling group.
         /// </summary>

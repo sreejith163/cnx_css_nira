@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\API.Core\Css.Api.Core.EventBus\Css.Api.Core.EventBus.csproj" />
+    <ProjectReference Include="..\Css.Api.Scheduling.Repository\Css.Api.Scheduling.Repository.csproj" />
   </ItemGroup>
 
 </Project>

@@ -92,6 +92,20 @@ namespace Css.Api.Scheduling.Repository
 
             return await FindByIdAsync(query);
         }
+      
+        /// <summary>Gets the agent admin ids by sso.</summary>
+        /// <param name="agentAdminSsoDetails">The agent admin sso details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<Agent> GetAgentAdminIdsBySso(AgentAdminSsoDetails agentAdminSsoDetails)
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
+                Builders<Agent>.Filter.Eq(i => i.Sso, agentAdminSsoDetails.Sso);
+
+            return await FindByIdAsync(query);
+        }
 
         /// <summary>
         /// Gets the agent admin ids by employee identifier.
