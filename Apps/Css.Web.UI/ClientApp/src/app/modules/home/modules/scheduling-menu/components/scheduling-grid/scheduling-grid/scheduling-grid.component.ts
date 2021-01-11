@@ -132,7 +132,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   importedData: ExcelData[] = [];
   sortingType: any[] = [];
   managerCharts: AgentChartResponse[] = [];
-  // timeFilterList: string[] = [];
 
   getAgentInfoSubscription: ISubscription;
   updateAgentScheduleChartSubscription: ISubscription;
@@ -164,9 +163,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tabIndex = AgentScheduleType.Scheduling;
     this.openTimes = this.getOpenTimes();
-    // this.startTimeFilter = this.openTimes[0];
-    // this.endTimeFilter = this.openTimes[this.openTimes.length - 1];
-    // this.timeFilterList = this.getOpenTimes();
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
     this.schedulingStatus = Object.keys(SchedulingStatus).filter(key => isNaN(SchedulingStatus[key]));
     this.sortingType = Object.keys(SortingType).filter(key => isNaN(SortingType[key]));
@@ -344,9 +340,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   changeTimeInterval(interval: number) {
     this.timeIntervals = +interval;
     this.openTimes = this.getOpenTimes();
-    // this.timeFilterList = this.openTimes;
-    // this.startTimeFilter = this.openTimes[0];
-    // this.endTimeFilter = this.openTimes[this.openTimes.length - 1];
   }
 
   changePageSize(pageSize: number) {
@@ -439,7 +432,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       if (result.needRefresh) {
         this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been copied!');
         this.modalRef.result.then(() => {
-          this.loadAgentSchedule(agentScheduleId);
+          if (this.tabIndex === AgentScheduleType.Scheduling) {
+            this.loadAgentSchedule(agentScheduleId);
+          }
           this.loadAgentSchedules();
         });
       } else {
@@ -503,8 +498,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       this.loadAgentScheduleManger();
     } else {
       this.clearStartDate();
-      const fields = 'id,employeeId,employeeName';
-      this.loadAgentSchedules(fields);
+      this.loadAgentSchedules();
     }
   }
 

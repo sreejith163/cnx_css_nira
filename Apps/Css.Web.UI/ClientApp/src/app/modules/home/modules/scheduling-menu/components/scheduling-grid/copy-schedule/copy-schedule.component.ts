@@ -57,6 +57,8 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadAgents();
+    this.loadTranslations();
+    this.subscribeToTranslations();
   }
 
   ngOnDestroy() {
@@ -158,7 +160,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
         let headerPaginationValues = new HeaderPagination();
         headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
         this.totalAgents = headerPaginationValues.totalCount;
-        this.showSelecteddEmployees();
+        this.showSelectedEmployees();
         this.spinnerService.hide(this.spinner);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
@@ -167,7 +169,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getAgentsSubscription);
   }
 
-  private showSelecteddEmployees() {
+  private showSelectedEmployees() {
     if (this.masterSelected || this.checkAll && this.checkedAgents.length === 0 ||
       this.checkedAgents.filter(x => x.isChecked === true).length === this.totalAgents) {
       this.agents.forEach(ele => {
