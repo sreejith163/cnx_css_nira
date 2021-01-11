@@ -412,10 +412,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  openImportSchedule(index: number) {
-    const agentScheduleId = this.totalSchedulingGridData[index]?.id;
+  openImportSchedule() {
     this.getModalPopup(ImportScheduleComponent, 'lg');
-    this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
     this.modalRef.componentInstance.translationValues = this.translationValues;
     this.modalRef.componentInstance.agentScheudleType = this.tabIndex;
 
@@ -423,7 +421,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
       this.getModalPopup(MessagePopUpComponent, 'sm', message);
       this.modalRef.result.then(() => {
-        this.loadAgentSchedule(agentScheduleId);
+        this.loadAgentSchedules();
       });
     });
   }

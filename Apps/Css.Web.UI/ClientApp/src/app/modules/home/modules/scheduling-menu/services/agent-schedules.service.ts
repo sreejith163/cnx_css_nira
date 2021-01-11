@@ -11,6 +11,7 @@ import { UpdateAgentschedulechart } from '../models/update-agent-schedule-chart.
 import { CopyAgentSchedulechart } from '../models/copy-agent-schedule-chart.model';
 import { AgentChartResponse } from '../models/agent-chart-response.model';
 import { ImportShceduleChart } from '../models/import-schedule-chart.model';
+import { UpdateAgentScheduleMangersChart } from '../models/update-agent-schedule-managers-chart.model';
 
 @Injectable()
 export class AgentSchedulesService extends HttpBaseService {
@@ -58,6 +59,13 @@ export class AgentSchedulesService extends HttpBaseService {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/charts`;
 
     return this.http.put<ApiResponseModel>(url, updateAgentScheduleChart)
+    .pipe(catchError(this.handleError));
+  }
+
+  updateScheduleManagerChart(updateAgentScheduleMangagerChart: UpdateAgentScheduleMangersChart) {
+    const url = `${this.baseURL}/AgentSchedules/managercharts`;
+
+    return this.http.put<ApiResponseModel>(url, updateAgentScheduleMangagerChart)
     .pipe(catchError(this.handleError));
   }
 

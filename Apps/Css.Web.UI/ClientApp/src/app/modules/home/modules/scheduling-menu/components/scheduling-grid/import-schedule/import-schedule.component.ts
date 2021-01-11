@@ -24,6 +24,7 @@ import { UpdateAgentScheduleMangersChart } from '../../../models/update-agent-sc
 import { ImportScheduleData } from '../../../models/import-schedule-data.model';
 import { AgentShceduleMangerData } from '../../../models/agent-schedule-manager-data.model';
 import { ManagerExcelData } from '../../../models/manager-excel-data.model';
+import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manager-chart.model';
 
 @Component({
   selector: 'app-import-schedule',
@@ -41,6 +42,8 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   fileSubmitted: boolean;
   jsonData: any[] = [];
   scheduleColumns = ['EmployeeId', 'StartDate', 'EndDate', 'ActivityCode', 'StartTime', 'EndTime'];
+  schedulingManagerColumns = ['EmployeeId', 'StartDate', 'ActivityCode', 'StartTime', 'EndTime'];
+  csvTableHeader: string[];
 
   getAgentSchedulesSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
@@ -62,11 +65,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    // if (this.agentScheudleType === AgentScheduleType.Scheduling) {
-    //   this.jsonData = new Array<ImportShceduleChart>();
-    // } else {
-    //   this.jsonData = new Array<UpdateAgentScheduleMangersChart>();
-    // }
   }
 
   ngOnDestroy() {
@@ -94,7 +92,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           ele.EndTime = '00' + ':' + ele.EndTime.split(':')[1];
         }
       });
-      if (!this.fileFormatValidation && !this.validateInputRecord()) {
+      if (!this.fileFormatValidation && !this.validateHeading()) {
         const employees = new Array<number>();
         this.jsonData.forEach(data => {
           if (employees.filter(x => x === +data.EmployeeId).length === 0) {
@@ -126,6 +124,20 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     }
   }
 
+  private validateHeading() {
+    for (const item of this.csvTableHeader) {
+      if (this.agentScheudleType === AgentScheduleType.Scheduling && this.scheduleColumns.findIndex(x => x === item) === -1 &&
+        !this.jsonData.every(x => x.StartDate === this.jsonData[0].StartDate && x.EndDate === this.jsonData[0].EndDate)) {
+        return true;
+      }
+      if (this.agentScheudleType === AgentScheduleType.SchedulingManager &&
+        this.schedulingManagerColumns.findIndex(x => x === item) === -1 &&
+        !this.jsonData.every(x => x.Date === this.jsonData[0].Date)) {
+        return true;
+      }
+    }
+  }
+
   private readCsvFile() {
     const reader: FileReader = new FileReader();
     reader.readAsText(this.fileUploaded);
@@ -133,14 +145,14 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       const csv = reader.result;
       const results = this.papa.parse(csv as string, { header: false });
       if (results?.data !== undefined && results?.data.length > 0 && results?.errors.length === 0) {
-        const csvTableHeader = results.data[0];
+        this.csvTableHeader = results.data[0];
         const csvTableData = [...results.data.slice(1, results.data.length)];
         for (const ele of csvTableData) {
           const csvJson = this.agentScheudleType === AgentScheduleType.Scheduling ?
             new ExcelData() : new ManagerExcelData();
           if (ele.length > 0) {
             for (let i = 0; i < ele.length; i++) {
-              csvJson[csvTableHeader[i]] = ele[i];
+              csvJson[this.csvTableHeader[i]] = ele[i];
             }
           }
           if (csvJson.EmployeeId) {
@@ -151,66 +163,57 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     };
   }
 
-  private validateInputRecord() {
-    if (this.jsonData.length > 0) {
-      for (const item of this.jsonData) {
+  private validateInputRecord(importRecord: any[]) {
+    if (importRecord.length > 0) {
+      for (const item of importRecord) {
         if (this.agentScheudleType === AgentScheduleType.Scheduling) {
-          if (item.StartDate && item.EndDate) {
-            // if (item.StartDate !== item.EndDate) {
-            //   return true;
-            // }
-            if (!this.jsonData.every(x => x.StartDate === item.StartDate &&
-              x.EndDate === item.EndDate)) {
-              return true;
-            }
-          } else {
-            return true;
+          for (const record of item.agentScheduleCharts) {
+            return this.validateChart(record.charts);
           }
         } else {
-          if (!this.jsonData.every(x => x.Date === item.Date)) {
-            return true;
-          }
+          const chartData = item.agentScheduleManagerChart;
+          return this.validateChart(chartData.charts);
         }
-        if (this.jsonData.filter(x => this.convertToDateFormat(x.StartTime) === this.convertToDateFormat(item.StartTime) &&
-          this.convertToDateFormat(x.EndTime) === this.convertToDateFormat(item.EndTime)).length > 1) {
-          return true;
-        }
-        if (this.jsonData.filter(x => this.convertToDateFormat(x.StartTime) >= this.convertToDateFormat(item.StartTime) &&
-          this.convertToDateFormat(x.StartTime) < this.convertToDateFormat(item.EndTime)).length > 1) {
-          return true;
-        }
-        if (this.jsonData.filter(x => this.convertToDateFormat(x.StartTime) > this.convertToDateFormat(item.StartTime) &&
-          this.convertToDateFormat(x.EndTime) <= this.convertToDateFormat(item.EndTime)).length > 1) {
-          return true;
-        }
-        if (this.jsonData.find(x => this.convertToDateFormat(x.StartTime) < this.convertToDateFormat(item.StartTime) &&
-          this.convertToDateFormat(x.EndTime) >= this.convertToDateFormat(item.EndTime))) {
-          return true;
-        }
-        if (this.jsonData.find(x => this.convertToDateFormat(x.StartTime) < this.convertToDateFormat(item.StartTime) &&
-          this.convertToDateFormat(x.EndTime) === this.convertToDateFormat(item.EndTime))) {
-          return true;
-        }
-        if (item) {
-          for (const property in item) {
-            if (this.scheduleColumns.findIndex(x => x === property) === -1) {
-              return true;
-            }
-          }
-        }
-        return this.validateTimeFormat(item);
       }
     } else {
       return true;
     }
   }
 
-  private validateTimeFormat(data: ExcelData) {
-    if (data.StartTime && data.EndTime) {
-      if (data.StartTime.indexOf(':') > -1 && data.StartTime.indexOf(' ') > -1 &&
-        data.EndTime.indexOf(':') > -1 && data.EndTime.indexOf(' ') > -1) {
-        if (!data.StartTime.split(':')[0] && !data.StartTime.split(':')[1].split(' ')[0] &&
-          !data.EndTime.split(':')[0] && !data.EndTime.split(':')[1].split(' ')[0]) {
+  private validateChart(charts: ScheduleChart[]) {
+    for (const chartItem of charts) {
+      if (charts.filter(x => this.convertToDateFormat(x.startTime) === this.convertToDateFormat(chartItem.startTime) &&
+        this.convertToDateFormat(x.endTime) === this.convertToDateFormat(chartItem.endTime)).length > 1) {
+        return true;
+      }
+      if (charts.filter(x => this.convertToDateFormat(x.startTime) >= this.convertToDateFormat(chartItem.startTime) &&
+        this.convertToDateFormat(x.startTime) < this.convertToDateFormat(chartItem.endTime)).length > 1) {
+        return true;
+      }
+      if (charts.filter(x => this.convertToDateFormat(x.startTime) > this.convertToDateFormat(chartItem.startTime) &&
+        this.convertToDateFormat(x.endTime) <= this.convertToDateFormat(chartItem.endTime)).length > 1) {
+        return true;
+      }
+      if (charts.find(x => this.convertToDateFormat(x.startTime) < this.convertToDateFormat(chartItem.startTime) &&
+        this.convertToDateFormat(x.endTime) >= this.convertToDateFormat(chartItem.endTime))) {
+        return true;
+      }
+      if (charts.find(x => this.convertToDateFormat(x.startTime) < this.convertToDateFormat(chartItem.startTime) &&
+        this.convertToDateFormat(x.endTime) === this.convertToDateFormat(chartItem.endTime))) {
+        return true;
+      }
+      if (this.validateTimeFormat(chartItem) === true) {
+        return true;
+      }
+    }
+  }
+
+  private validateTimeFormat(data: ScheduleChart) {
+    if (data.startTime && data.endTime) {
+      if (data.startTime.indexOf(':') > -1 && data.startTime.indexOf(' ') > -1 &&
+        data.endTime.indexOf(':') > -1 && data.endTime.indexOf(' ') > -1) {
+        if (!data.startTime.split(':')[0] && !data.startTime.split(':')[1].split(' ')[0] &&
+          !data.endTime.split(':')[0] && !data.endTime.split(':')[1].split(' ')[0]) {
           return true;
         }
       } else {
@@ -221,34 +224,48 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     }
   }
 
-  // private matchActivitycodes(activityCodes: Array<string>, schedulingCodes: SchedulingCode[]) {
-  //   let hasMismatch = false;
-  //   if (activityCodes.length > 0) {
-  //     for (const index in activityCodes) {
-  //       if (schedulingCodes.findIndex(x => x.description === activityCodes[index]) === -1) {
-  //         hasMismatch = true;
-  //         break;
-  //       }
-  //     }
-  //   }
-
-  //   this.importAgentScheduleChart(schedulingCodes, hasMismatch);
-  // }
-
   private importAgentScheduleChart(scheduleResponse: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[], hasMismatch?: boolean) {
     const model = this.getImportAgentScheduleChartModel(scheduleResponse, schedulingCodes);
-    this.spinnerService.show(this.spinner, SpinnerOptions);
+    if (!this.validateInputRecord(model.importAgentScheduleCharts)) {
+      this.spinnerService.show(this.spinner, SpinnerOptions);
+      this.importAgentScheduleChartSubscription = this.agentSchedulesService.importAgentScheduleChart(model)
+        .subscribe(() => {
+          this.spinnerService.hide(this.spinner);
+          this.activeModal.close({ partialImport: hasMismatch });
+        }, (error) => {
+          this.spinnerService.hide(this.spinner);
+          console.log(error);
+        });
+      this.subscriptions.push(this.importAgentScheduleChartSubscription);
 
-    this.importAgentScheduleChartSubscription = this.agentSchedulesService.importAgentScheduleChart(model)
-      .subscribe(() => {
-        this.spinnerService.hide(this.spinner);
-        this.activeModal.close({ partialImport: hasMismatch });
-      }, (error) => {
-        this.spinnerService.hide(this.spinner);
-        console.log(error);
-      });
+    } else {
+      const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
+      this.showErrorWarningPopUpMessage(errorMessage);
+    }
+  }
 
-    this.subscriptions.push(this.importAgentScheduleChartSubscription);
+  private updateManagerChart(scheduleResponse: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[], hasMismatch?: boolean) {
+    const model = this.getImportAgentManagerChartModel(scheduleResponse, schedulingCodes);
+    if (!this.validateInputRecord(model.agentScheduleManagers)) {
+      this.spinnerService.show(this.spinner, SpinnerOptions);
+
+      this.importAgentScheduleChartSubscription = this.agentSchedulesService.updateScheduleManagerChart(model)
+        .subscribe(() => {
+          this.spinnerService.hide(this.spinner);
+          this.activeModal.close({ partialImport: hasMismatch });
+        }, (error) => {
+          this.spinnerService.hide(this.spinner);
+          console.log(error);
+        });
+
+      this.subscriptions.push(this.importAgentScheduleChartSubscription);
+
+    } else {
+      const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
+      this.showErrorWarningPopUpMessage(errorMessage);
+    }
+
+
   }
 
   private loadAgentSchedules(employees: number[]) {
@@ -288,9 +305,13 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       this.spinnerService.hide(this.spinner);
       if (scheduleRepsonse.length > 0 && schedulingCodesResponse.length > 0) {
         if (activityCodes.length === schedulingCodesResponse) {
-          this.importAgentScheduleChart(scheduleRepsonse, schedulingCodesResponse, false);
+          this.agentScheudleType === AgentScheduleType.Scheduling ?
+            this.importAgentScheduleChart(scheduleRepsonse, schedulingCodesResponse, false) :
+            this.updateManagerChart(scheduleRepsonse, schedulingCodesResponse, false);
         } else {
-          this.importAgentScheduleChart(scheduleRepsonse, schedulingCodesResponse, true);
+          this.agentScheudleType === AgentScheduleType.Scheduling ?
+            this.importAgentScheduleChart(scheduleRepsonse, schedulingCodesResponse, true) :
+            this.updateManagerChart(scheduleRepsonse, schedulingCodesResponse, true);
         }
       } else {
         const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
@@ -309,7 +330,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       const importData = new ImportScheduleData();
       const chartArray = new Array<ScheduleChart>();
       importData.employeeId = employee.employeeId;
-      importData.dateFrom = new Date(employeeDetails[0].StartDate) ;
+      importData.dateFrom = new Date(employeeDetails[0].StartDate);
       importData.dateTo = new Date(employeeDetails[0].EndDate);
       employeeDetails.forEach(ele => {
         const data = schedulingCodes.find(x => x.description === ele.ActivityCode);
@@ -325,6 +346,33 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         importData.agentScheduleCharts.push(chartData);
       }
       chartModel.importAgentScheduleCharts.push(importData);
+    }
+
+    return chartModel;
+
+  }
+
+  private getImportAgentManagerChartModel(schedules: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[]) {
+    const chartModel = new UpdateAgentScheduleMangersChart();
+    chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
+    for (const employee of schedules) {
+      const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);
+      const importData = new AgentShceduleMangerData();
+      const chartArray = new Array<ScheduleChart>();
+      importData.employeeId = employee.employeeId;
+      employeeDetails.forEach(ele => {
+        const data = schedulingCodes.find(x => x.description === ele.ActivityCode);
+        if (data) {
+          const chart = new ScheduleChart(ele.StartTime, ele.EndTime, data.id);
+          chartArray.push(chart);
+        }
+      });
+      const chartData = new AgentScheduleManagerChart();
+
+      chartData.date = new Date(this.jsonData[0].Date);
+      chartData.charts = chartArray;
+      importData.agentScheduleManagerChart = chartData;
+      chartModel.agentScheduleManagers.push(importData);
     }
 
     return chartModel;

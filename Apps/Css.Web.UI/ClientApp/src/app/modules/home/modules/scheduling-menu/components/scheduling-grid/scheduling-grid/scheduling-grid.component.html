@@ -42,11 +42,17 @@
         {{ 'Search' | translate }}
       </button>
     </div>
-    <div class="col-md-2 col-sm-6">
-      <i class="fa fa-download padding-5 black" title="Import"></i>
-      <i class="fa fa-upload padding-5 black" title="Export"></i>
-    </div>
+   
   </div>
+  <div class="row m-l-r-10 m-b-10 bg-white">
+    <div class="col-md-10">
+    </div>
+    <div class="col-md-2">
+    <i class="fa fa-download padding-5 black float-right" title="Import" (click)="openImportSchedule()"></i>
+    <i class="fa fa-upload padding-5 black float-right" title="Export" (click)="exportToExcel()"></i>
+  </div>
+  </div>
+    
 
   <tabset #staticTabs>
     <!-- tab 1 starting -->
@@ -267,14 +273,6 @@
                             <i
                               class="fa fa-copy padding-5 black"></i>{{ 'Copy Schedule' | translate }}
                           </button>
-                          <button class="btn btn-default m-l-10" (click)="openImportSchedule(i)">
-                            <i
-                              class="fa fa-download padding-5 black"></i>{{ 'Import Schedule' | translate }}
-                          </button>
-                          <button class="btn btn-default m-l-10" (click)="exportToExcel()">
-                            <i
-                              class="fa fa-upload padding-5 black"></i>{{ 'Export Schedule' | translate }}
-                          </button>
                         </div>
                         <div class="col-md-1 row">
                           <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
@@ -476,14 +474,6 @@
         <button class="btn btn-default copy-button m-l-10" id="btn_copy_schedule" (click)="openCopySchedule(selectedRow)">
           <i
             class="fa fa-copy padding-5 black"></i>{{ 'Copy Schedule' | translate }}
-        </button>
-        <button class="btn btn-default copy-button m-l-10" (click)="openImportSchedule(selectedRow)">
-          <i
-            class="fa fa-download padding-5 black"></i>{{ 'Import Schedule' | translate }}
-        </button>
-        <button class="btn btn-default copy-button m-l-10" (click)="exportToExcel()">
-          <i
-            class="fa fa-upload padding-5 black"></i>{{ 'Export Schedule' | translate }}
         </button>
       </div>
       <div class="col-md-1 row">
