@@ -100,7 +100,7 @@ namespace Css.Api.Setup.Business
 
             await _repository.SaveAsync();
 
-            await _bus.SendCommand<CreateClientCommand>(MassTransitConstants.ClientCreateCommandRouteKey, 
+             _bus.SendCommand<CreateClientCommand>(MassTransitConstants.ClientCreateCommandRouteKey, 
                 new { 
                     Id = clientRequest.Id, 
                     Name = clientRequest.Name,
@@ -150,7 +150,7 @@ namespace Css.Api.Setup.Business
 
             if (!clientDetails.IsUpdateRevert)
             {
-                await _bus.SendCommand<UpdateClientCommand>(
+                 _bus.SendCommand<UpdateClientCommand>(
                     MassTransitConstants.ClientUpdateCommandRouteKey,
                     new
                     {
@@ -230,7 +230,7 @@ namespace Css.Api.Setup.Business
             _repository.Clients.UpdateClient(client);
             await _repository.SaveAsync();
 
-            await _bus.SendCommand<DeleteClientCommand>(
+             _bus.SendCommand<DeleteClientCommand>(
                 MassTransitConstants.ClientDeleteCommandRouteKey,
                 new
                 {

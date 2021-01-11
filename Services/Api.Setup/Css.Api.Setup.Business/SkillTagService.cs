@@ -123,7 +123,7 @@ namespace Css.Api.Setup.Business
 
             await _repository.SaveAsync();
 
-            await _bus.SendCommand<CreateSkillTagCommand>(MassTransitConstants.SkillTagCreateCommandRouteKey,
+            _bus.SendCommand<CreateSkillTagCommand>(MassTransitConstants.SkillTagCreateCommandRouteKey,
                new
                {
                    Id = skillTagRequest.Id,
@@ -206,7 +206,7 @@ namespace Css.Api.Setup.Business
                 UpdateSkillTag skillTagPreUpdate = null;
                 var skillTagPreRequest = _mapper.Map(skillTagDetailsPreUpdate, skillTagPreUpdate);
 
-                await _bus.SendCommand<UpdateSkillTagCommand>(
+                _bus.SendCommand<UpdateSkillTagCommand>(
                     MassTransitConstants.SkillTagUpdateCommandRouteKey,
                     new
                     {
@@ -314,7 +314,7 @@ namespace Css.Api.Setup.Business
             var skillTagPreRequest = _mapper.Map(skillTagDetailsPreUpdate, skillTagPreUpdate);
 
 
-            await _bus.SendCommand<DeleteSkillTagCommand>(
+            _bus.SendCommand<DeleteSkillTagCommand>(
                MassTransitConstants.SkillTagDeleteCommandRouteKey,
                new
                {

@@ -105,7 +105,7 @@ namespace Css.Api.Admin.Business
 
             await _repository.SaveAsync();
 
-            await _bus.SendCommand<CreateSchedulingCodeCommand>(MassTransitConstants.SchedulingCodeCreateCommandRouteKey,
+            _bus.SendCommand<CreateSchedulingCodeCommand>(MassTransitConstants.SchedulingCodeCreateCommandRouteKey,
                new
                {
                    Id = schedulingCodeRequest.Id,
@@ -177,7 +177,7 @@ namespace Css.Api.Admin.Business
                 UpdateSchedulingCode schedulingCodePreUpdate = null;
                 var schedulingCodePreRequest = _mapper.Map(schedulingCodeDetailsPreUpdate, schedulingCodePreUpdate);
 
-                await _bus.SendCommand<UpdateSchedulingCodeCommand>(
+                _bus.SendCommand<UpdateSchedulingCodeCommand>(
                     MassTransitConstants.SchedulingCodeUpdateCommandRouteKey,
                     new
                     {
@@ -264,7 +264,7 @@ namespace Css.Api.Admin.Business
             var schedulingCodePreRequest = _mapper.Map(schedulingCodeDetailsPreUpdate, schedulingCodePreUpdate);
 
 
-            await _bus.SendCommand<DeleteSchedulingCodeCommand>(
+            _bus.SendCommand<DeleteSchedulingCodeCommand>(
                MassTransitConstants.SchedulingCodeDeleteCommandRouteKey,
                new
                {

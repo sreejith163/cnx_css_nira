@@ -111,7 +111,7 @@ namespace Css.Api.Setup.Business
 
             await _repository.SaveAsync();
 
-            await _bus.SendCommand<CreateClientLOBCommand>(MassTransitConstants.ClientLOBCreateCommandRouteKey,
+             _bus.SendCommand<CreateClientLOBCommand>(MassTransitConstants.ClientLOBCreateCommandRouteKey,
                 new
                 {
                     Id = clientLOBGroupRequest.Id,
@@ -171,7 +171,7 @@ namespace Css.Api.Setup.Business
 
             if (!clientLOBGroupDetails.IsUpdateRevert)
             {
-                await _bus.SendCommand<UpdateClientLOBCommand>(
+                 _bus.SendCommand<UpdateClientLOBCommand>(
                     MassTransitConstants.ClientLOBUpdateCommandRouteKey,
                     new
                     {
@@ -253,7 +253,7 @@ namespace Css.Api.Setup.Business
             _repository.ClientLOBGroups.UpdateClientLOBGroup(clientLOBGroup);
             await _repository.SaveAsync();
 
-            await _bus.SendCommand<DeleteClientLOBCommand>(
+             _bus.SendCommand<DeleteClientLOBCommand>(
                 MassTransitConstants.ClientLOBDeleteCommandRouteKey,
                 new
                 {

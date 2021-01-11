@@ -120,7 +120,7 @@ namespace Css.Api.Setup.Business
 
             await _repository.SaveAsync();
 
-            await _bus.SendCommand<CreateAgentSchedulingGroupCommand>(MassTransitConstants.AgentSchedulingGroupCreateCommandRouteKey,
+            _bus.SendCommand<CreateAgentSchedulingGroupCommand>(MassTransitConstants.AgentSchedulingGroupCreateCommandRouteKey,
               new
               {
                   Id = agentSchedulingGroupRequest.Id,
@@ -223,7 +223,7 @@ namespace Css.Api.Setup.Business
                 UpdateAgentSchedulingGroup agentSchedulingGroupPreUpdate = null;
                 var agentSchedulingGroupPreRequest = _mapper.Map(agentSchedulingGroupDetailsPreUpdate, agentSchedulingGroupPreUpdate);
 
-                await _bus.SendCommand<UpdateAgentSchedulingGroupCommand>(
+                 _bus.SendCommand<UpdateAgentSchedulingGroupCommand>(
                     MassTransitConstants.AgentSchedulingGroupUpdateCommandRouteKey,
                     new
                     {
@@ -332,7 +332,7 @@ namespace Css.Api.Setup.Business
             UpdateAgentSchedulingGroup agentSchedulingGroupPreUpdate = null;
             var agentSchedulingGroupPreRequest = _mapper.Map(agentSchedulingGroupDetailsPreUpdate, agentSchedulingGroupPreUpdate);
 
-            await _bus.SendCommand<DeleteAgentSchedulingGroupCommand>(
+             _bus.SendCommand<DeleteAgentSchedulingGroupCommand>(
                MassTransitConstants.AgentSchedulingGroupDeleteCommandRouteKey,
                new
                {
