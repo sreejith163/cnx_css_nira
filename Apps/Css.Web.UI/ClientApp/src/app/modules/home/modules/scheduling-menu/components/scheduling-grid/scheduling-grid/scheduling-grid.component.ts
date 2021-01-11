@@ -420,7 +420,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   openCopySchedule(index: number) {
-    debugger
     const agentScheduleId = this.totalSchedulingGridData[index]?.id;
     const employeeId = this.totalSchedulingGridData[index]?.employeeId;
     this.getModalPopup(CopyScheduleComponent, 'lg');

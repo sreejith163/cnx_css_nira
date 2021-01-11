@@ -10,7 +10,6 @@ import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.s
 import { SchedulingCode } from '../../../../system-admin/models/scheduling-code.model';
 import { AgentSchedulesService } from '../../../services/agent-schedules.service';
 import { AgentScheduleChart } from '../../../models/agent-schedule-chart.model';
-import { UpdateAgentschedulechart } from '../../../models/update-agent-schedule-chart.model';
 import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { ScheduleChart } from '../../../models/schedule-chart.model';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -42,7 +41,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   fileSubmitted: boolean;
   jsonData: any[] = [];
   scheduleColumns = ['EmployeeId', 'StartDate', 'EndDate', 'ActivityCode', 'StartTime', 'EndTime'];
-  schedulingManagerColumns = ['EmployeeId', 'StartDate', 'ActivityCode', 'StartTime', 'EndTime'];
+  schedulingManagerColumns = ['EmployeeId', 'Date', 'ActivityCode', 'StartTime', 'EndTime'];
   csvTableHeader: string[];
 
   getAgentSchedulesSubscription: ISubscription;
@@ -50,7 +49,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   importAgentScheduleChartSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
-  // @Input() agentScheduleId: string;
   @Input() agentScheudleType: AgentScheduleType;
   @Input() translationValues: TranslationDetails[];
 
@@ -126,13 +124,12 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private validateHeading() {
     for (const item of this.csvTableHeader) {
-      if (this.agentScheudleType === AgentScheduleType.Scheduling && this.scheduleColumns.findIndex(x => x === item) === -1 &&
-        !this.jsonData.every(x => x.StartDate === this.jsonData[0].StartDate && x.EndDate === this.jsonData[0].EndDate)) {
+      if (this.agentScheudleType === AgentScheduleType.Scheduling &&
+         this.scheduleColumns.findIndex(x => x === item) === -1) {
         return true;
       }
       if (this.agentScheudleType === AgentScheduleType.SchedulingManager &&
-        this.schedulingManagerColumns.findIndex(x => x === item) === -1 &&
-        !this.jsonData.every(x => x.Date === this.jsonData[0].Date)) {
+        this.schedulingManagerColumns.findIndex(x => x === item) === -1) {
         return true;
       }
     }
@@ -165,7 +162,17 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private validateInputRecord(importRecord: any[]) {
     if (importRecord.length > 0) {
+      if (this.agentScheudleType === AgentScheduleType.Scheduling &&
+        !importRecord.every(x => Date.parse(x?.dateFrom) === Date.parse(importRecord[0]?.dateFrom) &&
+        Date.parse(x?.dateTo) === Date.parse(importRecord[0]?.dateTo))) {
+        return true;
+      }
       for (const item of importRecord) {
+        if (this.agentScheudleType === AgentScheduleType.SchedulingManager &&
+          !importRecord.every(x => Date.parse(x?.agentScheduleManagerChart?.date) ===
+          Date.parse(importRecord[0]?.agentScheduleManagerChart?.date))) {
+          return true;
+        }
         if (this.agentScheudleType === AgentScheduleType.Scheduling) {
           for (const record of item.agentScheduleCharts) {
             return this.validateChart(record.charts);
@@ -391,7 +398,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private convertToDateFormat(time: string) {
     if (time) {
-      const count = time.split(' ')[1] === 'pm' ? 12 : undefined;
+      const count = time.split(' ')[1] === 'pm' || time.split(' ')[1] === 'PM' ? 12 : undefined;
       if (count) {
         time = (+time.split(':')[0] + 12) + ':' + time.split(':')[1].split(' ')[0];
       } else {
