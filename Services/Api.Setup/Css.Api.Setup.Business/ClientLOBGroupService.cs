@@ -111,7 +111,7 @@ namespace Css.Api.Setup.Business
 
             await _repository.SaveAsync();
 
-             _bus.SendCommand<CreateClientLOBCommand>(MassTransitConstants.ClientLOBCreateCommandRouteKey,
+            await _bus.SendCommand<CreateClientLOBCommand>(MassTransitConstants.ClientLOBCreateCommandRouteKey,
                 new
                 {
                     Id = clientLOBGroupRequest.Id,
@@ -171,7 +171,7 @@ namespace Css.Api.Setup.Business
 
             if (!clientLOBGroupDetails.IsUpdateRevert)
             {
-                 _bus.SendCommand<UpdateClientLOBCommand>(
+                await _bus.SendCommand<UpdateClientLOBCommand>(
                     MassTransitConstants.ClientLOBUpdateCommandRouteKey,
                     new
                     {
@@ -253,20 +253,20 @@ namespace Css.Api.Setup.Business
             _repository.ClientLOBGroups.UpdateClientLOBGroup(clientLOBGroup);
             await _repository.SaveAsync();
 
-             _bus.SendCommand<DeleteClientLOBCommand>(
-                MassTransitConstants.ClientLOBDeleteCommandRouteKey,
-                new
-                {
-                    Id = clientLOBGroup.Id,
-                    Name = clientLOBDetailsPreUpdate.Name,
-                    ClientId = clientLOBDetailsPreUpdate.ClientId,
-                    TimezoneId = clientLOBDetailsPreUpdate.TimezoneId,
-                    FirstDayOfWeek = clientLOBDetailsPreUpdate.FirstDayOfWeek,
-                    ModifiedByOldValue = clientLOBDetailsPreUpdate.ModifiedBy,
-                    IsDeletedOldValue = clientLOBDetailsPreUpdate.IsDeleted,
-                    ModifiedDateOldValue = clientLOBDetailsPreUpdate.ModifiedDate,
-                    IsDeletedNewValue = clientLOBGroup.IsDeleted
-                });
+            await _bus.SendCommand<DeleteClientLOBCommand>(
+               MassTransitConstants.ClientLOBDeleteCommandRouteKey,
+               new
+               {
+                   Id = clientLOBGroup.Id,
+                   Name = clientLOBDetailsPreUpdate.Name,
+                   ClientId = clientLOBDetailsPreUpdate.ClientId,
+                   TimezoneId = clientLOBDetailsPreUpdate.TimezoneId,
+                   FirstDayOfWeek = clientLOBDetailsPreUpdate.FirstDayOfWeek,
+                   ModifiedByOldValue = clientLOBDetailsPreUpdate.ModifiedBy,
+                   IsDeletedOldValue = clientLOBDetailsPreUpdate.IsDeleted,
+                   ModifiedDateOldValue = clientLOBDetailsPreUpdate.ModifiedDate,
+                   IsDeletedNewValue = clientLOBGroup.IsDeleted
+               });
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }

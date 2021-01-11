@@ -44,7 +44,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   @Input() agentSchedulingGroupId: number;
   @Input() employeeId: number;
   @Input() agentScheduleId: string;
-  @Input() agentScheudleType: AgentScheduleType;
+  @Input() agentScheduleType: AgentScheduleType;
 
   constructor(
     private genericStateManagerService: GenericStateManagerService,
@@ -212,7 +212,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const copyData = new CopyAgentSchedulechart();
     copyData.agentSchedulingGroupId = this.agentSchedulingGroupId;
-    copyData.agentScheduleType = this.agentScheudleType;
+    copyData.agentScheduleType = this.agentScheduleType;
     copyData.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     copyData.employeeIds = this.masterSelected ? [] : copiedAgents;
 

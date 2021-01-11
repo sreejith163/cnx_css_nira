@@ -123,17 +123,17 @@ namespace Css.Api.Setup.Business
 
             await _repository.SaveAsync();
 
-            _bus.SendCommand<CreateSkillTagCommand>(MassTransitConstants.SkillTagCreateCommandRouteKey,
-               new
-               {
-                   Id = skillTagRequest.Id,
-                   Name = skillTagRequest.Name,
-                   ClientId = skillTagRequest.ClientId,
-                   ClientLobGroupId = skillTagRequest.ClientLobGroupId,
-                   SkillGroupId = skillTagRequest.SkillGroupId,
-                   OperationHour = JsonConvert.SerializeObject(skillTagDetails.OperationHour),
-                   ModifiedDate = skillTagRequest.ModifiedDate
-               });
+            await _bus.SendCommand<CreateSkillTagCommand>(MassTransitConstants.SkillTagCreateCommandRouteKey,
+                new
+                {
+                    Id = skillTagRequest.Id,
+                    Name = skillTagRequest.Name,
+                    ClientId = skillTagRequest.ClientId,
+                    ClientLobGroupId = skillTagRequest.ClientLobGroupId,
+                    SkillGroupId = skillTagRequest.SkillGroupId,
+                    OperationHour = JsonConvert.SerializeObject(skillTagDetails.OperationHour),
+                    ModifiedDate = skillTagRequest.ModifiedDate
+                });
 
             return new CSSResponse(new SkillTagIdDetails { SkillTagId = skillTagRequest.Id }, HttpStatusCode.Created);
         }
@@ -206,7 +206,7 @@ namespace Css.Api.Setup.Business
                 UpdateSkillTag skillTagPreUpdate = null;
                 var skillTagPreRequest = _mapper.Map(skillTagDetailsPreUpdate, skillTagPreUpdate);
 
-                _bus.SendCommand<UpdateSkillTagCommand>(
+                await _bus.SendCommand<UpdateSkillTagCommand>(
                     MassTransitConstants.SkillTagUpdateCommandRouteKey,
                     new
                     {
@@ -314,7 +314,7 @@ namespace Css.Api.Setup.Business
             var skillTagPreRequest = _mapper.Map(skillTagDetailsPreUpdate, skillTagPreUpdate);
 
 
-            _bus.SendCommand<DeleteSkillTagCommand>(
+            await _bus.SendCommand<DeleteSkillTagCommand>(
                MassTransitConstants.SkillTagDeleteCommandRouteKey,
                new
                {

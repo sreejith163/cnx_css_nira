@@ -408,7 +408,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   openImportSchedule() {
     this.getModalPopup(ImportScheduleComponent, 'lg');
     this.modalRef.componentInstance.translationValues = this.translationValues;
-    this.modalRef.componentInstance.agentScheudleType = this.tabIndex;
+    this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
 
     this.modalRef.result.then((result) => {
       const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
@@ -427,7 +427,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.modalRef.componentInstance.translationValues = this.translationValues;
     this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
     this.modalRef.componentInstance.employeeId = employeeId;
-    this.modalRef.componentInstance.agentScheudleType = this.tabIndex;
+    this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
 
     this.modalRef.result.then((result) => {
       if (result.needRefresh) {

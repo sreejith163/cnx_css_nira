@@ -96,7 +96,6 @@ namespace Css.Api.Setup.Business
         public async Task<CSSResponse> CreateAgentSchedulingGroup(CreateAgentSchedulingGroup agentSchedulingGroupDetails)
         {
             var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentSchedulingGroupDetails.SkillTagId };
-            var agentSchedulingGroupNameDetails = new AgentSchedulingGroupNameDetails { Name = agentSchedulingGroupDetails.Name };
 
             var skillTag = await _repository.SkillTags.GetSkillTag(skillTagIdDetails);
             if (skillTag == null)
@@ -120,7 +119,7 @@ namespace Css.Api.Setup.Business
 
             await _repository.SaveAsync();
 
-            _bus.SendCommand<CreateAgentSchedulingGroupCommand>(MassTransitConstants.AgentSchedulingGroupCreateCommandRouteKey,
+            await _bus.SendCommand<CreateAgentSchedulingGroupCommand>(MassTransitConstants.AgentSchedulingGroupCreateCommandRouteKey,
               new
               {
                   Id = agentSchedulingGroupRequest.Id,
@@ -166,7 +165,7 @@ namespace Css.Api.Setup.Business
             var isSchedulingGroupExistsForSkillTag = matchingSchedulingGroupCount > 0;
             if (isSchedulingGroupExistsForSkillTag)
             {
-                if (!agentSchedulingGroupDetails.IsUpdateRevert 
+                if (!agentSchedulingGroupDetails.IsUpdateRevert
                     && agentSchedulingGroups.FirstOrDefault().Id != agentSchedulingGroupIdDetails.AgentSchedulingGroupId)
                 {
                     return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
@@ -223,7 +222,7 @@ namespace Css.Api.Setup.Business
                 UpdateAgentSchedulingGroup agentSchedulingGroupPreUpdate = null;
                 var agentSchedulingGroupPreRequest = _mapper.Map(agentSchedulingGroupDetailsPreUpdate, agentSchedulingGroupPreUpdate);
 
-                 _bus.SendCommand<UpdateAgentSchedulingGroupCommand>(
+                await _bus.SendCommand<UpdateAgentSchedulingGroupCommand>(
                     MassTransitConstants.AgentSchedulingGroupUpdateCommandRouteKey,
                     new
                     {
@@ -332,7 +331,7 @@ namespace Css.Api.Setup.Business
             UpdateAgentSchedulingGroup agentSchedulingGroupPreUpdate = null;
             var agentSchedulingGroupPreRequest = _mapper.Map(agentSchedulingGroupDetailsPreUpdate, agentSchedulingGroupPreUpdate);
 
-             _bus.SendCommand<DeleteAgentSchedulingGroupCommand>(
+            await _bus.SendCommand<DeleteAgentSchedulingGroupCommand>(
                MassTransitConstants.AgentSchedulingGroupDeleteCommandRouteKey,
                new
                {

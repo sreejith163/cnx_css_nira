@@ -172,11 +172,11 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            //var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
-            //if (!hasValidCodes)
-            //{
-            //    return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
-            //}
+            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            }
 
             _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
 
@@ -192,11 +192,11 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> UpdateAgentScheduleMangerChart(UpdateAgentScheduleManagerChart agentScheduleManagerChartDetails)
         {
-            //var hasValidCodes = await HasValidSchedulingCodes(agentScheduleManagerChartDetails);
-            //if (!hasValidCodes)
-            //{
-            //    return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
-            //}
+            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleManagerChartDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            }
 
             foreach (var agentScheduleManager in agentScheduleManagerChartDetails.AgentScheduleManagers)
             {
@@ -217,11 +217,11 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails)
         {
-            //var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
-            //if (!hasValidCodes)
-            //{
-            //    return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
-            //}
+            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            }
 
             foreach (var importAgentScheduleChart in agentScheduleDetails.ImportAgentScheduleCharts)
             {
@@ -378,6 +378,8 @@ namespace Css.Api.Scheduling.Business
                     }
                 }
             }
+
+            codes = codes.Distinct().ToList();
 
             if (codes.Any())
             {

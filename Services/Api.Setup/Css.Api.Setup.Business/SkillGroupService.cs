@@ -115,7 +115,7 @@ namespace Css.Api.Setup.Business
 
             await _repository.SaveAsync();
 
-            _bus.SendCommand<CreateSkillGroupCommand>(MassTransitConstants.SkillGroupCreateCommandRouteKey,
+            await _bus.SendCommand<CreateSkillGroupCommand>(MassTransitConstants.SkillGroupCreateCommandRouteKey,
                new
                {
                    Id = skillGroupRequest.Id,
@@ -200,7 +200,7 @@ namespace Css.Api.Setup.Business
                 UpdateSkillGroup skillGroupPreUpdate = null;
                 var skillGroupPreRequest = _mapper.Map(skillGroupDetailsPreUpdate, skillGroupPreUpdate);
 
-                _bus.SendCommand<UpdateSkillGroupCommand>(
+                await _bus.SendCommand<UpdateSkillGroupCommand>(
                     MassTransitConstants.SkillGroupUpdateCommandRouteKey,
                     new
                     {
@@ -305,7 +305,7 @@ namespace Css.Api.Setup.Business
             var skillGroupPreRequest = _mapper.Map(skillGroupDetailsPreUpdate, skillGroupPreUpdate);
 
 
-            _bus.SendCommand<DeleteSkillGroupCommand>(
+            await _bus.SendCommand<DeleteSkillGroupCommand>(
                MassTransitConstants.SkillGroupDeleteCommandRouteKey,
                new
                {

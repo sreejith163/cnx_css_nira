@@ -49,7 +49,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   importAgentScheduleChartSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
-  @Input() agentScheudleType: AgentScheduleType;
+  @Input() agentScheduleType: AgentScheduleType;
   @Input() translationValues: TranslationDetails[];
 
   constructor(
@@ -124,11 +124,11 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private validateHeading() {
     for (const item of this.csvTableHeader) {
-      if (this.agentScheudleType === AgentScheduleType.Scheduling &&
+      if (this.agentScheduleType === AgentScheduleType.Scheduling &&
          this.scheduleColumns.findIndex(x => x === item) === -1) {
         return true;
       }
-      if (this.agentScheudleType === AgentScheduleType.SchedulingManager &&
+      if (this.agentScheduleType === AgentScheduleType.SchedulingManager &&
         this.schedulingManagerColumns.findIndex(x => x === item) === -1) {
         return true;
       }
@@ -145,7 +145,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         this.csvTableHeader = results.data[0];
         const csvTableData = [...results.data.slice(1, results.data.length)];
         for (const ele of csvTableData) {
-          const csvJson = this.agentScheudleType === AgentScheduleType.Scheduling ?
+          const csvJson = this.agentScheduleType === AgentScheduleType.Scheduling ?
             new ExcelData() : new ManagerExcelData();
           if (ele.length > 0) {
             for (let i = 0; i < ele.length; i++) {
@@ -162,18 +162,18 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private validateInputRecord(importRecord: any[]) {
     if (importRecord.length > 0) {
-      if (this.agentScheudleType === AgentScheduleType.Scheduling &&
+      if (this.agentScheduleType === AgentScheduleType.Scheduling &&
         !importRecord.every(x => Date.parse(x?.dateFrom) === Date.parse(importRecord[0]?.dateFrom) &&
         Date.parse(x?.dateTo) === Date.parse(importRecord[0]?.dateTo))) {
         return true;
       }
       for (const item of importRecord) {
-        if (this.agentScheudleType === AgentScheduleType.SchedulingManager &&
+        if (this.agentScheduleType === AgentScheduleType.SchedulingManager &&
           !importRecord.every(x => Date.parse(x?.agentScheduleManagerChart?.date) ===
           Date.parse(importRecord[0]?.agentScheduleManagerChart?.date))) {
           return true;
         }
-        if (this.agentScheudleType === AgentScheduleType.Scheduling) {
+        if (this.agentScheduleType === AgentScheduleType.Scheduling) {
           for (const record of item.agentScheduleCharts) {
             return this.validateChart(record.charts);
           }
@@ -311,17 +311,12 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
       this.spinnerService.hide(this.spinner);
       if (scheduleRepsonse.length > 0 && schedulingCodesResponse.length > 0) {
-        if (activityCodes.length === schedulingCodesResponse) {
-          this.agentScheudleType === AgentScheduleType.Scheduling ?
-            this.importAgentScheduleChart(scheduleRepsonse, schedulingCodesResponse, false) :
-            this.updateManagerChart(scheduleRepsonse, schedulingCodesResponse, false);
-        } else {
-          this.agentScheudleType === AgentScheduleType.Scheduling ?
-            this.importAgentScheduleChart(scheduleRepsonse, schedulingCodesResponse, true) :
-            this.updateManagerChart(scheduleRepsonse, schedulingCodesResponse, true);
-        }
+        const hasMismatch = activityCodes.length !== schedulingCodesResponse?.length;
+        this.agentScheduleType === AgentScheduleType.Scheduling ?
+          this.importAgentScheduleChart(scheduleRepsonse, schedulingCodesResponse, hasMismatch) :
+          this.updateManagerChart(scheduleRepsonse, schedulingCodesResponse, hasMismatch);
       } else {
-        const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
+        const errorMessage = `An error occurred upon importing the file. Please check the following<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
         this.showErrorWarningPopUpMessage(errorMessage);
       }
     }, error => {
@@ -387,7 +382,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   private showErrorWarningPopUpMessage(contentMessage: any) {
-    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'md' };
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
     modalRef.componentInstance.headingMessage = 'Error';
     modalRef.componentInstance.contentMessage = contentMessage;

@@ -262,7 +262,10 @@ namespace Css.Api.Scheduling.Repository
             switch (copyAgentScheduleRequest.AgentScheduleType)
             {
                 case AgentScheduleType.SchedulingTab:
-                    update = update.Set(x => x.AgentScheduleCharts, agentSchedule.AgentScheduleCharts);
+                    update = update
+                        .Set(x => x.DateFrom, agentSchedule.DateFrom)
+                        .Set(x => x.DateTo, agentSchedule.DateTo)
+                        .Set(x => x.AgentScheduleCharts, agentSchedule.AgentScheduleCharts);
                     break;
 
                 case AgentScheduleType.SchedulingMangerTab:

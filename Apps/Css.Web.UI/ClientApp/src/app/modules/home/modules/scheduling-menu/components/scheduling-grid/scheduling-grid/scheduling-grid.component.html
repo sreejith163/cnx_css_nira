@@ -14,27 +14,30 @@
   </div>
   <div class="row m-l-r-10 m-b-10">
     <div class="col-md-3 d-flex flex-column">
-     {{ 'Scheduling_grid' | translate }}
+      {{ 'Scheduling_grid' | translate }}
       <app-agent-scheduling-group-typeahead [agentSchedulingGroupId]="agentSchedulingGroupId"
         (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
       </app-agent-scheduling-group-typeahead>
     </div>
     <div class="col-md-3 d-flex flex-column padding-t-24">
       <div class="input-group">
-        <input class="form-control" placeholder="{{'Select Start Date' | translate}}" name="dp" ngbDatepicker [readonly]="true" [(ngModel)]="startDate"
-          [footerTemplate]="footerTemplate" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker" (dateSelect)="onSelectStartDate($event)">
+        <input class="form-control" placeholder="{{'Select Start Date' | translate}}" name="dp" ngbDatepicker
+          [readonly]="true" [(ngModel)]="startDate" [footerTemplate]="footerTemplate"
+          [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker" (dateSelect)="onSelectStartDate($event)">
         <div class="input-group-append">
           <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
         </div>
         <ng-template #footerTemplate>
           <button class="btn btn-primary btn-sm m-2 float-left" (click)="setStartDateAsToday(); d.close()"
             id="btn_today">{{'Today' | translate}}</button>
-          <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close();clearStartDate();" id="btn_close">{{'Clear' | translate}}</button>
+          <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close();clearStartDate();"
+            id="btn_close">{{'Clear' | translate}}</button>
         </ng-template>
       </div>
     </div>
     <div class="col-md-2 col-sm-6 padding-t-24">
-      <input type="text" class="form-control" placeholder="{{'Type_here_to_search' | translate}}" [(ngModel)]="searchKeyword">
+      <input type="text" class="form-control" placeholder="{{'Type_here_to_search' | translate}}"
+        [(ngModel)]="searchKeyword">
     </div>
     <div class="col-md-2 col-sm-6">
       <button class="form-control mt-4" id="btn_search" (click)="search()"><i class="fa fa-search"
@@ -42,57 +45,57 @@
         {{ 'Search' | translate }}
       </button>
     </div>
-   
+
   </div>
   <div class="row m-l-r-10 m-b-10 bg-white">
     <div class="col-md-10">
     </div>
     <div class="col-md-2">
-    <i class="fa fa-download padding-5 black float-right" title="Import" (click)="openImportSchedule()"></i>
-    <i class="fa fa-upload padding-5 black float-right" title="Export" (click)="exportToExcel()"></i>
+      <i class="fa fa-download padding-5 black float-right" [ngbTooltip]="'Import'" (click)="openImportSchedule()"></i>
+      <i class="fa fa-upload padding-5 black float-right" [ngbTooltip]="'Export'" (click)="exportToExcel()"></i>
+    </div>
   </div>
-  </div>
-    
+
 
   <tabset #staticTabs>
     <!-- tab 1 starting -->
     <tab heading="Scheduling" id="tab1" (selectTab)="openTab(0)">
-  <div class="row">
-    <div class="col-md-12 mt-2 table-responsive">
-      <div class="scrollable-table">
-        <table id="tableSortExample " class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th></th>
-              <th class="sortable-field" (click)="sort('employeeId', sortBy)">
-                {{ 'Employee_id' | translate }}
-                <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                  [class.fa-sort-up]="sortBy === 'asc'">
-                </i>
-              </th>
-              <th class="sortable-field" (click)="sort('employeeName', sortBy)">
-                {{ 'Name' | translate }}
-                <i *ngIf="orderBy !== 'employeeName'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'employeeName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                  [class.fa-sort-up]="sortBy === 'asc'">
-                </i>
-              </th>
-              <th class="sortable-field width-18-p" (click)="sort('dateFrom', sortBy)">
-                {{ 'Date_range' | translate }}
-                <i *ngIf="orderBy !== 'dateFrom'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'dateFrom'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                  [class.fa-sort-up]="sortBy === 'asc'">
-                </i>
-              </th>
-              <th class="sortable-field" (click)="sort('status', sortBy)">
-                {{ 'Status' | translate }}
-                <i *ngIf="orderBy !== 'status'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'status'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                  [class.fa-sort-up]="sortBy === 'asc'">
-                </i>
-              </th>
-              <!-- <th class="sortable-field" (click)="sort('createdBy', sortBy)">
+      <div class="row">
+        <div class="col-md-12 mt-2 table-responsive">
+          <div class="scrollable-table">
+            <table id="tableSortExample " class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="sortable-field" (click)="sort('employeeId', sortBy)">
+                    {{ 'Employee_id' | translate }}
+                    <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa"
+                      [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
+                    </i>
+                  </th>
+                  <th class="sortable-field" (click)="sort('employeeName', sortBy)">
+                    {{ 'Name' | translate }}
+                    <i *ngIf="orderBy !== 'employeeName'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'employeeName'" class="fa"
+                      [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
+                    </i>
+                  </th>
+                  <th class="sortable-field width-18-p" (click)="sort('dateFrom', sortBy)">
+                    {{ 'Date_range' | translate }}
+                    <i *ngIf="orderBy !== 'dateFrom'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'dateFrom'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                      [class.fa-sort-up]="sortBy === 'asc'">
+                    </i>
+                  </th>
+                  <th class="sortable-field" (click)="sort('status', sortBy)">
+                    {{ 'Status' | translate }}
+                    <i *ngIf="orderBy !== 'status'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'status'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                      [class.fa-sort-up]="sortBy === 'asc'">
+                    </i>
+                  </th>
+                  <!-- <th class="sortable-field" (click)="sort('createdBy', sortBy)">
                 {{ 'Created_by' | translate }}
                 <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
@@ -106,224 +109,230 @@
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th> -->
-              <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
-                {{ 'Modified_by' | translate }}
-                <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                  [class.fa-sort-up]="sortBy === 'asc'">
-                </i>
-              </th>
-              <th class="sortable-field" (click)="sort('modifiedDate', sortBy)">
-                {{ 'Modified_date' | translate }}
-                <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                  [class.fa-sort-up]="sortBy === 'asc'">
-                </i>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <ngx-spinner [name]="spinner"></ngx-spinner>
-            <ng-container
-              *ngFor="let el of totalSchedulingGridData; let i = index">
-              <tr class="table-row">
-                <td>
-                  <i class="expand-icon fa padding-5 pointer"
-                    [ngClass]="( selectedGrid?.employeeId === el?.employeeId ) ? 'fa-minus' : 'fa-plus'"
-                    (click)="toggleDetails(el)"></i></td>
-                <td>{{el.employeeId}}</td>
-                <td>
-                  <span
-                  ngbTooltip="{{ el.employeeName }}">{{el.employeeName | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}
-                </span>
-                </td>
-                <td>{{el.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="el.dateTo">-</span>  {{ el.dateTo | date: 'yyyy-MM-dd'}}
-                  <i class="fa fa-calendar float-right padding-5" aria-hidden="true" (click)="onClickDateIcon(i); datepicker.toggle()"></i>
-                  <input name="datepicker" class="hidden-datepicker" ngbDatepicker #datepicker="ngbDatepicker"
-                    [autoClose]="'outside'" (dateSelect)="onDateSelection($event, i)" [displayMonths]="2"
-                    [dayTemplate]="t" [container]="'body'" [placement]="'bottom'" outsideDays="hidden"
-                    >
-                  <ng-template #t let-date let-focused="focused">
-                    <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                      [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                      (mouseleave)="hoveredDate = null">
-                      {{ date.day }}
-                    </span>
-                  </ng-template>
-                </td>
-                <td>
-                  <select class="form-control" (change)="setSchedulingStatus($event.target.value, i)">
-                    <option [value]="status" [selected]="el.status === +status" *ngFor="let status of schedulingStatus">
-                      {{ scheduleStatus[status] }}
-                    </option>
-                  </select>
-                </td>
-                <!-- <td>{{el.createdBy}}</td>
-                <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td> -->
-                <td>{{el.modifiedBy}}</td>
-                <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
-              </tr>
-              <ng-container>
-                <tr class="row-details" *ngIf="selectedGrid?.employeeId === el?.employeeId"
-                  [@enterAnimation]="selectedGrid?.employeeId === el?.employeeId">
-                  <td colspan="12">
-                    <div class="jsgrid-grid-body">
-                      <div class="row">
-                        <div class="col-md-4 col-sm-4 row">
-                          <p class="float-left">
-                            {{ 'Time Interval' | translate }}:
-                          </p>
-                          <select class="form-control width-sm" [(ngModel)]="timeIntervals"
-                            (change)="changeTimeInterval($event.target.value)">
-                            <ng-container *ngFor="let interval of schedulingIntervals; let i = index">
-                              <option [value]="interval.id">{{ interval.value }}</option>
-                            </ng-container>
-                          </select> 
-                        </div>
-                        <div class="col-md-4 col-sm-4">
-                          <p class="text-center">
-                            {{ 'Agent' | translate }}:
-                            {{ selectedGrid.employeeName }}</p>
-                        </div>
-                        <div class="col-md-4 col-sm-4">
-                          <p class="float-right">
-                            {{ 'Date' | translate }}:
-                            {{ selectedGrid.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="selectedGrid.dateTo">-</span>
-                            {{selectedGrid.dateTo | date: 'yyyy-MM-dd'}}</p>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-sm-12" cdkDropList (cdkDropListDropped)="dragged($event)">
-                          <div class="row">
-                            <div class="col-md-12 col-sm-12 align">
-                              <span>
-                                <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true" (click)="toBeginning()"
-                                  [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-                                <i class="fa fa-caret-left arrow-icon" aria-hidden="true" (click)="previous()"
-                                  [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-                              </span>
-                              <ng-container
-                                *ngFor="let code of schedulingCodes | horizontalScroll : startIcon: endIcon: iconCount; let i= index;">
-                                <i id="{{ code.icon.value }}" class="icon-style icon"
-                                  [ngClass]="{'icon-active': icon === code.icon.value}" (click)="onIconClick($event); t.close()" (mousedown)="t.close()"
-                                  [ngClass]="{ 'icon-active': (selectedIconId == code.icon.value)}" cdkDrag>
-                                  <span ngbTooltip="{{ code.description }}" #t="ngbTooltip">
-                                    {{ unifiedToNative(code.icon.value) }}</span></i>
-                              </ng-container>
-                              <span>
-                                <i class="fa fa-caret-right arrow-icon" aria-hidden="true" (click)="next()"
-                                  [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-                                <i class="fa fa-angle-double-right arrow-icon" aria-hidden="true" (click)="toEnd()"
-                                  [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-                              </span>
-                            </div>
-                          </div>
-                          <br>
-                          <div class="row table-responsive" [style.max-width]="getGridMaxWidth()">
-                            <ngx-spinner [name]="scheduleSpinner"></ngx-spinner>
-                            <div class="col-md-12 col-sm-12">
-                              <table class="jsgrid-table table" id="schedulingGridTable">
-                                <tbody>
-                                  <tr class="jsgrid-header-row">
-                                    <th class="jsgrid-header-cell jsgrid-header-sortable">
-                                    </th>
-                                    <ng-container *ngFor="let data of openTimes;">
-                                      <ng-container *ngIf="isMainMinute(data); else subMinutes">
-                                        <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
-                                          class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                                          {{ data.split(':')[0] === '00' ? '12' : data.split(':')[0] }}
-                                        </th>
-                                      </ng-container>
-                                      <ng-template #subMinutes>
-                                        <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
-                                          class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                                          <sup>{{ data.split(':')[1].split(' ')[0] }}</sup>
-                                        </th>
-                                      </ng-template>
-                                    </ng-container>
-                                  </tr>
-                                  <tr class="jsgrid-row user-select-none" *ngFor="let week of weekDays; let i = index">
-                                    <td class="jsgrid-cell-week">
-                                      {{ weekDay[week] | slice: 0 : 3 }}
-                                    </td>
-                                    <td id="grid_col_{{week}}_{{j}}" class="jsgrid-cell"
-                                      attr.time="{{ openTime.split(' ')[0] }}"
-                                      attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}" [attr.week]="week"
-                                      *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
-                                      (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
-                                      [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-                                      <ng-container *ngIf="getIconFromSelectedGrid(week, openTime)?.length"> 
-                                        <span ngbTooltip="{{ getIconDescription(week, openTime) }}">
-                                        <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime) }}</i>
-                                        </span>
-                                      </ng-container>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row padding-10">
-                      <div class="col-md-12 padding-12 row">
-                        <div class="col-md-11 m-b-5">
-                          <button class="btn btn-default copy-button" id="btn_copy_schedule" (click)="openCopySchedule(i)">
-                            <i
-                              class="fa fa-copy padding-5 black"></i>{{ 'Copy Schedule' | translate }}
-                          </button>
-                        </div>
-                        <div class="col-md-1 row">
-                          <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
-                            id="btn_save">
-                            <i
-                              class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
+                  <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
+                    {{ 'Modified_by' | translate }}
+                    <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa"
+                      [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
+                    </i>
+                  </th>
+                  <th class="sortable-field" (click)="sort('modifiedDate', sortBy)">
+                    {{ 'Modified_date' | translate }}
+                    <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa"
+                      [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
+                    </i>
+                  </th>
                 </tr>
-              </ng-container>
-            </ng-container>
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                <ngx-spinner [name]="spinner"></ngx-spinner>
+                <ng-container *ngFor="let el of totalSchedulingGridData; let i = index">
+                  <tr class="table-row">
+                    <td>
+                      <i class="expand-icon fa padding-5 pointer"
+                        [ngClass]="( selectedGrid?.employeeId === el?.employeeId ) ? 'fa-minus' : 'fa-plus'"
+                        (click)="toggleDetails(el)"></i>
+                    </td>
+                    <td>{{el.employeeId}}</td>
+                    <td>
+                      <span ngbTooltip="{{ el.employeeName }}">{{el.employeeName | truncate: { sliceStart: 0, sliceEnd:
+                        characterSplice, append: '...' } }}
+                      </span>
+                    </td>
+                    <td>{{el.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="el.dateTo">-</span> {{ el.dateTo | date:
+                      'yyyy-MM-dd'}}
+                      <i class="fa fa-calendar float-right padding-5" aria-hidden="true"
+                        (click)="onClickDateIcon(i); datepicker.toggle()"></i>
+                      <input name="datepicker" class="hidden-datepicker" ngbDatepicker #datepicker="ngbDatepicker"
+                        [autoClose]="'outside'" (dateSelect)="onDateSelection($event, i)" [displayMonths]="2"
+                        [dayTemplate]="t" [container]="'body'" [placement]="'bottom'" outsideDays="hidden">
+                      <ng-template #t let-date let-focused="focused">
+                        <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                          [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                          (mouseleave)="hoveredDate = null">
+                          {{ date.day }}
+                        </span>
+                      </ng-template>
+                    </td>
+                    <td>
+                      <select class="form-control" (change)="setSchedulingStatus($event.target.value, i)">
+                        <option [value]="status" [selected]="el.status === +status"
+                          *ngFor="let status of schedulingStatus">
+                          {{ scheduleStatus[status] }}
+                        </option>
+                      </select>
+                    </td>
+                    <!-- <td>{{el.createdBy}}</td>
+                <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td> -->
+                    <td>{{el.modifiedBy}}</td>
+                    <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
+                  </tr>
+                  <ng-container>
+                    <tr class="row-details" *ngIf="selectedGrid?.employeeId === el?.employeeId"
+                      [@enterAnimation]="selectedGrid?.employeeId === el?.employeeId">
+                      <td colspan="12">
+                        <div class="jsgrid-grid-body">
+                          <div class="row">
+                            <div class="col-md-4 col-sm-4 row">
+                              <p class="float-left">
+                                {{ 'Time Interval' | translate }}:
+                              </p>
+                              <select class="form-control width-sm" [(ngModel)]="timeIntervals"
+                                (change)="changeTimeInterval($event.target.value)">
+                                <ng-container *ngFor="let interval of schedulingIntervals; let i = index">
+                                  <option [value]="interval.id">{{ interval.value }}</option>
+                                </ng-container>
+                              </select>
+                            </div>
+                            <div class="col-md-4 col-sm-4">
+                              <p class="text-center">
+                                {{ 'Agent' | translate }}:
+                                {{ selectedGrid.employeeName }}</p>
+                            </div>
+                            <div class="col-md-4 col-sm-4">
+                              <p class="float-right">
+                                {{ 'Date' | translate }}:
+                                {{ selectedGrid.dateFrom | date: 'yyyy-MM-dd'}} <span
+                                  *ngIf="selectedGrid.dateTo">-</span>
+                                {{selectedGrid.dateTo | date: 'yyyy-MM-dd'}}</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-12" cdkDropList (cdkDropListDropped)="dragged($event)">
+                              <div class="row">
+                                <div class="col-md-12 col-sm-12 align">
+                                  <span>
+                                    <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true"
+                                      (click)="toBeginning()"
+                                      [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
+                                    <i class="fa fa-caret-left arrow-icon" aria-hidden="true" (click)="previous()"
+                                      [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
+                                  </span>
+                                  <ng-container
+                                    *ngFor="let code of schedulingCodes | horizontalScroll : startIcon: endIcon: iconCount; let i= index;">
+                                    <i id="{{ code.icon.value }}" class="icon-style icon"
+                                      [ngClass]="{'icon-active': icon === code.icon.value}"
+                                      (click)="onIconClick($event); t.close()" (mousedown)="t.close()"
+                                      [ngClass]="{ 'icon-active': (selectedIconId == code.icon.value)}" cdkDrag>
+                                      <span ngbTooltip="{{ code.description }}" #t="ngbTooltip">
+                                        {{ unifiedToNative(code.icon.value) }}</span></i>
+                                  </ng-container>
+                                  <span>
+                                    <i class="fa fa-caret-right arrow-icon" aria-hidden="true" (click)="next()"
+                                      [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
+                                    <i class="fa fa-angle-double-right arrow-icon" aria-hidden="true" (click)="toEnd()"
+                                      [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
+                                  </span>
+                                </div>
+                              </div>
+                              <br>
+                              <div class="row table-responsive" [style.max-width]="getGridMaxWidth()">
+                                <ngx-spinner [name]="scheduleSpinner"></ngx-spinner>
+                                <div class="col-md-12 col-sm-12">
+                                  <table class="jsgrid-table table" id="schedulingGridTable">
+                                    <tbody>
+                                      <tr class="jsgrid-header-row">
+                                        <th class="jsgrid-header-cell jsgrid-header-sortable">
+                                        </th>
+                                        <ng-container *ngFor="let data of openTimes;">
+                                          <ng-container *ngIf="isMainMinute(data); else subMinutes">
+                                            <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                                              class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                                              {{ data.split(':')[0] === '00' ? '12' : data.split(':')[0] }}
+                                            </th>
+                                          </ng-container>
+                                          <ng-template #subMinutes>
+                                            <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                                              class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                                              <sup>{{ data.split(':')[1].split(' ')[0] }}</sup>
+                                            </th>
+                                          </ng-template>
+                                        </ng-container>
+                                      </tr>
+                                      <tr class="jsgrid-row user-select-none"
+                                        *ngFor="let week of weekDays; let i = index">
+                                        <td class="jsgrid-cell-week">
+                                          {{ weekDay[week] | slice: 0 : 3 }}
+                                        </td>
+                                        <td id="grid_col_{{week}}_{{j}}" class="jsgrid-cell"
+                                          attr.time="{{ openTime.split(' ')[0] }}"
+                                          attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}" [attr.week]="week"
+                                          *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
+                                          (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
+                                          [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
+                                          <ng-container *ngIf="getIconFromSelectedGrid(week, openTime)?.length">
+                                            <span ngbTooltip="{{ getIconDescription(week, openTime) }}">
+                                              <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime)
+                                                }}</i>
+                                            </span>
+                                          </ng-container>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row padding-10">
+                          <div class="col-md-12 padding-12 row">
+                            <div class="col-md-11 m-b-5">
+                              <button class="btn btn-default copy-button" id="btn_copy_schedule"
+                                (click)="openCopySchedule(i)">
+                                <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
+                              </button>
+                            </div>
+                            <div class="col-md-1 row">
+                              <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
+                                id="btn_save">
+                                <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12 d-flex justify-content-end mt-3">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination p-0 float-right">
-          <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalSchedulingRecord"
-            (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
-          </ngb-pagination>
-          <select class="form-control" (change)="changePageSize($event.target.value)">
-            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
-              {{ x.text | translate }}
-            </option>
-          </select>
-        </ul>
-      </nav>
-    </div>
-  </div>
-</tab>
- <!-- tab 2 starting -->
- <tab heading="Scheduling Manager" (selectTab)="openTab(1)">
-  <div class="row col-md-12 bg-color m-t-20">
-    <div class="col-md-8 row">
-      <div class="col-md-1 col-sm-1">
-        <div class="test">{{ unifiedToNative("1F600") }}</div>
-        <!-- <input readonly type="text" class="form-control margin-4 manager"> -->
+      <div class="row">
+        <div class="col-md-12 d-flex justify-content-end mt-3">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination p-0 float-right">
+              <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalSchedulingRecord"
+                (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
+              </ngb-pagination>
+              <select class="form-control" (change)="changePageSize($event.target.value)">
+                <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+                  {{ x.text | translate }}
+                </option>
+              </select>
+            </ul>
+          </nav>
+        </div>
       </div>
-      <div class="col-md-4 col-sm-4">
-        <input readonly type="text" disabled [(ngModel)]="iconDescription" class="form-control margin-4 manager">
-      </div>
-      <div class="col-md-2 col-sm-2">
-        <input readonly type="text" disabled [(ngModel)]="currentDate" class="form-control margin-4 manager">
-      </div>
-      <!-- <div class="col-md-3 d-flex flex-column">
+    </tab>
+    <!-- tab 2 starting -->
+    <tab heading="Scheduling Manager" (selectTab)="openTab(1)">
+      <div class="row col-md-12 bg-color m-t-20">
+        <div class="col-md-8 row">
+          <div class="col-md-1 col-sm-1">
+            <div class="test">{{ unifiedToNative("1F600") }}</div>
+            <!-- <input readonly type="text" class="form-control margin-4 manager"> -->
+          </div>
+          <div class="col-md-4 col-sm-4">
+            <input readonly type="text" disabled [(ngModel)]="iconDescription" class="form-control margin-4 manager">
+          </div>
+          <div class="col-md-2 col-sm-2">
+            <input readonly type="text" disabled [(ngModel)]="currentDate" class="form-control margin-4 manager">
+          </div>
+          <!-- <div class="col-md-3 d-flex flex-column">
         <div class="input-group">
           <input class="form-control" placeholder="Select Start Date" name="dp" ngbDatepicker [readonly]="true" [(ngModel)]="startDate"
             [footerTemplate]="footerTemplate" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker" (dateSelect)="onSelectStartDate($event)">
@@ -337,123 +346,122 @@
           </ng-template>
         </div>
       </div> -->
-      <div class="col-md-2 col-sm-2">
-        <input readonly type="text" disabled [(ngModel)]="startTimeFilter" class="form-control margin-4 manager">
+          <div class="col-md-2 col-sm-2">
+            <input readonly type="text" disabled [(ngModel)]="startTimeFilter" class="form-control margin-4 manager">
+          </div>
+          <div class="col-md-2 col-sm-2">
+            <input readonly type="text" disabled [(ngModel)]="endTimeFilter" class="form-control margin-4 manager">
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-2 label-color p-t-10">
+          <span>
+            <label>{{ 'Total Schedules' | translate }}:</label>
+            <b>{{totalSchedules}}</b>
+          </span>
+        </div>
       </div>
-      <div class="col-md-2 col-sm-2">
-        <input readonly type="text" disabled [(ngModel)]="endTimeFilter" class="form-control margin-4 manager">
-      </div>
-    </div>
-    <div class="col-md-2"></div>
-    <div class="col-md-2 label-color p-t-10">
-      <span>
-        <label>{{ 'Total Schedules' | translate }}:</label>
-        <b>{{totalSchedules}}</b>
-      </span>
-    </div>
-  </div>
-  <div class="col-md-12 m-t-20">
-    <div class="row">
-      <div class="col-md-4 col-sm-4">
-        <p class="float-left">
-          {{ 'Time Interval' | translate }}:
-        </p>
-        <select class="form-control width-sm" [(ngModel)]="timeIntervals"
-          (change)="changeTimeInterval($event.target.value)">
-          <ng-container *ngFor="let interval of schedulingIntervals; let i = index">
-            <option [value]="interval.id">{{ interval.value }}</option>
-          </ng-container>
-        </select>
-      </div>
-      <div class="col-md-4 col-sm-4">
-        <p class="float-left">
-          {{ 'Start Time Sorting:' | translate }}
-        </p>
-        <select class="form-control width-43p m-b-10" (change)="onSortTypeChange($event.target.value)" [(ngModel)]="sortTypeValue">
-            <option *ngFor="let item of sortingType" [value]="item">{{sortType[item]}}</option>
-        </select>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12 col-sm-12 align" cdkDropList (cdkDropListDropped)="dragged($event)">
-        <span>
-          <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true" (click)="toBeginning()"
-            [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-          <i class="fa fa-caret-left arrow-icon" aria-hidden="true" (click)="previous()"
-            [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-        </span>
-        <ng-container
-        *ngFor="let code of schedulingCodes | horizontalScroll : startIcon: endIcon: iconCount; let i= index;">
-        <i id="{{ code.icon.value }}" class="icon-style icon"
-          [ngClass]="{'icon-active': icon === code.icon.value}" (click)="onIconClick($event); t.close()" (mousedown)="t.close()"
-          [ngClass]="{ 'icon-active': (selectedIconId == code.icon.value)}" cdkDrag>
-          <span ngbTooltip="{{ code.description }}" #t="ngbTooltip">
-            {{ unifiedToNative(code.icon.value) }}</span></i>
-      </ng-container>
-        <span>
-          <i class="fa fa-caret-right arrow-icon" aria-hidden="true" (click)="next()"
-            [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-          <i class="fa fa-angle-double-right arrow-icon" aria-hidden="true" (click)="toEnd()"
-            [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-        </span>
-      </div>
-    </div>
-  </div>
-  <br>
-  <div class="row table-responsive" [style.max-width]="getGridMaxWidth()">
-    <div class="col-md-12 col-sm-12 scrollable-table">
-      <table class="jsgrid-table table" id="schedulingGridTable">
-        <thead>
-          <tr class="jsgrid-header-row">
-            <th class="sortable-field" (click)="sort('employeeId', sortBy)">
-              {{ 'Employee_id' | translate }}
-              <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                  [class.fa-sort-up]="sortBy === 'asc'">
-                </i>
-            </th>
-            <th class="sortable-field" (click)="sort('employeeName', sortBy)">
-              {{ 'Name' | translate }}
-              <i *ngIf="orderBy !== 'employeeName'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'employeeName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                  [class.fa-sort-up]="sortBy === 'asc'">
-                </i>
-            </th>
-            <ng-container *ngFor="let data of openTimes;">
-              <ng-container *ngIf="isMainMinute(data); else subMinutes">
-                <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
-                  class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                  {{ data.split(':')[0] === '00' ? '12' : data.split(':')[0] }}
-                </th>
+      <div class="col-md-12 m-t-20">
+        <div class="row">
+          <div class="col-md-4 col-sm-4">
+            <p class="float-left">
+              {{ 'Time Interval' | translate }}:
+            </p>
+            <select class="form-control width-sm" [(ngModel)]="timeIntervals"
+              (change)="changeTimeInterval($event.target.value)">
+              <ng-container *ngFor="let interval of schedulingIntervals; let i = index">
+                <option [value]="interval.id">{{ interval.value }}</option>
               </ng-container>
-              <ng-template #subMinutes>
-                <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
-                  class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                  <sup>{{ data.split(':')[1].split(' ')[0] }}</sup>
+            </select>
+          </div>
+          <div class="col-md-4 col-sm-4">
+            <p class="float-left">
+              {{ 'Start Time Sorting:' | translate }}
+            </p>
+            <select class="form-control width-43p m-b-10" (change)="onSortTypeChange($event.target.value)"
+              [(ngModel)]="sortTypeValue">
+              <option *ngFor="let item of sortingType" [value]="item">{{sortType[item]}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 col-sm-12 align" cdkDropList (cdkDropListDropped)="dragged($event)">
+            <span>
+              <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true" (click)="toBeginning()"
+                [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
+              <i class="fa fa-caret-left arrow-icon" aria-hidden="true" (click)="previous()"
+                [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
+            </span>
+            <ng-container
+              *ngFor="let code of schedulingCodes | horizontalScroll : startIcon: endIcon: iconCount; let i= index;">
+              <i id="{{ code.icon.value }}" class="icon-style icon"
+                [ngClass]="{'icon-active': icon === code.icon.value}" (click)="onIconClick($event); t.close()"
+                (mousedown)="t.close()" [ngClass]="{ 'icon-active': (selectedIconId == code.icon.value)}" cdkDrag>
+                <span ngbTooltip="{{ code.description }}" #t="ngbTooltip">
+                  {{ unifiedToNative(code.icon.value) }}</span></i>
+            </ng-container>
+            <span>
+              <i class="fa fa-caret-right arrow-icon" aria-hidden="true" (click)="next()"
+                [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
+              <i class="fa fa-angle-double-right arrow-icon" aria-hidden="true" (click)="toEnd()"
+                [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row table-responsive" [style.max-width]="getGridMaxWidth()">
+        <div class="col-md-12 col-sm-12 scrollable-table">
+          <table class="jsgrid-table table" id="schedulingGridTable">
+            <thead>
+              <tr class="jsgrid-header-row">
+                <th class="sortable-field" (click)="sort('employeeId', sortBy)">
+                  {{ 'Employee_id' | translate }}
+                  <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
+                  <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                    [class.fa-sort-up]="sortBy === 'asc'">
+                  </i>
                 </th>
-              </ng-template>
-            </ng-container>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="jsgrid-row user-select-none" *ngFor="let el of totalSchedulingGridData; let i = index"
-           [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(i)">
-            <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
-            <td class="jsgrid-cell-emp">{{el.employeeName}}</td>
-            <td id="grid_col_{{el.employeeId}}_{{j}}" class="jsgrid-cell"
-            attr.time="{{ openTime.split(' ')[0] }}"
-            attr.scheduleId="{{el.id}}"
-            attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
-            *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
-            (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
-            [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-            <ng-container *ngIf="getIconFromSelectedAgent(el.id,openTime)?.length"> 
-              <span ngbTooltip="{{ getAgentIconDescription(openTime) }}">
-              <i class="font-style-normal">{{ getIconFromSelectedAgent(el.id,openTime) }}</i>
-              </span>
-            </ng-container>
-          </td>
-            <!-- <td class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
+                <th class="sortable-field" (click)="sort('employeeName', sortBy)">
+                  {{ 'Name' | translate }}
+                  <i *ngIf="orderBy !== 'employeeName'" class="fa fa-sort"></i>
+                  <i id="sortIcon" *ngIf="orderBy === 'employeeName'" class="fa"
+                    [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
+                  </i>
+                </th>
+                <ng-container *ngFor="let data of openTimes;">
+                  <ng-container *ngIf="isMainMinute(data); else subMinutes">
+                    <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                      class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                      {{ data.split(':')[0] === '00' ? '12' : data.split(':')[0] }}
+                    </th>
+                  </ng-container>
+                  <ng-template #subMinutes>
+                    <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                      class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                      <sup>{{ data.split(':')[1].split(' ')[0] }}</sup>
+                    </th>
+                  </ng-template>
+                </ng-container>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="jsgrid-row user-select-none" *ngFor="let el of totalSchedulingGridData; let i = index"
+                [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(i)">
+                <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
+                <td class="jsgrid-cell-emp">{{el.employeeName}}</td>
+                <td id="grid_col_{{el.employeeId}}_{{j}}" class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
+                  attr.scheduleId="{{el.id}}" attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
+                  *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
+                  (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
+                  [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
+                  <ng-container *ngIf="getIconFromSelectedAgent(el.id,openTime)?.length">
+                    <span ngbTooltip="{{ getAgentIconDescription(openTime) }}">
+                      <i class="font-style-normal">{{ getIconFromSelectedAgent(el.id,openTime) }}</i>
+                    </span>
+                  </ng-container>
+                </td>
+                <!-- <td class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
               attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
               *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
               (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
@@ -463,106 +471,106 @@
                 class="font-style-normal"></i>
             </ng-container>
             </td> -->
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="row padding-10">
-    <div class="col-md-12 padding-12 row">
-      <div class="col-md-11 m-b-5">
-        <button class="btn btn-default copy-button m-l-10" id="btn_copy_schedule" (click)="openCopySchedule(selectedRow)">
-          <i
-            class="fa fa-copy padding-5 black"></i>{{ 'Copy Schedule' | translate }}
-        </button>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="col-md-1 row">
-        <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" id="btn_save">
-          <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
-        </button>
+      <div class="row padding-10">
+        <div class="col-md-12 padding-12 row">
+          <div class="col-md-11 m-b-5">
+            <button class="btn btn-default copy-button m-l-10" id="btn_copy_schedule"
+              (click)="openCopySchedule(selectedRow)">
+              <i class="fa fa-copy padding-5 black"></i>{{ 'Copy Schedule' | translate }}
+            </button>
+          </div>
+          <div class="col-md-1 row">
+            <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" id="btn_save">
+              <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Agent Info -->
-  <div class="row">
-    <div class="col-12 col-md-12">
-      <h3>{{ 'Agent Info' | translate }}</h3>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12 col-md-12 d-flex">
-      <p>{{ 'Agent' | translate }}</p>:
-      <b><span>{{agentInfo?.employeeId}} {{agentInfo?.firstName}}, {{agentInfo?.lastName}}</span></b>
-    </div>
-  </div>
-  <div class="col-md-12 bg-color">
-    <div class="col-md-6  d-flex  row">
-      <p class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative("1F600")}} Open Time 10:00 am - 11:00 pm</p>
-      <p class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative("1F349")}} Lunch 04:45 pm - 05:15 pm</p>
-    </div>
-  </div>
-  <div class="col-md-12 mt-2 table-responsive">
-    <div class="scrollable-table">
-      <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
-        <thead>
-          <tr>
-            <th class="sortable-field">
-              {{ 'Schedule Type' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Supervisor' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Employee Id' | translate }}
-            <th class="sortable-field">
-              {{ 'Hire_date' | translate }}
-            <th class="sortable-field">
-              {{ 'Production Date' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Term Date' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'LOA Date' | translate }}
-            </th>
+      <!-- Agent Info -->
+      <div class="row">
+        <div class="col-12 col-md-12">
+          <h3>{{ 'Agent Info' | translate }}</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-12 d-flex">
+          <p>{{ 'Agent' | translate }}</p>:
+          <b><span>{{agentInfo?.employeeId}} {{agentInfo?.firstName}}, {{agentInfo?.lastName}}</span></b>
+        </div>
+      </div>
+      <div class="col-md-12 bg-color">
+        <div class="col-md-6  d-flex  row">
+          <p class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative("1F600")}} Open Time 10:00 am - 11:00 pm</p>
+          <p class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative("1F349")}} Lunch 04:45 pm - 05:15 pm</p>
+        </div>
+      </div>
+      <div class="col-md-12 mt-2 table-responsive">
+        <div class="scrollable-table">
+          <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+            <thead>
+              <tr>
+                <th class="sortable-field">
+                  {{ 'Schedule Type' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Supervisor' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Employee Id' | translate }}
+                <th class="sortable-field">
+                  {{ 'Hire_date' | translate }}
+                <th class="sortable-field">
+                  {{ 'Production Date' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Term Date' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'LOA Date' | translate }}
+                </th>
 
-            <th class="sortable-field">
-              {{ 'Primary CT/Skill' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Tour Band' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Rank' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Part Time/Full Time' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Operations Manager' | translate }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-           <tr class="table-row">
-             <td>Accomodated</td>
-             <td>{{agentInfo?.supervisorName}}</td>
-             <td>{{agentInfo?.employeeId}}</td>
-             <td>2020-12-14</td>
-             <td>2020-12-14</td>
-             <td></td>
-             <td></td>
-             <td>DotCom</td>
-             <td>Band 1</td>
-             <td>38</td>
-             <td>FT</td>
-             <td></td>
-           </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</tab>
-</tabset>
+                <th class="sortable-field">
+                  {{ 'Primary CT/Skill' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Tour Band' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Rank' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Part Time/Full Time' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Operations Manager' | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-row">
+                <td>Accomodated</td>
+                <td>{{agentInfo?.supervisorName}}</td>
+                <td>{{agentInfo?.employeeId}}</td>
+                <td>2020-12-14</td>
+                <td>2020-12-14</td>
+                <td></td>
+                <td></td>
+                <td>DotCom</td>
+                <td>Band 1</td>
+                <td>38</td>
+                <td>FT</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </tab>
+  </tabset>
 </div>
