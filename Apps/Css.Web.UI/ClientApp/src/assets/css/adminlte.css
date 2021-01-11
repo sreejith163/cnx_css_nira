@@ -10,7 +10,7 @@
  * Copyright 2011-2019 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
-:root {
+ :root {
   --blue: #007bff;
   --indigo: #6610f2;
   --purple: #6f42c1;
@@ -11850,7 +11850,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
 .nav-sidebar .nav-link > p > .right {
   position: absolute;
   right: 1rem;
-  top: .7rem;
+  /* top: .7rem; */
 }
 
 .nav-sidebar .nav-link > .right i,
@@ -11932,7 +11932,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
   padding: 1.7rem 1rem .5rem;
 }
 
-.nav-sidebar .nav-link p {
+.nav-sidebar .nav-link p, .nav-sidebar .nav-link span{
   display: inline-block;
   -webkit-animation-name: fadeIn;
   animation-name: fadeIn;
@@ -12850,9 +12850,16 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
   .sidebar-mini .nav-sidebar,
   .sidebar-mini .nav-sidebar > .nav-header,
   .sidebar-mini .nav-sidebar .nav-link {
-    /* white-space: nowrap; */
+    white-space: normal;
     overflow: hidden;
   }
+
+  .sidebar-mini.sidebar-collapse .nav-sidebar,
+  .sidebar-mini.sidebar-collapse .nav-sidebar > .nav-header,
+  .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link {
+    white-space: nowrap;
+  }
+
   .sidebar-mini.sidebar-collapse .d-hidden-mini {
     display: none;
   }
@@ -12869,6 +12876,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
   }
   .sidebar-mini.sidebar-collapse .sidebar .user-panel > .info,
   .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link p,
+  .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link span,
   .sidebar-mini.sidebar-collapse .brand-text {
     margin-left: -10px;
     -webkit-animation-name: fadeOut;
@@ -12922,11 +12930,14 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
   }
   .sidebar-mini.sidebar-collapse .main-sidebar:hover .user-panel > .info,
   .sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link p,
+  .sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link span,
   .sidebar-mini.sidebar-collapse .main-sidebar:hover .brand-text,
   .sidebar-mini.sidebar-collapse .main-sidebar:hover .logo-xl, .sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .user-panel > .info,
   .sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .nav-sidebar .nav-link p,
+  .sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .nav-sidebar .nav-link span,
   .sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .brand-text,
   .sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .logo-xl {
+    white-space: normal;
     display: inline-block;
     margin-left: 0;
     -webkit-animation-name: fadeIn;
@@ -12998,6 +13009,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
   }
   .sidebar-mini-md.sidebar-collapse .sidebar .user-panel > .info,
   .sidebar-mini-md.sidebar-collapse .nav-sidebar .nav-link p,
+  .sidebar-mini-md.sidebar-collapse .nav-sidebar .nav-link span,
   .sidebar-mini-md.sidebar-collapse .brand-text {
     margin-left: -10px;
     -webkit-animation-name: fadeOut;
@@ -13051,11 +13063,14 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
   }
   .sidebar-mini-md.sidebar-collapse .main-sidebar:hover .user-panel > .info,
   .sidebar-mini-md.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link p,
+  .sidebar-mini-md.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link span,
   .sidebar-mini-md.sidebar-collapse .main-sidebar:hover .brand-text,
   .sidebar-mini-md.sidebar-collapse .main-sidebar:hover .logo-xl, .sidebar-mini-md.sidebar-collapse .main-sidebar.sidebar-focused .user-panel > .info,
   .sidebar-mini-md.sidebar-collapse .main-sidebar.sidebar-focused .nav-sidebar .nav-link p,
+  .sidebar-mini-md.sidebar-collapse .main-sidebar.sidebar-focused .nav-sidebar .nav-link span,
   .sidebar-mini-md.sidebar-collapse .main-sidebar.sidebar-focused .brand-text,
   .sidebar-mini-md.sidebar-collapse .main-sidebar.sidebar-focused .logo-xl {
+    white-space: normal;
     display: inline-block;
     margin-left: 0;
     -webkit-animation-name: fadeIn;
@@ -13195,9 +13210,11 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
 .sidebar-collapse .sidebar-no-expand.main-sidebar.sidebar-focused .brand-text,
 .sidebar-collapse .sidebar-no-expand.main-sidebar.sidebar-focused .user-panel > .info,
 .sidebar-collapse .sidebar-no-expand.main-sidebar.sidebar-focused .nav-sidebar .nav-link p,
+.sidebar-collapse .sidebar-no-expand.main-sidebar.sidebar-focused .nav-sidebar .nav-link span,
 .sidebar-collapse .sidebar-no-expand.main-sidebar:hover .brand-text,
 .sidebar-collapse .sidebar-no-expand.main-sidebar:hover .user-panel > .info,
-.sidebar-collapse .sidebar-no-expand.main-sidebar:hover .nav-sidebar .nav-link p {
+.sidebar-collapse .sidebar-no-expand.main-sidebar:hover .nav-sidebar .nav-link p,
+.sidebar-collapse .sidebar-no-expand.main-sidebar:hover .nav-sidebar .nav-link span {
   margin-left: -10px;
   -webkit-animation-name: fadeOut;
   animation-name: fadeOut;

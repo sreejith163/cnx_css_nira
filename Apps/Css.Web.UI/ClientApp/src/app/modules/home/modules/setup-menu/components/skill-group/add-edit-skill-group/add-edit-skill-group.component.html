@@ -84,7 +84,7 @@
                       <input type="radio" id="{{ 'radio_lob_group_' + getWeekDay(day) }}" name="firstDayOfWeek"
                         [value]="day" formControlName="firstDayOfWeek" (change)="changeOperatingHoursDays(day)">
                       <label for="{{ 'radio_lob_group_' + getWeekDay(day) }}">
-                        {{ getWeekDay(day) | translate }}
+                        {{ getWeekDay(day) }}
                       </label>
                     </div>
                   </div>
@@ -146,14 +146,14 @@
                         <ng-container formArrayName="operationHour">
                           <tr *ngFor="let details of operationHour.controls index as i">
                             <ng-container [formGroupName]="i">
-                              <td class="text-bold days">{{getWeekDay(details.value.day) | translate}}</td>
+                              <td class="text-bold days">{{getWeekDay(details.value.day)}}</td>
                               <td>
                                 <select class="form-control" (change)="onOptionTypeChange(i)"
                                   formControlName="operationHourOpenTypeId">
                                   <option value="">
                                     {{ 'Select' | translate }}
                                   </option>
-                                  <option *ngFor="let x of openTypes" [value]="x.id">{{x.open | translate}}</option>
+                                  <option *ngFor="let x of openTypes" [value]="x.id">{{x.open }}</option>
                                 </select>
                                 <span
                                   *ngIf="formSubmitted && operationHour.controls[i].get('operationHourOpenTypeId').errors?.required"

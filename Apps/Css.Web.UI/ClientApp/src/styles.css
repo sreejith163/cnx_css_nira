@@ -332,6 +332,14 @@ sup {
   margin-left: 253px;
 }
 
+.btn-primary{
+  white-space: nowrap;
+}
+
+button{
+  white-space: nowrap;
+}
+
 /* .long-sidebar-menu{
   width: 400px !important;
 }

@@ -17,42 +17,42 @@
         <nav class="mt-2 treeview-menu">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="dashboard" routerLinkActive="active">
+                    <a class="nav-link d-flex flex-row" routerLink="dashboard" routerLinkActive="active">
                         <i class="nav-icon fa fa-home"></i>
-                            {{ 'Home' | translate }}    
+                            <span>{{ 'Home' | translate }} </span>
                     </a>
                 </li>
                 <li class="nav-item has-treeview">
-                    <a class="nav-link"
+                    <a class="nav-link d-flex flex-row"
                         [ngClass]="{'active': sysAdmin1.isActive || sysAdmin2.isActive || sysAdmin3.isActive}">
                         <i class="nav-icon fa fa-th"></i>
-                            {{ 'System_admin' | translate }}
+                            <span>{{ 'System_admin' | translate }}</span>
                             <i class="fa fa-angle-right right"></i>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="system-admin/scheduling-codes" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="system-admin/scheduling-codes" routerLinkActive="active"
                                 #sysAdmin1="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Scheduling_codes' | translate }}
+                                <span>{{ 'Scheduling_codes' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="system-admin/permissions" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="system-admin/permissions" routerLinkActive="active"
                                 #sysAdmin2="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Permissions' | translate }}
+                                <span>{{ 'Permissions' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="system-admin/agent-categories" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="system-admin/agent-categories" routerLinkActive="active"
                                 #sysAdmin3="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Agent_categories' | translate }}
+                            <span>{{ 'Agent_categories' | translate }}</span>
                             </a>
                         </li>
                         <!-- <li class="nav-item">
-                            <a class="nav-link" routerLink="system-admin/transalations" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="system-admin/transalations" routerLinkActive="active"
                                 #sysAdmin4="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
                                 Translation
@@ -61,109 +61,107 @@
                     </ul>
                 </li>
                 <li class="nav-item has-treeview">
-                    <a class="nav-link"
+                    <a class="nav-link d-flex flex-row"
                         [ngClass]="{'active': setUpMenu1.isActive || setUpMenu2.isActive || setUpMenu3.isActive || setUpMenu4.isActive || setUpMenu5.isActive }">
                         <i class="nav-icon fa fa-cog"></i>
-                        
-                            {{ 'Setup_menu' | translate }}
+                            <span>{{ 'Setup_menu' | translate }}</span>
                             <i class="fa fa-angle-right right"></i>
-                        
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="setup-menu/client-name" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="setup-menu/client-name" routerLinkActive="active"
                                 #setUpMenu1="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Client_name' | translate }}
+                            <span>{{ 'Client_name' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="setup-menu/client-lob-group" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="setup-menu/client-lob-group" routerLinkActive="active"
                                 #setUpMenu2="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Client_lob_group' | translate }}
+                                <span>{{ 'Client_lob_group' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="setup-menu/skill-groups" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="setup-menu/skill-groups" routerLinkActive="active"
                                 #setUpMenu3="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Skill_groups' | translate }}
+                            <span>{{ 'Skill_groups' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="setup-menu/skill-tags" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="setup-menu/skill-tags" routerLinkActive="active"
                                 #setUpMenu4="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Skill_tags' | translate }}
+                            <span>{{ 'Skill_tags' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="setup-menu/agent-scheduling-group" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="setup-menu/agent-scheduling-group" routerLinkActive="active"
                                 #setUpMenu5="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Agent_scheduling_group' | translate }}
+                            <span>{{ 'Agent_scheduling_group' | translate }}</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item has-treeview">
-                    <a class="nav-link"
+                    <a class="nav-link d-flex flex-row"
                         [ngClass]="{'active': schMenu1.isActive || schMenu2.isActive || schMenu3.isActive || schMenu4.isActive || schMenu5.isActive || schMenu6.isActive || schMenu7.isActive }">
                         <i class="nav-icon fa fa-calendar"></i>
                         
-                            {{ 'Scheduling_menu' | translate }}
+                        <span>{{ 'Scheduling_menu' | translate }}</span>
                             <i class="fa fa-angle-right right"></i>
                         
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="scheduling-menu/agent-admin" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/agent-admin" routerLinkActive="active"
                                 #schMenu1="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Agent_admin' | translate }}
+                            <span>{{ 'Agent_admin' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="scheduling-menu/scheduling-grid" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-grid" routerLinkActive="active"
                                 #schMenu2="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Scheduling_grid' | translate }}
+                            <span>{{ 'Scheduling_grid' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="scheduling-menu/scheduling-functions"
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-functions"
                                 routerLinkActive="active" #schMenu3="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'All_scheduling_functions' | translate }}
+                            <span>{{ 'All_scheduling_functions' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="scheduling-menu/import-data" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/import-data" routerLinkActive="active"
                                 #schMenu4="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Import_data_option' | translate }}
+                            <span>{{ 'Import_data_option' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="scheduling-menu/forecast-screen" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/forecast-screen" routerLinkActive="active"
                                 #schMenu5="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Forecast_screen' | translate }}
+                            <span>{{ 'Forecast_screen' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="scheduling-menu/adjust-schedule-screen"
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/adjust-schedule-screen"
                                 routerLinkActive="active" #schMenu6="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'Adjust_schedule_screen' | translate }}
+                            <span>{{ 'Adjust_schedule_screen' | translate }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="scheduling-menu/view-o/u-screen" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/view-o/u-screen" routerLinkActive="active"
                                 #schMenu7="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                                {{ 'View_ou_screen' | translate }}
+                            <span>{{ 'View_ou_screen' | translate }}</span>
                             </a>
                         </li>
                     </ul>

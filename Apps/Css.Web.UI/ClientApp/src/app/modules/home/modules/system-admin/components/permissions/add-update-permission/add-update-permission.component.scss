@@ -19,6 +19,10 @@
     background-color: inherit;
   }
   
+  .card-body {
+    white-space: nowrap !important;
+  }
+
   .card-header {
     padding: 3px 2px;
     background-color: #dadbeb73;
