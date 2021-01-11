@@ -420,12 +420,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   openCopySchedule(index: number) {
+    debugger
     const agentScheduleId = this.totalSchedulingGridData[index]?.id;
+    const employeeId = this.totalSchedulingGridData[index]?.employeeId;
     this.getModalPopup(CopyScheduleComponent, 'lg');
     this.modalRef.componentInstance.agentSchedulingGroupId = this.schedulingGridData?.agentSchedulingGroupId;
     this.modalRef.componentInstance.translationValues = this.translationValues;
     this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
-    this.modalRef.componentInstance.employeeId = this.schedulingGridData?.employeeId;
+    this.modalRef.componentInstance.employeeId = employeeId;
     this.modalRef.componentInstance.agentScheudleType = this.tabIndex;
 
     this.modalRef.result.then((result) => {
@@ -843,7 +845,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     agentSchedulesQueryParams.pageNumber = this.currentPage;
     agentSchedulesQueryParams.pageSize = this.pageSize;
     agentSchedulesQueryParams.searchKeyword = this.searchKeyword ?? '';
-    // agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
+    agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentSchedulesQueryParams.fields = fields ?? undefined;
     agentSchedulesQueryParams.employeeIds = undefined;
 
