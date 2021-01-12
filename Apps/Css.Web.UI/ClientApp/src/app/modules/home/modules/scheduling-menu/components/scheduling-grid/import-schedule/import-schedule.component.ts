@@ -332,7 +332,8 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         this.showErrorWarningPopUpMessage(errorMessage);
       }
     }, error => {
-      this.spinnerService.hide(this.spinner); console.log(error);
+      this.spinnerService.hide(this.spinner);
+      console.log(error);
     });
   }
 
