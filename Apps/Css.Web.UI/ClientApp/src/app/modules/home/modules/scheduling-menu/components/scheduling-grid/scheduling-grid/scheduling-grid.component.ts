@@ -412,6 +412,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.currentDate = undefined;
     if (this.tabIndex === AgentScheduleType.Scheduling) {
       this.loadAgentSchedules();
+    } else {
+      this.loadAgentScheduleManger();
     }
   }
 
@@ -424,7 +426,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
       this.getModalPopup(MessagePopUpComponent, 'sm', message);
       this.modalRef.result.then(() => {
-        this.loadAgentSchedules();
+        this.tabIndex === AgentScheduleType.Scheduling ? this.loadAgentSchedules() : this.loadAgentScheduleManger();
       });
     });
   }
