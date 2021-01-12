@@ -340,10 +340,6 @@ button{
   white-space: nowrap;
 }
 
-/* .long-sidebar-menu{
-  width: 400px !important;
+.marign-l-auto {
+  margin-left: auto !important;
 }
-
-.long-content-wrapper{
-    margin-left: 400px !important;
-} */

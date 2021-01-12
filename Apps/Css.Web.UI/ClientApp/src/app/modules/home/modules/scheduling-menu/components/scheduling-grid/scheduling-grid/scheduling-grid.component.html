@@ -45,23 +45,27 @@
         {{ 'Search' | translate }}
       </button>
     </div>
-
-  </div>
-  <div class="row m-l-r-10 m-b-10 bg-white">
-    <div class="col-md-10">
-    </div>
-    <div class="col-md-2">
-      <img src="assets/images/icon-export.png" class="icon-image float-right padding-2" [ngbTooltip]="'Export'" (click)="exportToExcel()">
-      <img src="assets/images/icon-import.png" class="icon-image float-right padding-2" [ngbTooltip]="'Import'" (click)="openImportSchedule()">
-      <!-- <i class="fa fa-file-excel-o padding-5 black float-right" [ngbTooltip]="'Import'" (click)="openImportSchedule()"></i> -->
-      <!-- <i class="fa fa-file-excel-o padding-5 black float-right" [ngbTooltip]="'Export'" (click)="exportToExcel()"></i> -->
-    </div>
   </div>
 
+  <div class="nav-tabs-custom margin-b-0">
+    <ul class="nav nav-tabs" id="custom-content-above-tab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="scheduling-tab" data-toggle="pill" href="#scheduling" role="tab"
+          aria-controls="scheduling" aria-selected="true">Scheduling</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="scheduling-manager-tab" data-toggle="pill" href="#scheduling-manager" role="tab"
+          aria-controls="cscheduling-manager" aria-selected="false">Scheduling Manger</a>
+      </li>
+      <li class="pull-right marign-l-auto">
+        <img src="assets/images/icon-export.png" class="icon-image float-right padding-2" [ngbTooltip]="'Export'" (click)="exportToExcel()">
+        <img src="assets/images/icon-import.png" class="icon-image float-right padding-2" [ngbTooltip]="'Import'" (click)="openImportSchedule()">
+      </li>
+    </ul>
+  </div>
 
-  <tabset #staticTabs>
-    <!-- tab 1 starting -->
-    <tab heading="Scheduling" id="tab1" (selectTab)="openTab(0)">
+  <div class="tab-content" id="scheduling-tabContent">
+    <div class="tab-pane fade show active" id="scheduling" role="tabpanel" aria-labelledby="scheduling-tab">
       <div class="row">
         <div class="col-md-12 mt-2 table-responsive">
           <div class="scrollable-table">
@@ -98,19 +102,19 @@
                     </i>
                   </th>
                   <!-- <th class="sortable-field" (click)="sort('createdBy', sortBy)">
-                {{ 'Created_by' | translate }}
-                <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                  [class.fa-sort-up]="sortBy === 'asc'">
-                </i>
-              </th>
-              <th class="sortable-field" (click)="sort('createdDate', sortBy)">
-                {{ 'Created_date' | translate }}
-                <i *ngIf="orderBy !== 'createdDate'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                  [class.fa-sort-up]="sortBy === 'asc'">
-                </i>
-              </th> -->
+              {{ 'Created_by' | translate }}
+              <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
+              <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                [class.fa-sort-up]="sortBy === 'asc'">
+              </i>
+            </th>
+            <th class="sortable-field" (click)="sort('createdDate', sortBy)">
+              {{ 'Created_date' | translate }}
+              <i *ngIf="orderBy !== 'createdDate'" class="fa fa-sort"></i>
+              <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                [class.fa-sort-up]="sortBy === 'asc'">
+              </i>
+            </th> -->
                   <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
                     {{ 'Modified_by' | translate }}
                     <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
@@ -129,10 +133,6 @@
               </thead>
               <tbody>
                 <ngx-spinner [name]="spinner"></ngx-spinner>
-                <tr *ngIf="!agentSchedulingGroupId" class="valid-record">
-                  <td colspan="12">
-                    {{ 'No records found' | translate }}</td>
-                </tr>
                 <ng-container *ngFor="let el of totalSchedulingGridData; let i = index">
                   <tr class="table-row">
                     <td>
@@ -170,12 +170,10 @@
                       </select>
                     </td>
                     <!-- <td>{{el.createdBy}}</td>
-                <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td> -->
+              <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td> -->
                     <td>{{el.modifiedBy}}</td>
                     <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
-
                   </tr>
-
                   <ng-container>
                     <tr class="row-details" *ngIf="selectedGrid?.employeeId === el?.employeeId"
                       [@enterAnimation]="selectedGrid?.employeeId === el?.employeeId">
@@ -277,7 +275,6 @@
                                           </ng-container>
                                         </td>
                                       </tr>
-
                                     </tbody>
                                   </table>
                                 </div>
@@ -326,9 +323,8 @@
           </nav>
         </div>
       </div>
-    </tab>
-    <!-- tab 2 starting -->
-    <tab heading="Scheduling Manager" (selectTab)="openTab(1)">
+    </div>
+    <div class="tab-pane fade" id="scheduling-manager" role="tabpanel" aria-labelledby="scheduling-manager-tab">
       <div class="row col-md-12 bg-color m-t-20">
         <div class="col-md-8 row">
           <div class="col-md-1 col-sm-1">
@@ -342,19 +338,19 @@
             <input readonly type="text" disabled [(ngModel)]="currentDate" class="form-control margin-4 manager">
           </div>
           <!-- <div class="col-md-3 d-flex flex-column">
-        <div class="input-group">
-          <input class="form-control" placeholder="Select Start Date" name="dp" ngbDatepicker [readonly]="true" [(ngModel)]="startDate"
-            [footerTemplate]="footerTemplate" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker" (dateSelect)="onSelectStartDate($event)">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
-          </div>
-          <ng-template #footerTemplate>
-            <button class="btn btn-primary btn-sm m-2 float-left" (click)="setStartDateAsToday(); d.close()"
-              id="btn_today">Today</button>
-            <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close();clearStartDate();" id="btn_close">Clear</button>
-          </ng-template>
+      <div class="input-group">
+        <input class="form-control" placeholder="Select Start Date" name="dp" ngbDatepicker [readonly]="true" [(ngModel)]="startDate"
+          [footerTemplate]="footerTemplate" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker" (dateSelect)="onSelectStartDate($event)">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
         </div>
-      </div> -->
+        <ng-template #footerTemplate>
+          <button class="btn btn-primary btn-sm m-2 float-left" (click)="setStartDateAsToday(); d.close()"
+            id="btn_today">Today</button>
+          <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close();clearStartDate();" id="btn_close">Clear</button>
+        </ng-template>
+      </div>
+    </div> -->
           <div class="col-md-2 col-sm-2">
             <input readonly type="text" disabled [(ngModel)]="startTimeFilter" class="form-control margin-4 manager">
           </div>
@@ -455,10 +451,6 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngIf="!agentSchedulingGroupId" class="valid-record">
-                <td colspan="25">
-                  {{ 'No records found' | translate }}</td>
-              </tr>
               <tr class="jsgrid-row user-select-none" *ngFor="let el of totalSchedulingGridData; let i = index"
                 [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(i)">
                 <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
@@ -475,19 +467,18 @@
                   </ng-container>
                 </td>
                 <!-- <td class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
-              attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
-              *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
-              (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
-              [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-              <ng-container>
-              <i
-                class="font-style-normal"></i>
-            </ng-container>
-            </td> -->
+            attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
+            *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
+            (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
+            [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
+            <ng-container>
+            <i
+              class="font-style-normal"></i>
+          </ng-container>
+          </td> -->
               </tr>
             </tbody>
           </table>
-
         </div>
       </div>
       <div class="row padding-10">
@@ -585,6 +576,6 @@
           </table>
         </div>
       </div>
-    </tab>
-  </tabset>
+    </div>
+  </div>
 </div>
