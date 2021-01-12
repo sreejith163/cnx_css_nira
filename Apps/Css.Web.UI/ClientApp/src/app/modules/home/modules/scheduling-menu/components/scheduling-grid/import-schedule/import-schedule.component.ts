@@ -113,11 +113,22 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   browse(files: any) {
+    const exportFileName = 'Attendance_scheduling';
     this.fileUploaded = files[0];
     this.uploadFile = this.fileUploaded.name;
     if (this.uploadFile.split('.')[1] === 'csv') {
-      this.readCsvFile();
-      this.fileFormatValidation = false;
+      const dateSection = this.uploadFile.split(exportFileName)[1].split('.')[0];
+      const year = dateSection?.substr(0, 4);
+      const month = dateSection?.substr(4, 2);
+      const day = dateSection?.substr(6, 2);
+      const date = new Date(year + '/' + month + '/' + day);
+      if (date instanceof Date && dateSection.length === 8) {
+        this.readCsvFile();
+        this.fileFormatValidation = false;
+      } else {
+        this.fileFormatValidation = true;
+      }
+
     } else {
       this.fileFormatValidation = true;
     }
@@ -126,7 +137,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private validateHeading() {
     for (const item of this.csvTableHeader) {
       if (this.agentScheduleType === AgentScheduleType.Scheduling &&
-         this.scheduleColumns.findIndex(x => x === item) === -1) {
+        this.scheduleColumns.findIndex(x => x === item) === -1) {
         return true;
       }
       if (this.agentScheduleType === AgentScheduleType.SchedulingManager &&
@@ -165,13 +176,13 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     if (importRecord.length > 0) {
       if (this.agentScheduleType === AgentScheduleType.Scheduling &&
         !importRecord.every(x => Date.parse(x?.dateFrom) === Date.parse(importRecord[0]?.dateFrom) &&
-        Date.parse(x?.dateTo) === Date.parse(importRecord[0]?.dateTo))) {
+          Date.parse(x?.dateTo) === Date.parse(importRecord[0]?.dateTo))) {
         return true;
       }
       for (const item of importRecord) {
         if (this.agentScheduleType === AgentScheduleType.SchedulingManager &&
           !importRecord.every(x => Date.parse(x?.agentScheduleManagerChart?.date) ===
-          Date.parse(importRecord[0]?.agentScheduleManagerChart?.date))) {
+            Date.parse(importRecord[0]?.agentScheduleManagerChart?.date))) {
           return true;
         }
         if (this.agentScheduleType === AgentScheduleType.Scheduling) {

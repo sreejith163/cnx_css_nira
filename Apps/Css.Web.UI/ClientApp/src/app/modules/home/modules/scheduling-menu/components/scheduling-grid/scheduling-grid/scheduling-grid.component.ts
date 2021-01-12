@@ -29,7 +29,6 @@ import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { ExcelService } from 'src/app/shared/services/excel.service';
 
 import * as $ from 'jquery';
-import { KeyValue } from 'src/app/shared/models/key-value.model';
 import { ImportScheduleComponent } from '../import-schedule/import-schedule.component';
 import { ExcelData } from '../../../models/excel-data.model';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
