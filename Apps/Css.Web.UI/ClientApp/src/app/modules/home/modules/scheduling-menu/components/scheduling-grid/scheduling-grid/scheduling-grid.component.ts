@@ -392,6 +392,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.currentDate = this.startDate.year + '-' + month + '-' + day;
     if (this.tabIndex === AgentScheduleType.Scheduling) {
       this.loadAgentSchedules();
+    } else {
+      this.loadAgentScheduleManger();
     }
   }
 
@@ -497,6 +499,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.tabIndex = tabIndex;
     this.openTimes = this.getOpenTimes();
     if (this.tabIndex === AgentScheduleType.SchedulingManager && this.agentSchedulingGroupId) {
+      this.totalSchedulingGridData = undefined;
+      this.totalSchedulingRecord = undefined;
       this.setStartDateAsToday();
       this.setAgent(0);
       this.managerCharts = [];
@@ -859,15 +863,15 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private loadAgentScheduleManger() {
-    const queryParams = this.getQueryParams('id');
+    const queryParams = this.getQueryParams('id,employeeId,employeeName');
     queryParams.skipPageSize = true;
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
     this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
       .pipe(mergeMap(data => {
-        const response = data.body;
+        this.totalSchedulingGridData = data.body;
         const ids = Array<string>();
-        response.forEach(element => {
+        this.totalSchedulingGridData.forEach(element => {
           ids.push(element.id);
         });
         return this.getAgentChatrs(ids);

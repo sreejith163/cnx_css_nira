@@ -95,7 +95,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <summary>
         /// Updates the agent schedule manager chart.
         /// </summary>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>on
         /// <returns></returns>
         [HttpPut("managercharts")]
         public async Task<IActionResult> UpdateAgentScheduleManagerChart([FromBody] UpdateAgentScheduleManagerChart agentScheduleDetails)
