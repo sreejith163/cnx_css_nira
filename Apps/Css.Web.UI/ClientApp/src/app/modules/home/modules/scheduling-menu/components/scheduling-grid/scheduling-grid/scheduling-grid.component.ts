@@ -71,7 +71,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   timeIntervals = 15;
   currentPage = 1;
-  pageSize = 10;
+  pageSize = 3;
   characterSplice = 25;
   maxIconCount = 30;
   iconCount: number;
@@ -118,7 +118,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   selectedGrid: AgentScheduleGridResponse;
   schedulingGridData: AgentScheduleGridResponse;
   agentInfo: AgentInfo;
-  paginationSize = Constants.paginationSize;
+  paginationSize = Constants.schedulingPaginationSize;
   schedulingIntervals = Constants.schedulingIntervals;
   sortType = SortingType;
 
@@ -343,13 +343,17 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   changePageSize(pageSize: number) {
-    this.pageSize = pageSize;
-    this.loadAgentSchedules();
+    if (this.agentSchedulingGroupId) {
+      this.pageSize = pageSize;
+      this.loadAgentSchedules();
+    }
   }
 
   changePage(page: number) {
-    this.currentPage = page;
-    this.loadAgentSchedules();
+    if (this.agentSchedulingGroupId) {
+      this.currentPage = page;
+      this.loadAgentSchedules();
+    }
   }
 
   setSchedulingStatus(status: string, index: number) {
@@ -363,7 +367,15 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   onSchedulingGroupChange(schedulingGroupId: number) {
     this.agentSchedulingGroupId = schedulingGroupId;
-    this.tabIndex === AgentScheduleType.Scheduling ? this.loadAgentSchedules() : this.loadAgentScheduleManger();
+    if (this.agentSchedulingGroupId) {
+      this.pageSize = this.pageSize ?? 3;
+      this.currentPage = this.currentPage ?? 1;
+      this.tabIndex === AgentScheduleType.Scheduling ? this.loadAgentSchedules() : this.loadAgentScheduleManger();
+    } else {
+      this.totalSchedulingGridData = undefined;
+      this.pageSize = undefined;
+      this.currentPage = undefined;
+    }
   }
 
   search() {
@@ -449,9 +461,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     const today = new Date();
     const year = String(today.getFullYear());
     const month = String((today.getMonth() + 1)).length === 1 ?
-     ('0' + String((today.getMonth() + 1))) : String((today.getMonth() + 1));
+      ('0' + String((today.getMonth() + 1))) : String((today.getMonth() + 1));
     const day = String(today.getDate()).length === 1 ?
-    ('0' + String(today.getDate())) : String(today.getDate());
+      ('0' + String(today.getDate())) : String(today.getDate());
 
     const date = year + month + day;
     this.excelService.exportAsExcelFile(this.tabIndex === AgentScheduleType.Scheduling ?
@@ -488,8 +500,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   openTab(tabIndex: number) {
     this.tabIndex = tabIndex;
     this.openTimes = this.getOpenTimes();
-    if (this.tabIndex === AgentScheduleType.SchedulingManager) {
-      this. setStartDateAsToday();
+    if (this.tabIndex === AgentScheduleType.SchedulingManager && this.agentSchedulingGroupId) {
+      this.setStartDateAsToday();
       this.setAgent(0);
       this.managerCharts = [];
       this.sortTypeValue = SortingType.Ascending;
@@ -497,7 +509,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       // this.endTimeFilter = this.openTimes[this.openTimes.length - 1];
       this.loadSchedulingCodes();
       this.loadAgentScheduleManger();
-    } else {
+    } else if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
       this.clearStartDate();
       this.loadAgentSchedules();
     }
@@ -505,7 +517,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   getIconFromSelectedAgent(scheduleId: string, openTime: string) {
     const date = this.testDate;
-    const chart = this.managerCharts.find(x => x.id === scheduleId );
+    const chart = this.managerCharts.find(x => x.id === scheduleId);
     const data = chart?.agentScheduleManagerCharts.find(x => x.date === date);
 
     if (data) {
@@ -617,7 +629,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         weekData = weekDays.find(x => x.day === +week);
       } else {
         scheduleId = elem?.attributes?.scheduleId?.value;
-        const chart = this.managerCharts.find(x => x.id === scheduleId );
+        const chart = this.managerCharts.find(x => x.id === scheduleId);
         // weekDays = chart.agentScheduleManagerCharts.find(x => x.date === date);
         // this.selectedGrid.agentScheduleManagerCharts = weekDays;
         weekDays = chart?.agentScheduleManagerCharts;
@@ -819,7 +831,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadTranslations(){
+  private loadTranslations() {
     const browserLang = this.genericStateManagerService.getLanguage();
     this.currentLanguage = browserLang;
     this.translate.use(browserLang ? browserLang : 'en');
@@ -856,14 +868,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
     this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
-    .pipe(mergeMap(data => {
-      const response = data.body;
-      const ids = Array<string>();
-      response.forEach(element => {
-        ids.push(element.id);
-      });
-      return this.getAgentChatrs(ids);
-    }))
+      .pipe(mergeMap(data => {
+        const response = data.body;
+        const ids = Array<string>();
+        response.forEach(element => {
+          ids.push(element.id);
+        });
+        return this.getAgentChatrs(ids);
+      }))
       .subscribe((response) => {
         this.managerCharts.push(response);
         console.log('s', this.managerCharts);

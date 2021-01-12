@@ -4158,6 +4158,29 @@ export class Constants {
     },
   ];
 
+  public static readonly schedulingPaginationSize: PaginationSize[] = [
+    {
+      count: 3,
+      text: '3/Page'
+    },
+    {
+      count: 5,
+      text: '5/Page'
+    },
+    {
+      count: 10,
+      text: '10/Page'
+    },
+    {
+      count: 15,
+      text: '15/Page'
+    },
+    {
+      count: 20,
+      text: '20/Page'
+    },
+  ];
+
   public static readonly EmailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{3,}))$/;
 
   public static readonly DefaultTextMaxLength = 50;

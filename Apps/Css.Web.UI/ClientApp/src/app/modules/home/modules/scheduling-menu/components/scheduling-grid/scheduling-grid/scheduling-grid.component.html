@@ -167,7 +167,9 @@
                 <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td> -->
                     <td>{{el.modifiedBy}}</td>
                     <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
+
                   </tr>
+
                   <ng-container>
                     <tr class="row-details" *ngIf="selectedGrid?.employeeId === el?.employeeId"
                       [@enterAnimation]="selectedGrid?.employeeId === el?.employeeId">
@@ -269,6 +271,7 @@
                                           </ng-container>
                                         </td>
                                       </tr>
+
                                     </tbody>
                                   </table>
                                 </div>
@@ -298,6 +301,9 @@
                 </ng-container>
               </tbody>
             </table>
+            <div *ngIf="!agentSchedulingGroupId" class="valid-record">
+              {{ 'No Record Found' | translate }}
+            </div>
           </div>
         </div>
       </div>
@@ -473,7 +479,11 @@
             </td> -->
               </tr>
             </tbody>
+            <div *ngIf="!agentSchedulingGroupId" class="valid-record">
+              {{ 'No Record Found' | translate }}
+            </div>
           </table>
+
         </div>
       </div>
       <div class="row padding-10">
