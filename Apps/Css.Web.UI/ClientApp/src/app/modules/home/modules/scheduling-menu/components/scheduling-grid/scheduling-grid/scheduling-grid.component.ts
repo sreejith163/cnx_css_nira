@@ -368,13 +368,12 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   onSchedulingGroupChange(schedulingGroupId: number) {
     this.agentSchedulingGroupId = schedulingGroupId;
     if (this.agentSchedulingGroupId) {
-      this.pageSize = this.pageSize ?? 3;
-      this.currentPage = this.currentPage ?? 1;
+      this.pageSize = this.pageSize;
+      this.currentPage = this.currentPage;
       this.tabIndex === AgentScheduleType.Scheduling ? this.loadAgentSchedules() : this.loadAgentScheduleManger();
     } else {
       this.totalSchedulingGridData = undefined;
-      this.pageSize = undefined;
-      this.currentPage = undefined;
+      this.totalSchedulingRecord = undefined;
     }
   }
 
