@@ -862,6 +862,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   private loadAgentScheduleManger() {
     const queryParams = this.getQueryParams('id');
+    queryParams.skipPageSize = true;
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
     this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
