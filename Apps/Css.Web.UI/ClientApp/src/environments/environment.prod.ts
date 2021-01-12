@@ -5,10 +5,10 @@ export const environment = {
     authAppToken: '9xxo7FxS7IdXQRQpBTaVQtmpgHTZBKxOEhN'
   },
   services: {
-    gatewayService: 'http://10.87.221.35:4201/api'
+    gatewayService: 'http://10.87.222.9:4201/api'
   },
   settings: {
-    applicationUrl: 'http://10.87.221.8:4200',
+    applicationUrl: 'http://10.87.221.34:4200',
     sessionName: 'session',
     cookiePath: '/'
   }
