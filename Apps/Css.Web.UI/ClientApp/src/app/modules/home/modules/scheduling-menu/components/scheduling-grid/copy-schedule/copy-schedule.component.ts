@@ -57,8 +57,6 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadAgents();
-    this.loadTranslations();
-    this.subscribeToTranslations();
   }
 
   ngOnDestroy() {
@@ -77,6 +75,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
       this.agentSchedulingGroupId = +schedulingGroupId;
       this.loadAgents();
     } else {
+      this.agentSchedulingGroupId = undefined;
       this.agents = [];
     }
   }
@@ -226,22 +225,6 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptions.push(this.copyAgentScheduleChartSubscription);
-  }
-
-  private subscribeToTranslations() {
-    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
-      (language) => {
-        if (language) {
-          this.loadTranslations();
-        }
-      }
-    );
-    this.subscriptions.push(this.getTranslationSubscription);
-  }
-
-  private loadTranslations() {
-    const browserLang = this.genericStateManagerService.getLanguage();
-    this.translate.use(browserLang ? browserLang : 'en');
   }
 
 }

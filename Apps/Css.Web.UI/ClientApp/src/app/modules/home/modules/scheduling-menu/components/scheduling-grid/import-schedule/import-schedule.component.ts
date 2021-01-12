@@ -117,6 +117,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     this.uploadFile = this.fileUploaded.name;
     if (this.uploadFile.split('.')[1] === 'csv') {
       this.readCsvFile();
+      this.fileFormatValidation = false;
     } else {
       this.fileFormatValidation = true;
     }
