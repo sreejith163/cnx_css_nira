@@ -175,8 +175,6 @@ services:
      - ASPNETCORE_HTTPS_PORT=5011
      - ASPNETCORE_Kestrel__Certificates__Default__Password=cnxcss
      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/css.pfx
-     - MongoDbSettings__ConnectionStrings=mongodb://mongo1:30001
-     - MongoDbSettings__DatabaseName=css_dev
    ports:
      - "5011:443"
      - "5010:80"
