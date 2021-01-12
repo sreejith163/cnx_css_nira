@@ -39,9 +39,14 @@ namespace Css.Api.Scheduling.Repository
 
             var sortedAgentSchedules = SortHelper.ApplySort(filteredAgentSchedules, agentScheduleQueryparameter.OrderBy);
 
-            var pagedAgentSchedules = sortedAgentSchedules
-                .Skip((agentScheduleQueryparameter.PageNumber - 1) * agentScheduleQueryparameter.PageSize)
-                .Take(agentScheduleQueryparameter.PageSize);
+            var pagedAgentSchedules = sortedAgentSchedules;
+
+            if (!agentScheduleQueryparameter.SkipPageSize)
+            {
+                pagedAgentSchedules = pagedAgentSchedules
+                    .Skip((agentScheduleQueryparameter.PageNumber - 1) * agentScheduleQueryparameter.PageSize)
+                    .Take(agentScheduleQueryparameter.PageSize);
+            }
 
             var shapedAgentSchedules = DataShaper.ShapeData(pagedAgentSchedules, agentScheduleQueryparameter.Fields);
 
