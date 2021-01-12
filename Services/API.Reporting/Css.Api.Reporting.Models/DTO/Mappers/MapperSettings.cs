@@ -7,8 +7,7 @@ namespace Css.Api.Reporting.Models.DTO.Mappers
 {
     public class MapperSettings
     {
-        public MapperGlobalSettings GlobalSettings { get; set; }
-        public List<MapperIndividualSettings> Imports { get; set; }
-        public List<MapperIndividualSettings> Exports { get; set; }
+        public List<Activity> Activities { get; set; }
+        public List<DataOption> DataOptions { get; set; }
     }
 }

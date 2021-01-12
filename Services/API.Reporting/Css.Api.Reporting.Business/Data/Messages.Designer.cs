@@ -70,29 +70,38 @@ namespace Css.Api.Reporting.Business.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FTP mapping not found for {0} &amp; operation - {1}.
+        ///   Looks up a localized string similar to Invalid data source specified for key - &apos;{0}&apos;.
         /// </summary>
-        internal static string FTPMappingNotFound {
+        internal static string InvalidDataSource {
             get {
-                return ResourceManager.GetString("FTPMappingNotFound", resourceCulture);
+                return ResourceManager.GetString("InvalidDataSource", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid FTP host specified for key {0}.
+        ///   Looks up a localized string similar to Invalid data target specified for key - &apos;{0}&apos;.
         /// </summary>
-        internal static string InvalidFTPHost {
+        internal static string InvalidDataTarget {
             get {
-                return ResourceManager.GetString("InvalidFTPHost", resourceCulture);
+                return ResourceManager.GetString("InvalidDataTarget", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The requested operation is invalid.
+        ///   Looks up a localized string similar to Invalid source specified for key - &apos;{0}&apos;.
         /// </summary>
-        internal static string InvalidOperation {
+        internal static string InvalidSource {
             get {
-                return ResourceManager.GetString("InvalidOperation", resourceCulture);
+                return ResourceManager.GetString("InvalidSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid target specified for key - &apos;{0}&apos;.
+        /// </summary>
+        internal static string InvalidTarget {
+            get {
+                return ResourceManager.GetString("InvalidTarget", resourceCulture);
             }
         }
         
@@ -102,15 +111,6 @@ namespace Css.Api.Reporting.Business.Data {
         internal static string MappingNotFound {
             get {
                 return ResourceManager.GetString("MappingNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unable to map key - &apos;{0}&apos; to a service.
-        /// </summary>
-        internal static string ServiceMappingNotFound {
-            get {
-                return ResourceManager.GetString("ServiceMappingNotFound", resourceCulture);
             }
         }
     }

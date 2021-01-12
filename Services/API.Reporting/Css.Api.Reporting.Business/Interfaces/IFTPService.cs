@@ -13,11 +13,16 @@ namespace Css.Api.Reporting.Business.Interfaces
     public interface IFTPService
     {
         /// <summary>
-        /// The method to read data from FTP for the defined key. All other FTP configs will be pulled from the mapper json using the key.
+        /// The method to set FTP options
         /// </summary>
-        /// <param name="key">The 'Key' field defined in the mapper json</param>
+        /// <param name="options"></param>
+        public void Set(Dictionary<string, string> options);
+
+        /// <summary>
+        /// The method to read data from FTP for the mapped context.
+        /// </summary>
         /// <returns>A list of instances of DataFeed for all files present in import directory</returns>
-        Task<List<DataFeed>> Read(string key);
+        List<DataFeed> Read();
 
         /// <summary>
         /// Moves the processed file to the corresponding completed folder within the FTP

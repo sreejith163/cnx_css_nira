@@ -12,10 +12,9 @@ namespace Css.Api.Reporting.Business.Interfaces
     public interface IImportStrategy
     {
         /// <summary>
-        /// The method for processing the strategy for the key
+        /// The method for processing the import strategy
         /// </summary>
-        /// <param name="key">The 'Key' field defined in the mapper json</param>
         /// <returns>An instance of ImportResponse</returns>
-        Task<ImportStrategyResponse> Process(string key);
+        Task<TargetResponse> Process();
     }
 }

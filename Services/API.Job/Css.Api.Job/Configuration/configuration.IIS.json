@@ -7,7 +7,7 @@
         "Url": "https://localhost:44397/api/import",
         "Method": "POST",
         "Headers": {
-          "importKey": "UDW"
+          "activity": "UDW-Import"
         },
         "Content": "",
         "TimeZone": "UTC"

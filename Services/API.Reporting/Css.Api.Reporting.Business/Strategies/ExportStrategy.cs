@@ -16,7 +16,7 @@ namespace Css.Api.Reporting.Business.Strategies
         /// <summary>
         /// The service resolver to fetch related services
         /// </summary>
-        private readonly IServiceResolver _serviceResolver;
+        private readonly IServiceFactory _serviceFactory;
         #endregion
 
         #region Constructor
@@ -24,23 +24,22 @@ namespace Css.Api.Reporting.Business.Strategies
         /// <summary>
         /// Constructor to initialize all properties
         /// </summary>
-        /// <param name="serviceResolver"></param>
-        public ExportStrategy(IServiceResolver serviceResolver)
+        /// <param name="serviceFactory"></param>
+        public ExportStrategy(IServiceFactory serviceFactory)
         {
-            _serviceResolver = serviceResolver;
+            _serviceFactory = serviceFactory;
         }
         #endregion
 
         #region Public Methods
 
         /// <summary>
-        /// The method to process the export strategy based on the input key
+        /// The method to process the export strategy
         /// </summary>
-        /// <param name="key">The 'Key' field defined in the mapper json</param>
-        /// <returns>An instance of ExportResponse</returns>
-        public ExportResponse Process(string key)
+        /// <returns></returns>
+        public void Process()
         {
-            return _serviceResolver.GetExporter(key).Process();
+            
         }
         #endregion
     }

@@ -36,12 +36,12 @@ namespace Css.Api.Reporting.UnitTest.Controllers
         public ImportControllerShould()
         {
             _mockImportStrategy = new Mock<IImportStrategy>();
-            _mockImportStrategy.SetReturnsDefault<Task<ImportStrategyResponse>>(Task.FromResult<ImportStrategyResponse>(new ImportStrategyResponse()));
+            _mockImportStrategy.SetReturnsDefault<Task<TargetResponse>>(Task.FromResult<TargetResponse>(new TargetResponse()));
             _importController = new ImportController(_mockImportStrategy.Object);
         }
         #endregion
 
-        #region Post([FromHeader] string importKey)
+        #region Post()
         
         /// <summary>
         /// The method to test the post call
@@ -49,9 +49,9 @@ namespace Css.Api.Reporting.UnitTest.Controllers
         [Fact]
         public async void CheckPost()
         {
-            var response = await _importController.Post("UDW");
+            var response = await _importController.Post();
             Assert.NotNull(response);
-            Assert.IsType<ImportStrategyResponse>(response);
+            Assert.IsType<TargetResponse>(response);
         }
         #endregion
     }

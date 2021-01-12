@@ -7,7 +7,7 @@
         "Url": "https://css.api.gateway/api/import",
         "Method": "POST",
         "Headers": {
-          "importKey": "UDW"
+          "activity": "UDW-Import"
         },
         "Content": "",
         "TimeZone": "UTC"

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Css.Api.Reporting.Models.DTO.Response
 {
-    public class ImportResponse
+    public class DataResponse
     {
         public int Status { get; set; }
         public string Metadata { get; set; }

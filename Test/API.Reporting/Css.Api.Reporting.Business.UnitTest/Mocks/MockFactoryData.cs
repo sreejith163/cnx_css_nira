@@ -9,6 +9,8 @@ using Css.Api.Reporting.Models.DTO.Processing;
 using System.Threading.Tasks;
 using Css.Api.Reporting.Models.DTO.Response;
 using Css.Api.Reporting.Models.Enums;
+using Css.Api.Core.Utilities.Extensions;
+using Css.Api.Reporting.Models.DTO.Request;
 
 namespace Css.Api.Reporting.Business.UnitTest.Mocks
 {
@@ -24,29 +26,49 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         private readonly IOptions<MapperSettings> _mappings;
 
         /// <summary>
-        /// The list of all mock importer objects
+        /// A mock IMapperService
         /// </summary>
-        private readonly IEnumerable<IImporter> _importers;
+        private readonly Mock<IMapperService> _mapperService;
 
         /// <summary>
-        /// The list of all mock exporter objects
+        /// The list of all mock source objects
         /// </summary>
-        private readonly IEnumerable<IExporter> _exporters;
+        private readonly IEnumerable<ISource> _sources;
+
+        /// <summary>
+        /// The list of all mock target objects
+        /// </summary>
+        private readonly IEnumerable<ITarget> _targets;
 
         /// <summary>
         /// A mock importer
         /// </summary>
-        private readonly Mock<IImporter> _mockImporter;
+        private readonly Mock<ISource> _mockSource;
 
         /// <summary>
         /// A mock exporter
         /// </summary>
-        private readonly Mock<IExporter> _mockExporter;
+        private readonly Mock<ITarget> _mockTarget;
+
+        /// <summary>
+        /// A mock ftp service
+        /// </summary>
+        private readonly Mock<IFTPService> _mockFtp;
 
         /// <summary>
         /// A mock response data feed
         /// </summary>
         private readonly List<DataFeed> _mockFeed;
+
+        /// <summary>
+        /// A mock mapping context
+        /// </summary>
+        private readonly MappingContext _mockContext;
+
+        /// <summary>
+        /// A list of mock mapping contexts
+        /// </summary>
+        private readonly List<MappingContext> _contexts;
         #endregion
 
         #region Constructor
@@ -58,10 +80,14 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         {
             _mappings = GenerateMapperOptions();
             _mockFeed = InitializeDataFeed();
-            _mockImporter = InitializeMockImporter();
-            _mockExporter = InitializeMockExporter();
-            _importers = InitializeImporters();
-            _exporters = InitializeExporters();
+            _mockSource = InitializeMockSource();
+            _mockTarget = InitializeMockTarget();
+            _sources = InitializeSources();
+            _targets = InitializeTargets();
+            _mapperService = InitializeMockMapper();
+            _mockFtp = InitializeMockFTP();
+            _mockContext = InitializeMappingContext();
+            _contexts = GenerateMappingContexts();
         }
         #endregion
 
@@ -72,18 +98,6 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         /// </summary>
         /// <returns></returns>
         public IOptions<MapperSettings> GetMapperSettings() => _mappings;
-
-        /// <summary>
-        /// Method which returns the mapper settings with individual override data
-        /// </summary>
-        /// <returns></returns>
-        public IOptions<MapperSettings> GetMapperSettingsIndividual() => GenerateMapperOptionsIndividual();
-
-        /// <summary>
-        /// Method which returns an empty mapper settings simulation object
-        /// </summary>
-        /// <returns></returns>
-        public IOptions<MapperSettings> GetEmptyMapperSettings() => Options.Create<MapperSettings>(new MapperSettings());
 
         /// <summary>
         /// Method which returns an instance of DataFeed
@@ -98,42 +112,62 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         public List<DataFeed> GetFeeds() => _mockFeed;
 
         /// <summary>
+        /// Method which returns an instances of MappingContext
+        /// </summary>
+        /// <returns></returns>
+        public MappingContext GetMappingContext() => _mockContext;
+
+        public List<MappingContext> GetMappingContexts() => _contexts;
+
+        /// <summary>
+        /// Method which returns a mock mapper service
+        /// </summary>
+        /// <returns></returns>
+        public Mock<IMapperService> GetMockMapper() => _mapperService; 
+        
+        /// <summary>
         /// Method which returns an enumerable of all mock importer objects
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IImporter> GetImporters() => _importers;
+        public IEnumerable<ISource> GetSources() => _sources;
 
         /// <summary>
         /// Method which returns an enumerable of all mock exporter objects
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IExporter> GetExporters() => _exporters;
+        public IEnumerable<ITarget> GetTargets() => _targets;
+
+        /// <summary>
+        /// Method which returns a mock ftp service
+        /// </summary>
+        /// <returns></returns>
+        public Mock<IFTPService> GetMockFTP() => _mockFtp;
 
         /// <summary>
         /// Method which returns a mock importer object
         /// </summary>
         /// <returns></returns>
-        public Mock<IImporter> GetMockImporter() => _mockImporter;
+        public Mock<ISource> GetMockSource() => _mockSource;
 
         /// <summary>
         /// Method which returns a mock exporter object
         /// </summary>
         /// <returns></returns>
-        public Mock<IExporter> GetMockExporter() => _mockExporter;
+        public Mock<ITarget> GetMockTarget() => _mockTarget;
 
         /// <summary>
         /// Method which returns a mock importer object which has mock responses configured based on the input status
         /// </summary>
         /// <param name="status">The process status</param>
         /// <returns></returns>
-        public Mock<IImporter> GetMockImporter(int status) => InitializeMockImporter(status);
+        public Mock<ISource> GetMockSource(int status) => InitializeMockSource(status);
 
         /// <summary>
         /// Method which returns a mock exporter object which has mock responses configured based on the input status
         /// </summary>
         /// <param name="status">The process status</param>
         /// <returns></returns>
-        public Mock<IExporter> GetMockExporter(int status) => InitializeMockExporter(status);
+        public Mock<ITarget> GetMockTarget(int status) => InitializeMockTarget(status);
         #endregion
 
         #region Private Methods
@@ -146,84 +180,100 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         {
             return Options.Create<MapperSettings>(new MapperSettings()
             {
-                GlobalSettings = new MapperGlobalSettings()
+                Activities = new List<Activity>
                 {
-                    FTPServer = "sftp://username:pwd@0.0.0.0",
-                    FTPInbox = "/ftp/{0}/Inbox",
-                    FTPOutbox = "/ftp/{0}/Outbox"
-                },
-                Imports = new List<MapperIndividualSettings>()
-                {
-                    new MapperIndividualSettings()
+                    new Activity()
                     {
                         Key = "UDW",
-                        Service = "UDWImporter"
+                        Source = "UDWFTP",
+                        SourceDataOption = "UDWFTPOptions",
+                        Target = "UDWDB",
+                        TargetDataOption = "UDWDBOptions"
                     },
-                    new MapperIndividualSettings()
+                    new Activity()
                     {
-                        Key = "eStart",
-                        Service = "eStartImporter"
+                        Key = "EStart",
+                        Source = "EStartDB",
+                        SourceDataOption = "EStartDBOptions",
+                        Target = "EStartFTP",
+                        TargetDataOption = "EStartFTPOptions"
                     },
-                    new MapperIndividualSettings()
+                    new Activity()
                     {
-                        Key = "Test"
+                        Key = "NoSource",
+                        Source = "",
+                        SourceDataOption = "",
+                        Target = "EStartFTP",
+                        TargetDataOption = "EStartFTPOptions"
+                    },
+                    new Activity()
+                    {
+                        Key = "NoSourceOption",
+                        Source = "EStartDB",
+                        SourceDataOption = "NoOption",
+                        Target = "EStartFTP",
+                        TargetDataOption = "EStartFTPOptions"
+                    },
+                    new Activity()
+                    {
+                        Key = "NoTarget",
+                        Source = "EStartDB",
+                        SourceDataOption = "EStartDBOptions",
+                        Target = "",
+                        TargetDataOption = ""
+                    },
+                    new Activity()
+                    {
+                        Key = "NoTargetOption",
+                        Source = "EStartDB",
+                        SourceDataOption = "EStartDBOptions",
+                        Target = "EStartFTP",
+                        TargetDataOption = "NoOption"
                     }
                 },
-                Exports = new List<MapperIndividualSettings>()
+                DataOptions =  new List<DataOption>()
                 {
-                    new MapperIndividualSettings()
+                    new DataOption()
                     {
-                        Key = "eStart",
-                        Service = "eStartExporter"
+                        Key = "UDWDB",
+                        Type = DataOptions.Mongo.GetDescription(),
+                        Options = new Dictionary<string, string>()
+                        {
+                            { "ConnectionString" , "" },
+                            { "DatabaseName" , "" }
+                        }
                     },
-                    new MapperIndividualSettings()
+                    new DataOption()
                     {
-                        Key = "Test"
-                    }
-                }
-            });
-
-        }
-
-        /// <summary>
-        /// A method to generate the mock IOptions for MapperSettings with individual configuration overrides
-        /// </summary>
-        /// <returns></returns>
-        private IOptions<MapperSettings> GenerateMapperOptionsIndividual()
-        {
-            return Options.Create<MapperSettings>(new MapperSettings()
-            {
-                GlobalSettings = new MapperGlobalSettings()
-                {
-                    FTPServer = "",
-                    FTPInbox = "",
-                    FTPOutbox = ""
-                },
-                Imports = new List<MapperIndividualSettings>()
-                {
-                    new MapperIndividualSettings()
-                    {
-                        Key = "UDW",
-                        Service = "UDWImporter",
-                        FTPServer = "sftp://username:pwd@0.0.0.0",
-                        FTPFolder = "/ftp/UDW/Inbox"
+                        Key = "UDWFTP",
+                        Type = DataOptions.FTP.GetDescription(),
+                        Options = new Dictionary<string, string>()
+                        {
+                            { "FTPServer", "server" },
+                            { "FTPInbox", "inbox" },
+                            { "FTPOutbox", "outbox" }
+                        }
                     },
-                    new MapperIndividualSettings()
+                    new DataOption()
                     {
-                        Key = "eStart",
-                        Service = "eStartImporter",
-                        FTPServer = "sftp://username:pwd@0.0.0.0",
-                        FTPFolder = "/ftp/eStart/Inbox"
-                    }
-                },
-                Exports = new List<MapperIndividualSettings>()
-                {
-                    new MapperIndividualSettings()
+                        Key = "EStartDBOptions",
+                        Type = DataOptions.Mongo.GetDescription(),
+                        Options = new Dictionary<string, string>()
+                        {
+                            { "ConnectionString" , "" },
+                            { "DatabaseName" , "" }
+                        }
+                    },
+                    new DataOption()
                     {
-                        Key = "eStart",
-                        Service = "eStartExporter",
-                        FTPFolder = "sftp://username:pwd@0.0.0.0",
-                        FTPServer = "/ftp/eStart/Outbox"
+                        Key = "EStartFTPOptions",
+                        Type = DataOptions.FTP.GetDescription(),
+                        Options = new Dictionary<string, string>()
+                        {
+                            { "FTPServer", "server" },
+                            { "FTPInbox", "inbox" },
+                            { "FTPOutbox", "outbox" }
+                        }
                     }
                 }
             });
@@ -248,18 +298,109 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private MappingContext InitializeMappingContext()
+        {
+            return new MappingContext
+            {
+                Key = "UDW",
+                Source = "UDWFTP",
+                SourceType = DataOptions.FTP.GetDescription(),
+                Target = "UDWDB",
+                TargetType = DataOptions.Mongo.GetDescription(),
+                SourceOptions = new Dictionary<string, string>(),
+                TargetOptions = new Dictionary<string, string>()
+            };
+        }
+
+        private List<MappingContext> GenerateMappingContexts()
+        {
+            return new List<MappingContext>()
+            {
+                new MappingContext
+                {
+                    Key = "UDW",
+                    Source = "UDWFTP",
+                    SourceType = DataOptions.FTP.GetDescription(),
+                    Target = "UDWDB",
+                    TargetType = DataOptions.Mongo.GetDescription(),
+                    SourceOptions = new Dictionary<string, string>() {
+                        { "FTPServer", "server" },
+                        { "FTPInbox", "inbox" },
+                        { "FTPOutbox", "outbox" } 
+                    },
+                    TargetOptions = new Dictionary<string, string>()
+                    {
+                        { "ConnectionString" , "" },
+                        { "DatabaseName" , "" }
+                    }
+                },
+                new MappingContext
+                {
+                    Key = "EStart",
+                    Source = "EStartDB",
+                    SourceType = DataOptions.FTP.GetDescription(),
+                    Target = "EStartFTP",
+                    TargetType = DataOptions.Mongo.GetDescription(),
+                    SourceOptions = new Dictionary<string, string>()
+                    {
+                        { "ConnectionString" , "" },
+                        { "DatabaseName" , "" }
+                    },
+                    TargetOptions = new Dictionary<string, string>() {
+                        { "FTPServer", "server" },
+                        { "FTPInbox", "inbox" },
+                        { "FTPOutbox", "outbox" }
+                    }
+                },
+                new MappingContext
+                {
+                    Key = "Test",
+                    Source = "TestSource",
+                    SourceType = DataOptions.FTP.GetDescription(),
+                    Target = "TestTarget",
+                    TargetType = DataOptions.Mongo.GetDescription(),
+                    SourceOptions = new Dictionary<string, string>(),
+                    TargetOptions = new Dictionary<string, string>()
+                },
+            };
+        }
+        /// <summary>
+        /// A method to intialize a mock IMapperService
+        /// </summary>
+        /// <returns></returns>
+        private Mock<IMapperService> InitializeMockMapper()
+        {
+            var mapper = new Mock<IMapperService>();
+            mapper.SetReturnsDefault<MappingContext>(InitializeMappingContext());
+
+            return mapper;
+        }
+
+        /// <summary>
+        /// A method to initialize a mock IFTPService
+        /// </summary>
+        /// <returns></returns>
+        private Mock<IFTPService> InitializeMockFTP()
+        {
+            var ftp = new Mock<IFTPService>();
+            ftp.SetReturnsDefault<List<DataFeed>>(GetFeeds());
+            return ftp;
+        }
+
+        /// <summary>
         /// A method to initialize a mock importer and customize the responses based on the input status
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        private Mock<IImporter> InitializeMockImporter(int status = (int)ProcessStatus.Success)
+        private Mock<ISource> InitializeMockSource(int status = (int)ProcessStatus.Success)
         {
-            var importer = new Mock<IImporter>();
-            importer.SetReturnsDefault<string>("UDWImporter");
-            importer.SetReturnsDefault<Task<ImportResponse>>(Task.FromResult<ImportResponse>(new ImportResponse { 
-                Status = status
-            }));
-            return importer;
+            var source = new Mock<ISource>();
+            source.SetReturnsDefault<string>("UDWFTP");
+            source.SetReturnsDefault<Task<List<DataFeed>>>(Task.FromResult<List<DataFeed>>(InitializeDataFeed()));
+            return source;
         }
 
         /// <summary>
@@ -267,32 +408,43 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        private Mock<IExporter> InitializeMockExporter(int status = (int)ProcessStatus.Success)
+        private Mock<ITarget> InitializeMockTarget(int status = (int)ProcessStatus.Success)
         {
-            var exporter = new Mock<IExporter>();
-            exporter.SetReturnsDefault<string>("eStartExporter");
-            exporter.SetReturnsDefault<Task<ExportResponse>>(Task.FromResult<ExportResponse>(new ExportResponse
+            var target = new Mock<ITarget>();
+            target.SetReturnsDefault<string>("UDWDB");
+            target.SetReturnsDefault<Task<TargetResponse>>(Task.FromResult<TargetResponse>(new TargetResponse
             {
-                
+                Completed = new List<ImportData>()
+                {
+                    new ImportData()
+                },
+                Failed = new List<ImportData>()
+                {
+
+                },
+                Partial = new List<ImportData>()
+                {
+
+                }
             }));
-            return exporter;
+            return target;
         }
 
         /// <summary>
         /// A method to generate and initialize an enumerable of importer mock objects
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<IImporter> InitializeImporters()
+        private IEnumerable<ISource> InitializeSources()
         {
-            IList<IImporter> importers = new List<IImporter>();
-            var udw = new Mock<IImporter>();
-            udw.SetReturnsDefault<string>("UDWImporter");
+            IList<ISource> importers = new List<ISource>();
+            var udw = new Mock<ISource>();
+            udw.SetReturnsDefault<string>("UDWFTP");
 
             importers.Add(udw.Object);
 
             
-            var eStart = new Mock<IImporter>();
-            eStart.SetReturnsDefault<string>("eStartImporter");
+            var eStart = new Mock<ISource>();
+            eStart.SetReturnsDefault<string>("EStartDB");
 
             importers.Add(eStart.Object);
 
@@ -303,17 +455,17 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         /// A method to generate and initialize an enumerable of exporter mock objects
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<IExporter> InitializeExporters()
+        private IEnumerable<ITarget> InitializeTargets()
         {
-            IList<IExporter> exporters = new List<IExporter>();
-            var udw = new Mock<IExporter>();
-            udw.SetReturnsDefault<string>("UDWExporter");
+            IList<ITarget> exporters = new List<ITarget>();
+            var udw = new Mock<ITarget>();
+            udw.SetReturnsDefault<string>("UDWDB");
 
             exporters.Add(udw.Object);
 
 
-            var eStart = new Mock<IExporter>();
-            eStart.SetReturnsDefault<string>("eStartExporter");
+            var eStart = new Mock<ITarget>();
+            eStart.SetReturnsDefault<string>("EStartFTP");
 
             exporters.Add(eStart.Object);
 

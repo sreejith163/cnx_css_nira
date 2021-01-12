@@ -1,24 +1,31 @@
 {
   "Mappers": {
-    "GlobalSettings": {
-      "FTPServer": "sftp://cssftp:test@10.87.222.47", // sftp://{username}:{pwd}@{host/ip}
-      "FTPInbox": "/ftp/{0}/Inbox",
-      "FTPOutbox": "/ftp/{0}/Outbox"
-    },
-    "Imports": [
+    "Activities": [
       {
-        "Key": "UDW",
-        "Service": "UDWImporter",
-        "FTPServer": "",
-        "FTPFolder": ""
+        "Key": "UDW-Import",
+        "Source": "UDWImp",
+        "SourceDataOption": "CSSFTP",
+        "Target": "UDWImpTar",
+        "TargetDataOption": "CSSMongo"
       }
     ],
-    "Exports": [
+    "DataOptions": [
       {
-        "Key": "UDW",
-        "Service": "",
-        "FTPServer": "",
-        "FTPFolder": ""
+        "Key": "CSSMongo",
+        "Type": "MongoDB",
+        "Options": {
+          "ConnectionString": "mongodb://localhost:30001",
+          "DatabaseName": "css_dev"
+        }
+      },
+      {
+        "Key": "CSSFTP",
+        "Type": "FTP",
+        "Options": {
+          "FTPServer": "sftp://cssftp:test@10.87.222.47", // sftp://{username}:{pwd}@{host/ip}
+          "FTPInbox": "/ftp/{0}/Inbox",
+          "FTPOutbox": "/ftp/{0}/Outbox"
+        }
       }
     ]
   }

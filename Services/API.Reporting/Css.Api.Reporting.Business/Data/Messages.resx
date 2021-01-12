@@ -120,19 +120,19 @@
   <data name="EmptyFTPDirectory" xml:space="preserve">
     <value>Couldn't find any files to read in the requested directory</value>
   </data>
-  <data name="FTPMappingNotFound" xml:space="preserve">
-    <value>FTP mapping not found for {0} &amp; operation - {1}</value>
+  <data name="InvalidDataSource" xml:space="preserve">
+    <value>Invalid data source specified for key - '{0}'</value>
   </data>
-  <data name="InvalidFTPHost" xml:space="preserve">
-    <value>Invalid FTP host specified for key {0}</value>
+  <data name="InvalidDataTarget" xml:space="preserve">
+    <value>Invalid data target specified for key - '{0}'</value>
   </data>
-  <data name="InvalidOperation" xml:space="preserve">
-    <value>The requested operation is invalid</value>
+  <data name="InvalidSource" xml:space="preserve">
+    <value>Invalid source specified for key - '{0}'</value>
+  </data>
+  <data name="InvalidTarget" xml:space="preserve">
+    <value>Invalid target specified for key - '{0}'</value>
   </data>
   <data name="MappingNotFound" xml:space="preserve">
     <value>Mapping not found for key - '{0}'</value>
-  </data>
-  <data name="ServiceMappingNotFound" xml:space="preserve">
-    <value>Unable to map key - '{0}' to a service</value>
   </data>
 </root>

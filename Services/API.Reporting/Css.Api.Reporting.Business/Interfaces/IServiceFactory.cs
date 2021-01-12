@@ -11,12 +11,16 @@ namespace Css.Api.Reporting.Business.Interfaces
     public interface IServiceFactory
     {
         /// <summary>
-        /// A generic mapper to map a corresponding importer/exporter
+        /// A generic mapper to map a corresponding source/target for the current request
         /// </summary>
-        /// <typeparam name="T">A class of IImporter/IExporter</typeparam>
-        /// <param name="key">The 'Key' field from the mapper json</param>
-        /// <returns>An instance of the class implemention IImporter/IExporter</returns>
-        T Map<T>(string key)
+        /// <typeparam name="T">A class of ISource/ITarget</typeparam>
+        /// <returns>An instance of T</returns>
+        T Map<T>()
             where T : class;
+
+        /// <summary>
+        /// The method to initialize the data options
+        /// </summary>
+        void Initialize();
     }
 }

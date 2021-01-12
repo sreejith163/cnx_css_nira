@@ -21,11 +21,10 @@
             </summary>
             <param name="importStrategy"></param>
         </member>
-        <member name="M:Css.Api.Reporting.Controllers.ImportController.Post(System.String)">
+        <member name="M:Css.Api.Reporting.Controllers.ImportController.Post">
             <summary>
             The import method using the HTTP POST call
             </summary>
-            <param name="importKey">the key for import source </param>
         </member>
         <member name="T:Css.Api.Reporting.Extensions.DBContextExtension">
             <summary>

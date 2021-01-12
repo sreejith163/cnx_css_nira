@@ -39,14 +39,7 @@ namespace Css.Api.Reporting.Extensions
             services.AddSingleton(configuration);
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddHttpContextAccessor();
-
             services.Configure<MapperSettings>(configuration.GetSection("Mappers"));
-
-            services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
-
-            services.AddSingleton<IMongoDbSettings>(serviceProvider =>
-                serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
             services.AddReportingFramework();
 

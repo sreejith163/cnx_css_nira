@@ -11,10 +11,9 @@ namespace Css.Api.Reporting.Business.Interfaces
     public interface IExportStrategy
     {
         /// <summary>
-        /// The method for processing the strategy for the key
+        /// The method for processing the export strategy
         /// </summary>
-        /// <param name="key">The 'Key' field defined in the mapper json</param>
-        /// <returns>An instance of ExportResponse</returns>
-        ExportResponse Process(string key);
+        /// <returns></returns>
+        void Process();
     }
 }

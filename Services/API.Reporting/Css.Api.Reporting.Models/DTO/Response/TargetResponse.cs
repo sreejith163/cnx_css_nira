@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Css.Api.Reporting.Models.DTO.Response
 {
-    public class ImportStrategyResponse
+    public class TargetResponse
     {
         /// <summary>
         /// The total number of source processed
@@ -40,26 +40,26 @@ namespace Css.Api.Reporting.Models.DTO.Response
         /// <summary>
         /// List of all successful imports
         /// </summary>
-        public List<ImportStrategyFeed> Completed { get; set; }
+        public List<ImportData> Completed { get; set; }
 
         /// <summary>
         /// List of all failed imports
         /// </summary>
-        public List<ImportStrategyFeed> Failed { get; set; }
+        public List<ImportData> Failed { get; set; }
 
         /// <summary>
         /// List of all partial processed imports
         /// </summary>
-        public List<ImportStrategyFeed> Partial { get; set; }
+        public List<ImportData> Partial { get; set; }
 
         /// <summary>
         /// Constructor to initialize the properties
         /// </summary>
-        public ImportStrategyResponse()
+        public TargetResponse()
         {
-            Completed = new List<ImportStrategyFeed>();
-            Failed = new List<ImportStrategyFeed>();
-            Partial = new List<ImportStrategyFeed>();
+            Completed = new List<ImportData>();
+            Failed = new List<ImportData>();
+            Partial = new List<ImportData>();
         }
     }
 }

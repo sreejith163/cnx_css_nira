@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Css.Api.Reporting.Models.DTO.Response
 {
-    public class ImportStrategyFeed
+    public class ImportData
     {
         /// <summary>
         /// The source of the import

@@ -37,11 +37,10 @@ namespace Css.Api.Reporting.Controllers
         /// <summary>
         /// The import method using the HTTP POST call
         /// </summary>
-        /// <param name="importKey">the key for import source </param>
         [HttpPost]
-        public async Task<ImportStrategyResponse> Post([FromHeader] string importKey)
+        public async Task<TargetResponse> Post()
         {
-            return await _importStrategy.Process(importKey);
+            return await _importStrategy.Process();
         }
 
     }

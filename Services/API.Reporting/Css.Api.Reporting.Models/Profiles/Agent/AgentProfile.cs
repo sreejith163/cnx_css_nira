@@ -23,6 +23,7 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                 .ForMember(x => x.ModifiedBy, opt => opt.Ignore())
                 .ForMember(x => x.ModifiedDate, opt => opt.Ignore())
                 .ForMember(x => x.Mu, opt => opt.MapFrom(o => o.MU))
+                .ForMember(x => x.IsDeleted, opt => opt.MapFrom(o => false))
                 .ForMember(x => x.SenDate, opt =>
                 {
                     opt.PreCondition(o => {
@@ -69,6 +70,7 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                 .ForMember(x => x.ModifiedBy, opt => opt.MapFrom(o => "UDW Import"))
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ForMember(x => x.Mu, opt => opt.MapFrom(o => o.MU))
+                .ForMember(x => x.IsDeleted, opt => opt.MapFrom(o => false))
                 .ForMember(x => x.SenDate, opt =>
                 {
                     opt.PreCondition(o => {

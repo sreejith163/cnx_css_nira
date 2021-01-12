@@ -1,5 +1,6 @@
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Core.Utilities.Filters;
+using Css.Api.Reporting.Business.Extensions;
 using Css.Api.Reporting.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
@@ -90,6 +91,8 @@ namespace Css.Api.Reporting
                 c.SwaggerEndpoint("/swagger/" + Configuration["Version"] + "/swagger.json", Configuration["Title"] + " " + Configuration["Version"]);
             });
 
+            app.UseReportingFramework();
+
             app.UseRouting();
 
             app.UseAuthorization();
@@ -103,6 +106,8 @@ namespace Css.Api.Reporting
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
             });
+
+            
         }
     }
 }

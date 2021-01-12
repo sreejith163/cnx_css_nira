@@ -24,7 +24,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Strategies
         /// <summary>
         /// The mock service resolver
         /// </summary>
-        private Mock<IServiceResolver> _mockResolver;
+        private Mock<IServiceFactory> _mockFactory;
 
         /// <summary>
         /// The import strategy instance
@@ -45,6 +45,13 @@ namespace Css.Api.Reporting.Business.UnitTest.Strategies
         public ImportStrategyShould()
         {
             _data = new MockFactoryData();
+            _mockFactory = new Mock<IServiceFactory>();
+            _mockFactory.SetReturnsDefault<ISource>(_data.GetMockSource().Object);
+            _mockFactory.SetReturnsDefault<ITarget>(_data.GetMockTarget().Object);
+            _mockFactory.SetReturnsDefault<Task<List<DataFeed>>>(Task.FromResult<List<DataFeed>>(_data.GetFeeds()));
+            _mockFactory.SetReturnsDefault<Task>(Task.CompletedTask);
+
+            _importStrategy = new ImportStrategy(_mockFactory.Object);
         }
         #endregion
 
@@ -54,70 +61,12 @@ namespace Css.Api.Reporting.Business.UnitTest.Strategies
         /// The method to test the successful processing
         /// </summary>
         [Fact]
-        public async void CheckProcessSuccess()
+        public async void CheckStrategy()
         {
-            var response = await CheckProcess((int)ProcessStatus.Success);
+            var response = await _importStrategy.Process();
             Assert.NotNull(response);
-            Assert.IsType<ImportStrategyResponse>(response);
-            Assert.Single(response.Completed);
-            Assert.Empty(response.Partial);
-            Assert.Empty(response.Failed);
-            Assert.Equal(1, response.TotalSources);
-            Assert.Equal(ProcessStatus.Success.GetDescription(), response.Status);
+            Assert.IsType<TargetResponse>(response);
         }
-
-        /// <summary>
-        /// The method to test the partial processing
-        /// </summary>
-        [Fact]
-        public async void CheckProcessPartial()
-        {
-            var response = await CheckProcess((int)ProcessStatus.Partial);
-            Assert.NotNull(response);
-            Assert.IsType<ImportStrategyResponse>(response);
-            Assert.Single(response.Partial);
-            Assert.Empty(response.Completed);
-            Assert.Empty(response.Failed);
-            Assert.Equal(1, response.TotalSources);
-            Assert.Equal(ProcessStatus.Partial.GetDescription(), response.Status);
-        }
-
-        /// <summary>
-        /// The method to test the failed processing
-        /// </summary>
-        [Fact]
-        public async void CheckProcessFailed()
-        {
-            var response = await CheckProcess((int)ProcessStatus.Failed);
-            Assert.NotNull(response);
-            Assert.IsType<ImportStrategyResponse>(response);
-            Assert.Single(response.Failed);
-            Assert.Empty(response.Partial);
-            Assert.Empty(response.Completed);
-            Assert.Equal(1, response.TotalSources);
-            Assert.Equal(ProcessStatus.Failed.GetDescription(), response.Status);
-        }
-
-        #region Private Method
-        
-        /// <summary>
-        /// The method to execute the import strategy process based on the enum value ProcessStatus
-        /// </summary>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        private async Task<dynamic> CheckProcess(int status)
-        {
-            _mockResolver = new Mock<IServiceResolver>();
-            _mockResolver.SetReturnsDefault<IImporter>(_data.GetMockImporter(status).Object);
-            _mockResolver.SetReturnsDefault<IExporter>(_data.GetMockExporter(status).Object);
-            _mockResolver.SetReturnsDefault<Task<List<DataFeed>>>(Task.FromResult<List<DataFeed>>(_data.GetFeeds()));
-            _mockResolver.SetReturnsDefault<Task>(Task.CompletedTask);
-
-            _importStrategy = new ImportStrategy(_mockResolver.Object);
-
-            return await _importStrategy.Process("UDW");
-        }
-        #endregion
         #endregion
     }
 }

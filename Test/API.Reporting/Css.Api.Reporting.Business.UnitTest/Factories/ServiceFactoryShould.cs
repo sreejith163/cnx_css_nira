@@ -3,9 +3,12 @@ using Css.Api.Reporting.Business.Factories;
 using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Business.UnitTest.Mocks;
 using Css.Api.Reporting.Models.DTO.Mappers;
+using Css.Api.Reporting.Models.DTO.Request;
 using Microsoft.Extensions.Options;
+using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -24,9 +27,9 @@ namespace Css.Api.Reporting.Business.UnitTest.Factories
         private readonly MockFactoryData _factoryData;
 
         /// <summary>
-        /// The service factory
+        /// The list of mock Mapping contexts
         /// </summary>
-        private readonly IServiceFactory _serviceFactory;
+        private readonly List<MappingContext> _contexts;
         #endregion
 
         #region Constructor
@@ -37,92 +40,76 @@ namespace Css.Api.Reporting.Business.UnitTest.Factories
         public ServiceFactoryShould()
         {
             _factoryData = new MockFactoryData();
-            _serviceFactory = new ServiceFactory(_factoryData.GetMapperSettings()
-                        , _factoryData.GetImporters()
-                        , _factoryData.GetExporters());
+            _contexts = _factoryData.GetMappingContexts();
         }
         #endregion
 
-        #region Map<IImporter>(string key)
+        #region Map<ISource>()
+
         /// <summary>
-        /// The method to test the successful import mapping of the factory for the input key
+        /// The method to test the successful source mapping of the factory
         /// </summary>
         /// <param name="key"></param>
         [Theory]
         [InlineData("UDW")]
-        [InlineData("eStart")]
-        public void CheckFactoryImportSucess(string key)
+        [InlineData("EStart")]
+        public void CheckSourceMap(string key)
         {
-            var response = _serviceFactory.Map<IImporter>(key);
+            IServiceFactory serviceFactory = GetServiceFactory(key);
+            var response = serviceFactory.Map<ISource>();
 
             Assert.NotNull(response);
-            Assert.IsAssignableFrom<IImporter>(response);
-        }
-
-        /// <summary>
-        /// The method to test the unmmapped import service for the key
-        /// </summary>
-        /// <param name="key"></param>
-        [Theory]
-        [InlineData("Test")]
-        public void CheckFactoryImportServiceNotFound(string key)
-        {
-            var response = _serviceFactory.Map<IImporter>(key);
-            Assert.Null(response);
-        }
-
-        /// <summary>
-        /// The method to test an unmapped import key 
-        /// </summary>
-        /// <param name="key"></param>
-        [Theory]
-        [InlineData("Test1")]
-        [InlineData("Test2")]
-        public void CheckFactoryImportKeyNotFound(string key)
-        {
-            Action invocation = () => _serviceFactory.Map<IImporter>(key);
-            Assert.Throws<MappingException>(invocation);
+            Assert.IsAssignableFrom<ISource>(response);
         }
         #endregion
 
-        #region Map<IExporter>(string key)
+        #region Map<ITarget>()
+
         /// <summary>
-        /// The method to test the successful export mapping of the factory for the input key
+        /// The method to test the successful target mapping of the factory
         /// </summary>
         /// <param name="key"></param>
         [Theory]
-        [InlineData("eStart")]
-        public void CheckFactoryExportSucess(string key)
+        [InlineData("UDW")]
+        [InlineData("EStart")]
+        public void CheckTargetMap(string key)
         {
-            var response = _serviceFactory.Map<IExporter>(key);
+            IServiceFactory serviceFactory = GetServiceFactory(key);
+            var response = serviceFactory.Map<ITarget>();
 
             Assert.NotNull(response);
-            Assert.IsAssignableFrom<IExporter>(response);
+            Assert.IsAssignableFrom<ITarget>(response);
         }
+        #endregion
 
+        #region Map<T>()
         /// <summary>
         /// The method to test the unmmapped export service for the key
         /// </summary>
         /// <param name="key"></param>
         [Theory]
         [InlineData("Test")]
-        public void CheckFactoryExportServiceNotFound(string key)
+        public void CheckInvalidMap(string key)
         {
-            var response = _serviceFactory.Map<IExporter>(key);
-            Assert.Null(response);
+            IServiceFactory serviceFactory = GetServiceFactory(key);
+
+            Action invocation = () => serviceFactory.Map<IFTPService>();
+            Assert.Throws<MappingException>(invocation);
         }
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
-        /// The method to test an unmapped export key
+        /// The method to generate the IServiceFactory for the key
         /// </summary>
         /// <param name="key"></param>
-        [Theory]
-        [InlineData("Test1")]
-        [InlineData("Test2")]
-        public void CheckFactoryExportKeyNotFound(string key)
+        /// <returns></returns>
+        private IServiceFactory GetServiceFactory(string key)
         {
-            Action invocation = () => _serviceFactory.Map<IExporter>(key);
-            Assert.Throws<MappingException>(invocation);
+            var mapperService = new Mock<IMapperService>();
+            mapperService.SetReturnsDefault<MappingContext>(_contexts.First(x => x.Key.Equals(key)));
+            return new ServiceFactory(mapperService.Object, _factoryData.GetSources(), _factoryData.GetTargets());
         }
         #endregion
     }
