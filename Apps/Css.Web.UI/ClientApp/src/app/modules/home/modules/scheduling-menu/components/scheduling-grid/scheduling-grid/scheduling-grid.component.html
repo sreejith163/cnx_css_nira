@@ -127,6 +127,10 @@
               </thead>
               <tbody>
                 <ngx-spinner [name]="spinner"></ngx-spinner>
+                <tr *ngIf="!agentSchedulingGroupId" class="valid-record">
+                  <td colspan="12">
+                    {{ 'No Record Found' | translate }}</td>
+                </tr>
                 <ng-container *ngFor="let el of totalSchedulingGridData; let i = index">
                   <tr class="table-row">
                     <td>
@@ -301,9 +305,6 @@
                 </ng-container>
               </tbody>
             </table>
-            <div *ngIf="!agentSchedulingGroupId" class="valid-record">
-              {{ 'No Record Found' | translate }}
-            </div>
           </div>
         </div>
       </div>
@@ -452,6 +453,10 @@
               </tr>
             </thead>
             <tbody>
+              <tr *ngIf="!agentSchedulingGroupId" class="valid-record">
+                <td colspan="25">
+                  {{ 'No Record Found' | translate }}</td>
+              </tr>
               <tr class="jsgrid-row user-select-none" *ngFor="let el of totalSchedulingGridData; let i = index"
                 [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(i)">
                 <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
@@ -479,9 +484,6 @@
             </td> -->
               </tr>
             </tbody>
-            <div *ngIf="!agentSchedulingGroupId" class="valid-record">
-              {{ 'No Record Found' | translate }}
-            </div>
           </table>
 
         </div>

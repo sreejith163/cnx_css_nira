@@ -36,7 +36,6 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
 
   paginationSize = Constants.paginationSize;
 
-  getTranslationSubscription: ISubscription;
   copyAgentScheduleChartSubscription: ISubscription;
   getAgentsSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
