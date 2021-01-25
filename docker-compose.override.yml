@@ -121,6 +121,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=cnxcss
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/css.pfx
       - ConnectionStrings__Database=server=css.mysql.data;user id=root;password=root;persistsecurityinfo=True;database=css_admin
+      - ConnectionStrings__ServiceBus=rabbitmq://guest:guest@css.service.bus/
     ports:
       - "5007:443"
       - "5006:80"
@@ -156,7 +157,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=cnxcss
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/css.pfx
       - ConnectionStrings__Database=server=css.mysql.data;user id=root;password=root;persistsecurityinfo=True;database=css_schedule
-      - MongoDbSettings__ConnectionStrings=mongodb://mongo1:30001
+      - MongoDbSettings__ConnectionStrings=mongodb://css.mongo1:27017
       - MongoDbSettings__DatabaseName=css_dev
       - ConnectionStrings__ServiceBus=rabbitmq://guest:guest@css.service.bus/
     ports:
