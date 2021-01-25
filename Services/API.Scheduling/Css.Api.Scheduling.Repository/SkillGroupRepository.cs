@@ -4,10 +4,10 @@ using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,6 +50,17 @@ namespace Css.Api.Scheduling.Repository
 
             return await PagedList<Entity>
                 .ToPagedList(shapedSkillGroups, filteredSkillGroups.Count(), skillGroupQueryparameter.PageNumber, skillGroupQueryparameter.PageSize);
+        }
+
+        /// <summary>Gets the skill groups of cient lob.</summary>
+        /// <param name="clientLobGroupIdDetails">The client lob group identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<IQueryable<SkillGroup>> GetSkillGroupsOfClientLOB(ClientLobGroupIdDetails clientLobGroupIdDetails)
+        {
+            var skillGroups = FilterBy(x => x.IsDeleted == false && x.ClientLobGroupId == clientLobGroupIdDetails.ClientLobGroupId);
+            return await Task.FromResult(skillGroups);
         }
 
         /// <summary>

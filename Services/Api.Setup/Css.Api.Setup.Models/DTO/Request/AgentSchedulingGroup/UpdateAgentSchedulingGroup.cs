@@ -5,6 +5,11 @@ namespace Css.Api.Setup.Models.DTO.Request.AgentSchedulingGroup
     public class UpdateAgentSchedulingGroup : AgentSchedulingGroupAttribute
     {
         /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
+        public int? RefId { get; set; }
+
+        /// <summary>
         /// Gets or sets the modified by.
         /// </summary>
         /// <value>

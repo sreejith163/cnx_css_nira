@@ -1,7 +1,8 @@
 ﻿using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Controllers;
-using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Core.Models.Enums;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;

@@ -15,8 +15,9 @@ using System.Collections.Generic;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using System;
+using Css.Api.Core.Models.Enums;
 using Css.Api.Scheduling.Models.Enums;
-using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Core.Models.Domain.NoSQL;
 
 namespace Css.Api.Admin.Business.UnitTest.Services
 {

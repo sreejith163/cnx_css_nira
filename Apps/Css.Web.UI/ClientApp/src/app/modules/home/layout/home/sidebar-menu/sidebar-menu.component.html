@@ -11,7 +11,8 @@
             </div>
             <div class="info user-info">
                 <a class="d-block">{{ loggedUser?.displayName }}</a>
-                <a class="d-block">{{ 'System_administrator' | translate }}</a>
+
+                <a class="d-block">{{ employee?.roleName | translate }}</a>
             </div>
         </div>
         <nav class="mt-2 treeview-menu">
@@ -19,10 +20,10 @@
                 <li class="nav-item">
                     <a class="nav-link d-flex flex-row" routerLink="dashboard" routerLinkActive="active">
                         <i class="nav-icon fa fa-home"></i>
-                            <span>{{ 'Home' | translate }} </span>
+                            <span>{{ 'Dashboard' | translate }} </span>
                     </a>
                 </li>
-                <li class="nav-item has-treeview">
+                <li class="nav-item has-treeview" [hidden]="hideMenu([1],employee?.userRoleId)">
                     <a class="nav-link d-flex flex-row"
                         [ngClass]="{'active': sysAdmin1.isActive || sysAdmin2.isActive || sysAdmin3.isActive}">
                         <i class="nav-icon fa fa-th"></i>
@@ -51,16 +52,9 @@
                             <span>{{ 'Agent_categories' | translate }}</span>
                             </a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link d-flex flex-row" routerLink="system-admin/transalations" routerLinkActive="active"
-                                #sysAdmin4="routerLinkActive">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                Translation
-                            </a>
-                        </li> -->
                     </ul>
                 </li>
-                <li class="nav-item has-treeview">
+                <li class="nav-item has-treeview" [hidden]="hideMenu([1],employee?.userRoleId)">
                     <a class="nav-link d-flex flex-row"
                         [ngClass]="{'active': setUpMenu1.isActive || setUpMenu2.isActive || setUpMenu3.isActive || setUpMenu4.isActive || setUpMenu5.isActive }">
                         <i class="nav-icon fa fa-cog"></i>
@@ -105,9 +99,9 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item has-treeview">
-                    <a class="nav-link d-flex flex-row"
-                        [ngClass]="{'active': schMenu1.isActive || schMenu2.isActive || schMenu3.isActive || schMenu4.isActive || schMenu5.isActive || schMenu6.isActive || schMenu7.isActive }">
+                <li [hidden]="hideMenu([1,2,3],employee?.userRoleId)" class="nav-item has-treeview">
+                    <a class="nav-link d-flex flex-row" [ngClass]="{'active': schMenu1.isActive || schMenu2.isActive || 
+                    schMenu3.isActive || schMenu4.isActive || schMenu5.isActive || schMenu6.isActive || schMenu7.isActive}">
                         <i class="nav-icon fa fa-calendar"></i>
                         
                         <span>{{ 'Scheduling_menu' | translate }}</span>
@@ -115,14 +109,14 @@
                         
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
+                        <li [hidden]="hideMenu([1,2,3],employee?.userRoleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/agent-admin" routerLinkActive="active"
                                 #schMenu1="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
                             <span>{{ 'Agent_admin' | translate }}</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li [hidden]="hideMenu([1,2,3],employee?.userRoleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-grid" routerLinkActive="active"
                                 #schMenu2="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
@@ -157,7 +151,7 @@
                             <span>{{ 'Adjust_schedule_screen' | translate }}</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li [hidden]="hideMenu([1,2,3],employee?.userRoleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/view-o/u-screen" routerLinkActive="active"
                                 #schMenu7="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
@@ -165,6 +159,12 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+                <li [hidden]="hideMenu([6],employee?.userRoleId)" class="nav-item">
+                    <a class="nav-link d-flex flex-row" routerLink="agent-schedule-menu/my-schedule" routerLinkActive="active">
+                        <i class="nav-icon fa fa-calendar"></i>
+                            <span>{{ 'My Schedule' | translate }} </span>
+                    </a>
                 </li>
             </ul>
         </nav>

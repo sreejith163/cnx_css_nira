@@ -1,9 +1,9 @@
 <div class="wrapper">
   <app-header></app-header>
 
-  <app-sidebar-menu></app-sidebar-menu>
+  <app-sidebar-menu [employee]="employeeDetails"></app-sidebar-menu>
 
-  <div [ngClass]="{'long-content-wrapper': menuLength==='long'}" class="content-wrapper">
+  <div class="content-wrapper">
     <router-outlet></router-outlet>
   </div>
 

@@ -15,6 +15,8 @@ COPY ["Services/API.Core/Css.Api.Core.Utilities/Css.Api.Core.Utilities.csproj", 
 COPY ["Services/API.Core/Css.Api.Core.ExceptionHandling/Css.Api.Core.ExceptionHandling.csproj", "Services/API.Core/Css.Api.Core.ExceptionHandling/"]
 COPY ["Services/API.Admin/Css.Api.Admin.Models/Css.Api.Admin.Models.csproj", "Services/API.Admin/Css.Api.Admin.Models/"]
 COPY ["Services/API.Core/Css.Api.Core.DataAccess/Css.Api.Core.DataAccess.csproj", "Services/API.Core/Css.Api.Core.DataAccess/"]
+COPY ["Services/API.Admin/Css.Api.Admin.EventHandlers/Css.Api.Admin.EventHandlers.csproj", "Services/API.Admin/Css.Api.Admin.EventHandlers/"]
+COPY ["Services/API.Core/Css.Api.Core.EventBus/Css.Api.Core.EventBus.csproj", "Services/API.Core/Css.Api.Core.EventBus/"]
 #COPY ["Services/API.Admin/Css.Api.Admin/App_Data/SSL/css.api.admin.pfx", "/app/publish/"]
 #COPY ["Services/API.Admin/Css.Api.Admin/App_Data/SSL/css.api.admin.crt", "/usr/local/share/ca-certificates/"]
 RUN dotnet restore "Services/API.Admin/Css.Api.Admin/Css.Api.Admin.csproj"

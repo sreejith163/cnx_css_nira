@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Css.Api.Core.DataAccess.Repository.UnitOfWork.Interfaces;
+using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Business.Targets;
@@ -15,6 +16,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Css.Api.Reporting.Business.UnitTest.Targets
@@ -39,9 +41,19 @@ namespace Css.Api.Reporting.Business.UnitTest.Targets
         private readonly MockXmlData _data;
 
         /// <summary>
-        /// The mock repository
+        /// The mock agent repository
         /// </summary>
         private readonly Mock<IAgentRepository> _mockAgentRepository;
+
+        /// <summary>
+        /// The mock agent schedule repository
+        /// </summary>
+        private readonly Mock<IAgentScheduleRepository> _mockAgentScheduleRepository;
+
+        /// <summary>
+        /// The mock agent scheduling group repository
+        /// </summary>
+        private readonly Mock<IAgentSchedulingGroupRepository> _mockAgentSchedulingGroupRepository;
         #endregion
 
         #region Constructor
@@ -63,9 +75,14 @@ namespace Css.Api.Reporting.Business.UnitTest.Targets
 
             _mapper = new Mapper(mapperConfig);
             _mockAgentRepository = new Mock<IAgentRepository>();
+            _mockAgentSchedulingGroupRepository = new Mock<IAgentSchedulingGroupRepository>();
+            _mockAgentSchedulingGroupRepository.SetReturnsDefault<Task<List<AgentSchedulingGroup>>>(Task.FromResult<List<AgentSchedulingGroup>>(factory.GetAgentSchedulingGroups()));
+            _mockAgentScheduleRepository = new Mock<IAgentScheduleRepository>();
+            _mockAgentScheduleRepository.SetReturnsDefault<Task<List<AgentSchedule>>>(Task.FromResult<List<AgentSchedule>>(new List<AgentSchedule>()));
+
             var mockUnitWork = new Mock<IUnitOfWork>();
 
-            _target = new UDWImportTarget(_mapper, _mockAgentRepository.Object, mockUnitWork.Object, factory.GetMockFTP().Object);
+            _target = new UDWImportTarget(_mapper, _mockAgentRepository.Object, _mockAgentSchedulingGroupRepository.Object, _mockAgentScheduleRepository.Object, mockUnitWork.Object, factory.GetMockFTP().Object);
         }
         #endregion
 
@@ -95,14 +112,14 @@ namespace Css.Api.Reporting.Business.UnitTest.Targets
                 new DataFeed()
                 {
                     Content = _data.GetBytes<UDWAgentList>(),
-                    Path = "Test"
+                    Feeder = "Test"
                 }
             };
 
             var response = await _target.Push(feeds);
 
             Assert.NotNull(response);
-            Assert.IsType<TargetResponse>(response);
+            Assert.IsType<ActivityResponse>(response);
             Assert.Single(response.Completed);
             Assert.Empty(response.Partial);
             Assert.Empty(response.Failed);
@@ -120,14 +137,14 @@ namespace Css.Api.Reporting.Business.UnitTest.Targets
                 new DataFeed()
                 {
                     Content = _data.GetBytes<UDWAgentList>((int)ProcessStatus.Partial),
-                    Path = "Test"
+                    Feeder = "Test"
                 }
             };
 
             var response = await _target.Push(feeds);
 
             Assert.NotNull(response);
-            Assert.IsType<TargetResponse>(response);
+            Assert.IsType<ActivityResponse>(response);
             Assert.Empty(response.Completed);
             Assert.Single(response.Partial);
             Assert.Empty(response.Failed);
@@ -145,14 +162,14 @@ namespace Css.Api.Reporting.Business.UnitTest.Targets
                 new DataFeed()
                 {
                     Content = _data.GetBytes<UDWAgentList>((int)ProcessStatus.Failed),
-                    Path = "Test"
+                    Feeder = "Test"
                 }
             };
 
             var response = await _target.Push(feeds);
 
             Assert.NotNull(response);
-            Assert.IsType<TargetResponse>(response);
+            Assert.IsType<ActivityResponse>(response);
             Assert.Empty(response.Completed);
             Assert.Empty(response.Partial);
             Assert.Single(response.Failed);

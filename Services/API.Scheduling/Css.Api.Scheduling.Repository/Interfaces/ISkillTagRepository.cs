@@ -1,6 +1,8 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository.Interfaces
@@ -16,6 +18,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="skillTagQueryparameter">The skill tag queryparameter.</param>
         /// <returns></returns>
         Task<PagedList<Entity>> GetSkillTags(SkillTagQueryparameter skillTagQueryparameter);
+
+        /// <summary>Gets the skill tags of skill group.</summary>
+        /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<IQueryable<SkillTag>> GetSkillTagsOfSkillGroup(SkillGroupIdDetails skillGroupIdDetails);
 
         /// <summary>
         /// Gets the skill tag.

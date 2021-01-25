@@ -1,4 +1,4 @@
-﻿using Css.Api.Scheduling.Models.Domain;
+﻿using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using FluentValidation;
 

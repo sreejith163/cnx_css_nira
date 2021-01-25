@@ -1,4 +1,4 @@
-import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Constants } from './constants.util';
 
 export class CustomValidators {
@@ -13,10 +13,10 @@ export class CustomValidators {
             const startRange = formGroup.get(fromDateField) ? formGroup.get(fromDateField).value : null;
             const endRange = formGroup.get(toDateField) ? formGroup.get(toDateField).value : null;
             const fromDate = this.formattedDate(startRange);
-            const toDate =  this.formattedDate(endRange);
+            const toDate = this.formattedDate(endRange);
             if ((fromDate !== null && toDate !== null)
-             && (new Date(fromDate) > new Date(toDate))) {
-                return {[errorName]: true};
+                && (new Date(fromDate) > new Date(toDate))) {
+                return { [errorName]: true };
             }
             return null;
         };
@@ -27,8 +27,8 @@ export class CustomValidators {
             const startRange = formGroup.get(start) ? formGroup.get(start).value : null;
             const endRange = formGroup.get(to) ? formGroup.get(to).value : null;
             if (startRange !== null && endRange !== null) {
-                if ( +startRange >= +endRange) {
-                   return { rangeError: true };
+                if (+startRange >= +endRange) {
+                    return { rangeError: true };
                 }
                 return null;
             }

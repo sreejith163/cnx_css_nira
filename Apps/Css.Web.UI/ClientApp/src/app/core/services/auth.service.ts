@@ -4,6 +4,8 @@ import { environment } from 'src/environments/environment';
 import { LoggedUserInfo } from '../models/logged-user-info.model';
 
 import jwt_decode from 'jwt-decode';
+import { EmployeeDetails } from 'src/app/modules/home/modules/system-admin/models/employee-details.model';
+import { PermissionsService } from 'src/app/modules/home/modules/system-admin/services/permissions.service';
 
 @Injectable()
 export class AuthService {
@@ -24,8 +26,8 @@ export class AuthService {
       user.uid = decodedToken.uid;
       user.employeeId = decodedToken.employeeid;
       user.displayName = decodedToken.displayname;
-
       return user;
     }
   }
+
 }

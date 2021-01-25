@@ -185,6 +185,69 @@
             </div>
           </div>
         </div>
+
+        <!-- Team Lead Info -->
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Team Lead Name' | translate }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" class="form-control"
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorName')}" formControlName="supervisorName"
+                placeholder="{{ 'Team Lead Name' | translate }}" />
+              <div *ngIf="hasFormControlValidationError('supervisorName')" class="valid-error">
+                {{ 'Team Lead Name is required' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Team Lead SSO' | translate }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" class="form-control"
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorSso')}" formControlName="supervisorSso"
+                placeholder="SSO" />
+              <ng-container *ngIf="formSubmitted && form.supervisorSso.invalid">
+                <ng-container *ngIf="hasFormControlValidationError('supervisorSso'); else invalidTeamLeadSso">
+                  <div *ngIf="hasFormControlValidationError('supervisorSso')" class="valid-error">
+                    {{ 'Team Lead SSO is required' | translate }}
+                  </div>
+                </ng-container>
+                <ng-template #invalidTeamLeadSso>
+                  <div class="valid-error">
+                    {{ 'Team Lead SSO is invalid' | translate }}
+                  </div>
+                </ng-template>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Team Lead EID' | translate }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" class="form-control" (keypress)="isNumberKey($event)" onpaste="return false;"
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorId')}"
+                formControlName="supervisorId" placeholder="{{ 'Team Lead EID' | translate }}" />
+              <div *ngIf="hasFormControlValidationError('supervisorId')" class="valid-error">
+                {{ 'Team Lead EID is required' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>        
+      <!-- End of Team Lead Info -->
       </form>
     </div>
     <div class="modal-footer d-flex justify-content-center header-color">

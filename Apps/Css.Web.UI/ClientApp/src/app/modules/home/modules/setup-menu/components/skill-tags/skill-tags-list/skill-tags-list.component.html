@@ -19,26 +19,26 @@
             {{ 'Client_name' | translate }}
             <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
         </div>
-        <div class="col-md-2 d-flex flex-column">
+        <div class="col-md-3 d-flex flex-column">
             {{ 'Client_lob_group_name' | translate }}
             <app-client-lob-group-typeahead (clientLobSelected)="setClientLobgroup($event)">
             </app-client-lob-group-typeahead>
         </div>
-        <div class="col-md-2 d-flex flex-column">
+        <div class="col-md-3 d-flex flex-column">
             {{ 'Skill_groups' | translate }}
             <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)"></app-skill-group-typeahead>
         </div>
-        <div class="col-md-2 d-flex flex-column m-t-25">
+        <div class="col-md-3 d-flex flex-column m-t-25">
             <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
                 [maxLength]="maxLength"
                 placeholder="{{ 'Enter_a_skill_tag_name' | translate }}" />
         </div>
-        <div class="col-md-2 col-sm-6">
+        <div class="col-md-3 col-sm-6">
             <button class="form-control mt-4" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
                 {{ 'Search' | translate }}
             </button>
         </div>
-        <div class="col-md-2 text-right">
+        <div class="col-md-2 text-left">
             <button type="button" class="btn btn-primary float-r mt-4" (click)="addSkillTag()"><i
                     class="fa fa-plus pr-1" aria-hidden="true"></i>{{ 'Add' | translate }}</button>
         </div>
@@ -120,7 +120,7 @@
                                 <td>{{el.id}}</td>
                                 <td>{{el.refId}}</td>
                                 <td>
-                                    <div [class.display-inline-contents]="el.name.length > characterSplice">
+                                    <div class="d-flex justify-content-between" [class.display-inline-contents]="el.name.length > characterSplice">
                                         <span ngbTooltip="{{ el.name }}">{{ el.name | truncate: { sliceStart: 0,
                                             sliceEnd: characterSplice, append: '...' } }}</span>
                                         <span class="padding-left-10 float-right">

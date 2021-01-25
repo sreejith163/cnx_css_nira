@@ -1,41 +1,153 @@
-<div class="card row">
-    <form [formGroup]="permissionForm">
-        <div class=" card-header">
-            <button class="btn btn-primary float-right" (click)="savePermission()">
-                <i class="fa fa-user-circle padding-5"></i>
-                {{ getButtonTitle() | translate }}
-                {{ 'User' | translate }}</button>
+<div class="modal-dialog w-1000 add-edit-modal" role="document">
+  <div class="modal-content">
+    <ngx-spinner [name]="spinner"></ngx-spinner>
+    <div class="modal-header header-color">
+      <h6 class="modal-title w-100 font-weight-bold header">
+        <p>{{ getTitle() | translate }} {{ 'User' |translate }} {{ 'Permissions' | translate }}</p>
+        
+      </h6>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body mx-3 modal-style">
+      <form [formGroup]="userPermissionForm">
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>
+                {{ 'First_name' | translate }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" class="form-control" formControlName="firstname" [maxLength]="maxLength"/>
+              <ng-container *ngIf="formSubmitted && userPermissionForm.controls.firstname.invalid">
+                <ng-container *ngIf="hasFormControlValidationError('firstname'); else maxLengthError">
+                  <div *ngIf="hasFormControlValidationError('firstname')" class="valid-error">
+                    {{ 'First Name is required' | translate }}
+                  </div>
+                </ng-container>
+                <ng-template #maxLengthError>
+                  <div class="valid-error">
+                    {{ 'First Name cannot exceed 50 characters' | translate }}
+                  </div>
+                </ng-template>
+              </ng-container>
+            </div>
+          </div>
         </div>
-        <div class="card-body row">
-            <div class="col-md-4 col-sm-4 margin-b-05-rem">
-                <label
-                    class="text-color">{{ 'Select_an_employee' | translate }}</label>
-                <app-employee-typeahead [employeeId]="employeeId" [translationValues]="translationValues"
-                    (employeeSelected)="onEmployeeSelected($event)" (employeeCleared)="onEmployeeCleared()">
-                </app-employee-typeahead>
+
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Last_name' | translate }}
+                <span class="required">*</span>
+              </label>
             </div>
-            <div class="col-md-3 col-sm-3 margin-l-20px">
-                <div class="form-group clearfix margin-b-05-rem"
-                    *ngFor="let data of userRoles | slice: 0:3; let i = index">
-                    <div class="icheck-primary d-inline">
-                        <input type="checkbox" id="{{ data.id }}" [value]="data.id"
-                            [checked]="hasValueSelected(data.id)" (change)="onCheckboxChange($event)">
-                        <label for="{{ data.id }}">{{ data.role | translate }}</label>
-                    </div>
-                </div>
+            <div class="col-md-8">
+              <input type="text" class="form-control" formControlName="lastname" [maxLength]="maxLength"/>
+              <ng-container *ngIf="formSubmitted && userPermissionForm.controls.lastname.invalid">
+                <ng-container *ngIf="hasFormControlValidationError('lastname'); else maxLengthError">
+                  <div *ngIf="hasFormControlValidationError('lastname')" class="valid-error">
+                    {{ 'Last Name is required' | translate }}
+                  </div>
+                </ng-container>
+                <ng-template #maxLengthError>
+                  <div class="valid-error">
+                    {{ 'Last Name cannot exceed 50 characters' | translate }}
+                  </div>
+                </ng-template>
+              </ng-container>
             </div>
-            <div class="col-md-3 col-sm-3 margin-l-20px">
-                <div class="form-group clearfix margin-b-05-rem"
-                    *ngFor="let data of userRoles | slice: 3: 5; let i = index">
-                    <div class="icheck-primary d-inline">
-                        <input type="checkbox" id="{{ data.id }}" [value]="data.id"
-                            [checked]="hasValueSelected(data.id)" (change)="onCheckboxChange($event)">
-                        <label for="{{ data.id }}">
-                            {{ data.role | translate }}
-                        </label>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </form>
+
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>
+                {{ 'SSO' | translate }} 
+              </label> 
+               <span class="required"> *</span>
+            </div>
+            <div class="col-md-8">
+              <input type="email" class="form-control" formControlName="sso" [maxLength]="maxLength"/>
+              <ng-container *ngIf="formSubmitted && userPermissionForm.controls.sso.invalid">
+                  <div *ngIf="userPermissionForm.controls.sso.errors?.required;" class="valid-error">
+                    {{ 'SSO is required' | translate }}
+                  </div>
+                  <div *ngIf="userPermissionForm.controls.sso.errors?.pattern;" class="valid-error">
+                    {{ 'SSO should be a valid email address' | translate }}
+                  </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>
+                {{ 'Employee_id' | translate }} 
+              </label> 
+               <span class="required"> *</span>
+            </div>
+            <div class="col-md-8">
+              <input (keypress)="isNumberKey($event)" type="text" class="form-control" formControlName="employeeId" [maxLength]="maxLength"/>
+              <ng-container *ngIf="formSubmitted && userPermissionForm.controls.employeeId.invalid">
+                <ng-container *ngIf="hasFormControlValidationError('employeeId'); else maxLengthError">
+                  <div *ngIf="hasFormControlValidationError('employeeId')" class="valid-error">
+                    {{ 'Employee ID is required' | translate }}
+                  </div>
+                </ng-container>
+                <ng-template #maxLengthError>
+                  <div class="valid-error">
+                    {{ 'Employee ID cannot exceed 50 characters' | translate }}
+                  </div>
+                </ng-template>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>
+                {{ 'Permission' | translate }} 
+              </label> 
+               <span class="required"> *</span>
+            </div>
+            <div class="col-md-8">
+              <select class="form-control" [ngClass]="{'valid-border-error': hasFormControlValidationError('userRoleId')}"
+              formControlName="userRoleId">
+              <option value="">
+                {{ 'Select Permission' | translate }}</option>
+              <option *ngFor="let x of permissions" [value]="x.id">{{ x.name }}</option>
+              </select>
+              <div *ngIf="hasFormControlValidationError('userRoleId')" class="valid-error">
+                {{ 'Permission is required' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>        
+
+      </form>
+    </div>
+
+    <div class="modal-footer d-flex justify-content-center header-color">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-10"></div>
+          <div class="col-md-2">
+            <button class="btn btn-primary float-r" data-dismiss="modal" id="btn_save" (click)="submitUserPermissionForm()">
+              <i class="fa fa-save padding-5"></i>
+              {{ 'Save' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

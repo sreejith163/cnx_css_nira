@@ -92,13 +92,12 @@ namespace Css.Api.Scheduling.Controllers
         /// <summary>
         /// Creates the agent activity logs.
         /// </summary>
-        /// <param name="agentAdminId">The agent admin identifier.</param>
         /// <param name="agentActivityLogDetails">The agent activity log details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        [HttpPost("{agentAdminId}/create")]
-        public async Task<IActionResult> CreateAgentActivityLogs(string agentAdminId, [FromBody] CreateAgentActivityLog agentActivityLogDetails)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateAgentActivityLogs([FromBody] CreateAgentActivityLog agentActivityLogDetails)
         {
             var result = await _agentAdminService.CreateAgentActivityLog(agentActivityLogDetails);
             return StatusCode((int)result.Code, result.Value);

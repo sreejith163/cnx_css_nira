@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { CallbackComponent } from './callback.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { LanguagePreferenceResolver } from './shared/resolvers/language-preference.resolver';
 
 export const AppRoutes: Routes = [
   {
@@ -20,6 +21,7 @@ export const AppRoutes: Routes = [
     path: 'home',
     loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
     canActivate: [AuthGuard],
-    runGuardsAndResolvers: 'always'
+    runGuardsAndResolvers: 'always',
+    resolve: { languagePreference: LanguagePreferenceResolver }
   }
 ];

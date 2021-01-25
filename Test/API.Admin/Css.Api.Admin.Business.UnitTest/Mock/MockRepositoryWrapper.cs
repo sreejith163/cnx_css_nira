@@ -274,6 +274,10 @@ namespace Css.Api.Admin.Repository
             }
         }
 
+        public IRoleRepository Roles => throw new System.NotImplementedException();
+
+        public IUserPermissionRepository UserPermissions => throw new System.NotImplementedException();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryWrapper" /> class.
         /// </summary>

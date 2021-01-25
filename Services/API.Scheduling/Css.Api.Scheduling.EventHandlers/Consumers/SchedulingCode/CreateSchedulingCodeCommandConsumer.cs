@@ -8,6 +8,7 @@ using Css.Api.Scheduling.Repository.Interfaces;
 using MassTransit;
 using System;
 using System.Threading.Tasks;
+using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
 
 namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
 {
@@ -41,7 +42,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
         {
             try
             {
-                Css.Api.Scheduling.Models.Domain.SchedulingCode schedulingCode = await _schedulingCodeGroupRepository.GetSchedulingCode(new SchedulingCodeIdDetails
+                NoSQL.SchedulingCode schedulingCode = await _schedulingCodeGroupRepository.GetSchedulingCode(new SchedulingCodeIdDetails
                 {
                     SchedulingCodeId = context.Message.Id
                 });
@@ -53,7 +54,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
                 }
 
                 _schedulingCodeGroupRepository.CreateSchedulingCode(
-                        new Css.Api.Scheduling.Models.Domain.SchedulingCode
+                        new Css.Api.Core.Models.Domain.NoSQL.SchedulingCode
                         {
                             SchedulingCodeId = context.Message.Id,
                             Name = context.Message.Name,

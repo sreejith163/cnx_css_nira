@@ -1,255 +1,153 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { ContentType } from 'src/app/shared/enums/content-type.enum';
-import { Translation } from 'src/app/shared/models/translation.model';
-import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
-import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
+import { NgbModal, NgbActiveModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { Constants } from 'src/app/shared/util/constants.util';
-import { PermissionDetails } from '../../../models/permission-details.model';
-import { Permission } from '../../../models/permission.model';
-import { UserRole } from '../../../models/user-role.model';
+import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
 import { PermissionsService } from '../../../services/permissions.service';
+import { EmployeeRole } from '../../../models/employee-role.model';
+import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { ContentType } from 'src/app/shared/enums/content-type.enum';
+import { EmployeeDetails } from '../../../models/employee-details.model';
 
 @Component({
   selector: 'app-add-update-permission',
   templateUrl: './add-update-permission.component.html',
   styleUrls: ['./add-update-permission.component.scss']
 })
-export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestroy {
+export class AddUpdatePermissionComponent implements OnInit {
 
+  @Input() operation: ComponentOperation;
+  @Input() employee: EmployeeDetails;
+  spinner = 'addUpdatePermissionsSpinner';
+  userPermissionForm: FormGroup;
+  formSubmitted: boolean;
+  maxLength = Constants.DefaultTextMaxLength;
+
+  // Query Parameters
   currentPage = 1;
   pageSize = 10;
-  isEdit: boolean;
-  totalRecord: number;
   searchKeyword: string;
+  totalRecord: number;
   orderBy = 'createdDate';
   sortBy = 'desc';
 
-  userRoles = Constants.UserRoles;
-  employee: Permission;
-  permission: PermissionDetails;
-  permissionForm: FormGroup;
-
-  updatePermissionSubscription: any;
-  addPermissionSubscription: any;
-  getPermissionSubscription: any;
-  subscriptions: any[] = [];
-
-  @Input() employeeId: number;
-  @Input() translationValues: Translation[];
-  @Output() employeeSelected: EventEmitter<number> = new EventEmitter<number>();
-  @Output() permissionAdded = new EventEmitter();
-  @Output() permissionUpdated = new EventEmitter();
-  @Output() permissionCleared = new EventEmitter();
+  // Roles
+  permissions: EmployeeRole[] = [];
 
   constructor(
+    private modalService: NgbModal,
+    private spinnerService: NgxSpinnerService,
+    public activeModal: NgbActiveModal,
     private formBuilder: FormBuilder,
     private permissionsService: PermissionsService,
-    private modalService: NgbModal,
-  ) { }
+  ) {
+
+    this.createUserPermissionForm();
+  }
 
   ngOnInit(): void {
     this.loadPermissions();
+    this.loadEmployeeDetails();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes?.employeeId?.currentValue !== changes?.employeeId?.previousValue) {
-      this.loadPermissions();
+  public closeModal() {
+    this.activeModal.close(false);
+  }
+
+  getTitle() {
+    return ComponentOperation[this.operation];
+  }
+
+  // validators
+  hasFormControlValidationError(control: string) {
+    return (
+      this.formSubmitted &&
+      this.userPermissionForm.controls[control].errors?.required
+    );
+  }
+
+  submitUserPermissionForm() {
+    this.formSubmitted = true;
+    if (this.userPermissionForm.valid) {
+      this.operation === ComponentOperation.Edit ? this.updateUserPermission() : this.addUserPermission();
     }
   }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      if (subscription) {
-        subscription.unsubscribe();
-      }
-    });
-  }
+  private getQueryParams() {
+    const queryParams = new QueryStringParameters();
+    queryParams.pageNumber = this.currentPage;
+    queryParams.pageSize = this.pageSize;
+    queryParams.searchKeyword = this.searchKeyword ?? '';
+    queryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
+    queryParams.fields = '';
 
-  getButtonTitle() {
-    return this.isEdit ? 'Update' : 'Add';
-  }
-
-  get userRolesFormArray() {
-    return this.permissionForm.get('roles') as FormArray;
-  }
-
-  onCheckboxChange(e) {
-    const roles: FormArray = this.permissionForm.get('roles') as FormArray;
-    if (e.target.checked) {
-      roles.push(new FormControl(Number(e.target.value)));
-    } else {
-      let i = 0;
-      roles.controls.forEach((item: FormControl) => {
-        if (item.value === Number(e.target.value)) {
-          roles.removeAt(i);
-          return;
-        }
-        i++;
-      });
-    }
-  }
-
-  onEmployeeSelected(permission: Permission) {
-    this.employeeId = permission.employeeId;
-    this.employee = permission;
-    this.loadPermissions();
-    this.employeeSelected.emit(permission.employeeId);
-  }
-
-  onEmployeeCleared() {
-    this.permissionCleared.emit();
-    this.intializePermissionForm();
-    this.employee = undefined;
-    this.isEdit = false;
-  }
-
-  hasValueSelected(value) {
-    const roles: FormArray = this.permissionForm.get('roles') as FormArray;
-    return roles.controls.findIndex(x => x.value === value) !== -1;
-  }
-
-  savePermission() {
-    if (this.checkFormIsValid()) {
-      if (this.isEdit) {
-        this.updatePermission();
-      } else {
-        this.addPermission();
-      }
-    }
-  }
-
-  private checkFormIsValid() {
-    if (this.permissionForm.invalid && !this.employeeId) {
-      this.showErrorWarningPopUpMessage('Please select an employee and its user access role');
-      return false;
-    } else if (this.permissionForm.invalid) {
-      this.showErrorWarningPopUpMessage('Please select user access role');
-      return false;
-    } else if (!this.employeeId) {
-      this.showErrorWarningPopUpMessage('Please select an employee');
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  private addPermission() {
-    const addPermissionModel = this.employee as PermissionDetails;
-    addPermissionModel.createdDate = new Date();
-    addPermissionModel.createdBy = 'User';
-    addPermissionModel.roles = new Array<UserRole>();
-
-    this.userRolesFormArray.controls.forEach((ele, index) => {
-      const role = new UserRole();
-      role.id = Number(this.permissionForm.value.roles[index]);
-      addPermissionModel.roles.push(role);
-    });
-
-    this.addPermissionSubscription = this.permissionsService.addPermission(addPermissionModel)
-      .subscribe((data) => {
-        if (data) {
-          this.resetForm();
-          this.permissionAdded.emit();
-          this.showSuccessPopUpMessage('The record has been added!');
-        }
-      }, (error) => {
-        this.showErrorWarningPopUpMessage(error.error);
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.addPermissionSubscription);
-  }
-
-  private updatePermission() {
-    if (this.hasPermissionDetailsMismatch()) {
-      this.permission.modifiedDate = new Date();
-      this.permission.modifiedBy = 'User';
-      this.permission.roles = new Array<UserRole>();
-
-      this.userRolesFormArray.controls.forEach((ele, index) => {
-        const role = new UserRole();
-        role.id = Number(this.permissionForm.value.roles[index]);
-        this.permission.roles.push(role);
-      });
-
-      this.updatePermissionSubscription = this.permissionsService.updatePermission(this.permission.employeeId, this.permission)
-        .subscribe((success) => {
-          if (success) {
-            this.resetForm();
-            this.permissionUpdated.emit();
-            this.showSuccessPopUpMessage('The record has been updated!');
-          }
-        }, (error) => {
-          console.log(error);
-        });
-      this.subscriptions.push(this.updatePermissionSubscription);
-    } else {
-      this.resetForm();
-      this.permissionUpdated.emit();
-      this.showSuccessPopUpMessage('No changes has been made!');
-    }
-  }
-
-  private resetForm() {
-    this.isEdit = false;
-    this.permission = undefined;
-    this.employeeId = undefined;
-    this.intializePermissionForm();
-  }
-
-  private hasPermissionDetailsMismatch() {
-    for (const index in this.userRoles) {
-      if (this.permission.roles[index]?.id !== this.permissionForm.controls.roles.value[index]) {
-        return true;
-      }
-    }
-  }
-
-  private getPermission() {
-    if (this.employeeId) {
-      this.getPermissionSubscription = this.permissionsService.getPermission(this.employeeId)
-        .subscribe((data: PermissionDetails) => {
-          this.permission = data;
-          if (data) {
-            this.setPermissionDetails(data);
-          }
-        }, (error) => {
-          console.log(error);
-        });
-
-      this.subscriptions.push(this.getPermissionSubscription);
-    }
-  }
-
-  private setPermissionDetails(record: PermissionDetails) {
-    this.setUserRoles(record);
-    this.isEdit = true;
-  }
-
-  private setUserRoles(record: PermissionDetails) {
-    const array = this.permissionForm.controls.roles as FormArray;
-    record.roles.forEach(ele => array.push(new FormControl(ele.id)));
-
-    return array;
+    return queryParams;
   }
 
   private loadPermissions() {
-    this.isEdit = false;
-    this.intializePermissionForm();
-    this.getPermission();
+    const queryParams = this.getQueryParams();
+    this.permissionsService.getPermissions(queryParams)
+      .subscribe((response) => {
+        if (response.body) {
+          this.permissions = response.body;
+        }
+
+      }, (error) => {
+        console.log(error);
+      });
+
   }
 
-  private showSuccessPopUpMessage(contentMessage: string) {
-    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
-    const modalRef = this.modalService.open(MessagePopUpComponent, options);
-    modalRef.componentInstance.headingMessage = 'Success';
-    modalRef.componentInstance.contentMessage = contentMessage;
-
-    return modalRef;
+  private loadEmployeeDetails() {
+    if (this.operation === ComponentOperation.Edit) {
+      // console.log(this.employee)
+      this.userPermissionForm.patchValue({
+        firstname: this.employee.firstname,
+        lastname: this.employee.lastname,
+        sso: this.employee.sso,
+        employeeId: this.employee.employeeId
+      });
+      this.userPermissionForm.controls.userRoleId.setValue(this.employee.roleIndex);
+    }
   }
 
+
+  private addUserPermission() {
+    const addUserPermissionModel = this.userPermissionForm.value as EmployeeDetails;
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+    this.permissionsService.addUserPermission(addUserPermissionModel)
+      .subscribe(() => {
+        this.spinnerService.hide(this.spinner);
+        this.activeModal.close(true);
+      }, (error) => {
+        this.spinnerService.hide(this.spinner);
+        if (error.status === 409) {
+          this.showErrorWarningPopUpMessage(error.error);
+        }
+      });
+  }
+
+  private updateUserPermission() {
+    const updatePermissionModel = this.userPermissionForm.value as EmployeeDetails;
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+    // console.log(updatePermissionModel);
+    this.permissionsService.updateUserPermission(this.employee.employeeId, updatePermissionModel)
+      .subscribe(() => {
+        this.spinnerService.hide(this.spinner);
+        this.activeModal.close(true);
+      }, (error) => {
+        this.spinnerService.hide(this.spinner);
+        if (error.status === 409) {
+          this.showErrorWarningPopUpMessage(error.error);
+        }
+      });
+  }
+
+  // Pop up messages
   private showErrorWarningPopUpMessage(contentMessage: string) {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
@@ -260,9 +158,48 @@ export class AddUpdatePermissionComponent implements OnInit, OnChanges, OnDestro
     return modalRef;
   }
 
-  private intializePermissionForm() {
-    this.permissionForm = this.formBuilder.group({
-      roles: this.formBuilder.array([], Validators.required)
+  isNumberKey(evt) {
+    const currentValue = this.userPermissionForm.controls.employeeId?.value;
+    const charCode = (evt.which) ? evt.which : evt.keyCode;
+    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
+    if (isValid) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private createUserPermissionForm() {
+    this.userPermissionForm = this.formBuilder.group({
+      firstname: new FormControl('',
+        Validators.compose([
+          Validators.required,
+          Validators.maxLength(50)]
+        )),
+      lastname: new FormControl('',
+        Validators.compose([
+          Validators.required,
+          Validators.maxLength(50)]
+        )),
+      sso: new FormControl('',
+        Validators.compose([
+          Validators.pattern('^(?=[^@]*[A-Za-z])([a-zA-Z0-9])(([a-zA-Z0-9])*([\._-])?([a-zA-Z0-9]))*@(([a-zA-Z0-9\-])+(\.))+([a-zA-Z]{2,4})+$'),
+          Validators.email,
+          Validators.required,
+          Validators.maxLength(50)]
+        )),
+      employeeId: new FormControl('',
+        Validators.compose([
+          Validators.required,
+          Validators.maxLength(50)]
+        )),
+      // permission
+      userRoleId: new FormControl('',
+        Validators.compose([
+          Validators.required,
+          Validators.maxLength(50)]
+        )),
     });
   }
 }
+

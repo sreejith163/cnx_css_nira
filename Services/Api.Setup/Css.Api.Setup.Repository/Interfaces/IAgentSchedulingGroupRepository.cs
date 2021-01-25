@@ -37,12 +37,14 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// <returns></returns>
         Task<int> GetAgentSchedulingGroupsCountBySkillTagId(SkillTagIdDetails skillTagIdDetails);
 
+
         /// <summary>Gets all agent scheduling groups count by skill tag identifier.</summary>
         /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        Task<int> GetAllAgentSchedulingGroupsCountBySkillTagId(SkillTagIdDetails skillTagIdDetails);
+        Task<int> GetAllAgentSchedulingGroupsCountBySkillTagId(SkillTagIdDetails skillTagIdDetails, AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
 
         /// <summary>Gets the agent scheduling groups by skill tag identifier.</summary>
         /// <param name="skillTagIdDetails">The skill tag identifier details.</param>

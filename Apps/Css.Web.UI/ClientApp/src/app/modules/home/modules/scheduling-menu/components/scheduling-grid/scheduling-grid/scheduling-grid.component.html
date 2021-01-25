@@ -58,8 +58,10 @@
           aria-controls="cscheduling-manager" aria-selected="false" (click)="openTab(1)">Scheduling Manager</a>
       </li>
       <li class="pull-right marign-l-auto">
-        <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'" (click)="exportToExcel()">
-        <img src="assets/images/Import.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Import'" (click)="openImportSchedule()">
+        <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
+          (click)="exportToExcel()">
+        <img src="assets/images/Import.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
+          (click)="openImportSchedule()">
       </li>
     </ul>
   </div>
@@ -211,7 +213,9 @@
                           <div class="row">
                             <div class="col-sm-12" cdkDropList (cdkDropListDropped)="dragged($event)">
                               <div class="row">
-                                <div class="col-md-12 col-sm-12 align">
+                                <div class="col-md-12 col-sm-12 align"
+                                  style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
+                                  unselectable="on">
                                   <span>
                                     <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true"
                                       (click)="toBeginning()"
@@ -333,7 +337,6 @@
         <div class="col-md-8 row">
           <div class="col-md-1 col-sm-1">
             <div class="test">{{ unifiedToNative("1F600") }}</div>
-            <!-- <input readonly type="text" class="form-control margin-4 manager"> -->
           </div>
           <div class="col-md-4 col-sm-4">
             <input readonly type="text" disabled [(ngModel)]="iconDescription" class="form-control margin-4 manager">
@@ -341,20 +344,6 @@
           <div class="col-md-2 col-sm-2">
             <input readonly type="text" disabled [(ngModel)]="currentDate" class="form-control margin-4 manager">
           </div>
-          <!-- <div class="col-md-3 d-flex flex-column">
-      <div class="input-group">
-        <input class="form-control" placeholder="Select Start Date" name="dp" ngbDatepicker [readonly]="true" [(ngModel)]="startDate"
-          [footerTemplate]="footerTemplate" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker" (dateSelect)="onSelectStartDate($event)">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
-        </div>
-        <ng-template #footerTemplate>
-          <button class="btn btn-primary btn-sm m-2 float-left" (click)="setStartDateAsToday(); d.close()"
-            id="btn_today">Today</button>
-          <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close();clearStartDate();" id="btn_close">Clear</button>
-        </ng-template>
-      </div>
-    </div> -->
           <div class="col-md-2 col-sm-2">
             <input readonly type="text" disabled [(ngModel)]="startTimeFilter" class="form-control margin-4 manager">
           </div>
@@ -474,16 +463,6 @@
                     </span>
                   </ng-container>
                 </td>
-                <!-- <td class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
-            attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
-            *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
-            (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
-            [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-            <ng-container>
-            <i
-              class="font-style-normal"></i>
-          </ng-container>
-          </td> -->
               </tr>
             </tbody>
           </table>
@@ -522,7 +501,7 @@
           <p class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative("1F600")}} Open Time 10:00 am - 11:00 pm</p>
           <p class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative("1F349")}} Lunch 04:45 pm - 05:15 pm</p>
         </div>
-      </div>
+      </div> -->
       <div class="col-md-12 mt-2 table-responsive">
         <div class="scrollable-table">
           <table id="tableSortExample " class="table table-bordered table-striped table-fixed">

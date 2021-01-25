@@ -25,7 +25,7 @@
         <div class="col-md-3 d-flex flex-column m-t-10">
             <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
                 [maxLength]="maxLength"
-                placeholder="{{ 'Enter_employee' | translate }}" />
+                placeholder="{{ 'Enter SSO keyword' | translate }}" />
         </div>
         <div class="col-md-2 col-sm-6">
             <button class="form-control m-t-10" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
@@ -116,39 +116,45 @@
                     <tbody>
                         <ngx-spinner [name]="spinner"></ngx-spinner>
                         <ng-container *ngFor="let el of agentAdmins; let i = index">
-                            <tr>
+                            <tr class="pointer" (dblclick)="editAgentAdmin(el.id)">
                                 <td>
                                     <i class="fa fa-edit padding-5 pointer" (click)="editAgentAdmin(el.id)"></i>
                                     <i class="fa fa-trash padding-5 pointer" (click)="deleteAgentAdmin(el.id)"></i>
                                 </td>
                                 <td>{{el.employeeId}}</td>
-                                <td>{{el.sso}}</td>
-                                <!-- <td>
-                                    <span
-                                        ngbTooltip="{{ el.name }}">{{ el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
-                                    <span class="padding-left-10"
-                                        [class.float-right]="el.name.length < characterSplice">
-                                        <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle"
-                                            [placement]="'auto'" container="body">
-                                            <i class="fa fa-ellipsis-h"></i>
-                                        </a>
-                                        <ng-template #popContent>
-                                            <b>Client Name : </b> {{ el.clientName }}
-                                            <br />
-                                            <b>Client LOB group Name : </b> {{ el.clientLobGroupName }}
-                                            <br>
-                                            <b>Skill Group Name :</b> {{el.skillGroupName}}
-                                            <br>
-                                            <b>Skill Tag Name :</b> {{el.skillTagName}}
-                                        </ng-template>
-                                        <ng-template #popTitle>
-                                            {{ 'Hierarchy' | translation: 'lbl_table_heading_scheduling_group_hierarchy' : translationValues }}
-                                        </ng-template>
-                                    </span>
-                                </td> -->
+                                <td>
+                                    <div class="d-flex justify-content-between" [class.display-inline-contents]="el.sso.length > characterSplice">
+                                        <span ngbTooltip="{{ el.sso }}">{{ el.sso | truncate: { sliceStart: 0,
+                                            sliceEnd: characterSplice, append: '...' } }}</span>
+                                        <span class="padding-left-10 float-right">
+                                            <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle"
+                                                [placement]="'auto'" triggers="manual" #hierarchyPopOver="ngbPopover" (click)="getHierarchy(hierarchyPopOver, el.id)" container="body">
+                                                <i class="fa fa-ellipsis-h"></i>
+                                            </a>
+                                            <ng-template let-hierarchy="hierarchy" #popContent>
+
+                                                <b>Client Name : </b> {{ hierarchy.clientName }}
+                                                <br />
+                                                <br />
+                                                <b>Client LOB group Name : </b> {{ hierarchy.clientLobGroupName }}
+                                                <br />
+                                                <br />
+                                                <b>Skill Group Name :</b> {{hierarchy.skillGroupName}}
+                                                <br />
+                                                <br />
+                                                <b>Skill Tag Name :</b> {{hierarchy.skillTagName}}
+ 
+                                            </ng-template>
+                                            <ng-template #popTitle>
+                                                {{ 'Hierarchy' | translate }}
+                                            </ng-template>
+                                        </span>
+                                    </div>
+                                </td>
+                                <!-- <td class="d-flex justify-content-between">{{el.sso}} <a (click)="showHierarchy(el.id)" ngbTooltip="View Agent Hierarchy Info">&nbsp; &nbsp;<i class="fa fa-ellipsis-h"></i></a></td> -->
                                 <td>{{el.firstName}}</td>
                                 <td>{{el.lastName}}</td>
-                                <td>{{el.agentData[0].group.value | date: 'yyyy-MM-dd'}}</td>
+                                <td>{{getHireDateValue(el.agentData)}}</td>
                                 <td>{{el.createdBy}}</td>
                                 <td>{{el.createdDate | date: 'yyyy-MM-dd' }}</td>
                                 <td>{{el.modifiedBy}}</td>

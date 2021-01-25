@@ -25,8 +25,10 @@ namespace Css.Api.Reporting.Models.DTO.Request.UDW
         [XmlElement(ElementName = "nameSuffix")]
         public string NameSuffix { get; set; }
 
+        public int? MU { get { return string.IsNullOrWhiteSpace(MUString) ? null : (int?)int.Parse(MUString); } }
+
         [XmlElement(ElementName = "mu")]
-        public string MU { get; set; }
+        public string MUString { get; set; }
 
         [XmlElement(ElementName = "startID", IsNullable = true)]
         public long? StartId { get; set; }
@@ -42,8 +44,10 @@ namespace Css.Api.Reporting.Models.DTO.Request.UDW
         [XmlElement(ElementName = "senDate")]
         public UDWAgentDate SenDate { get; set; }
 
+        public int? SenExt { get { return string.IsNullOrWhiteSpace(SenExtString) ? null : (int?) int.Parse(SenExtString); } }
+
         [XmlElement(ElementName = "senExt")]
-        public UDWAgentDate SenExt { get; set; }
+        public string SenExtString { get; set; }
 
         [XmlArray(ElementName = "agentData")]
         [XmlArrayItem(ElementName = "group")]

@@ -2,7 +2,7 @@
 using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
-using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.Enums;

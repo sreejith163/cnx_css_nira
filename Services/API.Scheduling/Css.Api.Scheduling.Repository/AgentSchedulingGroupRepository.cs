@@ -2,13 +2,12 @@
 using Css.Api.Core.DataAccess.Repository.NoSQL;
 using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Core.Models.Domain;
+using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Utilities.Extensions;
-using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,6 +52,17 @@ namespace Css.Api.Scheduling.Repository
                 .ToPagedList(shapedAgentSchedulingGroups, filteredAgentSchedulingGroups.Count(), agentSchedulingGroupQueryparameter.PageNumber, agentSchedulingGroupQueryparameter.PageSize);
         }
 
+        /// <summary>Gets the agent scheduling groups of skill tag.</summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<IQueryable<AgentSchedulingGroup>> GetAgentSchedulingGroupsOfSkillTag(SkillTagIdDetails skillTagIdDetails)
+        {
+            var agentSchedulingGroups = FilterBy(x => x.IsDeleted == false && x.SkillTagId == skillTagIdDetails.SkillTagId);
+            return await Task.FromResult(agentSchedulingGroups);
+        }
+
         /// <summary>
         /// Gets the agent scheduling group.
         /// </summary>
@@ -84,7 +94,7 @@ namespace Css.Api.Scheduling.Repository
         ///   <br />
         /// </returns>
         public async Task<AgentSchedulingGroup> GetAgentSchedulingGroupBasedonSkillTag(SkillTagIdDetails skillTagIdDetails)
-        {   
+        {
             var query =
                Builders<AgentSchedulingGroup>.Filter.Eq(i => i.IsDeleted, false) &
                Builders<AgentSchedulingGroup>.Filter.Eq(i => i.SkillTagId, skillTagIdDetails.SkillTagId);

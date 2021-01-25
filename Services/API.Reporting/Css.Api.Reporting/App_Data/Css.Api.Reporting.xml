@@ -4,27 +4,28 @@
         <name>Css.Api.Reporting</name>
     </assembly>
     <members>
-        <member name="T:Css.Api.Reporting.Controllers.ImportController">
+        <member name="T:Css.Api.Reporting.Controllers.ActivityController">
             <summary>
             Controller for handling the all imports
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="F:Css.Api.Reporting.Controllers.ImportController._importStrategy">
+        <member name="F:Css.Api.Reporting.Controllers.ActivityController._activityStrategy">
             <summary>
             The strategy for import
             </summary>
         </member>
-        <member name="M:Css.Api.Reporting.Controllers.ImportController.#ctor(Css.Api.Reporting.Business.Interfaces.IImportStrategy)">
+        <member name="M:Css.Api.Reporting.Controllers.ActivityController.#ctor(Css.Api.Reporting.Business.Interfaces.IActivityStrategy)">
             <summary>
             Constructor to initialize all properties
             </summary>
-            <param name="importStrategy"></param>
+            <param name="activityStrategy"></param>
         </member>
-        <member name="M:Css.Api.Reporting.Controllers.ImportController.Post">
+        <member name="M:Css.Api.Reporting.Controllers.ActivityController.Post">
             <summary>
-            The import method using the HTTP POST call
+            The post method to process the requests
             </summary>
+            <returns>An instance of ActivityResponse</returns>
         </member>
         <member name="T:Css.Api.Reporting.Extensions.DBContextExtension">
             <summary>

@@ -1,7 +1,8 @@
 ﻿using Css.Api.Core.Models.Domain;
-using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository.Interfaces
@@ -17,6 +18,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="agentSchedulingGroupQueryparameter">The agent scheduling group queryparameter.</param>
         /// <returns></returns>
         Task<PagedList<Entity>> GetAgentSchedulingGroups(AgentSchedulingGroupQueryparameter agentSchedulingGroupQueryparameter);
+
+        /// <summary>Gets the agent scheduling groups of skill tag.</summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<IQueryable<AgentSchedulingGroup>> GetAgentSchedulingGroupsOfSkillTag(SkillTagIdDetails skillTagIdDetails);
 
         /// <summary>
         /// Gets the agent scheduling group.

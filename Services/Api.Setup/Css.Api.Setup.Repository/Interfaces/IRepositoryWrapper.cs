@@ -7,6 +7,8 @@ namespace Css.Api.Setup.Repository.Interfaces
     /// </summary>
     public interface IRepositoryWrapper
     {
+
+
         /// <summary>
         /// Gets the clients.
         /// </summary>

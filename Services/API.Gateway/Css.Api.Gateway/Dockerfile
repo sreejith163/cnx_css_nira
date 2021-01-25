@@ -8,6 +8,9 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Services/API.Gateway/Css.Api.Gateway/Css.Api.Gateway.csproj", "Services/API.Gateway/Css.Api.Gateway/"]
+COPY ["Services/API.Core/Css.Api.Core.ExceptionHandling/Css.Api.Core.ExceptionHandling.csproj", "Services/API.Core/Css.Api.Core.ExceptionHandling/"]
+COPY ["Services/API.Core/Css.Api.Core.Models/Css.Api.Core.Models.csproj", "Services/API.Core/Css.Api.Core.Models/"]
+COPY ["Services/API.Core/Css.Api.Core.Utilities/Css.Api.Core.Utilities.csproj", "Services/API.Core/Css.Api.Core.Utilities/"]
 #COPY ["Services/API.Gateway/Css.Api.Gateway/App_Data/SSL/css.api.gateway.pfx", "/app/publish/"]
 #COPY ["Services/API.Gateway/Css.Api.Gateway/App_Data/SSL/css.api.gateway.crt", "/usr/local/share/ca-certificates/"]
 RUN dotnet restore "Services/API.Gateway/Css.Api.Gateway/Css.Api.Gateway.csproj"

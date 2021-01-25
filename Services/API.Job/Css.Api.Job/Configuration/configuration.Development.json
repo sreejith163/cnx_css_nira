@@ -3,8 +3,8 @@
     "Cron": [
       {
         "Key": "UDWImport",
-        "CronExpression": "*/15 * * * *",
-        "Url": "http://10.87.221.35:4201/api/import",
+        "CronExpression": "0 */4 * * *",
+        "Url": "http://10.87.221.35:4201/api/activity",
         "Method": "POST",
         "Headers": {
           "activity": "UDW-Import"

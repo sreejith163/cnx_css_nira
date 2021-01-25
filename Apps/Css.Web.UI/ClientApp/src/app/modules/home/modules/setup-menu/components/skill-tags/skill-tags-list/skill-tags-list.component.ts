@@ -22,6 +22,10 @@ import { TranslationDetails } from 'src/app/shared/models/translation-details.mo
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 import { Language } from 'src/app/shared/models/language-value.model';
 import { TranslateService } from '@ngx-translate/core';
+import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
+import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-skill-tags-list',
@@ -39,7 +43,8 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./skill-tags-list.component.scss']
 })
 export class SkillTagsListComponent implements OnInit, OnDestroy {
-  currentLanguage: Language;
+  currentLanguage: string;
+  LoggedUser;
 
   currentPage = 1;
   pageSize = 10;
@@ -73,11 +78,15 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
     private skillTagSevice: SkillTagService,
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
-    private translationService: LanguageTranslationService,
-    private genericStateManagerService: GenericStateManagerService
-  ) { }
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private languagePreferenceService: LanguagePreferenceService
+  ) {
+    this.LoggedUser = this.authService.getLoggedUserInfo();
+  }
 
   ngOnInit() {
+    this.preLoadTranslations();
     this.loadTranslations();
     this.loadSkillTags();
     this.subscribeToTranslations();
@@ -271,22 +280,31 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getSkillTagSubscription);
   }
 
-  private subscribeToTranslations(){
-    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+  private subscribeToTranslations() {
+    this.getTranslationSubscription = this.languagePreferenceService.userLanguageChanged.subscribe(
       (language) => {
         if (language) {
           this.loadTranslations();
         }
-      }
-    );
+      });
+
     this.subscriptions.push(this.getTranslationSubscription);
   }
 
-  private loadTranslations(){
-    const browserLang = this.genericStateManagerService.getLanguage();
-    this.currentLanguage = browserLang;
-    this.translate.use(browserLang ? browserLang : 'en');
+  private preLoadTranslations() {
+    // Preload the user language //
+    const browserLang = this.route.snapshot.data.languagePreference.languagePreference;
+    this.currentLanguage = browserLang ? browserLang : 'en';
+    this.translate.use(this.currentLanguage);
   }
-  
+
+  private loadTranslations() {
+    // load the user language from api //
+    this.languagePreferenceService.getLanguagePreference(this.LoggedUser.employeeId).subscribe((langPref: LanguagePreference) => {
+      this.currentLanguage = langPref.languagePreference ? langPref.languagePreference : 'en';
+      this.translate.use(this.currentLanguage);
+    });
+  }
+
 
 }

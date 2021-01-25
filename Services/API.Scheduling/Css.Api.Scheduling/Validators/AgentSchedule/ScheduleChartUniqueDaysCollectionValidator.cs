@@ -1,4 +1,4 @@
-﻿using Css.Api.Scheduling.Models.Domain;
+﻿using Css.Api.Core.Models.Domain.NoSQL;
 using FluentValidation.Validators;
 using System.Collections.Generic;
 using System.Linq;

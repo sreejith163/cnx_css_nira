@@ -21,7 +21,7 @@ namespace Css.Api.Reporting.Business.Interfaces
         /// The method to push data to the destination
         /// </summary>
         /// <param name="feeds">List of instances of DataFeed (sources)</param>
-        /// <returns>An instance of ImportResponse</returns>
-        Task<TargetResponse> Push(List<DataFeed> feeds);
+        /// <returns>An instance of ActivityResponse</returns>
+        Task<ActivityResponse> Push(List<DataFeed> feeds);
     }
 }

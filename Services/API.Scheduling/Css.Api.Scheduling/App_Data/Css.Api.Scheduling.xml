@@ -55,11 +55,10 @@
             <param name="agentAdminId">The agentAdmin identifier.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.CreateAgentActivityLogs(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.CreateAgentActivityLog)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.CreateAgentActivityLogs(Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.CreateAgentActivityLog)">
             <summary>
             Creates the agent activity logs.
             </summary>
-            <param name="agentAdminId">The agent admin identifier.</param>
             <param name="agentActivityLogDetails">The agent activity log details.</param>
             <returns>
               <br />
@@ -148,6 +147,23 @@
             <param name="agentScheduleId">The agent schedule identifier.</param>
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
+        </member>
+        <member name="T:Css.Api.Scheduling.Controllers.EntityHierarchyController">
+            <summary>controller for entity hierarchy</summary>
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.EntityHierarchyController._entityHierarchyService">
+            <summary>The entity hierarchy service</summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.EntityHierarchyController.#ctor(Css.Api.Scheduling.Business.Interfaces.IEntityHierarchyService)">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.EntityHierarchyController" /> class.</summary>
+            <param name="entityHierarchyService">The entity hierarchy service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.EntityHierarchyController.GetEntityHierarchy(System.Int32)">
+            <summary>Gets the entity hierarchy.</summary>
+            <param name="clientId">The client identifier.</param>
+            <returns>
+              <br />
+            </returns>
         </member>
         <member name="T:Css.Api.Scheduling.Controllers.TimeZonesController">
             <summary>

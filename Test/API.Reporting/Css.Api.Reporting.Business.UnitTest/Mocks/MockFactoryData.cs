@@ -11,6 +11,7 @@ using Css.Api.Reporting.Models.DTO.Response;
 using Css.Api.Reporting.Models.Enums;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Reporting.Models.DTO.Request;
+using Css.Api.Core.Models.Domain.NoSQL;
 
 namespace Css.Api.Reporting.Business.UnitTest.Mocks
 {
@@ -41,12 +42,12 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         private readonly IEnumerable<ITarget> _targets;
 
         /// <summary>
-        /// A mock importer
+        /// A mock source
         /// </summary>
         private readonly Mock<ISource> _mockSource;
 
         /// <summary>
-        /// A mock exporter
+        /// A mock target
         /// </summary>
         private readonly Mock<ITarget> _mockTarget;
 
@@ -69,10 +70,15 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         /// A list of mock mapping contexts
         /// </summary>
         private readonly List<MappingContext> _contexts;
+
+        /// <summary>
+        /// A list of mock agent scheduling groups
+        /// </summary>
+        private readonly List<AgentSchedulingGroup> _mockSchedulingGroups;
         #endregion
 
         #region Constructor
-        
+
         /// <summary>
         /// The constructor to initialize all mocks 
         /// </summary>
@@ -88,6 +94,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
             _mockFtp = InitializeMockFTP();
             _mockContext = InitializeMappingContext();
             _contexts = GenerateMappingContexts();
+            _mockSchedulingGroups = InitializeSchedulingGroups();
         }
         #endregion
 
@@ -112,12 +119,22 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         public List<DataFeed> GetFeeds() => _mockFeed;
 
         /// <summary>
-        /// Method which returns an instances of MappingContext
+        /// Method which returns an instance of MappingContext
         /// </summary>
         /// <returns></returns>
         public MappingContext GetMappingContext() => _mockContext;
 
+        /// <summary>
+        /// Method which returns a list of instances of MappingContext
+        /// </summary>
+        /// <returns></returns>
         public List<MappingContext> GetMappingContexts() => _contexts;
+
+        /// <summary>
+        /// Method which returns a list of instances of mock AgentSchedulingGroups
+        /// </summary>
+        /// <returns></returns>
+        public List<AgentSchedulingGroup> GetAgentSchedulingGroups() => _mockSchedulingGroups;
 
         /// <summary>
         /// Method which returns a mock mapper service
@@ -126,13 +143,13 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         public Mock<IMapperService> GetMockMapper() => _mapperService; 
         
         /// <summary>
-        /// Method which returns an enumerable of all mock importer objects
+        /// Method which returns an enumerable of all mock sources
         /// </summary>
         /// <returns></returns>
         public IEnumerable<ISource> GetSources() => _sources;
 
         /// <summary>
-        /// Method which returns an enumerable of all mock exporter objects
+        /// Method which returns an enumerable of all mock targets
         /// </summary>
         /// <returns></returns>
         public IEnumerable<ITarget> GetTargets() => _targets;
@@ -144,26 +161,26 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         public Mock<IFTPService> GetMockFTP() => _mockFtp;
 
         /// <summary>
-        /// Method which returns a mock importer object
+        /// Method which returns a mock source object
         /// </summary>
         /// <returns></returns>
         public Mock<ISource> GetMockSource() => _mockSource;
 
         /// <summary>
-        /// Method which returns a mock exporter object
+        /// Method which returns a mock target object
         /// </summary>
         /// <returns></returns>
         public Mock<ITarget> GetMockTarget() => _mockTarget;
 
         /// <summary>
-        /// Method which returns a mock importer object which has mock responses configured based on the input status
+        /// Method which returns a mock source object which has mock responses configured based on the input status
         /// </summary>
         /// <param name="status">The process status</param>
         /// <returns></returns>
         public Mock<ISource> GetMockSource(int status) => InitializeMockSource(status);
 
         /// <summary>
-        /// Method which returns a mock exporter object which has mock responses configured based on the input status
+        /// Method which returns a mock target object which has mock responses configured based on the input status
         /// </summary>
         /// <param name="status">The process status</param>
         /// <returns></returns>
@@ -235,7 +252,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
                 {
                     new DataOption()
                     {
-                        Key = "UDWDB",
+                        Key = "UDWDBOptions",
                         Type = DataOptions.Mongo.GetDescription(),
                         Options = new Dictionary<string, string>()
                         {
@@ -245,7 +262,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
                     },
                     new DataOption()
                     {
-                        Key = "UDWFTP",
+                        Key = "UDWFTPOptions",
                         Type = DataOptions.FTP.GetDescription(),
                         Options = new Dictionary<string, string>()
                         {
@@ -290,15 +307,14 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
             {
                 new DataFeed
                 {
-                    Accessor = "test",
                     Content = new byte[] { 10, 20, 30 },
-                    Path = "/ftp/path"
+                    Feeder = "/ftp/path"
                 }
             };
         }
 
         /// <summary>
-        /// 
+        /// Method to intialize mock MappingContexts
         /// </summary>
         /// <returns></returns>
         private MappingContext InitializeMappingContext()
@@ -315,6 +331,36 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
             };
         }
 
+        /// <summary>
+        /// Method to initialize mock AgentSchedulingGroups
+        /// </summary>
+        /// <returns></returns>
+        private List<AgentSchedulingGroup> InitializeSchedulingGroups()
+        {
+            return new List<AgentSchedulingGroup>()
+            {
+                new AgentSchedulingGroup()
+                {
+                    RefId = 1000,
+                    AgentSchedulingGroupId = 1
+                },
+                new AgentSchedulingGroup()
+                {
+                    RefId = 1001,
+                    AgentSchedulingGroupId = 2
+                },
+                new AgentSchedulingGroup()
+                {
+                    RefId = 1002,
+                    AgentSchedulingGroupId = 3
+                }
+            };
+        }
+
+        /// <summary>
+        /// Method to generate a list of mock mapping contexts
+        /// </summary>
+        /// <returns>A list of instances of MappingContext</returns>
         private List<MappingContext> GenerateMappingContexts()
         {
             return new List<MappingContext>()
@@ -391,7 +437,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         }
 
         /// <summary>
-        /// A method to initialize a mock importer and customize the responses based on the input status
+        /// A method to initialize a mock source and customize the responses based on the input status
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
@@ -404,7 +450,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         }
 
         /// <summary>
-        /// A method to initialize a mock exporter and customize the responses based on the input status
+        /// A method to initialize a mock target and customize the responses based on the input status
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
@@ -412,17 +458,17 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         {
             var target = new Mock<ITarget>();
             target.SetReturnsDefault<string>("UDWDB");
-            target.SetReturnsDefault<Task<TargetResponse>>(Task.FromResult<TargetResponse>(new TargetResponse
+            target.SetReturnsDefault<Task<ActivityResponse>>(Task.FromResult<ActivityResponse>(new ActivityResponse
             {
-                Completed = new List<ImportData>()
+                Completed = new List<ActivityData>()
                 {
-                    new ImportData()
+                    new ActivityData()
                 },
-                Failed = new List<ImportData>()
+                Failed = new List<ActivityData>()
                 {
 
                 },
-                Partial = new List<ImportData>()
+                Partial = new List<ActivityData>()
                 {
 
                 }
@@ -431,45 +477,45 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
         }
 
         /// <summary>
-        /// A method to generate and initialize an enumerable of importer mock objects
+        /// A method to generate and initialize an enumerable of source mock objects
         /// </summary>
         /// <returns></returns>
         private IEnumerable<ISource> InitializeSources()
         {
-            IList<ISource> importers = new List<ISource>();
+            IList<ISource> sources = new List<ISource>();
             var udw = new Mock<ISource>();
             udw.SetReturnsDefault<string>("UDWFTP");
 
-            importers.Add(udw.Object);
+            sources.Add(udw.Object);
 
             
             var eStart = new Mock<ISource>();
             eStart.SetReturnsDefault<string>("EStartDB");
 
-            importers.Add(eStart.Object);
+            sources.Add(eStart.Object);
 
-            return importers;
+            return sources;
         }
 
         /// <summary>
-        /// A method to generate and initialize an enumerable of exporter mock objects
+        /// A method to generate and initialize an enumerable of target mock objects
         /// </summary>
         /// <returns></returns>
         private IEnumerable<ITarget> InitializeTargets()
         {
-            IList<ITarget> exporters = new List<ITarget>();
+            IList<ITarget> targets = new List<ITarget>();
             var udw = new Mock<ITarget>();
             udw.SetReturnsDefault<string>("UDWDB");
 
-            exporters.Add(udw.Object);
+            targets.Add(udw.Object);
 
 
             var eStart = new Mock<ITarget>();
             eStart.SetReturnsDefault<string>("EStartFTP");
 
-            exporters.Add(eStart.Object);
+            targets.Add(eStart.Object);
 
-            return exporters;
+            return targets;
         }
         #endregion
 

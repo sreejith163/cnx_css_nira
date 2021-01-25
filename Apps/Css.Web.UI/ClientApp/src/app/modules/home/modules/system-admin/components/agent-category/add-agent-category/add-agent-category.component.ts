@@ -196,12 +196,11 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
         return false;
       }
     } else {
-      if (+this.agentCategoryForm.get('dataType').value === 1)
-      {
+      if (+this.agentCategoryForm.get('dataType').value === 1) {
         const charCode = (event.which) ? event.which : event.keyCode;
         if ((!(charCode > 47 && charCode < 58) &&
-        !(charCode > 64 && charCode < 91) &&
-        !(charCode > 96 && charCode < 123))) {
+          !(charCode > 64 && charCode < 91) &&
+          !(charCode > 96 && charCode < 123))) {
           return false;
         }
       }

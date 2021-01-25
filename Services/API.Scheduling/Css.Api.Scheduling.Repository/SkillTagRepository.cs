@@ -4,10 +4,10 @@ using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -51,6 +51,17 @@ namespace Css.Api.Scheduling.Repository
 
             return await PagedList<Entity>
                 .ToPagedList(shapedSkillTags, filteredSkillTags.Count(), skillTagQueryparameter.PageNumber, skillTagQueryparameter.PageSize);
+        }
+
+        /// <summary>Gets the skill tags of skill group.</summary>
+        /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<IQueryable<SkillTag>> GetSkillTagsOfSkillGroup(SkillGroupIdDetails skillGroupIdDetails)
+        {
+            var skillTags = FilterBy(x => x.IsDeleted == false && x.SkillGroupId == skillGroupIdDetails.SkillGroupId);
+            return await Task.FromResult(skillTags);
         }
 
         /// <summary>

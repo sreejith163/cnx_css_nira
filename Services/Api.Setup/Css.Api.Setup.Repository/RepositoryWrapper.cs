@@ -70,6 +70,7 @@ namespace Css.Api.Setup.Repository
         /// </value>
         private IOperationHourRepository _operationHoursRepository { get; set; }
 
+
         /// <summary>
         /// Gets the clients.
         /// </summary>

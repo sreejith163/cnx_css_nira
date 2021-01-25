@@ -118,9 +118,8 @@
                               {{ '<' }}  <span ngbTooltip="{{ el.dataTypeMaxValue }}">{{el.dataTypeMaxValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
                                 append: '...' } }}</span> </ng-container>
                           <ng-container *ngSwitchCase="dataType.Date">
-                            <b>Start:</b> {{ el.dataTypeMinValue | date: 'yyyy-MM-dd' }}
-                            <b>End:</b>
-                            {{ el.dataTypeMaxValue | date: 'yyyy-MM-dd' }}
+                            {{el.dataTypeMinValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                              append: '...' } }}
                           </ng-container>
                       </ng-container>
               </td>

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Css.Api.Reporting.Models.DTO.Request.UDW;
+using Domain = Css.Api.Core.Models.Domain.NoSQL;
 using System;
 using System.Collections.Generic;
 using System.Text;

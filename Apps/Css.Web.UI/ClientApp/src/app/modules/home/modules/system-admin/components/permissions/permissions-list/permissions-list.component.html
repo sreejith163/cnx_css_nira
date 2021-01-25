@@ -14,10 +14,10 @@
     </div>
   </div>
 
-  <app-add-update-permission [employeeId]="employeeId"
+  <!-- <app-add-update-permission [employeeId]="employeeId"
     (employeeSelected)="onEmployeeSelected($event)" (permissionCleared)="onPermissionCleared()"
     (permissionUpdated)="onPermissionUpdated()" (permissionAdded)="onPermissionAdded()">
-  </app-add-update-permission>
+  </app-add-update-permission> -->
 
   <div class="row m-l-r-10">
     <div class="col-md-3 p-b-5">
@@ -29,27 +29,12 @@
         {{ 'Search' | translate }}
       </button>
     </div>
-    <div class="col-md-7 text-right">
-      <button type="button" class="btn btn-default float-r btn-grid">
-        <i class="fa fa-th"></i>
-        <i class="fa fa-sort-down padding-5" [ngbPopover]="popContent" [popoverTitle]="popTitle" [placement]="'left'"
-          container="body" [autoClose]="'outside'"></i>
-        <ng-template #popContent>
-          <div class="form-group clearfix margin-b-05-rem" *ngFor="let role of this.hiddenRoles; let i = index">
-            <div class="icheck-primary d-inline">
-              <input type="checkbox" id="{{ role.id }}" [value]="role.role" [checked]="hasHideRoleSelected(role.role)"
-                (change)="onCheckRolesToHide($event)">
-              <label for="{{ role.id }}">
-                {{ role.role | translate }}
-              </label>
-            </div>
-          </div>
-        </ng-template>
-        <ng-template #popTitle>
-          {{ 'Select_columns_to_hide' | translate }}
-        </ng-template>
-      </button>
-    </div>
+      <div class="col-md-7 text-right">
+        <button (click)="addPermission()" type="button" class="float-right  btn btn-primary" id="btn_add">
+          <i class="fa fa-plus padding-5" aria-hidden="true"></i>
+          {{ 'Add' | translate }} {{ 'User' | translate }}
+        </button>
+      </div>
   </div>
   <div class="row">
     <div class="col-md-12 mt-2 table-responsive">
@@ -57,74 +42,74 @@
         <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
           <thead>
             <tr>
-              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="employeeId">
+              <th>
+                {{ 'Action' | translate }}
+              </th>
+              <th class="sortable-field" (click)="sort('sso', sortBy)">
+                {{ 'SSO' | translate }}
+                <i *ngIf="orderBy !== 'sso'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'sso'" class="fa" [class.fa-sort-desc]="sortBy === 'desc'"
+                  [class.fa-sort-asc]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('employeeId', sortBy)">
                 {{ 'Employee_id' | translate }}
-                <i class="fa fa-sort"></i>
+                <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-desc]="sortBy === 'desc'"
+                  [class.fa-sort-asc]="sortBy === 'asc'">
+                </i>
               </th>
-              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="firstName">
+              <th class="sortable-field" (click)="sort('firstname', sortBy)">
                 {{ 'First_name' | translate }}
-                <i class="fa fa-sort"></i>
+                <i *ngIf="orderBy !== 'firstname'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'firstname'" class="fa" [class.fa-sort-desc]="sortBy === 'desc'"
+                  [class.fa-sort-asc]="sortBy === 'asc'">
+                </i>
               </th>
-              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="lastName">
+              <th class="sortable-field" (click)="sort('lastname', sortBy)">
                 {{ 'Last_name' | translate }}
-                <i class="fa fa-sort"></i>
+                <i *ngIf="orderBy !== 'lastname'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'lastname'" class="fa" [class.fa-sort-desc]="sortBy === 'desc'"
+                  [class.fa-sort-asc]="sortBy === 'asc'">
+                </i>
               </th>
-              <th *ngIf="hasRoleHidden('System Admin')" class="sortable-field" [appSort]="permissions"
-                data-order="asc" data-name="roles" data-type="array">
-                {{ 'System_admin' | translate }}
-                <i class="fa fa-sort"></i>
+              <th class="sortable-field" (click)="sort('userRoleId', sortBy)">
+                {{ 'Role' | translate }}
+                <i *ngIf="orderBy !== 'userRoleId'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'userRoleId'" class="fa" [class.fa-sort-desc]="sortBy === 'desc'"
+                  [class.fa-sort-asc]="sortBy === 'asc'">
+                </i>
               </th>
-              <th *ngIf="hasRoleHidden('WFM Admin')" class="sortable-field" [appSort]="permissions"
-                data-order="asc" data-name="roles" data-type="array">
-                {{ 'WFM_admin' | translate }}
-                <i class="fa fa-sort"></i>
-              </th>
-              <th *ngIf="hasRoleHidden('WFM Scheduling Team')" class="sortable-field" [appSort]="permissions"
-                data-order="asc" data-name="roles" data-type="array">
-                {{ 'WFM_scheduling_team' | translate }}
-                <i class="fa fa-sort"></i>
-              </th>
-              <th *ngIf="hasRoleHidden('Delivery Team')" class="sortable-field" [appSort]="permissions"
-                data-order="asc" data-name="roles" data-type="array">
-                {{ 'Delivery_team' | translate }}
-                <i class="fa fa-sort"></i>
-              </th>
-              <th *ngIf="hasRoleHidden('Active')" class="sortable-field" [appSort]="permissions"
-                data-order="asc" data-name="roles" data-type="array">
-                {{ 'Active' | translate }}
-                <i class="fa fa-sort"></i>
-              </th>
-              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="createdBy">
+              <th class="sortable-field">
                 {{ 'Created_by' | translate }}
                 <i class="fa fa-sort"></i></th>
-              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="createdDate">
+              <th class="sortable-field">
                 {{ 'Created_date' | translate }}
                 <i class="fa fa-sort"></i></th>
-              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="modifiedBy">
+              <th class="sortable-field">
                 {{ 'Modified_by' | translate }}
                 <i class="fa fa-sort"></i></th>
-              <th class="sortable-field" [appSort]="permissions" data-order="asc" data-name="modifiedDate">
+              <th class="sortable-field">
                 {{ 'Modified_date' | translate }}
                 <i class="fa fa-sort"></i></th>
             </tr>
           </thead>
           <tbody>
-            <tr
-              *ngFor="let el of permissions| slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize; let i = index;"
-              (click)="setSelectedEmployee(el.employeeId, i)" class="cursor-pointer"
-              [ngClass]="{'selected': isRowSelected(i)}">
+            <tr class="pointer" *ngFor="let el of employees; let i = index;" (dblclick)="editUserPermission(el)">
+              <td>
+                <i class="fa fa-edit padding-5 pointer" (click)="editUserPermission(el)"></i>
+                <i class="fa fa-trash padding-5 pointer" (click)="confirmDeleteUserPermission(el)"></i>
+              </td>
+              <td>{{el.sso}}</td>
               <td>{{el.employeeId}}</td>
-              <td>{{el.firstName}}</td>
-              <td>{{el.lastName}}</td>
-              <td *ngIf="hasRoleHidden('System Admin')">{{checkPermission(el,1)}}</td>
-              <td *ngIf="hasRoleHidden('WFM Admin')">{{checkPermission(el,2)}}</td>
-              <td *ngIf="hasRoleHidden('WFM Scheduling Team')">{{checkPermission(el,3)}}</td>
-              <td *ngIf="hasRoleHidden('Delivery Team')">{{checkPermission(el,4)}}</td>
-              <td *ngIf="hasRoleHidden('Active')">{{checkPermission(el,5)}}</td>
-              <td>{{el.createdBy}}</td>
+              <td>{{el.firstname}}</td>
+              <td>{{el.lastname}}</td>
+              <td>{{el.roleName}}</td>
+              <td>Admin123</td>
               <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
-              <td>{{el.modifiedBy}}</td>
-              <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
+              <td>Admin123</td>
+              <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
+              <!-- <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td> -->
             </tr>
           </tbody>
         </table>

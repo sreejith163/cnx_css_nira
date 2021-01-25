@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Css.Api.Reporting.Business.Sources
 {
+    /// <summary>
+    /// The UDW Import source service
+    /// </summary>
     public class UDWImportSource : ISource
     {
         #region Private Properties
@@ -47,7 +50,7 @@ namespace Css.Api.Reporting.Business.Sources
         /// <returns>A list of instances of DataFeed</returns>
         public async Task<List<DataFeed>> Pull()
         {
-            return _ftp.Read();
+            return await Task.FromResult(_ftp.Read());
         }
         #endregion
     }

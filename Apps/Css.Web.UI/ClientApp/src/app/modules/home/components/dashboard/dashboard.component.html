@@ -1,7 +1,9 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-6 col-md-6">
-            <h2>{{ 'Home' | translate }}</h2>
+            <h2>{{ 'Dashboard' | translate }} <span *ngIf="[6].indexOf(employee?.userRoleId) > -1; else managementRole;">- {{ 'Agent' | translate }}</span>
+            <ng-template #managementRole>- {{ 'Operations' | translate }}</ng-template>
+            </h2>
         </div>
     </div>
     <div class="row">

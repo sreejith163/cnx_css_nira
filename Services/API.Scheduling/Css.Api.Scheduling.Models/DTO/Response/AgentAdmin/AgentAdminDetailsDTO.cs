@@ -1,4 +1,4 @@
-﻿using Css.Api.Scheduling.Models.Domain;
+﻿using Css.Api.Core.Models.Domain.NoSQL;
 
 namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
 {

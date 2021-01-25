@@ -119,14 +119,16 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(count);
         }
 
+
         /// <summary>Gets all agent scheduling groups count by skill tag identifier.</summary>
         /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <param name="agentSchedulingGroupIdDetails"></param>
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<int> GetAllAgentSchedulingGroupsCountBySkillTagId(SkillTagIdDetails skillTagIdDetails)
+        public async Task<int> GetAllAgentSchedulingGroupsCountBySkillTagId(SkillTagIdDetails skillTagIdDetails, AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
         {
-            var count = FindByCondition(x => x.SkillTagId == skillTagIdDetails.SkillTagId)
+            var count = FindByCondition(x => x.SkillTagId == skillTagIdDetails.SkillTagId && x.Id == agentSchedulingGroupIdDetails.AgentSchedulingGroupId)
                 .Count();
 
             return await Task.FromResult(count);

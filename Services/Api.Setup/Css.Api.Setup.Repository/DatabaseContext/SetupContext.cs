@@ -27,7 +27,6 @@ namespace Css.Api.Setup.Repository.DatabaseContext
         {
             _configuration = configuration;
         }
-
         public virtual DbSet<AgentSchedulingGroup> AgentSchedulingGroup { get; set; }
         public virtual DbSet<Client> Client { get; set; }
         public virtual DbSet<ClientLobGroup> ClientLobGroup { get; set; }
@@ -46,7 +45,8 @@ namespace Css.Api.Setup.Repository.DatabaseContext
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {            
+        {
+
             modelBuilder.Entity<AgentSchedulingGroup>(entity =>
             {
                 entity.ToTable("agent_scheduling_group");
@@ -330,6 +330,7 @@ namespace Css.Api.Setup.Repository.DatabaseContext
                     .WithMany(p => p.OperationHour)
                     .HasForeignKey(d => d.SkillTagId)
                     .HasConstraintName("FK_operation_hour_skill_tag_id");
+
             });
 
             modelBuilder.Entity<OperationHourOpenType>(entity =>

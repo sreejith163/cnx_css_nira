@@ -8,6 +8,7 @@ using Css.Api.Scheduling.Repository.Interfaces;
 using MassTransit;
 using System;
 using System.Threading.Tasks;
+using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
 
 namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
 {
@@ -41,7 +42,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
         {
             try
             {
-                Css.Api.Scheduling.Models.Domain.AgentSchedulingGroup agentSchedulingGroup = await _agentSchedulingGroupGroupRepository.GetAgentSchedulingGroup(new AgentSchedulingGroupIdDetails
+                NoSQL.AgentSchedulingGroup agentSchedulingGroup = await _agentSchedulingGroupGroupRepository.GetAgentSchedulingGroup(new AgentSchedulingGroupIdDetails
                 {
                     AgentSchedulingGroupId = context.Message.Id
                 });
@@ -53,10 +54,11 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
                 }
 
                 _agentSchedulingGroupGroupRepository.CreateAgentSchedulingGroup(
-                        new Css.Api.Scheduling.Models.Domain.AgentSchedulingGroup
+                        new NoSQL.AgentSchedulingGroup
                         {
                             AgentSchedulingGroupId = context.Message.Id,
                             Name = context.Message.Name,
+                            RefId = context.Message.RefId,
                             ClientId = context.Message.ClientId,
                             ClientLobGroupId = context.Message.ClientLobGroupId,
                             SkillGroupId = context.Message.SkillGroupId,
@@ -86,6 +88,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
             {
                 Id = context.Message.Id,
                 Name = context.Message.Name,
+                RefId = context.Message.RefId,
                 ClientId = context.Message.ClientId,
                 ClientLobGroupId = context.Message.ClientLobGroupId,
                 SkillGroupId = context.Message.SkillGroupId,

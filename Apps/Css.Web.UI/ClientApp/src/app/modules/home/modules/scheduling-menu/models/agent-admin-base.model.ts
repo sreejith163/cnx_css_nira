@@ -8,4 +8,7 @@ export class AgentAdminBase {
     firstName: string;
     lastName: string;
     agentData: AgentAdminAgentData[];
+    supervisorId: number;
+    supervisorName: string;
+    supervisorSso: string;
 }

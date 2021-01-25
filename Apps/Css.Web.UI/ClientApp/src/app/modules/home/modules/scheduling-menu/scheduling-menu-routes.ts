@@ -1,4 +1,5 @@
-import { Routes } from '@angular/router';
+import { Routes, RunGuardsAndResolvers } from '@angular/router';
+import { PermissionsGuard } from 'src/app/core/guards/permissions.guard';
 import { AgentAdminListComponent } from './components/agent-admin/agent-admin-list/agent-admin-list.component';
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid/scheduling-grid.component';
 
@@ -14,6 +15,9 @@ export const SchedulingMenuRoutes: Routes = [
     },
     {
         path: 'scheduling-grid',
-        component: SchedulingGridComponent
+        component: SchedulingGridComponent,
+        canActivate: [PermissionsGuard],
+        data: {permissions: [1]},
+        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     }
 ];

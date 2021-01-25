@@ -53,6 +53,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddTransient<ITimezoneService, TimezoneService>();
             services.AddTransient<IAgentAdminService, AgentAdminService>();
             services.AddTransient<IAgentScheduleService, AgentScheduleService>();
+            services.AddTransient<IEntityHierarchyService, EntityHierarchyService>();
 
             services.AddScoped<ITimezoneRepository, TimezoneRepository>();
             services.AddScoped<IAgentAdminRepository, AgentAdminRepository>();

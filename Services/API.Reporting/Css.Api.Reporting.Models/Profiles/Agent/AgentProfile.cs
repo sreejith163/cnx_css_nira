@@ -1,8 +1,10 @@
 ﻿using Css.Api.Reporting.Models.DTO.Request.UDW;
 using Css.Api.Reporting.Models.Profiles.ValueResolvers;
+using Domain = Css.Api.Core.Models.Domain.NoSQL;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Globalization;
 
 namespace Css.Api.Reporting.Models.Profiles.Agent
 {
@@ -37,27 +39,14 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                             o.SenDate = null;
                             return false;
                         }
-                        return DateTime.TryParse(String.Join('-', o.SenDate.Year, o.SenDate.Month, o.SenDate.Day), out dt);
+                        return DateTime.TryParse(String.Join('-', o.SenDate.Year, o.SenDate.Month, o.SenDate.Day), CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal, out dt);
                     });
                     opt.MapFrom(o => new DateTime(o.SenDate.Year, o.SenDate.Month, o.SenDate.Day));
                 })
                 .ForMember(x => x.SenExt, opt =>
                 {
-                    opt.PreCondition(o =>
-                    {
-                        DateTime dt;
-                        if (o.SenExt == null)
-                        {
-                            return false;
-                        }
-                        else if (o.SenExt.Day == 0 && o.SenExt.Month == 0 && o.SenExt.Year == 0)
-                        {
-                            o.SenExt = null;
-                            return false;
-                        }
-                        return DateTime.TryParse(String.Join('-', o.SenExt.Year, o.SenExt.Month, o.SenExt.Day), out dt);
-                    });
-                    opt.MapFrom(o => new DateTime(o.SenExt.Year, o.SenExt.Month, o.SenExt.Day));
+                    opt.PreCondition(o => o.SenExt.HasValue && o.SenExt.Value > 0 && o.SenExt.Value < 10000);
+                    opt.MapFrom(o => DateTime.UtcNow.Date.AddDays((double)o.SenExt));
                 });
 
             CreateMap<UDWAgentUpdate, Domain.Agent>()
@@ -65,10 +54,10 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                 .ForMember(x => x.LastName, opt => opt.MapFrom<AgentLastNameResolver>())
                 .ForMember(x => x.Ssn, opt => opt.MapFrom(o => o.SSN))
                 .ForMember(x => x.Sso, opt => opt.MapFrom(o => o.SSO))
-                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
-                .ForMember(x => x.CreatedBy, opt => opt.Ignore())
-                .ForMember(x => x.ModifiedBy, opt => opt.MapFrom(o => "UDW Import"))
-                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
+                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => "UDW Import"))
+                .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
+                .ForMember(x => x.ModifiedBy, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore())
                 .ForMember(x => x.Mu, opt => opt.MapFrom(o => o.MU))
                 .ForMember(x => x.IsDeleted, opt => opt.MapFrom(o => false))
                 .ForMember(x => x.SenDate, opt =>
@@ -84,27 +73,14 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                             o.SenDate = null;
                             return false;
                         }
-                        return DateTime.TryParse(String.Join('-', o.SenDate.Year, o.SenDate.Month, o.SenDate.Day), out dt);
+                        return DateTime.TryParse(String.Join('-', o.SenDate.Year, o.SenDate.Month, o.SenDate.Day), CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal ,out dt);
                     });
                     opt.MapFrom(o => new DateTime(o.SenDate.Year, o.SenDate.Month, o.SenDate.Day));
                 })
                 .ForMember(x => x.SenExt, opt =>
                 {
-                    opt.PreCondition(o =>
-                    {
-                        DateTime dt;
-                        if (o.SenExt == null)
-                        {
-                            return false;
-                        }
-                        else if (o.SenExt.Day == 0 && o.SenExt.Month == 0 && o.SenExt.Year == 0)
-                        {
-                            o.SenExt = null;
-                            return false;
-                        }
-                        return DateTime.TryParse(String.Join('-', o.SenExt.Year, o.SenExt.Month, o.SenExt.Day), out dt);
-                    });
-                    opt.MapFrom(o => new DateTime(o.SenExt.Year, o.SenExt.Month, o.SenExt.Day));
+                    opt.PreCondition(o => o.SenExt.HasValue && o.SenExt.Value > 0 && o.SenExt.Value < 10000);
+                    opt.MapFrom(o => DateTime.UtcNow.Date.AddDays((double)o.SenExt));
                 });
                    
         }

@@ -4,7 +4,7 @@
       {
         "Key": "UDWImport",
         "CronExpression": "* * * * *",
-        "Url": "https://localhost:44397/api/import",
+        "Url": "https://localhost:44397/api/activity",
         "Method": "POST",
         "Headers": {
           "activity": "UDW-Import"

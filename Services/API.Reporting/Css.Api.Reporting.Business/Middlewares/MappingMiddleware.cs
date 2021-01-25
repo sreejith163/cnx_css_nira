@@ -54,7 +54,7 @@ namespace Css.Api.Reporting.Business.Middlewares
         /// <returns></returns>
         public Task Invoke(HttpContext httpContext)
         {
-            if(!httpContext.Request.Path.Equals("/api/v1/import"))
+            if(!httpContext.Request.Path.Equals("/api/v1/activity"))
             {
                 return _next(httpContext);
             }

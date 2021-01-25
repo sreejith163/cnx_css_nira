@@ -25,6 +25,10 @@ import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { Language } from 'src/app/shared/models/language-value.model';
 import { TranslateService } from '@ngx-translate/core';
+import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
 
 @Component({
   selector: 'app-skill-group-list',
@@ -43,7 +47,9 @@ import { TranslateService } from '@ngx-translate/core';
 })
 
 export class SkillGroupListComponent implements OnInit, OnDestroy {
-  currentLanguage: Language;
+  currentLanguage: string;
+  LoggedUser;
+
   currentPage = 1;
   pageSize = 10;
   characterSplice = 25;
@@ -75,11 +81,15 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
     private skillGroupService: SkillGroupService,
-    private translationService: LanguageTranslationService,
-    private genericStateManagerService: GenericStateManagerService
-  ) { }
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private languagePreferenceService: LanguagePreferenceService
+  ) {
+    this.LoggedUser = this.authService.getLoggedUserInfo();
+  }
 
   ngOnInit(): void {
+    this.preLoadTranslations();
     this.loadTranslations();
     this.loadSkillGroups();
     this.subscribeToTranslations();
@@ -247,20 +257,31 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(this.getAllSkillGroupDetailsSubscription);
   }
-  private subscribeToTranslations(){
-    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+
+  private subscribeToTranslations() {
+    this.getTranslationSubscription = this.languagePreferenceService.userLanguageChanged.subscribe(
       (language) => {
         if (language) {
           this.loadTranslations();
         }
-      }
-    );
+      });
+
     this.subscriptions.push(this.getTranslationSubscription);
   }
 
-  private loadTranslations(){
-    const browserLang = this.genericStateManagerService.getLanguage();
-    this.currentLanguage = browserLang;
-    this.translate.use(browserLang ? browserLang : 'en');
+  private preLoadTranslations() {
+    // Preload the user language //
+    const browserLang = this.route.snapshot.data.languagePreference.languagePreference;
+    this.currentLanguage = browserLang ? browserLang : 'en';
+    this.translate.use(this.currentLanguage);
   }
+
+  private loadTranslations() {
+    // load the user language from api //
+    this.languagePreferenceService.getLanguagePreference(this.LoggedUser.employeeId).subscribe((langPref: LanguagePreference) => {
+      this.currentLanguage = langPref.languagePreference ? langPref.languagePreference : 'en';
+      this.translate.use(this.currentLanguage);
+    });
+  }
+
 }

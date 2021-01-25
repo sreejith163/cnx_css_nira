@@ -8,7 +8,7 @@ using Css.Api.Scheduling.Repository.Interfaces;
 using MassTransit;
 using System;
 using System.Threading.Tasks;
-
+using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
 
 namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
 {
@@ -45,7 +45,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
         {
             try
             {
-                Css.Api.Scheduling.Models.Domain.AgentSchedulingGroup agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(new AgentSchedulingGroupIdDetails
+                NoSQL.AgentSchedulingGroup agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(new AgentSchedulingGroupIdDetails
                 {
                     AgentSchedulingGroupId = context.Message.Id
                 });
@@ -62,6 +62,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
                 agentSchedulingGroup.SkillGroupId = context.Message.SkillGroupIdNewValue;
                 agentSchedulingGroup.SkillTagId = context.Message.SkillTagIdNewValue;
                 agentSchedulingGroup.Name = context.Message.NameNewValue;
+                agentSchedulingGroup.RefId = context.Message.RefIdNewValue;
                 agentSchedulingGroup.IsDeleted = context.Message.IsDeletedNewValue;
 
                 _agentSchedulingGroupRepository.UpdateAgentSchedulingGroup(agentSchedulingGroup);
@@ -87,6 +88,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
             {
                 Id = context.Message.Id,
                 NameOldValue = context.Message.NameOldValue,
+                RefIdOldValue = context.Message.RefIdOldValue,
                 ClientIdOldValue = context.Message.ClientIdOldValue,
                 ClientLobGroupIdOldvalue = context.Message.ClientLobGroupIdOldvalue,
                 SkillGroupIdOldValue = context.Message.SkillGroupIdOldValue,

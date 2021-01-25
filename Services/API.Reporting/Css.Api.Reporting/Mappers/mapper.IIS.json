@@ -1,0 +1,39 @@
+{
+  "Mappers": {
+    "Activities": [
+      {
+        "Key": "UDW-Import",
+        "Source": "UDWImp",
+        "SourceDataOption": "CSSFTP",
+        "Target": "UDWImpTar",
+        "TargetDataOption": "CSSMongo"
+      },
+      {
+        "Key": "EStart-Export",
+        "Source": "EStartExp",
+        "SourceDataOption": "CSSMongo",
+        "Target": "EStartExpTar",
+        "TargetDataOption": "CSSFTP"
+      }
+    ],
+    "DataOptions": [
+      {
+        "Key": "CSSMongo",
+        "Type": "MongoDB",
+        "Options": {
+          "ConnectionString": "mongodb://localhost:30001",
+          "DatabaseName": "css_dev"
+        }
+      },
+      {
+        "Key": "CSSFTP",
+        "Type": "FTP",
+        "Options": {
+          "FTPServer": "sftp://cssftp:test@10.87.221.35", // sftp://{username}:{pwd}@{host/ip}
+          "FTPInbox": "/ftp/{0}/Inbox",
+          "FTPOutbox": "/ftp/{0}/Outbox"
+        }
+      }
+    ]
+  }
+}

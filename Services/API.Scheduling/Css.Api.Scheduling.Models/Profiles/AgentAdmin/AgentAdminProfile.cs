@@ -1,6 +1,7 @@
 ﻿using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
+using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
 using System;
 
 namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
@@ -10,7 +11,7 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
         /// <summary>Initializes a new instance of the <see cref="AgentAdminProfile" /> class.</summary>
         public AgentAdminProfile()
         {
-            CreateMap<CreateAgentAdmin, Domain.Agent>()
+            CreateMap<CreateAgentAdmin, NoSQL.Agent>()
                 .ForMember(x => x.FirstName, opt => opt.MapFrom(o => o.FirstName.Trim()))
                 .ForMember(x => x.LastName, opt => opt.MapFrom(o => o.LastName.Trim()))
                 .ForMember(x => x.Sso, opt => opt.MapFrom(o => o.Sso.Trim()))
@@ -19,7 +20,7 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
 
-            CreateMap<UpdateAgentAdmin, Domain.Agent>()
+            CreateMap<UpdateAgentAdmin, NoSQL.Agent>()
                 .ForMember(x => x.FirstName, opt => opt.MapFrom(o => o.FirstName.Trim()))
                 .ForMember(x => x.LastName, opt => opt.MapFrom(o => o.LastName.Trim()))
                 .ForMember(x => x.Sso, opt => opt.MapFrom(o => o.Sso.Trim()))
@@ -28,21 +29,21 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
 
-            CreateMap<Domain.Agent, AgentAdminDTO>()
+            CreateMap<NoSQL.Agent, AgentAdminDTO>()
                 .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.Ssn))
                 .ReverseMap();
 
-            CreateMap<Domain.Agent, AgentAdminDetailsDTO>()
+            CreateMap<NoSQL.Agent, AgentAdminDetailsDTO>()
             .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.Ssn))
             .ReverseMap();
 
-            CreateMap<Domain.AgentData, AgentDataAttribute>()
+            CreateMap<NoSQL.AgentData, AgentDataAttribute>()
                .ReverseMap();
 
-            CreateMap<Domain.AgentGroup, AgentGroupAttribute>()
+            CreateMap<NoSQL.AgentGroup, AgentGroupAttribute>()
               .ReverseMap();
 
-            CreateMap<Domain.AgentPto, AgentPtoAttribute>()
+            CreateMap<NoSQL.AgentPto, AgentPtoAttribute>()
               .ReverseMap();
 
             CreateMap<Domain.ActivityLog, CreateAgentActivityLog>()

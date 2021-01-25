@@ -138,6 +138,73 @@
       "UpstreamPathTemplate": "/api/agentschedulinggroups/{agentSchedulingGroupId}",
       "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
     },
+
+    //********* User Permission Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/userpermissions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.6",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/userpermissions",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/userpermissions/{agentEmployeeId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.6",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/userpermissions/{agentEmployeeId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+
+    //********* Language Preference Route *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/userpermissions/{agentEmployeeId}/language",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.6",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/user/{agentEmployeeId}/language/",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+
+    //********* Role Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/roles",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.6",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/roles",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/roles/{roleId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.6",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/roles/{roleId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+
     //********* CSS Languages *********************
     {
       "DownstreamPathTemplate": "/api/v1/csslanguages",
@@ -424,9 +491,9 @@
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
     },
-    //********* Import Routes *********************
+    //********* Activity Routes *********************
     {
-      "DownstreamPathTemplate": "/api/v1/import",
+      "DownstreamPathTemplate": "/api/v1/activity",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -434,8 +501,11 @@
           "Port": 4206
         }
       ],
-      "UpstreamPathTemplate": "/api/import",
-      "UpstreamHttpMethod": [ "Post" ]
+      "UpstreamPathTemplate": "/api/activity",
+      "UpstreamHttpMethod": [ "Post" ],
+      "QoSOptions": {
+        "TimeoutValue": 300000
+      }
     }
   ],
   "GlobalConfiguration": {

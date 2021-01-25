@@ -1,7 +1,7 @@
 ﻿using Css.Api.Core.Models.Domain;
-using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
-using Css.Api.Scheduling.Models.Enums;
+using Css.Api.Core.Models.Enums;
+using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
 using System;
 
 namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
@@ -11,22 +11,22 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
         /// <summary>Initializes a new instance of the <see cref="AgentScheduleProfile" /> class.</summary>
         public AgentScheduleProfile()
         {
-            CreateMap<Agent, Domain.AgentSchedule>()
+            CreateMap<NoSQL.Agent, NoSQL.AgentSchedule>()
                 .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.Ssn))
                 .ForMember(x => x.Status, opt => opt.MapFrom(o => SchedulingStatus.Approved))
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTimeOffset.UtcNow))
                 .ReverseMap();
 
-            CreateMap<Domain.AgentSchedule, AgentScheduleDTO>()
+            CreateMap<NoSQL.AgentSchedule, AgentScheduleDTO>()
                 .ReverseMap();
 
-            CreateMap<Domain.AgentSchedule, AgentScheduleDetailsDTO>()
+            CreateMap<NoSQL.AgentSchedule, AgentScheduleDetailsDTO>()
                 .ReverseMap();
 
-            CreateMap<Domain.AgentSchedule, AgentScheduleChartDetailsDTO>()
+            CreateMap<NoSQL.AgentSchedule, AgentScheduleChartDetailsDTO>()
                 .ReverseMap();
 
-            CreateMap<Domain.AgentSchedule, AgentScheduleManagerChartDetailsDTO>()
+            CreateMap<NoSQL.AgentSchedule, AgentScheduleManagerChartDetailsDTO>()
                 .ReverseMap();
 
             CreateMap<PagedList<Entity>, AgentScheduleDTO>()

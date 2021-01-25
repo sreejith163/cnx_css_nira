@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import * as $ from 'jquery';
 import * as AdminLte from 'admin-lte';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 import { CSS_LANGUAGES } from 'src/app/shared/models/language-value.model';
 import { TranslateService } from '@ngx-translate/core';
+import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
+import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { PermissionsService } from '../../modules/system-admin/services/permissions.service';
+import { EmployeeDetails } from '../../modules/system-admin/models/employee-details.model';
 
 @Component({
   selector: 'app-home',
@@ -13,44 +18,31 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  currentLanguage: string;
-  menuLength: string;
-  getTranslationSubscription: ISubscription;
-  subscriptionList: ISubscription[] = [];
-
+  employeeDetails: EmployeeDetails;
   constructor(
-    public translate: TranslateService,
-    private genericStateManagerService: GenericStateManagerService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private authService: AuthService,
+    private permissionsService: PermissionsService
+  ) {
+    this.checkPermissions();
+  }
 
   ngOnInit(): void {
     $('[data-widget="treeview"]').each(x => {
       AdminLte.Treeview._jQueryInterface.call($(this), 'init');
     });
-    this.loadTranslations();
-    this.subscribeToTranslations();
   }
 
   navigateToAgentAdmin() {
     this.router.navigate(['add-agent-profile']);
   }
 
-  private subscribeToTranslations() {
-    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
-      (language) => {
-        if (language) {
-          this.loadTranslations();
-        }
-      }
-    );
-    this.subscriptionList.push(this.getTranslationSubscription);
-  }
 
-  private loadTranslations() {
-    const browserLang = this.genericStateManagerService.getLanguage();
-    this.currentLanguage = browserLang ? browserLang : 'en';
-    this.translate.use(this.currentLanguage);
+  checkPermissions() {
+    const employeeId = this.authService.getLoggedUserInfo().employeeId;
+    // check user's role for permissions on the current route
+    this.permissionsService.getEmployee(+employeeId).subscribe((employee: EmployeeDetails) => {
+      this.employeeDetails = employee;
+    });
   }
-
 }

@@ -190,6 +190,56 @@
             <param name="translationId">The translation identifier.</param>
             <returns></returns>
         </member>
+        <member name="T:Css.Api.Admin.Controllers.RolesController">
+            <summary>Controller for handling User Role resource</summary>
+        </member>
+        <member name="F:Css.Api.Admin.Controllers.RolesController._roleService">
+            <summary>
+            The role service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.RolesController.#ctor(Css.Api.Admin.Business.Interfaces.IRoleService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.RolesController"/> class.
+            </summary>
+            <param name="roleService">The role service.</param>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.RolesController.GetRoles(Css.Api.Admin.Models.DTO.Request.Role.RoleQueryParameters)">
+            <summary>
+            Gets the roles.
+            </summary>
+            <param name="roleParameters">The role parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.RolesController.GetRole(System.Int32)">
+            <summary>
+            Gets the role.
+            </summary>
+            <param name="roleId">The role identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.RolesController.CreateRole(Css.Api.Admin.Models.DTO.Request.Role.CreateRoleDTO)">
+            <summary>
+            Creates the role.
+            </summary>
+            <param name="roleDetails">The role details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.RolesController.UpdateRole(System.Int32,Css.Api.Admin.Models.DTO.Request.Role.UpdateRoleDTO)">
+            <summary>
+            Updates the role.
+            </summary>
+            <param name="roleId">The role identifier.</param>
+            <param name="roleDetails">The role details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.RolesController.DeleteRole(System.Int32)">
+            <summary>
+            Deletes the role.
+            </summary>
+            <param name="roleId">The role identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Admin.Controllers.SchedulingCodeIconsController">
             <summary>
             Controller for handling the scheduling code icons resource
@@ -287,6 +337,64 @@
             <summary>
             Gets the scheduling codes.
             </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Css.Api.Admin.Controllers.UserPermissionsController">
+            <summary>Controller for handling Agent resource</summary>
+        </member>
+        <member name="F:Css.Api.Admin.Controllers.UserPermissionsController._agentService">
+            <summary>
+            The agent service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.UserPermissionsController.#ctor(Css.Api.Admin.Business.Interfaces.IUserPermissionService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.UserPermissionsController"/> class.
+            </summary>
+            <param name="agentService">The agent service.</param>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.UserPermissionsController.GetAgents(Css.Api.Admin.Models.DTO.Request.UserPermission.UserPermissionQueryParameters)">
+            <summary>
+            Gets the agents.
+            </summary>
+            <param name="agentParameters">The agent parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.UserPermissionsController.GetAgent(System.String)">
+            <summary>
+            Gets the agent.
+            </summary>
+            <param name="employeeId">The agent identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.UserPermissionsController.CreateAgent(Css.Api.Admin.Models.DTO.Request.UserPermission.CreateUserPermissionDTO)">
+            <summary>
+            Creates the agent.
+            </summary>
+            <param name="agentDetails">The agent details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.UserPermissionsController.UpdateAgent(System.String,Css.Api.Admin.Models.DTO.Request.UserPermission.UpdateUserPermissionDTO)">
+            <summary>
+            Updates the agent.
+            </summary>
+            <param name="employeeId">The agent identifier.</param>
+            <param name="agentDetails">The agent details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.UserPermissionsController.UpdateAgentLanguagePreference(System.String,Css.Api.Admin.Models.DTO.Request.UserPermission.UserLanguagePreference)">
+            <summary>
+            Updates the agent.
+            </summary>
+            <param name="employeeId">The agent identifier.</param>
+            <param name="languagePreferenceDetails">The language details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.UserPermissionsController.DeleteAgent(System.String)">
+            <summary>
+            Deletes the agent.
+            </summary>
+            <param name="employeeId">The agent identifier.</param>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Admin.Extensions.DBContextExtension">

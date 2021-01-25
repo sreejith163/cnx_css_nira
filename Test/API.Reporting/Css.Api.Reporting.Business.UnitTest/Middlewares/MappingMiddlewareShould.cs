@@ -47,8 +47,8 @@ namespace Css.Api.Reporting.Business.UnitTest.Middlewares
         /// <param name="requestPath">HTTP Request path</param>
         /// <param name="key">The mapping key</param>
         [Theory]
-        [InlineData("/api/v1/import", "UDW")]
-        [InlineData("/api/v1/import", "EStart")]
+        [InlineData("/api/v1/activity", "UDW")]
+        [InlineData("/api/v1/activity", "EStart")]
         public async void CheckMiddlewareSuccess(string requestPath, string key)
         {
             var mapper = _factoryData.GetMapperSettings();
@@ -78,7 +78,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Middlewares
         public async void CheckHeaderFailed()
         {
             var mapper = _factoryData.GetMapperSettings();
-            await Assert.ThrowsAsync<InvalidOperationException>(() => ExecuteMiddleware("/api/v1/import", mapper));
+            await Assert.ThrowsAsync<InvalidOperationException>(() => ExecuteMiddleware("/api/v1/activity", mapper));
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Middlewares
         public async void CheckMappingKeyNotFound(string key)
         {
             var mapper = _factoryData.GetMapperSettings();
-            await Assert.ThrowsAsync<MappingException>(() => ExecuteMiddleware("/api/v1/import", mapper, key));
+            await Assert.ThrowsAsync<MappingException>(() => ExecuteMiddleware("/api/v1/activity", mapper, key));
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Middlewares
         public async void CheckInvalidSource(string key)
         {
             var mapper = _factoryData.GetMapperSettings();
-            await Assert.ThrowsAsync<MappingException>(() => ExecuteMiddleware("/api/v1/import", mapper, key));
+            await Assert.ThrowsAsync<MappingException>(() => ExecuteMiddleware("/api/v1/activity", mapper, key));
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Middlewares
         public async void CheckInvalidSourceOption(string key)
         {
             var mapper = _factoryData.GetMapperSettings();
-            await Assert.ThrowsAsync<MappingException>(() => ExecuteMiddleware("/api/v1/import", mapper, key));
+            await Assert.ThrowsAsync<MappingException>(() => ExecuteMiddleware("/api/v1/activity", mapper, key));
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Middlewares
         public async void CheckInvalidTarget(string key)
         {
             var mapper = _factoryData.GetMapperSettings();
-            await Assert.ThrowsAsync<MappingException>(() => ExecuteMiddleware("/api/v1/import", mapper, key));
+            await Assert.ThrowsAsync<MappingException>(() => ExecuteMiddleware("/api/v1/activity", mapper, key));
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Middlewares
         public async void CheckInvalidTargetOption(string key)
         {
             var mapper = _factoryData.GetMapperSettings();
-            await Assert.ThrowsAsync<MappingException>(() => ExecuteMiddleware("/api/v1/import", mapper, key));
+            await Assert.ThrowsAsync<MappingException>(() => ExecuteMiddleware("/api/v1/activity", mapper, key));
         }
         #endregion
 

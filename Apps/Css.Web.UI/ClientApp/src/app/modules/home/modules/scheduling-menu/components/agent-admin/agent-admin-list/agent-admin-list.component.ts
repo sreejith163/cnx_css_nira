@@ -1,18 +1,23 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import * as moment from 'moment';
 import { WeekDay } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
+import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
 import { Language } from 'src/app/shared/models/language-value.model';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
+import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
 import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
@@ -39,7 +44,8 @@ import { AddAgentProfileComponent } from '../add-agent-profile/add-agent-profile
 
 })
 export class AgentAdminListComponent implements OnInit, OnDestroy {
-  currentLanguage: Language;
+  currentLanguage: string;
+  LoggedUser;
 
   currentPage = 1;
   pageSize = 10;
@@ -76,11 +82,15 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
     private agentAdminService: AgentAdminService,
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
-    private translationService: LanguageTranslationService,
-    private genericStateManagerService: GenericStateManagerService
-  ) { }
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private languagePreferenceService: LanguagePreferenceService
+  ){
+    this.LoggedUser = this.authService.getLoggedUserInfo();
+   }
 
   ngOnInit() {
+    this.preLoadTranslations();
     this.loadTranslations();
     this.loadAgentAdmins();
     this.subscribeToTranslations();
@@ -102,6 +112,26 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
   changePage(page: number) {
     this.currentPage = page;
     this.loadAgentAdmins();
+  }
+
+  getHierarchy(popover, agentAdminId: string){
+    this.getAgentAdminSubscription = this.agentAdminService.getAgentAdmin(agentAdminId)
+      .subscribe((response) => {
+        if (response) {
+          this.agentAdmin = response;
+          const hierarchy = this.agentAdmin;
+          if (popover.isOpen()) {
+            popover.close();
+          } else {
+            popover.open({hierarchy});
+          }
+
+        }
+
+      }, (error) => {
+        console.log(error);
+      });
+    this.subscriptions.push(this.getAgentAdminSubscription);
   }
 
   addAgentAdmin() {
@@ -153,6 +183,20 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.deleteAgentAdminSubscription);
       }
     });
+  }
+
+  getHireDateValue(values: {group: { description: string, value: string}}[]){
+
+    if (values === undefined)
+    {
+      return '';
+    }
+    const hireGroup = values.find(x => x.group.description.trim() === 'Hire Date');
+    if (hireGroup !== undefined)
+    {
+      return hireGroup.group.value;
+    }
+    return '';
   }
 
   private showSuccessPopUpMessage(contentMessage: string, needRefresh = true) {
@@ -242,6 +286,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
           this.agentAdmins = response.body;
           this.headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
           this.totalAgentAdminsRecord = this.headerPaginationValues.totalCount;
+
         }
         this.spinnerService.hide(this.spinner);
       }, (error) => {
@@ -252,37 +297,30 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getAgentAdminsSubscription);
   }
 
-  private getExpandedDetails(agentAdminId: string) {
-    this.spinnerService.show(this.spinner, SpinnerOptions);
-
-    this.getAgentAdminSubscription = this.agentAdminService.getAgentAdmin(agentAdminId)
-      .subscribe((response) => {
-        if (response) {
-          this.agentAdmin = response;
-        }
-        this.spinnerService.hide(this.spinner);
-      }, (error) => {
-        this.spinnerService.hide(this.spinner);
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.getAgentAdminSubscription);
-  }
-
-  private subscribeToTranslations(){
-    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+  private subscribeToTranslations() {
+    this.getTranslationSubscription = this.languagePreferenceService.userLanguageChanged.subscribe(
       (language) => {
         if (language) {
           this.loadTranslations();
         }
-      }
-    );
+      });
+
     this.subscriptions.push(this.getTranslationSubscription);
   }
 
-  private loadTranslations(){
-    const browserLang = this.genericStateManagerService.getLanguage();
-    this.currentLanguage = browserLang;
-    this.translate.use(browserLang ? browserLang : 'en');
+  private preLoadTranslations(){
+    // Preload the user language //
+    const browserLang = this.route.snapshot.data.languagePreference.languagePreference;
+    this.currentLanguage = browserLang ? browserLang : 'en';
+    this.translate.use(this.currentLanguage);
+}
+
+  private loadTranslations() {
+    // load the user language from api //
+    this.languagePreferenceService.getLanguagePreference(this.LoggedUser.employeeId).subscribe((langPref: LanguagePreference) => {
+      this.currentLanguage = langPref.languagePreference ? langPref.languagePreference : 'en';
+      this.translate.use(this.currentLanguage);
+    });
   }
+
 }

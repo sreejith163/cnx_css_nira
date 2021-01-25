@@ -65,7 +65,7 @@ namespace Css.Api.Reporting.Business.Services
 				foreach(var file in files)
                 {
 					DataFeed feed = new DataFeed();
-					feed.Path = file.FullName;
+					feed.Feeder = file.FullName;
 					feed.Content = sftp.ReadAllBytes(file.FullName);
 					feeds.Add(feed);
 				}
@@ -80,20 +80,54 @@ namespace Css.Api.Reporting.Business.Services
 		}
 
 		/// <summary>
+		/// The method to write data to FTP Outbox for the mapped context
+		/// </summary>
+		/// <param name="filename">The name of the destination file</param>
+		/// <param name="contents">The content of the file</param>
+		/// <returns>True if successful</returns>
+		public bool Write(string filename, string contents)
+		{
+			string outbox = _options.Outbox;
+            try
+            {
+				using (SftpClient sftp = CreateClient())
+				{
+					sftp.Connect();
+					sftp.WriteAllText(string.Join('/', outbox, filename), contents);
+					sftp.Disconnect();
+					sftp.Dispose();
+				}
+				return true;
+			}
+            catch
+            {
+				return false;
+            }
+		}
+
+		/// <summary>
 		/// Moves the processed file to the corresponding completed folder within the FTP
 		/// </summary>
 		/// <param name="feed">The instance of DataFeed which completed processing</param>
 		public async Task MoveToProcessedFolder(DataFeed feed)
 		{
-			string path = GetDestinationPath(feed.Path);
+			string path = await Task.FromResult(GetDestinationPath(feed.Feeder));
 			string destPath = String.Format(path, "Processed");
-			MoveDirectory(feed.Path, destPath);
-			
-			if(!string.IsNullOrWhiteSpace(feed.Metadata))
-            {
-				string pendingFilePath = GetPartialFileDestinationPath(String.Format(path, "Pending"));
-				await CreateFile(pendingFilePath, feed.Metadata);
-			}
+			MoveDirectory(feed.Feeder, destPath);
+		}
+
+		/// <summary>
+		/// Moves the unprocessed data to the corresponding folder within the FTP
+		/// </summary>
+		/// <param name="feed">The instance of DataFeed which completed processing</param>
+		public async Task MoveToUnprocessedFolder(DataFeed feed)
+        {
+			string path = GetDestinationPath(feed.Feeder);
+			string filePath = String.Format(path, "Processed");
+			string destPath = GetPartialFileDestinationPath(String.Format(path, "Pending"));
+			MoveDirectory(feed.Feeder, filePath);
+			await CreateFile(destPath, feed.Metadata);
+			feed.Metadata = string.Format("Unprocessed data - {0}", destPath);
 		}
 
 		/// <summary>
@@ -102,8 +136,8 @@ namespace Css.Api.Reporting.Business.Services
 		/// <param name="feed">The instance of DataFeed which failed to process</param>
 		public async Task MoveToFailedFolder(DataFeed feed)
 		{
-			string destPath = string.Format(GetDestinationPath(feed.Path), "Failed");
-			MoveDirectory(feed.Path, destPath);
+			string destPath = string.Format(GetDestinationPath(feed.Feeder), "Failed");
+			MoveDirectory(feed.Feeder, destPath);
 			string errorFilePath = GetErrorFileDestinationPath(destPath);
 			await CreateFile(errorFilePath, feed.Metadata);
 		}
@@ -171,7 +205,7 @@ namespace Css.Api.Reporting.Business.Services
 		{
 			int index = sourcePath.LastIndexOf(".xml");
 			string file = sourcePath.Substring(0, index);
-			return file + "_partial.xml";
+			return file + "_pending.xml";
 		}
 
 		/// <summary>

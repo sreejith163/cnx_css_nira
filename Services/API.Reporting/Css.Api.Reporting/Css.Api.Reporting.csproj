@@ -19,10 +19,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Mappers\mapper.development.json" />
+    <Content Remove="Mappers\mapper.IIS.json" />
     <Content Remove="Mappers\mapper.json" />
     <Content Remove="Mappers\mapper.Local.json" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Mappers\mapper.IIS.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Mappers\mapper.Local.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

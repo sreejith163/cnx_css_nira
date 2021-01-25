@@ -124,6 +124,7 @@ namespace Css.Api.Setup.Business
               {
                   Id = agentSchedulingGroupRequest.Id,
                   Name = agentSchedulingGroupRequest.Name,
+                  RefId = agentSchedulingGroupRequest.RefId,
                   ClientId = agentSchedulingGroupRequest.ClientId,
                   ClientLobGroupId = agentSchedulingGroupRequest.ClientLobGroupId,
                   SkillGroupId = agentSchedulingGroupRequest.SkillGroupId,
@@ -165,7 +166,7 @@ namespace Css.Api.Setup.Business
             var isSchedulingGroupExistsForSkillTag = matchingSchedulingGroupCount > 0;
             if (isSchedulingGroupExistsForSkillTag)
             {
-                if (!agentSchedulingGroupDetails.IsUpdateRevert
+                if (!agentSchedulingGroupDetails.IsUpdateRevert 
                     && agentSchedulingGroups.FirstOrDefault().Id != agentSchedulingGroupIdDetails.AgentSchedulingGroupId)
                 {
                     return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
@@ -187,6 +188,7 @@ namespace Css.Api.Setup.Business
                 agentSchedulingGroupDetailsPreUpdate = new AgentSchedulingGroup
                 {
                     Name = agentSchedulingGroup.Name,
+                    RefId = agentSchedulingGroup.RefId,
                     ClientId = agentSchedulingGroup.ClientId,
                     ClientLobGroupId = agentSchedulingGroup.ClientLobGroupId,
                     SkillGroupId = agentSchedulingGroup.SkillGroupId,
@@ -228,6 +230,7 @@ namespace Css.Api.Setup.Business
                     {
                         Id = agentSchedulingGroupRequest.Id,
                         NameOldValue = agentSchedulingGroupDetailsPreUpdate.Name,
+                        RefIdOldValue = agentSchedulingGroupDetailsPreUpdate.RefId,
                         ClientIdOldValue = agentSchedulingGroupDetailsPreUpdate.ClientId,
                         ClientLobGroupIdOldvalue = agentSchedulingGroupDetailsPreUpdate.ClientLobGroupId,
                         SkillGroupIdOldValue = agentSchedulingGroupDetailsPreUpdate.SkillGroupId,
@@ -240,6 +243,7 @@ namespace Css.Api.Setup.Business
                         ModifiedDateOldValue = agentSchedulingGroupDetailsPreUpdate.ModifiedDate,
                         IsDeletedOldValue = agentSchedulingGroupDetailsPreUpdate.IsDeleted,
                         NameNewValue = agentSchedulingGroupRequest.Name,
+                        RefIdNewValue = agentSchedulingGroupRequest.RefId,
                         ClientIdNewValue = agentSchedulingGroupRequest.ClientId,
                         ClientLobGroupIdNewValue = agentSchedulingGroupRequest.ClientLobGroupId,
                         SkillGroupIdNewValue = agentSchedulingGroupRequest.SkillGroupId,
@@ -268,7 +272,7 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Skill Tag with id '{skillTagIdDetails.SkillTagId}' not found", HttpStatusCode.NotFound);
             }
 
-            var isSchedulingGroupExistsForSkillTag = await _repository.AgentSchedulingGroups.GetAllAgentSchedulingGroupsCountBySkillTagId(skillTagIdDetails) > 1;
+            var isSchedulingGroupExistsForSkillTag = await _repository.AgentSchedulingGroups.GetAllAgentSchedulingGroupsCountBySkillTagId(skillTagIdDetails, agentSchedulingGroupIdDetails) > 1;
             if (isSchedulingGroupExistsForSkillTag)
             {
                 return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
@@ -311,6 +315,7 @@ namespace Css.Api.Setup.Business
             agentSchedulingGroupDetailsPreUpdate = new AgentSchedulingGroup
             {
                 Name = agentSchedulingGroup.Name,
+                RefId = agentSchedulingGroup.RefId,
                 ClientId = agentSchedulingGroup.ClientId,
                 ClientLobGroupId = agentSchedulingGroup.ClientLobGroupId,
                 SkillGroupId = agentSchedulingGroup.SkillGroupId,
@@ -337,6 +342,7 @@ namespace Css.Api.Setup.Business
                {
                    Id = agentSchedulingGroup.Id,
                    Name = agentSchedulingGroupDetailsPreUpdate.Name,
+                   RefId = agentSchedulingGroupDetailsPreUpdate.RefId,
                    ClientId = agentSchedulingGroupDetailsPreUpdate.ClientId,
                    ClientLobGroupId = agentSchedulingGroupDetailsPreUpdate.ClientLobGroupId,
                    SkillGroupId = agentSchedulingGroupDetailsPreUpdate.SkillGroupId,

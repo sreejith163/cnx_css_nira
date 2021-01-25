@@ -97,6 +97,7 @@ namespace Css.Api.Reporting.Business.UnitTest.Services
         }
         #endregion
 
+        #region Private Methods
 
         /// <summary>
         /// The method returns a IMapperService instance
@@ -124,5 +125,6 @@ namespace Css.Api.Reporting.Business.UnitTest.Services
             mockHttpContext.Setup(_ => _.HttpContext).Returns(context);
             return new MapperService(mockHttpContext.Object, _ftp.Object);
         }
+        #endregion
     }
 }

@@ -44,6 +44,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 import { PapaParseModule } from 'ngx-papaparse';
+import { LanguagePreferenceResolver } from './resolvers/language-preference.resolver';
 
 const components =
   [
@@ -85,7 +86,7 @@ const modules = [
 
 const providers = [GenericStateManagerService, TranslationService, TimezoneService, CssLanguageService, LanguageTranslationService,
   GenericDataService, ClientService, SkillGroupService, ClientLobGroupService, SkillTagService, AgentSchedulingGroupService,
-  SchedulingCodeService, ExcelService];
+  SchedulingCodeService, ExcelService, LanguagePreferenceResolver ];
 
 @NgModule({
   imports: modules,

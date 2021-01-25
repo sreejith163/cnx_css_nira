@@ -1,4 +1,4 @@
-﻿using Css.Api.Scheduling.Models.Domain;
+﻿using Css.Api.Core.Models.Domain.NoSQL;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;

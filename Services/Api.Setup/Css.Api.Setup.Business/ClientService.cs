@@ -90,7 +90,8 @@ namespace Css.Api.Setup.Business
         public async Task<CSSResponse> CreateClient(CreateClient clientDetails)
         {
             var clients = await _repository.Clients.GetClientsByName(new ClientNameDetails { Name = clientDetails.Name });
-            if (clients?.Count > 0)
+
+            if (clients?.Count > 0) 
             {
                 return new CSSResponse($"Client with name '{clientDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
@@ -100,12 +101,11 @@ namespace Css.Api.Setup.Business
 
             await _repository.SaveAsync();
 
-            await _bus.SendCommand<CreateClientCommand>(MassTransitConstants.ClientCreateCommandRouteKey,
-                new
-                {
-                    clientRequest.Id,
-                    clientRequest.Name,
-                    clientRequest.ModifiedDate
+            await _bus.SendCommand<CreateClientCommand>(MassTransitConstants.ClientCreateCommandRouteKey, 
+                new { 
+                    Id = clientRequest.Id, 
+                    Name = clientRequest.Name,
+                    ModifiedDate = clientRequest.ModifiedDate
                 });
 
             return new CSSResponse(new ClientIdDetails { ClientId = clientRequest.Id }, HttpStatusCode.Created);
@@ -152,17 +152,17 @@ namespace Css.Api.Setup.Business
             if (!clientDetails.IsUpdateRevert)
             {
                 await _bus.SendCommand<UpdateClientCommand>(
-                   MassTransitConstants.ClientUpdateCommandRouteKey,
-                   new
-                   {
+                    MassTransitConstants.ClientUpdateCommandRouteKey,
+                    new
+                    {
                        clientRequest.Id,
-                       NameOldValue = clientDetailsPreUpdate.Name,
-                       ModifiedByOldValue = clientDetailsPreUpdate.ModifiedBy,
-                       IsDeletedOldValue = clientDetailsPreUpdate.IsDeleted,
-                       ModifiedDateOldValue = clientDetailsPreUpdate.ModifiedDate,
-                       NameNewValue = clientRequest.Name,
-                       IsDeletedNewValue = clientRequest.IsDeleted
-                   });
+                        NameOldValue = clientDetailsPreUpdate.Name,
+                        ModifiedByOldValue = clientDetailsPreUpdate.ModifiedBy,
+                        IsDeletedOldValue = clientDetailsPreUpdate.IsDeleted,
+                        ModifiedDateOldValue = clientDetailsPreUpdate.ModifiedDate,
+                        NameNewValue = clientRequest.Name,
+                        IsDeletedNewValue = clientRequest.IsDeleted
+                    });
             }
 
             return new CSSResponse(HttpStatusCode.NoContent);
@@ -232,16 +232,16 @@ namespace Css.Api.Setup.Business
             await _repository.SaveAsync();
 
             await _bus.SendCommand<DeleteClientCommand>(
-               MassTransitConstants.ClientDeleteCommandRouteKey,
-               new
-               {
+                MassTransitConstants.ClientDeleteCommandRouteKey,
+                new
+                {
                    client.Id,
                    client.Name,
                    ModifiedByOldValue = clientDetailsPreUpdate.ModifiedBy,
-                   IsDeletedOldValue = clientDetailsPreUpdate.IsDeleted,
-                   ModifiedDateOldValue = clientDetailsPreUpdate.ModifiedDate,
-                   IsDeletedNewValue = client.IsDeleted
-               });
+                    IsDeletedOldValue = clientDetailsPreUpdate.IsDeleted,
+                    ModifiedDateOldValue = clientDetailsPreUpdate.ModifiedDate,
+                    IsDeletedNewValue = client.IsDeleted
+                });
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }

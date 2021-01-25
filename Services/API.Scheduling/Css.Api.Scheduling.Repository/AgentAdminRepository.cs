@@ -4,7 +4,7 @@ using Css.Api.Core.DataAccess.Repository.NoSQL;
 using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
-using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
@@ -87,7 +87,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var query = 
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
-                Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id) |
+                Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id) &
                 Builders<Agent>.Filter.Eq(i => i.Sso, agentAdminSsoDetails.Sso);
 
             return await FindByIdAsync(query);
@@ -178,11 +178,11 @@ namespace Css.Api.Scheduling.Repository
             DeleteOneAsync(x => x.Id == agentAdminRequest.Id);
         }
 
-        /// <summary>
-        /// Filters the agent admin.
-        /// </summary>
+
+        /// <summary>Filters the agent admin.</summary>
         /// <param name="agentAdmins">The agent admins.</param>
-        /// <param name="agentAdminQueryParameter">The agent admin query parameter.</param>
+        /// <param name="searchKeyword">The search keyword.</param>
+        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
         /// <returns>
         ///   <br />
         /// </returns>

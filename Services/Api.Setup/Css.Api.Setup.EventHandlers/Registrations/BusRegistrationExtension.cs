@@ -120,6 +120,7 @@ namespace Css.Api.Setup.EventHandlers.Registrations
 
             config.AddConsumer<AgentSchedulingGroupDeleteFailedConsumer>();
             config.AddConsumer<AgentSchedulingGroupDeleteFailedFault>();
+
         }
 
         /// <summary>
@@ -203,18 +204,6 @@ namespace Css.Api.Setup.EventHandlers.Registrations
                 c.Consumer<SkillGroupDeleteFailedConsumer>(ctx);
             });
 
-            cfg.ReceiveEndpoint(MassTransitConstants.SkillTagEventQueue, c =>
-            {
-                c.RegisterExchange(MassTransitConstants.SkillTagExchange, MassTransitConstants.SkillTagEventQueueBindingPattern);
-                c.Consumer<SkillTagCreateSuccessConsumer>(ctx);
-                c.Consumer<SkillTagCreateFailedConsumer>(ctx);
-
-                c.Consumer<SkillTagUpdateSuccessConsumer>(ctx);
-                c.Consumer<SkillTagUpdateFailedConsumer>(ctx);
-
-                c.Consumer<SkillTagDeleteSuccessConsumer>(ctx);
-                c.Consumer<SkillTagDeleteFailedConsumer>(ctx);
-            });
 
             cfg.ReceiveEndpoint(MassTransitConstants.AgentSchedulingGroupEventQueue, c =>
             {
@@ -228,6 +217,8 @@ namespace Css.Api.Setup.EventHandlers.Registrations
                 c.Consumer<AgentSchedulingGroupDeleteSuccessConsumer>(ctx);
                 c.Consumer<AgentSchedulingGroupDeleteFailedConsumer>(ctx);
             });
+
+
         }
     }
 }

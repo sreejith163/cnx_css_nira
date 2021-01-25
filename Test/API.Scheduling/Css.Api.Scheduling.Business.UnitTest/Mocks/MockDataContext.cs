@@ -1,14 +1,21 @@
 ﻿using Css.Api.Core.Models.Domain;
+using Css.Api.Core.Models.Domain.NoSQL;
+using Css.Api.Core.Models.Enums;
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
-using Css.Api.Scheduling.Models.Enums;
+using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
+using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Request.Client;
+using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
+using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
+using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
+using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
+using Css.Api.Scheduling.Models.Enums;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Css.Api.Core.Utilities.Extensions;
-using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
-using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 
 namespace Css.Api.Scheduling.Business.UnitTest.Mocks
 {
@@ -50,13 +57,22 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
 
         private readonly IQueryable<Agent> agentAdminsDB = new List<Agent>()
         {
-            new Agent { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), FirstName = "abc", LastName = "def", Ssn = 1, 
+            new Agent { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), FirstName = "abc", LastName = "def", Ssn = 1,
                         Sso = "user1@concentrix.com", ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
                         CreatedBy = "Admin", CreatedDate = DateTime.UtcNow },
             new Agent { Id = new ObjectId("5fe0b5c46a05416894c0718f"), FirstName = "lmn", LastName = "pqr", Ssn = 2,
                         Sso = "user2@concentrix.com", ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
                         CreatedBy = "Admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
+
+        private readonly IQueryable<ActivityLog> activityLogsDB = new List<ActivityLog>()
+        {
+            new ActivityLog { Id = new ObjectId("5kl0b5ad6a05416894c0718d"), ActivityOrigin=ActivityOrigin.CSS, ActivityStatus=ActivityStatus.Created,
+                ActivityType=ActivityType.AgentAdmin, ExecutedBy="admin", EmployeeId="1"},
+             new ActivityLog { Id = new ObjectId("5km0b5ad6a05416894c0718d"), ActivityOrigin=ActivityOrigin.CSS, ActivityStatus=ActivityStatus.Updated,
+                ActivityType=ActivityType.AgentAdmin, ExecutedBy="admin", EmployeeId="1"},
+        }.AsQueryable();
+
 
         private readonly IQueryable<AgentSchedule> agentSchedulesDB = new List<AgentSchedule>() {
             new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718e"), EmployeeId = 1, DateFrom = DateTime.UtcNow, DateTo = DateTime.UtcNow,
@@ -137,6 +153,57 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
 
         #endregion
 
+        #region Client 
+        /// <summary>
+        /// Gets the client.
+        /// </summary>
+        /// <param name="clientIdDetails">The client identifier details.</param>
+        /// <returns></returns>
+        public Client GetClient(ClientIdDetails clientIdDetails)
+        {
+            return clientsDB.Where(x => x.IsDeleted == false && x.Id == new ObjectId(clientIdDetails.ClientId.ToString())).FirstOrDefault();
+        }
+        #endregion
+
+        #region Client LOB
+        /// <summary>
+        /// Gets the client lob.
+        /// </summary>
+        /// <param name="clientLOBGroupIdDetails">The clientLOB group identifier details.</param>
+        /// <returns></returns>
+        public ClientLobGroup GetClientLobGroup(ClientLobGroupIdDetails clientLOBGroupIdDetails)
+        {
+            return clientLobGroupDB.Where(x => x.IsDeleted == false && x.Id == new ObjectId(clientLOBGroupIdDetails.ClientLobGroupId.ToString())).FirstOrDefault();
+
+        }
+        #endregion
+
+        #region Skill Group
+        /// <summary>
+        /// Gets the skill group.
+        /// </summary>
+        /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
+        /// <returns></returns>
+        public SkillGroup GetSkillGroup(SkillGroupIdDetails skillGroupIdDetails)
+        {
+            return skillGroupDB.Where(x => x.IsDeleted == false && x.Id == new ObjectId(skillGroupIdDetails.SkillGroupId.ToString())).FirstOrDefault();
+
+        }
+        #endregion
+
+        #region Skill Tag
+        /// <summary>
+        /// Gets the skill tag.
+        /// </summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <returns></returns>
+        public SkillTag GetSkillTag(SkillTagIdDetails skillTagIdDetails)
+        {
+            return skillTagDB.Where(x => x.IsDeleted == false && x.Id == new ObjectId(skillTagIdDetails.SkillTagId.ToString())).FirstOrDefault();
+
+        }
+        #endregion      
+
         #region Agent Admin
 
 
@@ -149,7 +216,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         {
             var agentAdmins = agentAdminsDB.Where(x => x.IsDeleted == false);
 
-            var filteredAgentAdmins = FilterAgentAdmin(agentAdmins, agentAdminQueryParameter);
+            var filteredAgentAdmins = FilterAgentAdmin(agentAdmins, agentAdminQueryParameter.SearchKeyword, agentAdminQueryParameter.AgentSchedulingGroupId);
 
             var sortedAgentAdmins = SortHelper.ApplySort(filteredAgentAdmins, agentAdminQueryParameter.OrderBy);
 
@@ -205,31 +272,158 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         {
             return agentAdminsDB.Where(x => x.IsDeleted == false && (x.Ssn == agentAdminEmployeeIdDetails.Id || x.Sso == agentAdminSsoDetails.Sso)).FirstOrDefault();
         }
-
-        /// <summary>
-        /// Filters the agent admin.
-        /// </summary>
-        /// <param name="agentAdmins">The agent admins.</param>
-        /// <param name="agentAdminQueryParameter">The agent admin query parameter.</param>
+        /// <summary>Gets the agent admin ids by sso.</summary>
+        /// <param name="agentAdminSsoDetails">The agent admin sso details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        private IQueryable<Agent> FilterAgentAdmin(IQueryable<Agent> agentAdmins, AgentAdminQueryParameter agentAdminQueryParameter)
+        public Agent GetAgentAdminIdsBySso(AgentAdminSsoDetails agentAdminSsoDetails)
+        {
+            return agentAdminsDB.Where(x => x.IsDeleted == false && x.Sso == agentAdminSsoDetails.Sso).FirstOrDefault();
+        }
+
+        /// <summary>Gets the agent scheduling group basedon skill tag.</summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public AgentSchedulingGroup GetAgentSchedulingGroupBasedonSkillTag(SkillTagIdDetails skillTagIdDetails)
+        {
+            return agentSchedulingGroupDB.Where(x => x.IsDeleted == false && x.SkillTagId == skillTagIdDetails.SkillTagId).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the agent admins count.
+        /// </summary>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public int GetAgentAdminsCount()
+        {
+            return agentAdminsDB.Where(x => x.IsDeleted == false).Count();
+        }
+        /// <summary>
+        /// Creates the agent admin.
+        /// </summary>
+        /// <param name="agentAdminRequest">The agent admin request.</param>
+        public void CreateAgentAdmin(Agent agentAdminRequest)
+        {
+            agentAdminsDB.ToList().Add(agentAdminRequest);
+        }
+        /// <summary>
+        /// Updates the agent admin.
+        /// </summary>
+        /// <param name="agentAdminRequest">The agent admin request.</param>
+        public void UpdateAgentAdmin(Agent agentAdminRequest)
+        {
+            var agentAdmin = agentAdminsDB.Where(x => x.Id == agentAdminRequest.Id).FirstOrDefault();
+            if (agentAdmin != null)
+            {
+                agentAdmin = agentAdminRequest;
+            }
+        }
+        // <summary>
+        /// Deletes the agent admin.
+        /// </summary>
+        /// <param name="agentAdminRequest">The agent admin request.</param>
+        public void DeleteAgentAdmin(Agent agentAdminRequest)
+        {
+            var agentAdmin = agentAdminsDB.Where(x => x.IsDeleted == false && x.Id == agentAdminRequest.Id).FirstOrDefault();
+            if (agentAdmin != null)
+            {
+                agentAdmin.IsDeleted = true;
+                agentAdmin.ModifiedDate = DateTime.UtcNow;
+            }
+        }
+
+        /// <summary>Filters the agent admin.</summary>
+        /// <param name="agentAdmins">The agent admins.</param>
+        /// <param name="searchKeyword">The search keyword.</param>
+        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        private IQueryable<Agent> FilterAgentAdmin(IQueryable<Agent> agentAdmins, string searchKeyword, int? agentSchedulingGroupId)
         {
             if (!agentAdmins.Any())
             {
                 return agentAdmins;
             }
 
-            if (!string.IsNullOrWhiteSpace(agentAdminQueryParameter.SearchKeyword))
+            if (agentSchedulingGroupId != null && agentSchedulingGroupId != default(int))
             {
-                agentAdmins = agentAdmins.Where(o => o.FirstName.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()) ||
-                                                     o.LastName.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()) ||
-                                                     o.CreatedBy.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()) ||
-                                                     o.ModifiedBy.ToLower().Contains(agentAdminQueryParameter.SearchKeyword.Trim().ToLower()));
+                agentAdmins = agentAdmins.Where(x => x.AgentSchedulingGroupId == agentSchedulingGroupId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchKeyword))
+            {
+                agentAdmins = agentAdmins.ToList().Where(o => o.Sso.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) ||
+                                                    o.Sso.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase)).AsQueryable();
             }
 
             return agentAdmins;
+        }
+
+        /// <summary>Creates the activity logs.</summary>
+        /// <param name="activityLogRequest">The activity log request.</param>
+        public void CreateActivityLogs(ActivityLog activityLogRequest)
+        {
+            activityLogsDB.ToList().Add(activityLogRequest);
+        }
+
+        /// <summary>Gets the agent activity logs.</summary>
+        /// <param name="activityLogQueryParameter">The activity log query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public PagedList<Entity> GetActivityLogs(ActivityLogQueryParameter activityLogQueryParameter)
+        {
+
+            var filteredActivityLogs = FilterActivityLogs(activityLogsDB, activityLogQueryParameter);
+
+            var sortedActivityLogs = SortHelper.ApplySort(filteredActivityLogs, activityLogQueryParameter.OrderBy);
+
+            var pagedActivityLogs = sortedActivityLogs
+                .Skip((activityLogQueryParameter.PageNumber - 1) * activityLogQueryParameter.PageSize)
+                .Take(activityLogQueryParameter.PageSize);
+
+            var shapedActivityLogs = DataShaper.ShapeData(pagedActivityLogs, activityLogQueryParameter.Fields);
+
+            return PagedList<Entity>
+                .ToPagedList(shapedActivityLogs, filteredActivityLogs.Count(), activityLogQueryParameter.PageNumber, activityLogQueryParameter.PageSize).Result;
+        }
+
+        /// <summary>Filters the activity logs.</summary>
+        /// <param name="activityLogs">The activity logs.</param>
+        /// <param name="activityLogQueryParameter">The activity log query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        private IQueryable<ActivityLog> FilterActivityLogs(IQueryable<ActivityLog> activityLogs, ActivityLogQueryParameter activityLogQueryParameter)
+        {
+            if (!activityLogs.Any())
+            {
+                return activityLogs;
+            }
+
+            string searchKeyword = activityLogQueryParameter.SearchKeyword;
+
+            if (!string.IsNullOrWhiteSpace(searchKeyword))
+            {
+                activityLogs = activityLogs.Where(o => o.ExecutedBy.ToLower().Contains(searchKeyword.Trim().ToLower()) ||
+                                                           o.FieldDetails.Any(
+                                                               field => field.Name.ToLower().Contains(searchKeyword.Trim().ToLower()) ||
+                                                               field.NewValue.ToLower().Contains(searchKeyword.Trim().ToLower()) ||
+                                                               field.OldValue.ToLower().Contains(searchKeyword.Trim().ToLower())
+                                                               ));
+            }
+
+            if (activityLogQueryParameter.ActivityType != null)
+            {
+                activityLogs = activityLogs.Where(o => o.ActivityType == activityLogQueryParameter.ActivityType);
+            }
+
+            return activityLogs;
         }
 
         #endregion

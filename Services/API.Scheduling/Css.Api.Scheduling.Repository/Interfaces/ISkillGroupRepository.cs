@@ -1,6 +1,8 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository.Interfaces
@@ -16,6 +18,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="skillGroupQueryparameter">The skill group queryparameter.</param>
         /// <returns></returns>
         Task<PagedList<Entity>> GetSkillGroups(SkillGroupQueryparameter skillGroupQueryparameter);
+
+        /// <summary>Gets the skill groups of cient lob.</summary>
+        /// <param name="clientLobGroupIdDetails">The client lob group identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<IQueryable<SkillGroup>> GetSkillGroupsOfClientLOB(ClientLobGroupIdDetails clientLobGroupIdDetails);
 
         /// <summary>
         /// Gets the skill group.

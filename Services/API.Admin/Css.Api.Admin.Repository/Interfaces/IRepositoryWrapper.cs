@@ -6,7 +6,17 @@ namespace Css.Api.Admin.Repository.Interfaces
     /// Interface for repository wrapper
     /// </summary>
     public interface IRepositoryWrapper
-    { 
+    {
+        /// <summary>
+        /// Gets the agents.
+        /// </summary>
+        IUserPermissionRepository UserPermissions { get; }
+
+        /// <summary>
+        /// Gets the roles.
+        /// </summary>
+        IRoleRepository Roles { get; }
+
         /// <summary>
         /// Gets the scheduling codes.
         /// </summary>

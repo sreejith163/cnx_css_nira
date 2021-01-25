@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Css.Api.Core.DataAccess.Repository.UnitOfWork.Interfaces;
 using Css.Api.Core.Models.Domain;
+using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
@@ -117,7 +118,6 @@ namespace Css.Api.Scheduling.Business
             _activityLogRepository = activityLogRepository;
             _mapper = mapper;
             _uow = uow;
-            SeedData();
         }
 
         //To be changed
@@ -277,13 +277,20 @@ namespace Css.Api.Scheduling.Business
         /// <summary>
         /// Creates the agent admin.
         /// </summary>
-        /// <param name="agentAdminDetails">The agent admin details.</param>
+        /// <param name="agentAdminDetails">The agent admin details</param>
         /// <returns></returns>
         public async Task<CSSResponse> CreateAgentAdmin(CreateAgentAdmin agentAdminDetails)
         {
             var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
             var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
             var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentAdminDetails.SkillTagId };
+
+            var agentAdminIdsByEmployeeIdAndSso = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
+
+            if (agentAdminIdsByEmployeeIdAndSso != null)
+            {
+                return new CSSResponse($"Agent Admin with Employee ID '{agentAdminEmployeeIdDetails.Id}' and SSO '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
+            }            
 
             var agentAdminsBasedOnEmployeeId = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(agentAdminEmployeeIdDetails);
 

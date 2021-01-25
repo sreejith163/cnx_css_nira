@@ -1,6 +1,6 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
+using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Business.UnitTest.Mocks;
-using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;

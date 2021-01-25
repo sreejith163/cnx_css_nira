@@ -35,6 +35,9 @@ import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { SchedulingExcelExportData } from '../../../constants/scheduling-excel-export-data';
 import { CopyScheduleComponent } from '../copy-schedule/copy-schedule.component';
+import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
+import { ActivatedRoute } from '@angular/router';
+import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
 import { SchedulingAgents } from '../../../models/scheduling-agents.model';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { SortingType } from '../../../enums/sorting-type.enum';
@@ -67,6 +70,8 @@ declare function highlightCell(cell: string, className: string);
   styleUrls: ['./scheduling-grid.component.scss']
 })
 export class SchedulingGridComponent implements OnInit, OnDestroy {
+  currentLanguage: string;
+  LoggedUser;
 
   timeIntervals = 15;
   currentPage = 1;
@@ -96,7 +101,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   exportFileName = 'Attendance_scheduling';
   iconDescription = 'Extra Working Hours';
   currentDate: string;
-  currentLanguage: string;
   startTimeFilter: string;
   endTimeFilter: string;
   isMouseDown: boolean;
@@ -139,7 +143,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   getSchedulingCodesSubscription: ISubscription;
   getAgentSchedulesSubscription: ISubscription;
   languageSelectionSubscription: ISubscription;
-  getTranslationValuesSubscription: ISubscription;
+  getTranslationSubscription: ISubscription;
   importAgentScheduleChartSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
@@ -149,15 +153,18 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     private calendar: NgbCalendar,
     private modalService: NgbModal,
     public ngbDateParserFormatter: NgbDateParserFormatter,
-    private genericStateManagerService: GenericStateManagerService,
     private spinnerService: NgxSpinnerService,
     private agentSchedulesService: AgentSchedulesService,
     private schedulingCodeService: SchedulingCodeService,
-    private authService: AuthService,
     private excelService: ExcelService,
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private languagePreferenceService: LanguagePreferenceService,
     public translate: TranslateService,
-    private agentAdmnService: AgentAdminService
-  ) { }
+    private agentAdminService: AgentAdminService
+  ){
+    this.LoggedUser = this.authService.getLoggedUserInfo();
+  }
 
   ngOnInit(): void {
     this.tabIndex = AgentScheduleType.Scheduling;
@@ -166,8 +173,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.schedulingStatus = Object.keys(SchedulingStatus).filter(key => isNaN(SchedulingStatus[key]));
     this.sortingType = Object.keys(SortingType).filter(key => isNaN(SortingType[key]));
     this.loadSchedulingCodes();
+    this.preLoadTranslations();
     this.loadTranslations();
-    this.subscribeToUserLanguage();
+    this.subscribeToTranslations();
   }
 
   ngOnDestroy() {
@@ -546,7 +554,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const agentAdminId = '5ff447fa8d7564a765a4d358';
 
-    this.getAgentInfoSubscription = this.agentAdmnService.getAgentAdmin(agentAdminId)
+    this.getAgentInfoSubscription = this.agentAdminService.getAgentAdmin(agentAdminId)
       .subscribe((response) => {
         this.agentInfo = response;
         this.spinnerService.hide(this.spinner);
@@ -832,22 +840,30 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadTranslations() {
-    const browserLang = this.genericStateManagerService.getLanguage();
-    this.currentLanguage = browserLang;
-    this.translate.use(browserLang ? browserLang : 'en');
-  }
-
-  private subscribeToUserLanguage() {
-    this.languageSelectionSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
-      (languageId: number) => {
-        if (languageId) {
+  private subscribeToTranslations() {
+    this.getTranslationSubscription = this.languagePreferenceService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
           this.loadTranslations();
         }
-      }
-    );
+      });
 
-    this.subscriptions.push(this.languageSelectionSubscription);
+    this.subscriptions.push(this.getTranslationSubscription);
+  }
+
+  private preLoadTranslations(){
+    // Preload the user language //
+    const browserLang = this.route.snapshot.data.languagePreference.languagePreference;
+    this.currentLanguage = browserLang ? browserLang : 'en';
+    this.translate.use(this.currentLanguage);
+  }
+
+  private loadTranslations() {
+    // load the user language from api //
+    this.languagePreferenceService.getLanguagePreference(this.LoggedUser.employeeId).subscribe((langPref: LanguagePreference) => {
+      this.currentLanguage = langPref.languagePreference ? langPref.languagePreference : 'en';
+      this.translate.use(this.currentLanguage);
+    });
   }
 
   private getQueryParams(fields?: string) {

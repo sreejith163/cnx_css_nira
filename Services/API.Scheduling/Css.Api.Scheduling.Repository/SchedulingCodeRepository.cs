@@ -1,8 +1,8 @@
 ﻿using Css.Api.Core.DataAccess.Repository.NoSQL;
 using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Core.Models.Domain;
+using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Utilities.Extensions;
-using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;

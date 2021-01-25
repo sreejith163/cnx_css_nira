@@ -1,4 +1,4 @@
-﻿namespace Css.Api.Setup.Models.DTO.Request.AgentSchedulingGroup
+﻿    namespace Css.Api.Setup.Models.DTO.Request.AgentSchedulingGroup
 {
     public class AgentSchedulingGroupIdDetails
     {

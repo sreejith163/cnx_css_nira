@@ -41,6 +41,7 @@ namespace Css.Api.Setup.EventHandlers.Consumers.AgentSchedulingGroup
             UpdateAgentSchedulingGroup updateAgentSchedulingGroup = new UpdateAgentSchedulingGroup
             {
                 Name = context.Message.Name,
+                RefId = context.Message.RefId,
                 SkillTagId = context.Message.SkillTagId,
                 TimezoneId = context.Message.TimezoneId,
                 ModifiedDate = context.Message.ModifiedDate,

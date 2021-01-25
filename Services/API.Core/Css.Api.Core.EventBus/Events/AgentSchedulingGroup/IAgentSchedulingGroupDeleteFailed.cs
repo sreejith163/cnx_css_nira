@@ -12,6 +12,10 @@ namespace Css.Api.Core.EventBus.Events.AgentSchedulingGroup
         /// <value>The name.</value>
         public string Name { get; set; }
 
+        /// <summary>Gets or sets the reference identifier.</summary>
+        /// <value>The reference identifier.</value>
+        public int? RefId { get; set; }
+
         /// <summary>Gets or sets the client identifier.</summary>
         /// <value>The client identifier.</value>
         public int ClientId { get; set; }

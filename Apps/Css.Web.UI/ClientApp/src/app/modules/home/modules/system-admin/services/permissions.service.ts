@@ -1,115 +1,78 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { HttpBaseService } from 'src/app/core/services/http-base.service';
 import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
 import { Constants } from 'src/app/shared/util/constants.util';
+import { environment } from 'src/environments/environment';
+import { EmployeeDetails } from '../models/employee-details.model';
+import { EmployeeRole } from '../models/employee-role.model';
+import { Employee } from '../models/employee.model';
 import { PermissionDetails } from '../models/permission-details.model';
 import { Permission } from '../models/permission.model';
-import { UserRole } from '../models/user-role.model';
 
 @Injectable()
-export class PermissionsService {
+export class PermissionsService extends HttpBaseService {
 
   roles = Constants.UserRoles;
   employees: Permission[] = [];
+  users: Employee[] = [];
   permissions: PermissionDetails[] = [];
 
-  constructor() {
-    this.createUserPermissionDetails();
-    this.createEmployeeIds();
+  private baseURL = '';
+
+  constructor(
+    private http: HttpClient
+  ) {
+    super();
+    this.baseURL = environment.services.gatewayService;
   }
 
-  createEmployeeIds() {
-    for (let i = 1; i <= 20; i++) {
-      const employee = new Permission();
-      employee.employeeId = i;
-      employee.firstName = 'FirstName ' + i;
-      employee.lastName = 'LastName ' + i;
-
-      this.employees.push(employee);
-    }
-  }
 
   getEmployees(queryParams: QueryStringParameters) {
-    const end = queryParams.pageNumber * queryParams.pageSize;
-    const start = (queryParams.pageNumber * queryParams.pageSize) - (queryParams.pageSize);
-    if (queryParams.searchKeyword) {
-      const employee = new Array<Permission>();
-      this.employees.forEach(ele => {
-        if (ele.firstName.toLowerCase().includes(queryParams.searchKeyword.toLowerCase())) {
-          employee.push(ele);
-        }
-      });
-      return of(employee);
-    } else {
-      return of(this.employees.slice(start, end));
-    }
+    const url = `${this.baseURL}/userpermissions`;
+
+    return this.http.get<EmployeeDetails>(url,
+      { params: this.convertToHttpParam(queryParams), observe: 'response' })
+      .pipe(catchError(this.handleError));
   }
 
   getEmployee(employeeId: number) {
-    return of(this.employees.find(x => x.employeeId === employeeId));
+    const url = `${this.baseURL}/userpermissions/${employeeId}`;
+
+    return this.http.get<EmployeeDetails>(url)
+      .pipe(catchError(this.handleError));
   }
 
-  createUserPermissionDetails() {
-    for (let i = 1; i <= 9; i++) {
-      const permission = new PermissionDetails();
-      permission.employeeId = i;
-      permission.firstName = 'FirstName ' + i;
-      permission.lastName = 'LastName ' + i;
-      permission.roles = new Array<UserRole>();
-      const n = i % 2 === 0 ? 0 : 3;
-      for (let j = n; j < n + 2; j++) {
-        permission.roles.push(this.roles[j]);
-      }
-      permission.createdBy = 'User ' + i;
-      permission.createdDate = new Date('2020-09-1' + i);
-      permission.modifiedBy = 'User ' + i;
-      permission.modifiedDate = new Date('2020-09-1' + i);
+  deleteEmployee(employeeId: number) {
+    const url = `${this.baseURL}/userpermissions/${employeeId}`;
 
-      this.permissions.push(permission);
-    }
+    return this.http.delete<EmployeeDetails>(url)
+      .pipe(catchError(this.handleError));
   }
 
-  getPermissions(queryParams?: QueryStringParameters) {
-    if (queryParams.searchKeyword) {
-      const permissions = this.searchKeyword(queryParams.searchKeyword);
-      return of(permissions);
-    } else {
-      return of(this.permissions);
-    }
+  getPermissions(queryParams: QueryStringParameters) {
+    const url = `${this.baseURL}/roles`;
+
+    return this.http.get<EmployeeRole>(url,
+      { params: this.convertToHttpParam(queryParams), observe: 'response' })
+      .pipe(catchError(this.handleError));
   }
 
-  getPermission(employeeId: number) {
-    return of(this.permissions.find(x => x.employeeId === employeeId));
+  addUserPermission(employeeDetails: EmployeeDetails){
+    const url = `${this.baseURL}/userpermissions`;
+
+    return this.http.post<EmployeeDetails>(url, employeeDetails)
+      .pipe(catchError(this.handleError));
   }
 
-  addPermission(permission: PermissionDetails) {
-    this.permissions.push(permission);
-    const success = true;
-    return of(success);
+  updateUserPermission(employeeId: number, employeeDetails: EmployeeDetails){
+    const url = `${this.baseURL}/userpermissions/${employeeId}`;
+
+    return this.http.put<EmployeeDetails>(url, employeeDetails)
+      .pipe(catchError(this.handleError));
   }
 
-  updatePermission(employeeId: number, permission: PermissionDetails) {
-    const index = this.permissions.findIndex(x => x.employeeId === employeeId);
-    if (index !== -1) {
-      this.permissions[index] = permission;
-    }
-    const success = true;
-    return of(success);
-  }
-
-  private searchKeyword(keyword) {
-    const permissions = new Array<PermissionDetails>();
-    this.permissions.forEach(ele => {
-      if (ele.firstName.toLowerCase().includes(keyword.toLowerCase())) {
-        permissions.push(ele);
-      } else if (ele.lastName.toLowerCase().includes(keyword.toLowerCase())) {
-        permissions.push(ele);
-      } else if (ele.employeeId === keyword) {
-        permissions.push(ele);
-      }
-    });
-
-    return permissions;
-  }
 
 }

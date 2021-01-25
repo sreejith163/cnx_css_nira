@@ -63,8 +63,52 @@ namespace Css.Api.Admin.Repository
         private ILanguageTranslationRepository _languageTranslationRepository { get; set; }
 
         /// <summary>
+        /// Gets or sets the agent repository.
+        /// </summary>
+        /// <value>
+        /// The agent repository.
+        /// </value>
+        private IUserPermissionRepository _userPermissionRepository { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the role repository.
+        /// </summary>
+        /// <value>
+        /// The role repository.
+        /// </value>
+        private IRoleRepository _roleRepository { get; set; }
+
+        public IUserPermissionRepository UserPermissions
+        {
+            get
+            {
+                if (_userPermissionRepository == null)
+                {
+                    _userPermissionRepository = new UserPermissionRepository(_repositoryContext, _mapper);
+                }
+                return _userPermissionRepository;
+            }
+        }
+
+
+        public IRoleRepository Roles
+        {
+            get
+            {
+                if (_roleRepository == null)
+                {
+                    _roleRepository = new RoleRepository(_repositoryContext, _mapper);
+                }
+                return _roleRepository;
+            }
+        }
+
+
+        /// <summary>
         /// Gets the scheduling codes.
         /// </summary>
+        /// 
         public ISchedulingCodeRepository SchedulingCodes
         {
             get

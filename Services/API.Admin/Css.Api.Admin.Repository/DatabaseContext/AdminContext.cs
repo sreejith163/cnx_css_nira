@@ -28,6 +28,7 @@ namespace Css.Api.Admin.Repository.DatabaseContext
             _configuration = configuration;
         }
 
+        public virtual DbSet<UserPermission> UserPermission { get; set; }
         public virtual DbSet<AgentCategory> AgentCategory { get; set; }
         public virtual DbSet<AgentCategoryDataType> AgentCategoryDataType { get; set; }
         public virtual DbSet<CssLanguage> CssLanguage { get; set; }
@@ -38,6 +39,7 @@ namespace Css.Api.Admin.Repository.DatabaseContext
         public virtual DbSet<SchedulingCodeIcon> SchedulingCodeIcon { get; set; }
         public virtual DbSet<SchedulingCodeType> SchedulingCodeType { get; set; }
         public virtual DbSet<SchedulingTypeCode> SchedulingTypeCode { get; set; }
+        public virtual DbSet<Role> Role { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -49,6 +51,88 @@ namespace Css.Api.Admin.Repository.DatabaseContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<UserPermission>(entity =>
+            {
+                entity.ToTable("user_permissions");
+
+                entity.HasIndex(e => e.UserRoleId)
+                    .HasName("fk_role_id_idx");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Sso)
+                    .HasColumnName("sso")
+                    .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.LanguagePreference)
+                    .HasColumnName("language_code")
+                    .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.Firstname)
+                    .HasColumnName("firstname")
+                    .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.Lastname)
+                    .HasColumnName("lastname")
+                    .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.EmployeeId)
+                    .HasColumnName("employee_id")
+                    .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.UserRoleId)
+                    .HasColumnName("role_id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ModifiedDate).HasColumnName("modified_date");
+
+                entity.Property(e => e.CreatedDate).HasColumnName("created_date");
+
+                entity.Property(e => e.IsDeleted)
+                    .HasColumnName("is_deleted")
+                    .HasColumnType("tinyint(4)");
+
+                entity.HasOne(d => d.Role)
+                      .WithMany()
+                      .HasForeignKey(d => d.UserRoleId)
+                      .OnDelete(DeleteBehavior.ClientSetNull)
+                      .HasConstraintName("fk_role_id");
+
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("role");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.Description)
+                    .HasColumnName("description")
+                    .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.RoleId)
+                    .HasColumnName("role_id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ModifiedDate).HasColumnName("modified_date");
+
+                entity.Property(e => e.CreatedDate).HasColumnName("created_date");
+
+                entity.Property(e => e.IsDeleted)
+                    .HasColumnName("is_deleted")
+                    .HasColumnType("tinyint(4)");
+
+            });
+
             modelBuilder.Entity<AgentCategory>(entity =>
             {
                 entity.ToTable("agent_category");

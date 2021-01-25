@@ -114,7 +114,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     if ((charCode < 48 || charCode > 57)) {
       return false;
     }
-    return true;    
+    return true;
   }
 
   hasFormControlValidationError(control: string) {
@@ -201,7 +201,9 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
 
       this.updateAgentAdminSubscription = this.agentService.updateAgentAdmin(
         this.agentAdminId, updateAgentAdminModel)
-        .subscribe(() => {
+        .subscribe((resp) => {
+          console.log(resp);
+          console.log(updateAgentAdminModel);
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
         }, (error) => {
@@ -223,7 +225,11 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
 
       this.agentProfileModel.firstName !== this.agentAdminDetails.firstName ||
       this.agentProfileModel.lastName !== this.agentAdminDetails.lastName ||
-      this.agentProfileModel.agentData[0].group.value !== this.agentAdminDetails.agentData[0].group.value
+      this.agentProfileModel.supervisorId !== this.agentAdminDetails.supervisorId ||
+      this.agentProfileModel.supervisorName !== this.agentAdminDetails.supervisorName ||
+      this.agentProfileModel.supervisorSso !== this.agentAdminDetails.supervisorSso ||
+      this.agentProfileModel.agentData.find(x => x.group.description.trim() === 'Hire Date')?.group.value
+        !== this.agentAdminDetails.agentData.find(x => x.group.description.trim() === 'Hire Date')?.group.value
     ) {
       return true;
     }
@@ -257,14 +263,22 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       sso: this.agentAdminDetails.sso,
       firstName: this.agentAdminDetails.firstName,
       lastName: this.agentAdminDetails.lastName,
+      supervisorId: this.agentAdminDetails.supervisorId,
+      supervisorName: this.agentAdminDetails.supervisorName,
+      supervisorSso: this.agentAdminDetails.supervisorSso
     });
-    const date = new Date(this.agentAdminDetails.agentData[0].group.value);
-    const ngbDateStruct: NgbDateStruct = {
-      day: date.getUTCDate(),
-      month: date.getUTCMonth() + 1,
-      year: date.getUTCFullYear(),
-    };
-    this.agentProfileForm.controls.hireDate.setValue(ngbDateStruct);
+    const dateValue = this.agentAdminDetails.agentData?.find(x => x.group.description.trim() === 'Hire Date');
+    if (dateValue !== undefined)
+    {
+      const dateString = dateValue.group.value;
+      const date = new Date(dateString);
+      const ngbDateStruct: NgbDateStruct = {
+        day: date.getUTCDate(),
+        month: date.getUTCMonth() + 1,
+        year: date.getUTCFullYear(),
+      };
+      this.agentProfileForm.controls.hireDate.setValue(ngbDateStruct);
+    }
   }
 
   private agentFormIntialization() {
@@ -274,6 +288,9 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       firstName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
       lastName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
       hireDate: new FormControl('', Validators.required),
+      supervisorId: new FormControl('', Validators.required),
+      supervisorName: new FormControl('', Validators.required),
+      supervisorSso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
     });
   }
 }

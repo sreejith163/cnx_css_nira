@@ -124,16 +124,16 @@ namespace Css.Api.Setup.Business
             await _repository.SaveAsync();
 
             await _bus.SendCommand<CreateSkillTagCommand>(MassTransitConstants.SkillTagCreateCommandRouteKey,
-                new
-                {
-                    Id = skillTagRequest.Id,
-                    Name = skillTagRequest.Name,
-                    ClientId = skillTagRequest.ClientId,
-                    ClientLobGroupId = skillTagRequest.ClientLobGroupId,
-                    SkillGroupId = skillTagRequest.SkillGroupId,
-                    OperationHour = JsonConvert.SerializeObject(skillTagDetails.OperationHour),
-                    ModifiedDate = skillTagRequest.ModifiedDate
-                });
+               new
+               {
+                   Id = skillTagRequest.Id,
+                   Name = skillTagRequest.Name,
+                   ClientId = skillTagRequest.ClientId,
+                   ClientLobGroupId = skillTagRequest.ClientLobGroupId,
+                   SkillGroupId = skillTagRequest.SkillGroupId,
+                   OperationHour = JsonConvert.SerializeObject(skillTagDetails.OperationHour),
+                   ModifiedDate = skillTagRequest.ModifiedDate
+               });
 
             return new CSSResponse(new SkillTagIdDetails { SkillTagId = skillTagRequest.Id }, HttpStatusCode.Created);
         }

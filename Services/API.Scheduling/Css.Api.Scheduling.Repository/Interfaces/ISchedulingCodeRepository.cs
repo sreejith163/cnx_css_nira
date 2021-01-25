@@ -1,5 +1,5 @@
 ﻿using Css.Api.Core.Models.Domain;
-using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
 using System.Collections.Generic;
 using System.Threading.Tasks;

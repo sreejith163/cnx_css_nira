@@ -1,3 +1,6 @@
+import { RunGuardsAndResolvers } from '@angular/router';
+import { PermissionsGuard } from 'src/app/core/guards/permissions.guard';
+import { LanguagePreferenceResolver } from 'src/app/shared/resolvers/language-preference.resolver';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { HomeComponent } from './layout/home/home.component';
 
@@ -9,23 +12,39 @@ export const HomeRoutes = [
             {
                 path: '',
                 redirectTo: 'dashboard',
-                pathMatch: 'full'
+                pathMatch: 'full',
             },
             {
                 path: 'dashboard',
-                component: DashboardComponent,
+                component: DashboardComponent
             },
             {
                 path: 'system-admin',
-                loadChildren: () => import('./modules/system-admin/system-admin.module').then(m => m.SystemAdminModule)
+                loadChildren: () => import('./modules/system-admin/system-admin.module').then(m => m.SystemAdminModule),
+                canActivate: [PermissionsGuard],
+                data: {permissions: [1]},
+                runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
+                resolve: { languagePreference: LanguagePreferenceResolver }
             },
             {
                 path: 'setup-menu',
-                loadChildren: () => import('./modules/setup-menu/setup-menu.module').then(m => m.SetupMenuModule)
+                loadChildren: () => import('./modules/setup-menu/setup-menu.module').then(m => m.SetupMenuModule),
+                canActivate: [PermissionsGuard],
+                data: {permissions: [1]},
+                runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
+                resolve: { languagePreference: LanguagePreferenceResolver }
             },
             {
                 path: 'scheduling-menu',
-                loadChildren: () => import('./modules/scheduling-menu/scheduling-menu.module').then(m => m.SchedulingMenuModule)
+                loadChildren: () => import('./modules/scheduling-menu/scheduling-menu.module').then(m => m.SchedulingMenuModule),
+                runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
+                resolve: { languagePreference: LanguagePreferenceResolver }
+            },
+            {
+                path: 'agent-schedule-menu',
+                loadChildren: () => import('./modules/agent-schedule-menu/agent-schedule-menu.module').then(m => m.AgentScheduleMenuModule),
+                runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
+                resolve: { languagePreference: LanguagePreferenceResolver }
             }
         ]
     }

@@ -15,6 +15,10 @@ namespace Css.Api.Core.EventBus.Commands.AgentSchedulingGroup
         /// <value>The name old value.</value>
         public string NameOldValue { get; set; }
 
+        /// <summary>Gets or sets the reference identifier old value.</summary>
+        /// <value>The reference identifier old value.</value>
+        public int? RefIdOldValue { get; set; }
+
         /// <summary>Gets or sets the client identifier oldvalue.</summary>
         /// <value>The client identifier oldvalue.</value>
         public int ClientIdOldValue { get; set; }
@@ -59,6 +63,10 @@ namespace Css.Api.Core.EventBus.Commands.AgentSchedulingGroup
         /// <summary>Gets or sets the name new value.</summary>
         /// <value>The name new value.</value>
         public string NameNewValue { get; set; }
+
+        /// <summary>Gets or sets the reference identifier new value.</summary>
+        /// <value>The reference identifier new value.</value>
+        public int? RefIdNewValue { get; set; }
 
         /// <summary>Gets or sets the client identifier new value.</summary>
         /// <value>The client identifier new value.</value>

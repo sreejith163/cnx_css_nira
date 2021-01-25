@@ -4,10 +4,10 @@ using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,6 +53,17 @@ namespace Css.Api.Scheduling.Repository
                 .ToPagedList(shapedClientLobGroups, filteredClientLobGroups.Count(), clientLobGroupQueryparameter.PageNumber, clientLobGroupQueryparameter.PageSize);
         }
 
+        /// <summary>Gets the client lob groups of client.</summary>
+        /// <param name="clientIdDetails">The client identifier details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<IQueryable<ClientLobGroup>> GetClientLobGroupsOfClient(ClientIdDetails clientIdDetails)
+        {
+            var clientLobGroups = FilterBy(x => x.IsDeleted == false && x.ClientId == clientIdDetails.ClientId);
+            return await Task.FromResult(clientLobGroups);
+        }
+
         /// <summary>
         /// Gets the client lob group.
         /// </summary>
@@ -61,7 +72,7 @@ namespace Css.Api.Scheduling.Repository
         public async Task<ClientLobGroup> GetClientLobGroup(ClientLobGroupIdDetails clientLobGroupIdDetails)
         {
             var query = Builders<ClientLobGroup>.Filter.Eq(i => i.ClientLobGroupId, clientLobGroupIdDetails.ClientLobGroupId) &
-               Builders<ClientLobGroup>.Filter.Eq(i => i.IsDeleted, false); 
+               Builders<ClientLobGroup>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindByIdAsync(query);
         }

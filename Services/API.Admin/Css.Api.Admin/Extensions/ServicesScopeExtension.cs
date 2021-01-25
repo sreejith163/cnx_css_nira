@@ -51,6 +51,9 @@ namespace Css.Api.Admin.Extensions
             services.AddTransient<ICssVariableService, CssVariableService>();
             services.AddTransient<ILanguageTranslationService, LanguageTranslationService>();
 
+            services.AddTransient<IUserPermissionService, UserPermissionService>();
+            services.AddTransient<IRoleService, RoleService>();
+
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
             return services;

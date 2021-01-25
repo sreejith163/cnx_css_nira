@@ -141,27 +141,27 @@
                                 <td>{{el.id}}</td>
                                 <td>{{el.refId}}</td>
                                 <td>
-                                    <span
-                                        ngbTooltip="{{ el.name }}">{{ el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
-                                    <span class="padding-left-10"
-                                        [class.float-right]="el.name.length < characterSplice">
-                                        <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle"
-                                            [placement]="'auto'" container="body">
-                                            <i class="fa fa-ellipsis-h"></i>
-                                        </a>
-                                        <ng-template #popContent>
-                                            <b>{{ 'Client_name' | translate }} : </b> {{ el.clientName }}
-                                            <br />
-                                            <b>{{ 'Client_lob_group_name' | translate }} : </b> {{ el.clientLobGroupName }}
-                                            <br>
-                                            <b>{{ 'Skill_group_name' | translate }} :</b> {{el.skillGroupName}}
-                                            <br>
-                                            <b>{{ 'Skill_tag_name' | translate }} :</b> {{el.skillTagName}}
-                                        </ng-template>
-                                        <ng-template #popTitle>
-                                            {{ 'Hierarchy' | translate }}
-                                        </ng-template>
-                                    </span>
+                                    <div class="d-flex justify-content-between" [class.display-inline-flex]="el.name.length > characterSplice">
+                                        <span ngbTooltip="{{ el.name }}">{{ el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
+                                        <span class="padding-left-10 float-right">
+                                            <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle"
+                                                [placement]="'auto'" container="body">
+                                                <i class="fa fa-ellipsis-h"></i>
+                                            </a>
+                                            <ng-template #popContent>
+                                                <b>{{ 'Client_name' | translate }} : </b> {{ el.clientName }}
+                                                <br />
+                                                <b>{{ 'Client_lob_group_name' | translate }} : </b> {{ el.clientLobGroupName }}
+                                                <br>
+                                                <b>{{ 'Skill_group_name' | translate }} :</b> {{el.skillGroupName}}
+                                                <br>
+                                                <b>{{ 'Skill_tag_name' | translate }} :</b> {{el.skillTagName}}
+                                            </ng-template>
+                                            <ng-template #popTitle>
+                                                {{ 'Hierarchy' | translate }}
+                                            </ng-template>
+                                        </span>
+                                    </div>
                                 </td>
                                 <td>{{weekDay[el.firstDayOfWeek]}}</td>
                                 <td>{{el.timezoneLabel}}</td>

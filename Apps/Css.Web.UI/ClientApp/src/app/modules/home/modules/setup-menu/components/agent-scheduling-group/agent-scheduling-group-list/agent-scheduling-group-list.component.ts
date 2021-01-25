@@ -22,6 +22,10 @@ import { GenericStateManagerService } from 'src/app/shared/services/generic-stat
 import { AgentSchedulingGroupService } from 'src/app/shared/services/agent-scheduling-group.service';
 import { Language } from 'src/app/shared/models/language-value.model';
 import { TranslateService } from '@ngx-translate/core';
+import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { ActivatedRoute } from '@angular/router';
+import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
 
 @Component({
   selector: 'app-agent-scheduling-group-list',
@@ -40,7 +44,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 })
 export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
-  currentLanguage: Language;
+  currentLanguage: string;
+  LoggedUser;
 
   currentPage = 1;
   pageSize = 10;
@@ -76,11 +81,15 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
     private agentSchedulingGroupSevice: AgentSchedulingGroupService,
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
-    private translationService: LanguageTranslationService,
-    private genericStateManagerService: GenericStateManagerService
-  ) { }
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private languagePreferenceService: LanguagePreferenceService
+  ) {
+    this.LoggedUser = this.authService.getLoggedUserInfo();
+  }
 
   ngOnInit() {
+    this.preLoadTranslations();
     this.loadTranslations();
     this.loadAgentSchedulingGroups();
     this.subscribeToTranslations();
@@ -281,20 +290,30 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getAgentSchedulingGroupSubscription);
   }
 
-  private subscribeToTranslations(){
-    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+  private subscribeToTranslations() {
+    this.getTranslationSubscription = this.languagePreferenceService.userLanguageChanged.subscribe(
       (language) => {
         if (language) {
           this.loadTranslations();
         }
-      }
-    );
+      });
+
     this.subscriptions.push(this.getTranslationSubscription);
   }
 
-  private loadTranslations(){
-    const browserLang = this.genericStateManagerService.getLanguage();
-    this.currentLanguage = browserLang;
-    this.translate.use(browserLang ? browserLang : 'en');
+  private preLoadTranslations(){
+    // Preload the user language //
+    const browserLang = this.route.snapshot.data.languagePreference.languagePreference;
+    this.currentLanguage = browserLang ? browserLang : 'en';
+    this.translate.use(this.currentLanguage);
   }
+
+  private loadTranslations() {
+    // load the user language from api //
+    this.languagePreferenceService.getLanguagePreference(this.LoggedUser.employeeId).subscribe((langPref: LanguagePreference) => {
+      this.currentLanguage = langPref.languagePreference ? langPref.languagePreference : 'en';
+      this.translate.use(this.currentLanguage);
+    });
+  }
+
 }

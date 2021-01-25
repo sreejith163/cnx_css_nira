@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { PermissionsGuard } from 'src/app/core/guards/permissions.guard';
 import { AgentSchedulingGroupListComponent } from './components/agent-scheduling-group/agent-scheduling-group-list/agent-scheduling-group-list.component';
 import { ClientLobGroupListComponent } from './components/client-lob-group/client-lob-group-list/client-lob-group-list.component';
 import { ClientNameListComponent } from './components/client-name/client-name-list/client-name-list.component';

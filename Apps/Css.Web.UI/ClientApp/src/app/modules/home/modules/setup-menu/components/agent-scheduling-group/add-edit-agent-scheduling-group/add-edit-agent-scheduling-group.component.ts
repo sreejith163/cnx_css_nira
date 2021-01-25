@@ -331,6 +331,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
 
   private hasAgentSchedulingGroupDetailsMismatch() {
     if (this.agentSchedulingGroupForm.controls.name.value !== this.agentSchedulingGroup.name ||
+      this.agentSchedulingGroupForm.controls.refId.value !== this.agentSchedulingGroup.refId ||
       this.clientId !== this.agentSchedulingGroup.clientId ||
       this.clientLobGroupId !== this.agentSchedulingGroup.clientLobGroupId || this.skillGroupId !== this.agentSchedulingGroup.skillGroupId
       || this.skillTagId !== this.agentSchedulingGroup.skillTagId
@@ -354,6 +355,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
 
   private populateFormDetails() {
     this.agentSchedulingGroupForm.controls.name.setValue(this.agentSchedulingGroup.name);
+    this.agentSchedulingGroupForm.controls.refId.setValue(this.agentSchedulingGroup.refId);
     this.clientId = this.agentSchedulingGroup.clientId;
     this.clientLobGroupId = this.agentSchedulingGroup.clientLobGroupId;
     this.skillGroupId = this.agentSchedulingGroup.skillGroupId;
@@ -410,6 +412,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.maxLength(Constants.DefaultTextMaxLength),
         CustomValidators.cannotContainSpace])),
+      refId: new FormControl(''),
       firstDayOfWeek: new FormControl('', Validators.required),
       timezoneId: new FormControl('', Validators.required),
       operationHour: this.createOperationHoursArray()

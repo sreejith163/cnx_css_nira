@@ -254,19 +254,19 @@ namespace Css.Api.Setup.Business
             await _repository.SaveAsync();
 
             await _bus.SendCommand<DeleteClientLOBCommand>(
-               MassTransitConstants.ClientLOBDeleteCommandRouteKey,
-               new
-               {
-                   Id = clientLOBGroup.Id,
-                   Name = clientLOBDetailsPreUpdate.Name,
-                   ClientId = clientLOBDetailsPreUpdate.ClientId,
-                   TimezoneId = clientLOBDetailsPreUpdate.TimezoneId,
-                   FirstDayOfWeek = clientLOBDetailsPreUpdate.FirstDayOfWeek,
-                   ModifiedByOldValue = clientLOBDetailsPreUpdate.ModifiedBy,
-                   IsDeletedOldValue = clientLOBDetailsPreUpdate.IsDeleted,
-                   ModifiedDateOldValue = clientLOBDetailsPreUpdate.ModifiedDate,
-                   IsDeletedNewValue = clientLOBGroup.IsDeleted
-               });
+                MassTransitConstants.ClientLOBDeleteCommandRouteKey,
+                new
+                {
+                    Id = clientLOBGroup.Id,
+                    Name = clientLOBDetailsPreUpdate.Name,
+                    ClientId = clientLOBDetailsPreUpdate.ClientId,
+                    TimezoneId = clientLOBDetailsPreUpdate.TimezoneId,
+                    FirstDayOfWeek = clientLOBDetailsPreUpdate.FirstDayOfWeek,
+                    ModifiedByOldValue = clientLOBDetailsPreUpdate.ModifiedBy,
+                    IsDeletedOldValue = clientLOBDetailsPreUpdate.IsDeleted,
+                    ModifiedDateOldValue = clientLOBDetailsPreUpdate.ModifiedDate,
+                    IsDeletedNewValue = clientLOBGroup.IsDeleted
+                });
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }

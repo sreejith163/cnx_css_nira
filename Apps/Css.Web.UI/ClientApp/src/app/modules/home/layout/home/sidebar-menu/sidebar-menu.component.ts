@@ -1,10 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { LoggedUserInfo } from 'src/app/core/models/logged-user-info.model';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { SubscriptionLike as ISubscription } from 'rxjs';
-import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
-import { CSS_LANGUAGES } from 'src/app/shared/models/language-value.model';
-import { TranslateService } from '@ngx-translate/core';
+import { EmployeeDetails } from '../../../modules/system-admin/models/employee-details.model';
 
 @Component({
   selector: 'app-sidebar-menu',
@@ -12,39 +9,21 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./sidebar-menu.component.css']
 })
 export class SidebarMenuComponent implements OnInit {
-  currentLanguage: string;
-  menuLength: string;
   loggedUser: LoggedUserInfo;
-  getTranslationSubscription: ISubscription;
-  subscriptionList: ISubscription[] = [];
-
-  constructor(
-    public translate: TranslateService,
-    private authService: AuthService,
-    private genericStateManagerService: GenericStateManagerService,
-  ) { }
+  @Input() employee: EmployeeDetails;
+  permissions: Permissions[] = [];
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     this.loggedUser = this.authService.getLoggedUserInfo();
-    this.loadTranslations();
-    this.subscribeToTranslations();
   }
 
-  private subscribeToTranslations() {
-    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
-      (language) => {
-        if (language) {
-          this.loadTranslations();
-        }
-      }
-    );
-    this.subscriptionList.push(this.getTranslationSubscription);
+  public hideMenu(rolesPermitted: number[], employeeId) {
+    // if role is inside rolesPermitted do not hide menu
+    if (rolesPermitted.indexOf(employeeId) > -1) {
+      return false;
+    } else {
+      return true;
+    }
   }
-
-  private loadTranslations() {
-    const browserLang = this.genericStateManagerService.getLanguage();
-    this.currentLanguage = browserLang ? browserLang : 'en';
-    this.translate.use(this.currentLanguage);
-  }
-
 }

@@ -1,18 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { CssMenu } from 'src/app/shared/enums/css-menu.enum';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
-import { Language } from 'src/app/shared/models/language-value.model';
+import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
-import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
-import { LanguageTranslationService } from 'src/app/shared/services/language-translation.service';
+import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { DataType } from '../../../enum/data-type.enum';
@@ -27,7 +28,8 @@ import { AddAgentCategoryComponent } from '../add-agent-category/add-agent-categ
   styleUrls: ['./agent-category-list.component.scss']
 })
 export class AgentCategoryListComponent implements OnInit, OnDestroy {
-  currentLanguage: Language;
+  currentLanguage: string;
+  LoggedUser;
 
   currentPage = 1;
   pageSize = 10;
@@ -58,11 +60,15 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
     private agentCategoryService: AgentCategoryService,
-    private translationService: LanguageTranslationService,
-    private genericStateManagerService: GenericStateManagerService
-  ) { }
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private languagePreferenceService: LanguagePreferenceService
+  ) {
+    this.LoggedUser = this.authService.getLoggedUserInfo();
+  }
 
   ngOnInit(): void {
+    this.preLoadTranslations();
     this.loadTranslations();
     this.loadAgentcategories();
     this.subscribeToTranslations();
@@ -209,21 +215,30 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
     this.subscriptionList.push(this.getAllAgentcategorySubscription);
   }
 
-  private subscribeToTranslations(){
-    this.getTranslationSubscription = this.genericStateManagerService.userLanguageChanged.subscribe(
+  private subscribeToTranslations() {
+    this.getTranslationSubscription = this.languagePreferenceService.userLanguageChanged.subscribe(
       (language) => {
         if (language) {
           this.loadTranslations();
         }
-      }
-    );
+      });
+
     this.subscriptionList.push(this.getTranslationSubscription);
   }
 
-  private loadTranslations(){
-    const browserLang = this.genericStateManagerService.getLanguage();
-    this.currentLanguage = browserLang;
-    this.translate.use(browserLang ? browserLang : 'en');
+  private preLoadTranslations() {
+    // Preload the user language //
+    const browserLang = this.route.snapshot.data.languagePreference.languagePreference;
+    this.currentLanguage = browserLang ? browserLang : 'en';
+    this.translate.use(this.currentLanguage);
+  }
+
+  private loadTranslations() {
+    // load the user language from api //
+    this.languagePreferenceService.getLanguagePreference(this.LoggedUser.employeeId).subscribe((langPref: LanguagePreference) => {
+      this.currentLanguage = langPref.languagePreference ? langPref.languagePreference : 'en';
+      this.translate.use(this.currentLanguage);
+    });
   }
 
 }

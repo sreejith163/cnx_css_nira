@@ -33,7 +33,7 @@
               <ng-container *ngFor="let language of cssLanguages">
                 <div class="dropdown-divider"></div>
                 <a [ngStyle]="{ cursor: 'pointer' }" (click)="confirmChangeLanguage(language)" [ngClass]="{'disabled active': currentLanguage === language.code}" class="dropdown-item">
-                  {{language.name}}
+                  {{language.name | translate}}
                 </a>
               </ng-container>
             </div>            

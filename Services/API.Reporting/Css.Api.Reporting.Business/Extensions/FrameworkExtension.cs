@@ -52,7 +52,7 @@ namespace Css.Api.Reporting.Business.Extensions
                 .AddBaseServices()
                 .AddFactories()
                 .AddStrategies()
-                .AddImportServices()
+                .AddActivityServices()
                 .AddRepositories();
 
             return services;
@@ -67,6 +67,7 @@ namespace Css.Api.Reporting.Business.Extensions
         {
             services.AddScoped<IMapperService, MapperService>();
             services.AddScoped<IFTPService, FTPService>();
+            services.AddScoped<IScheduleClockService, ScheduleClockService>();
             services.AddMongoConfiguration();
             return services;
         }
@@ -110,21 +111,21 @@ namespace Css.Api.Reporting.Business.Extensions
         /// <returns>The same instance of IServiceCollection</returns>
         private static IServiceCollection AddStrategies(this IServiceCollection services)
         {
-            services.AddScoped<IImportStrategy, ImportStrategy>();
-            services.AddScoped<IExportStrategy, ExportStrategy>();
+            services.AddScoped<IActivityStrategy, ActivityStrategy>();
             return services;
         }
 
         /// <summary>
-        /// The extension method to configure all import services
+        /// The extension method to configure all activity services
         /// </summary>
         /// <param name="services"></param>
         /// <returns>The same instance of IServiceCollection</returns>
-        private static IServiceCollection AddImportServices(this IServiceCollection services)
+        private static IServiceCollection AddActivityServices(this IServiceCollection services)
         {
             services.AddScoped<ISource, UDWImportSource>();
             services.AddScoped<ITarget, UDWImportTarget>();
             services.AddScoped<ISource, EStartExportSource>();
+            services.AddScoped<ITarget, EStartExportTarget>();
             return services;
         }
 
@@ -136,6 +137,9 @@ namespace Css.Api.Reporting.Business.Extensions
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IAgentRepository, AgentRepository>();
+            services.AddScoped<IAgentSchedulingGroupRepository, AgentSchedulingGroupRepository>();
+            services.AddScoped<IAgentScheduleRepository, AgentScheduleRepository>();
+            services.AddScoped<ISchedulingCodeRepository, SchedulingCodeRepository>();
             return services;
         }
     }
