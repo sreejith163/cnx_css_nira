@@ -53,15 +53,15 @@
                             <th></th>
                             <th>
                                 {{ 'Action' | translate }}</th>
-                            <th class="sortable-field" (click)="sort('id', sortBy)">
+                            <!--<th class="sortable-field" (click)="sort('id', sortBy)">
                                 {{ 'ID' | translate }}
                                 <i *ngIf="orderBy !== 'id'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
-                            </th>
+                            </th>-->
                             <th class="sortable-field" (click)="sort('refId', sortBy)">
-                                {{ 'Reference_id' | translate }}
+                                {{ 'ID' | translate }}<!--{{ 'Reference_id' | translate }}-->
                                 <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
@@ -117,7 +117,7 @@
                                     <i class="fa fa-edit padding-5 pointer" (click)="editSkillTag(el.id)"></i>
                                     <i class="fa fa-trash padding-5 pointer" (click)="deleteSkillTag(el.id)"></i>
                                 </td>
-                                <td>{{el.id}}</td>
+                                <!--<td>{{el.id}}</td>-->
                                 <td>{{el.refId}}</td>
                                 <td>
                                     <div class="d-flex justify-content-between" [class.display-inline-contents]="el.name.length > characterSplice">

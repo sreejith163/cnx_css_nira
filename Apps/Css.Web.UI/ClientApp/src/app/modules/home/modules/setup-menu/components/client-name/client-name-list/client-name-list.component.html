@@ -48,15 +48,15 @@
               <th>
                 {{ 'Action' | translate }}
               </th>
-              <th class="sortable-field" (click)="sortClients('id', sortBy)">
+              <!--<th class="sortable-field" (click)="sortClients('id', sortBy)">
                 {{ 'ID' | translate }}
                 <i *ngIf="orderBy !== 'id'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
-              </th>
+              </th>-->
               <th class="sortable-field" (click)="sortClients('refId', sortBy)">
-                {{ 'Reference_id' | translate }}
+                {{ 'ID' | translate }}<!--{{ 'Reference_id' | translate }}-->
                 <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
@@ -105,7 +105,7 @@
               <td><i class="fa fa-edit padding-5 pointer" (click)="editClient(el)"></i>
                 <i class="fa fa-trash padding-5 pointer" (click)="deleteClient(el.id)"></i>
               </td>
-              <td>{{el.id}}</td>
+              <!--<td>{{el.id}}</td>-->
               <td>{{el.refId}}</td>
               <td>
                 <span

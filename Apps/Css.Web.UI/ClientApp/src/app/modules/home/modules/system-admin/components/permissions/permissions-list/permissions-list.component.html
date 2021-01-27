@@ -95,6 +95,8 @@
             </tr>
           </thead>
           <tbody>
+            <ngx-spinner [name]="spinner">
+            </ngx-spinner>
             <tr class="pointer" *ngFor="let el of employees; let i = index;" (dblclick)="editUserPermission(el)">
               <td>
                 <i class="fa fa-edit padding-5 pointer" (click)="editUserPermission(el)"></i>

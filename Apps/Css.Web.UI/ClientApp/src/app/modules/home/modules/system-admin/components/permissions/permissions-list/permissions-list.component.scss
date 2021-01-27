@@ -50,9 +50,9 @@ label:not(.form-check-label):not(.custom-file-label) {
   max-height: 160px;
 }
 
-.scrollable-table {
-  max-height: calc(30vh);
-}
+//.scrollable-table {
+//  max-height: calc(30vh);
+//}
 
 @media only screen and (max-width: 992px) {
   .card {

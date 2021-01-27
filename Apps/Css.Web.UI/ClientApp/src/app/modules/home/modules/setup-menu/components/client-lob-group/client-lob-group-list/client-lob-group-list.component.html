@@ -46,15 +46,15 @@
               <th>
                 {{ 'Action' | translate }}</th>
 
-              <th class="sortable-field" (click)="sort('Id', sortBy)">
+              <!--<th class="sortable-field" (click)="sort('Id', sortBy)">
                 {{ 'ID' | translate }}
                 <i *ngIf="orderBy !== 'Id'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'Id'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
-              </th>
+              </th>-->
               <th class="sortable-field" (click)="sort('RefId', sortBy)">
-                {{ 'Reference_id' | translate }}
+                {{ 'ID' | translate }}<!--{{ 'Reference_id' | translate }}-->
                 <i *ngIf="orderBy !== 'RefId'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'RefId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
@@ -117,7 +117,7 @@
               <td><i class="fa fa-edit padding-5 pointer" (click)="editClientLOBGroup(el)"></i>
                 <i class="fa fa-trash padding-5 pointer" (click)="deleteClientLOBGroup(el.id)"></i>
               </td>
-              <td>{{el.id}}</td>
+              <!--<td>{{el.id}}</td>-->
               <td>{{el.refId}}</td>
               <td>
                 <div class="d-flex justify-content-between"  [class.display-inline-flex]="el.name.length > characterSplice">

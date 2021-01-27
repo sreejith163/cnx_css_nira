@@ -21,7 +21,7 @@
         "Key": "CSSMongo",
         "Type": "MongoDB",
         "Options": {
-          "ConnectionString": "mongodb://cssuser:cssuser_DEV@10.87.222.44:27017,10.87.222.45:27017,10.87.222.46:27017/admin?replicaSet=rs0&ssl=false",
+          "ConnectionString": "mongodb://cssuser:cssuser_DEV@10.87.221.15:27017",
           "DatabaseName": "css_dev"
         }
       },
