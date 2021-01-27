@@ -100,7 +100,7 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
         if (response?.body) {
           this.setPaginationValues(response);
           this.agentSchedulingGroupItemsBuffer = needBufferAdd ? this.agentSchedulingGroupItemsBuffer.concat(response.body) : response.body;
-          if (sendInitialValue) {
+          if (sendInitialValue && !this.agentSchedulingGroupId) {
             this.agentSchedulingGroupId = this.agentSchedulingGroupItemsBuffer[0]?.id;
             this.agentSchedulingGroupSelected.emit(this.agentSchedulingGroupId);
           }

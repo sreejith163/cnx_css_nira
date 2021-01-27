@@ -1,34 +1,42 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { NgbDate, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { from, SubscriptionLike as ISubscription } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { WeekDay } from '@angular/common';
+
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
 import { SortingType } from '../../../enums/sorting-type.enum';
+import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
+
 import { AgentSchedulesQueryParams } from '../../../models/agent-schedules-query-params.model';
-import { AgentSchedulesService } from '../../../services/agent-schedules.service';
-import { from, SubscriptionLike as ISubscription } from 'rxjs';
 import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
-import { mergeMap } from 'rxjs/operators';
 import { AgentChartResponse } from '../../../models/agent-chart-response.model';
 import { SchedulingCodeQueryParams } from '../../../../system-admin/models/scheduling-code-query-params.model';
-import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
 import { SchedulingCode } from '../../../../system-admin/models/scheduling-code.model';
 import { ScheduleChart } from '../../../models/schedule-chart.model';
 import { AgentScheduleChart } from '../../../models/agent-schedule-chart.model';
-import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manager-chart.model';
-import { WeekDay } from '@angular/common';
-import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
+import { AgentInfo } from '../../../models/agent-info.model';
+import { UpdateAgentScheduleMangersChart } from '../../../models/update-agent-schedule-managers-chart.model';
+import { AgentShceduleMangerData } from '../../../models/agent-schedule-manager-data.model';
+
+import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
+import { AgentSchedulesService } from '../../../services/agent-schedules.service';
+import { AgentAdminService } from '../../../services/agent-admin.service';
+import { AuthService } from 'src/app/core/services/auth.service';
+
 import { CopyScheduleComponent } from '../copy-schedule/copy-schedule.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
-import { AgentScheduleGridResponse } from '../../../models/agent-schedule-grid-response.model';
 
 declare function setManagerRowCellIndex(cell, row);
 declare function highlightManagerSelectedCells(table: string, cell: string);
 declare function highlightCell(cell: string, className: string);
 import * as $ from 'jquery';
-
+import { ScheduleChartQueryParams } from '../../../models/schedule-chart-query-params.model';
 
 @Component({
   selector: 'app-scheduling-manager',
@@ -45,6 +53,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   iconCount: number;
   selectedRow: number;
   totalSchedulingRecord: number;
+
   iconDescription: string;
   icon: string;
   iconCode: string;
@@ -59,19 +68,25 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   tableClassName = 'schedulingManagerTable';
   isMouseDown: boolean;
   isDelete: boolean;
+
   schedulingIntervals = Constants.schedulingIntervals;
   tabIndex = AgentScheduleType.SchedulingManager;
   sortTypeValue = SortingType.Ascending;
   sortType = SortingType;
   openTimes: Array<any>;
   modalRef: NgbModalRef;
+  agentInfo: AgentInfo;
+
   sortingType: any[] = [];
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
   weekDays: Array<string> = [];
   schedulingStatus: any[] = [];
   schedulingCodes: SchedulingCode[] = [];
   managerCharts: AgentChartResponse[] = [];
+  schedulingMangerChart: AgentChartResponse[] = [];
 
+  updateAgentManagerChartSubscription: ISubscription;
+  getAgentInfoSubscription: ISubscription;
   getAgentScheduleSubscription: ISubscription;
   getAgentSchedulesSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
@@ -79,16 +94,17 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
 
   @Input() currentDate: string;
   @Input() currentLanguage: string;
-  @Input() agentSchedulingGroupId: number;
-  @Input() startDate: NgbDate;
   @Input() searchKeyword: string;
-
-  
+  @Input() agentSchedulingGroupId: number;
+  @Input() refreshMangerTab: boolean;
+  @Input() startDate: NgbDate;
 
   constructor(
     private agentSchedulesService: AgentSchedulesService,
     private spinnerService: NgxSpinnerService,
     private schedulingCodeService: SchedulingCodeService,
+    private agentAdminService: AgentAdminService,
+    private authService: AuthService,
     private modalService: NgbModal,
   ) { }
 
@@ -97,9 +113,9 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
     this.schedulingStatus = Object.keys(SchedulingStatus).filter(key => isNaN(SchedulingStatus[key]));
     this.sortingType = Object.keys(SortingType).filter(key => isNaN(SortingType[key]));
-    this.loadSchedulingCodes();
     this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
     this.endIcon = this.iconCount;
+    this.loadSchedulingCodes();
     this.loadAgentScheduleManger();
   }
 
@@ -112,8 +128,11 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   ngOnChanges() {
-    if (this.agentSchedulingGroupId) {
+    if (this.agentSchedulingGroupId && this.startDate) {
       this.loadAgentScheduleManger();
+    } else if (this.refreshMangerTab) {
+      this.loadAgentScheduleManger();
+      this.refreshMangerTab = false;
     } else {
       this.totalSchedulingGridData = [];
     }
@@ -148,9 +167,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
 
   setAgent(index: number) {
     this.selectedRow = index;
-    // const agentScheduleId = this.totalSchedulingGridData[index].id;
-    // this.loadAgentInfo();
-    // this.loadAgentSchedule(agentScheduleId);
+    const employeeId = this.totalSchedulingGridData[index]?.employeeId;
+    this.loadAgentInfo(employeeId);
   }
 
   onMouseUp(event) {
@@ -163,7 +181,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     }
   }
 
-  onMouseDown(event, cell, row) {
+  onMouseDown(event: any, cell: number, row: number) {
     let object;
     this.isMouseDown = true;
     const time = event.currentTarget.attributes.time.nodeValue;
@@ -254,11 +272,9 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
           return code?.description;
         }
       }
-
     }
 
     return '';
-
   }
 
   getIconFromSelectedAgent(scheduleId: string, openTime: string) {
@@ -273,7 +289,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
           return code ? this.unifiedToNative(code?.icon?.value) : '';
         }
       }
-
     }
 
     return '';
@@ -299,6 +314,58 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       }
     });
 
+  }
+
+  save() {
+    if (this.matchManagerChartDataChanges()) {
+      const managerChartModel = new UpdateAgentScheduleMangersChart();
+      for (const item of this.managerCharts) {
+        const employeeData = new AgentShceduleMangerData();
+        employeeData.employeeId = this.totalSchedulingGridData.find(x => x.id === item.id).employeeId;
+        employeeData.agentScheduleManagerChart = item.agentScheduleManagerCharts[0];
+        managerChartModel.agentScheduleManagers.push(employeeData);
+      }
+      managerChartModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
+
+      this.updateAgentManagerChartSubscription = this.agentSchedulesService.updateScheduleManagerChart(managerChartModel)
+        .subscribe((response) => {
+          this.spinnerService.hide(this.spinner);
+          this.schedulingMangerChart = JSON.parse(JSON.stringify(this.managerCharts));
+          this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been updated!');
+          this.modalRef.result.then(() => {
+            this.loadAgentScheduleManger();
+          });
+        }, (error) => {
+          this.spinnerService.hide(this.spinner);
+          console.log(error);
+        });
+
+      this.subscriptions.push(this.updateAgentManagerChartSubscription);
+    } else {
+      this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
+    }
+
+  }
+
+  private matchManagerChartDataChanges() {
+    if (JSON.stringify(this.schedulingMangerChart) !== JSON.stringify(this.managerCharts)) {
+      return true;
+    }
+  }
+
+  private loadAgentInfo(employeeId: number) {
+    this.spinnerService.show(this.spinner, SpinnerOptions);
+
+    this.getAgentInfoSubscription = this.agentAdminService.getAgentInfo(employeeId)
+      .subscribe((response) => {
+        this.agentInfo = response;
+        this.spinnerService.hide(this.spinner);
+      }, (error) => {
+        this.spinnerService.hide(this.spinner);
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getAgentInfoSubscription);
   }
 
   private getQueryParams(fields?: string) {
@@ -350,9 +417,41 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
           this.endTimeFilter = firstAgent?.endTime;
           this.iconCode = schedulingCode?.icon.value;
         }
+        this.schedulingMangerChart = JSON.parse(JSON.stringify(this.managerCharts));
+        this.setAgent(0);
       });
 
     this.subscriptions.push(this.getAgentSchedulesSubscription);
+  }
+
+  private loadSchedulingCodes() {
+    const queryParams = new SchedulingCodeQueryParams();
+    queryParams.skipPageSize = true;
+    queryParams.fields = 'id, description, icon';
+    this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
+
+    this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)
+      .subscribe((response) => {
+        if (response.body) {
+          this.schedulingCodes = response.body;
+          this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
+          this.endIcon = this.iconCount;
+        }
+        this.spinnerService.hide(this.scheduleSpinner);
+      }, (error) => {
+        this.spinnerService.hide(this.scheduleSpinner);
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getSchedulingCodesSubscription);
+  }
+
+  private getAgentChatrs(ids: string[]) {
+    const queryParams = new ScheduleChartQueryParams();
+    queryParams.date = this.getDateInStringFormat(this.startDate);
+    return from(ids).pipe(
+      mergeMap(id => this.agentSchedulesService.getCharts(id.toString(), queryParams)
+      ));
   }
 
   private removeHighlightedCells() {
@@ -372,7 +471,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     table.find('.' + this.selectedCellClassName).each((index, elem) => {
       let weekDays;
       let weekData;
-      let week;
       let scheduleId;
       this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
       let meridiem = elem.attributes.meridiem.value;
@@ -396,18 +494,12 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       scheduleId = elem?.attributes?.scheduleId?.value;
       const chart = this.managerCharts.find(x => x.id === scheduleId);
       weekDays = chart?.agentScheduleManagerCharts;
-      weekData = weekDays.length > 0 ? weekDays[0] : undefined;
+      weekData = weekDays?.length > 0 ? weekDays[0] : undefined;
 
       if (this.icon && !this.isDelete) {
 
         if (weekData) {
           this.insertIconToGrid(weekData, iconModel);
-        } else if (this.tabIndex === AgentScheduleType.Scheduling) {
-          const weekDay = new AgentScheduleChart();
-          weekDay.day = +week;
-          const calendarTime = new ScheduleChart(fromTime, to, code.id);
-          weekDay.charts.push(calendarTime);
-          weekDays.push(weekDay);
         } else if (this.tabIndex === AgentScheduleType.SchedulingManager) {
           const weekDay = new AgentScheduleManagerChart();
           weekDay.date = date;
@@ -590,35 +682,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
 
     return newTimesarray;
   }
-
-  private loadSchedulingCodes() {
-    const queryParams = new SchedulingCodeQueryParams();
-    queryParams.skipPageSize = true;
-    queryParams.fields = 'id, description, icon';
-    this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
-
-    this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)
-      .subscribe((response) => {
-        if (response.body) {
-          this.schedulingCodes = response.body;
-          this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
-          this.endIcon = this.iconCount;
-        }
-        this.spinnerService.hide(this.scheduleSpinner);
-      }, (error) => {
-        this.spinnerService.hide(this.scheduleSpinner);
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.getSchedulingCodesSubscription);
-  }
-
-  private getAgentChatrs(ids: string[]) {
-    return from(ids).pipe(
-      mergeMap(id => this.agentSchedulesService.getCharts(id.toString())
-      ));
-  }
-
 
   private getDateInStringFormat(startDate: any): string {
     if (!startDate) {

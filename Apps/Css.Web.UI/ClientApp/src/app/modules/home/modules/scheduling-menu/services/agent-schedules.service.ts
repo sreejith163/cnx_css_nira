@@ -12,6 +12,7 @@ import { CopyAgentSchedulechart } from '../models/copy-agent-schedule-chart.mode
 import { AgentChartResponse } from '../models/agent-chart-response.model';
 import { ImportShceduleChart } from '../models/import-schedule-chart.model';
 import { UpdateAgentScheduleMangersChart } from '../models/update-agent-schedule-managers-chart.model';
+import { ScheduleChartQueryParams } from '../models/schedule-chart-query-params.model';
 
 @Injectable()
 export class AgentSchedulesService extends HttpBaseService {
@@ -41,11 +42,13 @@ export class AgentSchedulesService extends HttpBaseService {
     .pipe(catchError(this.handleError));
   }
 
-  getCharts(agentScheduleId: string) {
+  getCharts(agentScheduleId: string, queryParams: ScheduleChartQueryParams) {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/charts`;
 
-    return this.http.get<AgentChartResponse>(url)
-    .pipe(catchError(this.handleError));
+    return this.http.get<AgentChartResponse>(url,
+      {
+        params: this.convertToHttpParam(queryParams),
+      }).pipe(catchError(this.handleError));
   }
 
   updateAgentSchedule(agentScheduleId: string, updateAgent: UpdateAgentSchedule) {

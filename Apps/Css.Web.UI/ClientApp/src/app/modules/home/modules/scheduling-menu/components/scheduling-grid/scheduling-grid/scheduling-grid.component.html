@@ -135,7 +135,7 @@
               </thead>
               <tbody>
                 <ngx-spinner [name]="spinner"></ngx-spinner>
-                <tr *ngIf="!agentSchedulingGroupId" class="valid-record">
+                <tr *ngIf="totalSchedulingGridData?.length === 0" class="valid-record">
                   <td colspan="12">
                     {{ 'No records found' | translate }}</td>
                 </tr>
@@ -338,7 +338,8 @@
       [currentLanguage]="currentLanguage"
       [agentSchedulingGroupId]="agentSchedulingGroupId"
        [startDate]="startDate"
-      [searchKeyword]="searchKeyword" >
+      [searchKeyword]="searchKeyword"
+      [refreshMangerTab]="refreshMangerTab" >
     </app-scheduling-manager>
     </div>
   </div>

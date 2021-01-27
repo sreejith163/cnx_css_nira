@@ -178,13 +178,11 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         !importRecord.every(x => Date.parse(x?.dateFrom) === Date.parse(importRecord[0]?.dateFrom) &&
           Date.parse(x?.dateTo) === Date.parse(importRecord[0]?.dateTo))) {
         return true;
+      } else if (this.agentScheduleType === AgentScheduleType.SchedulingManager &&
+        !this.jsonData.every(x => x.Date === this.jsonData[0]?.Date)) {
+        return true;
       }
       for (const item of importRecord) {
-        if (this.agentScheduleType === AgentScheduleType.SchedulingManager &&
-          !importRecord.every(x => Date.parse(x?.agentScheduleManagerChart?.date) ===
-            Date.parse(importRecord[0]?.agentScheduleManagerChart?.date))) {
-          return true;
-        }
         if (this.agentScheduleType === AgentScheduleType.Scheduling) {
           for (const record of item.agentScheduleCharts) {
             return this.validateChart(record.charts);
@@ -367,6 +365,16 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   }
 
+  private getDateInFormat(date: string) {
+    const year = date.split('/')[0];
+    const month = date.split('/')[1].split('/')[0];
+    const day = date.split(`${month}/`)[1];
+
+    const newDate = new Date(+year, (+month) - 1, (+day) + 1, 0, 0, 0, 0);
+    return newDate;
+
+  }
+
   private getImportAgentManagerChartModel(schedules: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[]) {
     const chartModel = new UpdateAgentScheduleMangersChart();
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
@@ -383,8 +391,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         }
       });
       const chartData = new AgentScheduleManagerChart();
-
-      chartData.date = new Date(this.jsonData[0].Date);
+      chartData.date = this.getDateInFormat(this.jsonData[0].Date);
       chartData.charts = chartArray;
       importData.agentScheduleManagerChart = chartData;
       chartModel.agentScheduleManagers.push(importData);

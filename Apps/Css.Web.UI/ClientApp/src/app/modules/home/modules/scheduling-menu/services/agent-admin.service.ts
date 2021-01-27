@@ -8,6 +8,7 @@ import { AddAgentAdmin } from '../models/add-agent-admin.model';
 import { AgentAdminDetails } from '../models/agent-admin-details.model';
 import { AgentAdminQueryParameter } from '../models/agent-admin-query-parameter.model';
 import { AgentAdminResponse } from '../models/agent-admin-response.model';
+import { AgentInfo } from '../models/agent-info.model';
 import { UpdateAgentAdmin } from '../models/update-agent-admin.model';
 
 @Injectable()
@@ -35,6 +36,13 @@ export class AgentAdminService extends HttpBaseService {
     const url = `${this.baseURL}/agentadmins/${agentAdminId}`;
 
     return this.http.get<AgentAdminResponse>(url)
+      .pipe(catchError(this.handleError));
+  }
+
+  getAgentInfo(employeeId: number) {
+    const url = `${this.baseURL}/agentAdmins/employees/${employeeId}`;
+
+    return this.http.get<AgentInfo>(url)
       .pipe(catchError(this.handleError));
   }
 
