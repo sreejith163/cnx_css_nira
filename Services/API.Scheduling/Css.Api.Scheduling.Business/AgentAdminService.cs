@@ -275,6 +275,23 @@ namespace Css.Api.Scheduling.Business
         }
 
         /// <summary>
+        /// Gets the agent admin by employee identifier.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <returns></returns>
+        public async Task<CSSResponse> GetAgentAdminByEmployeeId(EmployeeIdDetails employeeIdDetails)
+        {
+            var agentAdmin = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(employeeIdDetails);
+            if (agentAdmin == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var mappedAgentAdmin = _mapper.Map<AgentAdminDetailsDTO>(agentAdmin);
+            return new CSSResponse(mappedAgentAdmin, HttpStatusCode.OK);
+        }
+
+        /// <summary>
         /// Creates the agent admin.
         /// </summary>
         /// <param name="agentAdminDetails">The agent admin details</param>

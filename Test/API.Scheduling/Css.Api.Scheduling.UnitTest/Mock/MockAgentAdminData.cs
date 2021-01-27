@@ -86,6 +86,17 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             return new CSSResponse(mappedAgentAdmin, HttpStatusCode.OK);
         }
 
+        public CSSResponse GetAgentAdminByEmployeeId(EmployeeIdDetails employeeIdDetails)
+        {
+            var agentAdmin = new MockDataContext().GetAgentAdminIdsByEmployeeId(employeeIdDetails);
+            if (agentAdmin == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            return new CSSResponse(agentAdmin, HttpStatusCode.OK);
+        }
+
         public CSSResponse CreateAgentAdmin(CreateAgentAdmin agentAdminDetails)
         {
             var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = agentAdminDetails.EmployeeId };

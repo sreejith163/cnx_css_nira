@@ -33,6 +33,13 @@
             <param name="agentAdminId">The agentAdmin identifier.</param>
             <returns></returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.GetAgentAdminByEmployeeId(System.Int32)">
+            <summary>
+            Gets the agent admin by employee identifier.
+            </summary>
+            <param name="employeeId">The employee identifier.</param>
+            <returns></returns>
+        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.CreateAgentAdmin(Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.CreateAgentAdmin)">
             <summary>
             Creates the agent admin.

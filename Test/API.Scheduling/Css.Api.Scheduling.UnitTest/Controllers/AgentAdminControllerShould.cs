@@ -82,6 +82,39 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
             Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
         }
 
+
+
+        /// <summary>Gets the agent admin returns not found result.</summary>
+        /// <param name="agentAdminId">The agent admin identifier.</param>
+        [Theory]
+        [InlineData(100)]
+        [InlineData(101)]
+        public async void GetAgentAdminByEmployeeId_ReturnsNotFoundResult(int employeeId)
+        {
+            mockAgentAdminService.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync((EmployeeIdDetails employeeIdDetails) =>
+               mockAgentAdminData.GetAgentAdminByEmployeeId(new EmployeeIdDetails { Id = employeeId }));
+
+            var value = await controller.GetAgentAdminByEmployeeId(employeeId);
+
+            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+        }
+
+        /// <summary>Gets the agent admin returns ok result.</summary>
+        /// <param name="agentAdminId">The agent admin identifier.</param>
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void GetAgentAdminByEmployeeId_ReturnsOKResult(int employeeId)
+        {
+            mockAgentAdminService.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync((EmployeeIdDetails employeeIdDetails) =>
+               mockAgentAdminData.GetAgentAdminByEmployeeId(new EmployeeIdDetails { Id = employeeId }));
+
+            var value = await controller.GetAgentAdminByEmployeeId(employeeId);
+
+            Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
+        }
+
+
         /// <summary>Creates the agent admin.</summary>
         [Fact]
         public async void CreateAgentAdmin()

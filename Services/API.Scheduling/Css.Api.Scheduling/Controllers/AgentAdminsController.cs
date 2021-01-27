@@ -53,6 +53,18 @@ namespace Css.Api.Scheduling.Controllers
         }
 
         /// <summary>
+        /// Gets the agent admin by employee identifier.
+        /// </summary>
+        /// <param name="employeeId">The employee identifier.</param>
+        /// <returns></returns>
+        [HttpGet("employees/{employeeId}")]
+        public async Task<IActionResult> GetAgentAdminByEmployeeId(int employeeId)
+        {
+            var result = await _agentAdminService.GetAgentAdminByEmployeeId(new EmployeeIdDetails { Id = employeeId });
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>
         /// Creates the agent admin.
         /// </summary>
         /// <param name="clientDetails">The client details.</param>

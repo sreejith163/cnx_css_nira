@@ -139,6 +139,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         #endregion
 
         #region GetAgentAdmin
+
         /// <summary>
         /// Gets the agent admin.
         /// </summary>
@@ -147,7 +148,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         [Theory]
         [InlineData("5fe0b5ad6a05416894c0618c")]
         [InlineData("5fe0b5ad6a05416894c0618d")]
-        public async void GetGetAgentAdminWithNotFoundForAdmin(string agentAdminId)
+        public async void GetAgentAdminWithNotFoundForAdmin(string agentAdminId)
         {
             mockAgentAdminRepository.Setup(mr => mr.GetAgentAdmin(It.IsAny<AgentAdminIdDetails>())).ReturnsAsync(
                 (AgentAdminIdDetails agentAdminIdDetails) => mockDataContext.GetAgentAdmin(agentAdminIdDetails));
@@ -204,6 +205,50 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Assert.IsType<AgentAdminDetailsDTO>(result.Value);
             Assert.Equal(HttpStatusCode.OK, result.Code);
         }
+
+        #endregion
+
+        #region GetAgentAdminByEmployeeId
+
+        /// <summary>
+        /// Gets the agent admin by employee identifier with not found for admin.
+        /// </summary>
+        /// <param name="employeeId">The employee identifier.</param>
+        [Theory]
+        [InlineData(100)]
+        [InlineData(101)]
+        public async void GetAgentAdminByEmployeeIdWithNotFoundForAdmin(int employeeId)
+        {
+            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminIdsByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminIdsByEmployeeId(employeeIdDetails));
+
+            var result = await agentAdminService.GetAgentAdminByEmployeeId(new EmployeeIdDetails { Id = employeeId });
+
+            Assert.NotNull(result);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        /// <summary>
+        /// Gets the agent admin by employee identifier.
+        /// </summary>
+        /// <param name="employeeId">The employee identifier.</param>
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void GetAgentAdminByEmployeeId(int employeeId)
+        {
+            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminIdsByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminIdsByEmployeeId(employeeIdDetails));
+
+            var result = await agentAdminService.GetAgentAdminByEmployeeId(new EmployeeIdDetails { Id = employeeId });
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.IsType<AgentAdminDetailsDTO>(result.Value);
+            Assert.Equal(HttpStatusCode.OK, result.Code);
+        }
+
         #endregion
 
         #region Add agent admin       

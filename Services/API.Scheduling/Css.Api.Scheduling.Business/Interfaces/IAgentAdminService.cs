@@ -22,6 +22,13 @@ namespace Css.Api.Scheduling.Business.Interfaces
         Task<CSSResponse> GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails);
 
         /// <summary>
+        /// Gets the agent admin by employee identifier.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <returns></returns>
+        Task<CSSResponse> GetAgentAdminByEmployeeId(EmployeeIdDetails employeeIdDetails);
+
+        /// <summary>
         /// Creates the Agent Admin.
         /// </summary>
         /// <param name="agentAdminDetails">The agentAdmin details.</param>
