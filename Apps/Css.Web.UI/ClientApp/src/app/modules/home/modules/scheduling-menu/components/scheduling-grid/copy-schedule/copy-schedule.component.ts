@@ -111,7 +111,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
         this.checkedAgents[index].isChecked = false;
       }
     }
-    if (this.checkedAgents.filter(x => x.isChecked === true).length === this.totalAgents) {
+    if (this.checkedAgents.filter(x => x.isChecked === true).length === this.totalAgents - 1) {
       this.masterSelected = true;
     } else {
       this.masterSelected = false;
