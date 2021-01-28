@@ -23,6 +23,7 @@ import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manage
 import { AgentInfo } from '../../../models/agent-info.model';
 import { UpdateAgentScheduleMangersChart } from '../../../models/update-agent-schedule-managers-chart.model';
 import { AgentShceduleMangerData } from '../../../models/agent-schedule-manager-data.model';
+import { ScheduleChartQueryParams } from '../../../models/schedule-chart-query-params.model';
 
 import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
 import { AgentSchedulesService } from '../../../services/agent-schedules.service';
@@ -36,7 +37,7 @@ declare function setManagerRowCellIndex(cell, row);
 declare function highlightManagerSelectedCells(table: string, cell: string);
 declare function highlightCell(cell: string, className: string);
 import * as $ from 'jquery';
-import { ScheduleChartQueryParams } from '../../../models/schedule-chart-query-params.model';
+
 
 @Component({
   selector: 'app-scheduling-manager',
@@ -154,7 +155,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
     this.orderBy = columnName;
 
-    // this.loadAgentSchedules();
+    this.loadAgentScheduleManger();
   }
 
   isMainMinute(data: any) {
