@@ -88,7 +88,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
 
   updateAgentManagerChartSubscription: ISubscription;
   getAgentInfoSubscription: ISubscription;
-  getAgentScheduleSubscription: ISubscription;
   getAgentSchedulesSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
   subscriptions: ISubscription[] = [];

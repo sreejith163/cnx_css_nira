@@ -46,7 +46,6 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   @Input() agentScheduleType: AgentScheduleType;
 
   constructor(
-    private genericStateManagerService: GenericStateManagerService,
     public translate: TranslateService,
     public activeModal: NgbActiveModal,
     private spinnerService: NgxSpinnerService,

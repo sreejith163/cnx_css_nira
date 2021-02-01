@@ -84,7 +84,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   totalSchedules: number;
   selectedRow: number;
   tabIndex: number;
-  sortTypeValue = SortingType.Ascending;
 
   selectedIconId: string;
   icon: string;
@@ -97,10 +96,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   orderBy = 'createdDate';
   sortBy = 'desc';
   exportFileName = 'Attendance_scheduling';
-  iconDescription = 'Extra Working Hours';
   currentDate: string;
-  startTimeFilter: string;
-  endTimeFilter: string;
   isMouseDown: boolean;
   isDelete: boolean;
   refreshMangerTab: boolean;
@@ -111,21 +107,17 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   fromDate = this.calendar.getToday();
   today = this.calendar.getToday();
 
-  testDate = new Date('2020/01/01');
-
   modalRef: NgbModalRef;
   model: NgbDateStruct;
   weekDay = WeekDay;
   scheduleStatus = SchedulingStatus;
   selectedGrid: AgentScheduleGridResponse;
   schedulingGridData: AgentScheduleGridResponse;
-  agentInfo: AgentInfo;
   paginationSize = Constants.schedulingPaginationSize;
   schedulingIntervals = Constants.schedulingIntervals;
   sortType = SortingType;
 
   openTimes: Array<any>;
-  translationValues: TranslationDetails[] = [];
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
   schedulingStatus: any[] = [];
   weekDays: Array<string> = [];
@@ -133,17 +125,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   agents: SchedulingAgents[] = [];
   importedData: ExcelData[] = [];
   sortingType: any[] = [];
-  managerCharts: AgentChartResponse[] = [];
 
-  getAgentInfoSubscription: ISubscription;
   updateAgentScheduleChartSubscription: ISubscription;
   getAgentScheduleSubscription: ISubscription;
   updateAgentScheduleSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
   getAgentSchedulesSubscription: ISubscription;
-  languageSelectionSubscription: ISubscription;
   getTranslationSubscription: ISubscription;
-  importAgentScheduleChartSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
   @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
@@ -306,12 +294,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.tabIndex === AgentScheduleType.Scheduling) {
       const week = event.currentTarget.attributes.week.nodeValue;
       days = this.selectedGrid.agentScheduleCharts.find(x => x.day === +week);
-    } else {
-      const scheduleId = event.currentTarget.attributes.scheduleId.nodeValue;
-      const date = this.testDate;
-      const chart = this.managerCharts.find(x => x.id === scheduleId);
-      days = chart?.agentScheduleManagerCharts.find(x => x.date === date);
-      // days = this.selectedGrid.agentScheduleManagerCharts.find(x => x.date === date);
     }
     const fromTime = time + ' ' + meridiem;
     const object = days?.charts.find(x => this.convertToDateFormat(x.startTime) <= this.convertToDateFormat(fromTime) &&
@@ -422,7 +404,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   openImportSchedule() {
     this.getModalPopup(ImportScheduleComponent, 'lg');
-    this.modalRef.componentInstance.translationValues = this.translationValues;
     this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
 
     this.modalRef.result.then((result) => {
@@ -439,7 +420,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     const employeeId = this.totalSchedulingGridData[index]?.employeeId;
     this.getModalPopup(CopyScheduleComponent, 'lg');
     this.modalRef.componentInstance.agentSchedulingGroupId = this.schedulingGridData?.agentSchedulingGroupId;
-    this.modalRef.componentInstance.translationValues = this.translationValues;
     this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
     this.modalRef.componentInstance.employeeId = employeeId;
     this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
@@ -489,25 +469,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   }
 
-  isRowSelected(index: number) {
-    return this.selectedRow === index;
-  }
-
-  setAgent(index: number) {
-    this.selectedRow = index;
-  }
-
   openTab(tabIndex: number) {
     this.tabIndex = tabIndex;
     this.openTimes = this.getOpenTimes();
     if (this.tabIndex === AgentScheduleType.SchedulingManager && this.agentSchedulingGroupId) {
       this.refreshMangerTab = true;
-      this.totalSchedulingGridData = undefined;
+      this.totalSchedulingGridData = [];
       this.totalSchedulingRecord = undefined;
       this.setStartDateAsToday();
-      this.setAgent(0);
-      this.managerCharts = [];
-      this.sortTypeValue = SortingType.Ascending;
     } else if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
       this.clearStartDate();
       this.loadAgentSchedules();
@@ -515,16 +484,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSortTypeChange(value: number) {
-    this.sortTypeValue = value;
-    this.openTimes.reverse();
-  }
-
   private removeHighlightedCells() {
     const table = $('#' + this.tableClassName);
     table.find('.' + this.selectedCellClassName).removeClass(this.selectedCellClassName);
   }
-
 
   private convertToNgbDate(date: Date) {
     if (date) {
@@ -566,7 +529,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       let weekDays;
       let weekData;
       let week;
-      let scheduleId;
       this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
       let meridiem = elem.attributes.meridiem.value;
       const fromTime = elem.attributes.time.value + ' ' + meridiem;
@@ -584,19 +546,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       const code = this.schedulingCodes.find(x => x.icon.value === this.icon);
       const iconModel = new ScheduleChart(fromTime, to, code?.id);
 
-      const date = this.testDate;
 
       if (this.tabIndex === AgentScheduleType.Scheduling) {
         week = elem.attributes.week.value;
         weekDays = this.selectedGrid?.agentScheduleCharts;
         weekData = weekDays.find(x => x.day === +week);
-      } else {
-        scheduleId = elem?.attributes?.scheduleId?.value;
-        const chart = this.managerCharts.find(x => x.id === scheduleId);
-        // weekDays = chart.agentScheduleManagerCharts.find(x => x.date === date);
-        // this.selectedGrid.agentScheduleManagerCharts = weekDays;
-        weekDays = chart?.agentScheduleManagerCharts;
-        weekData = weekDays?.find(x => x.date === date);
       }
 
       if (this.icon && !this.isDelete) {
@@ -606,12 +560,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         } else if (this.tabIndex === AgentScheduleType.Scheduling) {
           const weekDay = new AgentScheduleChart();
           weekDay.day = +week;
-          const calendarTime = new ScheduleChart(fromTime, to, code.id);
-          weekDay.charts.push(calendarTime);
-          weekDays.push(weekDay);
-        } else if (this.tabIndex === AgentScheduleType.SchedulingManager) {
-          const weekDay = new AgentScheduleManagerChart();
-          weekDay.date = date;
           const calendarTime = new ScheduleChart(fromTime, to, code.id);
           weekDay.charts.push(calendarTime);
           weekDays.push(weekDay);
@@ -768,16 +716,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private formatTimeValuesInSchedulingGrid() {
-    const weekDays = this.tabIndex === AgentScheduleType.Scheduling ?
-      this.selectedGrid.agentScheduleCharts : this.selectedGrid.agentScheduleManagerCharts;
+    const weekDays = this.selectedGrid.agentScheduleCharts;
     weekDays.forEach((element) => {
       element.charts = this.adjustSchedulingCalendarTimesRange(element.charts);
     });
   }
 
   private sortSelectedGridCalendarTimes() {
-    const weekDays = this.tabIndex === AgentScheduleType.Scheduling ?
-      this.selectedGrid.agentScheduleCharts : this.selectedGrid.agentScheduleManagerCharts;
+    const weekDays = this.selectedGrid.agentScheduleCharts;
     weekDays.forEach((element) => {
       if (element.charts.length > 0) {
         element.charts.sort((a, b): number => {
@@ -951,7 +897,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   private getModalPopup(component: any, size: string, contentMessage?: string) {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
     this.modalRef = this.modalService.open(component, options);
-    this.modalRef.componentInstance.translationValues = this.translationValues;
     this.modalRef.componentInstance.headingMessage = 'Success';
     this.modalRef.componentInstance.contentMessage = contentMessage;
   }

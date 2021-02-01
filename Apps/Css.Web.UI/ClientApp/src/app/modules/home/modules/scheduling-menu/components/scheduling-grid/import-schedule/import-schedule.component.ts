@@ -35,8 +35,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   uploadFile: string;
   spinner = 'import';
   fileUploaded: File;
-  storeData: any;
-  worksheet: any;
   fileFormatValidation: boolean;
   fileSubmitted: boolean;
   jsonData: any[] = [];
@@ -44,13 +42,11 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   schedulingManagerColumns = ['EmployeeId', 'Date', 'ActivityCode', 'StartTime', 'EndTime'];
   csvTableHeader: string[];
 
-  getAgentSchedulesSubscription: ISubscription;
-  getSchedulingCodesSubscription: ISubscription;
   importAgentScheduleChartSubscription: ISubscription;
+  updateManagerChartSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
   @Input() agentScheduleType: AgentScheduleType;
-  @Input() translationValues: TranslationDetails[];
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -266,7 +262,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     if (!this.validateInputRecord(model.agentScheduleManagers)) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
-      this.importAgentScheduleChartSubscription = this.agentSchedulesService.updateScheduleManagerChart(model)
+      this.updateManagerChartSubscription = this.agentSchedulesService.updateScheduleManagerChart(model)
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ partialImport: hasMismatch });
@@ -275,7 +271,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           console.log(error);
         });
 
-      this.subscriptions.push(this.importAgentScheduleChartSubscription);
+      this.subscriptions.push(this.updateManagerChartSubscription);
 
     } else {
       const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
