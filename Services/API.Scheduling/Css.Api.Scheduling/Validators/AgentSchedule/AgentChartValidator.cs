@@ -122,6 +122,11 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
                     DateTime startTimeDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, startTimeHour, startTimeMinute, 0);
                     DateTime endTimeDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, endTimeHour, endTimeMinute, 0);
 
+                    if (endTimeHour == 0 && endTimeMeridiem == "am")
+                    {
+                        endTimeDateTime = endTimeDateTime.AddDays(1);
+                    }
+
                     if (startTimeDateTime >= endTimeDateTime)
                     {
                         validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time and End time range is not valid"));
