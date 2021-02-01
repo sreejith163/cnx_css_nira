@@ -13,18 +13,26 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Css.Api.Core.Models.Enums;
+using AutoMapper;
+using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
+using AutoMapper.QueryableExtensions;
 
 namespace Css.Api.Scheduling.Repository
 {
     public class AgentScheduleRepository : GenericRepository<AgentSchedule>, IAgentScheduleRepository
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentScheduleRepository" /> class.
+        /// The mapper
         /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>Initializes a new instance of the <see cref="AgentScheduleRepository" /> class.</summary>
         /// <param name="mongoContext">The mongo context.</param>
-        public AgentScheduleRepository(
-            IMongoContext mongoContext) : base(mongoContext)
+        /// <param name="mapper">The mapper.</param>
+        public AgentScheduleRepository(IMongoContext mongoContext,
+            IMapper mapper) : base(mongoContext)
         {
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -49,7 +57,10 @@ namespace Css.Api.Scheduling.Repository
                     .Take(agentScheduleQueryparameter.PageSize);
             }
 
-            var shapedAgentSchedules = DataShaper.ShapeData(pagedAgentSchedules, agentScheduleQueryparameter.Fields);
+            var mappedAgentAdmins = pagedAgentSchedules
+                .ProjectTo<AgentScheduleDTO>(_mapper.ConfigurationProvider);
+
+            var shapedAgentSchedules = DataShaper.ShapeData(mappedAgentAdmins, agentScheduleQueryparameter.Fields);
 
             return await PagedList<Entity>
                 .ToPagedList(shapedAgentSchedules, filteredAgentSchedules.Count(), agentScheduleQueryparameter.PageNumber, agentScheduleQueryparameter.PageSize);
@@ -154,6 +165,8 @@ namespace Css.Api.Scheduling.Repository
 
             var update = Builders<AgentSchedule>.Update
                 .Set(x => x.EmployeeId, updateAgentScheduleEmployeeDetails.EmployeeId)
+                .Set(x => x.FirstName, updateAgentScheduleEmployeeDetails.FirstName)
+                .Set(x => x.LastName, updateAgentScheduleEmployeeDetails.LastName)
                 .Set(x => x.AgentSchedulingGroupId, updateAgentScheduleEmployeeDetails.AgentSchedulingGroupId)
                 .Set(x => x.ModifiedBy, updateAgentScheduleEmployeeDetails.ModifiedBy)
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
@@ -328,6 +341,8 @@ namespace Css.Api.Scheduling.Repository
 
                 agentSchedules = agentSchedules.Where(o => (o.EmployeeId == employeeId && employeeId != 0) ||
                                                            (o.Status == scheduleStatus && !string.IsNullOrWhiteSpace(status)) ||
+                                                            o.FirstName.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
+                                                            o.LastName.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
                                                             o.CreatedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
                                                             o.ModifiedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()));
             }

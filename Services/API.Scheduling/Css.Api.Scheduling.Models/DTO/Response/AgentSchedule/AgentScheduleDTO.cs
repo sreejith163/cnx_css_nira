@@ -22,10 +22,16 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         public int EmployeeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the employee.
+        /// Gets or sets the first name.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string EmployeeName { get; set; }
+        public string FirstName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last name.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the agent scheduling group identifier.

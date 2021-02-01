@@ -5,12 +5,10 @@ using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
-using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,11 +34,6 @@ namespace Css.Api.Scheduling.Business
         private readonly IAgentScheduleRepository _agentScheduleRepository;
 
         /// <summary>
-        /// The agent admin repository
-        /// </summary>
-        private readonly IAgentAdminRepository _agentAdminRepository;
-
-        /// <summary>
         /// The scheduling code repository
         /// </summary>
         private readonly ISchedulingCodeRepository _schedulingCodeRepository;
@@ -60,21 +53,18 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="agentScheduleRepository">The agent schedule repository.</param>
-        /// <param name="agentAdminRepository">The agent admin repository.</param>
-        /// <param name="_schedulingCodeRepository">The scheduling code repository.</param>
+        /// <param name="schedulingCodeRepository">The scheduling code repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
         public AgentScheduleService(
             IHttpContextAccessor httpContextAccessor,
             IAgentScheduleRepository agentScheduleRepository,
-            IAgentAdminRepository agentAdminRepository,
             ISchedulingCodeRepository schedulingCodeRepository,
             IMapper mapper,
             IUnitOfWork uow)
         {
             _httpContextAccessor = httpContextAccessor;
             _agentScheduleRepository = agentScheduleRepository;
-            _agentAdminRepository = agentAdminRepository;
             _schedulingCodeRepository = schedulingCodeRepository;
             _mapper = mapper;
             _uow = uow;
@@ -87,7 +77,10 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> GetAgentSchedules(AgentScheduleQueryparameter agentScheduleQueryparameter)
         {
-            return await GetAgentSchedulesData(agentScheduleQueryparameter);
+            var agentSchedules = await _agentScheduleRepository.GetAgentSchedules(agentScheduleQueryparameter);
+            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentSchedules));
+
+            return new CSSResponse(agentSchedules, HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -103,11 +96,7 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var agentProfile = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(new EmployeeIdDetails { Id = agentSchedule.EmployeeId });
-
             var mappedAgentSchedule = _mapper.Map<AgentScheduleDetailsDTO>(agentSchedule);
-            mappedAgentSchedule.EmployeeName = $"{agentProfile?.FirstName} {agentProfile?.LastName}";
-
             return new CSSResponse(mappedAgentSchedule, HttpStatusCode.OK);
         }
 
@@ -264,86 +253,6 @@ namespace Css.Api.Scheduling.Business
             await _uow.Commit();
 
             return new CSSResponse(HttpStatusCode.NoContent);
-        }
-
-        /// <summary>
-        /// Gets the agent schedules.
-        /// </summary>
-        /// <param name="agentScheduleQueryparameter">The agent schedule queryparameter.</param>
-        /// <returns></returns>
-        private async Task<CSSResponse> GetAgentSchedulesData(AgentScheduleQueryparameter agentScheduleQueryparameter)
-        {
-            var agentSchedulesData = new List<AgentScheduleDTO>();
-            var fields = agentScheduleQueryparameter.Fields?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.ToString().ToLower());
-            var orderBy = agentScheduleQueryparameter.OrderBy.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(x => x.ToString().ToLower());
-            var orderKeywords = orderBy.Select(x => x.Split(" ")[0]);
-            bool needEmployeeName = fields == null || fields.Contains("employeename");
-            bool needEmployeeNameSort = orderBy != null && orderKeywords != null && orderKeywords.Contains("employeename");
-
-            if (needEmployeeNameSort)
-            {
-                var orderByType = "asc";
-                var existingOrderType = orderBy.Where(x => x.Contains("employeename")).FirstOrDefault()?.Split(" ");
-                if (existingOrderType.Count() > 1)
-                {
-                    orderByType = existingOrderType[1];
-                }
-
-                var agentAdminQueryParameter = new AgentAdminQueryParameter
-                {
-                    PageNumber = agentScheduleQueryparameter.PageNumber,
-                    PageSize = agentScheduleQueryparameter.PageSize,
-                    OrderBy = $"FirstName {orderByType}",
-                    Fields = "EmployeeId, FirstName, LastName"
-                };
-
-                var agents = await _agentAdminRepository.GetAgentAdmins(agentAdminQueryParameter);
-                var mappedAgents = JsonConvert.DeserializeObject<List<AgentAdminDTO>>(JsonConvert.SerializeObject(agents));
-                var employeeIds = mappedAgents.Select(x => x.EmployeeId).ToList();
-
-                agentScheduleQueryparameter.EmployeeIds = employeeIds;
-                var agentSchedules = await _agentScheduleRepository.GetAgentSchedules(agentScheduleQueryparameter);
-
-                _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentSchedules));
-
-                var mappedAgentSchedules = JsonConvert.DeserializeObject<List<AgentScheduleDTO>>(JsonConvert.SerializeObject(agentSchedules));
-                foreach (var mappedAgentSchedule in mappedAgentSchedules)
-                {
-                    var agentAdmin = mappedAgents.Find(x => x.EmployeeId == mappedAgentSchedule.EmployeeId);
-                    if (needEmployeeName)
-                    {
-                        mappedAgentSchedule.EmployeeName = $"{agentAdmin?.FirstName} {agentAdmin?.LastName}";
-                    }
-                }
-
-                var sortedAgentSchedules = orderByType == "desc" ? mappedAgentSchedules.OrderByDescending(x => x.EmployeeName) : mappedAgentSchedules.OrderBy(x => x.EmployeeName);
-                agentSchedulesData = sortedAgentSchedules.ToList();
-            }
-            else
-            {
-                var agentSchedules = await _agentScheduleRepository.GetAgentSchedules(agentScheduleQueryparameter);
-
-                _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentSchedules));
-
-                var mappedAgentSchedules = JsonConvert.DeserializeObject<List<AgentScheduleDTO>>(JsonConvert.SerializeObject(agentSchedules));
-
-                if (needEmployeeName)
-                {
-                    var employeeIds = mappedAgentSchedules.Select(x => x.EmployeeId).Distinct().ToList();
-
-                    var agentAdmins = await _agentAdminRepository.GetAgentAdminsByEmployeeIds(employeeIds);
-
-                    foreach (var mappedAgentSchedule in mappedAgentSchedules)
-                    {
-                        var agentAdmin = agentAdmins.Find(x => x.Ssn == mappedAgentSchedule.EmployeeId);
-                        mappedAgentSchedule.EmployeeName = $"{agentAdmin?.FirstName} {agentAdmin?.LastName}";
-                    }
-                }
-
-                agentSchedulesData = mappedAgentSchedules;
-            }
-
-            return new CSSResponse(agentSchedulesData, HttpStatusCode.OK);
         }
 
         /// <summary>

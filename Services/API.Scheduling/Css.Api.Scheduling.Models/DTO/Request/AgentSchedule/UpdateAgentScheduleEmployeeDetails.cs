@@ -8,6 +8,16 @@
         public int EmployeeId { get; set; }
 
         /// <summary>
+        /// Gets or sets the first name.
+        /// </summary>
+        public string FirstName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last name.
+        /// </summary>
+        public string LastName { get; set; }
+
+        /// <summary>
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
         public int AgentSchedulingGroupId { get; set; }

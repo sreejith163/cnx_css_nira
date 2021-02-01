@@ -318,6 +318,8 @@ namespace Css.Api.Scheduling.Business
             var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
             {
                 EmployeeId = agentAdminDetails.EmployeeId,
+                FirstName = agentAdminDetails.FirstName,
+                LastName = agentAdminDetails.LastName,
                 AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId,
                 ModifiedBy = agentAdminDetails.ModifiedBy
             };

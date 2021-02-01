@@ -34,11 +34,6 @@ namespace Css.Api.Admin.Business.UnitTest.Services
         private readonly Mock<IAgentScheduleRepository> mockAgentScheduleRepository;
 
         /// <summary>
-        /// The mock agent admin repository
-        /// </summary>
-        private readonly Mock<IAgentAdminRepository> mockAgentAdminRepository;
-
-        /// <summary>
         /// The mock scheduling code repository
         /// </summary>
         private readonly Mock<ISchedulingCodeRepository> mockSchedulingCodeRepository;
@@ -71,13 +66,13 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
             mockAgentScheduleRepository = new Mock<IAgentScheduleRepository>();
-            mockAgentAdminRepository = new Mock<IAgentAdminRepository>();
             mockSchedulingCodeRepository = new Mock<ISchedulingCodeRepository>();
+
             var mockUnitWork = new Mock<IUnitOfWork>();
 
             mockDataContext = new MockDataContext();
 
-            agentScheduleService = new AgentScheduleService(mockHttContext.Object, mockAgentScheduleRepository.Object, mockAgentAdminRepository.Object,
+            agentScheduleService = new AgentScheduleService(mockHttContext.Object, mockAgentScheduleRepository.Object, 
                                                             mockSchedulingCodeRepository.Object, mapper, mockUnitWork.Object);
         }
 
@@ -93,9 +88,6 @@ namespace Css.Api.Admin.Business.UnitTest.Services
 
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedules(It.IsAny<AgentScheduleQueryparameter>())).ReturnsAsync(
                 (AgentScheduleQueryparameter agentScheduleQueryparameter) => mockDataContext.GetAgentSchedules(agentScheduleQueryparameter));
-
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminsByEmployeeIds(It.IsAny<List<int>>())).ReturnsAsync(
-                (List<int> employeeIds) => mockDataContext.GetAgentAdminsByEmployeeIds(employeeIds));
 
             var result = await agentScheduleService.GetAgentSchedules(agentScheduleQueryparameter);
 
@@ -114,9 +106,6 @@ namespace Css.Api.Admin.Business.UnitTest.Services
 
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedules(It.IsAny<AgentScheduleQueryparameter>())).ReturnsAsync(
                 (AgentScheduleQueryparameter agentScheduleQueryparameter) => mockDataContext.GetAgentSchedules(agentScheduleQueryparameter));
-
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdmins(It.IsAny<AgentAdminQueryParameter>())).ReturnsAsync(
-                (AgentAdminQueryParameter agentAdminQueryParameter) => mockDataContext.GetAgentAdmins(agentAdminQueryParameter));
 
             var result = await agentScheduleService.GetAgentSchedules(agentScheduleQueryparameter);
 
@@ -142,9 +131,6 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentSchedule(agentScheduleIdDetails));
 
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminIdsByEmployeeIdAndSso(It.IsAny<EmployeeIdDetails>(), It.IsAny<AgentAdminSsoDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails, AgentAdminSsoDetails agentAdminSsoDetails) => mockDataContext.GetAgentAdminIdsByEmployeeIdAndSso(employeeIdDetails, agentAdminSsoDetails));
-
             var result = await agentScheduleService.GetAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId });
 
             Assert.NotNull(result);
@@ -163,10 +149,6 @@ namespace Css.Api.Admin.Business.UnitTest.Services
         {
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentSchedule(agentScheduleIdDetails));
-
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminIdsByEmployeeIdAndSso(It.IsAny<EmployeeIdDetails>(), It.IsAny<AgentAdminSsoDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails, AgentAdminSsoDetails agentAdminSsoDetails) => mockDataContext.GetAgentAdminIdsByEmployeeIdAndSso(employeeIdDetails, agentAdminSsoDetails));
-
 
             var result = await agentScheduleService.GetAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId });
 

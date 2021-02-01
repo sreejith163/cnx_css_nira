@@ -76,6 +76,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
 
         private readonly IQueryable<AgentSchedule> agentSchedulesDB = new List<AgentSchedule>() {
             new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718e"), EmployeeId = 1, DateFrom = DateTime.UtcNow, DateTo = DateTime.UtcNow,
+                                FirstName = "Test", LastName = "last",
                                 Status = SchedulingStatus.Approved, AgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow, IsDeleted = false,
                                 AgentScheduleCharts = new List<AgentScheduleChart>
                                 {
@@ -111,6 +112,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
             },
             new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718f"), EmployeeId = 2, DateFrom = DateTime.UtcNow, DateTo = DateTime.UtcNow,
                                 Status = SchedulingStatus.Approved, AgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow, IsDeleted = false,
+                                FirstName = "Test", LastName = "last",
                                 AgentScheduleCharts = new List<AgentScheduleChart>
                                 {
                                     new AgentScheduleChart {

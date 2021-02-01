@@ -16,6 +16,16 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public int EmployeeId { get; set; }
 
         /// <summary>
+        /// Gets or sets the first name.
+        /// </summary>
+        public string FirstName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last name.
+        /// </summary>
+        public string LastName { get; set; }
+
+        /// <summary>
         /// Gets or sets the date from.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
