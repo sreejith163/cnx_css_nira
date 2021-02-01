@@ -3,7 +3,8 @@ import { SchedulingStatus } from '../enums/scheduling-status.enum';
 export class AgentScheduleBase {
     id: string;
     employeeId: number;
-    employeeName: string;
+    firstName: string;
+    lastName: string;
     status: SchedulingStatus;
     agentSchedulingGroupId: number;
 }

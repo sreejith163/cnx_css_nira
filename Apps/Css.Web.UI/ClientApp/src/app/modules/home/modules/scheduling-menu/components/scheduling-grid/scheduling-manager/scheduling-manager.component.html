@@ -85,10 +85,10 @@
               [class.fa-sort-up]="sortBy === 'asc'">
             </i>
           </th>
-          <th class="sortable-field" (click)="sort('employeeName', sortBy)">
+          <th class="sortable-field" (click)="sort('lastName', sortBy)">
             {{ 'Name' | translate }}
-            <i *ngIf="orderBy !== 'employeeName'" class="fa fa-sort"></i>
-            <i id="sortIcon" *ngIf="orderBy === 'employeeName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+            <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
+            <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
               [class.fa-sort-up]="sortBy === 'asc'">
             </i>
           </th>
@@ -116,7 +116,12 @@
         <tr class="jsgrid-row user-select-none" *ngFor="let el of totalSchedulingGridData; let i = index"
           [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(i)">
           <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
-          <td class="jsgrid-cell-empName">{{el.employeeName}}</td>
+          <td class="jsgrid-cell-empName">
+            <span ngbTooltip="{{ el.lastName + ' ' + el.firstName }}">
+              {{el.lastName + ' ' + el.firstName | truncate: { sliceStart: 0, sliceEnd:
+              characterSplice, append: '...' } }}
+            </span>
+          </td>
           <td id="grid_col_{{i+1}}_{{j}}" class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
             attr.scheduleId="{{el.id}}" attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
             *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
@@ -157,7 +162,8 @@
 <div class="row">
   <div class="col-12 col-md-12 d-flex">
     <p>{{ 'Agent' | translate }}</p>:
-    <b><span>{{agentInfo?.employeeId}} {{agentInfo?.firstName}}, {{agentInfo?.lastName}}</span></b>
+    <b><span>{{agentInfo?.employeeId}} {{agentInfo?.firstName}}, {{agentInfo?.lastName}}</span>
+    </b>
   </div>
 </div>
 <div class="col-md-12 bg-color">
@@ -212,8 +218,8 @@
         <tr class="table-row">
           <td>Accomodated</td>
           <td>{{agentInfo?.supervisorName}}</td>
-          <td>{{agentInfo?.employeeId}}</td>
-          <td>{{agentInfo?.hireDate}}</td>
+          <td>{{agentInfo?.supervisorId}}</td>
+          <td>{{getAgentHireDate()}}</td>
           <td>2020-12-14</td>
           <td></td>
           <td></td>

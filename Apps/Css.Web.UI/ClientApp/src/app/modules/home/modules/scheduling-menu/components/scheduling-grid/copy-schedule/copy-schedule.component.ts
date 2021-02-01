@@ -24,6 +24,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   totalAgents: number;
   currentPage = 1;
   pageSize = 10;
+  characterSplice = 25;
   spinner = 'Copy-Schedule';
   orderBy = 'employeeId';
   sortBy = 'asc';
@@ -140,7 +141,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     agentSchedulesQueryParams.pageNumber = this.currentPage;
     agentSchedulesQueryParams.pageSize = this.pageSize;
     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
-    agentSchedulesQueryParams.fields = 'employeeId,employeeName';
+    agentSchedulesQueryParams.fields = 'employeeId,firstName,lastName';
 
     return agentSchedulesQueryParams;
   }

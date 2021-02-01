@@ -84,10 +84,10 @@
                       [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                     </i>
                   </th>
-                  <th class="sortable-field" (click)="sort('employeeName', sortBy)">
+                  <th class="sortable-field" (click)="sort('lastName', sortBy)">
                     {{ 'Name' | translate }}
-                    <i *ngIf="orderBy !== 'employeeName'" class="fa fa-sort"></i>
-                    <i id="sortIcon" *ngIf="orderBy === 'employeeName'" class="fa"
+                    <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa"
                       [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                     </i>
                   </th>
@@ -150,7 +150,8 @@
                     </td>
                     <td>{{el.employeeId}}</td>
                     <td>
-                      <span ngbTooltip="{{ el.employeeName }}">{{el.employeeName | truncate: { sliceStart: 0, sliceEnd:
+                      <span ngbTooltip="{{ el.lastName + ' ' + el.firstName }}">
+                        {{el.lastName + ' ' + el.firstName | truncate: { sliceStart: 0, sliceEnd:
                         characterSplice, append: '...' } }}
                       </span>
                     </td>
@@ -202,7 +203,8 @@
                             <div class="col-md-4 col-sm-4">
                               <p class="text-center">
                                 {{ 'Agent' | translate }}:
-                                {{ selectedGrid.employeeName }}</p>
+                                {{ selectedGrid.lastName + ' ' + selectedGrid.firstName }}
+                              </p>
                             </div>
                             <div class="col-md-4 col-sm-4">
                               <p class="float-right">

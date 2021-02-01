@@ -158,6 +158,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
     this.schedulingStatus = Object.keys(SchedulingStatus).filter(key => isNaN(SchedulingStatus[key]));
     this.sortingType = Object.keys(SortingType).filter(key => isNaN(SortingType[key]));
+    this.startDate = this.today;
     this.loadSchedulingCodes();
     this.preLoadTranslations();
     this.loadTranslations();
@@ -474,11 +475,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.openTimes = this.getOpenTimes();
     if (this.tabIndex === AgentScheduleType.SchedulingManager && this.agentSchedulingGroupId) {
       this.refreshMangerTab = true;
+      this.setStartDateAsToday();
       this.totalSchedulingGridData = [];
       this.totalSchedulingRecord = undefined;
-      this.setStartDateAsToday();
     } else if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
-      this.clearStartDate();
+      this.startDate = this.today;
       this.loadAgentSchedules();
       this.selectedGrid = null;
     }

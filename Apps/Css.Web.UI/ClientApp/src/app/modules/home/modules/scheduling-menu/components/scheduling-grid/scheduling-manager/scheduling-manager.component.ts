@@ -50,6 +50,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   currentPage = 1;
   pageSize = 3;
   timeIntervals = 15;
+  characterSplice = 25;
   endIcon: number;
   iconCount: number;
   selectedRow: number;
@@ -294,6 +295,19 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     return '';
   }
 
+  getAgentHireDate() {
+    let value;
+    for (const item of this.agentInfo?.agentData) {
+      if (item?.group?.description === 'Hire Date') {
+        value = item?.group?.value;
+        break;
+      }
+    }
+
+    return value;
+
+  }
+
   openCopySchedule(index: number) {
     const agentScheduleId = this.totalSchedulingGridData[index]?.id;
     const employeeId = this.totalSchedulingGridData[index]?.employeeId;
@@ -388,7 +402,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private loadAgentScheduleManger() {
-    const queryParams = this.getQueryParams('id,employeeId,employeeName');
+    const queryParams = this.getQueryParams('id,employeeId,firstName,lastName');
     queryParams.skipPageSize = true;
     this.iconDescription = undefined;
     this.startTimeFilter = undefined;

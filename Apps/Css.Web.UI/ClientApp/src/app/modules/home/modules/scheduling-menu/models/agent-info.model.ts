@@ -1,6 +1,9 @@
+import { AgentData } from './agent-data.model';
+
 export class AgentInfo {
     scheduleType: string;
     supervisorName: string;
+    supervisorId: number;
     employeeId: number;
     hireDate: string;
     productionDate: string;
@@ -13,4 +16,9 @@ export class AgentInfo {
     operationsManager: string;
     firstName: string;
     lastName: string;
+    agentData: AgentData[];
+
+    constructor() {
+        this.agentData = [];
+    }
 }
