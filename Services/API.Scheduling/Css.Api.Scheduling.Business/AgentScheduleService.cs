@@ -127,11 +127,22 @@ namespace Css.Api.Scheduling.Business
 
             if (agentScheduleChartQueryparameter.AgentScheduleType == AgentScheduleType.SchedulingTab)
             {
+                if (agentScheduleChartQueryparameter.Day.HasValue && agentScheduleChartQueryparameter.Day != default(int))
+                {
+                    agentSchedule.AgentScheduleCharts = agentSchedule.AgentScheduleCharts.FindAll(x => x.Day == agentScheduleChartQueryparameter.Day);
+                }
+
                 var mappedAgentScheduleChart = _mapper.Map<AgentScheduleChartDetailsDTO>(agentSchedule);
                 return new CSSResponse(mappedAgentScheduleChart, HttpStatusCode.OK);
             }
             else
             {
+                if (agentScheduleChartQueryparameter.Date.HasValue && agentScheduleChartQueryparameter.Date != default(DateTimeOffset))
+                {
+                    var dateTimeWithZeroTimeSpan = new DateTimeOffset(agentScheduleChartQueryparameter.Date.Value.Date, TimeSpan.Zero);
+                    agentSchedule.AgentScheduleManagerCharts = agentSchedule.AgentScheduleManagerCharts.FindAll(x => x.Date == dateTimeWithZeroTimeSpan);
+                }
+
                 var mappedAgentScheduleChart = _mapper.Map<AgentScheduleManagerChartDetailsDTO>(agentSchedule);
                 return new CSSResponse(mappedAgentScheduleChart, HttpStatusCode.OK);
             }

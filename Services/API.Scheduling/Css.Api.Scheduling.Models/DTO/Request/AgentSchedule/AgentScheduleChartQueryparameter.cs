@@ -13,7 +13,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets from date.
         /// </summary>
-        public DateTime? Date { get; set; }
+        public DateTimeOffset? Date { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the agent schedule.

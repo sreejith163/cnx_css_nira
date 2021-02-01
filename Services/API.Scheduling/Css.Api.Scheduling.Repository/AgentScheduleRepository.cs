@@ -316,7 +316,8 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(agentScheduleQueryparameter.SearchKeyword))
             {
-                agentSchedules = agentSchedules.Where(o => o.CreatedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
+                agentSchedules = agentSchedules.Where(o => o.EmployeeId == Convert.ToInt32(agentScheduleQueryparameter.SearchKeyword.Trim()) || 
+                                                           o.CreatedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
                                                            o.ModifiedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()));
             }
 
