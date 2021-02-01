@@ -87,8 +87,8 @@
                   <th class="sortable-field" (click)="sort('lastName', sortBy)">
                     {{ 'Name' | translate }}
                     <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
-                    <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa"
-                      [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
+                    <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                      [class.fa-sort-up]="sortBy === 'asc'">
                     </i>
                   </th>
                   <th class="sortable-field width-18-p" (click)="sort('dateFrom', sortBy)">
@@ -296,12 +296,19 @@
                         </div>
                         <div class="row padding-10">
                           <div class="col-md-12 padding-12 row">
-                            <div class="col-md-11 m-b-5">
+                            <div class="col-md-2 m-b-5">
                               <button class="btn btn-default copy-button" id="btn_copy_schedule"
                                 (click)="openCopySchedule(i)">
                                 <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
                               </button>
                             </div>
+                            <div class="col-md-2 m-b-5">
+                              <button class="btn btn-primary btn-activity" id="btn_activity_logs"
+                                (click)="openActivityLogs(i)">
+                                {{ 'Activity Logs' | translate }}
+                              </button>
+                            </div>
+                            <div class="col-md-7 m-b-5"></div>
                             <div class="col-md-1 row">
                               <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
                                 id="btn_save">
@@ -337,14 +344,10 @@
       </div>
     </div>
     <div class="tab-pane fade" id="scheduling-manager" role="tabpanel" aria-labelledby="scheduling-manager-tab">
-      <app-scheduling-manager 
-      [currentDate]="currentDate"
-      [currentLanguage]="currentLanguage"
-      [agentSchedulingGroupId]="agentSchedulingGroupId"
-       [startDate]="startDate"
-      [searchText]="searchText"
-      [refreshMangerTab]="refreshMangerTab" >
-    </app-scheduling-manager>
+      <app-scheduling-manager [currentDate]="currentDate" [currentLanguage]="currentLanguage"
+        [agentSchedulingGroupId]="agentSchedulingGroupId" [startDate]="startDate" [searchText]="searchText"
+        [refreshMangerTab]="refreshMangerTab">
+      </app-scheduling-manager>
     </div>
   </div>
 </div>

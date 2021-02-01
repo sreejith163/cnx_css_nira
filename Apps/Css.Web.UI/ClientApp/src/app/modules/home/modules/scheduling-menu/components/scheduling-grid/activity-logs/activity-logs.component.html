@@ -1,0 +1,69 @@
+<div class="modal-dialog-activity w-1000 add-edit-modal" role="document">
+  <div class="modal-content">
+    <ngx-spinner [name]="spinner"></ngx-spinner>
+    <div class="modal-header header-color">
+      <h6 class="modal-title w-100 font-weight-bold header">
+        <p>{{ 'Activity Logs' | translate }}
+        </p>
+      </h6>
+      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body mx-3 modal-style">
+      <div class="row">
+        <div class="col-12 col-md-12 d-flex">
+          <p>{{ 'Agent' | translate }}</p>:
+          <b><span>3018383 John Alexander</span></b>
+          <b><span class="agent">Monday</span></b>
+          <b><span  class="agent">12/03/21</span></b>
+        </div>
+      </div>
+      <div class="row col-md-12 m-t-6">
+        <div class="col-md-8 row bg-color">
+          <div class="col-md-1 col-sm-1">
+            <div class="test">{{ unifiedToNative(iconCode) }}</div>
+          </div>
+          <div class="col-md-3 col-sm-3">
+            <input readonly type="text" disabled [(ngModel)]="iconDescription" class="form-control margin-4 manager">
+          </div>
+          <div class="col-md-2 col-sm-2">
+            <input readonly type="text" disabled [(ngModel)]="startTimeFilter" class="form-control margin-4 manager">
+          </div>
+          <div class="col-md-2 col-sm-2">
+            <input readonly type="text" disabled [(ngModel)]="endTimeFilter" class="form-control margin-4 manager">
+          </div>
+          <div class="col-md-1"></div>
+          <div class="col-md-3 label-color p-t-10">
+            <span>
+              <label>{{ 'Total Revisions' | translate }}:</label>
+              <b>{{totalRevisions}}</b>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-2 m-l-10">
+          <input type="text" placeholder="search" class="form-control">
+        </div>
+        <div class="col-md-1 p-t-10">
+          <i class="fa fa-sort-down icon" aria-hidden="true"></i>
+        </div>
+        <div class="col-md-1 p-t-10">
+          <i class="fa fa-download icon" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-center header-color">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-8"></div>
+          <div class="col-md-4">
+            <button class="btn btn-secondary btn-sm m-2 float-r" data-dismiss="modal"
+              (click)="activeModal.dismiss('Cross click')">
+              {{ 'Close' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

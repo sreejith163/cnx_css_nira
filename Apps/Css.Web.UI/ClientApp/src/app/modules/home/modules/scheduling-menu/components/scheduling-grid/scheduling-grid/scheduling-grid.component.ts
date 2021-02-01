@@ -1,7 +1,7 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { WeekDay } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDate, NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
@@ -45,6 +45,7 @@ import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manage
 import { TranslateService } from '@ngx-translate/core';
 import { AgentInfo } from '../../../models/agent-info.model';
 import { AgentChartResponse } from '../../../models/agent-chart-response.model';
+import { ActivityLogsComponent } from '../activity-logs/activity-logs.component';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -148,6 +149,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private languagePreferenceService: LanguagePreferenceService,
     public translate: TranslateService,
+    // private dateAdapter: NgbDateAdapter
   ) {
     this.LoggedUser = this.authService.getLoggedUserInfo();
   }
@@ -385,6 +387,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
   }
 
+  // toModel(date: NgbDateStruct | null): string | null {
+  //   return date ? date.day + '-' + date.month + '-' + date.year : null;
+  // }
+
   setStartDateAsToday() {
     this.startDate = this.today;
     const day = this.startDate.day < 10 ? '0' + this.startDate.day : this.startDate.day;
@@ -401,6 +407,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.tabIndex === AgentScheduleType.Scheduling) {
       this.loadAgentSchedules();
     }
+  }
+
+  openActivityLogs(index: number) {
+    this.getModalPopup(ActivityLogsComponent, 'xl');
   }
 
   openImportSchedule() {

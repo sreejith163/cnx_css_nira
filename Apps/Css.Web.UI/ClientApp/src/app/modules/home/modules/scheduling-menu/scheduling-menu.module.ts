@@ -13,6 +13,7 @@ import { SchedulingGridComponent } from './components/scheduling-grid/scheduling
 import { ImportScheduleComponent } from './components/scheduling-grid/import-schedule/import-schedule.component';
 import { CopyScheduleComponent } from './components/scheduling-grid/copy-schedule/copy-schedule.component';
 import { SchedulingManagerComponent } from './components/scheduling-grid/scheduling-manager/scheduling-manager.component';
+import { ActivityLogsComponent } from './components/scheduling-grid/activity-logs/activity-logs.component';
 
 
 
@@ -24,6 +25,7 @@ const components =
     ImportScheduleComponent,
     CopyScheduleComponent,
     SchedulingManagerComponent,
+    ActivityLogsComponent,
     HorizontalScrollPipe];
 const providers = [AgentAdminService, AgentSchedulesService];
 

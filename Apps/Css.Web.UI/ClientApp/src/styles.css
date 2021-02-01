@@ -164,6 +164,25 @@ th:last-of-type {
   max-width: 1000px !important;
 }
 
+@media (min-width: 576px) {
+  .add-edit-modal.modal-dialog-activity {
+    max-width: 1000px;
+    margin: 1.75rem auto;
+  }
+}
+
+.add-edit-modal.modal-dialog-activity {
+  margin-top: auto;
+  margin-bottom: auto;
+  max-width: 1000px !important;
+}
+
+.modal.show .add-edit-modal.modal-dialog-activity {
+  -webkit-transform: none;
+  transform: none;
+  max-width: 1500px !important;
+}
+
 .w-1000 {
   max-width: 1000px !important;
 }
