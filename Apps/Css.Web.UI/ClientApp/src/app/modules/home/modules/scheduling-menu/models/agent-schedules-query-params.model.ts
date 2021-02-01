@@ -6,5 +6,4 @@ export class AgentSchedulesQueryParams extends QueryStringParameters {
     fromDate?: string;
     employeeIds: number[];
     skipPageSize: boolean;
-    agentScheduleType: AgentScheduleType;
 }

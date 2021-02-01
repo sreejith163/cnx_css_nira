@@ -529,6 +529,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       let weekDays;
       let weekData;
       let week;
+      let to;
       this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
       let meridiem = elem.attributes.meridiem.value;
       const fromTime = elem.attributes.time.value + ' ' + meridiem;
@@ -542,7 +543,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         minute = '00';
       }
 
-      const to = hours + ':' + minute + ' ' + meridiem;
+      if (hours === '00' && minute === '00' && meridiem === 'pm' && fromTime.split(' ')[1] === 'pm') {
+        to = '11:60 pm';
+     } else {
+        to = hours + ':' + minute + ' ' + meridiem;
+     }
       const code = this.schedulingCodes.find(x => x.icon.value === this.icon);
       const iconModel = new ScheduleChart(fromTime, to, code?.id);
 
@@ -776,7 +781,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentSchedulesQueryParams.fields = fields ?? undefined;
     agentSchedulesQueryParams.employeeIds = undefined;
-    agentSchedulesQueryParams.agentScheduleType = AgentScheduleType.Scheduling;
 
     return agentSchedulesQueryParams;
   }
@@ -829,7 +833,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.getAgentScheduleSubscription = this.agentSchedulesService.getAgentSchedule(agentScheduleId)
       .subscribe((response) => {
         if (response) {
-          this.selectedGrid = response;
+          this.selectedGrid = this.formatEndTime(response);
           this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
         }
         this.spinnerService.hide(this.scheduleSpinner);
@@ -841,11 +845,29 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getAgentScheduleSubscription);
   }
 
+  private formatEndTime(scheduleResponse: AgentScheduleGridResponse) {
+    for (const weekData of scheduleResponse.agentScheduleCharts) {
+      const responseIndex = weekData?.charts.findIndex(x => x.endTime === '00:00 am');
+      if (responseIndex > -1) {
+        weekData.charts[responseIndex].endTime = '11:60 pm';
+      } else {
+        const requestIndex = weekData?.charts.findIndex(x => x.endTime === '11:60 pm');
+        if (requestIndex > -1) {
+          weekData.charts[requestIndex].endTime = '00:00 am';
+        }
+      }
+    }
+
+    return scheduleResponse;
+
+  }
+
   private updateAgentScheduleChart(agentScheduleId: string) {
     if (this.matchSchedulingGridDataChanges()) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
       const chartModel = new UpdateAgentschedulechart();
-      chartModel.agentScheduleCharts = this.selectedGrid.agentScheduleCharts;
+      const gridData = this.formatEndTime(this.selectedGrid);
+      chartModel.agentScheduleCharts = gridData.agentScheduleCharts;
       chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
 
       this.updateAgentScheduleChartSubscription = this.agentSchedulesService
