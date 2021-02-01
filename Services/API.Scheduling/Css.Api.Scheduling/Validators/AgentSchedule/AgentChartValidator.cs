@@ -116,6 +116,16 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
                         return validationFailures;
                     }
 
+                    if (startTimeHour == 12)
+                    {
+                        startTimeHour = 0;
+                    }
+
+                    if (endTimeHour == 12)
+                    {
+                        endTimeHour = 0;
+                    }
+
                     startTimeHour = startTimeMeridiem == "am" ? startTimeHour : startTimeHour + 12;
                     endTimeHour = endTimeMeridiem == "am" ? endTimeHour : endTimeHour + 12;
 
