@@ -47,23 +47,25 @@
     </div>
   </div>
 
-  <div class="nav-tabs-custom margin-b-0">
-    <ul class="nav nav-tabs" id="custom-content-above-tab" role="tablist">
-      <li class="nav-item">
-        <a class="nav-link active" id="scheduling-tab" data-toggle="pill" href="#scheduling" role="tab"
-          aria-controls="scheduling" aria-selected="true" (click)="openTab(0)">Scheduling</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="scheduling-manager-tab" data-toggle="pill" href="#scheduling-manager" role="tab"
-          aria-controls="cscheduling-manager" aria-selected="false" (click)="openTab(1)">Scheduling Manager</a>
-      </li>
-      <li class="pull-right marign-l-auto">
-        <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
-          (click)="exportToExcel()">
-        <img src="assets/images/Import.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
-          (click)="openImportSchedule()">
-      </li>
-    </ul>
+  <div class="card card-primary card-outline card-outline-tabs">
+    <div class="card-header p-0 border-bottom-0">
+      <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="scheduling-tab" data-toggle="pill" href="#scheduling" role="tab"
+            aria-controls="scheduling" aria-selected="true" (click)="openTab(0)">Scheduling</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="scheduling-manager-tab" data-toggle="pill" href="#scheduling-manager" role="tab"
+            aria-controls="cscheduling-manager" aria-selected="false" (click)="openTab(1)">Scheduling Manager</a>
+        </li>
+        <li class="pull-right marign-l-auto m-t-10">
+          <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
+            (click)="exportToExcel()">
+          <img src="assets/images/Import.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
+            (click)="openImportSchedule()">
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="tab-content" id="scheduling-tabContent">
