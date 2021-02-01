@@ -12,6 +12,7 @@ using MongoDB.Driver;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Css.Api.Core.Models.Enums;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -316,9 +317,19 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(agentScheduleQueryparameter.SearchKeyword))
             {
-                agentSchedules = agentSchedules.Where(o => o.EmployeeId == Convert.ToInt32(agentScheduleQueryparameter.SearchKeyword.Trim()) || 
-                                                           o.CreatedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
-                                                           o.ModifiedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()));
+                SchedulingStatus scheduleStatus = SchedulingStatus.Approved;
+                int.TryParse(agentScheduleQueryparameter.SearchKeyword.Trim(), out int employeeId);
+                var status = Enum.GetNames(typeof(SchedulingStatus)).FirstOrDefault(e => e.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.ToLower()));
+
+                if (!string.IsNullOrWhiteSpace(status))
+                {
+                    scheduleStatus = (SchedulingStatus)Enum.Parse(typeof(SchedulingStatus), status, true);
+                }
+
+                agentSchedules = agentSchedules.Where(o => (o.EmployeeId == employeeId && employeeId != 0) ||
+                                                           (o.Status == scheduleStatus && !string.IsNullOrWhiteSpace(status)) ||
+                                                            o.CreatedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
+                                                            o.ModifiedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()));
             }
 
             if (agentScheduleQueryparameter.EmployeeIds.Any())
