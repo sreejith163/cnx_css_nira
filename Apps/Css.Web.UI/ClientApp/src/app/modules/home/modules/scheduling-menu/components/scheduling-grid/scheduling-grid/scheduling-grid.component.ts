@@ -89,6 +89,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   selectedIconId: string;
   icon: string;
   searchKeyword: string;
+  searchText: string;
   tableClassName = 'schedulingGridTable';
   selectedCellClassName = 'cell-selected';
   spinner = 'Scheduling';
@@ -374,12 +375,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.agentSchedulingGroupId && this.tabIndex === AgentScheduleType.Scheduling) {
       this.loadAgentSchedules();
     } else {
-      this.totalSchedulingGridData = undefined;
+      this.totalSchedulingGridData = [];
       this.totalSchedulingRecord = undefined;
     }
   }
 
   search() {
+    this.searchText = this.searchKeyword;
     this.loadAgentSchedules();
   }
 
@@ -828,6 +830,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentSchedulesQueryParams.fields = fields ?? undefined;
     agentSchedulesQueryParams.employeeIds = undefined;
+    agentSchedulesQueryParams.agentScheduleType = AgentScheduleType.Scheduling;
 
     return agentSchedulesQueryParams;
   }
