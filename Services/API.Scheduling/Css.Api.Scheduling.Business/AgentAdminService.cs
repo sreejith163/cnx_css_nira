@@ -16,7 +16,6 @@ using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -118,81 +117,6 @@ namespace Css.Api.Scheduling.Business
             _activityLogRepository = activityLogRepository;
             _mapper = mapper;
             _uow = uow;
-        }
-
-        //To be changed
-        /// <summary>
-        /// Seeds the data.
-        /// </summary>
-        public async void SeedData()
-        {
-            var isClientSeeded = await _clientRepository.GetClientsCount() > 0;
-            if (!isClientSeeded)
-            {
-                _clientRepository.CreateClient(
-                    new Client { ClientId = 1, Name = "CName1ForAgentAdmin" });
-                _clientRepository.CreateClient(
-                    new Client { ClientId = 2, Name = "CName2ForAgentAdmin" });
-            }
-
-            var isClientLobSeeded = await _clientLobGroupRepository.GetClientLobGroupsCount() > 0;
-            if (!isClientLobSeeded)
-            {
-                _clientLobGroupRepository.CreateClientLobGroup(
-                    new ClientLobGroup { ClientId = 1, ClientLobGroupId = 1, Name = "Lob1ForAgentAdmin" });
-                _clientLobGroupRepository.CreateClientLobGroup(
-                    new ClientLobGroup { ClientId = 2, ClientLobGroupId = 2, Name = "Lob2ForAgentAdmin" });
-            }
-
-            var isSkillGroupSeeded = await _skillGroupRepository.GetSkillGroupsCount() > 0;
-            if (!isSkillGroupSeeded)
-            {
-                _skillGroupRepository.CreateSkillGroup(
-                    new SkillGroup { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, Name = "SG1ForAgentAdmin" }
-                );
-                _skillGroupRepository.CreateSkillGroup(
-                                   new SkillGroup { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, Name = "SG2ForAgentAdmin" }
-               );
-            }
-
-            var isSkillTagSeeded = await _skillTagRepository.GetSkillTagsCount() > 0;
-            if (!isSkillTagSeeded)
-            {
-                _skillTagRepository.CreateSkillTag(
-                    new SkillTag { ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, Name = "ST1ForAgentAdmin" }
-                );
-                _skillTagRepository.CreateSkillTag(
-                new SkillTag { ClientId = 2, ClientLobGroupId = 2, SkillGroupId = 2, SkillTagId = 2, Name = "ST2ForAgentAdmin" }
-                );
-            }
-
-            var isagentSchedulingGroupsSeeded = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsCount() > 0;
-            if (!isagentSchedulingGroupsSeeded)
-            {
-                _agentSchedulingGroupRepository.CreateAgentSchedulingGroup(new AgentSchedulingGroup
-                {
-                    ClientId = 1,
-                    ClientLobGroupId = 1,
-                    SkillGroupId = 1,
-                    SkillTagId = 1,
-                    AgentSchedulingGroupId = 1,
-                    Name = "Agent Scheduliung Group 1",
-                    IsDeleted = false
-                });
-
-                _agentSchedulingGroupRepository.CreateAgentSchedulingGroup(new AgentSchedulingGroup
-                {
-                    ClientId = 2,
-                    ClientLobGroupId = 2,
-                    SkillGroupId = 2,
-                    SkillTagId = 2,
-                    AgentSchedulingGroupId = 2,
-                    Name = "Agent Scheduliung Group 2",
-                    IsDeleted = false
-                });
-            }
-
-            await _uow.Commit();
         }
 
         /// <summary>
