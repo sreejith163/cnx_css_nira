@@ -1,4 +1,4 @@
-import { AgentData } from './agent-data.model';
+import { AgentAdminAgentData } from './agent-admin-agent-data.model';
 
 export class AgentInfo {
     scheduleType: string;
@@ -16,7 +16,7 @@ export class AgentInfo {
     operationsManager: string;
     firstName: string;
     lastName: string;
-    agentData: AgentData[];
+    agentData: AgentAdminAgentData[];
 
     constructor() {
         this.agentData = [];

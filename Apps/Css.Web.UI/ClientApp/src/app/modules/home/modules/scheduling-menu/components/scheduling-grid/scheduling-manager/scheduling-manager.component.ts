@@ -137,7 +137,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     } else {
       this.totalSchedulingGridData = [];
     }
-
   }
 
   previous() {
