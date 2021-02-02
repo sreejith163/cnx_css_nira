@@ -30,10 +30,10 @@ export class ActivityLogsService extends HttpBaseService {
     data.day = 0;
     data.origin = 'Css';
     data.status = 'Updated';
-    data.timeStamp = 'Aug 12 2020 09:30 am';
+    data.timeStamp = new Date('2021-01-03');
     data.agentScheduleManagerCharts = [];
     const dataChart = new AgentScheduleManagerChart();
-    dataChart.date = new Date('22/11/2021');
+    dataChart.date = new Date('2021-01-03');
     dataChart.charts = [{
       schedulingCodeId: 5,
       startTime: '08:00 am',

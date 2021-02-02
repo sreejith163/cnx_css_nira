@@ -11,6 +11,7 @@ import { SchedulingCodeQueryParams } from '../../../../system-admin/models/sched
 import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
 import { SchedulingCode } from '../../../../system-admin/models/scheduling-code.model';
 import { Constants } from 'src/app/shared/util/constants.util';
+import { WeekDay } from '@angular/common';
 
 @Component({
   selector: 'app-activity-logs',
@@ -36,8 +37,11 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   pageSize = 5;
   totalRecord: number;
 
-  paginationSize = Constants.schedulingPaginationSize;
+  weekDay = WeekDay;
+  paginationSize = Constants.paginationSize;
 
+  columnList = ['Employee Id', 'Day', 'Time Stamp', 'Executed By', 'Origin', 'Status'];
+  hiddenColumnList = [];
   openTimes: Array<any>;
   activityLogsData = [];
   schedulingCodes: SchedulingCode[] = [];
@@ -67,6 +71,33 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
         subscription.unsubscribe();
       }
     });
+  }
+
+  getDateInStringFormat(timeStamp: any): string {
+    if (!timeStamp) {
+      return undefined;
+    }
+
+    // const date = new Date(timeStamp.year, timeStamp.month - 1, timeStamp.day, 0, 0, 0, 0);
+    return timeStamp.toDateString();
+  }
+
+  hasColumnHidden(column: string) {
+    return this.hiddenColumnList?.findIndex(x => x === column) === -1;
+  }
+
+  hasHiddenColumnSelected(column: string) {
+    return this.hiddenColumnList?.findIndex(x => x === column) !== -1;
+  }
+
+  onCheckColumnsToHide(e) {
+    if (e.target.checked) {
+      const item = e.target.value;
+      this.hiddenColumnList.push(item);
+    } else {
+      const index = this.hiddenColumnList.findIndex(x => x === e.target.value);
+      this.hiddenColumnList.splice(index, 1);
+    }
   }
 
   unifiedToNative(unified: string) {
@@ -142,7 +173,7 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
     agentSchedulesQueryParams.pageSize = this.pageSize;
     agentSchedulesQueryParams.searchKeyword = this.searchKeyword ?? '';
     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
-    agentSchedulesQueryParams.fields =  undefined;
+    agentSchedulesQueryParams.fields = undefined;
 
     return agentSchedulesQueryParams;
   }
@@ -154,6 +185,7 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
     this.getActivityLogsSubscription = this.activityLogService.getActivityLogs(queryParams)
       .subscribe((response) => {
         this.activityLogsData = response;
+        this.totalRecord = response.length;
         // let headerPaginationValues = new HeaderPagination();
         // headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
         // this.totalSchedulingRecord = headerPaginationValues.totalCount;

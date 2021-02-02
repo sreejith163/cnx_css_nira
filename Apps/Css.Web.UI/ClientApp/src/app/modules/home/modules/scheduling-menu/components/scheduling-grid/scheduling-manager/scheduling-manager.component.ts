@@ -296,15 +296,18 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   getAgentHireDate() {
-    let value;
-    for (const item of this.agentInfo?.agentData) {
-      if (item?.group?.description === 'Hire Date') {
-        value = item?.group?.value;
-        break;
+    if (this.agentInfo?.agentData.length > 0) {
+      let value;
+      for (const item of this.agentInfo?.agentData) {
+        if (item?.group?.description === 'Hire Date') {
+          value = item?.group?.value;
+          break;
+        }
       }
-    }
 
-    return value;
+      return value;
+    }
+    return '';
 
   }
 

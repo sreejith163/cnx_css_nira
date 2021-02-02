@@ -16,7 +16,7 @@
           <p>{{ 'Agent' | translate }}</p>:
           <b><span>3018383 John Alexander</span></b>
           <b><span class="agent">Monday</span></b>
-          <b><span  class="agent">12/03/21</span></b>
+          <b><span class="agent">12/03/21</span></b>
         </div>
       </div>
       <div class="row col-md-12 m-t-6">
@@ -37,7 +37,7 @@
           <div class="col-md-3 label-color p-t-10">
             <span>
               <label>{{ 'Total Revisions' | translate }}:</label>
-              <b>{{totalRevisions}}</b>
+              <b>{{totalRecord}}</b>
             </span>
           </div>
         </div>
@@ -52,8 +52,23 @@
           </div>
         </div>
         <div class="col-md-2">
-          <button class="btn btn-secondary icon float-left" type="button">
+          <button class="btn btn-secondary icon float-left" type="button" [ngbPopover]="popContent"
+            [popoverTitle]="popTitle" [placement]="'left'" container="body" [autoClose]="'outside'">
             <i class="fa fa-sort-down"></i>
+            <ng-template #popContent>
+              <div class="form-group clearfix margin-b-05-rem" *ngFor="let x of this.columnList; let i = index">
+                <div class="icheck-primary d-inline">
+                  <input type="checkbox" id="{{ x }}" [value]="x" [checked]="hasHiddenColumnSelected(x)"
+                    (change)="onCheckColumnsToHide($event)">
+                  <label for="{{ x }}">
+                    {{ x | translate }}
+                  </label>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #popTitle>
+              {{ 'Select_columns_to_hide' | translate }}
+            </ng-template>
           </button>
           <button class="btn btn-secondary icon float-right" type="button">
             <i class="fa fa-download"></i>
@@ -66,34 +81,34 @@
           <table class="jsgrid-table table" id="schedulingActivityTable">
             <thead>
               <tr class="jsgrid-header-row">
-                <th class="sortable-field" (click)="sort('employeeId', sortBy)">
+                <th *ngIf="hasColumnHidden('Employee Id')" class="sortable-field" (click)="sort('employeeId', sortBy)">
                   {{ 'Employee_id' | translate }}
                   <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
                   <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                     [class.fa-sort-up]="sortBy === 'asc'">
                   </i>
                 </th>
-                <th class="sortable-field" (click)="sort('day', sortBy)">
+                <th *ngIf="hasColumnHidden('Day')" class="sortable-field" (click)="sort('day', sortBy)">
                   {{ 'Day' | translate }}
                   <i *ngIf="orderBy !== 'day'" class="fa fa-sort"></i>
                   <i id="sortIcon" *ngIf="orderBy === 'day'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                     [class.fa-sort-up]="sortBy === 'asc'">
                   </i>
                 </th>
-                <th class="sortable-field">
+                <th *ngIf="hasColumnHidden('Time Stamp')" class="sortable-field">
                   {{ 'Time Stamp' | translate }}
                 </th>
-                <th class="sortable-field">
+                <th *ngIf="hasColumnHidden('Executed By')" class="sortable-field">
                   {{ 'Executed By' | translate }}
                 </th>
-                <th class="sortable-field" (click)="sort('origin', sortBy)">
+                <th *ngIf="hasColumnHidden('Origin')" class="sortable-field" (click)="sort('origin', sortBy)">
                   {{ 'Origin' | translate }}
                   <i *ngIf="orderBy !== 'origin'" class="fa fa-sort"></i>
                   <i id="sortIcon" *ngIf="orderBy === 'origin'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                     [class.fa-sort-up]="sortBy === 'asc'">
                   </i>
                 </th>
-                <th class="sortable-field" (click)="sort('status', sortBy)">
+                <th *ngIf="hasColumnHidden('Status')" class="sortable-field" (click)="sort('status', sortBy)">
                   {{ 'Status' | translate }}
                   <i *ngIf="orderBy !== 'status'" class="fa fa-sort"></i>
                   <i id="sortIcon" *ngIf="orderBy === 'status'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
@@ -121,33 +136,33 @@
                 <td colspan="25">
                   {{ 'No records found' | translate }}</td>
               </tr>
-              <tr class="jsgrid-row user-select-none" *ngFor="let el of activityLogsData; let i = index" >
-                <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
-                <td class="jsgrid-cell-day">
-                  <span ngbTooltip="{{ el.day }}">
-                    {{el.day | truncate: { sliceStart: 0, sliceEnd:
+              <tr class="jsgrid-row user-select-none" *ngFor="let el of activityLogsData; let i = index">
+                <td *ngIf="hasColumnHidden('Employee Id')" class="jsgrid-cell-emp">{{el.employeeId}}</td>
+                <td *ngIf="hasColumnHidden('Day')" class="jsgrid-cell-day">
+                  <span ngbTooltip="{{ weekDay[el.day] }}">
+                    {{weekDay[el.day] | truncate: { sliceStart: 0, sliceEnd:
                     characterSplice, append: '...' } }}
                   </span>
                 </td>
-                <td class="jsgrid-cell-time-stamp">
-                  <span ngbTooltip="{{ el.timeStamp }}">
-                    {{el.timeStamp | truncate: { sliceStart: 0, sliceEnd:
+                <td *ngIf="hasColumnHidden('Time Stamp')" class="jsgrid-cell-time-stamp">
+                  <span ngbTooltip="{{ getDateInStringFormat(el.timeStamp) }}">
+                    {{getDateInStringFormat(el.timeStamp) | truncate: { sliceStart: 0, sliceEnd:
                     characterSplice, append: '...' } }}
                   </span>
                 </td>
-                <td class="jsgrid-cell-executedBy">
+                <td *ngIf="hasColumnHidden('Executed By')" class="jsgrid-cell-executedBy">
                   <span ngbTooltip="{{ el.executedBy }}">
                     {{el.executedBy | truncate: { sliceStart: 0, sliceEnd:
                     characterSplice, append: '...' } }}
                   </span>
                 </td>
-                <td class="jsgrid-cell-origin">
+                <td *ngIf="hasColumnHidden('Origin')" class="jsgrid-cell-origin">
                   <span ngbTooltip="{{ el.origin }}">
                     {{el.origin | truncate: { sliceStart: 0, sliceEnd:
                     characterSplice, append: '...' } }}
                   </span>
                 </td>
-                <td class="jsgrid-cell-status">
+                <td *ngIf="hasColumnHidden('Status')" class="jsgrid-cell-status">
                   <span ngbTooltip="{{ el.status }}">
                     {{el.status | truncate: { sliceStart: 0, sliceEnd:
                     characterSplice, append: '...' } }}
@@ -173,8 +188,8 @@
         <div class="col-md-12 d-flex justify-content-end mt-3">
           <nav aria-label="Page navigation example">
             <ul class="pagination p-0 float-right">
-              <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalRecord"
-                (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
+              <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalRecord" (pageChange)="changePage($event)"
+                [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
               </ngb-pagination>
               <select class="form-control" (change)="changePageSize($event.target.value)">
                 <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
