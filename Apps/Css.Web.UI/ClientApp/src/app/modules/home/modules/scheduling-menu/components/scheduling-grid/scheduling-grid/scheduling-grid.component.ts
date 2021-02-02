@@ -7,7 +7,6 @@ import { Constants } from 'src/app/shared/util/constants.util';
 import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
-import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
@@ -30,8 +29,6 @@ import { ExcelService } from 'src/app/shared/services/excel.service';
 import * as $ from 'jquery';
 import { ImportScheduleComponent } from '../import-schedule/import-schedule.component';
 import { ExcelData } from '../../../models/excel-data.model';
-import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
-import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { SchedulingExcelExportData } from '../../../constants/scheduling-excel-export-data';
 import { CopyScheduleComponent } from '../copy-schedule/copy-schedule.component';
 import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
@@ -41,10 +38,7 @@ import { SchedulingAgents } from '../../../models/scheduling-agents.model';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { SortingType } from '../../../enums/sorting-type.enum';
 import { SchedulingMangerExcelExportData } from '../../../constants/scheduling-manager-excel-export-data';
-import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manager-chart.model';
 import { TranslateService } from '@ngx-translate/core';
-import { AgentInfo } from '../../../models/agent-info.model';
-import { AgentChartResponse } from '../../../models/agent-chart-response.model';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -115,7 +109,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   schedulingGridData: AgentScheduleGridResponse;
   paginationSize = Constants.schedulingPaginationSize;
   schedulingIntervals = Constants.schedulingIntervals;
-  sortType = SortingType;
 
   openTimes: Array<any>;
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
@@ -479,6 +472,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       this.totalSchedulingGridData = [];
       this.totalSchedulingRecord = undefined;
     } else if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
+      this.refreshMangerTab = false;
       this.startDate = this.today;
       this.loadAgentSchedules();
       this.selectedGrid = null;
