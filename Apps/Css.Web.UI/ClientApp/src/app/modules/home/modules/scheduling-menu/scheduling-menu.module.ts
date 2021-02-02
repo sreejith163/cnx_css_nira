@@ -14,6 +14,7 @@ import { ImportScheduleComponent } from './components/scheduling-grid/import-sch
 import { CopyScheduleComponent } from './components/scheduling-grid/copy-schedule/copy-schedule.component';
 import { SchedulingManagerComponent } from './components/scheduling-grid/scheduling-manager/scheduling-manager.component';
 import { ActivityLogsComponent } from './components/scheduling-grid/activity-logs/activity-logs.component';
+import { ActivityLogsService } from './services/activity-logs.service';
 
 
 
@@ -27,7 +28,7 @@ const components =
     SchedulingManagerComponent,
     ActivityLogsComponent,
     HorizontalScrollPipe];
-const providers = [AgentAdminService, AgentSchedulesService];
+const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService];
 
 @NgModule({
   declarations: components,

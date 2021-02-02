@@ -404,10 +404,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   private loadAgentScheduleManger() {
     const queryParams = this.getQueryParams('id,employeeId,firstName,lastName');
     queryParams.skipPageSize = true;
-    this.iconDescription = undefined;
-    this.startTimeFilter = undefined;
-    this.endTimeFilter = undefined;
-    this.iconCode = undefined;
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
     this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)

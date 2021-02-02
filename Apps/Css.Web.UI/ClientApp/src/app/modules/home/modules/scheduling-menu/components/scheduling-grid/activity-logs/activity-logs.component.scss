@@ -43,14 +43,62 @@ input.manager {
 }
 
 .icon {
-  padding: 5px;
-  background-color: darkgray;
-  height: 30px;
-  width: 30px;
-  text-align: center;
-  color: white;
+  height: 42px;
 }
 
 .m-l-10 {
   margin-left: 10px;
+}
+
+input.form-control {
+  height: calc(2.25rem + 7px);
+}
+
+.morning {
+  background-color: white;
+}
+
+.night {
+  background-color: darkgrey;
+  color: white;
+}
+
+.jsgrid-grid-body {
+  padding-right: 8px;
+  padding-left: 13px
+}
+
+.jsgrid-grid-header {
+  overflow-x: auto;
+  overflow-y: auto;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+}
+
+.jsgrid-cell {
+  cursor: pointer;
+  background-color: white;
+  max-height: 40px;
+  max-width: 40px;
+}
+
+.jsgrid-cell:hover {
+  cursor: pointer;
+  background-color: lightgrey;
+  height: 40px;
+  width: 40px;
+}
+
+.jsgrid-header-cell {
+  cursor: pointer;
+  height: 40px;
+  width: 40px;
+}
+
+.valid-record {
+  color: #797676;
+  font-size: 16px;
+  padding: 6px;
+  text-align: center;
 }

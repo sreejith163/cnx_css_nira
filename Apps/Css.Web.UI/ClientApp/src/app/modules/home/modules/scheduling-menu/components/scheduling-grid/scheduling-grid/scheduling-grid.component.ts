@@ -411,6 +411,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   openActivityLogs(index: number) {
     this.getModalPopup(ActivityLogsComponent, 'xl');
+    this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.Scheduling;
   }
 
   openImportSchedule() {
