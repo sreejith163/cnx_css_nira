@@ -9,7 +9,7 @@ export const environment = {
     authAppToken: 'w6VEeeJ9CdAuCWh8ORi702Es400EXcMnVf1'
   },
   services: {
-    gatewayService: 'https://localhost:44397/api'
+    gatewayService: 'https://localhost:5001/api'
   },
   settings: {
     applicationUrl: 'http://localhost:4200',
@@ -17,6 +17,15 @@ export const environment = {
     cookiePath: '/'
   }
 };
+
+// UAT to be deleted after testing
+export class uatenvironment {
+  public static UAT = false;
+  public static uatUsername = null;
+  public static uatPassword = null;
+  public static uatEmployeeId = null;
+}
+
 
 /*
  * For easier debugging in development mode, you can import the following file
