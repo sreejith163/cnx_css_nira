@@ -140,11 +140,17 @@
 </div>
 <div class="row padding-10">
   <div class="col-md-12 padding-12 row">
-    <div class="col-md-11 m-b-5">
+    <div class="col-md-2 m-b-5">
       <button class="btn btn-default copy-button m-l-10" id="btn_copy_schedule" (click)="openCopySchedule(selectedRow)">
         <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
       </button>
     </div>
+    <div class="col-md-2 m-b-5">
+      <button class="btn btn-primary btn-activity" id="btn_activity_logs" (click)="openActivityLogs(selectedRow)">
+        {{ 'Activity Logs' | translate }}
+      </button>
+    </div>
+    <div class="col-md-7 m-b-5"></div>
     <div class="col-md-1 row">
       <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" id="btn_save" (click)="save()">
         <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}

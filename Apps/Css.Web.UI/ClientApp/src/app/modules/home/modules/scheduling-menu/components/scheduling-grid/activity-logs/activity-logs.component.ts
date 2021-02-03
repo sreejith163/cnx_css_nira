@@ -40,8 +40,8 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   weekDay = WeekDay;
   paginationSize = Constants.paginationSize;
 
-  columnList = ['Employee Id', 'Day', 'Time Stamp', 'Executed By', 'Origin', 'Status'];
-  hiddenColumnList = [];
+  columnList: Array<string> = [];
+  hiddenColumnList: Array<string> = [];
   openTimes: Array<any>;
   activityLogsData = [];
   schedulingCodes: SchedulingCode[] = [];
@@ -60,6 +60,11 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    if (this.agentScheduleType === AgentScheduleType.Scheduling) {
+      this.columnList = ['Employee Id', 'Day', 'Time Stamp', 'Executed By', 'Origin', 'Status'];
+    } else {
+      this.columnList = ['Employee Id', 'Time Stamp', 'Executed By', 'Origin', 'Status'];
+    }
     this.openTimes = this.getOpenTimes();
     this.loadSchedulingCodes();
     this.loadActivityLogs();
