@@ -12,10 +12,10 @@ import { LanguagePreference } from 'src/app/shared/models/language-preference.mo
   styleUrls: ['./agent-schedule.component.scss']
 })
 export class AgentScheduleComponent implements OnInit {
+
   currentLanguage: string;
   LoggedUser;
   subscriptions: ISubscription[] = [];
-
 
   getTranslationSubscription: ISubscription;
 
@@ -24,11 +24,11 @@ export class AgentScheduleComponent implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthService,
     private languagePreferenceService: LanguagePreferenceService
-  ) {
+    ) {
 
-    this.LoggedUser = this.authService.getLoggedUserInfo();
+      this.LoggedUser = this.authService.getLoggedUserInfo();
 
-  }
+     }
 
   ngOnInit() {
     this.preLoadTranslations();
@@ -52,12 +52,12 @@ export class AgentScheduleComponent implements OnInit {
     this.subscriptions.push(this.getTranslationSubscription);
   }
 
-  private preLoadTranslations() {
+  private preLoadTranslations(){
     // Preload the user language //
     const browserLang = this.route.snapshot.data.languagePreference.languagePreference;
     this.currentLanguage = browserLang ? browserLang : 'en';
     this.translate.use(this.currentLanguage);
-  }
+}
 
   private loadTranslations() {
     // load the user language from api //

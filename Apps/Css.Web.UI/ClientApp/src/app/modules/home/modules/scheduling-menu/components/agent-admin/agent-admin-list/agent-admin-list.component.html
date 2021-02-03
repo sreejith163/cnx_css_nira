@@ -123,7 +123,7 @@
                                 </td>
                                 <td>{{el.employeeId}}</td>
                                 <td>
-                                    <div class="d-flex justify-content-between" [class.display-inline-contents]="el.sso.length > characterSplice">
+                                    <div *ngIf="el.sso != null || el.sso != undefined " class="d-flex justify-content-between" [class.display-inline-contents]="el.sso.length > characterSplice">
                                         <span ngbTooltip="{{ el.sso }}">{{ el.sso | truncate: { sliceStart: 0,
                                             sliceEnd: characterSplice, append: '...' } }}</span>
                                         <span class="padding-left-10 float-right">
