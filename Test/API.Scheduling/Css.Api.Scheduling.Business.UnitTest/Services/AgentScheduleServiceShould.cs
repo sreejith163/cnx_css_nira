@@ -7,7 +7,6 @@ using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Business.UnitTest.Mocks;
 using Css.Api.Scheduling.Models.Profiles.AgentAdmin;
 using Css.Api.Scheduling.Models.Profiles.AgentSchedule;
-using Css.Api.Scheduling.Business;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Css.Api.Core.DataAccess.Repository.UnitOfWork.Interfaces;
