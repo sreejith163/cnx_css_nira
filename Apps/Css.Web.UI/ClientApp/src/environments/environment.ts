@@ -18,15 +18,6 @@ export const environment = {
   }
 };
 
-// UAT to be deleted after testing
-export class uatenvironment {
-  public static UAT = false;
-  public static uatUsername = null;
-  public static uatPassword = null;
-  public static uatEmployeeId = null;
-}
-
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

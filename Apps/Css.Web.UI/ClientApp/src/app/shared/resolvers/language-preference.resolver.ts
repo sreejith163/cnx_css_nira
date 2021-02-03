@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
-import { environment, uatenvironment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 import { LanguagePreferenceService } from '../services/language-preference.service';
 import jwt_decode from 'jwt-decode';
 import { LoggedUserInfo } from 'src/app/core/models/logged-user-info.model';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Injectable()
 export class LanguagePreferenceResolver implements Resolve<any> {
@@ -14,7 +15,9 @@ export class LanguagePreferenceResolver implements Resolve<any> {
 
     constructor(
         private languagePreferenceService: LanguagePreferenceService,
-        private cookieService: CookieService) { }
+        private cookieService: CookieService,
+        private authService: AuthService
+    ) { }
 
     isLoggedIn() {
         return this.cookieService.get(environment.settings.sessionName) ?? false;
@@ -22,15 +25,11 @@ export class LanguagePreferenceResolver implements Resolve<any> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
         any | Observable<any> | Promise<any> {
-        uatenvironment.UAT = Boolean(this.cookieService.get('UAT'));
-        if (uatenvironment.UAT) {
+        if (this.authService.currentUserUATValue) {
             const user = new LoggedUserInfo();
-            uatenvironment.uatUsername = this.cookieService.get('uatUsername');
-            uatenvironment.uatEmployeeId = this.cookieService.get('uatEmployeeId');
-            user.uid = uatenvironment.uatEmployeeId;
-            user.employeeId = uatenvironment.uatEmployeeId;
-            user.displayName = uatenvironment.uatUsername;
-
+            user.uid = this.cookieService.get('uid');
+            user.employeeId = this.cookieService.get('employeeId');
+            user.displayName = this.cookieService.get('displayName');
             const languagePref = this.languagePreferenceService.getLanguagePreference(user.employeeId);
 
             return languagePref;
