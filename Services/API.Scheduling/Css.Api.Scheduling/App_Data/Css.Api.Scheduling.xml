@@ -155,6 +155,14 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.GetAgentMySchedule(System.Int32,Css.Api.Scheduling.Models.DTO.Request.MySchedule.MyScheduleQueryParameter)">
+            <summary>Gets the agent my schedule.</summary>
+            <param name="agentEmployeeId">The agent employee identifier.</param>
+            <param name="myScheduleQueryParameter">My schedule query parameter.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.EntityHierarchyController">
             <summary>controller for entity hierarchy</summary>
         </member>

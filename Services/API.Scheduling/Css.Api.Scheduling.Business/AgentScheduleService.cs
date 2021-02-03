@@ -5,12 +5,15 @@ using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Response.MySchedule;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -253,6 +256,80 @@ namespace Css.Api.Scheduling.Business
             await _uow.Commit();
 
             return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>Gets the agent my schedule.</summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<CSSResponse> GetAgentMySchedule(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter)
+        {
+            AgentMyScheduleDetailsDTO agentMyScheduleDetailsDTO;
+
+            var agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            if (agentSchedule.DateFrom == null || agentSchedule.DateTo == null
+                || agentSchedule.AgentScheduleCharts == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            agentMyScheduleDetailsDTO = new AgentMyScheduleDetailsDTO();
+            agentMyScheduleDetailsDTO.Id = agentSchedule.Id.ToString();
+            agentMyScheduleDetailsDTO.AgentMySchedules = new List<AgentMyScheduleDay>();
+
+            foreach (DateTime date in EachDay(myScheduleQueryParameter.StartDate, myScheduleQueryParameter.EndDate))
+            {
+                if (date.Date >= agentSchedule.DateFrom.Value.Date
+                    && date.Date.AddDays(1) <= agentSchedule.DateTo.Value.Date.AddDays(1))
+                {
+                    bool isChartAvailableForDay =
+                        agentSchedule.AgentScheduleCharts.Any(chart => chart.Day == (int)date.DayOfWeek);
+                    if (isChartAvailableForDay)
+                    {
+                        var chartsOfDay = agentSchedule.AgentScheduleCharts
+                            .Where(chart => chart.Day == (int)date.DayOfWeek)
+                            .Select(chart => chart.Charts)
+                            .FirstOrDefault();
+
+                        var firstStartTime = chartsOfDay.Min(chart => DateTime.
+                        ParseExact(chart.StartTime, "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
+                        var lastEndTime = chartsOfDay.Max(chart => DateTime.
+                        ParseExact(chart.EndTime, "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
+
+                        AgentMyScheduleDay schedule = new AgentMyScheduleDay
+                        {
+                            Day = (int)date.DayOfWeek,
+                            Date = date,
+                            Charts = chartsOfDay,
+                            FirstStartTime = firstStartTime,
+                            LastEndTime = lastEndTime
+                        };
+
+                        agentMyScheduleDetailsDTO.AgentMySchedules.Add(schedule);
+                    }
+                }
+            }
+
+            return new CSSResponse(agentMyScheduleDetailsDTO, HttpStatusCode.OK);
+        }
+
+        /// <summary>Eaches the day.</summary>
+        /// <param name="from">From.</param>
+        /// <param name="to">To.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        private IEnumerable<DateTime> EachDay(DateTime from, DateTime to)
+        {
+            for (var day = from.Date; day.Date <= to.Date; day = day.AddDays(1))
+                yield return day;
         }
 
         /// <summary>
