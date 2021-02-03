@@ -28,9 +28,6 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
-        /// <value>
-        /// The agent scheduling group identifier.
-        /// </value>
         public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>

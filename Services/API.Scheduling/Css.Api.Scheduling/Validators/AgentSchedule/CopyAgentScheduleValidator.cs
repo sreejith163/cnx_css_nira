@@ -15,6 +15,7 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         {
             RuleFor(x => x.AgentSchedulingGroupId).NotEmpty();
             RuleFor(x => x.AgentScheduleType).IsInEnum();
+            RuleFor(x => x.ActivityOrigin).IsInEnum();
             RuleFor(x => x.ModifiedBy).NotEmpty();
         }
     }
