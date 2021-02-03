@@ -357,15 +357,21 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    this.searchText = this.searchKeyword;
-    this.loadAgentSchedules();
+    if (this.agentSchedulingGroupId) {
+      this.searchText = this.searchKeyword;
+      if (this.tabIndex === AgentScheduleType.Scheduling) {
+        this.loadAgentSchedules();
+      }
+    }
   }
 
   sort(columnName: string, sortBy: string) {
-    this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
-    this.orderBy = columnName;
+    if (this.agentSchedulingGroupId) {
+      this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
+      this.orderBy = columnName;
 
-    this.loadAgentSchedules();
+      this.loadAgentSchedules();
+    }
   }
 
   onSelectStartDate(date: NgbDate) {
@@ -373,25 +379,25 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     const day = this.startDate.day < 10 ? '0' + this.startDate.day : this.startDate.day;
     const month = this.startDate.month < 10 ? '0' + this.startDate.month : this.startDate.month;
     this.currentDate = this.startDate.year + '-' + month + '-' + day;
-    if (this.tabIndex === AgentScheduleType.Scheduling) {
+    if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
       this.loadAgentSchedules();
     }
   }
 
   setStartDateAsToday() {
-    this.startDate = this.today;
-    const day = this.startDate.day < 10 ? '0' + this.startDate.day : this.startDate.day;
-    const month = this.startDate.month < 10 ? '0' + this.startDate.month : this.startDate.month;
-    this.currentDate = this.startDate.year + '-' + month + '-' + day;
-    if (this.tabIndex === AgentScheduleType.Scheduling) {
-      this.loadAgentSchedules();
-    }
+      this.startDate = this.today;
+      const day = this.startDate.day < 10 ? '0' + this.startDate.day : this.startDate.day;
+      const month = this.startDate.month < 10 ? '0' + this.startDate.month : this.startDate.month;
+      this.currentDate = this.startDate.year + '-' + month + '-' + day;
+      if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
+        this.loadAgentSchedules();
+      }
   }
 
   clearStartDate() {
     this.startDate = undefined;
     this.currentDate = undefined;
-    if (this.tabIndex === AgentScheduleType.Scheduling) {
+    if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
       this.loadAgentSchedules();
     }
   }
@@ -467,10 +473,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.tabIndex = tabIndex;
     this.openTimes = this.getOpenTimes();
     if (this.tabIndex === AgentScheduleType.SchedulingManager && this.agentSchedulingGroupId) {
-      this.refreshMangerTab = true;
       this.setStartDateAsToday();
-      this.totalSchedulingGridData = [];
-      this.totalSchedulingRecord = undefined;
     } else if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
       this.refreshMangerTab = false;
       this.startDate = this.today;

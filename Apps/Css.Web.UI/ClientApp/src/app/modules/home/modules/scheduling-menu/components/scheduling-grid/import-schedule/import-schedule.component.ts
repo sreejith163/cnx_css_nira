@@ -174,9 +174,18 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         !importRecord.every(x => Date.parse(x?.dateFrom) === Date.parse(importRecord[0]?.dateFrom) &&
           Date.parse(x?.dateTo) === Date.parse(importRecord[0]?.dateTo))) {
         return true;
-      } else if (this.agentScheduleType === AgentScheduleType.SchedulingManager &&
-        !this.jsonData.every(x => x.Date === this.jsonData[0]?.Date)) {
-        return true;
+      } else if (this.agentScheduleType === AgentScheduleType.SchedulingManager) {
+        const date = this.jsonData[0]?.Date;
+        const year = date.split('/')[0];
+        const month = date.split('/')[1].split('/')[0];
+        const day = date.split(`${month}/`)[1];
+
+        if (year.length !== 4 || month.length !== 2 || day.length !== 2) {
+          return true;
+        }
+        if (!this.jsonData.every(x => x.Date === this.jsonData[0]?.Date)) {
+          return true;
+        }
       }
       for (const item of importRecord) {
         if (this.agentScheduleType === AgentScheduleType.Scheduling) {
@@ -259,7 +268,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private updateManagerChart(scheduleResponse: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[], hasMismatch?: boolean) {
     const model = this.getImportAgentManagerChartModel(scheduleResponse, schedulingCodes);
-    if (!this.validateInputRecord(model.agentScheduleManagers)) {
+    if (!this.validateInputRecord(model?.agentScheduleManagers)) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
       this.updateManagerChartSubscription = this.agentSchedulesService.updateScheduleManagerChart(model)

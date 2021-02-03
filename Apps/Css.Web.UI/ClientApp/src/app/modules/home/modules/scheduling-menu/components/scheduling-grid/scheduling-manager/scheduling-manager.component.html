@@ -141,7 +141,8 @@
 <div class="row padding-10">
   <div class="col-md-12 padding-12 row">
     <div class="col-md-11 m-b-5">
-      <button class="btn btn-default copy-button m-l-10" id="btn_copy_schedule" (click)="openCopySchedule(selectedRow)">
+      <button class="btn btn-default copy-button m-l-10" id="btn_copy_schedule"
+      [disabled]="!agentSchedulingGroupId" (click)="openCopySchedule(selectedRow)">
         <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
       </button>
     </div>
