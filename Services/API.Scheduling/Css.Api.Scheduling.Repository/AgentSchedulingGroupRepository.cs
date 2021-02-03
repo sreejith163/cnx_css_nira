@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Css.Api.Core.DataAccess.Repository.NoSQL;
+﻿using Css.Api.Core.DataAccess.Repository.NoSQL;
 using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
@@ -15,18 +14,11 @@ namespace Css.Api.Scheduling.Repository
 {
     public class AgentSchedulingGroupRepository : GenericRepository<AgentSchedulingGroup>, IAgentSchedulingGroupRepository
     {
-        /// <summary>
-        /// The mapper
-        /// </summary>
-        private readonly IMapper _mapper;
-
         /// <summary>Initializes a new instance of the <see cref="AgentSchedulingGroupRepository" /> class.</summary>
         /// <param name="mongoContext">The mongo context.</param>
         /// <param name="mapper">The mapper.</param>
-        public AgentSchedulingGroupRepository(IMongoContext mongoContext,
-            IMapper mapper) : base(mongoContext)
+        public AgentSchedulingGroupRepository(IMongoContext mongoContext) : base(mongoContext)
         {
-            _mapper = mapper;
         }
 
         /// <summary>

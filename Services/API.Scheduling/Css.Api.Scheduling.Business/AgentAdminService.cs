@@ -374,7 +374,7 @@ namespace Css.Api.Scheduling.Business
             var activityLogRequest = _mapper.Map<ActivityLog>(agentActivityLogDetails);
             activityLogRequest.ActivityType = ActivityType.AgentAdmin;
 
-            _activityLogRepository.CreateActivityLogs(activityLogRequest);
+            _activityLogRepository.CreateActivityLog(activityLogRequest);
 
             await _uow.Commit();
 

@@ -270,7 +270,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
                 FieldDetails = agentActivityLogDetails.FieldDetails
             };
 
-            new MockDataContext().CreateActivityLogs(activityLog);
+            new MockDataContext().CreateActivityLog(activityLog);
 
             return new CSSResponse(new AgentActivityLogIdDetails { AgentActivityLogId = activityLog.Id }, HttpStatusCode.Created);
         }

@@ -9,6 +9,8 @@ using MongoDB.Bson;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Css.Api.Scheduling.Models.Domain;
+using System;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {
@@ -156,11 +158,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
                 return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
             }
 
-            foreach (var importAgentScheduleChart in agentScheduleDetails.ImportAgentScheduleCharts)
-            {
-                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
-                new MockDataContext().ImportAgentScheduleChart(importAgentScheduleChart, modifiedUserDetails);
-            }
+            new MockDataContext().ImportAgentScheduleChart(agentScheduleDetails);
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }
@@ -182,6 +180,51 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             new MockDataContext().CopyAgentSchedules(agentSchedule, agentScheduleDetails);
 
             return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Gets the activity log for scheduling chart.
+        /// </summary>
+        /// <param name="scheduleCharts">The schedule charts.</param>
+        /// <param name="employeeId">The employee identifier.</param>
+        /// <param name="executedBy">The executed by.</param>
+        /// <param name="activityOrigin">The activity origin.</param>
+        /// <returns></returns>
+        private ActivityLog GetActivityLogForSchedulingChart(object scheduleCharts, int employeeId, string executedBy, ActivityOrigin activityOrigin)
+        {
+            var activityLog = new ActivityLog()
+            {
+                EmployeeId = employeeId,
+                ExecutedBy = executedBy,
+                TimeStamp = DateTimeOffset.UtcNow,
+                ActivityOrigin = activityOrigin,
+                ActivityStatus = ActivityStatus.Updated,
+                SchedulingFieldDetails = new SchedulingFieldDetails()
+            };
+
+            if (scheduleCharts is List<AgentScheduleChart>)
+            {
+                var charts = scheduleCharts as List<AgentScheduleChart>;
+                activityLog.ActivityType = ActivityType.SchedulingGrid;
+                activityLog.SchedulingFieldDetails.AgentScheduleCharts = charts;
+            }
+            else if (scheduleCharts is List<AgentScheduleManagerChart>)
+            {
+                var charts = scheduleCharts as List<AgentScheduleManagerChart>;
+                activityLog.ActivityType = ActivityType.SchedulingmanagerGrid;
+                activityLog.SchedulingFieldDetails.AgentScheduleManagerCharts = charts;
+            }
+            else if (scheduleCharts is AgentScheduleManagerChart)
+            {
+                var chart = scheduleCharts as AgentScheduleManagerChart;
+                activityLog.ActivityType = ActivityType.SchedulingmanagerGrid;
+                activityLog.SchedulingFieldDetails.AgentScheduleManagerCharts = new List<AgentScheduleManagerChart>
+                {
+                    chart
+                };
+            }
+
+            return activityLog;
         }
 
         /// <summary>
@@ -218,13 +261,10 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             {
 
                 var details = agentScheduleDetails as ImportAgentSchedule;
-                foreach (var importAgentScheduleChart in details.ImportAgentScheduleCharts)
+                foreach (var agentScheduleChart in details.AgentScheduleCharts)
                 {
-                    foreach (var agentScheduleChart in importAgentScheduleChart.AgentScheduleCharts)
-                    {
-                        var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
-                        codes.AddRange(scheduleCodes);
-                    }
+                    var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                    codes.AddRange(scheduleCodes);
                 }
             }
 

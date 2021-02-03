@@ -21,6 +21,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         public AgentScheduleType AgentScheduleType { get; set; }
 
         /// <summary>
+        /// Gets or sets the activity origin.
+        /// </summary>
+        public ActivityOrigin ActivityOrigin { get; set; }
+
+        /// <summary>
         /// Gets or sets the modified by.
         /// </summary>
         public string ModifiedBy { get; set; }

@@ -36,5 +36,10 @@ namespace Css.Api.Scheduling.Models.DTO.Response.ActivityLog
         /// Gets or sets the field details.
         /// </summary>
         public List<FieldDetail> FieldDetails { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scheduling field details.
+        /// </summary>
+        public SchedulingFieldDetails SchedulingFieldDetails { get; set; }
     }
 }

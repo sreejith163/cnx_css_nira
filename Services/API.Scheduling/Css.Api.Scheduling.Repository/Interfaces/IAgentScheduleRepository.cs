@@ -2,6 +2,7 @@
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.Enums;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -33,6 +34,20 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <returns></returns>
         Task<long> GetAgentScheduleCount(AgentScheduleIdDetails agentScheduleIdDetails);
+
+        /// <summary>
+        /// Gets the employee identifier by agent schedule identifier.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <returns></returns>
+        Task<int> GetEmployeeIdByAgentScheduleId(AgentScheduleIdDetails agentScheduleIdDetails);
+
+        /// <summary>
+        /// Gets the employee ids by agent schedule group identifier.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <returns></returns>
+        Task<List<int>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
 
         /// <summary>
         /// Gets the agent schedule by employee identifier.
@@ -88,8 +103,7 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// Imports the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        /// <param name="modifiedUserDetails">The modified user details.</param>
-        void ImportAgentScheduleChart(ImportAgentScheduleChart agentScheduleDetails, ModifiedUserDetails modifiedUserDetails);
+        void ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails);
 
         /// <summary>
         /// Copies the agent schedules.

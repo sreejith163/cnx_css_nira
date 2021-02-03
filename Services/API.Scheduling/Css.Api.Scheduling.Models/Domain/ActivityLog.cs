@@ -12,7 +12,7 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
-        public string EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the time stamp.
@@ -47,6 +47,6 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the scheduling field details.
         /// </summary>
-        public List<SchedulingFieldDetail> SchedulingFieldDetails { get; set; }
+        public SchedulingFieldDetails SchedulingFieldDetails { get; set; }
     }
 }

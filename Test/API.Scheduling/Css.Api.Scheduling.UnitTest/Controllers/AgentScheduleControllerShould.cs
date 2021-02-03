@@ -410,32 +410,27 @@ namespace Css.Api.Admin.UnitTest.Controllers
         /// <summary>
         /// Updates the agent schedule returns not found result.
         /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="schedulingCode">The scheduling code.</param>
+        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
         [Theory]
-        [InlineData(100, 100)]
-        [InlineData(101, 101)]
-        public async void ImportAgentScheduleChart_ReturnsNotFoundResult(int schedulingCode, int employeeId)
+        [InlineData(100, 1)]
+        [InlineData(101, 2)]
+        public async void ImportAgentScheduleChart_ReturnsNotFoundResult(int schedulingCode, int agentSchedulingGroupId)
         {
             ImportAgentSchedule importAgentSchedule = new ImportAgentSchedule
             {
-                ImportAgentScheduleCharts = new List<ImportAgentScheduleChart>
+                AgentScheduleCharts = new List<AgentScheduleChart>
                 {
-                    new ImportAgentScheduleChart
+                    new AgentScheduleChart
                     {
-                        EmployeeId = employeeId,
-                        AgentScheduleCharts = new List<AgentScheduleChart>
+                        Day = 1,
+                        Charts = new List<ScheduleChart>
                         {
-                            new AgentScheduleChart
-                            {
-                                Day = 1,
-                                Charts = new List<ScheduleChart>
-                                {
-                                    new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
-                                }
-                            }
+                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
                         }
                     }
                 },
+                AgentSchedulingGroupId = agentSchedulingGroupId,
                 ModifiedBy = "admin"
             };
 
@@ -451,32 +446,27 @@ namespace Css.Api.Admin.UnitTest.Controllers
         /// <summary>
         /// Updates the agent schedule returns no content result.
         /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="schedulingCode">The scheduling code.</param>
+        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
         [Theory]
         [InlineData(1, 1)]
         [InlineData(2, 2)]
-        public async void ImportAgentScheduleChart_ReturnsNoContentResultForSchedulingTab(int schedulingCode, int employeeId)
+        public async void ImportAgentScheduleChart_ReturnsNoContentResultForSchedulingTab(int schedulingCode, int agentSchedulingGroupId)
         {
             ImportAgentSchedule importAgentSchedule = new ImportAgentSchedule
             {
-                ImportAgentScheduleCharts = new List<ImportAgentScheduleChart>
+                AgentScheduleCharts = new List<AgentScheduleChart>
                 {
-                    new ImportAgentScheduleChart
+                    new AgentScheduleChart
                     {
-                        EmployeeId = employeeId,
-                        AgentScheduleCharts = new List<AgentScheduleChart>
+                        Day = 1,
+                        Charts = new List<ScheduleChart>
                         {
-                            new AgentScheduleChart
-                            {
-                                Day = 1,
-                                Charts = new List<ScheduleChart>
-                                {
-                                    new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
-                                }
-                            }
+                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
                         }
                     }
                 },
+                AgentSchedulingGroupId = agentSchedulingGroupId,
                 ModifiedBy = "admin"
             };
 

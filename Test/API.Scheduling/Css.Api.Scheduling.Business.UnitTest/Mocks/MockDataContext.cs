@@ -6,6 +6,7 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SchedulingCode;
@@ -68,9 +69,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         private readonly IQueryable<ActivityLog> activityLogsDB = new List<ActivityLog>()
         {
             new ActivityLog { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), ActivityOrigin=ActivityOrigin.CSS, ActivityStatus=ActivityStatus.Created,
-                ActivityType=ActivityType.AgentAdmin, ExecutedBy="admin", EmployeeId="1" },
+                ActivityType=ActivityType.AgentAdmin, ExecutedBy="admin", EmployeeId = 1 },
              new ActivityLog { Id = new ObjectId("5fe0b5c46a05416894c0718f"), ActivityOrigin=ActivityOrigin.CSS, ActivityStatus=ActivityStatus.Updated,
-                ActivityType=ActivityType.AgentAdmin, ExecutedBy="admin", EmployeeId="1"},
+                ActivityType=ActivityType.AgentAdmin, ExecutedBy="admin", EmployeeId = 1},
         }.AsQueryable();
 
 
@@ -207,7 +208,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         #endregion      
 
         #region Agent Admin
-
 
         /// <summary>
         /// Gets the agent admins.
@@ -366,11 +366,26 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
             return agentAdmins;
         }
 
-        /// <summary>Creates the activity logs.</summary>
+        #endregion
+
+        #region Activity Logs
+
+        /// <summary>
+        /// Creates the activity log.
+        /// </summary>
         /// <param name="activityLogRequest">The activity log request.</param>
-        public void CreateActivityLogs(ActivityLog activityLogRequest)
+        public void CreateActivityLog(ActivityLog activityLogRequest)
         {
             activityLogsDB.ToList().Add(activityLogRequest);
+        }
+
+        /// <summary>
+        /// Creates the activity logs.
+        /// </summary>
+        /// <param name="activityLogRequest">The activity log request.</param>
+        public void CreateActivityLogs(List<ActivityLog> activityLogRequest)
+        {
+            activityLogsDB.ToList().AddRange(activityLogRequest);
         }
 
         /// <summary>Gets the agent activity logs.</summary>
@@ -476,6 +491,27 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         }
 
         /// <summary>
+        /// Gets the employee identifier by agent schedule identifier.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <returns></returns>
+        public int GetEmployeeIdByAgentScheduleId(AgentScheduleIdDetails agentScheduleIdDetails)
+        {
+            return agentSchedulesDB.Where(x => x.IsDeleted == false && x.Id == new ObjectId(agentScheduleIdDetails.AgentScheduleId)).FirstOrDefault().EmployeeId;
+        }
+
+        /// <summary>
+        /// Gets the employee ids by agent schedule group identifier.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <returns></returns>
+        public List<int> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        {
+            return agentSchedulesDB.Where(x => x.IsDeleted == false && x.AgentSchedulingGroupId == agentSchedulingGroupIdDetails.AgentSchedulingGroupId)
+                .Select(x => x.EmployeeId).ToList();
+        }
+
+        /// <summary>
         /// Gets the agent schedule by employee identifier.
         /// </summary>
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
@@ -576,13 +612,12 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// Imports the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        /// <param name="modifiedUserDetails">The modified user details.</param>
-        public void ImportAgentScheduleChart(ImportAgentScheduleChart agentScheduleDetails, ModifiedUserDetails modifiedUserDetails)
+        public void ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails)
         {
-            var agentSchedule = agentSchedulesDB.Where(x => x.IsDeleted == false && x.EmployeeId == agentScheduleDetails.EmployeeId).FirstOrDefault();
+            var agentSchedule = agentSchedulesDB.Where(x => x.IsDeleted == false && x.AgentSchedulingGroupId == agentScheduleDetails.AgentSchedulingGroupId).FirstOrDefault();
             if (agentSchedule != null)
             {
-                agentSchedule.ModifiedBy = modifiedUserDetails.ModifiedBy;
+                agentSchedule.ModifiedBy = agentScheduleDetails.ModifiedBy;
                 agentSchedule.ModifiedDate = DateTime.UtcNow;
                 agentSchedule.AgentScheduleCharts = agentScheduleDetails.AgentScheduleCharts;
             }
