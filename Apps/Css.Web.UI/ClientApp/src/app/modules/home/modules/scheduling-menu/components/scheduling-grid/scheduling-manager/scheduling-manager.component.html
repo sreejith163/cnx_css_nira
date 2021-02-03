@@ -141,8 +141,8 @@
 <div class="row padding-10">
   <div class="col-md-12 padding-12 row">
     <div class="col-md-11 m-b-5">
-      <button class="btn btn-default copy-button m-l-10" id="btn_copy_schedule"
-      [disabled]="!agentSchedulingGroupId" (click)="openCopySchedule(selectedRow)">
+      <button class="btn btn-default copy-button m-l-10" id="btn_copy_schedule" [disabled]="!agentSchedulingGroupId"
+        (click)="openCopySchedule(selectedRow)">
         <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
       </button>
     </div>
@@ -154,83 +154,85 @@
   </div>
 </div>
 
-<!-- Agent Info -->
-<div class="row">
-  <div class="col-12 col-md-12">
-    <h3>{{ 'Agent Info' | translate }}</h3>
+<ng-container *ngIf="totalSchedulingGridData?.length">
+  <!-- Agent Info -->
+  <div class="row">
+    <div class="col-12 col-md-12">
+      <h3>{{ 'Agent Info' | translate }}</h3>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-12 col-md-12 d-flex">
-    <p>{{ 'Agent' | translate }}</p>:
-    <b><span>{{agentInfo?.employeeId}} {{agentInfo?.firstName}}, {{agentInfo?.lastName}}</span>
-    </b>
+  <div class="row">
+    <div class="col-12 col-md-12 d-flex">
+      <p>{{ 'Agent' | translate }}</p>:
+      <b><span>{{agentInfo?.employeeId}} {{agentInfo?.firstName}}, {{agentInfo?.lastName}}</span>
+      </b>
+    </div>
   </div>
-</div>
-<div class="col-md-12 bg-color">
-  <div class="col-md-6  d-flex  row">
-    <p class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative("1F600")}} Open Time 10:00 am - 11:00 pm</p>
-    <p class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative("1F349")}} Lunch 04:45 pm - 05:15 pm</p>
+  <div class="col-md-12 bg-color">
+    <div class="col-md-6  d-flex  row">
+      <p class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative("1F600")}} Open Time 10:00 am - 11:00 pm</p>
+      <p class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative("1F349")}} Lunch 04:45 pm - 05:15 pm</p>
+    </div>
   </div>
-</div>
-<div class="col-md-12 mt-2 table-responsive">
-  <div class="scrollable-table">
-    <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
-      <thead>
-        <tr>
-          <th class="sortable-field">
-            {{ 'Schedule Type' | translate }}
-          </th>
-          <th class="sortable-field">
-            {{ 'Supervisor' | translate }}
-          </th>
-          <th class="sortable-field">
-            {{ 'Employee ID' | translate }}
-          <th class="sortable-field">
-            {{ 'Hire_date' | translate }}
-          <th class="sortable-field">
-            {{ 'Production Date' | translate }}
-          </th>
-          <th class="sortable-field">
-            {{ 'Term Date' | translate }}
-          </th>
-          <th class="sortable-field">
-            {{ 'LOA Date' | translate }}
-          </th>
+  <div class="col-md-12 mt-2 table-responsive">
+    <div class="scrollable-table">
+      <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+        <thead>
+          <tr>
+            <th class="sortable-field">
+              {{ 'Schedule Type' | translate }}
+            </th>
+            <th class="sortable-field">
+              {{ 'Supervisor' | translate }}
+            </th>
+            <th class="sortable-field">
+              {{ 'Employee ID' | translate }}
+            <th class="sortable-field">
+              {{ 'Hire_date' | translate }}
+            <th class="sortable-field">
+              {{ 'Production Date' | translate }}
+            </th>
+            <th class="sortable-field">
+              {{ 'Term Date' | translate }}
+            </th>
+            <th class="sortable-field">
+              {{ 'LOA Date' | translate }}
+            </th>
 
-          <th class="sortable-field">
-            {{ 'Primary CT/Skill' | translate }}
-          </th>
-          <th class="sortable-field">
-            {{ 'Tour Band' | translate }}
-          </th>
-          <th class="sortable-field">
-            {{ 'Rank' | translate }}
-          </th>
-          <th class="sortable-field">
-            {{ 'Part Time/Full Time' | translate }}
-          </th>
-          <th class="sortable-field">
-            {{ 'Operations Manager' | translate }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="table-row">
-          <td>Accomodated</td>
-          <td>{{agentInfo?.supervisorName}}</td>
-          <td>{{agentInfo?.supervisorId}}</td>
-          <td>{{getAgentHireDate()}}</td>
-          <td>2020-12-14</td>
-          <td></td>
-          <td></td>
-          <td>DotCom</td>
-          <td>Band 1</td>
-          <td>38</td>
-          <td>FT</td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+            <th class="sortable-field">
+              {{ 'Primary CT/Skill' | translate }}
+            </th>
+            <th class="sortable-field">
+              {{ 'Tour Band' | translate }}
+            </th>
+            <th class="sortable-field">
+              {{ 'Rank' | translate }}
+            </th>
+            <th class="sortable-field">
+              {{ 'Part Time/Full Time' | translate }}
+            </th>
+            <th class="sortable-field">
+              {{ 'Operations Manager' | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-row">
+            <td>Accomodated</td>
+            <td>{{agentInfo?.supervisorName}}</td>
+            <td>{{agentInfo?.supervisorId}}</td>
+            <td>{{getAgentHireDate()}}</td>
+            <td>2020-12-14</td>
+            <td></td>
+            <td></td>
+            <td>DotCom</td>
+            <td>Band 1</td>
+            <td>38</td>
+            <td>FT</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
+</ng-container>
