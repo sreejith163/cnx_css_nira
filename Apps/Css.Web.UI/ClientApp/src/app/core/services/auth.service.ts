@@ -2,43 +2,59 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
 import { LoggedUserInfo } from '../models/logged-user-info.model';
-import { uatenvironment } from 'src/environments/environment';
 import jwt_decode from 'jwt-decode';
 import { EmployeeDetails } from 'src/app/modules/home/modules/system-admin/models/employee-details.model';
 import { PermissionsService } from 'src/app/modules/home/modules/system-admin/services/permissions.service';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+
+// temporary model for UAT
+export class UAT {
+  uid: string;
+  employeeId: string;
+  displayName: string;
+}
 
 @Injectable()
 export class AuthService {
+  private currentUserUATSubject: BehaviorSubject<UAT>;
 
   constructor(
-    private cookieService: CookieService
-  ) { }
+    private cookieService: CookieService,
+    private router: Router,
+  ) {
+
+    const userUAT: UAT = {
+      uid: this.cookieService.get('uid'),
+      employeeId: this.cookieService.get('employeeId'),
+      displayName: this.cookieService.get('displayName'),
+    };
+
+    // store the object on a subject
+    this.currentUserUATSubject = new BehaviorSubject<UAT>(userUAT);
+
+  }
+
+  public get currentUserUATValue(): UAT {
+    return this.currentUserUATSubject.value;
+  }
 
   isLoggedIn() {
-    console.log('islog?');
-    uatenvironment.UAT = Boolean (this.cookieService.get('UAT'));
-    if (uatenvironment.UAT){
-      console.log('islog');
+    if (this.currentUserUATValue) {
       return true;
-    }else{
+    } else {
       return this.cookieService.get(environment.settings.sessionName) ?? false;
     }
   }
 
   getLoggedUserInfo(): LoggedUserInfo {
-    console.log('try');
-    uatenvironment.UAT = Boolean (this.cookieService.get('UAT'));
-    console.log(uatenvironment.UAT);
-    if (uatenvironment.UAT){
-      uatenvironment.uatUsername = this.cookieService.get('uatUsername');
-      uatenvironment.uatEmployeeId = this.cookieService.get('uatEmployeeId');
+    if (this.currentUserUATValue) {
       const user = new LoggedUserInfo();
-      user.uid = uatenvironment.uatEmployeeId;
-      user.employeeId = uatenvironment.uatEmployeeId;
-      user.displayName = uatenvironment.uatUsername;
-      console.log('dumaan');
+      user.uid = this.cookieService.get('uid');
+      user.employeeId = this.cookieService.get('employeeId');
+      user.displayName = this.cookieService.get('displayName');
       return user;
-    }else{
+    } else {
       if (this.isLoggedIn()) {
         const token = this.cookieService.get(environment.settings.sessionName);
         const decodedToken = jwt_decode(token);
@@ -50,6 +66,14 @@ export class AuthService {
       }
     }
 
+  }
 
+  loginUAT(userUAT: UAT) {
+    // store the UAT details inside a cookie to persist uat session
+    this.cookieService.set('employeeId', userUAT.employeeId);
+    this.cookieService.set('uid', userUAT.uid);
+    this.cookieService.set('displayName', userUAT.displayName);
+
+    this.router.navigate(['home']);
   }
 }

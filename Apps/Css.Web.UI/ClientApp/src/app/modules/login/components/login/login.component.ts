@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { environment, uatenvironment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   FormBuilder,
@@ -8,8 +8,10 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { AuthService, UAT } from 'src/app/core/services/auth.service';
 import { CookieService } from 'ngx-cookie-service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 
 @Component({
   selector: 'app-login',
@@ -21,8 +23,10 @@ export class LoginComponent implements OnInit {
   public uatUsername: any;
   public uatPassword: any;
   uatLoginForm: FormGroup;
+  spinner = 'uatLoginSpinner';
 
   constructor(
+    private spinnerService: NgxSpinnerService,
     private cookieService: CookieService,
     private router: Router,
     private modalService: NgbModal,
@@ -59,13 +63,22 @@ export class LoginComponent implements OnInit {
   login_uat_test(){
     // redirect to home if permission exists
     if (this.checkUATCredentials(this.uatUsername, this.uatPassword)){
-      // where's the callback
-      uatenvironment.UAT = true;
-      this.cookieService.set('UAT', 'true');
-      this.cookieService.set('uatUsername', this.uatUsername);
-      this.cookieService.set('uatEmployeeId', this.convertUATUsername(this.uatUsername).toString());
-      this.modalService.dismissAll();
-      this.router.navigate(['home']);
+      this.spinnerService.show(this.spinner, SpinnerOptions);
+
+      const userUAT: UAT = {
+        uid: this.uatUsername,
+        employeeId: this.convertUATUsername(this.uatUsername).toString(),
+        displayName: this.uatUsername
+      };
+
+      // pass the UAT Object to the authService for handling
+      setTimeout(() => {
+        /** spinner ends after 2.5 seconds */
+        this.spinnerService.hide(this.spinner);
+        this.modalService.dismissAll();
+        this.authService.loginUAT(userUAT);
+      }, 2500);
+
     }else{
       console.log('invalid credentials');
     }

@@ -13,6 +13,7 @@
     </div>
     <!-- temporary for UAT -->
     <ng-template #content let-modal>
+      <ngx-spinner [name]="spinner"></ngx-spinner>
       <div class="modal-header">
         <h4 class="modal-title">UAT Testing Login</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
