@@ -16,7 +16,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 {
     public class MockAgentScheduleData
     {
-        List<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
+        readonly List<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
         {
             new SchedulingCode { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), SchedulingCodeId = 1, Name = "lunch", IsDeleted = false},
             new SchedulingCode { Id = new ObjectId("5fe0b5c46a05416894c0718f"), SchedulingCodeId = 2, Name = "lunch", IsDeleted = false},
@@ -158,7 +158,11 @@ namespace Css.Api.Scheduling.UnitTest.Mock
                 return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
             }
 
-            new MockDataContext().ImportAgentScheduleChart(agentScheduleDetails);
+            foreach (var importAgentScheduleChart in agentScheduleDetails.ImportAgentScheduleCharts)
+            {
+                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
+                new MockDataContext().ImportAgentScheduleChart(importAgentScheduleChart, modifiedUserDetails);
+            }
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }
@@ -227,7 +231,6 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             return activityLog;
         }
 
-        /// <summary>
         /// Determines whether [has valid scheduling codes] [the specified agent schedule details].
         /// </summary>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
@@ -261,10 +264,13 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             {
 
                 var details = agentScheduleDetails as ImportAgentSchedule;
-                foreach (var agentScheduleChart in details.AgentScheduleCharts)
+                foreach (var importAgentScheduleChart in details.ImportAgentScheduleCharts)
                 {
-                    var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
-                    codes.AddRange(scheduleCodes);
+                    foreach (var agentScheduleChart in importAgentScheduleChart.AgentScheduleCharts)
+                    {
+                        var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                        codes.AddRange(scheduleCodes);
+                    }
                 }
             }
 

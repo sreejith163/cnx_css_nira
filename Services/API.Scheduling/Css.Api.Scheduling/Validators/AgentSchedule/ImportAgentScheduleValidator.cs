@@ -15,10 +15,16 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         public ImportAgentScheduleValidator()
         {
             RuleFor(x => x.ModifiedBy).NotEmpty();
-            RuleFor(x => x.AgentSchedulingGroupId).NotEmpty();
             RuleFor(x => x.ActivityOrigin).IsInEnum();
-            RuleFor(x => x.AgentScheduleCharts).SetValidator(new ScheduleChartUniqueDaysCollectionValidator());
-            RuleForEach(x => x.AgentScheduleCharts).SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>());
+            RuleFor(x => x.ImportAgentScheduleCharts).NotNull();
+            RuleForEach(x => x.ImportAgentScheduleCharts)
+                .ChildRules(x => x.RuleFor(x => x.EmployeeId).NotEmpty());
+            RuleForEach(x => x.ImportAgentScheduleCharts)
+                .ChildRules(x => x.RuleFor(x => x.AgentScheduleCharts)
+                .SetValidator(new ScheduleChartUniqueDaysCollectionValidator()));
+            RuleForEach(x => x.ImportAgentScheduleCharts)
+                .ChildRules(x => x.RuleForEach(x => x.AgentScheduleCharts)
+                .SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>()));
         }
     }
 }

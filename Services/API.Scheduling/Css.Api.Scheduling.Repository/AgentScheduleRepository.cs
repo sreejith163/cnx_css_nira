@@ -265,14 +265,15 @@ namespace Css.Api.Scheduling.Repository
         /// Imports the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        public void ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails)
+        /// <param name="modifiedUserDetails">The modified user details.</param>
+        public void ImportAgentScheduleChart(ImportAgentScheduleChart agentScheduleDetails, ModifiedUserDetails modifiedUserDetails)
         {
             var query =
-                Builders<AgentSchedule>.Filter.Eq(i => i.AgentSchedulingGroupId, agentScheduleDetails.AgentSchedulingGroupId) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, agentScheduleDetails.EmployeeId) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
-                .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
+                .Set(x => x.ModifiedBy, modifiedUserDetails.ModifiedBy)
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow)
                 .Set(x => x.AgentScheduleCharts, agentScheduleDetails.AgentScheduleCharts);
 

@@ -499,32 +499,35 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// <summary>
         /// Imports the agent schedule chart for scheduling tab with not found for scheduling code.
         /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
         /// <param name="schedulingCode">The scheduling code.</param>
-        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
         [Theory]
-        [InlineData(100, 1)]
-        [InlineData(101, 2)]
-        public async void ImportAgentScheduleChartForSchedulingTabWithNotFoundForSchedulingCode(int schedulingCode, int agentSchedulingGroupId)
+        [InlineData(100, 100)]
+        [InlineData(101, 101)]
+        public async void ImportAgentScheduleChartForSchedulingTabWithNotFoundForSchedulingCode(int schedulingCode, int employeeId)
         {
             ImportAgentSchedule importAgentSchedule = new ImportAgentSchedule
             {
-                AgentScheduleCharts = new List<AgentScheduleChart>
+                ImportAgentScheduleCharts = new List<ImportAgentScheduleChart>
                 {
-                    new AgentScheduleChart
+                    new ImportAgentScheduleChart
                     {
-                        Day = 1,
-                        Charts = new List<ScheduleChart>
+                        EmployeeId = employeeId,
+                        AgentScheduleCharts = new List<AgentScheduleChart>
                         {
-                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
+                            new AgentScheduleChart
+                            {
+                                Day = 1,
+                                Charts = new List<ScheduleChart>
+                                {
+                                    new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
+                                }
+                            }
                         }
                     }
                 },
-                AgentSchedulingGroupId = agentSchedulingGroupId,
                 ModifiedBy = "admin"
             };
-
-            mockAgentScheduleRepository.Setup(mr => mr.GetEmployeeIdsByAgentScheduleGroupId(It.IsAny<AgentSchedulingGroupIdDetails>())).ReturnsAsync(
-                (AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails) => mockDataContext.GetEmployeeIdsByAgentScheduleGroupId(agentSchedulingGroupIdDetails));
 
             mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
                 (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
@@ -539,32 +542,34 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// <summary>
         /// Imports the agent schedule chart for scheduling tab.
         /// </summary>
-        /// <param name="schedulingCode">The scheduling code.</param>
-        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
         [Theory]
         [InlineData(1, 1)]
         [InlineData(2, 2)]
-        public async void ImportAgentScheduleChartForSchedulingTab(int schedulingCode, int agentSchedulingGroupId)
+        public async void ImportAgentScheduleChartForSchedulingTab(int schedulingCode, int employeeId)
         {
             ImportAgentSchedule importAgentSchedule = new ImportAgentSchedule
             {
-                AgentScheduleCharts = new List<AgentScheduleChart>
+                ImportAgentScheduleCharts = new List<ImportAgentScheduleChart>
                 {
-                    new AgentScheduleChart
+                    new ImportAgentScheduleChart
                     {
-                        Day = 1,
-                        Charts = new List<ScheduleChart>
+                        EmployeeId = employeeId,
+                        AgentScheduleCharts = new List<AgentScheduleChart>
                         {
-                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
+                            new AgentScheduleChart
+                            {
+                                Day = 1,
+                                Charts = new List<ScheduleChart>
+                                {
+                                    new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
+                                }
+                            }
                         }
                     }
                 },
-                AgentSchedulingGroupId = agentSchedulingGroupId,
                 ModifiedBy = "admin"
             };
-
-            mockAgentScheduleRepository.Setup(mr => mr.GetEmployeeIdsByAgentScheduleGroupId(It.IsAny<AgentSchedulingGroupIdDetails>())).ReturnsAsync(
-                (AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails) => mockDataContext.GetEmployeeIdsByAgentScheduleGroupId(agentSchedulingGroupIdDetails));
 
             mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
                 (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));

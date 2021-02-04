@@ -255,16 +255,14 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
             }
 
-            _agentScheduleRepository.ImportAgentScheduleChart(agentScheduleDetails);
-
-            var agentSchedulingGroupIdDetails = new AgentSchedulingGroupIdDetails { AgentSchedulingGroupId = agentScheduleDetails.AgentSchedulingGroupId };
-            var employeeIds = await _agentScheduleRepository.GetEmployeeIdsByAgentScheduleGroupId(agentSchedulingGroupIdDetails);
-
             var activityLogs = new List<ActivityLog>();
 
-            foreach (var employeeId in employeeIds)
+            foreach (var importAgentScheduleChart in agentScheduleDetails.ImportAgentScheduleCharts)
             {
-                var activityLog = GetActivityLogForSchedulingChart(agentScheduleDetails.AgentScheduleCharts, employeeId,
+                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
+                _agentScheduleRepository.ImportAgentScheduleChart(importAgentScheduleChart, modifiedUserDetails);
+
+                var activityLog = GetActivityLogForSchedulingChart(importAgentScheduleChart.AgentScheduleCharts, importAgentScheduleChart.EmployeeId,
                                                                    agentScheduleDetails.ModifiedBy, agentScheduleDetails.ActivityOrigin);
                 activityLogs.Add(activityLog);
             }
@@ -339,9 +337,11 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            agentMyScheduleDetailsDTO = new AgentMyScheduleDetailsDTO();
-            agentMyScheduleDetailsDTO.Id = agentSchedule.Id.ToString();
-            agentMyScheduleDetailsDTO.AgentMySchedules = new List<AgentMyScheduleDay>();
+            agentMyScheduleDetailsDTO = new AgentMyScheduleDetailsDTO
+            {
+                Id = agentSchedule.Id.ToString(),
+                AgentMySchedules = new List<AgentMyScheduleDay>()
+            };
 
             foreach (DateTime date in EachDay(myScheduleQueryParameter.StartDate, myScheduleQueryParameter.EndDate))
             {
@@ -472,10 +472,13 @@ namespace Css.Api.Scheduling.Business
             {
 
                 var details = agentScheduleDetails as ImportAgentSchedule;
-                foreach (var agentScheduleChart in details.AgentScheduleCharts)
+                foreach (var importAgentScheduleChart in details.ImportAgentScheduleCharts)
                 {
-                    var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
-                    codes.AddRange(scheduleCodes);
+                    foreach (var agentScheduleChart in importAgentScheduleChart.AgentScheduleCharts)
+                    {
+                        var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                        codes.AddRange(scheduleCodes);
+                    }
                 }
             }
 

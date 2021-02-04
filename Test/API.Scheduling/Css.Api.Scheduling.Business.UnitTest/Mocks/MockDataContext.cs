@@ -612,12 +612,13 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// Imports the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        public void ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails)
+        /// <param name="modifiedUserDetails">The modified user details.</param>
+        public void ImportAgentScheduleChart(ImportAgentScheduleChart agentScheduleDetails, ModifiedUserDetails modifiedUserDetails)
         {
-            var agentSchedule = agentSchedulesDB.Where(x => x.IsDeleted == false && x.AgentSchedulingGroupId == agentScheduleDetails.AgentSchedulingGroupId).FirstOrDefault();
+            var agentSchedule = agentSchedulesDB.Where(x => x.IsDeleted == false && x.EmployeeId == agentScheduleDetails.EmployeeId).FirstOrDefault();
             if (agentSchedule != null)
             {
-                agentSchedule.ModifiedBy = agentScheduleDetails.ModifiedBy;
+                agentSchedule.ModifiedBy = modifiedUserDetails.ModifiedBy;
                 agentSchedule.ModifiedDate = DateTime.UtcNow;
                 agentSchedule.AgentScheduleCharts = agentScheduleDetails.AgentScheduleCharts;
             }

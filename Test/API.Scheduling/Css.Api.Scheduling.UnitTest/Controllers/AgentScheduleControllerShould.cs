@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Net;
 using Xunit;
 
-namespace Css.Api.Admin.UnitTest.Controllers
+namespace Css.Api.Scheduling.UnitTest.Controllers
 {
     public class AgentScheduleControllerShould
     {
@@ -410,27 +410,32 @@ namespace Css.Api.Admin.UnitTest.Controllers
         /// <summary>
         /// Updates the agent schedule returns not found result.
         /// </summary>
-        /// <param name="schedulingCode">The scheduling code.</param>
-        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
         [Theory]
-        [InlineData(100, 1)]
-        [InlineData(101, 2)]
-        public async void ImportAgentScheduleChart_ReturnsNotFoundResult(int schedulingCode, int agentSchedulingGroupId)
+        [InlineData(100, 100)]
+        [InlineData(101, 101)]
+        public async void ImportAgentScheduleChart_ReturnsNotFoundResult(int schedulingCode, int employeeId)
         {
             ImportAgentSchedule importAgentSchedule = new ImportAgentSchedule
             {
-                AgentScheduleCharts = new List<AgentScheduleChart>
+                ImportAgentScheduleCharts = new List<ImportAgentScheduleChart>
                 {
-                    new AgentScheduleChart
+                    new ImportAgentScheduleChart
                     {
-                        Day = 1,
-                        Charts = new List<ScheduleChart>
+                        EmployeeId = employeeId,
+                        AgentScheduleCharts = new List<AgentScheduleChart>
                         {
-                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
+                            new AgentScheduleChart
+                            {
+                                Day = 1,
+                                Charts = new List<ScheduleChart>
+                                {
+                                    new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
+                                }
+                            }
                         }
                     }
                 },
-                AgentSchedulingGroupId = agentSchedulingGroupId,
                 ModifiedBy = "admin"
             };
 
@@ -446,27 +451,32 @@ namespace Css.Api.Admin.UnitTest.Controllers
         /// <summary>
         /// Updates the agent schedule returns no content result.
         /// </summary>
-        /// <param name="schedulingCode">The scheduling code.</param>
-        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
         [Theory]
         [InlineData(1, 1)]
         [InlineData(2, 2)]
-        public async void ImportAgentScheduleChart_ReturnsNoContentResultForSchedulingTab(int schedulingCode, int agentSchedulingGroupId)
+        public async void ImportAgentScheduleChart_ReturnsNoContentResultForSchedulingTab(int schedulingCode, int employeeId)
         {
             ImportAgentSchedule importAgentSchedule = new ImportAgentSchedule
             {
-                AgentScheduleCharts = new List<AgentScheduleChart>
+                ImportAgentScheduleCharts = new List<ImportAgentScheduleChart>
                 {
-                    new AgentScheduleChart
+                    new ImportAgentScheduleChart
                     {
-                        Day = 1,
-                        Charts = new List<ScheduleChart>
+                        EmployeeId = employeeId,
+                        AgentScheduleCharts = new List<AgentScheduleChart>
                         {
-                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
+                            new AgentScheduleChart
+                            {
+                                Day = 1,
+                                Charts = new List<ScheduleChart>
+                                {
+                                    new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
+                                }
+                            }
                         }
                     }
                 },
-                AgentSchedulingGroupId = agentSchedulingGroupId,
                 ModifiedBy = "admin"
             };
 
