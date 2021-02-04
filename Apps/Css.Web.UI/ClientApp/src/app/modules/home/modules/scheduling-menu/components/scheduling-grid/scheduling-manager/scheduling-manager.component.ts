@@ -168,7 +168,9 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   setAgent(index: number) {
     this.selectedRow = index;
     const employeeId = this.totalSchedulingGridData[index]?.employeeId;
-    this.loadAgentInfo(employeeId);
+    if (employeeId) {
+      this.loadAgentInfo(employeeId);
+    }
   }
 
   onMouseUp(event) {
