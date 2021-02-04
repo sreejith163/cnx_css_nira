@@ -33,6 +33,11 @@
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [skip page size].
+        /// </summary>
+        public bool SkipPageSize { get; set; }
+
+        /// <summary>
         /// Gets or sets the search keyword.
         /// </summary>
         public string SearchKeyword { get; set; }

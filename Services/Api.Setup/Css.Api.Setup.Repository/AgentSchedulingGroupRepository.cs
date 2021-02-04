@@ -51,13 +51,18 @@ namespace Css.Api.Setup.Repository
 
             var sortedAgentSchedulingGroups = SortHelper.ApplySort(filteredAgentSchedulingGroups, agentSchedulingGroupQueryParameter.OrderBy);
 
-            var pagedAgentSchedulingGroups = sortedAgentSchedulingGroups
-                .Skip((agentSchedulingGroupQueryParameter.PageNumber - 1) * agentSchedulingGroupQueryParameter.PageSize)
-                .Take(agentSchedulingGroupQueryParameter.PageSize)
-                .Include(x => x.SkillTag)
-                .Include(x => x.SkillGroup)
-                .Include(x => x.Client)
-                .Include(x => x.ClientLobGroup);
+            var pagedAgentSchedulingGroups = sortedAgentSchedulingGroups;
+
+            if (!agentSchedulingGroupQueryParameter.SkipPageSize)
+            {
+                pagedAgentSchedulingGroups = sortedAgentSchedulingGroups
+                   .Skip((agentSchedulingGroupQueryParameter.PageNumber - 1) * agentSchedulingGroupQueryParameter.PageSize)
+                   .Take(agentSchedulingGroupQueryParameter.PageSize)
+                   .Include(x => x.SkillTag)
+                   .Include(x => x.SkillGroup)
+                   .Include(x => x.Client)
+                   .Include(x => x.ClientLobGroup);
+            }
 
             var mappedAgentSchedulingGroups = pagedAgentSchedulingGroups
                 .ProjectTo<AgentSchedulingGroupDTO>(_mapper.ConfigurationProvider);

@@ -35,9 +35,14 @@ namespace Css.Api.Scheduling.Repository
 
             var sortedSchedulingCodes = SortHelper.ApplySort(filteredSchedulingCodes, schedulingCodeQueryparameter.OrderBy);
 
-            var pagedSchedulingCodes = sortedSchedulingCodes
-                .Skip((schedulingCodeQueryparameter.PageNumber - 1) * schedulingCodeQueryparameter.PageSize)
-                .Take(schedulingCodeQueryparameter.PageSize);
+            var pagedSchedulingCodes = sortedSchedulingCodes;
+
+            if (!schedulingCodeQueryparameter.SkipPageSize)
+            {
+                pagedSchedulingCodes = sortedSchedulingCodes
+                   .Skip((schedulingCodeQueryparameter.PageNumber - 1) * schedulingCodeQueryparameter.PageSize)
+                   .Take(schedulingCodeQueryparameter.PageSize);
+            }
 
             var shapedSchedulingCodes = DataShaper.ShapeData(pagedSchedulingCodes, schedulingCodeQueryparameter.Fields);
 

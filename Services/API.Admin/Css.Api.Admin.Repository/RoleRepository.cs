@@ -59,9 +59,14 @@ namespace Css.Api.Admin.Repository
 
             var sortedRoles = SortHelper.ApplySort(filteredRoles, roleParameters.OrderBy);
 
-            var pagedRoles = sortedRoles
+            var pagedRoles = sortedRoles;
+
+            if (!roleParameters.SkipPageSize)
+            {
+                pagedRoles = sortedRoles
                 .Skip((roleParameters.PageNumber - 1) * roleParameters.PageSize)
                 .Take(roleParameters.PageSize);
+            }
 
             var mappedRoles = pagedRoles
                 .ProjectTo<RoleDTO>(_mapper.ConfigurationProvider);

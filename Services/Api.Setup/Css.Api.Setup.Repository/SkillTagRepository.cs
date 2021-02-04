@@ -51,15 +51,20 @@ namespace Css.Api.Setup.Repository
 
             var sortedSkillTags = SortHelper.ApplySort(filteredSkillTags, skillTagQueryParameter.OrderBy);
 
-            var pagedSkillTags = sortedSkillTags
-                .Skip((skillTagQueryParameter.PageNumber - 1) * skillTagQueryParameter.PageSize)
-                .Take(skillTagQueryParameter.PageSize)
-                .Include(x => x.SkillGroup)
-                .Include(x => x.Client)
-                .Include(x => x.ClientLobGroup);
+            var pagedSkillTags = sortedSkillTags;
+
+            if (!skillTagQueryParameter.SkipPageSize)
+            {
+                pagedSkillTags = sortedSkillTags
+                   .Skip((skillTagQueryParameter.PageNumber - 1) * skillTagQueryParameter.PageSize)
+                   .Take(skillTagQueryParameter.PageSize)
+                   .Include(x => x.SkillGroup)
+                   .Include(x => x.Client)
+                   .Include(x => x.ClientLobGroup);
+            }
 
             var mappedSkillTags = pagedSkillTags
-                .ProjectTo<SkillTagDTO>(_mapper.ConfigurationProvider);
+            .ProjectTo<SkillTagDTO>(_mapper.ConfigurationProvider);
 
             var shapedSkillTags = DataShaper.ShapeData(mappedSkillTags, skillTagQueryParameter.Fields);
 

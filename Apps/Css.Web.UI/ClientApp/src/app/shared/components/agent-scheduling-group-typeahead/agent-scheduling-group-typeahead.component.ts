@@ -145,6 +145,7 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
     queryParams.pageSize = this.agentSchedulingGroupItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
+    queryParams.skipPageSize = true;
     queryParams.orderBy = 'name';
     queryParams.sortBy = 'asc';
     queryParams.fields = 'id, name';

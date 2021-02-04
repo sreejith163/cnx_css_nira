@@ -29,10 +29,5 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// Gets or sets the employee ids.
         /// </summary>
         public List<int> EmployeeIds { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [skip page size].
-        /// </summary>
-        public bool SkipPageSize { get; set; }
     }
 }

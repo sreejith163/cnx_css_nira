@@ -43,9 +43,14 @@ namespace Css.Api.Scheduling.Repository
 
             var sortedClientLobGroups = SortHelper.ApplySort(filteredClientLobGroups, clientLobGroupQueryparameter.OrderBy);
 
-            var pagedClientLobGroups = sortedClientLobGroups
-                .Skip((clientLobGroupQueryparameter.PageNumber - 1) * clientLobGroupQueryparameter.PageSize)
-                .Take(clientLobGroupQueryparameter.PageSize);
+            var pagedClientLobGroups = sortedClientLobGroups;
+
+            if (!clientLobGroupQueryparameter.SkipPageSize)
+            {
+                pagedClientLobGroups = sortedClientLobGroups
+                   .Skip((clientLobGroupQueryparameter.PageNumber - 1) * clientLobGroupQueryparameter.PageSize)
+                   .Take(clientLobGroupQueryparameter.PageSize);
+            }
 
             var shapedClientLobGroups = DataShaper.ShapeData(pagedClientLobGroups, clientLobGroupQueryparameter.Fields);
 

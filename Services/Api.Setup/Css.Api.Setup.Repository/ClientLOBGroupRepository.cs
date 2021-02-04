@@ -53,10 +53,15 @@ namespace Css.Api.Setup.Repository
 
             var sortedClientLOBGroups = SortHelper.ApplySort(filteredClientLOBGroups, clientLOBGroupParameters.OrderBy);
 
-            var pagedClientLOBGroups = sortedClientLOBGroups
-                .Skip((clientLOBGroupParameters.PageNumber - 1) * clientLOBGroupParameters.PageSize)
-                .Take(clientLOBGroupParameters.PageSize)
-                .Include(x => x.Client);
+            var pagedClientLOBGroups = sortedClientLOBGroups;
+
+            if (!clientLOBGroupParameters.SkipPageSize)
+            {
+                pagedClientLOBGroups = sortedClientLOBGroups
+                   .Skip((clientLOBGroupParameters.PageNumber - 1) * clientLOBGroupParameters.PageSize)
+                   .Take(clientLOBGroupParameters.PageSize)
+                   .Include(x => x.Client);
+            }
 
             var mappedClientLOBGroups = pagedClientLOBGroups
                 .ProjectTo<ClientLOBGroupDTO>(_mapper.ConfigurationProvider);

@@ -15,11 +15,6 @@ namespace Css.Api.Admin.Models.DTO.Request.SchedulingCode
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [skip page size].
-        /// </summary>
-        public bool SkipPageSize { get; set; }
-
-        /// <summary>
         /// Gets or sets the activity codes.
         /// </summary>
         public List<string> ActivityCodes { get; set; }

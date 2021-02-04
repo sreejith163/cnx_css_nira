@@ -35,9 +35,14 @@ namespace Css.Api.Scheduling.Repository
 
             var sortedClients = SortHelper.ApplySort(filteredClients, clientQueryparameter.OrderBy);
 
-            var pagedClients = sortedClients
-                .Skip((clientQueryparameter.PageNumber - 1) * clientQueryparameter.PageSize)
-                .Take(clientQueryparameter.PageSize);
+            var pagedClients = sortedClients;
+
+            if (!clientQueryparameter.SkipPageSize)
+            {
+                pagedClients = sortedClients
+                   .Skip((clientQueryparameter.PageNumber - 1) * clientQueryparameter.PageSize)
+                   .Take(clientQueryparameter.PageSize);
+            }
 
             var shapedClients = DataShaper.ShapeData(pagedClients, clientQueryparameter.Fields);
 
