@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.uatLoginIntialization();
-   }
+  }
 
   login() {
     window.location.href = environment.sso.authBaseUrl + environment.sso.authAppToken;
@@ -50,19 +50,20 @@ export class LoginComponent implements OnInit {
     this.modalService.open(content, { centered: true });
   }
 
-  checkUATCredentials(uatUsername, uatPassword){
-    if (uatUsername === 'CSS_test_agent' && uatPassword === 'Neutron47coleslaw') {return true; }
-    if (uatUsername === 'CSS_test_sup' && uatPassword === 'Dramatize63surgical') {return true; }
-    if (uatUsername === 'CSS_test_mgr' && uatPassword === 'Thread25shortness') {return true; }
-    if (uatUsername === 'CSS_test_reports' && uatPassword === 'Statute13scariness') {return true; }
-    if (uatUsername === 'CSS_test_wfm' && uatPassword === 'Neutron47coleslaw') {return true; }
-    if (uatUsername === 'CSS_test_admin' && uatPassword === 'Pastor40overripe136') {return true; }
+  checkUATCredentials(uatUsername, uatPassword) {
+    if (uatUsername === 'CSS_test_agent' && uatPassword === 'Neutron47coleslaw') { return true; }
+    if (uatUsername === 'CSS_test_sup' && uatPassword === 'Dramatize63surgical') { return true; }
+    if (uatUsername === 'CSS_test_mgr' && uatPassword === 'Thread25shortness') { return true; }
+    if (uatUsername === 'CSS_test_reports' && uatPassword === 'Statute13scariness') { return true; }
+    if (uatUsername === 'CSS_test_wfm' && uatPassword === 'Neutron47coleslaw') { return true; }
+    if (uatUsername === 'CSS_test_admin' && uatPassword === 'Pastor40overripe136') { return true; }
     return false;
   }
 
-  login_uat_test(){
+  login_uat_test() {
     // redirect to home if permission exists
-    if (this.checkUATCredentials(this.uatUsername, this.uatPassword)){
+    if (this.checkUATCredentials(this.uatUsername, this.uatPassword)) {
+
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
       const userUAT: UAT = {
@@ -79,14 +80,14 @@ export class LoginComponent implements OnInit {
         this.authService.loginUAT(userUAT);
       }, 2500);
 
-    }else{
+    } else {
       console.log('invalid credentials');
     }
 
   }
 
 
-  convertUATUsername(uatUsername){
+  convertUATUsername(uatUsername) {
     switch (uatUsername) {
       case 'CSS_test_agent': {
         return 6;
