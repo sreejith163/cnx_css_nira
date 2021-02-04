@@ -51,11 +51,16 @@ namespace Css.Api.Setup.Repository
 
             var sortedSkillGroups = SortHelper.ApplySort(filteredSkillGroups, skillGroupQueryParameter.OrderBy);
 
-            var pagedSkillGroups = sortedSkillGroups
-                .Skip((skillGroupQueryParameter.PageNumber - 1) * skillGroupQueryParameter.PageSize)
-                .Take(skillGroupQueryParameter.PageSize)
-                .Include(x => x.Client)
-                .Include(x => x.ClientLobGroup);
+            var pagedSkillGroups = sortedSkillGroups;
+
+            if (!skillGroupQueryParameter.SkipPageSize)
+            {
+                pagedSkillGroups = sortedSkillGroups
+                   .Skip((skillGroupQueryParameter.PageNumber - 1) * skillGroupQueryParameter.PageSize)
+                   .Take(skillGroupQueryParameter.PageSize)
+                   .Include(x => x.Client)
+                   .Include(x => x.ClientLobGroup);
+            }
 
             var mappedSkillGroups = pagedSkillGroups
                 .ProjectTo<SkillGroupDTO>(_mapper.ConfigurationProvider);

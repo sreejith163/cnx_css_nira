@@ -42,9 +42,14 @@ namespace Css.Api.Scheduling.Repository
 
             var sortedSkillGroups = SortHelper.ApplySort(filteredSkillGroups, skillGroupQueryparameter.OrderBy);
 
-            var pagedSkillGroups = sortedSkillGroups
-                .Skip((skillGroupQueryparameter.PageNumber - 1) * skillGroupQueryparameter.PageSize)
-                .Take(skillGroupQueryparameter.PageSize);
+            var pagedSkillGroups = sortedSkillGroups;
+
+            if (!skillGroupQueryparameter.SkipPageSize)
+            {
+                pagedSkillGroups = sortedSkillGroups
+                   .Skip((skillGroupQueryparameter.PageNumber - 1) * skillGroupQueryparameter.PageSize)
+                   .Take(skillGroupQueryparameter.PageSize);
+            }
 
             var shapedSkillGroups = DataShaper.ShapeData(pagedSkillGroups, skillGroupQueryparameter.Fields);
 

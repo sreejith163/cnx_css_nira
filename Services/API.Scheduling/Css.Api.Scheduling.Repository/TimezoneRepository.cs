@@ -34,9 +34,14 @@ namespace Css.Api.Scheduling.Repository
 
             var sortedTimeZones = SortHelper.ApplySort(filteredTimeZones, timezoneQueryParameters.OrderBy);
 
-            var pagedTimeZones = sortedTimeZones
-                .Skip((timezoneQueryParameters.PageNumber - 1) * timezoneQueryParameters.PageSize)
-                .Take(timezoneQueryParameters.PageSize);
+            var pagedTimeZones = sortedTimeZones;
+
+            if (!timezoneQueryParameters.SkipPageSize)
+            {
+                pagedTimeZones = sortedTimeZones
+                   .Skip((timezoneQueryParameters.PageNumber - 1) * timezoneQueryParameters.PageSize)
+                   .Take(timezoneQueryParameters.PageSize);
+            }
 
             var shapedSkillTags = DataShaper.ShapeData(pagedTimeZones, timezoneQueryParameters.Fields);
 

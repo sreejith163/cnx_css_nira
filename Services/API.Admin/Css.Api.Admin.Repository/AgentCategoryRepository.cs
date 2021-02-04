@@ -49,9 +49,14 @@ namespace Css.Api.Admin.Repository
 
             var sortedAgentCategories = SortHelper.ApplySort(filteredAgentCategories, agentCategoryParameters.OrderBy);
 
-            var pagedAgentCategories = sortedAgentCategories
+            var pagedAgentCategories = sortedAgentCategories;
+
+            if (!agentCategoryParameters.SkipPageSize)
+            {
+                pagedAgentCategories = sortedAgentCategories
                 .Skip((agentCategoryParameters.PageNumber - 1) * agentCategoryParameters.PageSize)
                 .Take(agentCategoryParameters.PageSize);
+            }
 
             var mappedAgentCategories = pagedAgentCategories
                 .ProjectTo<AgentCategoryDTO>(_mapper.ConfigurationProvider);

@@ -48,9 +48,14 @@ namespace Css.Api.Setup.Repository
 
             var sortedClients = SortHelper.ApplySort(filteredClients, clientParameters.OrderBy);
 
-            var pagedClients = sortedClients
-                .Skip((clientParameters.PageNumber - 1) * clientParameters.PageSize)
-                .Take(clientParameters.PageSize);
+            var pagedClients = sortedClients;
+
+            if (!clientParameters.SkipPageSize)
+            {
+                pagedClients = sortedClients
+                   .Skip((clientParameters.PageNumber - 1) * clientParameters.PageSize)
+                   .Take(clientParameters.PageSize);
+            }
 
             var mappedClients = pagedClients
                 .ProjectTo<ClientDTO>(_mapper.ConfigurationProvider);

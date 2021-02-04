@@ -9,7 +9,7 @@ export const environment = {
     authAppToken: 'w6VEeeJ9CdAuCWh8ORi702Es400EXcMnVf1'
   },
   services: {
-    gatewayService: 'https://localhost:5001/api'
+    gatewayService: 'https://localhost:44397/api'
   },
   settings: {
     applicationUrl: 'http://localhost:4200',

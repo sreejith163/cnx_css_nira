@@ -43,9 +43,14 @@ namespace Css.Api.Scheduling.Repository
 
             var sortedSkillTags = SortHelper.ApplySort(filteredSkillTags, skillTagQueryparameter.OrderBy);
 
-            var pagedSkillTags = sortedSkillTags
-                .Skip((skillTagQueryparameter.PageNumber - 1) * skillTagQueryparameter.PageSize)
-                .Take(skillTagQueryparameter.PageSize);
+            var pagedSkillTags = sortedSkillTags;
+
+            if (!skillTagQueryparameter.SkipPageSize)
+            {
+                pagedSkillTags = sortedSkillTags
+                    .Skip((skillTagQueryparameter.PageNumber - 1) * skillTagQueryparameter.PageSize)
+                    .Take(skillTagQueryparameter.PageSize);
+            }
 
             var shapedSkillTags = DataShaper.ShapeData(pagedSkillTags, skillTagQueryparameter.Fields);
 

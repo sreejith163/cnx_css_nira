@@ -392,7 +392,8 @@ namespace Css.Api.Scheduling.Repository
 
             if (agentScheduleQueryparameter.FromDate.HasValue && agentScheduleQueryparameter.FromDate != default(DateTimeOffset))
             {
-                agentSchedules = agentSchedules.Where(x => x.DateFrom >= agentScheduleQueryparameter.FromDate.Value.ToUniversalTime() ||
+                agentSchedules = agentSchedules.Where(x => !x.DateFrom.HasValue || !x.DateTo.HasValue ||
+                                                           x.DateFrom >= agentScheduleQueryparameter.FromDate.Value.ToUniversalTime() ||
                                                            x.DateTo >= agentScheduleQueryparameter.FromDate.Value.ToUniversalTime());
             }
 

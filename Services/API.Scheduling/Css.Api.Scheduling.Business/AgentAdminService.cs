@@ -67,7 +67,9 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IAgentSchedulingGroupRepository _agentSchedulingGroupRepository;
 
-        /// <summary>The activity log repository</summary>
+        /// <summary>
+        /// The activity log repository
+        /// </summary>
         private readonly IActivityLogRepository _activityLogRepository;
 
         /// <summary>

@@ -137,6 +137,7 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
     queryParams.pageSize = this.skillGroupItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
+    queryParams.skipPageSize = true;
     queryParams.orderBy = undefined;
     queryParams.fields = 'id, name';
 

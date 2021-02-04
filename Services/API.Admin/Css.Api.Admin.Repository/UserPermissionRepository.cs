@@ -62,13 +62,18 @@ namespace Css.Api.Admin.Repository
 
             var sortedAgents = SortHelper.ApplySort(filteredAgents, userPermissionParameters.OrderBy);
 
-            var pagedAgents = sortedAgents
-                .Skip((userPermissionParameters.PageNumber - 1) * userPermissionParameters.PageSize)
-                .Take(userPermissionParameters.PageSize)
-                .Include(x => x.Role);
+            var pagedAgents = sortedAgents;
+
+            if (!userPermissionParameters.SkipPageSize)
+            {
+                pagedAgents = sortedAgents
+                   .Skip((userPermissionParameters.PageNumber - 1) * userPermissionParameters.PageSize)
+                   .Take(userPermissionParameters.PageSize)
+                   .Include(x => x.Role);
+            }
 
             var mappedAgents = pagedAgents
-                .ProjectTo<UserPermissionDTO>(_mapper.ConfigurationProvider);
+            .ProjectTo<UserPermissionDTO>(_mapper.ConfigurationProvider);
 
             var shapedAgents = DataShaper.ShapeData(mappedAgents, userPermissionParameters.Fields);
 

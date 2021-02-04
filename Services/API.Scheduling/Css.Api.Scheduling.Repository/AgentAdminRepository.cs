@@ -47,12 +47,17 @@ namespace Css.Api.Scheduling.Repository
 
             var sortedAgentAdmins = SortHelper.ApplySort(filteredAgentAdmins, agentAdminQueryParameter.OrderBy);
 
-            var pagedAgentAdmins = sortedAgentAdmins
-                .Skip((agentAdminQueryParameter.PageNumber - 1) * agentAdminQueryParameter.PageSize)
-                .Take(agentAdminQueryParameter.PageSize);
+            var pagedAgentAdmins = sortedAgentAdmins;
+
+            if (!agentAdminQueryParameter.SkipPageSize)
+            {
+                pagedAgentAdmins = sortedAgentAdmins
+                   .Skip((agentAdminQueryParameter.PageNumber - 1) * agentAdminQueryParameter.PageSize)
+                   .Take(agentAdminQueryParameter.PageSize);
+            }
 
             var mappedAgentAdmins = pagedAgentAdmins
-                .ProjectTo<AgentAdminDTO>(_mapper.ConfigurationProvider);
+            .ProjectTo<AgentAdminDTO>(_mapper.ConfigurationProvider);
 
             var shapedAgentAdmins = DataShaper.ShapeData(mappedAgentAdmins, agentAdminQueryParameter.Fields);
 

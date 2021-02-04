@@ -11,10 +11,5 @@ namespace Css.Api.Scheduling.Models.DTO.Request.SchedulingCode
         {
             OrderBy = "CreatedDate";
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [skip page size].
-        /// </summary>
-        public bool SkipPageSize { get; set; }
     }
 }

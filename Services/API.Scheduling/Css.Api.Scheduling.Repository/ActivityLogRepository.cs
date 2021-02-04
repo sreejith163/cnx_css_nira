@@ -50,12 +50,17 @@ namespace Css.Api.Scheduling.Repository
 
             var sortedActivityLogs = SortHelper.ApplySort(filteredActivityLogs, activityLogQueryParameter.OrderBy);
 
-            var pagedActivityLogs = sortedActivityLogs
-                .Skip((activityLogQueryParameter.PageNumber - 1) * activityLogQueryParameter.PageSize)
-                .Take(activityLogQueryParameter.PageSize);
+            var pagedActivityLogs = sortedActivityLogs;
+
+            if (!activityLogQueryParameter.SkipPageSize)
+            {
+                pagedActivityLogs = sortedActivityLogs
+                   .Skip((activityLogQueryParameter.PageNumber - 1) * activityLogQueryParameter.PageSize)
+                   .Take(activityLogQueryParameter.PageSize);
+            }
 
             var mappedActivityLogs = pagedActivityLogs
-                .ProjectTo<ActivityLogDTO>(_mapper.ConfigurationProvider);
+            .ProjectTo<ActivityLogDTO>(_mapper.ConfigurationProvider);
 
             var shapedActivityLogs = DataShaper.ShapeData(mappedActivityLogs, activityLogQueryParameter.Fields);
 
