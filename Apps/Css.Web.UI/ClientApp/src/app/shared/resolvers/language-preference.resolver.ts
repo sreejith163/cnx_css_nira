@@ -19,31 +19,26 @@ export class LanguagePreferenceResolver implements Resolve<any> {
         private authService: AuthService
     ) { }
 
-    isLoggedIn() {
-        return this.cookieService.get(environment.settings.sessionName) ?? false;
-    }
-
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
         any | Observable<any> | Promise<any> {
-        if (this.authService.currentUserUATValue) {
-            const user = new LoggedUserInfo();
-            user.uid = this.cookieService.get('uid');
-            user.employeeId = this.cookieService.get('employeeId');
-            user.displayName = this.cookieService.get('displayName');
-            const languagePref = this.languagePreferenceService.getLanguagePreference(user.employeeId);
 
-            return languagePref;
-        } else {
-            if (this.isLoggedIn()) {
-                const token = this.cookieService.get(environment.settings.sessionName);
+        if (this.authService.isLoggedIn()) {
+            const token = this.cookieService.get(environment.settings.sessionName);
+            if(token){
                 const decodedToken = jwt_decode(token);
                 const user = new LoggedUserInfo();
                 user.uid = decodedToken.uid;
                 user.employeeId = decodedToken.employeeid;
-                user.displayName = decodedToken.displayname;
-
+                user.displayName = decodedToken.displayname;    
                 const languagePref = this.languagePreferenceService.getLanguagePreference(user.employeeId);
 
+                return languagePref;
+            }else{
+                const user = new LoggedUserInfo();
+                user.uid = this.cookieService.get('uid');
+                user.employeeId = this.cookieService.get('employeeId');
+                user.displayName = this.cookieService.get('displayName');    
+                const languagePref = this.languagePreferenceService.getLanguagePreference(user.employeeId);
                 return languagePref;
             }
         }
