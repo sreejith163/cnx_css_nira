@@ -128,7 +128,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
 
   ngOnChanges() {
     if (this.tabIndex === AgentScheduleType.SchedulingManager) {
-      if (this.agentSchedulingGroupId && this.startDate) {
+      this.clearIconFilters();
+      if (this.agentSchedulingGroupId) {
         this.loadAgentScheduleManger();
         this.refreshMangerTab = false;
       } else {
@@ -150,7 +151,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   sort(columnName: string, sortBy: string) {
-    if (this.agentSchedulingGroupId && this.startDate) {
+    if (this.agentSchedulingGroupId) {
       this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
       this.orderBy = columnName;
 
@@ -183,6 +184,13 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       this.endTimeFilter = agent?.endTime;
       this.iconCode = schedulingCode?.icon.value;
     }
+  }
+
+  clearIconFilters() {
+    this.iconDescription = undefined;
+    this.startTimeFilter = undefined;
+    this.endTimeFilter = undefined;
+    this.iconCode = undefined;
   }
 
   onMouseUp(event) {
@@ -423,6 +431,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private loadAgentScheduleManger() {
+    this.clearIconFilters();
     const queryParams = this.getQueryParams();
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
