@@ -152,6 +152,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.schedulingStatus = Object.keys(SchedulingStatus).filter(key => isNaN(SchedulingStatus[key]));
     this.sortingType = Object.keys(SortingType).filter(key => isNaN(SortingType[key]));
     this.startDate = this.today;
+    this.setCurrentDate();
     this.loadSchedulingCodes();
     this.preLoadTranslations();
     this.loadTranslations();
@@ -376,12 +377,16 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   onSelectStartDate(date: NgbDate) {
     this.startDate = date;
-    const day = this.startDate.day < 10 ? '0' + this.startDate.day : this.startDate.day;
-    const month = this.startDate.month < 10 ? '0' + this.startDate.month : this.startDate.month;
-    this.currentDate = this.startDate.year + '-' + month + '-' + day;
+    this.setCurrentDate();
     if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
       this.loadAgentSchedules();
     }
+  }
+
+  setCurrentDate() {
+    const day = this.startDate.day < 10 ? '0' + this.startDate.day : this.startDate.day;
+    const month = this.startDate.month < 10 ? '0' + this.startDate.month : this.startDate.month;
+    this.currentDate = this.startDate.year + '-' + month + '-' + day;
   }
 
   clearStartDate() {

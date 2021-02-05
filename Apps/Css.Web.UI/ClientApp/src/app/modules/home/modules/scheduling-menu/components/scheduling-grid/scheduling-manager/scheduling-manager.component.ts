@@ -76,6 +76,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   modalRef: NgbModalRef;
   agentInfo: AgentInfo;
 
+  
   sortingType: any[] = [];
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
   weekDays: Array<string> = [];
@@ -170,6 +171,17 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     const employeeId = this.totalSchedulingGridData[index]?.employeeId;
     if (employeeId) {
       this.loadAgentInfo(employeeId);
+    }
+  }
+
+  setIconFilters(index: number) {
+    const agent = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[0];
+    if (agent) {
+      const schedulingCode = this.schedulingCodes.find(x => x.id === agent.schedulingCodeId);
+      this.iconDescription = schedulingCode?.description;
+      this.startTimeFilter = agent?.startTime;
+      this.endTimeFilter = agent?.endTime;
+      this.iconCode = schedulingCode?.icon.value;
     }
   }
 
@@ -445,11 +457,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       }, () => {
         const firstAgent = this.managerCharts[0]?.agentScheduleManagerCharts[0]?.charts[0];
         if (firstAgent) {
-          const schedulingCode = this.schedulingCodes.find(x => x.id === firstAgent.schedulingCodeId);
-          this.iconDescription = schedulingCode?.description;
-          this.startTimeFilter = firstAgent?.startTime;
-          this.endTimeFilter = firstAgent?.endTime;
-          this.iconCode = schedulingCode?.icon.value;
+          this.setIconFilters(0);
         }
         this.schedulingMangerChart = JSON.parse(JSON.stringify(this.managerCharts));
         this.setAgent(0);
