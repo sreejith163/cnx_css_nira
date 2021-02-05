@@ -508,13 +508,13 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
         this.spinnerService.hide(this.spinner);
         console.log(error);
       }, () => {
-        const firstAgentScheduleId = this.totalSchedulingGridData[0]?.id;
-        const firstAgent = this.managerCharts.find(x => x.id === firstAgentScheduleId).agentScheduleManagerCharts[0]?.charts[0];
-        if (firstAgent) {
-          this.setIconFilters(firstAgentScheduleId);
+        const agentScheduleId = this.totalSchedulingGridData[0]?.id;
+        const agentScheduleChart = this.managerCharts.find(x => x.id === agentScheduleId).agentScheduleManagerCharts[0]?.charts[0];
+        if (agentScheduleChart) {
+          this.setIconFilters(agentScheduleId);
         }
         this.schedulingMangerChart = JSON.parse(JSON.stringify(this.managerCharts));
-        this.setAgent(firstAgentScheduleId, 0);
+        this.setAgent(agentScheduleId, 0);
       });
 
     this.subscriptions.push(this.getAgentSchedulesSubscription);
