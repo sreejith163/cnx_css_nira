@@ -16,6 +16,7 @@ using Css.Api.Core.Models.Enums;
 using AutoMapper;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using AutoMapper.QueryableExtensions;
+using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -218,7 +219,14 @@ namespace Css.Api.Scheduling.Repository
             if (documentCount > 0)
             {
                 query = documentQuery;
-                update = update.Set(x => x.AgentScheduleManagerCharts[-1], agentScheduleManagerChart);
+                if (agentScheduleManagerChart.Charts.Any())
+                {
+                    update = update.Set(x => x.AgentScheduleManagerCharts[-1], agentScheduleManagerChart);
+                }
+                else
+                {
+                    update = update.PullFilter(x => x.AgentScheduleManagerCharts, builder => builder.Date == agentScheduleManagerChart.Date);
+                }
             }
             else
             {
