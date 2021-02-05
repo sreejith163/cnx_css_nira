@@ -37,6 +37,7 @@ declare function setManagerRowCellIndex(cell, row);
 declare function highlightManagerSelectedCells(table: string, cell: string);
 declare function highlightCell(cell: string, className: string);
 import * as $ from 'jquery';
+import { AgentIconFilter } from '../../../models/agent-icon-filter.model';
 
 
 @Component({
@@ -75,6 +76,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   openTimes: Array<any>;
   modalRef: NgbModalRef;
   agentInfo: AgentInfo;
+  openTimeAgentIcon: AgentIconFilter;
+  lunchAgentIcon: AgentIconFilter;
 
   sortingType: any[] = [];
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
@@ -167,6 +170,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   setAgent(index: number) {
+    this.setIconFilters(index);
+    this.setAgentIconFilters(index);
     this.selectedRow = index;
     const employeeId = this.totalSchedulingGridData[index]?.employeeId;
     if (employeeId) {
@@ -185,11 +190,42 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     }
   }
 
+  setAgentIconFilters(index: number) {
+    const openTime = this.schedulingCodes?.find(x => x.description.toUpperCase() === 'open time'.toUpperCase());
+    const lunch = this.schedulingCodes?.find(x => x.description.toUpperCase() === 'lunch'.toUpperCase());
+    if (openTime) {
+      const opnTimeIndex = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts
+        .findIndex(x => x.schedulingCodeId === openTime?.id);
+      if (opnTimeIndex > -1) {
+        this.openTimeAgentIcon = new AgentIconFilter();
+        this.openTimeAgentIcon.codeValue = openTime?.icon?.value;
+        this.openTimeAgentIcon.startTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[opnTimeIndex]?.startTime;
+        this.openTimeAgentIcon.endTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[opnTimeIndex]?.endTime;
+      } else {
+        this.openTimeAgentIcon = undefined;
+      }
+    }
+    if (lunch) {
+      const lunchIndex = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts
+        .findIndex(x => x.schedulingCodeId === lunch?.id);
+      if (lunchIndex > -1) {
+        this.lunchAgentIcon = new AgentIconFilter();
+        this.lunchAgentIcon.codeValue = lunch?.icon?.value;
+        this.lunchAgentIcon.startTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[lunchIndex]?.startTime;
+        this.lunchAgentIcon.endTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[lunchIndex]?.endTime;
+      } else {
+        this.lunchAgentIcon = undefined;
+      }
+    }
+  }
+
   clearIconFilters() {
     this.iconDescription = undefined;
     this.startTimeFilter = undefined;
     this.endTimeFilter = undefined;
     this.iconCode = undefined;
+    this.openTimeAgentIcon = undefined;
+    this.lunchAgentIcon = undefined;
   }
 
   onMouseUp(event) {
