@@ -196,13 +196,13 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     const openTime = this.schedulingCodes?.find(x => x.description.toUpperCase() === 'open time'.toUpperCase());
     const lunch = this.schedulingCodes?.find(x => x.description.toUpperCase() === 'lunch'.toUpperCase());
     if (openTime) {
-      const opnTimeIndex = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts
+      const openTimeIndex = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts
         .findIndex(x => x.schedulingCodeId === openTime?.id);
-      if (opnTimeIndex > -1) {
+      if (openTimeIndex > -1) {
         this.openTimeAgentIcon = new AgentIconFilter();
         this.openTimeAgentIcon.codeValue = openTime?.icon?.value;
-        this.openTimeAgentIcon.startTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[opnTimeIndex]?.startTime;
-        this.openTimeAgentIcon.endTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[opnTimeIndex]?.endTime;
+        this.openTimeAgentIcon.startTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[openTimeIndex]?.startTime;
+        this.openTimeAgentIcon.endTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[openTimeIndex]?.endTime;
       } else {
         this.openTimeAgentIcon = undefined;
       }
@@ -481,7 +481,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
         this.totalSchedulingGridData.forEach(element => {
           ids.push(element.id);
         });
-        return this.getAgentChatrs(ids);
+        return this.getAgentCharts(ids);
       }))
       .subscribe((response) => {
         if (response) {
@@ -534,7 +534,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     this.subscriptions.push(this.getSchedulingCodesSubscription);
   }
 
-  private getAgentChatrs(ids: string[]) {
+  private getAgentCharts(ids: string[]) {
     const queryParams = new ScheduleChartQueryParams();
     queryParams.date = this.getDateInStringFormat(this.startDate);
     queryParams.agentScheduleType = AgentScheduleType.SchedulingManager;
