@@ -97,16 +97,6 @@ function highlightCell(cellId, className) {
   cell.addClass(className);
 }
 
-function highlightManagerCell(cellId, className) {
-  const cell = $('#' + cellId);
-  cell.addClass(className);
-}
-
-function removeTable(tableId) {
-  const table = $('#' + tableId);
-  table.remove();
-}
-
 function removeHighlightedCells(tableId, className) {
   const table = $('#' + tableId);
   table.find('.' + className).removeClass(className);

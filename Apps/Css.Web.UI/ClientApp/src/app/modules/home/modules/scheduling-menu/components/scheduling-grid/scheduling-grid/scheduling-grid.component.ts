@@ -44,7 +44,6 @@ declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
 declare function removeHighlightedCells(table: string, className: string);
 declare function highlightCell(cell: string, className: string);
-declare function removeTable(table: string);
 
 @Component({
   selector: 'app-scheduling-grid',
@@ -469,7 +468,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.tabIndex = tabIndex;
     this.openTimes = this.getOpenTimes();
     if (this.tabIndex === AgentScheduleType.SchedulingManager && this.agentSchedulingGroupId) {
-      removeTable(this.tableClassName);
     } else if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
       this.refreshMangerTab = false;
       this.loadAgentSchedules();
