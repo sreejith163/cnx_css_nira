@@ -114,7 +114,7 @@
             {{ 'No records found' | translate }}</td>
         </tr>
         <tr class="jsgrid-row user-select-none" *ngFor="let el of totalSchedulingGridData; let i = index"
-          [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(i)">
+          [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.id, i)">
           <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
           <td class="jsgrid-cell-empName">
             <span ngbTooltip="{{ el.lastName + ' ' + el.firstName }}">
