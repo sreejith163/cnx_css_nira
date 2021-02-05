@@ -180,7 +180,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   setIconFilters(index: number) {
-    const agent = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[0];
+    const agent = this.schedulingMangerChart[index]?.agentScheduleManagerCharts[0]?.charts[0];
     if (agent) {
       const schedulingCode = this.schedulingCodes.find(x => x.id === agent.schedulingCodeId);
       this.iconDescription = schedulingCode?.description;
@@ -196,25 +196,29 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     const openTime = this.schedulingCodes?.find(x => x.description.toUpperCase() === 'open time'.toUpperCase());
     const lunch = this.schedulingCodes?.find(x => x.description.toUpperCase() === 'lunch'.toUpperCase());
     if (openTime) {
-      const openTimeIndex = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts
+      const openTimeIndex = this.schedulingMangerChart[index]?.agentScheduleManagerCharts[0]?.charts
         .findIndex(x => x.schedulingCodeId === openTime?.id);
       if (openTimeIndex > -1) {
         this.openTimeAgentIcon = new AgentIconFilter();
         this.openTimeAgentIcon.codeValue = openTime?.icon?.value;
-        this.openTimeAgentIcon.startTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[openTimeIndex]?.startTime;
-        this.openTimeAgentIcon.endTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[openTimeIndex]?.endTime;
+        this.openTimeAgentIcon.startTime = this.schedulingMangerChart[index]?.
+        agentScheduleManagerCharts[0]?.charts[openTimeIndex]?.startTime;
+        this.openTimeAgentIcon.endTime = this.schedulingMangerChart[index]?.
+        agentScheduleManagerCharts[0]?.charts[openTimeIndex]?.endTime;
       } else {
         this.openTimeAgentIcon = undefined;
       }
     }
     if (lunch) {
-      const lunchIndex = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts
+      const lunchIndex = this.schedulingMangerChart[index]?.agentScheduleManagerCharts[0]?.charts
         .findIndex(x => x.schedulingCodeId === lunch?.id);
       if (lunchIndex > -1) {
         this.lunchAgentIcon = new AgentIconFilter();
         this.lunchAgentIcon.codeValue = lunch?.icon?.value;
-        this.lunchAgentIcon.startTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[lunchIndex]?.startTime;
-        this.lunchAgentIcon.endTime = this.managerCharts[index]?.agentScheduleManagerCharts[0]?.charts[lunchIndex]?.endTime;
+        this.lunchAgentIcon.startTime = this.schedulingMangerChart[index]?.
+        agentScheduleManagerCharts[0]?.charts[lunchIndex]?.startTime;
+        this.lunchAgentIcon.endTime = this.schedulingMangerChart[index]?.
+        agentScheduleManagerCharts[0]?.charts[lunchIndex]?.endTime;
       } else {
         this.lunchAgentIcon = undefined;
       }
