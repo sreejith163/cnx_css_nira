@@ -295,7 +295,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       this.convertToDateFormat(x.endTime) > this.convertToDateFormat(fromTime));
     if (object) {
       const code = this.schedulingCodes.find(x => x.id === object.schedulingCodeId);
-      this.icon = code.icon.value ?? undefined;
+      this.icon = code?.icon?.value ?? undefined;
       if (this.isMouseDown && this.icon) {
         setRowCellIndex(event.currentTarget.id);
       }
@@ -464,11 +464,15 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   }
 
+  setStartDateAsToday() {
+    this.startDate = this.today;
+    this.setCurrentDate();
+  }
+
   openTab(tabIndex: number) {
     this.tabIndex = tabIndex;
     this.openTimes = this.getOpenTimes();
-    if (this.tabIndex === AgentScheduleType.SchedulingManager && this.agentSchedulingGroupId) {
-    } else if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
+    if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
       this.refreshMangerTab = false;
       this.loadAgentSchedules();
       this.selectedGrid = null;
@@ -539,7 +543,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
      } else {
         to = hours + ':' + minute + ' ' + meridiem;
      }
-      const code = this.schedulingCodes.find(x => x.icon.value === this.icon);
+      const code = this.schedulingCodes.find(x => x?.icon?.value?.trim()?.toLowerCase() === this.icon?.trim()?.toLowerCase());
       const iconModel = new ScheduleChart(fromTime, to, code?.id);
 
 
@@ -825,6 +829,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         if (response) {
           this.selectedGrid = this.formatEndTime(response);
+          this.selectedGrid.agentScheduleCharts.map(x => x?.charts.map(y => {
+            y.startTime = y?.startTime.trim().toLowerCase();
+            y.endTime = y?.endTime.trim().toLowerCase();
+          }));
           this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
         }
         this.spinnerService.hide(this.scheduleSpinner);
@@ -838,11 +846,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   private formatEndTime(scheduleResponse: AgentScheduleGridResponse) {
     for (const weekData of scheduleResponse.agentScheduleCharts) {
-      const responseIndex = weekData?.charts.findIndex(x => x.endTime.toLowerCase() === '00:00 am');
+      const responseIndex = weekData?.charts.findIndex(x => x.endTime.trim().toLowerCase() === '00:00 am');
       if (responseIndex > -1) {
         weekData.charts[responseIndex].endTime = '11:60 pm';
       } else {
-        const requestIndex = weekData?.charts.findIndex(x => x.endTime.toLowerCase() === '11:60 pm');
+        const requestIndex = weekData?.charts.findIndex(x => x.endTime.trim().toLowerCase() === '11:60 pm');
         if (requestIndex > -1) {
           weekData.charts[requestIndex].endTime = '00:00 am';
         }

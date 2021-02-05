@@ -162,7 +162,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   isMainMinute(data: any) {
-    return data.split(':')[1] === '00 am' || data.split(':')[1] === '00 pm';
+    return data.split(':')[1].trim().toLowerCase() === '00 am' || data.split(':')[1].trim().toLowerCase() === '00 pm';
   }
 
   isRowSelected(index: number) {
@@ -186,15 +186,15 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       this.iconDescription = schedulingCode?.description;
       this.startTimeFilter = agent?.startTime;
       this.endTimeFilter = agent?.endTime;
-      this.iconCode = schedulingCode?.icon.value;
+      this.iconCode = schedulingCode?.icon?.value;
     } else {
       this.clearIconFilters();
     }
   }
 
   setAgentIconFilters(id: string) {
-    const openTime = this.schedulingCodes?.find(x => x.description.toUpperCase() === 'open time'.toUpperCase());
-    const lunch = this.schedulingCodes?.find(x => x.description.toUpperCase() === 'lunch'.toUpperCase());
+    const openTime = this.schedulingCodes?.find(x => x.description.trim().toLowerCase() === 'open time');
+    const lunch = this.schedulingCodes?.find(x => x.description.trim().toLowerCase() === 'lunch');
     const agentScheduleData = this.schedulingMangerChart.find(x => x.id === id);
     if (agentScheduleData) {
       if (openTime) {
@@ -264,7 +264,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     }
     if (object) {
       const code = this.schedulingCodes.find(x => x.id === object.schedulingCodeId);
-      this.icon = code.icon.value ?? undefined;
+      this.icon = code?.icon?.value ?? undefined;
       if (this.isMouseDown && this.icon) {
         setManagerRowCellIndex(cell, row);
       }
@@ -364,7 +364,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     if (this.agentInfo?.agentData.length > 0) {
       let value;
       for (const item of this.agentInfo?.agentData) {
-        if (item?.group?.description === 'Hire Date') {
+        if (item?.group?.description.trim().toLowerCase() === 'hire date') {
           value = item?.group?.value;
           break;
         }
@@ -492,7 +492,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       }))
       .subscribe((response) => {
         if (response) {
-          const index = response?.agentScheduleManagerCharts[0]?.charts.findIndex(x => x.endTime === '00:00 am');
+          const index = response?.agentScheduleManagerCharts[0]?.charts.findIndex(x => x.endTime.trim().toLowerCase() === '00:00 am');
           if (index > -1) {
             response.agentScheduleManagerCharts[0].charts[index].endTime = '11:60 pm';
           }
@@ -508,8 +508,12 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
         this.spinnerService.hide(this.spinner);
         console.log(error);
       }, () => {
+        this.managerCharts.map(x => x?.agentScheduleManagerCharts[0]?.charts.map(chart => {
+          chart.endTime = chart?.endTime.trim().toLowerCase();
+          chart.startTime = chart?.startTime.trim().toLowerCase();
+        }));
         const agentScheduleId = this.totalSchedulingGridData[0]?.id;
-        const agentScheduleChart = this.managerCharts.find(x => x.id === agentScheduleId).agentScheduleManagerCharts[0]?.charts[0];
+        const agentScheduleChart = this.managerCharts.find(x => x.id === agentScheduleId)?.agentScheduleManagerCharts[0]?.charts[0];
         if (agentScheduleChart) {
           this.setIconFilters(agentScheduleId);
         }
@@ -589,7 +593,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
         to = hours + ':' + minute + ' ' + meridiem;
       }
 
-      const code = this.schedulingCodes.find(x => x.icon.value === this.icon);
+      const code = this.schedulingCodes.find(x => x?.icon?.value?.trim().toLowerCase() === this.icon?.trim().toLowerCase());
       const iconModel = new ScheduleChart(fromTime, to, code?.id);
 
       const date = new Date(this.currentDate);

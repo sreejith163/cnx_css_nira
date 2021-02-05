@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { ExcelData } from '../../../models/excel-data.model';
 import { SchedulingCodeQueryParams } from '../../../../system-admin/models/scheduling-code-query-params.model';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -111,7 +110,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   browse(files: any) {
     const exportFileName = 'Attendance_scheduling';
     this.fileUploaded = files[0];
-    this.uploadFile = this.fileUploaded.name;
+    this.uploadFile = this.fileUploaded?.name;
     if (this.uploadFile.split('.')[1].toLowerCase() === 'csv'.toLowerCase()) {
       // const dateSection = this.uploadFile.split(exportFileName)[1].split('.')[0];
       // const year = dateSection?.substr(0, 4);
@@ -134,11 +133,11 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private validateHeading() {
     for (const item of this.csvTableHeader) {
       if (this.agentScheduleType === AgentScheduleType.Scheduling &&
-        this.scheduleColumns.findIndex(x => x === item) === -1) {
+        this.scheduleColumns.findIndex(x => x.trim().toLowerCase() === item.trim().toLowerCase()) === -1) {
         return true;
       }
       if (this.agentScheduleType === AgentScheduleType.SchedulingManager &&
-        this.schedulingManagerColumns.findIndex(x => x === item) === -1) {
+        this.schedulingManagerColumns.findIndex(x => x.trim().toLowerCase() === item.trim().toLowerCase()) === -1) {
         return true;
       }
     }
@@ -184,7 +183,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         if (year.length !== 4 || month.length !== 2 || day.length !== 2) {
           return true;
         }
-        if (!this.jsonData.every(x => x.Date === this.jsonData[0]?.Date)) {
+        if (!this.jsonData.every(x => x.Date.trim() === this.jsonData[0]?.Date.trim())) {
           return true;
         }
       }
@@ -294,7 +293,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private loadAgentSchedules(employees: number[]) {
     const activityCodes = Array<string>();
     this.jsonData.forEach(element => {
-      if (activityCodes.findIndex(x => x.toLowerCase() === element.ActivityCode.toLowerCase()) === -1) {
+      if (activityCodes.findIndex(x => x.trim().toLowerCase() === element.ActivityCode.trim().toLowerCase()) === -1) {
         activityCodes.push(element.ActivityCode);
       }
     });
@@ -352,7 +351,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       importData.dateFrom = new Date(employeeDetails[0].StartDate);
       importData.dateTo = new Date(employeeDetails[0].EndDate);
       employeeDetails.forEach(ele => {
-        const data = schedulingCodes.find(x => x.description.toUpperCase() === ele.ActivityCode.toUpperCase());
+        const data = schedulingCodes.find(x => x.description.trim().toLowerCase() === ele.ActivityCode.trim().toLowerCase());
         if (data) {
           const chart = new ScheduleChart(ele.StartTime, ele.EndTime, data.id);
           chartArray.push(chart);
@@ -390,7 +389,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       const chartArray = new Array<ScheduleChart>();
       importData.employeeId = employee.employeeId;
       employeeDetails.forEach(ele => {
-        const data = schedulingCodes.find(x => x.description === ele.ActivityCode);
+        const data = schedulingCodes.find(x => x.description.trim().toLowerCase() === ele.ActivityCode.trim().toLowerCase());
         if (data) {
           const chart = new ScheduleChart(ele.StartTime, ele.EndTime, data.id);
           chartArray.push(chart);
@@ -419,7 +418,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private convertToDateFormat(time: string) {
     if (time) {
-      const count = time.split(' ')[1] === 'pm' || time.split(' ')[1] === 'PM' ? 12 : undefined;
+      const count = time.split(' ')[1].trim().toLowerCase() === 'pm' ? 12 : undefined;
       if (count) {
         time = (+time.split(':')[0] + 12) + ':' + time.split(':')[1].split(' ')[0];
       } else {
