@@ -838,11 +838,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   private formatEndTime(scheduleResponse: AgentScheduleGridResponse) {
     for (const weekData of scheduleResponse.agentScheduleCharts) {
-      const responseIndex = weekData?.charts.findIndex(x => x.endTime === '00:00 am');
+      const responseIndex = weekData?.charts.findIndex(x => x.endTime.toLowerCase() === '00:00 am');
       if (responseIndex > -1) {
         weekData.charts[responseIndex].endTime = '11:60 pm';
       } else {
-        const requestIndex = weekData?.charts.findIndex(x => x.endTime === '11:60 pm');
+        const requestIndex = weekData?.charts.findIndex(x => x.endTime.toLowerCase() === '11:60 pm');
         if (requestIndex > -1) {
           weekData.charts[requestIndex].endTime = '00:00 am';
         }
@@ -925,7 +925,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   private convertToDateFormat(time: string) {
     if (time) {
-      const count = time.split(' ')[1] === 'pm' ? 12 : undefined;
+      const count = time.split(' ')[1].toLowerCase() === 'pm' ? 12 : undefined;
       if (count) {
         time = (+time.split(':')[0] + 12) + ':' + time.split(':')[1].split(' ')[0];
       } else {

@@ -112,18 +112,19 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     const exportFileName = 'Attendance_scheduling';
     this.fileUploaded = files[0];
     this.uploadFile = this.fileUploaded.name;
-    if (this.uploadFile.split('.')[1] === 'csv') {
-      const dateSection = this.uploadFile.split(exportFileName)[1].split('.')[0];
-      const year = dateSection?.substr(0, 4);
-      const month = dateSection?.substr(4, 2);
-      const day = dateSection?.substr(6, 2);
-      const date = new Date(year + '/' + month + '/' + day);
-      if (date instanceof Date && dateSection.length === 8) {
-        this.readCsvFile();
-        this.fileFormatValidation = false;
-      } else {
-        this.fileFormatValidation = true;
-      }
+    if (this.uploadFile.split('.')[1].toLowerCase() === 'csv'.toLowerCase()) {
+      // const dateSection = this.uploadFile.split(exportFileName)[1].split('.')[0];
+      // const year = dateSection?.substr(0, 4);
+      // const month = dateSection?.substr(4, 2);
+      // const day = dateSection?.substr(6, 2);
+      // const date = new Date(year + '/' + month + '/' + day);
+      // if (date instanceof Date && dateSection.length === 8) {
+      this.readCsvFile();
+      //   this.fileFormatValidation = false;
+      // }
+      // else {
+      //   this.fileFormatValidation = true;
+      // }
 
     } else {
       this.fileFormatValidation = true;
@@ -351,7 +352,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       importData.dateFrom = new Date(employeeDetails[0].StartDate);
       importData.dateTo = new Date(employeeDetails[0].EndDate);
       employeeDetails.forEach(ele => {
-        const data = schedulingCodes.find(x => x.description === ele.ActivityCode);
+        const data = schedulingCodes.find(x => x.description.toUpperCase() === ele.ActivityCode.toUpperCase());
         if (data) {
           const chart = new ScheduleChart(ele.StartTime, ele.EndTime, data.id);
           chartArray.push(chart);
