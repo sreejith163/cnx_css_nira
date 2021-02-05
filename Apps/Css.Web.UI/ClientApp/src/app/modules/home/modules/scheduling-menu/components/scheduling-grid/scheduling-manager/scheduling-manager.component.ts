@@ -76,7 +76,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   modalRef: NgbModalRef;
   agentInfo: AgentInfo;
 
-  
   sortingType: any[] = [];
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
   weekDays: Array<string> = [];
