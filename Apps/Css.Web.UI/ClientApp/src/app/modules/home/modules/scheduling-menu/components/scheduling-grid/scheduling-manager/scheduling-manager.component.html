@@ -122,7 +122,7 @@
               characterSplice, append: '...' } }}
             </span>
           </td>
-          <td id="grid_col_{{i+1}}_{{j}}" class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
+          <td id="grid_manager_col_{{i+1}}_{{j}}" class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
             attr.scheduleId="{{el.id}}" attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
             *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
             (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event,j,i+1)"
