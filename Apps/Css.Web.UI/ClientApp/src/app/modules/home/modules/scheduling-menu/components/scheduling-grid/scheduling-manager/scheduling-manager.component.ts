@@ -35,7 +35,7 @@ import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/mess
 
 declare function setManagerRowCellIndex(cell, row);
 declare function highlightManagerSelectedCells(table: string, cell: string);
-declare function highlightCell(cell: string, className: string);
+declare function highlightManagerCell(cell: string, className: string);
 import * as $ from 'jquery';
 
 
@@ -64,7 +64,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   sortBy = 'desc';
   spinner = 'schedulig-manager';
   scheduleSpinner = 'scheduling-spinner';
-  selectedCellClassName = 'cell-selected';
+  selectedCellClassName = 'manager-cell-selected';
   tableClassName = 'schedulingManagerTable';
   isMouseDown: boolean;
   isDelete: boolean;
@@ -190,7 +190,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     if (this.isDelete) {
       this.saveGridItems();
     } else {
-      highlightCell(event.currentTarget.id, this.selectedCellClassName);
+      highlightManagerCell(event.currentTarget.id, this.selectedCellClassName);
       this.saveGridItems();
     }
   }
