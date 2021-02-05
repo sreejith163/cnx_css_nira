@@ -187,6 +187,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       this.startTimeFilter = agent?.startTime;
       this.endTimeFilter = agent?.endTime;
       this.iconCode = schedulingCode?.icon.value;
+    } else {
+      this.clearIconFilters();
     }
   }
 
