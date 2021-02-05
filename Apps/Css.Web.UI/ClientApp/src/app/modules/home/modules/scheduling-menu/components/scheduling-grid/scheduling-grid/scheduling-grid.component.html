@@ -28,7 +28,7 @@
           <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
         </div>
         <ng-template #footerTemplate>
-          <button class="btn btn-primary btn-sm m-2 float-left" (click)="setStartDateAsToday(); d.close()"
+          <button class="btn btn-primary btn-sm m-2 float-left" (click)="d.close()"
             id="btn_today">{{'Today' | translate}}</button>
           <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close();clearStartDate();"
             id="btn_close">{{'Clear' | translate}}</button>

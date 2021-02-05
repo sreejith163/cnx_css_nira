@@ -40,7 +40,7 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
   ) { }
 
   ngOnInit(): void {
-    this.subscribeToAgentSchedulingGroups(false, true);
+    this.subscribeToAgentSchedulingGroups();
     this.subscribeToSearching();
   }
 
@@ -93,17 +93,13 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
     }
   }
 
-  private subscribeToAgentSchedulingGroups(needBufferAdd?: boolean, sendInitialValue?: boolean) {
+  private subscribeToAgentSchedulingGroups(needBufferAdd?: boolean) {
     this.loading = true;
     this.getAgentSchedulingGroupSubscription = this.getAgentSchedulingGroups().subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
           this.agentSchedulingGroupItemsBuffer = needBufferAdd ? this.agentSchedulingGroupItemsBuffer.concat(response.body) : response.body;
-          if (sendInitialValue && !this.agentSchedulingGroupId) {
-            this.agentSchedulingGroupId = this.agentSchedulingGroupItemsBuffer[0]?.id;
-            this.agentSchedulingGroupSelected.emit(this.agentSchedulingGroupId);
-          }
         }
         this.loading = false;
       }, err => this.loading = false);

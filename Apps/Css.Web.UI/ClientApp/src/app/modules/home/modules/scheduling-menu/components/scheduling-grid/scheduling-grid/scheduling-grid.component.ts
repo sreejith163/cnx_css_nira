@@ -384,16 +384,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  setStartDateAsToday() {
-      this.startDate = this.today;
-      const day = this.startDate.day < 10 ? '0' + this.startDate.day : this.startDate.day;
-      const month = this.startDate.month < 10 ? '0' + this.startDate.month : this.startDate.month;
-      this.currentDate = this.startDate.year + '-' + month + '-' + day;
-      if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
-        this.loadAgentSchedules();
-      }
-  }
-
   clearStartDate() {
     this.startDate = undefined;
     this.currentDate = undefined;
@@ -473,10 +463,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.tabIndex = tabIndex;
     this.openTimes = this.getOpenTimes();
     if (this.tabIndex === AgentScheduleType.SchedulingManager && this.agentSchedulingGroupId) {
-      this.setStartDateAsToday();
     } else if (this.tabIndex === AgentScheduleType.Scheduling && this.agentSchedulingGroupId) {
       this.refreshMangerTab = false;
-      this.startDate = this.today;
       this.loadAgentSchedules();
       this.selectedGrid = null;
     }
