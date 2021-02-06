@@ -123,6 +123,13 @@
                             <span>{{ 'Scheduling_grid' | translate }}</span>
                             </a>
                         </li>
+                        <li [hidden]="hideMenu([1,2,3],employee?.userRoleId)" class="nav-item">
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-manager" routerLinkActive="active"
+                                #schMenu2="routerLinkActive">
+                                <i class="fa fa-circle-o nav-icon"></i>
+                            <span>{{ 'Scheduling Manager' | translate }}</span>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-functions"
                                 routerLinkActive="active" #schMenu3="routerLinkActive">
