@@ -518,6 +518,19 @@
       "QoSOptions": {
         "TimeoutValue": 300000
       }
+    },
+	//********* Scheduling service Activity Log Routes *********************
+	{
+      "DownstreamPathTemplate": "/api/v1/activitylogs",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.reporting",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/activitylogs",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {
