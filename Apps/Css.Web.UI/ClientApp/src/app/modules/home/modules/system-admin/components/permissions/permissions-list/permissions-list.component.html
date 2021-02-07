@@ -29,12 +29,12 @@
         {{ 'Search' | translate }}
       </button>
     </div>
-      <div class="col-md-7 text-right">
-        <button (click)="addPermission()" type="button" class="float-right  btn btn-primary" id="btn_add">
-          <i class="fa fa-plus padding-5" aria-hidden="true"></i>
-          {{ 'Add' | translate }} {{ 'User' | translate }}
-        </button>
-      </div>
+    <div class="col-md-7 text-right">
+      <button (click)="addPermission()" type="button" class="float-right  btn btn-primary" id="btn_add">
+        <i class="fa fa-plus padding-5" aria-hidden="true"></i>
+        {{ 'Add' | translate }} {{ 'User' | translate }}
+      </button>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-12 mt-2 table-responsive">
@@ -73,25 +73,41 @@
                   [class.fa-sort-asc]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field" (click)="sort('userRoleId', sortBy)">
+              <th class="sortable-field" (click)="sort('role.Name', sortBy)">
                 {{ 'Role' | translate }}
-                <i *ngIf="orderBy !== 'userRoleId'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'userRoleId'" class="fa" [class.fa-sort-desc]="sortBy === 'desc'"
+                <i *ngIf="orderBy !== 'role.Name'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'role.Name'" class="fa" [class.fa-sort-desc]="sortBy === 'desc'"
                   [class.fa-sort-asc]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field">
+              <th class="sortable-field" (click)="sort('createdBy', sortBy)">
                 {{ 'Created_by' | translate }}
-                <i class="fa fa-sort"></i></th>
-              <th class="sortable-field">
+                <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa" [class.fa-sort-desc]="sortBy === 'desc'"
+                  [class.fa-sort-asc]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('createdDate', sortBy)">
                 {{ 'Created_date' | translate }}
-                <i class="fa fa-sort"></i></th>
-              <th class="sortable-field">
+                <i *ngIf="orderBy !== 'createdDate'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa" [class.fa-sort-desc]="sortBy === 'desc'"
+                  [class.fa-sort-asc]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
                 {{ 'Modified_by' | translate }}
-                <i class="fa fa-sort"></i></th>
-              <th class="sortable-field">
+                <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa" [class.fa-sort-desc]="sortBy === 'desc'"
+                  [class.fa-sort-asc]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('modifiedDate', sortBy)">
                 {{ 'Modified_date' | translate }}
-                <i class="fa fa-sort"></i></th>
+                <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa" [class.fa-sort-desc]="sortBy === 'desc'"
+                  [class.fa-sort-asc]="sortBy === 'asc'">
+                </i>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -107,11 +123,10 @@
               <td>{{el.firstname}}</td>
               <td>{{el.lastname}}</td>
               <td>{{el.roleName}}</td>
-              <td>Admin123</td>
-              <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
-              <td>Admin123</td>
-              <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
-              <!-- <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td> -->
+              <td>{{el.createdBy ? el.createdBy : 'Not Available'}}</td>
+              <td>{{el.createdDate ? (el.createdDate | date: 'yyyy-MM-dd') : 'Not Available'}}</td>
+              <td>{{el.modifiedBy ? el.modifiedBy : 'Not Available'}}</td>
+              <td>{{el.modifiedDate ? (el.modifiedDate | date: 'yyyy-MM-dd') : 'Not Available'}}</td>
             </tr>
           </tbody>
         </table>

@@ -3,7 +3,18 @@
     <ngx-spinner [name]="spinner"></ngx-spinner>
     <div class="modal-header header-color">
       <h6 class="modal-title w-100 font-weight-bold header">
-        <p>{{ getTitle() | translate}} {{ 'Agent_admin' | translate }}</p>
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-10">
+              <p>{{ getTitle() | translate}} {{ 'Agent_admin' | translate }}</p>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary btn-sm float-r" (click)="showActivityLogs()">
+                {{ 'Activity Logs' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
       </h6>
       <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
@@ -163,8 +174,8 @@
             </div>
             <div class="col-md-8">
               <div class="input-group">
-                <input class="form-control" placeholder="{{ 'Select_hire_date' | translate }}" name="dp" [readonly]="true"
-                  [ngClass]="{'valid-border-error': hasFormControlValidationError('hireDate')}"
+                <input class="form-control" placeholder="{{ 'Select_hire_date' | translate }}" name="dp"
+                  [readonly]="true" [ngClass]="{'valid-border-error': hasFormControlValidationError('hireDate')}"
                   formControlName="hireDate" ngbDatepicker [footerTemplate]="footerTemplate"
                   [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
                 <div class="input-group-append">
@@ -175,8 +186,8 @@
                 <ng-template #footerTemplate>
                   <button class="btn btn-primary btn-sm m-2 float-left" (click)="setHireDateAsToday(); d.close()"
                     id="btn_today">{{ 'Today' | translate }}</button>
-                  <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()"
-                    id="btn_close">{{ 'Close' | translate }}</button>
+                  <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()" id="btn_close">{{ 'Close'
+                    | translate }}</button>
                 </ng-template>
               </div>
               <div *ngIf="hasFormControlValidationError('hireDate')" class="valid-error">
@@ -196,8 +207,8 @@
             </div>
             <div class="col-md-8">
               <input type="text" class="form-control"
-                [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorName')}" formControlName="supervisorName"
-                placeholder="{{ 'Team Lead Name' | translate }}" />
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorName')}"
+                formControlName="supervisorName" placeholder="{{ 'Team Lead Name' | translate }}" />
               <div *ngIf="hasFormControlValidationError('supervisorName')" class="valid-error">
                 {{ 'Team Lead Name is required' | translate }}
               </div>
@@ -213,8 +224,8 @@
             </div>
             <div class="col-md-8">
               <input type="text" class="form-control"
-                [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorSso')}" formControlName="supervisorSso"
-                placeholder="SSO" />
+                [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorSso')}"
+                formControlName="supervisorSso" placeholder="SSO" />
               <ng-container *ngIf="formSubmitted && form.supervisorSso.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('supervisorSso'); else invalidTeamLeadSso">
                   <div *ngIf="hasFormControlValidationError('supervisorSso')" class="valid-error">
@@ -246,8 +257,8 @@
               </div>
             </div>
           </div>
-        </div>        
-      <!-- End of Team Lead Info -->
+        </div>
+        <!-- End of Team Lead Info -->
       </form>
     </div>
     <div class="modal-footer d-flex justify-content-center header-color">

@@ -12,6 +12,7 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { EmployeeDetails } from '../../../models/employee-details.model';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-add-update-permission',
@@ -19,7 +20,7 @@ import { EmployeeDetails } from '../../../models/employee-details.model';
   styleUrls: ['./add-update-permission.component.scss']
 })
 export class AddUpdatePermissionComponent implements OnInit {
-
+  LoggedUser;
   @Input() operation: ComponentOperation;
   @Input() employee: EmployeeDetails;
   spinner = 'addUpdatePermissionsSpinner';
@@ -44,8 +45,9 @@ export class AddUpdatePermissionComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private formBuilder: FormBuilder,
     private permissionsService: PermissionsService,
+    private authService: AuthService,
   ) {
-
+    this.LoggedUser = this.authService.getLoggedUserInfo();
     this.createUserPermissionForm();
   }
 
@@ -118,6 +120,8 @@ export class AddUpdatePermissionComponent implements OnInit {
 
   private addUserPermission() {
     const addUserPermissionModel = this.userPermissionForm.value as EmployeeDetails;
+    // append the model with createdby
+    addUserPermissionModel.createdBy = this.LoggedUser.displayName;
     this.spinnerService.show(this.spinner, SpinnerOptions);
     this.permissionsService.addUserPermission(addUserPermissionModel)
       .subscribe(() => {
@@ -133,6 +137,7 @@ export class AddUpdatePermissionComponent implements OnInit {
 
   private updateUserPermission() {
     const updatePermissionModel = this.userPermissionForm.value as EmployeeDetails;
+    updatePermissionModel.modifiedBy = this.LoggedUser.displayName;
     this.spinnerService.show(this.spinner, SpinnerOptions);
     // console.log(updatePermissionModel);
     this.permissionsService.updateUserPermission(this.employee.employeeId, updatePermissionModel)

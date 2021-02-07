@@ -5,4 +5,6 @@ export class EmployeeDetails extends Employee {
     roleIndex: number;
     createdDate: Date;
     modifiedDate: Date;
+    createdBy: string;
+    modifiedBy: string;
 }

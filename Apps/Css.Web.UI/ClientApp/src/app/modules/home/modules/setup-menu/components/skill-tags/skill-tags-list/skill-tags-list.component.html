@@ -30,8 +30,7 @@
         </div>
         <div class="col-md-3 d-flex flex-column m-t-25">
             <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
-                [maxLength]="maxLength"
-                placeholder="{{ 'Enter_a_skill_tag_name' | translate }}" />
+                [maxLength]="maxLength" placeholder="{{ 'Enter_a_skill_tag_name' | translate }}" />
         </div>
         <div class="col-md-3 col-sm-6">
             <button class="form-control mt-4" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
@@ -45,7 +44,7 @@
     </div>
     <br>
     <div class="row m-r-15">
-        <div class="col-md-12 mt-2 table-responsive">
+        <div class="col-md-12 mt-2">
             <div class="scrollable-table">
                 <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
                     <thead>
@@ -61,7 +60,8 @@
                                 </i>
                             </th>-->
                             <th class="sortable-field" (click)="sort('refId', sortBy)">
-                                {{ 'ID' | translate }}<!--{{ 'Reference_id' | translate }}-->
+                                {{ 'ID' | translate }}
+                                <!--{{ 'Reference_id' | translate }}-->
                                 <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
@@ -120,7 +120,8 @@
                                 <!--<td>{{el.id}}</td>-->
                                 <td>{{el.refId}}</td>
                                 <td>
-                                    <div class="d-flex justify-content-between" [class.display-inline-contents]="el.name.length > characterSplice">
+                                    <div class="d-flex justify-content-between"
+                                        [class.display-inline-contents]="el.name.length > characterSplice">
                                         <span ngbTooltip="{{ el.name }}">{{ el.name | truncate: { sliceStart: 0,
                                             sliceEnd: characterSplice, append: '...' } }}</span>
                                         <span class="padding-left-10 float-right">
@@ -132,7 +133,8 @@
                                                 <b>{{ 'Client_name' | translate }} : </b> {{ el.clientName }}
                                                 <br />
                                                 <br />
-                                                <b>{{ 'Client_lob_group' | translate }} : </b> {{ el.clientLobGroupName }}
+                                                <b>{{ 'Client_lob_group' | translate }} : </b> {{ el.clientLobGroupName
+                                                }}
                                                 <br>
                                                 <br />
                                                 <b>{{ 'Skill_group_name' | translate }} :</b> {{el.skillGroupName}}
@@ -172,7 +174,8 @@
                                                 <tbody>
                                                     <tr *ngFor="let details of skillTag?.operationHour">
                                                         <td>{{getWeekDay(details.day) | translate}}</td>
-                                                        <td>{{getOpenType(details.operationHourOpenTypeId) | translate}}</td>
+                                                        <td>{{getOpenType(details.operationHourOpenTypeId) | translate}}
+                                                        </td>
                                                         <td>{{details.from | translate}}</td>
                                                         <td>{{details.to | translate}}</td>
                                                     </tr>

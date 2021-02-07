@@ -11,7 +11,8 @@ import {
   NgbDateParserFormatter,
   NgbDateStruct,
   NgbModal,
-  NgbModalOptions
+  NgbModalOptions,
+  NgbModalRef
 } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
@@ -31,6 +32,7 @@ import { AgentAdminBase } from '../../../models/agent-admin-base.model';
 import { AgentAdminResponse } from '../../../models/agent-admin-response.model';
 import { UpdateAgentAdmin } from '../../../models/update-agent-admin.model';
 import { AgentAdminService } from '../../../services/agent-admin.service';
+import { ActivityLogsComponent } from '../activity-logs/activity-logs.component';
 
 @Component({
   selector: 'app-add-agent-profile',
@@ -38,6 +40,8 @@ import { AgentAdminService } from '../../../services/agent-admin.service';
   styleUrls: ['./add-agent-profile.component.css'],
 })
 export class AddAgentProfileComponent implements OnInit, OnDestroy {
+  // modal ref
+  modalRef: NgbModalRef;
 
   hasMismatch: boolean;
   formSubmitted: boolean;
@@ -291,6 +295,20 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       supervisorId: new FormControl('', Validators.required),
       supervisorName: new FormControl('', Validators.required),
       supervisorSso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
+    });
+  }
+
+  showActivityLogs(){
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'lg' };
+    this.modalRef = this.modalService.open(ActivityLogsComponent, options);
+    // this.modalRef.componentInstance.employee = employee;
+    this.modalRef.result.then((confirmed) => {
+      if (confirmed === true){
+        console.log(closed);
+        // this.currentPage = 1;
+        // this.loadEmployees();
+        // this.showSuccessPopUpMessage('The record has been updated!');
+      }
     });
   }
 }
