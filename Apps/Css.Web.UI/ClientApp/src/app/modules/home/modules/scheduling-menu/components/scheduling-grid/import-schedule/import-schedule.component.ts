@@ -164,6 +164,11 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
             this.jsonData.push(csvJson);
           }
         }
+        this.jsonData.map(x => {
+          x.StartTime = x?.StartTime.trim().toLowerCase();
+          x.EndTime = x?.EndTime.trim().toLowerCase();
+          x.ActivityCode = x?.ActivityCode.trim().toLowerCase();
+        });
       }
     };
   }
@@ -176,25 +181,25 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         return true;
       } else if (this.agentScheduleType === AgentScheduleType.SchedulingManager) {
         const date = this.jsonData[0]?.Date;
-        const year = date.split('/')[0];
-        const month = date.split('/')[1].split('/')[0];
-        const day = date.split(`${month}/`)[1];
+        const year = date?.split('/')[0];
+        const month = date?.split('/')[1].split('/')[0];
+        const day = date?.split(`${month}/`)[1];
 
-        if (year.length !== 4 || month.length !== 2 || day.length !== 2) {
+        if (year?.length !== 4 || month?.length !== 2 || day?.length !== 2) {
           return true;
         }
-        if (!this.jsonData.every(x => x.Date.trim() === this.jsonData[0]?.Date.trim())) {
+        if (!this.jsonData.every(x => x?.Date.trim() === this.jsonData[0]?.Date.trim())) {
           return true;
         }
       }
       for (const item of importRecord) {
         if (this.agentScheduleType === AgentScheduleType.Scheduling) {
           for (const record of item.agentScheduleCharts) {
-            return this.validateChart(record.charts);
+            return this.validateChart(record?.charts);
           }
         } else {
           const chartData = item.agentScheduleManagerChart;
-          return this.validateChart(chartData.charts);
+          return this.validateChart(chartData?.charts);
         }
       }
     } else {

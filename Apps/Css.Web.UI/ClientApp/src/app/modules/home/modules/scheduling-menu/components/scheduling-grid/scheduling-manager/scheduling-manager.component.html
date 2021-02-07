@@ -7,7 +7,7 @@
       <input readonly type="text" disabled [(ngModel)]="iconDescription" class="form-control margin-4 manager">
     </div>
     <div class="col-md-2 col-sm-2">
-      <input readonly type="text" disabled [(ngModel)]="currentDate" class="form-control margin-4 manager">
+      <input readonly type="text" disabled [(ngModel)]="startDate" class="form-control margin-4 manager">
     </div>
     <div class="col-md-2 col-sm-2">
       <input readonly type="text" disabled [(ngModel)]="startTimeFilter" class="form-control margin-4 manager">
@@ -170,8 +170,11 @@
   </div>
   <div class="col-md-12 bg-color">
     <div class="col-md-6  d-flex  row">
-      <p *ngIf="openTimeAgentIcon" class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative(openTimeAgentIcon?.codeValue)}} Open Time {{openTimeAgentIcon?.startTime}} - {{openTimeAgentIcon?.endTime}}</p>
-      <p *ngIf="lunchAgentIcon" class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative(lunchAgentIcon?.codeValue)}} Lunch {{lunchAgentIcon?.startTime}} - {{lunchAgentIcon?.endTime}}</p>
+      <p *ngIf="openTimeAgentIcon" class="agent-info-lbl col-md-6 col-sm-6">
+        {{unifiedToNative(openTimeAgentIcon?.codeValue)}} Open Time {{openTimeAgentIcon?.startTime}} -
+        {{openTimeAgentIcon?.endTime}}</p>
+      <p *ngIf="lunchAgentIcon" class="agent-info-lbl col-md-6 col-sm-6">{{unifiedToNative(lunchAgentIcon?.codeValue)}}
+        Lunch {{lunchAgentIcon?.startTime}} - {{lunchAgentIcon?.endTime}}</p>
     </div>
   </div>
   <div class="col-md-12 mt-2 table-responsive">
