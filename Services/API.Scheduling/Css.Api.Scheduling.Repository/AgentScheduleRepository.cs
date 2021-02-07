@@ -251,7 +251,14 @@ namespace Css.Api.Scheduling.Repository
             if (documentCount > 0)
             {
                 query = documentQuery;
-                update = update.Set(x => x.AgentScheduleManagerCharts[-1], agentScheduleManagerChart);
+                if (agentScheduleManagerChart.Charts.Any())
+                {
+                    update = update.Set(x => x.AgentScheduleManagerCharts[-1], agentScheduleManagerChart);
+                }
+                else
+                {
+                    update = update.PullFilter(x => x.AgentScheduleManagerCharts, builder => builder.Date == agentScheduleManagerChart.Date);
+                }
             }
             else
             {

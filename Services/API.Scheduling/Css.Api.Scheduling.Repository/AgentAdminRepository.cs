@@ -3,8 +3,8 @@ using AutoMapper.QueryableExtensions;
 using Css.Api.Core.DataAccess.Repository.NoSQL;
 using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Core.Models.Domain;
-using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Core.Models.Domain.NoSQL;
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
@@ -72,8 +72,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<Agent> GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails)
         {
-            var query = 
-                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) & 
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
                 Builders<Agent>.Filter.Eq(i => i.Id, new ObjectId(agentAdminIdDetails.AgentAdminId));
 
             return await FindByIdAsync(query);
@@ -90,14 +90,14 @@ namespace Css.Api.Scheduling.Repository
         /// </returns>
         public async Task<Agent> GetAgentAdminIdsByEmployeeIdAndSso(EmployeeIdDetails agentAdminEmployeeIdDetails, AgentAdminSsoDetails agentAdminSsoDetails)
         {
-            var query = 
+            var query =
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
                 Builders<Agent>.Filter.Eq(i => i.Ssn, agentAdminEmployeeIdDetails.Id) &
                 Builders<Agent>.Filter.Eq(i => i.Sso, agentAdminSsoDetails.Sso);
 
             return await FindByIdAsync(query);
         }
-      
+
         /// <summary>Gets the agent admin ids by sso.</summary>
         /// <param name="agentAdminSsoDetails">The agent admin sso details.</param>
         /// <returns>
@@ -136,6 +136,25 @@ namespace Css.Api.Scheduling.Repository
             var query =
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
                 Builders<Agent>.Filter.In(i => i.Ssn, agentAdminEmployeeIdsDetails);
+
+            var agentAdmins = FilterBy(query);
+
+            return await Task.FromResult(agentAdmins.ToList());
+        }
+
+
+        /// <summary>Gets the agent admins by ids.</summary>
+        /// <param name="agentAdminIdsDetails">The agent admin ids details.</param>
+        /// <param name="sourceSchedulingGroupId">The source scheduling group identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<List<Agent>> GetAgentAdminsByIds(List<ObjectId> agentAdminIdsDetails, int sourceSchedulingGroupId)
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
+                Builders<Agent>.Filter.In(i => i.Id, agentAdminIdsDetails) &
+                Builders<Agent>.Filter.Eq(i => i.AgentSchedulingGroupId, sourceSchedulingGroupId);
 
             var agentAdmins = FilterBy(query);
 
@@ -198,14 +217,14 @@ namespace Css.Api.Scheduling.Repository
                 return agentAdmins;
             }
 
-            if (agentSchedulingGroupId!=null && agentSchedulingGroupId != default(int))
+            if (agentSchedulingGroupId != null && agentSchedulingGroupId != default(int))
             {
                 agentAdmins = agentAdmins.Where(x => x.AgentSchedulingGroupId == agentSchedulingGroupId);
             }
-            
+
             if (!string.IsNullOrWhiteSpace(searchKeyword))
             {
-                agentAdmins = agentAdmins.ToList().Where(o => o.Sso.Contains( searchKeyword, StringComparison.OrdinalIgnoreCase) ||
+                agentAdmins = agentAdmins.ToList().Where(o => o.Sso.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) ||
                                                     o.Sso.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase)).AsQueryable();
             }
 

@@ -17,6 +17,7 @@ namespace Css.Api.Admin.Models.Profiles.Agent
                 .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.EmployeeId.Trim()))
                 .ForMember(x => x.Firstname, opt => opt.MapFrom(o => o.Firstname))
                 .ForMember(x => x.Lastname, opt => opt.MapFrom(o => o.Lastname))
+                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy))
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ReverseMap();
 
@@ -25,6 +26,7 @@ namespace Css.Api.Admin.Models.Profiles.Agent
                 .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.EmployeeId.Trim()))
                 .ForMember(x => x.Firstname, opt => opt.MapFrom(o => o.Firstname))
                 .ForMember(x => x.Lastname, opt => opt.MapFrom(o => o.Lastname))
+                .ForMember(x => x.ModifiedBy, opt => opt.MapFrom(o => o.ModifiedBy))
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => o.ModifiedDate.HasValue ? o.ModifiedDate : DateTime.UtcNow))
                 .ReverseMap();
 

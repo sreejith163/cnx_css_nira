@@ -19,6 +19,11 @@ namespace Css.Api.Admin.Models.Domain
         public string LanguagePreference { get; set; }
 
         public DateTimeOffset CreatedDate { get; set; }
+
+        public string CreatedBy { get; set; }
+
+        public string ModifiedBy { get; set; }
+
         public DateTimeOffset? ModifiedDate { get; set; }
 
         public bool IsDeleted { get; set; }

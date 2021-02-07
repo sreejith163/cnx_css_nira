@@ -337,11 +337,11 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            agentMyScheduleDetailsDTO = new AgentMyScheduleDetailsDTO
-            {
-                Id = agentSchedule.Id.ToString(),
-                AgentMySchedules = new List<AgentMyScheduleDay>()
-            };
+            agentMyScheduleDetailsDTO = new AgentMyScheduleDetailsDTO();
+            agentMyScheduleDetailsDTO.Id = agentSchedule.Id.ToString();
+            agentMyScheduleDetailsDTO.AgentMySchedules = new List<AgentMyScheduleDay>();
+
+            AgentMyScheduleDay schedule;
 
             foreach (DateTime date in EachDay(myScheduleQueryParameter.StartDate, myScheduleQueryParameter.EndDate))
             {
@@ -362,7 +362,7 @@ namespace Css.Api.Scheduling.Business
                         var lastEndTime = chartsOfDay.Max(chart => DateTime.
                         ParseExact(chart.EndTime, "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
 
-                        AgentMyScheduleDay schedule = new AgentMyScheduleDay
+                        schedule = new AgentMyScheduleDay
                         {
                             Day = (int)date.DayOfWeek,
                             Date = date,
@@ -370,10 +370,18 @@ namespace Css.Api.Scheduling.Business
                             FirstStartTime = firstStartTime,
                             LastEndTime = lastEndTime
                         };
-
-                        agentMyScheduleDetailsDTO.AgentMySchedules.Add(schedule);
+                    }
+                    else
+                    {
+                        schedule = CreateMyScheduleDayWithNoChart(date);
                     }
                 }
+                else
+                {
+                    schedule = CreateMyScheduleDayWithNoChart(date);
+
+                }
+                agentMyScheduleDetailsDTO.AgentMySchedules.Add(schedule);
             }
 
             return new CSSResponse(agentMyScheduleDetailsDTO, HttpStatusCode.OK);
@@ -494,6 +502,20 @@ namespace Css.Api.Scheduling.Business
             }
 
             return isValid;
+        }
+
+        /// <summary>Creates my schedule day with no chart.</summary>
+        /// <param name="date">The date.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        private AgentMyScheduleDay CreateMyScheduleDayWithNoChart(DateTime date)
+        {
+            return new AgentMyScheduleDay
+            {
+                Day = (int)date.DayOfWeek,
+                Date = date
+            };
         }
     }
 }

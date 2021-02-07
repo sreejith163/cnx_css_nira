@@ -8,6 +8,7 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
@@ -16,6 +17,10 @@ using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -233,7 +238,7 @@ namespace Css.Api.Scheduling.Business
             if (agentAdminIdsByEmployeeIdAndSso != null)
             {
                 return new CSSResponse($"Agent Admin with Employee ID '{agentAdminEmployeeIdDetails.Id}' and SSO '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
-            }            
+            }
 
             var agentAdminsBasedOnEmployeeId = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(agentAdminEmployeeIdDetails);
 
@@ -257,7 +262,7 @@ namespace Css.Api.Scheduling.Business
             }
 
             var agentAdminRequest = _mapper.Map<Agent>(agentAdminDetails);
-            
+
             agentAdminRequest.AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId;
 
             _agentAdminRepository.CreateAgentAdmin(agentAdminRequest);
@@ -291,7 +296,7 @@ namespace Css.Api.Scheduling.Business
 
             var agentAdminsBasedOnEmployeeId = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(agentAdminEmployeeIdDetails);
 
-            if (agentAdminsBasedOnEmployeeId != null && 
+            if (agentAdminsBasedOnEmployeeId != null &&
                 !string.Equals(agentAdminsBasedOnEmployeeId.Id.ToString(), agentAdminIdDetails.AgentAdminId))
             {
                 return new CSSResponse($"Agent Admin with Employee ID '{agentAdminEmployeeIdDetails.Id}' already exists.", HttpStatusCode.Conflict);
@@ -332,6 +337,62 @@ namespace Css.Api.Scheduling.Business
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }
+
+        /// <summary>Moves the agent admins.</summary>
+        /// <param name="moveAgentAdminsDetails">The move agent admins details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<CSSResponse> MoveAgentAdmins(MoveAgentAdminsDetails moveAgentAdminsDetails)
+        {
+            var sourceSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(
+                new AgentSchedulingGroupIdDetails { AgentSchedulingGroupId = moveAgentAdminsDetails.SourceSchedulingGroupId });
+
+            if (sourceSchedulingGroup == null)
+            {
+                return new CSSResponse($"Source Scheduling Group does not exists.", HttpStatusCode.NotFound);
+            }
+
+            var destinationSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(
+                new AgentSchedulingGroupIdDetails { AgentSchedulingGroupId = moveAgentAdminsDetails.DestinationSchedulingGroupId });
+
+            if (destinationSchedulingGroup == null)
+            {
+                return new CSSResponse($"Destination Scheduling Group does not exists.", HttpStatusCode.NotFound);
+            }
+
+            List<ObjectId> agentIds = moveAgentAdminsDetails.AgentAdminIds.Select(id => new ObjectId(id)).ToList();
+
+            var agentAdminsInSourceSchedulingGroup
+                = await _agentAdminRepository.GetAgentAdminsByIds(agentIds, moveAgentAdminsDetails.SourceSchedulingGroupId);
+
+            if (agentAdminsInSourceSchedulingGroup == null)
+            {
+                return new CSSResponse($"Agent admins does not exists in source scheduling group.", HttpStatusCode.NotFound);
+            }
+
+            if (agentAdminsInSourceSchedulingGroup.Count != moveAgentAdminsDetails.AgentAdminIds.Count)
+            {
+                return new CSSResponse("One of the agent admins does not exists in source scheduling group.", HttpStatusCode.NotFound);
+            }
+
+            foreach (Agent movingAgent in agentAdminsInSourceSchedulingGroup)
+            {
+                movingAgent.AgentSchedulingGroupId = moveAgentAdminsDetails.DestinationSchedulingGroupId;
+                movingAgent.SkillTagId = destinationSchedulingGroup.SkillTagId;
+                movingAgent.ModifiedBy = moveAgentAdminsDetails.ModifiedBy;
+                movingAgent.ModifiedDate = DateTime.Now;
+                movingAgent.MovedDate = DateTime.Now;
+
+                _agentAdminRepository.UpdateAgentAdmin(movingAgent);
+            }
+
+            await _uow.Commit();
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+
+        }
+
 
         /// <summary>
         /// Deletes the agent admin.

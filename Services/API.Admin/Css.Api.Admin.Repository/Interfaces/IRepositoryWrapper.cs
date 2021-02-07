@@ -8,7 +8,7 @@ namespace Css.Api.Admin.Repository.Interfaces
     public interface IRepositoryWrapper
     {
         /// <summary>
-        /// Gets the agents.
+        /// Gets the user permissions.
         /// </summary>
         IUserPermissionRepository UserPermissions { get; }
 
