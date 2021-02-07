@@ -5,7 +5,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
-import { GenericStateManagerService } from 'src/app/shared/services/generic-state-manager.service';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
@@ -66,6 +65,10 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     });
   }
 
+  hasEmployeeSelected() {
+    return this.checkedAgents.length > 0 || this.masterSelected;
+  }
+
   onSchedulingGroupChange(schedulingGroupId: number) {
     this.masterSelected = false;
     this.checkAll = false;
@@ -111,7 +114,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
         this.checkedAgents[index].isChecked = false;
       }
     }
-    if (this.checkedAgents.filter(x => x.isChecked === true).length === this.totalAgents - 1) {
+    if (this.checkedAgents.filter(x => x.isChecked === true).length === this.totalAgents) {
       this.masterSelected = true;
     } else {
       this.masterSelected = false;
@@ -122,15 +125,13 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   copySchedule() {
     this.formSubmitted = true;
     const copiedAgents = [];
-    if (this.checkedAgents.length > 0 || this.masterSelected) {
+    if (this.checkedAgents.length > 0 || this.masterSelected && this.agentSchedulingGroupId) {
       if (this.checkedAgents.length > 0 && this.checkedAgents.filter(x => x.isChecked === true).length !== this.totalAgents) {
         for (const item of this.checkedAgents.filter(x => x.isChecked === true)) {
           copiedAgents.push(item.employeeId);
         }
       }
       this.copyAgentSchedule(copiedAgents);
-    } else {
-      this.activeModal.close({ needRefresh: false });
     }
 
   }
@@ -153,11 +154,15 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     this.getAgentsSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
       .subscribe((response) => {
         this.agents = response.body;
-        const index = this.agents.findIndex(x => x.employeeId === this.employeeId);
-        this.agents.splice(index, 1);
         let headerPaginationValues = new HeaderPagination();
         headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
-        this.totalAgents = headerPaginationValues.totalCount;
+        const index = this.agents.findIndex(x => x.employeeId === this.employeeId);
+        if (index > -1) {
+          this.agents.splice(index, 1);
+          this.totalAgents = +headerPaginationValues.totalCount - 1;
+        } else {
+          this.totalAgents = +headerPaginationValues.totalCount;
+        }
         this.showSelectedEmployees();
         this.spinnerService.hide(this.spinner);
       }, (error) => {

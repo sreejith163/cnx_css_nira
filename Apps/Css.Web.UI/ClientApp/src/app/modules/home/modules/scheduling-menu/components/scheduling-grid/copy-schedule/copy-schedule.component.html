@@ -34,7 +34,8 @@
             <thead>
               <tr>
                 <th>
-                  <input type="checkbox" [disabled]="!agentSchedulingGroupId" [(ngModel)]="masterSelected" (change)="checkUncheckAll($event)">
+                  <input type="checkbox" [disabled]="!agentSchedulingGroupId || agents.length === 0"
+                    [(ngModel)]="masterSelected" (change)="checkUncheckAll($event)">
                 </th>
                 <th>
                   {{ 'Employee_id' | translate }}
@@ -46,6 +47,10 @@
             </thead>
             <tbody>
               <ngx-spinner [name]="spinner"></ngx-spinner>
+              <tr *ngIf="agents?.length === 0" class="valid-record">
+                <td colspan="12">
+                  {{ 'No records found' | translate }}</td>
+              </tr>
               <tr *ngFor="let x of agents">
                 <td>
                   <input type="checkbox" [disabled]="masterSelected" [(ngModel)]="x.isChecked" [value]="x.employeeId"
@@ -59,8 +64,10 @@
                 </td>
               </tr>
             </tbody>
-
           </table>
+        </div>
+        <div *ngIf="!hasEmployeeSelected() && formSubmitted && agents.length > 0" class="valid-error">
+          {{ 'Please select an employee' | translate }}
         </div>
       </div>
     </div>

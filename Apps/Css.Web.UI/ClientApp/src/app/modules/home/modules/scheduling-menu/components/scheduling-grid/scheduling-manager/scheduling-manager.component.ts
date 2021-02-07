@@ -1,6 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { NgbDate, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { from, SubscriptionLike as ISubscription } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -15,7 +15,6 @@ import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { AgentSchedulesQueryParams } from '../../../models/agent-schedules-query-params.model';
 import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
 import { AgentChartResponse } from '../../../models/agent-chart-response.model';
-import { SchedulingCodeQueryParams } from '../../../../system-admin/models/scheduling-code-query-params.model';
 import { SchedulingCode } from '../../../../system-admin/models/scheduling-code.model';
 import { ScheduleChart } from '../../../models/schedule-chart.model';
 import { AgentScheduleChart } from '../../../models/agent-schedule-chart.model';
@@ -82,8 +81,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   sortingType: any[] = [];
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
   weekDays: Array<string> = [];
-  schedulingStatus: any[] = [];
-  schedulingCodes: SchedulingCode[] = [];
   managerCharts: AgentChartResponse[] = [];
   schedulingMangerChart: AgentChartResponse[] = [];
 
@@ -93,18 +90,17 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   getSchedulingCodesSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
-  @Input() currentDate: string;
   @Input() currentLanguage: string;
   @Input() searchText: string;
+  @Input() startDate: string;
   @Input() agentSchedulingGroupId: number;
   @Input() tabIndex: number;
   @Input() refreshMangerTab: boolean;
-  @Input() startDate: NgbDate;
+  @Input() schedulingCodes: SchedulingCode[] = [];
 
   constructor(
     private agentSchedulesService: AgentSchedulesService,
     private spinnerService: NgxSpinnerService,
-    private schedulingCodeService: SchedulingCodeService,
     private agentAdminService: AgentAdminService,
     private authService: AuthService,
     private modalService: NgbModal,
@@ -113,11 +109,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   ngOnInit(): void {
     this.openTimes = this.getOpenTimes();
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
-    this.schedulingStatus = Object.keys(SchedulingStatus).filter(key => isNaN(SchedulingStatus[key]));
     this.sortingType = Object.keys(SortingType).filter(key => isNaN(SortingType[key]));
-    this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
-    this.endIcon = this.iconCount;
-    this.loadSchedulingCodes();
   }
 
   ngOnDestroy() {
@@ -130,6 +122,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
 
   ngOnChanges() {
     if (this.tabIndex === AgentScheduleType.SchedulingManager) {
+      this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
+      this.endIcon = this.iconCount;
       this.clearIconFilters();
       if (this.agentSchedulingGroupId) {
         this.loadAgentScheduleManger();
@@ -182,7 +176,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   setIconFilters(id: string) {
     const agent = this.schedulingMangerChart.find(x => x.id === id)?.agentScheduleManagerCharts[0]?.charts[0];
     if (agent) {
-      const schedulingCode = this.schedulingCodes.find(x => x.id === agent.schedulingCodeId);
+      const schedulingCode = this.schedulingCodes.find(x => x.id === agent?.schedulingCodeId);
       this.iconDescription = schedulingCode?.description;
       this.startTimeFilter = agent?.startTime;
       this.endTimeFilter = agent?.endTime;
@@ -263,7 +257,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       }
     }
     if (object) {
-      const code = this.schedulingCodes.find(x => x.id === object.schedulingCodeId);
+      const code = this.schedulingCodes.find(x => x.id === object?.schedulingCodeId);
       this.icon = code?.icon?.value ?? undefined;
       if (this.isMouseDown && this.icon) {
         setManagerRowCellIndex(cell, row);
@@ -334,7 +328,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
         const weekTimeData = item?.charts.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x.startTime) &&
           this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
         if (weekTimeData) {
-          const code = this.schedulingCodes.find(x => x.id === weekTimeData.schedulingCodeId);
+          const code = this.schedulingCodes.find(x => x.id === weekTimeData?.schedulingCodeId);
           return code?.description;
         }
       }
@@ -351,7 +345,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
         const weekTimeData = item?.charts.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x.startTime) &&
           this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
         if (weekTimeData) {
-          const code = this.schedulingCodes.find(x => x.id === weekTimeData.schedulingCodeId);
+          const code = this.schedulingCodes.find(x => x.id === weekTimeData?.schedulingCodeId);
           return code ? this.unifiedToNative(code?.icon?.value) : '';
         }
       }
@@ -403,7 +397,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       for (const item of this.managerCharts) {
         if (item.agentScheduleManagerCharts.length > 0) {
           const employeeData = new AgentShceduleMangerData();
-          employeeData.employeeId = this.totalSchedulingGridData.find(x => x.id === item.id).employeeId;
+          employeeData.employeeId = this.totalSchedulingGridData.find(x => x.id === item?.id)?.employeeId;
           const index = item?.agentScheduleManagerCharts[0]?.charts.findIndex(x => x.endTime === '11:60 pm');
           if (index > -1) {
             item.agentScheduleManagerCharts[0].charts[index].endTime = '00:00 am';
@@ -524,28 +518,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     this.subscriptions.push(this.getAgentSchedulesSubscription);
   }
 
-  private loadSchedulingCodes() {
-    const queryParams = new SchedulingCodeQueryParams();
-    queryParams.skipPageSize = true;
-    queryParams.fields = 'id, description, icon';
-    this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
-
-    this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)
-      .subscribe((response) => {
-        if (response.body) {
-          this.schedulingCodes = response.body;
-          this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
-          this.endIcon = this.iconCount;
-        }
-        this.spinnerService.hide(this.scheduleSpinner);
-      }, (error) => {
-        this.spinnerService.hide(this.scheduleSpinner);
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.getSchedulingCodesSubscription);
-  }
-
   private getAgentCharts(ids: string[]) {
     const queryParams = new ScheduleChartQueryParams();
     queryParams.date = this.getDateInStringFormat(this.startDate);
@@ -596,7 +568,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       const code = this.schedulingCodes.find(x => x?.icon?.value?.trim().toLowerCase() === this.icon?.trim().toLowerCase());
       const iconModel = new ScheduleChart(fromTime, to, code?.id);
 
-      const date = new Date(this.currentDate);
+      const date = new Date(this.startDate);
 
       scheduleId = elem?.attributes?.scheduleId?.value;
       const chart = this.managerCharts.find(x => x.id === scheduleId);
@@ -798,7 +770,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       return undefined;
     }
 
-    const date = new Date(startDate.year, startDate.month - 1, startDate.day, 0, 0, 0, 0);
+    const date = new Date(startDate);
     return date.toDateString();
   }
 
