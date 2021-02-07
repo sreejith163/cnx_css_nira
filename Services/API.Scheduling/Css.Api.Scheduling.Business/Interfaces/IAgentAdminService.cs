@@ -43,6 +43,13 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <returns></returns>
         Task<CSSResponse> UpdateAgentAdmin(AgentAdminIdDetails agentAdminIdDetails, UpdateAgentAdmin agentAdminDetails);
 
+        /// <summary>Moves the agent admins.</summary>
+        /// <param name="moveAgentAdminsDetails">The move agent admins details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<CSSResponse> MoveAgentAdmins(MoveAgentAdminsDetails moveAgentAdminsDetails);
+
         /// <summary>
         /// Deletes the Agent Admin.
         /// </summary>

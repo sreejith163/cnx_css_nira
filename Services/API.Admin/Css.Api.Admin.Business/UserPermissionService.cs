@@ -80,8 +80,8 @@ namespace Css.Api.Admin.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var mappedAgent = _mapper.Map<UserPermissionDTO>(userPermission);
-            return new CSSResponse(mappedAgent, HttpStatusCode.OK);
+            var mappedPermission = _mapper.Map<UserPermissionDTO>(userPermission);
+            return new CSSResponse(mappedPermission, HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Css.Api.Admin.Business
 
             if (userPermissions?.Count > 0)
             {
-                return new CSSResponse($"userPermission with name '{userPermissionDetails.Sso}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"User Permission with name '{userPermissionDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
             var userPermissionRequest = _mapper.Map<UserPermission>(userPermissionDetails);
@@ -129,7 +129,7 @@ namespace Css.Api.Admin.Business
                 var userPermissions = await _repository.UserPermissions.GetUserPermissionsBySso(new UserPermissionSsoDetails { Sso = userPermissionDetails.Sso });
                 if (userPermissions?.Count > 0 && userPermissions.IndexOf(userPermission.Id) == -1)
                 {
-                    return new CSSResponse($"Agent with sso '{userPermissionDetails.Sso}' already exists.", HttpStatusCode.Conflict);
+                    return new CSSResponse($"User Permission with sso '{userPermissionDetails.Sso}' already exists.", HttpStatusCode.Conflict);
                 }
             }
 
@@ -138,7 +138,7 @@ namespace Css.Api.Admin.Business
                 var userPermissions = await _repository.UserPermissions.GetUserPermissionsByEmployeeId(new UserPermissionEmployeeIdDetails { EmployeeId = userPermissionDetails.EmployeeId });
                 if (userPermissions?.Count > 0 && userPermissions.IndexOf(userPermission.Id) == -1)
                 {
-                    return new CSSResponse($"Agent with employeeId '{userPermissionDetails.EmployeeId}' already exists.", HttpStatusCode.Conflict);
+                    return new CSSResponse($"User Permission with employeeId '{userPermissionDetails.EmployeeId}' already exists.", HttpStatusCode.Conflict);
                 }
             }
 
@@ -151,7 +151,8 @@ namespace Css.Api.Admin.Business
                 Firstname = userPermission.Firstname,
                 Lastname = userPermission.Lastname,
                 IsDeleted = userPermission.IsDeleted,
-                ModifiedDate = userPermission.ModifiedDate
+                ModifiedDate = userPermission.ModifiedDate,
+                ModifiedBy = userPermission.ModifiedBy
             };
 
             var userPermissionRequest = _mapper.Map(userPermissionDetails, userPermission);
@@ -220,7 +221,7 @@ namespace Css.Api.Admin.Business
             var userPermissions = await _repository.UserPermissions.GetAllUserPermissionsBySso(new UserPermissionSsoDetails { Sso = userPermissionDetails.Sso });
             if (userPermissions?.Count > 0 && userPermissions.IndexOf(userPermission.Id) == -1)
             {
-                return new CSSResponse($"userPermission with sso '{userPermissionDetails.Sso}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"User Permission with sso '{userPermissionDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
             var userPermissionRequest = _mapper.Map(userPermissionDetails, userPermission);

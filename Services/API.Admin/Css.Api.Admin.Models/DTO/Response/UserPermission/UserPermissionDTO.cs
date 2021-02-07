@@ -26,7 +26,11 @@ namespace Css.Api.Admin.Models.DTO.Response.UserPermission
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset? ModifiedDate { get; set; }
 
+        public string ModifiedBy { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset CreatedDate { get; set; }
+
+        public string CreatedBy { get; set; }
     }
 }

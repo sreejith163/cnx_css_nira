@@ -89,7 +89,11 @@ namespace Css.Api.Admin.Repository.DatabaseContext
 
                 entity.Property(e => e.ModifiedDate).HasColumnName("modified_date");
 
+                entity.Property(e => e.ModifiedBy).HasColumnName("modified_by");
+
                 entity.Property(e => e.CreatedDate).HasColumnName("created_date");
+
+                entity.Property(e => e.CreatedBy).HasColumnName("created_by");
 
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("is_deleted")

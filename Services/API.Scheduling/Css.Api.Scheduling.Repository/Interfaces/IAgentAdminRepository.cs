@@ -1,6 +1,7 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using MongoDB.Bson;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -52,6 +53,14 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="agentAdminEmployeeIdsDetails">The agent admin employee ids details.</param>
         /// <returns></returns>
         Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<int> agentAdminEmployeeIdsDetails);
+
+        /// <summary>Gets the agent admins by ids.</summary>
+        /// <param name="agentAdminIdsDetails">The agent admin ids details.</param>
+        /// <param name="sourceSchedulingGroupId">The source scheduling group identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<List<Agent>> GetAgentAdminsByIds(List<ObjectId> agentAdminIdsDetails, int sourceSchedulingGroupId);
 
         /// <summary>Gets the agent admins count.</summary>
         /// <returns>

@@ -9,9 +9,8 @@ namespace Css.Api.Admin.Models.DTO.Request.UserPermission
     {
         public UserPermissionQueryParameters()
         {
-            OrderBy = "Id";
+            OrderBy = "CreatedDate";
         }
 
-        //public int? UserRoleId { get; set; }
-    }
+    }   
 }

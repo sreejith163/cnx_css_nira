@@ -5,7 +5,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
 {
     [BsonCollection("agent")]
     public class Agent : BaseDocument
-    {      
+    {
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
@@ -120,5 +120,10 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// Gets or sets the modified date.
         /// </summary>
         public DateTimeOffset? ModifiedDate { get; set; }
+
+        /// <summary>Gets or sets the moved date.</summary>
+        /// <value>The moved date.</value>
+        public DateTimeOffset? MovedDate { get; set; }
+
     }
 }

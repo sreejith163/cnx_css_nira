@@ -89,6 +89,18 @@ namespace Css.Api.Scheduling.Controllers
             return StatusCode((int)result.Code, result.Value);
         }
 
+        /// <summary>Moves the agent admins.</summary>
+        /// <param name="moveAgentAdminsDetails">The move agent admins details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        [HttpPut("move")]
+        public async Task<IActionResult> MoveAgentAdmins([FromBody] MoveAgentAdminsDetails moveAgentAdminsDetails)
+        {
+            var result = await _agentAdminService.MoveAgentAdmins(moveAgentAdminsDetails);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
         /// <summary>
         /// Deletes the agent admin.
         /// </summary>

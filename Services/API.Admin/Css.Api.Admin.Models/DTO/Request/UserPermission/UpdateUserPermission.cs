@@ -10,6 +10,8 @@ namespace Css.Api.Admin.Models.DTO.Request.UserPermission
 
         public string Lastname { get; set; }
 
+        public string ModifiedBy { get; set; }
+
         public DateTimeOffset? ModifiedDate { get; set; }
 
         public bool IsUpdateRevert { get; set; }

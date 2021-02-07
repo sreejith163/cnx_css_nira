@@ -55,6 +55,13 @@
             <param name="clientDetails">The client details.</param>
             <returns></returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.MoveAgentAdmins(Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.MoveAgentAdminsDetails)">
+            <summary>Moves the agent admins.</summary>
+            <param name="moveAgentAdminsDetails">The move agent admins details.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.DeleteAgentAdmin(System.String)">
             <summary>
             Deletes the agent admin.
