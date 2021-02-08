@@ -181,13 +181,15 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         return true;
       } else if (this.agentScheduleType === AgentScheduleType.SchedulingManager) {
         const date = this.jsonData[0]?.Date;
-        const year = date?.split('/')[0];
-        const month = date?.split('/')[1].split('/')[0];
-        const day = date?.split(`${month}/`)[1];
+        const year = date?.split('/')[2];
+        const day = date?.split('/')[1]?.length === 1 ? '0' + date?.split('/')[1] : date?.split('/')[1];
+        const month = date?.split('/')[0]?.length === 1 ? '0' + date?.split('/')[0] : date?.split('/')[0];
 
-        if (year?.length !== 4 || month?.length !== 2 || day?.length !== 2) {
-          return true;
+        const isValidDate = Date.parse(`${day}/${month}/${year}`);
+        if (isNaN(isValidDate)) {
+          return false;
         }
+
         if (!this.jsonData.every(x => x?.Date.trim() === this.jsonData[0]?.Date.trim())) {
           return true;
         }
@@ -375,16 +377,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   }
 
-  private getDateInFormat(date: string) {
-    const year = date.split('/')[0];
-    const month = date.split('/')[1].split('/')[0];
-    const day = date.split(`${month}/`)[1];
-
-    const newDate = new Date(+year, (+month) - 1, (+day) + 1, 0, 0, 0, 0);
-    return newDate;
-
-  }
-
   private getImportAgentManagerChartModel(schedules: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[]) {
     const chartModel = new UpdateAgentScheduleMangersChart();
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
@@ -401,7 +393,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         }
       });
       const chartData = new AgentScheduleManagerChart();
-      chartData.date = this.getDateInFormat(this.jsonData[0].Date);
+      chartData.date = new Date(this.jsonData[0].Date);
       chartData.charts = chartArray;
       importData.agentScheduleManagerChart = chartData;
       chartModel.agentScheduleManagers.push(importData);

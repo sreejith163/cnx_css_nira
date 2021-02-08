@@ -42,9 +42,9 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    let _isLoggedIn = this.cookieService.get(environment.settings.sessionName);
-    if(_isLoggedIn){
-      return _isLoggedIn ?? false;
+    const isLoggedIn = this.cookieService.get(environment.settings.sessionName);
+    if (isLoggedIn){
+      return isLoggedIn ?? false;
     }else{
       return this.currentUserUATValue ?? false;
     }
@@ -53,19 +53,19 @@ export class AuthService {
   getLoggedUserInfo(): LoggedUserInfo {
     if (this.isLoggedIn()) {
       const token = this.cookieService.get(environment.settings.sessionName);
-            
-      if(token){
+
+      if (token){
           const decodedToken = jwt_decode(token);
           const user = new LoggedUserInfo();
           user.uid = decodedToken.uid;
           user.employeeId = decodedToken.employeeid;
-          user.displayName = decodedToken.displayname;    
+          user.displayName = decodedToken.displayname;
           return user;
       }else{
           const user = new LoggedUserInfo();
           user.uid = this.cookieService.get('uid');
           user.employeeId = this.cookieService.get('employeeId');
-          user.displayName = this.cookieService.get('displayName');    
+          user.displayName = this.cookieService.get('displayName');
           return user;
       }
 
