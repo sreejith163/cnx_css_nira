@@ -21,6 +21,7 @@ import { AgentSchedulesService } from '../../../services/agent-schedules.service
 export class CopyScheduleComponent implements OnInit, OnDestroy {
 
   totalAgents: number;
+  employeeAgentSchedulingGroupId: number;
   currentPage = 1;
   pageSize = 10;
   characterSplice = 25;
@@ -55,6 +56,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadAgents();
+    this.employeeAgentSchedulingGroupId = this.agentSchedulingGroupId;
   }
 
   ngOnDestroy() {
@@ -159,10 +161,9 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
         const index = this.agents.findIndex(x => x.employeeId === this.employeeId);
         if (index > -1) {
           this.agents.splice(index, 1);
-          this.totalAgents = +headerPaginationValues.totalCount - 1;
-        } else {
-          this.totalAgents = +headerPaginationValues.totalCount;
         }
+        this.employeeAgentSchedulingGroupId === this.agentSchedulingGroupId ?
+        this.totalAgents = +headerPaginationValues.totalCount - 1 : this.totalAgents = +headerPaginationValues.totalCount;
         this.showSelectedEmployees();
         this.spinnerService.hide(this.spinner);
       }, (error) => {
