@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Net;
 using Xunit;
 
-namespace Css.Api.Admin.UnitTest.Controllers
+namespace Css.Api.Scheduling.UnitTest.Controllers
 {
     public class AgentScheduleControllerShould
     {

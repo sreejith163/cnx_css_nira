@@ -11,8 +11,19 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
             OrderBy = "TimeStamp";
         }
 
-        /// <summary>Gets or sets the type of the activity.</summary>
-        /// <value>The type of the activity.</value>
+        /// <summary>
+        /// Gets or sets the employee identifier.
+        /// </summary>
+        public int? EmployeeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the activity.
+        /// </summary>
         public ActivityType? ActivityType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the activity origin.
+        /// </summary>
+        public ActivityOrigin? ActivityOrigin { get; set; }
     }
 }

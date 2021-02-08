@@ -9,6 +9,7 @@ using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Response.ActivityLog;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,16 +23,21 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         private readonly IMapper _mapper;
 
-        /// <summary>Initializes a new instance of the <see cref="ActivityLogRepository" /> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActivityLogRepository" /> class.
+        /// </summary>
         /// <param name="mongoContext">The mongo context.</param>
         /// <param name="mapper">The mapper.</param>
-        public ActivityLogRepository(IMongoContext mongoContext,
+        public ActivityLogRepository(
+            IMongoContext mongoContext,
             IMapper mapper) : base(mongoContext)
         {
             _mapper = mapper;
         }
 
-        /// <summary>Gets the activity logs.</summary>
+        /// <summary>
+        /// Gets the activity logs.
+        /// </summary>
         /// <param name="activityLogQueryParameter">The activity log query parameter.</param>
         /// <returns>
         ///   <br />
@@ -62,24 +68,22 @@ namespace Css.Api.Scheduling.Repository
                 .ToPagedList(shapedActivityLogs, filteredActivityLogs.Count(), activityLogQueryParameter.PageNumber, activityLogQueryParameter.PageSize);
         }
 
-
-        /// <summary>Gets the activity logs count.</summary>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<int> GetActivityLogsCount()
-        {
-            var count = FilterBy(x => true)
-                .Count();
-
-            return await Task.FromResult(count);
-        }
-
-        /// <summary>Creates the activity logs.</summary>
+        /// <summary>
+        /// Creates the activity log.
+        /// </summary>
         /// <param name="activityLogRequest">The activity log request.</param>
-        public void CreateActivityLogs(ActivityLog activityLogRequest)
+        public void CreateActivityLog(ActivityLog activityLogRequest)
         {
             InsertOneAsync(activityLogRequest);
+        }
+
+        /// <summary>
+        /// Creates the activity logs.
+        /// </summary>
+        /// <param name="activityLogRequest">The activity log request.</param>
+        public void CreateActivityLogs(List<ActivityLog> activityLogRequest)
+        {
+            InsertManyAsync(activityLogRequest);
         }
 
         /// <summary>Filters the activity logs.</summary>
@@ -95,21 +99,29 @@ namespace Css.Api.Scheduling.Repository
                 return activityLogs;
             }
 
-            string searchKeyword = activityLogQueryParameter.SearchKeyword;
-
-            if (!string.IsNullOrWhiteSpace(searchKeyword))
+            if (!string.IsNullOrWhiteSpace(activityLogQueryParameter.SearchKeyword))
             {
-                activityLogs = activityLogs.Where(o => o.ExecutedBy.ToLower().Contains(searchKeyword.Trim().ToLower()) ||
-                                                           o.FieldDetails.Any(
-                                                               field => field.Name.ToLower().Contains(searchKeyword.Trim().ToLower()) ||
-                                                               field.NewValue.ToLower().Contains(searchKeyword.Trim().ToLower()) ||
-                                                               field.OldValue.ToLower().Contains(searchKeyword.Trim().ToLower())
-                                                               ));
+                activityLogs = activityLogs.Where(o => o.ExecutedBy.ToLower().Contains(activityLogQueryParameter.SearchKeyword.Trim().ToLower()) ||
+                                                       o.FieldDetails
+                                                        .Any(field => field.Name.ToLower().Contains(activityLogQueryParameter.SearchKeyword.Trim().ToLower()) ||
+                                                             field.NewValue.ToLower().Contains(activityLogQueryParameter.SearchKeyword.Trim().ToLower()) ||
+                                                             field.OldValue.ToLower().Contains(activityLogQueryParameter.SearchKeyword.Trim().ToLower())
+                                                             ));
+            }
+
+            if (activityLogQueryParameter.EmployeeId.HasValue && activityLogQueryParameter.EmployeeId != default(int))
+            {
+                activityLogs = activityLogs.Where(x => x.EmployeeId == activityLogQueryParameter.EmployeeId);
             }
 
             if (activityLogQueryParameter.ActivityType != null)
             {
                 activityLogs = activityLogs.Where(o => o.ActivityType == activityLogQueryParameter.ActivityType);
+            }
+
+            if (activityLogQueryParameter.ActivityOrigin != null)
+            {
+                activityLogs = activityLogs.Where(o => o.ActivityOrigin == activityLogQueryParameter.ActivityOrigin);
             }
 
             return activityLogs;

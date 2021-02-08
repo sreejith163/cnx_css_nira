@@ -65,7 +65,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
 
                 await _busUtility.PublishEvent<ISchedulingCodeDeleteSuccess>(MassTransitConstants.SchedulingCodeDeleteSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)
@@ -80,14 +80,14 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
         {
             await _busUtility.PublishEvent<ISchedulingCodeDeleteFailed>(MassTransitConstants.SchedulingCodeDeleteFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                Name = context.Message.Name,
-                PriorityNumber = context.Message.PriorityNumber,
-                IconId = context.Message.IconId,
-                SchedulingTypeCode = context.Message.SchedulingTypeCode,
-                ModifiedByOldValue = context.Message.ModifiedByOldValue,
-                ModifiedDateOldValue = context.Message.ModifiedDateOldValue,
-                IsDeletedOldValue = context.Message.IsDeletedOldValue
+                context.Message.Id,
+                context.Message.Name,
+                context.Message.PriorityNumber,
+                context.Message.IconId,
+                context.Message.SchedulingTypeCode,
+                context.Message.ModifiedByOldValue,
+                context.Message.ModifiedDateOldValue,
+                context.Message.IsDeletedOldValue
             });
         }
     }

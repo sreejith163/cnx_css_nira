@@ -108,12 +108,12 @@ namespace Css.Api.Admin.Business
             await _bus.SendCommand<CreateSchedulingCodeCommand>(MassTransitConstants.SchedulingCodeCreateCommandRouteKey,
                new
                {
-                   Id = schedulingCodeRequest.Id,
+                   schedulingCodeRequest.Id,
                    Name = schedulingCodeRequest.Description,
-                   PriorityNumber = schedulingCodeRequest.PriorityNumber,
-                   IconId = schedulingCodeRequest.IconId,
+                   schedulingCodeRequest.PriorityNumber,
+                   schedulingCodeRequest.IconId,
                    SchedulingTypeCode = JsonConvert.SerializeObject(schedulingCodeDetails.SchedulingTypeCode),
-                   ModifiedDate = schedulingCodeRequest.ModifiedDate
+                   schedulingCodeRequest.ModifiedDate
                });
 
             return new CSSResponse(new SchedulingCodeIdDetails { SchedulingCodeId = schedulingCodeRequest.Id }, HttpStatusCode.Created);
@@ -181,7 +181,7 @@ namespace Css.Api.Admin.Business
                     MassTransitConstants.SchedulingCodeUpdateCommandRouteKey,
                     new
                     {
-                        Id = schedulingCodeRequest.Id,
+                        schedulingCodeRequest.Id,
                         NameOldValue = schedulingCodeDetailsPreUpdate.Description,
                         PriorityNumberOldValue = schedulingCodeDetailsPreUpdate.PriorityNumber,
                         IconIdOldValue = schedulingCodeDetailsPreUpdate.IconId,
@@ -268,10 +268,10 @@ namespace Css.Api.Admin.Business
                MassTransitConstants.SchedulingCodeDeleteCommandRouteKey,
                new
                {
-                   Id = schedulingCode.Id,
+                   schedulingCode.Id,
                    Name = schedulingCodeDetailsPreUpdate.Description,
-                   PriorityNumber = schedulingCodeDetailsPreUpdate.PriorityNumber,
-                   IconId = schedulingCodeDetailsPreUpdate.IconId,
+                   schedulingCodeDetailsPreUpdate.PriorityNumber,
+                   schedulingCodeDetailsPreUpdate.IconId,
                    SchedulingTypeCode = JsonConvert.SerializeObject(schedulingCodePreRequest.SchedulingTypeCode),
                    ModifiedByOldValue = schedulingCodeDetailsPreUpdate.ModifiedBy,
                    IsDeletedOldValue = schedulingCodeDetailsPreUpdate.IsDeleted,

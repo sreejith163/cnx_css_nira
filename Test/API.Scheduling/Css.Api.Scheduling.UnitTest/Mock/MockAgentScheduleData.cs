@@ -9,12 +9,14 @@ using MongoDB.Bson;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Css.Api.Scheduling.Models.Domain;
+using System;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {
     public class MockAgentScheduleData
     {
-        List<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
+        readonly List<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
         {
             new SchedulingCode { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), SchedulingCodeId = 1, Name = "lunch", IsDeleted = false},
             new SchedulingCode { Id = new ObjectId("5fe0b5c46a05416894c0718f"), SchedulingCodeId = 2, Name = "lunch", IsDeleted = false},
@@ -185,6 +187,50 @@ namespace Css.Api.Scheduling.UnitTest.Mock
         }
 
         /// <summary>
+        /// Gets the activity log for scheduling chart.
+        /// </summary>
+        /// <param name="scheduleCharts">The schedule charts.</param>
+        /// <param name="employeeId">The employee identifier.</param>
+        /// <param name="executedBy">The executed by.</param>
+        /// <param name="activityOrigin">The activity origin.</param>
+        /// <returns></returns>
+        private ActivityLog GetActivityLogForSchedulingChart(object scheduleCharts, int employeeId, string executedBy, ActivityOrigin activityOrigin)
+        {
+            var activityLog = new ActivityLog()
+            {
+                EmployeeId = employeeId,
+                ExecutedBy = executedBy,
+                TimeStamp = DateTimeOffset.UtcNow,
+                ActivityOrigin = activityOrigin,
+                ActivityStatus = ActivityStatus.Updated,
+                SchedulingFieldDetails = new SchedulingFieldDetails()
+            };
+
+            if (scheduleCharts is List<AgentScheduleChart>)
+            {
+                var charts = scheduleCharts as List<AgentScheduleChart>;
+                activityLog.ActivityType = ActivityType.SchedulingGrid;
+                activityLog.SchedulingFieldDetails.AgentScheduleCharts = charts;
+            }
+            else if (scheduleCharts is List<AgentScheduleManagerChart>)
+            {
+                var charts = scheduleCharts as List<AgentScheduleManagerChart>;
+                activityLog.ActivityType = ActivityType.SchedulingmanagerGrid;
+                activityLog.SchedulingFieldDetails.AgentScheduleManagerCharts = charts;
+            }
+            else if (scheduleCharts is AgentScheduleManagerChart)
+            {
+                var chart = scheduleCharts as AgentScheduleManagerChart;
+                activityLog.ActivityType = ActivityType.SchedulingmanagerGrid;
+                activityLog.SchedulingFieldDetails.AgentScheduleManagerCharts = new List<AgentScheduleManagerChart>
+                {
+                    chart
+                };
+            }
+
+            return activityLog;
+        }
+
         /// Determines whether [has valid scheduling codes] [the specified agent schedule details].
         /// </summary>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>

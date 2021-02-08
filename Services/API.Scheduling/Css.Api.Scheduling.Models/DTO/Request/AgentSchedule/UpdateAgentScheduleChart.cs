@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.Domain.NoSQL;
+using Css.Api.Scheduling.Models.Enums;
 using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
@@ -11,8 +12,14 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
 
         /// <summary>
+        /// Gets or sets the activity origin.
+        /// </summary>
+        public ActivityOrigin ActivityOrigin { get; set; }
+
+        /// <summary>
         /// Gets or sets the modified by.
         /// </summary>
         public string ModifiedBy { get; set; }
+
     }
 }

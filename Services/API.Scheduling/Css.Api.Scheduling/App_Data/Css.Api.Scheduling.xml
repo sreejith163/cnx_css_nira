@@ -4,6 +4,30 @@
         <name>Css.Api.Scheduling</name>
     </assembly>
     <members>
+        <member name="T:Css.Api.Scheduling.Controllers.ActivityLogsController">
+            <summary>
+            Controller for handling the Time zones resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.ActivityLogsController._activityLogService">
+            <summary>
+            The activity log service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ActivityLogsController.#ctor(Css.Api.Scheduling.Business.Interfaces.IActivityLogService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.ActivityLogsController"/> class.
+            </summary>
+            <param name="activityLogService">The activity log service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ActivityLogsController.GetTimeZones(Css.Api.Scheduling.Models.DTO.Request.ActivityLog.ActivityLogQueryParameter)">
+            <summary>
+            Gets the time zones.
+            </summary>
+            <param name="activityLogQueryParameter">The activity log query parameter.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.AgentAdminsController">
             <summary>
             Controller for handling the agent admins resource

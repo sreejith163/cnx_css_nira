@@ -17,6 +17,7 @@ using AutoMapper;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using AutoMapper.QueryableExtensions;
 using System.Collections.Generic;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -93,6 +94,37 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindCountByIdAsync(query);
+        }
+
+        /// <summary>
+        /// Gets the employee identifier by agent schedule identifier.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <returns></returns>
+        public async Task<int> GetEmployeeIdByAgentScheduleId(AgentScheduleIdDetails agentScheduleIdDetails)
+        {
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            var agentSchedule = await FindByIdAsync(query);
+            return agentSchedule.EmployeeId;
+        }
+
+        /// <summary>
+        /// Gets the employee ids by agent schedule group identifier.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <returns></returns>
+        public async Task<List<int>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        {
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.AgentSchedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
+
+            var agentSchedules = FilterBy(query);
+
+            return await Task.FromResult(agentSchedules.Select(x => x.EmployeeId).ToList());
         }
 
         /// <summary>

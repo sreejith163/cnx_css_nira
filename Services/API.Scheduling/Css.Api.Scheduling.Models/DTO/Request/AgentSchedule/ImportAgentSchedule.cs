@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Css.Api.Scheduling.Models.Enums;
+using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
@@ -8,6 +9,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// Gets or sets the charts.
         /// </summary>
         public List<ImportAgentScheduleChart> ImportAgentScheduleCharts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the activity origin.
+        /// </summary>
+        public ActivityOrigin ActivityOrigin { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
