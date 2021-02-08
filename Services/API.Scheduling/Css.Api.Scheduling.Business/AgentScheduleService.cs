@@ -142,7 +142,7 @@ namespace Css.Api.Scheduling.Business
             {
                 if (agentScheduleChartQueryparameter.Date.HasValue && agentScheduleChartQueryparameter.Date != default(DateTimeOffset))
                 {
-                    var dateTimeWithZeroTimeSpan = new DateTimeOffset(agentScheduleChartQueryparameter.Date.Value.Date, TimeSpan.Zero);
+                    var dateTimeWithZeroTimeSpan = new DateTimeOffset(agentScheduleChartQueryparameter.Date.Value.ToUniversalTime().Date, TimeSpan.Zero);
                     agentSchedule.AgentScheduleManagerCharts = agentSchedule.AgentScheduleManagerCharts.FindAll(x => x.Date == dateTimeWithZeroTimeSpan);
                 }
 
@@ -289,6 +289,13 @@ namespace Css.Api.Scheduling.Business
             }
 
             _agentScheduleRepository.CopyAgentSchedules(agentSchedule, agentScheduleDetails);
+
+            if (!agentScheduleDetails.EmployeeIds.Any())
+            {
+                AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails = new AgentSchedulingGroupIdDetails { AgentSchedulingGroupId = agentScheduleDetails.AgentSchedulingGroupId };
+                agentScheduleDetails.EmployeeIds = await _agentScheduleRepository.GetEmployeeIdsByAgentScheduleGroupId(agentSchedulingGroupIdDetails);
+                agentScheduleDetails.EmployeeIds = agentScheduleDetails.EmployeeIds.FindAll(x => x != agentSchedule.EmployeeId);
+            }
 
             var activityLogs = new List<ActivityLog>();
 
