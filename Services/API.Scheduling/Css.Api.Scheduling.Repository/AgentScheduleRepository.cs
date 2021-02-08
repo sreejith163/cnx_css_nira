@@ -242,7 +242,7 @@ namespace Css.Api.Scheduling.Repository
                 .Set(x => x.ModifiedBy, modifiedUserDetails.ModifiedBy)
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 
-            agentScheduleManagerChart.Date = new DateTimeOffset(agentScheduleManagerChart.Date.Date, TimeSpan.Zero);
+            agentScheduleManagerChart.Date = new DateTimeOffset(agentScheduleManagerChart.Date.ToUniversalTime().Date, TimeSpan.Zero);
 
             var documentQuery = query & Builders<AgentSchedule>.Filter
                 .ElemMatch(i => i.AgentScheduleManagerCharts, chart => chart.Date == agentScheduleManagerChart.Date);
