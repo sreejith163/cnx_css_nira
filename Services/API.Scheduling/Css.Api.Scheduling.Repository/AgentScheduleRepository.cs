@@ -242,7 +242,7 @@ namespace Css.Api.Scheduling.Repository
                 .Set(x => x.ModifiedBy, modifiedUserDetails.ModifiedBy)
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 
-            agentScheduleManagerChart.Date = new DateTimeOffset(agentScheduleManagerChart.Date.ToUniversalTime().Date, TimeSpan.Zero);
+            agentScheduleManagerChart.Date = new DateTimeOffset(agentScheduleManagerChart.Date.Date, TimeSpan.Zero);
 
             var documentQuery = query & Builders<AgentSchedule>.Filter
                 .ElemMatch(i => i.AgentScheduleManagerCharts, chart => chart.Date == agentScheduleManagerChart.Date);
@@ -400,8 +400,8 @@ namespace Css.Api.Scheduling.Repository
             if (agentScheduleQueryparameter.FromDate.HasValue && agentScheduleQueryparameter.FromDate != default(DateTimeOffset))
             {
                 agentSchedules = agentSchedules.Where(x => !x.DateFrom.HasValue || !x.DateTo.HasValue ||
-                                                           x.DateFrom >= agentScheduleQueryparameter.FromDate.Value.ToUniversalTime() ||
-                                                           x.DateTo >= agentScheduleQueryparameter.FromDate.Value.ToUniversalTime());
+                                                           x.DateFrom >= agentScheduleQueryparameter.FromDate.Value ||
+                                                           x.DateTo >= agentScheduleQueryparameter.FromDate.Value);
             }
 
             return agentSchedules;
