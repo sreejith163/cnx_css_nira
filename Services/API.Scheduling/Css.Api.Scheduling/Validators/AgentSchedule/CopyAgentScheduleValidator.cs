@@ -13,7 +13,6 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         /// </summary>
         public CopyAgentScheduleValidator()
         {
-            RuleFor(x => x.EmployeeIds).NotEmpty();
             RuleFor(x => x.AgentSchedulingGroupId).NotEmpty();
             RuleFor(x => x.AgentScheduleType).IsInEnum();
             RuleFor(x => x.ActivityOrigin).IsInEnum();

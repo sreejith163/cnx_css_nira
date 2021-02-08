@@ -290,6 +290,13 @@ namespace Css.Api.Scheduling.Business
 
             _agentScheduleRepository.CopyAgentSchedules(agentSchedule, agentScheduleDetails);
 
+            if (!agentScheduleDetails.EmployeeIds.Any())
+            {
+                AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails = new AgentSchedulingGroupIdDetails { AgentSchedulingGroupId = agentScheduleDetails.AgentSchedulingGroupId };
+                agentScheduleDetails.EmployeeIds = await _agentScheduleRepository.GetEmployeeIdsByAgentScheduleGroupId(agentSchedulingGroupIdDetails);
+                agentScheduleDetails.EmployeeIds = agentScheduleDetails.EmployeeIds.FindAll(x => x != agentSchedule.EmployeeId);
+            }
+
             var activityLogs = new List<ActivityLog>();
 
             foreach (var employeeId in agentScheduleDetails.EmployeeIds)
