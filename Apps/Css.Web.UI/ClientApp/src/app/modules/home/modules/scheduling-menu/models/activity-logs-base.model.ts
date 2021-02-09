@@ -1,4 +1,6 @@
 import { WeekDay } from '@angular/common';
+import { ActivityOrigin } from '../enums/activity-origin.enum';
+import { ActivityStatus } from '../enums/activity-status.enum';
 
 export class ActivityLogsBase {
     id: string;
@@ -7,5 +9,6 @@ export class ActivityLogsBase {
     timeStamp: Date;
     executedBy: string;
     origin: string;
-    status: string;
+    activityStatus: ActivityStatus;
+    activityOrigin: ActivityOrigin;
 }

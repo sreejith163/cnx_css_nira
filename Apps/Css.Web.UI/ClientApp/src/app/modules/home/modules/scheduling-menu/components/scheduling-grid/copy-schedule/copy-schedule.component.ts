@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { ActivityType } from '../../../enums/activity-type.enum';
+import { ActivityOrigin } from '../../../enums/activity-origin.enum';
 import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { AgentSchedulesQueryParams } from '../../../models/agent-schedules-query-params.model';
 import { CopyAgentSchedulechart } from '../../../models/copy-agent-schedule-chart.model';
@@ -218,7 +218,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     const copyData = new CopyAgentSchedulechart();
     copyData.agentSchedulingGroupId = this.agentSchedulingGroupId;
     copyData.agentScheduleType = this.agentScheduleType;
-    copyData.activityOrigin = ActivityType.CSS;
+    copyData.activityOrigin = ActivityOrigin.CSS;
     copyData.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     copyData.employeeIds = this.masterSelected ? [] : copiedAgents;
 

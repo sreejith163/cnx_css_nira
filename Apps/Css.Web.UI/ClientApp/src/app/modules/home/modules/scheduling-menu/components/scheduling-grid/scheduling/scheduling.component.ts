@@ -24,7 +24,8 @@ import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ActivityLogsComponent } from '../activity-logs/activity-logs.component';
-import { ActivityType } from '../../../enums/activity-type.enum';
+import { ActivityOrigin } from '../../../enums/activity-origin.enum';
+import { ActivityType } from 'src/app/shared/enums/activity-type.enum';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -327,7 +328,8 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
 
   openActivityLogs(index: number) {
     this.getModalPopup(ActivityLogsComponent, 'xl');
-    this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.Scheduling;
+    this.modalRef.componentInstance.activityType = ActivityType.SchedulingGrid;
+    this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
   }
 
   openCopySchedule(index: number) {
@@ -692,7 +694,7 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
       const chartModel = new UpdateAgentschedulechart();
       const gridData = this.formatEndTime(this.selectedGrid);
       chartModel.agentScheduleCharts = gridData.agentScheduleCharts;
-      chartModel.activityOrigin = ActivityType.CSS;
+      chartModel.activityOrigin = ActivityOrigin.CSS;
       chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
 
       this.updateAgentScheduleChartSubscription = this.agentSchedulesService

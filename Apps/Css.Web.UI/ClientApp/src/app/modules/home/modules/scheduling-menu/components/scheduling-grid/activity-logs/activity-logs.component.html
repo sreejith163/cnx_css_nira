@@ -88,7 +88,7 @@
                     [class.fa-sort-up]="sortBy === 'asc'">
                   </i>
                 </th>
-                <th *ngIf="hasColumnHidden('Day') && agentScheduleType === 0" class="sortable-field" (click)="sort('day', sortBy)">
+                <th *ngIf="hasColumnHidden('Day') && activityType === activityTypeEnum.SchedulingGrid" class="sortable-field" (click)="sort('day', sortBy)">
                   {{ 'Day' | translate }}
                   <i *ngIf="orderBy !== 'day'" class="fa fa-sort"></i>
                   <i id="sortIcon" *ngIf="orderBy === 'day'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
@@ -138,15 +138,15 @@
               </tr>
               <tr class="jsgrid-row user-select-none" *ngFor="let el of activityLogsData; let i = index">
                 <td *ngIf="hasColumnHidden('Employee Id')" class="jsgrid-cell-emp">{{el.employeeId}}</td>
-                <td *ngIf="hasColumnHidden('Day') && agentScheduleType === 0" class="jsgrid-cell-day">
+                <td *ngIf="hasColumnHidden('Day') && activityType === activityTypeEnum.SchedulingGrid" class="jsgrid-cell-day">
                   <span ngbTooltip="{{ weekDay[el.day] }}">
                     {{weekDay[el.day] | truncate: { sliceStart: 0, sliceEnd:
                     characterSplice, append: '...' } }}
                   </span>
                 </td>
                 <td *ngIf="hasColumnHidden('Time Stamp')" class="jsgrid-cell-time-stamp">
-                  <span ngbTooltip="{{ getDateInStringFormat(el.timeStamp) }}">
-                    {{getDateInStringFormat(el.timeStamp) | truncate: { sliceStart: 0, sliceEnd:
+                  <span ngbTooltip="{{ el.timeStamp | date:'medium' }}">
+                    {{el.timeStamp | date:'medium' | truncate: { sliceStart: 0, sliceEnd:
                     characterSplice, append: '...' } }}
                   </span>
                 </td>
