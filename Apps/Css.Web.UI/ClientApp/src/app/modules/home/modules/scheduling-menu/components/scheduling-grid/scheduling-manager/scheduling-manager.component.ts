@@ -37,6 +37,7 @@ declare function highlightManagerSelectedCells(table: string, cell: string);
 declare function highlightCell(cell: string, className: string);
 import * as $ from 'jquery';
 import { AgentIconFilter } from '../../../models/agent-icon-filter.model';
+import { ActivityLogsComponent } from '../activity-logs/activity-logs.component';
 
 
 @Component({
@@ -367,6 +368,11 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     }
 
     return '';
+  }
+
+  openActivityLogs(index: number) {
+    this.getModalPopup(ActivityLogsComponent, 'xl');
+    this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.SchedulingManager;
   }
 
   openCopySchedule(index: number) {

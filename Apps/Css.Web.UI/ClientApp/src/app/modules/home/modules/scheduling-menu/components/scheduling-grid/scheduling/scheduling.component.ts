@@ -23,6 +23,7 @@ import { CopyScheduleComponent } from '../copy-schedule/copy-schedule.component'
 import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ActivityLogsComponent } from '../activity-logs/activity-logs.component';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -321,6 +322,11 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
 
   save(gridChart: AgentScheduleGridResponse) {
     this.updateAgentScheduleChart(gridChart.id);
+  }
+
+  openActivityLogs(index: number) {
+    this.getModalPopup(ActivityLogsComponent, 'xl');
+    this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.Scheduling;
   }
 
   openCopySchedule(index: number) {
