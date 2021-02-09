@@ -12,6 +12,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
         }
 
         /// <summary>
+        /// Gets or sets the employee identifier.
+        /// </summary>
+        public int? EmployeeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the executed user.
         /// </summary>
         public int? ExecutedUser { get; set; }

@@ -109,6 +109,11 @@ namespace Css.Api.Scheduling.Repository
                                                              ));
             }
 
+            if (activityLogQueryParameter.EmployeeId.HasValue && activityLogQueryParameter.EmployeeId != default(int))
+            {
+                activityLogs = activityLogs.Where(x => x.EmployeeId == activityLogQueryParameter.EmployeeId);
+            }
+
             if (activityLogQueryParameter.ExecutedUser.HasValue && activityLogQueryParameter.ExecutedUser != default(int))
             {
                 activityLogs = activityLogs.Where(x => x.ExecutedUser == activityLogQueryParameter.ExecutedUser);

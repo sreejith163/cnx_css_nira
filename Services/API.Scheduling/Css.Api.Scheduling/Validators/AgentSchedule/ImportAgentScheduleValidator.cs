@@ -15,6 +15,7 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         public ImportAgentScheduleValidator()
         {
             RuleFor(x => x.ModifiedBy).NotEmpty();
+            RuleFor(x => x.ModifiedUser).NotEmpty();
             RuleFor(x => x.ActivityOrigin).IsInEnum();
             RuleFor(x => x.ImportAgentScheduleCharts).NotNull();
             RuleForEach(x => x.ImportAgentScheduleCharts)
