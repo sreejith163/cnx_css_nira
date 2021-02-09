@@ -526,7 +526,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44301
+          "Port": 44393
         }
       ],
       "UpstreamPathTemplate": "/api/activitylogs",

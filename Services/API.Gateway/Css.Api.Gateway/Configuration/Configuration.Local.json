@@ -525,7 +525,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "css.api.reporting",
+          "Host": "css.api.scheduling",
           "Port": 80
         }
       ],

@@ -525,8 +525,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.34",
-          "Port": 4206
+          "Host": "10.87.221.14",
+          "Port": 4205
         }
       ],
       "UpstreamPathTemplate": "/api/activitylogs",
