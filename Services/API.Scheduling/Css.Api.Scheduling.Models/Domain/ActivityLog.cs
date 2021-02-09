@@ -25,6 +25,11 @@ namespace Css.Api.Scheduling.Models.Domain
         public string ExecutedBy { get; set; }
 
         /// <summary>
+        /// Gets or sets the executed user.
+        /// </summary>
+        public int ExecutedUser { get; set; }
+
+        /// <summary>
         /// Gets or sets the activity status.
         /// </summary>
         public ActivityStatus ActivityStatus { get; set; }

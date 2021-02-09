@@ -23,6 +23,11 @@ namespace Css.Api.Scheduling.Models.DTO.Response.ActivityLog
         public string ExecutedBy { get; set; }
 
         /// <summary>
+        /// Gets or sets the executed user.
+        /// </summary>
+        public string ExecutedUser { get; set; }
+
+        /// <summary>
         /// Gets or sets the activity status.
         /// </summary>
         public ActivityStatus ActivityStatus { get; set; }

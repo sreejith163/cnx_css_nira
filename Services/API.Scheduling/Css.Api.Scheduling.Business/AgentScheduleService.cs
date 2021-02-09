@@ -202,8 +202,8 @@ namespace Css.Api.Scheduling.Business
 
             var employeeId = await _agentScheduleRepository.GetEmployeeIdByAgentScheduleId(agentScheduleIdDetails);
 
-            var activityLog = GetActivityLogForSchedulingChart(agentScheduleDetails.AgentScheduleCharts, employeeId, agentScheduleDetails.ModifiedBy, 
-                                                               agentScheduleDetails.ActivityOrigin);
+            var activityLog = GetActivityLogForSchedulingChart(agentScheduleDetails.AgentScheduleCharts, employeeId, agentScheduleDetails.ModifiedBy,
+                                                               agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
 
             _activityLogRepository.CreateActivityLog(activityLog);
 
@@ -237,7 +237,8 @@ namespace Css.Api.Scheduling.Business
             foreach (var agentScheduleManagerChartDetail in agentScheduleManagerChartDetails.AgentScheduleManagers)
             {
                 var activityLog = GetActivityLogForSchedulingChart(agentScheduleManagerChartDetail.AgentScheduleManagerChart, agentScheduleManagerChartDetail.EmployeeId,
-                                                                   agentScheduleManagerChartDetails.ModifiedBy, agentScheduleManagerChartDetails.ActivityOrigin);
+                                                                   agentScheduleManagerChartDetails.ModifiedBy, agentScheduleManagerChartDetails.ModifiedUser, 
+                                                                   agentScheduleManagerChartDetails.ActivityOrigin);
                 activityLogs.Add(activityLog);
             }
 
@@ -269,7 +270,8 @@ namespace Css.Api.Scheduling.Business
                 _agentScheduleRepository.ImportAgentScheduleChart(importAgentScheduleChart, modifiedUserDetails);
 
                 var activityLog = GetActivityLogForSchedulingChart(importAgentScheduleChart.AgentScheduleCharts, importAgentScheduleChart.EmployeeId,
-                                                                   agentScheduleDetails.ModifiedBy, agentScheduleDetails.ActivityOrigin);
+                                                                   agentScheduleDetails.ModifiedBy, agentScheduleDetails.ModifiedUser,
+                                                                   agentScheduleDetails.ActivityOrigin);
                 activityLogs.Add(activityLog);
             }
 
@@ -310,13 +312,13 @@ namespace Css.Api.Scheduling.Business
                 if (agentScheduleDetails.AgentScheduleType == AgentScheduleType.SchedulingTab)
                 {
                     var activityLog = GetActivityLogForSchedulingChart(agentSchedule.AgentScheduleCharts, employeeId, agentScheduleDetails.ModifiedBy,
-                                                                       agentScheduleDetails.ActivityOrigin);
+                                                                       agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
                     activityLogs.Add(activityLog);
                 }
                 else if (agentScheduleDetails.AgentScheduleType == AgentScheduleType.SchedulingMangerTab)
                 {
                     var activityLog = GetActivityLogForSchedulingChart(agentSchedule.AgentScheduleManagerCharts, employeeId, agentScheduleDetails.ModifiedBy,
-                                                                       agentScheduleDetails.ActivityOrigin);
+                                                                       agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
                     activityLogs.Add(activityLog);
                 }
             }
@@ -406,14 +408,17 @@ namespace Css.Api.Scheduling.Business
         /// <param name="scheduleCharts">The schedule charts.</param>
         /// <param name="employeeId">The employee identifier.</param>
         /// <param name="executedBy">The executed by.</param>
+        /// <param name="executedUser">The executed user.</param>
         /// <param name="activityOrigin">The activity origin.</param>
         /// <returns></returns>
-        private ActivityLog GetActivityLogForSchedulingChart(object scheduleCharts, int employeeId, string executedBy, ActivityOrigin activityOrigin)
+        private ActivityLog GetActivityLogForSchedulingChart(object scheduleCharts, int employeeId, string executedBy, int executedUser, 
+                                                             ActivityOrigin activityOrigin)
         {
             var activityLog = new ActivityLog()
             {
                 EmployeeId = employeeId,
                 ExecutedBy = executedBy,
+                ExecutedUser = executedUser,
                 TimeStamp = DateTimeOffset.UtcNow,
                 ActivityOrigin = activityOrigin,
                 ActivityStatus = ActivityStatus.Updated,
