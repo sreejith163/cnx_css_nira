@@ -22,32 +22,10 @@ export class ActivityLogsService extends HttpBaseService {
   }
 
   getActivityLogs(queryParams: ActivityLogsQueryParams) {
-    const response = Array<ActivityLogsResponse>();
-    const data = new ActivityLogsResponse();
-    data.id = '1';
-    data.employeeId = 1;
-    data.executedBy = 'Sree';
-    data.day = 0;
-    data.origin = 'Css';
-    data.status = 'Updated';
-    data.timeStamp = new Date('2021-01-03');
-    data.agentScheduleManagerCharts = [];
-    const dataChart = new AgentScheduleManagerChart();
-    dataChart.date = new Date('2021-01-03');
-    dataChart.charts = [{
-      schedulingCodeId: 5,
-      startTime: '08:00 am',
-      endTime: '10:00 am'
-    }];
-    data.agentScheduleManagerCharts.push(dataChart);
-    response.push(data);
-
-    return of(response);
-  //   const url = `${this.baseURL}/activityLogs`;
-
-  //   return this.http.get<ActivityLogsBase>(url, {
-  //     params: this.convertToHttpParam(queryParams),
-  //     observe: 'response'
-  //   }).pipe(catchError(this.handleError));
+    const url = `${this.baseURL}/activityLogs`;
+    return this.http.get<ActivityLogsBase>(url, {
+      params: this.convertToHttpParam(queryParams),
+      observe: 'response'
+    }).pipe(catchError(this.handleError));
   }
 }

@@ -12,6 +12,7 @@ import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.s
 import { SchedulingCode } from '../../../../system-admin/models/scheduling-code.model';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { WeekDay } from '@angular/common';
+import { ActivityType } from 'src/app/shared/enums/activity-type.enum';
 
 @Component({
   selector: 'app-activity-logs',
@@ -27,7 +28,7 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   endTimeFilter = '10:00 am';
 
   // tableClassName = 'schedulingActivityTable';
-  orderBy = 'createdDate';
+  orderBy = 'TimeStamp';
   sortBy = 'desc';
   searchKeyword: string;
   totalRevisions = 3;
@@ -38,6 +39,7 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   totalRecord: number;
 
   weekDay = WeekDay;
+  activityTypeEnum = ActivityType;
   paginationSize = Constants.paginationSize;
 
   columnList: Array<string> = [];
@@ -50,7 +52,8 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   getActivityLogsSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
-  @Input() agentScheduleType: AgentScheduleType;
+  @Input() activityType: ActivityType;
+  @Input() employeeId: number;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -60,7 +63,7 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    if (this.agentScheduleType === AgentScheduleType.Scheduling) {
+    if (this.activityType === ActivityType.SchedulingGrid) {
       this.columnList = ['Employee Id', 'Day', 'Time Stamp', 'Executed By', 'Origin', 'Status'];
     } else {
       this.columnList = ['Employee Id', 'Time Stamp', 'Executed By', 'Origin', 'Status'];
@@ -172,15 +175,17 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   }
 
   private getQueryParams() {
-    const agentSchedulesQueryParams = new ActivityLogsQueryParams();
-    agentSchedulesQueryParams.agentScheduleType = this.agentScheduleType;
-    agentSchedulesQueryParams.pageNumber = this.currentPage;
-    agentSchedulesQueryParams.pageSize = this.pageSize;
-    agentSchedulesQueryParams.searchKeyword = this.searchKeyword ?? '';
-    agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
-    agentSchedulesQueryParams.fields = undefined;
+    const queryParams = new ActivityLogsQueryParams();
+    queryParams.activityType = this.activityType;
+    queryParams.pageNumber = this.currentPage;
+    queryParams.pageSize = this.pageSize;
+    queryParams.searchKeyword = this.searchKeyword ?? '';
+    queryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
+    queryParams.fields = undefined;
+    queryParams.employeeId = this.employeeId;
 
-    return agentSchedulesQueryParams;
+
+    return queryParams;
   }
 
   private loadActivityLogs() {

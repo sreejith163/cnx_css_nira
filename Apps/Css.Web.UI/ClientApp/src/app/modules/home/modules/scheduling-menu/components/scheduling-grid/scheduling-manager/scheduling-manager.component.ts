@@ -38,7 +38,8 @@ declare function highlightCell(cell: string, className: string);
 import * as $ from 'jquery';
 import { AgentIconFilter } from '../../../models/agent-icon-filter.model';
 import { ActivityLogsComponent } from '../activity-logs/activity-logs.component';
-import { ActivityType } from '../../../enums/activity-type.enum';
+import { ActivityOrigin } from '../../../enums/activity-origin.enum';
+import { ActivityType } from 'src/app/shared/enums/activity-type.enum';
 
 
 @Component({
@@ -373,7 +374,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
 
   openActivityLogs(index: number) {
     this.getModalPopup(ActivityLogsComponent, 'xl');
-    this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.SchedulingManager;
+    this.modalRef.componentInstance.activityType = ActivityType.SchedulingManagerGrid;
+    this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
   }
 
   openCopySchedule(index: number) {
@@ -417,7 +419,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
           managerChartModel.agentScheduleManagers.push(employeeData);
         }
       }
-      managerChartModel.activityOrigin = ActivityType.CSS;
+      managerChartModel.activityOrigin = ActivityOrigin.CSS;
       managerChartModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
 
       this.updateAgentManagerChartSubscription = this.agentSchedulesService.updateScheduleManagerChart(managerChartModel)
