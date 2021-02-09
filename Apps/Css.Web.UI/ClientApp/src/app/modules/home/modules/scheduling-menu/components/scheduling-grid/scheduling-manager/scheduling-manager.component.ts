@@ -38,6 +38,7 @@ declare function highlightCell(cell: string, className: string);
 import * as $ from 'jquery';
 import { AgentIconFilter } from '../../../models/agent-icon-filter.model';
 import { ActivityLogsComponent } from '../activity-logs/activity-logs.component';
+import { ActivityType } from '../../../enums/activity-type.enum';
 
 
 @Component({
@@ -416,6 +417,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
           managerChartModel.agentScheduleManagers.push(employeeData);
         }
       }
+      managerChartModel.activityOrigin = ActivityType.CSS;
       managerChartModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
 
       this.updateAgentManagerChartSubscription = this.agentSchedulesService.updateScheduleManagerChart(managerChartModel)
