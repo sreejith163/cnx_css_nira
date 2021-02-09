@@ -119,11 +119,6 @@ namespace Css.Api.Scheduling.Repository
                 activityLogs = activityLogs.Where(o => o.ActivityType == activityLogQueryParameter.ActivityType);
             }
 
-            if (activityLogQueryParameter.ActivityOrigin != null)
-            {
-                activityLogs = activityLogs.Where(o => o.ActivityOrigin == activityLogQueryParameter.ActivityOrigin);
-            }
-
             return activityLogs;
         }
     }
