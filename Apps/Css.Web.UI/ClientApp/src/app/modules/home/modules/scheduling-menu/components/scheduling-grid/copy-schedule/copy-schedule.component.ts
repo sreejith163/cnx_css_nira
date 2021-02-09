@@ -219,6 +219,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     copyData.agentSchedulingGroupId = this.agentSchedulingGroupId;
     copyData.agentScheduleType = this.agentScheduleType;
     copyData.activityOrigin = ActivityOrigin.CSS;
+    copyData.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
     copyData.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     copyData.employeeIds = this.masterSelected ? [] : copiedAgents;
 

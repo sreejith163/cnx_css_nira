@@ -5,5 +5,6 @@ export class CopyAgentSchedulechart {
     agentSchedulingGroupId: number;
     agentScheduleType: AgentScheduleType;
     activityOrigin: number;
+    modifiedUser: number;
     modifiedBy: string;
 }

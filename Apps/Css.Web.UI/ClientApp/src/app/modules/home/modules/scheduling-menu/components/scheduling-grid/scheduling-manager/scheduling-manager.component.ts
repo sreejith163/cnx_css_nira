@@ -376,6 +376,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     this.getModalPopup(ActivityLogsComponent, 'xl');
     this.modalRef.componentInstance.activityType = ActivityType.SchedulingManagerGrid;
     this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
+    this.modalRef.componentInstance.employeeName = this.agentInfo.lastName + ' ' + this.agentInfo.firstName;
+    this.modalRef.componentInstance.startDate = new Date(this.startDate);
   }
 
   openCopySchedule(index: number) {

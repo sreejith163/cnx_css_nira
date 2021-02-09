@@ -14,9 +14,9 @@
       <div class="row">
         <div class="col-12 col-md-12 d-flex">
           <p>{{ 'Agent' | translate }}</p>:
-          <b><span>3018383 John Alexander</span></b>
-          <b><span class="agent">Monday</span></b>
-          <b><span class="agent">12/03/21</span></b>
+          <b><span>{{employeeName}}</span></b>
+          <b><span class="agent">{{startDate | date:'EEEE'}}</span></b>
+          <b><span class="agent">{{startDate | date:'MM/dd/yy'}}</span></b>
         </div>
       </div>
       <div class="row col-md-12 m-t-6">
@@ -43,9 +43,9 @@
         </div>
         <div class="col-md-2 m-l-10">
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search">
+            <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchKeyword">
             <div class="input-group-append">
-              <button class="btn btn-secondary" type="button">
+              <button class="btn btn-secondary" type="button" (click)="search()">
                 <i class="fa fa-search"></i>
               </button>
             </div>
@@ -70,7 +70,7 @@
               {{ 'Select_columns_to_hide' | translate }}
             </ng-template>
           </button>
-          <button class="btn btn-secondary icon float-right" type="button">
+          <button class="btn btn-secondary icon float-right" type="button" (click)="exportToExcel()">
             <i class="fa fa-download"></i>
           </button>
         </div>
@@ -81,10 +81,10 @@
           <table class="jsgrid-table table" id="schedulingActivityTable">
             <thead>
               <tr class="jsgrid-header-row">
-                <th *ngIf="hasColumnHidden('Employee Id')" class="sortable-field" (click)="sort('employeeId', sortBy)">
+                <th *ngIf="hasColumnHidden('Employee Id')" class="sortable-field" (click)="sort('executedUser', sortBy)">
                   {{ 'Employee_id' | translate }}
-                  <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
-                  <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  <i *ngIf="orderBy !== 'executedUser'" class="fa fa-sort"></i>
+                  <i id="sortIcon" *ngIf="orderBy === 'executedUser'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                     [class.fa-sort-up]="sortBy === 'asc'">
                   </i>
                 </th>
@@ -136,18 +136,18 @@
                 <td colspan="25">
                   {{ 'No records found' | translate }}</td>
               </tr>
-              <tr class="jsgrid-row user-select-none" *ngFor="let el of activityLogsData; let i = index">
-                <td *ngIf="hasColumnHidden('Employee Id')" class="jsgrid-cell-emp">{{el.employeeId}}</td>
+              <tr class="jsgrid-row user-select-none"
+               *ngFor="let el of activityLogsChart | slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize; let i = index;">
+                <td *ngIf="hasColumnHidden('Employee Id')" class="jsgrid-cell-emp">{{el.executedUser}}</td>
                 <td *ngIf="hasColumnHidden('Day') && activityType === activityTypeEnum.SchedulingGrid" class="jsgrid-cell-day">
-                  <span ngbTooltip="{{ weekDay[el.day] }}">
-                    {{weekDay[el.day] | truncate: { sliceStart: 0, sliceEnd:
+                  <span ngbTooltip="{{ weekDay[el?.day] }}">
+                    {{weekDay[el?.day] | truncate: { sliceStart: 0, sliceEnd:
                     characterSplice, append: '...' } }}
                   </span>
                 </td>
                 <td *ngIf="hasColumnHidden('Time Stamp')" class="jsgrid-cell-time-stamp">
-                  <span ngbTooltip="{{ el.timeStamp | date:'medium' }}">
-                    {{el.timeStamp | date:'medium' | truncate: { sliceStart: 0, sliceEnd:
-                    characterSplice, append: '...' } }}
+                  <span ngbTooltip="{{ el.timeStamp | date:'MMM d, y, h:mm a' }}">
+                    {{el.timeStamp | date:'MMM d, y, h:mm a' }}
                   </span>
                 </td>
                 <td *ngIf="hasColumnHidden('Executed By')" class="jsgrid-cell-executedBy">
@@ -157,14 +157,14 @@
                   </span>
                 </td>
                 <td *ngIf="hasColumnHidden('Origin')" class="jsgrid-cell-origin">
-                  <span ngbTooltip="{{ el.origin }}">
-                    {{el.origin | truncate: { sliceStart: 0, sliceEnd:
+                  <span ngbTooltip="{{ activityOrigin[el.activityOrigin] }}">
+                    {{activityOrigin[el.activityOrigin] | truncate: { sliceStart: 0, sliceEnd:
                     characterSplice, append: '...' } }}
                   </span>
                 </td>
                 <td *ngIf="hasColumnHidden('Status')" class="jsgrid-cell-status">
-                  <span ngbTooltip="{{ el.status }}">
-                    {{el.status | truncate: { sliceStart: 0, sliceEnd:
+                  <span ngbTooltip="{{ activityStatus[el.activityStatus] }}">
+                    {{activityStatus[el.activityStatus] | truncate: { sliceStart: 0, sliceEnd:
                     characterSplice, append: '...' } }}
                   </span>
                 </td>
@@ -172,9 +172,9 @@
                   attr.scheduleId="{{el.id}}" attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
                   *ngFor="let openTime of openTimes;let j = index"
                   [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-                  <ng-container *ngIf="getIconFromSelectedAgent(el.id,openTime)?.length">
-                    <span ngbTooltip="{{ getAgentIconDescription(el.id,openTime) }}">
-                      <i class="font-style-normal">{{ getIconFromSelectedAgent(el.id,openTime) }}</i>
+                  <ng-container *ngIf="getIconFromSelectedAgent(i,openTime)?.length">
+                    <span ngbTooltip="{{ getAgentIconDescription(i,openTime) }}">
+                      <i class="font-style-normal">{{ getIconFromSelectedAgent(i,openTime) }}</i>
                     </span>
                   </ng-container>
                 </td>

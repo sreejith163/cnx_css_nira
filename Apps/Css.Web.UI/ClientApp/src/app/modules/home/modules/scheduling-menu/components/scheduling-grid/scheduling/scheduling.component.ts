@@ -330,6 +330,8 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
     this.getModalPopup(ActivityLogsComponent, 'xl');
     this.modalRef.componentInstance.activityType = ActivityType.SchedulingGrid;
     this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
+    this.modalRef.componentInstance.employeeName = this.selectedGrid.lastName + ' ' + this.selectedGrid.firstName;
+    this.modalRef.componentInstance.startDate = new Date(this.startDate);
   }
 
   openCopySchedule(index: number) {
@@ -695,6 +697,7 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
       const gridData = this.formatEndTime(this.selectedGrid);
       chartModel.agentScheduleCharts = gridData.agentScheduleCharts;
       chartModel.activityOrigin = ActivityOrigin.CSS;
+      chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
       chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
 
       this.updateAgentScheduleChartSubscription = this.agentSchedulesService
