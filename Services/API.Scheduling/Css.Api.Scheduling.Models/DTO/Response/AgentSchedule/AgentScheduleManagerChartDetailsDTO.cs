@@ -20,6 +20,12 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<AgentScheduleManagerChart> AgentScheduleManagerCharts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the chart.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public AgentScheduleChart AgentScheduleChart { get; set; }
     }
 }
 

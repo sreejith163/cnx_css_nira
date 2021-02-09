@@ -144,6 +144,12 @@ namespace Css.Api.Scheduling.Business
                 {
                     var dateTimeWithZeroTimeSpan = new DateTimeOffset(agentScheduleChartQueryparameter.Date.Value.Date, TimeSpan.Zero);
                     agentSchedule.AgentScheduleManagerCharts = agentSchedule.AgentScheduleManagerCharts.FindAll(x => x.Date == dateTimeWithZeroTimeSpan);
+                    
+                    if (agentSchedule.DateFrom >= dateTimeWithZeroTimeSpan || agentSchedule.DateTo >= dateTimeWithZeroTimeSpan)
+                    {
+                        int weekDay = (int)dateTimeWithZeroTimeSpan.DayOfWeek;
+                        agentSchedule.AgentScheduleCharts = agentSchedule.AgentScheduleCharts.FindAll(x => x.Day == weekDay);
+                    }
                 }
 
                 var mappedAgentScheduleChart = _mapper.Map<AgentScheduleManagerChartDetailsDTO>(agentSchedule);

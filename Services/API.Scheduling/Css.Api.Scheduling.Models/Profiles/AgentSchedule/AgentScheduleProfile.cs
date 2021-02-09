@@ -3,6 +3,7 @@ using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using Css.Api.Core.Models.Enums;
 using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
 using System;
+using System.Linq;
 
 namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
 {
@@ -27,6 +28,7 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
                 .ReverseMap();
 
             CreateMap<NoSQL.AgentSchedule, AgentScheduleManagerChartDetailsDTO>()
+                .ForMember(x => x.AgentScheduleChart, opt => opt.MapFrom(o => o.AgentScheduleCharts.ToList().FirstOrDefault()))
                 .ReverseMap();
 
             CreateMap<PagedList<Entity>, AgentScheduleDTO>()
