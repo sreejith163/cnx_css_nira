@@ -13,16 +13,19 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-          <ul ngbNav #nav="ngbNav" class="nav-tabs">
-            <li ngbNavItem>
+          <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" (activeIdChange)="loadTabContent()" class="nav-tabs myscheduleNavTabs">
+            <li [ngbNavItem]="1" [destroyOnHide]="true">
               <a ngbNavLink class="text-sm text-uppercase mb-4">Daily</a>
               <ng-template ngbNavContent>
-                <div class="container-fluid text-center dateTodayHeader">Today is Monday, December 14, 2020</div>
+                <div class="container-fluid text-center dateTodayHeader">Today is {{dateToday | date: 'EEEE, MMMM d, y'}}</div>
                 <br />
                 <div class="card tableDailyScheduleWrapper">
                   <div class="card-header">
                     <h3 class="card-title">My Schedule For Today:</h3>
-
+                    <ng-container *ngFor="let schedule of myScheduleToday">
+                      {{schedule.date}}
+                    </ng-container>
+                    
                     <div class="card-tools">
                       <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
                         title="Collapse">
@@ -30,44 +33,37 @@
                     </div>
                   </div>
                   <div class="card-body table-responsive p-0">
-                    <table class="table table-hover">
+                    <ngx-spinner [name]="todaySpinner"></ngx-spinner>
+                    <table class="table table-hover" *ngIf="myScheduleChartsToday; else todayOff">
                       <thead>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>
-                            <i class="icon-style icon">{{ unifiedToNative("1F436") }} &nbsp; Open Time</i>
-                          </td>
-                          <td>11:00 AM - 12:30 PM</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <i class="icon-style icon">{{ unifiedToNative("1F963") }} &nbsp; Lunch</i>
-                          </td>
-                          <td>12:30 PM - 01:30 PM</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <i class="icon-style icon">{{ unifiedToNative("1F436") }} &nbsp; Open Time</i>
-                          </td>
-                          <td>11:00 AM - 12:30 PM</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <i class="icon-style icon">{{ unifiedToNative("1F436") }} &nbsp; Open Time</i>
-                          </td>
-                          <td>11:00 AM - 12:30 PM</td>
-                        </tr>
+                        <ng-container *ngFor="let chart of myScheduleChartsToday">
+                          <tr>
+                            <td>
+                              <i class="icon-style">{{ getSchedulingIcon(chart.schedulingCodeId) }} &nbsp; {{ getSchedulingCode(chart.schedulingCodeId) }}</i>
+                            </td>
+                            <td>{{chart.startTime}} - {{chart.endTime}}</td>
+                          </tr>
+                        </ng-container>  
                       </tbody>
                     </table>
+                    <ng-template #todayOff>
+                      <h3 class="mt-2 text-center">OFF</h3>
+                    </ng-template>
                   </div>
                   <!-- /.card-body -->
                 </div>
 
+                <div class="d-flex justify-content-start">
+                    <button class="btn btn-default" (click)="nav.select(2)">Open the Schedule Viewer</button>
+                </div>
+
+                <br/>
+
                 <div class="card tableWeeklyScheduleWrapper">
                   <div class="card-header">
                     <h3 class="card-title">My Schedule For This Week:</h3>
-
                     <div class="card-tools">
                       <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
                         title="Collapse">
@@ -75,68 +71,28 @@
                     </div>
                   </div>
                   <div class="card-body table-responsive p-0">
-                    <table class="table table-hover">
+                    <table class="table table-hover text-center">
                       <thead>
                         <tr>
-                          <th>
-                            Sunday 12/13/20
-                          </th>
-                          <th>
-                            Monday 12/14/20
-                          </th>
-                          <th>
-                            Tuesday 12/15/20
-                          </th>
-                          <th>
-                            Wednesday 12/16/20
-                          </th>
-                          <th>
-                            Thursday 12/17/20
-                          </th>
-                          <th>
-                            Friday 12/18/20
-                          </th>
-                          <th>
-                            Saturday 12/19/20
-                          </th>
+                          <ng-container *ngFor="let dayOfWeek of daysCurrentWeek">
+                            <th>{{dayOfWeek.dayName}} &nbsp; {{dayOfWeek.date | date: 'M/d/yy'}}</th>
+                          </ng-container>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                        </tr>
-                        <tr>
-                          <td>12:30 PM - 01:30 PM</td>
-                          <td>12:30 PM - 01:30 PM</td>
-                          <td>12:30 PM - 01:30 PM</td>
-                          <td>12:30 PM - 01:30 PM</td>
-                          <td>12:30 PM - 01:30 PM</td>
-                          <td>12:30 PM - 01:30 PM</td>
-                          <td>12:30 PM - 01:30 PM</td>
-                        </tr>
-                        <tr>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                        </tr>
-                        <tr>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
-                          <td>11:00 AM - 12:30 PM</td>
+                          <ng-container *ngFor="let schedWeek of myScheduleWeek">
+                            <td>      
+                              <ng-container *ngIf="schedWeek.firstStartTime !== null && schedWeek.lastEndTime !== null; else dayOff">
+                                {{schedWeek.firstStartTime}}
+                                <br/>
+                                {{schedWeek.lastEndTime}}
+                              </ng-container>               
+                              <ng-template #dayOff>
+                                OFF
+                              </ng-template>                                                                     
+                            </td>
+                          </ng-container>                          
                         </tr>
                       </tbody>
                     </table>
@@ -149,34 +105,105 @@
             <li>
               <a class="separator"></a>
             </li>
-            <li ngbNavItem>
+            <li [ngbNavItem]="2" [destroyOnHide]="true">
               <a ngbNavLink class="text-sm text-uppercase mb-4">Weekly</a>
-              <ng-template ngbNavContent>Second content</ng-template>
+              <ng-template ngbNavContent>
+                <div class="container-fluid text-center weeklyHeader d-flex justify-content-between">
+                  <span class="pointer p-1" (click)="goToPrevWeek(); dp.navigateTo(fromDate);"><i class="fa fa-fw fa-chevron-left"></i></span>
+                  {{ daysCurrentWeek[0].date | date: 'MMMM d, y'}} - {{ daysCurrentWeek[6].date | date: 'MMMM d, y'}}
+                  <span class="pointer p-1" (click)="goToNextWeek(); dp.navigateTo(fromDate);"><i class="fa fa-fw fa-chevron-right"></i></span>
+                </div>
+                <br />
+                <div class="row">
+                  <ngx-spinner [name]="weeklyViewSpinner"></ngx-spinner>
+                  <div class="col-lg-10 scrollable-table">
+                    <ng-container *ngFor="let schedWeek of myScheduleWeek; let i = index">                
+                      <div class="card-body scrollable-table p-0">
+                          <table class="table table-striped text-sm">
+                            <thead>
+                              <th width="20%">DAY</th>
+                              <th width="20%">SCHEDULE</th>
+                              <th width="20%">ACTIVITY</th>
+                              <th width="20%">START</th>
+                              <th width="20%">END</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td width="20%">
+                                  {{ daysCurrentWeek[i].dayName }} &nbsp; {{schedWeek.date | date: 'M/d/yy'}}
+                                </td>
+                                <ng-container *ngIf="schedWeek.firstStartTime !== null && schedWeek.lastEndTime !== null; else dayOff">
+                                  <td width="20%">
+                                      {{schedWeek.firstStartTime}}
+                                      -
+                                      {{schedWeek.lastEndTime}}
+                                  </td>
+                                  <td width="20%">
+                                      <ng-container *ngFor="let activity of schedWeek.charts">
+                                        <p><i class="icon-style">{{ getSchedulingIcon(activity.schedulingCodeId) }} &nbsp; {{ getSchedulingCode(activity.schedulingCodeId) }}</i></p>
+                                      </ng-container>
+                                  </td>
+                                  <td width="20%">
+                                    <ng-container *ngFor="let activity of schedWeek.charts">
+                                      <p>{{activity.startTime}}</p>
+                                    </ng-container>
+                                  </td>
+                                  <td width="20%">
+                                    <ng-container *ngFor="let activity of schedWeek.charts">
+                                      <p>{{activity.endTime}}</p>
+                                    </ng-container>
+                                  </td>
+                                </ng-container>               
+                                <ng-template #dayOff>
+                                  <td width="80%" colspan="4" class="text-center">
+                                    OFF
+                                  </td>
+                                </ng-template>  
+                              </tr>      
+                            </tbody>
+                          </table>
+                      </div>
+                      <br/>
+                      <br/>
+                      <hr/>
+                      <br/>
+                    </ng-container>
+                  </div>
+                  <div class="col-lg-2">
+                    <br/>
+                    <div [ngStyle]="{ 'width': '233px'}" class="container-fluid text-center dateTodayHeader p-0">
+                      <span [ngStyle]="{'color': '#007bff'}" class="text-bold">Today is</span> <br/> {{dateToday | date: 'EEEE, MMMM d, y'}}
+                    </div>
+                      <div class="p-0 scrollable-table text-center">
+                        <ngb-datepicker #dp [(ngModel)]="calendarModel" [dayTemplate]="t" firstDayOfWeek='0'></ngb-datepicker>
+                        <ng-template #t let-date let-focused="focused">
+                          <span class="custom-day"
+                                [class.focused]="focused"
+                                [class.range]="isRange(date)"
+                                [class.faded]="isHovered(date) || isInside(date)"
+                                (mouseenter)="hoveredDate = date"
+                                (mouseleave)="hoveredDate = null">
+                            {{ date.day }}
+                          </span>
+                        </ng-template>
+                      </div>
+                  </div>
+                </div>                
+              </ng-template>
             </li>
             <li>
               <a class="separator"></a>
             </li>
-            <li ngbNavItem>
+            <li [ngbNavItem]="3" [destroyOnHide]="true">
               <a ngbNavLink class="text-sm text-uppercase mb-4">Monthly</a>
               <ng-template ngbNavContent>
-
-                <div class="card card-primary">
-                  <div class="card-body p-0">
-
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-
+                <div class="container-fluid text-center dateTodayHeader">Today is {{dateToday | date: 'EEEE, MMMM d, y'}}</div>
+                    <my-schedule-monthly-view (selected)="selected = $event"></my-schedule-monthly-view>
               </ng-template>
             </li>
           </ul>
           <div [ngbNavOutlet]="nav"></div>
         </div>
-        <!-- /.card-body -->
-        <div class="card-footer">
-
-        </div>
-        <!-- /.card-footer -->
       </div>
     </div>
   </div>

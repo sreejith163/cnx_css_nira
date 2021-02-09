@@ -1,0 +1,51 @@
+
+<div class="row">
+    <div class="card col-lg-10">
+        <ngx-spinner [name]="calendarSpinner"></ngx-spinner>
+        <div class="card-header">
+            <div class="d-flex justify-content-between">
+                <span class="pointer p-1"(click)="setMonth(-1)"><i class="fa fa-fw fa-chevron-left"></i></span>
+                <span>{{date | date: 'MMMM y'}}</span>
+                <span class="pointer p-1"  (click)="setMonth(+1)"><i class="fa fa-fw fa-chevron-right"></i></span>
+            </div>    
+        </div>
+        <div class="card-body p-0" style="border:none;">
+            <ng-container *ngFor="let day of days">
+                <div class="text-uppercase text-bold calendarWeekDays">
+                    {{day}}
+                </div>
+            </ng-container>
+            <ng-container *ngFor="let schedule of myScheduleMonthly;">
+                <div class="calendarDays"
+                [ngClass]="{grey: !isSameMonth(schedule.date), now: isNow(schedule.date)}"
+                >
+                <span class="text-right">{{schedule.date | date:'d'}}</span>
+                <ng-container *ngIf="schedule.firstStartTime !== null && schedule.lastEndTime !== null; else dayOff">
+                    <div class="text-xs">{{schedule.firstStartTime}}</div>
+                    <div class="text-xs">{{schedule.lastEndTime}}</div>
+                </ng-container>
+                <ng-template #dayOff>
+                    <div class="text-xs">OFF</div>   
+                    <div class="text-xs spaceFiller">&nbsp;&nbsp;</div>   
+                </ng-template>         
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    
+    <div class="col-lg-2">
+        <div class="container">
+            <p>
+                <br/>
+                <br/>
+                Jump To:
+                <br/>
+                <br/>
+                <select #monthSelect (change)="jumpToMonth(monthSelect.value)" class="form-control">
+                    <option disabled selected>Select Month</option>
+                    <option *ngFor="let month of months; let i = index" [value]="i">{{month}}</option>
+                </select>
+            </p>
+        </div>
+    </div>
+</div>

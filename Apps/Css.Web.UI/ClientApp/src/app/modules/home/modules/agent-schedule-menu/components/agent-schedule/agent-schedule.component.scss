@@ -6,6 +6,9 @@
     color: rgb(114, 112, 112);
 }
 
+.ngb-datepicker {
+    border-radius: 0 !important;
+}
 
 .nav-tabs .nav-link.active {
     color: #495057;
@@ -15,12 +18,17 @@
     font-weight: bold;
 }
 
+.nav-tabs .nav-link:hover:not(.active){
+    background-color: #fff;
+    border-color: #fff;
+}
+
 .nav-tabs li .separator {
     border-left: 2px solid #ccc;
     line-height: 40px;
 }
 
-.dateTodayHeader{
+.dateTodayHeader, .weeklyHeader{
     border: 1px solid #a4cbf5;
     padding: 8px;
     font-weight: 550;
@@ -49,6 +57,25 @@
 .icon-style {
     padding: 5px;
     font-style: normal;
-    cursor: pointer;
 }
+  
+.custom-day {
+    text-align: center;
+    padding: 0.185rem 0.25rem;
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+  }
+  .custom-day.focused {
+    background-color: #e6e6e6;
+  }
+  .custom-day.range, .custom-day:hover {
+    background-color: rgb(2, 117, 216);
+    color: white;
+  }
+  .custom-day.faded {
+    background-color: rgba(2, 117, 216, 0.5);
+  }
+
+
   

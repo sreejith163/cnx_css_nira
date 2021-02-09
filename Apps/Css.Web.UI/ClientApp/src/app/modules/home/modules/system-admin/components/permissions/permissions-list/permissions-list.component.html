@@ -113,21 +113,23 @@
           <tbody>
             <ngx-spinner [name]="spinner">
             </ngx-spinner>
-            <tr class="pointer" *ngFor="let el of employees; let i = index;" (dblclick)="editUserPermission(el)">
-              <td>
-                <i class="fa fa-edit padding-5 pointer" (click)="editUserPermission(el)"></i>
-                <i class="fa fa-trash padding-5 pointer" (click)="confirmDeleteUserPermission(el)"></i>
-              </td>
-              <td>{{el.sso}}</td>
-              <td>{{el.employeeId}}</td>
-              <td>{{el.firstname}}</td>
-              <td>{{el.lastname}}</td>
-              <td>{{el.roleName}}</td>
-              <td>{{el.createdBy ? el.createdBy : 'Not Available'}}</td>
-              <td>{{el.createdDate ? (el.createdDate | date: 'yyyy-MM-dd') : 'Not Available'}}</td>
-              <td>{{el.modifiedBy ? el.modifiedBy : 'Not Available'}}</td>
-              <td>{{el.modifiedDate ? (el.modifiedDate | date: 'yyyy-MM-dd') : 'Not Available'}}</td>
-            </tr>
+            <ng-container *ngFor="let el of employees; let i = index;">
+              <tr class="pointer" *ngIf="el.userRoleId!==6" (dblclick)="editUserPermission(el)">
+                <td>
+                  <i class="fa fa-edit padding-5 pointer" (click)="editUserPermission(el)"></i>
+                  <i class="fa fa-trash padding-5 pointer" (click)="confirmDeleteUserPermission(el)"></i>
+                </td>
+                <td>{{el.sso}}</td>
+                <td>{{el.employeeId}}</td>
+                <td>{{el.firstname}}</td>
+                <td>{{el.lastname}}</td>
+                <td>{{el.roleName}}</td>
+                <td>{{el.createdBy ? el.createdBy : 'Not Available'}}</td>
+                <td>{{el.createdDate ? (el.createdDate | date: 'yyyy-MM-dd') : 'Not Available'}}</td>
+                <td>{{el.modifiedBy ? el.modifiedBy : 'Not Available'}}</td>
+                <td>{{el.modifiedDate ? (el.modifiedDate | date: 'yyyy-MM-dd') : 'Not Available'}}</td>
+              </tr>
+            </ng-container>
           </tbody>
         </table>
       </div>

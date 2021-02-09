@@ -124,7 +124,9 @@
               formControlName="userRoleId">
               <option value="">
                 {{ 'Select Permission' | translate }}</option>
-              <option *ngFor="let x of permissions" [value]="x.id">{{ x.name }}</option>
+                <ng-container *ngFor="let x of permissions">
+                  <option *ngIf="x.id!==6" [value]="x.id">{{ x.name }}</option>
+                </ng-container>
               </select>
               <div *ngIf="hasFormControlValidationError('userRoleId')" class="valid-error">
                 {{ 'Permission is required' | translate }}

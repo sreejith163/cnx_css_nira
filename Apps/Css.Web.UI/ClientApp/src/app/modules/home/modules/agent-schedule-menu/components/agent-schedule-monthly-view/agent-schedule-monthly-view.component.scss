@@ -1,0 +1,32 @@
+ul { margin: 0; padding: 0; list-style: none;}
+
+div.calendarDays {
+  display: inline-block; 
+  height: calc(100%/7 - 2px);
+  border: 1px solid rgba(0,0,0,.125);
+  width: calc(100%/7);
+  text-align: center;
+}
+
+.card {
+    height: 600px;
+    box-shadow: none !important;
+}
+
+div.calendarWeekDays {
+    display: inline-block; 
+    height: calc(100%/7 - 2px);
+    border: 1px solid rgba(0,0,0,.125);
+    width: calc(100%/7);
+    text-align: center;
+    line-height: 70px;
+}
+
+div.calendarDays.days {font-weight: bold;}
+div.calendarDays.grey {color: #ccc}
+div.calendarDays.grey:hover {background-color: #ccc; color: black;}
+div.calendarDays:hover {background-color: #ccc;}
+div.calendarDays.now {
+  background-color: #0275d8;
+  color: white;
+}
