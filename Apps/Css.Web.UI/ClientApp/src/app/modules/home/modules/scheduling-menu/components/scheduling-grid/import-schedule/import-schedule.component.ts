@@ -23,6 +23,7 @@ import { ImportScheduleData } from '../../../models/import-schedule-data.model';
 import { AgentShceduleMangerData } from '../../../models/agent-schedule-manager-data.model';
 import { ManagerExcelData } from '../../../models/manager-excel-data.model';
 import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manager-chart.model';
+import { ActivityType } from '../../../enums/activity-type.enum';
 
 @Component({
   selector: 'app-import-schedule',
@@ -349,6 +350,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private getImportAgentScheduleChartModel(schedules: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[]) {
     const chartModel = new ImportShceduleChart();
+    chartModel.activityOrigin = ActivityType.CSS;
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     for (const employee of schedules) {
       const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);
@@ -379,6 +381,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private getImportAgentManagerChartModel(schedules: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[]) {
     const chartModel = new UpdateAgentScheduleMangersChart();
+    chartModel.activityOrigin = ActivityType.CSS;
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     for (const employee of schedules) {
       const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);

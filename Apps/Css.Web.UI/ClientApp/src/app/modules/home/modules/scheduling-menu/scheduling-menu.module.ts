@@ -13,6 +13,8 @@ import { SchedulingGridComponent } from './components/scheduling-grid/scheduling
 import { ImportScheduleComponent } from './components/scheduling-grid/import-schedule/import-schedule.component';
 import { CopyScheduleComponent } from './components/scheduling-grid/copy-schedule/copy-schedule.component';
 import { SchedulingManagerComponent } from './components/scheduling-grid/scheduling-manager/scheduling-manager.component';
+import { ActivityLogsComponent } from './components/scheduling-grid/activity-logs/activity-logs.component';
+import { ActivityLogsService } from './services/activity-logs.service';
 import { SchedulingComponent } from './components/scheduling-grid/scheduling/scheduling.component';
 import { SchedulingFilterComponent } from './components/scheduling-grid/scheduling-filter/scheduling-filter.component';
 
@@ -26,10 +28,11 @@ const components =
     ImportScheduleComponent,
     CopyScheduleComponent,
     SchedulingManagerComponent,
+    ActivityLogsComponent,
     SchedulingComponent,
     SchedulingFilterComponent,
     HorizontalScrollPipe];
-const providers = [AgentAdminService, AgentSchedulesService];
+const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService];
 
 @NgModule({
   declarations: components,

@@ -1,0 +1,112 @@
+.test {
+  margin-top: 5px;
+  margin-left: 6px;
+  margin-right: 0px;
+  background-color: #f6f6f69e;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 4px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  height: 32px;
+}
+
+.bg-color {
+  background-color: #dfdfeb;
+}
+
+.label-color {
+  color: #007bff;
+}
+
+.p-t-10 {
+  padding-top: 10px;
+}
+
+input.manager {
+  height: calc(1.5em + .75rem + 0px) !important;
+  font-size: 0.9rem !important;
+}
+
+.margin-4 {
+  margin: 4px;
+}
+
+.modal.show .add-edit-modal.modal-dialog-activity {
+  transform: none;
+  max-width: 1500px !important;
+}
+
+.agent {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.icon {
+  height: 42px;
+}
+
+.m-l-10 {
+  margin-left: 10px;
+}
+
+input.form-control {
+  height: calc(2.25rem + 7px);
+}
+
+.morning {
+  background-color: white;
+}
+
+.night {
+  background-color: darkgrey;
+  color: white;
+}
+
+.jsgrid-grid-body {
+  padding-right: 8px;
+  padding-left: 13px
+}
+
+.jsgrid-grid-header {
+  overflow-x: auto;
+  overflow-y: auto;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+}
+
+.jsgrid-cell {
+  cursor: pointer;
+  background-color: white;
+  max-height: 40px;
+  max-width: 40px;
+}
+
+.jsgrid-cell:hover {
+  cursor: pointer;
+  background-color: lightgrey;
+  height: 40px;
+  width: 40px;
+}
+
+.jsgrid-header-cell {
+  cursor: pointer;
+  height: 40px;
+  width: 40px;
+}
+
+.valid-record {
+  color: #797676;
+  font-size: 16px;
+  padding: 6px;
+  text-align: center;
+}
+
+.label {
+  font-weight: 100;
+}
+
+label:not(.form-check-label):not(.custom-file-label) {
+  font-weight: 400;
+}
