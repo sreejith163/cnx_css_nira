@@ -422,6 +422,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
         }
       }
       managerChartModel.activityOrigin = ActivityOrigin.CSS;
+      managerChartModel.modifiedUser = +this.authService.getLoggedUserInfo().employeeId;
       managerChartModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
 
       this.updateAgentManagerChartSubscription = this.agentSchedulesService.updateScheduleManagerChart(managerChartModel)
