@@ -22,6 +22,7 @@ import { ExcelService } from 'src/app/shared/services/excel.service';
 import { ExcelData } from '../../../models/excel-data.model';
 import { ActivityLogExcelData } from '../../../models/activity-log-excel-data.model';
 
+
 @Component({
   selector: 'app-activity-logs',
   templateUrl: './activity-logs.component.html',
@@ -293,6 +294,9 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
           icon?.charts?.map(x => {
             x.endTime = x?.endTime.trim().toLowerCase();
             x.startTime = x?.startTime.trim().toLowerCase();
+            if (x.endTime.trim().toLowerCase() === '00:00 am') {
+              x.endTime = '11:60 pm';
+            }
           });
           chart.agentScheduleChart = new AgentScheduleChart();
           chart.day = icon?.day;
@@ -303,22 +307,26 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   }
 
   private setManagerChartData() {
-    for (const item of this.activityLogsData) {
-      const chart = new ActivityLogsChart();
-      chart.employeeId = item?.employeeId;
-      chart.executedUser = item?.executedUser;
-      chart.executedBy = item?.executedBy;
-      chart.activityStatus = item?.activityStatus;
-      chart.activityOrigin = item?.activityOrigin;
-      chart.timeStamp = item?.timeStamp;
-      item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts.map(x => {
-        x.endTime = x?.endTime.trim().toLowerCase();
-        x.startTime = x?.startTime.trim().toLowerCase();
+      this.activityLogsData.forEach((item, index) => {
+        const chart = new ActivityLogsChart();
+        chart.id = index;
+        chart.employeeId = item?.employeeId;
+        chart.executedUser = item?.executedUser;
+        chart.executedBy = item?.executedBy;
+        chart.activityStatus = item?.activityStatus;
+        chart.activityOrigin = item?.activityOrigin;
+        chart.timeStamp = item?.timeStamp;
+        item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts.map(x => {
+          x.endTime = x?.endTime.trim().toLowerCase();
+          x.startTime = x?.startTime.trim().toLowerCase();
+          if (x.endTime.trim().toLowerCase() === '00:00 am') {
+            x.endTime = '11:60 pm';
+          }
+        });
+        chart.agentScheduleChart = new AgentScheduleChart();
+        chart.agentScheduleChart.charts = item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts;
+        this.activityLogsChart.push(chart);
       });
-      chart.agentScheduleChart = new AgentScheduleChart();
-      chart.agentScheduleChart.charts = item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts;
-      this.activityLogsChart.push(chart);
-    }
   }
 
   private loadSchedulingCodes() {
