@@ -98,8 +98,12 @@
                 <th *ngIf="hasColumnHidden('Time Stamp')" class="sortable-field">
                   {{ 'Time Stamp' | translate }}
                 </th>
-                <th *ngIf="hasColumnHidden('Executed By')" class="sortable-field">
+                <th *ngIf="hasColumnHidden('Executed By')" class="sortable-field" (click)="sort('executedBy', sortBy)">
                   {{ 'Executed By' | translate }}
+                  <i *ngIf="orderBy !== 'executedBy'" class="fa fa-sort"></i>
+                  <i id="sortIcon" *ngIf="orderBy === 'executedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                    [class.fa-sort-up]="sortBy === 'asc'">
+                  </i>
                 </th>
                 <th *ngIf="hasColumnHidden('Origin')" class="sortable-field" (click)="sort('origin', sortBy)">
                   {{ 'Origin' | translate }}
@@ -137,7 +141,7 @@
                   {{ 'No records found' | translate }}</td>
               </tr>
               <tr class="jsgrid-row user-select-none"
-               *ngFor="let el of activityLogsChart | slice: (currentPage-1) * pageSize : (currentPage-1) * pageSize + pageSize; let i = index;">
+               *ngFor="let el of activityLogsChart | slice: (currentPage-1) * pageSize : (currentPage) * pageSize; let i = index;">
                 <td *ngIf="hasColumnHidden('Employee Id')" class="jsgrid-cell-emp">{{el.executedUser}}</td>
                 <td *ngIf="hasColumnHidden('Day') && activityType === activityTypeEnum.SchedulingGrid" class="jsgrid-cell-day">
                   <span ngbTooltip="{{ weekDay[el?.day] }}">

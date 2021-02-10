@@ -169,8 +169,31 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   sort(columnName: string, sortBy: string) {
     this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
     this.orderBy = columnName;
+    if (sortBy === 'asc') {
+      this.activityLogsChart.sort((a, b): number => {
+        if (a[columnName] < b[columnName]) {
+          return -1;
+        } else if (a[columnName] > b[columnName]) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      });
 
-    this.loadActivityLogs();
+    } else {
+      this.activityLogsChart.sort((a, b): number => {
+        if (a[columnName] > b[columnName]) {
+          return -1;
+        } else if (a[columnName] < b[columnName]) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      });
+    }
+
   }
 
   changePage(page: number) {
@@ -192,7 +215,7 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
     for (const item of this.activityLogsChart) {
       const model = new ActivityLogExcelData();
       model.EmployeeId = +item?.executedUser;
-      if(this.activityType === ActivityType.SchedulingGrid) {
+      if (this.activityType === ActivityType.SchedulingGrid) {
         model.Day = WeekDay[item?.day];
       }
       model.ExecutedBy = item?.executedBy;
