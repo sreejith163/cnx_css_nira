@@ -490,6 +490,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
 
     this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
       .pipe(mergeMap(data => {
+        this.spinnerService.hide(this.spinner);
         this.totalSchedulingGridData = data.body;
         this.totalSchedulingRecord = this.totalSchedulingGridData.length;
         this.managerCharts = [];
@@ -500,6 +501,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
         return this.getAgentCharts(ids);
       }))
       .subscribe((response) => {
+        this.spinnerService.show(this.spinner, SpinnerOptions);
         if (response) {
           const index = response?.agentScheduleManagerCharts[0]?.charts.findIndex(x => x.endTime.trim().toLowerCase() === '00:00 am');
           if (index > -1) {

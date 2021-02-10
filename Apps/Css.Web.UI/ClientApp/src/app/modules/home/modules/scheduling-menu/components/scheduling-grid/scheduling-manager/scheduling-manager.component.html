@@ -148,18 +148,21 @@
       </button>
     </div>
     <div class="col-md-2 m-b-5">
-      <button class="btn btn-primary btn-activity" id="btn_activity_logs" (click)="openActivityLogs(selectedRow)">
+      <button class="btn btn-primary btn-activity" id="btn_activity_logs"
+      [disabled]="!agentSchedulingGroupId" (click)="openActivityLogs(selectedRow)">
         {{ 'Activity Logs' | translate }}
       </button>
     </div>
     <div class="col-md-6 m-b-5"></div>
     <div class="col-md-1 m-b-5">
-      <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" id="btn_save" (click)="save()">
+      <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" id="btn_save"
+      [disabled]="!agentSchedulingGroupId" (click)="save()">
         <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
       </button>
     </div>
     <div class="col-md-1  m-b-5">
-      <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
+      <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal"
+      [disabled]="!agentSchedulingGroupId" (click)="cancel()"
         id="btn_cancel">
         <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
       </button>
