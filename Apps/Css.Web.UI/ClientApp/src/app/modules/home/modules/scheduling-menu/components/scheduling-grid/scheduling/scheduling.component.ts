@@ -133,6 +133,9 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
       } else {
         this.totalSchedulingGridData = [];
       }
+      if (this.refreshSchedulingTab) {
+        this.selectedGrid = null;
+      }
     }
 
   }

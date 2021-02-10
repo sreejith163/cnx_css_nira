@@ -8,7 +8,6 @@ import { WeekDay } from '@angular/common';
 
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
 import { SortingType } from '../../../enums/sorting-type.enum';
 import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 
@@ -24,7 +23,6 @@ import { UpdateAgentScheduleMangersChart } from '../../../models/update-agent-sc
 import { AgentShceduleMangerData } from '../../../models/agent-schedule-manager-data.model';
 import { ScheduleChartQueryParams } from '../../../models/schedule-chart-query-params.model';
 
-import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
 import { AgentSchedulesService } from '../../../services/agent-schedules.service';
 import { AgentAdminService } from '../../../services/agent-admin.service';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -66,7 +64,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   orderBy = 'createdDate';
   sortBy = 'desc';
   spinner = 'schedulig-manager';
-  scheduleSpinner = 'scheduling-spinner';
   selectedCellClassName = 'cell-selected';
   tableClassName = 'schedulingManagerTable';
   isMouseDown: boolean;
@@ -559,7 +556,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
       let weekData;
       let scheduleId;
       let to;
-      this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
+      this.spinnerService.show(this.spinner, SpinnerOptions);
       let meridiem = elem.attributes.meridiem.value;
       const fromTime = elem.attributes.time.value + ' ' + meridiem;
       let hours = fromTime.split(':')[0];
@@ -608,7 +605,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
         }
       }
     });
-    this.spinnerService.hide(this.scheduleSpinner);
+    this.spinnerService.hide(this.spinner);
     this.isDelete = false;
     this.icon = undefined;
     this.sortSelectedGridCalendarTimes();

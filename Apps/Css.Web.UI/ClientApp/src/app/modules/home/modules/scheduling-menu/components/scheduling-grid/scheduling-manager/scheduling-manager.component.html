@@ -109,6 +109,7 @@
         </tr>
       </thead>
       <tbody>
+        <ngx-spinner [name]="spinner"></ngx-spinner>
         <tr *ngIf="totalSchedulingGridData?.length === 0" class="valid-record">
           <td colspan="25">
             {{ 'No records found' | translate }}</td>
