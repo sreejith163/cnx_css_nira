@@ -176,9 +176,9 @@
                   attr.scheduleId="{{el.id}}" attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
                   *ngFor="let openTime of openTimes;let j = index"
                   [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-                  <ng-container *ngIf="getIconFromSelectedAgent(i,openTime)?.length">
-                    <span ngbTooltip="{{ getAgentIconDescription(i,openTime) }}">
-                      <i class="font-style-normal">{{ getIconFromSelectedAgent(i,openTime) }}</i>
+                  <ng-container *ngIf="getIconFromSelectedAgent(el.id,openTime)?.length">
+                    <span ngbTooltip="{{ getAgentIconDescription(el.id,openTime) }}">
+                      <i class="font-style-normal">{{ getIconFromSelectedAgent(el.id,openTime) }}</i>
                     </span>
                   </ng-container>
                 </td>

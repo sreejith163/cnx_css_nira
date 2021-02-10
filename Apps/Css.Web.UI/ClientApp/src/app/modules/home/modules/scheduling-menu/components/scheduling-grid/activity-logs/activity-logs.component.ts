@@ -136,9 +136,9 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
     return data.split(':')[1] === '00 am' || data.split(':')[1] === '00 pm';
   }
 
-  getIconFromSelectedAgent(index: number, openTime: string) {
+  getIconFromSelectedAgent(id: number, openTime: string) {
     if (this.activityLogsChart.length > 0) {
-      const item = this.activityLogsChart[index];
+      const item = this.activityLogsChart.find(x => x.id === id);
       const weekTimeData = item?.agentScheduleChart?.charts.find(x => this.convertToDateFormat(openTime) >=
         this.convertToDateFormat(x.startTime) &&
         this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
@@ -151,9 +151,9 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
     return '';
   }
 
-  getAgentIconDescription(index: number, openTime: string) {
+  getAgentIconDescription(id: number, openTime: string) {
     if (this.activityLogsChart.length > 0) {
-      const item = this.activityLogsChart[index];
+      const item = this.activityLogsChart.find(x => x.id === id);
       const weekTimeData = item?.agentScheduleChart?.charts.find(x => this.convertToDateFormat(openTime) >=
         this.convertToDateFormat(x.startTime) &&
         this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
@@ -239,8 +239,6 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   private getQueryParams() {
     const queryParams = new ActivityLogsQueryParams();
     queryParams.activityType = this.activityType;
-    // queryParams.pageNumber = this.currentPage;
-    // queryParams.pageSize = this.pageSize;
     queryParams.searchKeyword = this.searchKeyword ?? '';
     queryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     queryParams.fields = undefined;
@@ -285,23 +283,24 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
 
   private setScheduleChart() {
     for (const item of this.activityLogsData) {
-      for (const icon of item.schedulingFieldDetails.agentScheduleCharts) {
-        const chart = new ActivityLogsChart();
-        chart.employeeId = item.employeeId;
-        chart.executedUser = item.executedUser;
-        chart.executedBy = item.executedBy;
-        chart.activityStatus = item.activityStatus;
-        chart.activityOrigin = item.activityOrigin;
-        chart.timeStamp = item.timeStamp;
-        icon.charts.map(x => {
-          x.endTime = x.endTime.trim().toLowerCase();
-          x.startTime = x.startTime.trim().toLowerCase();
+        item.schedulingFieldDetails.agentScheduleCharts.forEach((icon, index) => {
+          const chart = new ActivityLogsChart();
+          chart.id = index;
+          chart.employeeId = item.employeeId;
+          chart.executedUser = item.executedUser;
+          chart.executedBy = item.executedBy;
+          chart.activityStatus = item.activityStatus;
+          chart.activityOrigin = item.activityOrigin;
+          chart.timeStamp = item.timeStamp;
+          icon.charts.map(x => {
+            x.endTime = x.endTime.trim().toLowerCase();
+            x.startTime = x.startTime.trim().toLowerCase();
+          });
+          chart.agentScheduleChart = new AgentScheduleChart();
+          chart.day = icon.day;
+          chart.agentScheduleChart.charts = icon.charts;
+          this.activityLogsChart.push(chart);
         });
-        chart.agentScheduleChart = new AgentScheduleChart();
-        chart.day = icon.day;
-        chart.agentScheduleChart.charts = icon.charts;
-        this.activityLogsChart.push(chart);
-      }
     }
   }
 

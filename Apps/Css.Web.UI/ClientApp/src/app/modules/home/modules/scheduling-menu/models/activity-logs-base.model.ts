@@ -3,7 +3,6 @@ import { ActivityOrigin } from '../enums/activity-origin.enum';
 import { ActivityStatus } from '../enums/activity-status.enum';
 
 export class ActivityLogsBase {
-    id: string;
     employeeId: number;
     executedUser: string;
     day: WeekDay;
