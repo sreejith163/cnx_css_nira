@@ -578,15 +578,17 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// Updates the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        public void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails)
+        /// <param name="agentScheduleCharts">The agent schedule charts.</param>
+        /// <param name="modifiedUserDetails">The modified user details.</param>
+        public void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, List<AgentScheduleChart> agentScheduleCharts,
+                                             ModifiedUserDetails modifiedUserDetails)
         {
             var agentSchedule = agentSchedulesDB.Where(x => x.IsDeleted == false && x.Id == new ObjectId(agentScheduleIdDetails.AgentScheduleId)).FirstOrDefault();
             if (agentSchedule != null)
             {
-                agentSchedule.ModifiedBy = agentScheduleDetails.ModifiedBy;
+                agentSchedule.ModifiedBy = modifiedUserDetails.ModifiedBy;
                 agentSchedule.ModifiedDate = DateTime.UtcNow;
-                agentSchedule.AgentScheduleCharts = agentScheduleDetails.AgentScheduleCharts;
+                agentSchedule.AgentScheduleCharts = agentScheduleCharts;
             }
         }
 

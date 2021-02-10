@@ -87,9 +87,10 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// Updates the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        /// <param name="agentScheduleChart">The agent schedule chart.</param>
-        /// <returns></returns>
-        void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleChart);
+        /// <param name="agentScheduleCharts">The agent schedule charts.</param>
+        /// <param name="modifiedUserDetails">The modified user details.</param>
+        void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, List<AgentScheduleChart> agentScheduleCharts,
+                                      ModifiedUserDetails modifiedUserDetails);
 
         /// <summary>
         /// Updates the agent schedule manger chart.

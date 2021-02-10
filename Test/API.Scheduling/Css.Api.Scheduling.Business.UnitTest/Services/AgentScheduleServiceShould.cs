@@ -312,8 +312,8 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
                 (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
-            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
-                (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
+            mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentSchedule(agentScheduleIdDetails));
 
             var result = await agentScheduleService.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleChart);
 
@@ -355,8 +355,8 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
                 (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
-            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
-                (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
+            mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentSchedule(agentScheduleIdDetails));
 
             var result = await agentScheduleService.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleChart);
 
@@ -398,8 +398,8 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
                 (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
-            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleCount(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
-                (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentScheduleCount(agentScheduleIdDetails));
+            mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentSchedule(agentScheduleIdDetails));
 
             var result = await agentScheduleService.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleChart);
 

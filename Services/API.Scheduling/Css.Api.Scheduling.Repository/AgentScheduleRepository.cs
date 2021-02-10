@@ -211,17 +211,19 @@ namespace Css.Api.Scheduling.Repository
         /// Updates the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        /// <param name="agentScheduleChart">The agent schedule chart.</param>
-        public void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleChart)
+        /// <param name="agentScheduleCharts">The agent schedule charts.</param>
+        /// <param name="modifiedUserDetails">The modified user details.</param>
+        public void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, List<AgentScheduleChart> agentScheduleCharts, 
+                                             ModifiedUserDetails modifiedUserDetails)
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
-                .Set(x => x.ModifiedBy, agentScheduleChart.ModifiedBy)
+                .Set(x => x.ModifiedBy, modifiedUserDetails.ModifiedBy)
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow)
-                .Set(x => x.AgentScheduleCharts, agentScheduleChart.AgentScheduleCharts);
+                .Set(x => x.AgentScheduleCharts, agentScheduleCharts);
 
             UpdateOneAsync(query, update);
         }

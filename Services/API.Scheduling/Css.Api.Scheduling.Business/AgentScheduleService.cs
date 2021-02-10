@@ -186,8 +186,8 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails)
         {
-            var agentScheduleCount = await _agentScheduleRepository.GetAgentScheduleCount(agentScheduleIdDetails);
-            if (agentScheduleCount < 1)
+            var agentSchedule = await _agentScheduleRepository.GetAgentSchedule(agentScheduleIdDetails);
+            if (agentSchedule == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
@@ -198,7 +198,23 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
             }
 
-            _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleDetails);
+            var agentScheduleCharts = agentSchedule.AgentScheduleCharts;
+
+            foreach (var agentScheduleChart in agentScheduleDetails.AgentScheduleCharts)
+            {
+                if (agentScheduleCharts.Exists(x => x.Day == agentScheduleChart.Day))
+                {
+                    var scheduleChart = agentScheduleCharts.Find(x => x.Day == agentScheduleChart.Day);
+                    scheduleChart.Charts = agentScheduleChart.Charts;
+                }
+                else
+                {
+                    agentScheduleCharts.Add(agentScheduleChart);
+                }
+            }
+
+            var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
+            _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleCharts, modifiedUserDetails);
 
             var employeeId = await _agentScheduleRepository.GetEmployeeIdByAgentScheduleId(agentScheduleIdDetails);
 
