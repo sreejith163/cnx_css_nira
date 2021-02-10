@@ -1,0 +1,74 @@
+.header-title {
+    span {
+      margin-right: 5px;
+      background: white;
+      border: solid 1px #d2d2d2;
+      border-radius: 20px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+    }
+  
+    h5 {
+      padding-top: 3px;
+    }
+  }
+  
+  .float-r {
+    float: right;
+  }
+  
+  .padding-5 {
+    padding: 5px;
+  }
+  
+  .p-r-5 {
+    padding-right: 5px;
+  }
+  
+  .breadcrumb-item.active {
+    color: inherit;
+  }
+  
+  .breadcrumb {
+    background-color: inherit;
+  }
+  
+  .pointer {
+    cursor: pointer;
+  }
+  
+  .table thead th {
+    color: #666363;
+  }
+  
+  .overflow-auto {
+    overflow: auto;
+  }
+
+  .list-left li, .list-right li {
+    cursor: pointer;
+}
+
+.agent-list-item.selected{
+    background-color: #007bff;
+}
+
+.agent-list-item.selected td{
+  color: #ffffff;
+}
+
+
+.agent-list-item{
+    background-color: #fff;
+}
+
+.agent-list-item td{
+  color: #ffffff;
+  color: black;
+}
+
+.agentAdminsList{
+  height: 200px;
+}

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { HttpBaseService } from 'src/app/core/services/http-base.service';
 import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
 import { environment } from 'src/environments/environment';
@@ -9,6 +10,7 @@ import { AgentAdminDetails } from '../models/agent-admin-details.model';
 import { AgentAdminQueryParameter } from '../models/agent-admin-query-parameter.model';
 import { AgentAdminResponse } from '../models/agent-admin-response.model';
 import { AgentInfo } from '../models/agent-info.model';
+import { MoveAgentAdminParameters } from '../models/move-agent-params.model';
 import { UpdateAgentAdmin } from '../models/update-agent-admin.model';
 
 @Injectable()
@@ -23,6 +25,8 @@ export class AgentAdminService extends HttpBaseService {
     this.baseURL = environment.services.gatewayService;
   }
 
+  agentAdminsUpdated = new BehaviorSubject<number>(undefined);
+
   getAgentAdmins(agentAdminsQueryParams: AgentAdminQueryParameter) {
     const url = `${this.baseURL}/agentadmins`;
 
@@ -30,6 +34,11 @@ export class AgentAdminService extends HttpBaseService {
       params: this.convertToHttpParam(agentAdminsQueryParams),
       observe: 'response'
     }).pipe(catchError(this.handleError));
+  }
+
+  getAgentAdminsBySchedulingGroupId(schedulingGroupId) {
+    const url = `${this.baseURL}/agentadmins?AgentSchedulingGroupId=${schedulingGroupId}`;
+    return this.http.get<AgentAdminDetails>(url).pipe(catchError(this.handleError));
   }
 
   getAgentAdmin(agentAdminId: string) {
@@ -65,5 +74,15 @@ export class AgentAdminService extends HttpBaseService {
 
     return this.http.delete<ApiResponseModel>(url)
       .pipe(catchError(this.handleError));
+  }
+
+  moveAgentAdmins(moveAgentAdminsParams: MoveAgentAdminParameters){
+    const url = `${this.baseURL}/agentadmins/move`;
+    return this.http.put<ApiResponseModel>(url, moveAgentAdminsParams)
+      .pipe(
+        tap(() => {
+          this.agentAdminsUpdated.next(1);
+        }),
+        catchError(this.handleError));
   }
 }

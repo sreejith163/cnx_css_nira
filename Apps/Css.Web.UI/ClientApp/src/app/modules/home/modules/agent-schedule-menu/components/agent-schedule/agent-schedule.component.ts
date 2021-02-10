@@ -28,9 +28,11 @@ export class DaysInWeek {
 })
 
 export class AgentScheduleComponent implements OnInit {
-  activeTab = 1;
+  activeTab = 2;
 
   selected: Date;
+
+  days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   // NgbCalendar
   calendarModel: NgbDateStruct;
@@ -39,6 +41,9 @@ export class AgentScheduleComponent implements OnInit {
   toDate: NgbDate | null = null;
   currentWeek;
   currentDayDateNumber;
+
+  // default dates
+  dates: Array<Date>;
 
   todaySpinner = 'todayScheduleSpinner';
   weeklyViewSpinner = 'weeklyViewSpinner';
@@ -110,7 +115,7 @@ export class AgentScheduleComponent implements OnInit {
   private convertToNgbDate(date: Date) {
     if (date) {
       date = new Date(date);
-      const newDate: NgbDate = new NgbDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate() + 1);
+      const newDate: NgbDate = new NgbDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
       return newDate ?? undefined;
     }
   }
@@ -155,6 +160,7 @@ export class AgentScheduleComponent implements OnInit {
       
       default: { 
         this.getTodaySchedule();
+        this.currentDayDateNumber = new Date().getDate();
         this.getCurrentWeek(this.currentDayDateNumber);
         break; 
       } 
@@ -167,22 +173,20 @@ export class AgentScheduleComponent implements OnInit {
         this.myScheduleWeek = resp.agentMySchedules;
         this.spinnerService.hide(this.weeklyViewSpinner);
       },error => {
-        console.log(error);
+        this.dates = this.weeklyDateRange(new Date(startDate), new Date(endDate));
+        this.myScheduleWeek = null;
+        // console.log(error);
         this.spinnerService.hide(this.weeklyViewSpinner);
       }
     );
   }
 
-  getMonthlySchedule(startDate, endDate){
-    // this.spinnerService.show(this.weeklyViewSpinner, SpinnerOptions);
-    this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, startDate, endDate).subscribe((resp: AgentMyScheduleResponse)=>{
-        this.myScheduleMonthly = resp.agentMySchedules;
-        // this.spinnerService.hide(this.weeklyViewSpinner);
-      },error => {
-        console.log(error);
-        // this.spinnerService.hide(this.weeklyViewSpinner);
+
+  private weeklyDateRange(start,end){
+      for(var arr=[],dt=new Date(start); dt<=end; dt.setDate(dt.getDate()+1)){
+          arr.push(new Date(dt));
       }
-    );
+      return arr;
   }
 
 
@@ -239,12 +243,11 @@ export class AgentScheduleComponent implements OnInit {
 
     var curr = new Date; // get current date
 
-    // get firstday
-    // current date number - current day index of the week + 1
+    // get firstday of the week
     var currentDate = new Date(curr.setDate(currentDayDateNumber));
-    var firstDay = currentDate.getDate() - (currentDate.getDay()+1);
+    var firstDayOfTheWeek = currentDate.getDate() - (currentDate.getDay());
 
-    const selectedDay = firstDay + day;
+    const selectedDay = firstDayOfTheWeek + day;
     const date = new Date(currentDate.setDate(selectedDay));
     const dayOfWeek = date.getDay()
 
@@ -279,7 +282,7 @@ export class AgentScheduleComponent implements OnInit {
         }
       }, (error) => {
         this.spinnerService.hide(this.todaySpinner);
-        console.log(error);
+        // console.log(error);
       });
   }
 

@@ -81,18 +81,27 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <ng-container *ngFor="let schedWeek of myScheduleWeek">
-                            <td>      
-                              <ng-container *ngIf="schedWeek.firstStartTime !== null && schedWeek.lastEndTime !== null; else dayOff">
-                                {{schedWeek.firstStartTime}}
-                                <br/>
-                                {{schedWeek.lastEndTime}}
-                              </ng-container>               
-                              <ng-template #dayOff>
-                                OFF
-                              </ng-template>                                                                     
-                            </td>
-                          </ng-container>                          
+                          <ng-container *ngIf="myScheduleWeek !== null; else noWeeklyScheduleToday">
+                            <ng-container *ngFor="let schedWeek of myScheduleWeek">
+                              <td>      
+                                <ng-container *ngIf="schedWeek.firstStartTime !== null && schedWeek.lastEndTime !== null; else dayOff">
+                                  {{schedWeek.firstStartTime}}
+                                  <br/>
+                                  {{schedWeek.lastEndTime}}
+                                </ng-container>               
+                                <ng-template #dayOff>
+                                  OFF
+                                </ng-template>                                                                     
+                              </td>
+                            </ng-container>   
+                          </ng-container>
+                          <ng-template #noWeeklyScheduleToday>
+                            <ng-container *ngFor="let schedWeek of dates">
+                              <td>                   
+                                  OFF                                                                   
+                              </td>
+                            </ng-container>   
+                          </ng-template>
                         </tr>
                       </tbody>
                     </table>
@@ -117,57 +126,88 @@
                 <div class="row">
                   <ngx-spinner [name]="weeklyViewSpinner"></ngx-spinner>
                   <div class="col-lg-10 scrollable-table">
-                    <ng-container *ngFor="let schedWeek of myScheduleWeek; let i = index">                
-                      <div class="card-body scrollable-table p-0">
-                          <table class="table table-striped text-sm">
-                            <thead>
-                              <th width="20%">DAY</th>
-                              <th width="20%">SCHEDULE</th>
-                              <th width="20%">ACTIVITY</th>
-                              <th width="20%">START</th>
-                              <th width="20%">END</th>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td width="20%">
-                                  {{ daysCurrentWeek[i].dayName }} &nbsp; {{schedWeek.date | date: 'M/d/yy'}}
-                                </td>
-                                <ng-container *ngIf="schedWeek.firstStartTime !== null && schedWeek.lastEndTime !== null; else dayOff">
+                    <ng-container *ngIf="myScheduleWeek !== null; else noWeeklySchedule">
+                      <ng-container *ngFor="let schedWeek of myScheduleWeek; let i = index">                
+                        <div class="card-body scrollable-table p-0">
+                            <table class="table table-striped text-sm">
+                              <thead>
+                                <th width="20%">DAY</th>
+                                <th width="20%">SCHEDULE</th>
+                                <th width="20%">ACTIVITY</th>
+                                <th width="20%">START</th>
+                                <th width="20%">END</th>
+                              </thead>
+                              <tbody>
+                                <tr>
                                   <td width="20%">
-                                      {{schedWeek.firstStartTime}}
-                                      -
-                                      {{schedWeek.lastEndTime}}
+                                    {{ daysCurrentWeek[i].dayName }} &nbsp; {{schedWeek.date | date: 'M/d/yy'}}
                                   </td>
-                                  <td width="20%">
+                                  <ng-container *ngIf="schedWeek.firstStartTime !== null && schedWeek.lastEndTime !== null; else dayOff">
+                                    <td width="20%">
+                                        {{schedWeek.firstStartTime}}
+                                        -
+                                        {{schedWeek.lastEndTime}}
+                                    </td>
+                                    <td width="20%">
+                                        <ng-container *ngFor="let activity of schedWeek.charts">
+                                          <p><i class="icon-style">{{ getSchedulingIcon(activity.schedulingCodeId) }} &nbsp; {{ getSchedulingCode(activity.schedulingCodeId) }}</i></p>
+                                        </ng-container>
+                                    </td>
+                                    <td width="20%">
                                       <ng-container *ngFor="let activity of schedWeek.charts">
-                                        <p><i class="icon-style">{{ getSchedulingIcon(activity.schedulingCodeId) }} &nbsp; {{ getSchedulingCode(activity.schedulingCodeId) }}</i></p>
+                                        <p>{{activity.startTime}}</p>
                                       </ng-container>
-                                  </td>
-                                  <td width="20%">
-                                    <ng-container *ngFor="let activity of schedWeek.charts">
-                                      <p>{{activity.startTime}}</p>
-                                    </ng-container>
-                                  </td>
-                                  <td width="20%">
-                                    <ng-container *ngFor="let activity of schedWeek.charts">
-                                      <p>{{activity.endTime}}</p>
-                                    </ng-container>
-                                  </td>
-                                </ng-container>               
-                                <ng-template #dayOff>
-                                  <td width="80%" colspan="4" class="text-center">
-                                    OFF
-                                  </td>
-                                </ng-template>  
-                              </tr>      
-                            </tbody>
-                          </table>
-                      </div>
-                      <br/>
-                      <br/>
-                      <hr/>
-                      <br/>
+                                    </td>
+                                    <td width="20%">
+                                      <ng-container *ngFor="let activity of schedWeek.charts">
+                                        <p>{{activity.endTime}}</p>
+                                      </ng-container>
+                                    </td>
+                                  </ng-container>               
+                                  <ng-template #dayOff>
+                                    <td width="80%" colspan="4" class="text-center">
+                                      OFF
+                                    </td>
+                                  </ng-template>  
+                                </tr>      
+                              </tbody>
+                            </table>
+                        </div>
+                        <br/>
+                        <br/>
+                        <hr/>
+                        <br/>
+                      </ng-container>
                     </ng-container>
+                    <ng-template #noWeeklySchedule>
+                      <ng-container *ngFor="let schedWeek of dates; let i = index">                
+                        <div class="card-body scrollable-table p-0">
+                            <table class="table table-striped text-sm">
+                              <thead>
+                                <th width="20%">DAY</th>
+                                <th width="20%">SCHEDULE</th>
+                                <th width="20%">ACTIVITY</th>
+                                <th width="20%">START</th>
+                                <th width="20%">END</th>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td width="20%">
+                                    {{ days[i] }} &nbsp; {{schedWeek | date: 'M/d/yy'}}
+                                  </td>             
+                                    <td width="80%" colspan="4" class="text-center">
+                                      OFF
+                                    </td>
+                                </tr>      
+                              </tbody>
+                            </table>
+                        </div>
+                        <br/>
+                        <br/>
+                        <hr/>
+                        <br/>
+                      </ng-container>
+                    </ng-template>
                   </div>
                   <div class="col-lg-2">
                     <br/>

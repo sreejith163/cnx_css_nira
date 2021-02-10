@@ -12,6 +12,7 @@ export class GenericPopUpComponent implements OnInit {
   @Input() contentMessage = '';
   @Input() confirmButton = 'Yes' ;
   @Input() cancelButton = 'No' ;
+  @Input() warning: boolean = false;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -25,6 +26,6 @@ export class GenericPopUpComponent implements OnInit {
   }
 
   dismiss() {
-    this.activeModal.dismiss();
+    this.activeModal.close(false);
   }
 }

@@ -6,8 +6,7 @@ import { AgentMyScheduleDetails } from '../../models/agent-myschedule-details.mo
 import { AgentMyScheduleResponse } from '../../models/agent-myschedule-response.model';
 import { AgentMyScheduleService } from '../../services/agent-myschedule.service';
 import { DatePipe } from '@angular/common';
-
-const DAY_MS = 60 * 60 * 24 * 1000;
+import { DAY_MS } from '../../enums/agent-schedule.enum';
 
 export enum Month {
   January = "January",
@@ -84,7 +83,7 @@ export class AgentScheduleMonthlyViewComponent implements OnInit {
     const firstDayOfMonth = new Date(year, month, 1).getTime();
 
     return this.range(1,7)
-      .map(num => new Date(firstDayOfMonth - DAY_MS * num))
+      .map(num => new Date(firstDayOfMonth - DAY_MS.util * num))
       .find(dt => dt.getDay() === 0)
   }
 
@@ -95,15 +94,16 @@ export class AgentScheduleMonthlyViewComponent implements OnInit {
   getMonthlySchedule(date = new Date){
 
     const calendarStartTime =  this.getCalendarStartDay(date).getTime();
-    var dateRange = this.range(0, 41)
-    .map(num => new Date(calendarStartTime + DAY_MS * num));
+    this.dates = this.range(0, 41)
+    .map(num => new Date(calendarStartTime + DAY_MS.util * num));
 
     this.spinnerService.show(this.calendarSpinner, SpinnerOptions);
-    this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, dateRange[0].toISOString(), dateRange[41].toISOString()).subscribe((resp: AgentMyScheduleResponse)=>{
+    this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, this.dates[0].toISOString(), this.dates[41].toISOString()).subscribe((resp: AgentMyScheduleResponse)=>{
         this.myScheduleMonthly = resp.agentMySchedules;
         this.spinnerService.hide(this.calendarSpinner);
       },error => {
-        console.log(error);
+        this.myScheduleMonthly = null;
+        // console.log(error);
         this.spinnerService.hide(this.calendarSpinner);
       }
     );

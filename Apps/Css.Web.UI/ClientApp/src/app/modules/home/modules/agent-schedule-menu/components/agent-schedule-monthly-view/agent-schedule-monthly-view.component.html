@@ -15,21 +15,35 @@
                     {{day}}
                 </div>
             </ng-container>
-            <ng-container *ngFor="let schedule of myScheduleMonthly;">
-                <div class="calendarDays"
-                [ngClass]="{grey: !isSameMonth(schedule.date), now: isNow(schedule.date)}"
-                >
-                <span class="text-right">{{schedule.date | date:'d'}}</span>
-                <ng-container *ngIf="schedule.firstStartTime !== null && schedule.lastEndTime !== null; else dayOff">
-                    <div class="text-xs">{{schedule.firstStartTime}}</div>
-                    <div class="text-xs">{{schedule.lastEndTime}}</div>
+            <ng-container *ngIf="myScheduleMonthly !== null; else noMonthlySched">
+                <ng-container *ngFor="let schedule of myScheduleMonthly;">
+                    <div class="calendarDays"
+                    [ngClass]="{grey: !isSameMonth(schedule.date), now: isNow(schedule.date)}"
+                    >
+                    <span class="text-right">{{schedule.date | date:'d'}}</span>
+                    <ng-container *ngIf="schedule.firstStartTime !== null && schedule.lastEndTime !== null; else dayOff">
+                        <div class="text-xs">{{schedule.firstStartTime}}</div>
+                        <div class="text-xs">{{schedule.lastEndTime}}</div>
+                    </ng-container>
+                    <ng-template #dayOff>
+                        <div class="text-xs">OFF</div>   
+                        <div class="text-xs spaceFiller">&nbsp;&nbsp;</div>   
+                    </ng-template>         
+                    </div>
                 </ng-container>
-                <ng-template #dayOff>
-                    <div class="text-xs">OFF</div>   
-                    <div class="text-xs spaceFiller">&nbsp;&nbsp;</div>   
-                </ng-template>         
-                </div>
             </ng-container>
+            <ng-template #noMonthlySched>
+                <ng-container *ngFor="let schedule of dates;">
+                    <div class="calendarDays"
+                    [ngClass]="{grey: !isSameMonth(schedule), now: isNow(schedule)}"
+                    >
+                    <span class="text-right">{{schedule | date:'d'}}</span>
+                        <div class="text-xs">OFF</div>   
+                        <div class="text-xs spaceFiller">&nbsp;&nbsp;</div>            
+                    </div>
+                </ng-container>
+            </ng-template>
+            
         </div>
     </div>
     

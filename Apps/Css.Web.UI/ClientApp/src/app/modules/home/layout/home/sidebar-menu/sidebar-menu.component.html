@@ -117,6 +117,13 @@
                             </a>
                         </li>
                         <li [hidden]="hideMenu([1,2,3],employee?.userRoleId)" class="nav-item">
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/move-agents" routerLinkActive="active"
+                                #schMenu1="routerLinkActive">
+                                <i class="fa fa-circle-o nav-icon"></i>
+                            <span>{{ 'Move Agents' | translate }}</span>
+                            </a>
+                        </li>
+                        <li [hidden]="hideMenu([1,2,3],employee?.userRoleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-grid" routerLinkActive="active"
                                 #schMenu2="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
