@@ -400,11 +400,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   cancel() {
-    if (this.matchManagerChartDataChanges()) {
-      this.managerCharts = JSON.parse(JSON.stringify(this.schedulingMangerChart));
-    } else {
-      this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
-    }
+    this.managerCharts = JSON.parse(JSON.stringify(this.schedulingMangerChart));
   }
 
   save() {

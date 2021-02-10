@@ -145,11 +145,7 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   cancel() {
-    if (this.matchSchedulingGridDataChanges()) {
-      this.selectedGrid = JSON.parse(JSON.stringify(this.schedulingGridData));
-    } else {
-      this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
-    }
+    this.selectedGrid = JSON.parse(JSON.stringify(this.schedulingGridData));
   }
 
   onClickDateIcon(index: number) {
