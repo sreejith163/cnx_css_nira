@@ -225,7 +225,10 @@ namespace Css.Api.Scheduling.Repository
             if (!string.IsNullOrWhiteSpace(searchKeyword))
             {
                 agentAdmins = agentAdmins.ToList().Where(o => o.Sso.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) ||
-                                                    o.Sso.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase)).AsQueryable();
+                                                    o.FirstName.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) ||
+                                                    o.LastName.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) ||
+                                                    o.Ssn.ToString().Contains(searchKeyword, StringComparison.OrdinalIgnoreCase)
+                                                    ).AsQueryable();
             }
 
             return agentAdmins;

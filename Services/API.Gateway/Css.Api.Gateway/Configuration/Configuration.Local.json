@@ -442,6 +442,18 @@
       "UpstreamPathTemplate": "/api/agentadmins/{agentAdminId}",
       "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentadmins/move",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.scheduling",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentadmins/move",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
     //********* Agent Schedule Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules",
