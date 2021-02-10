@@ -210,9 +210,9 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   }
 
   exportToExcel() {
-    const exportSchedule = new Array<ActivityLogExcelData>();
+    const exportSchedule = new Array<any>();
     for (const item of this.activityLogsChart) {
-      const model = new ActivityLogExcelData();
+      let model: any = {};
       model.EmployeeId = +item?.executedUser;
       if (this.activityType === ActivityType.SchedulingGrid) {
         model.Day = WeekDay[item?.day];
@@ -221,6 +221,15 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
       model.Origin = ActivityOrigin[item?.activityOrigin];
       model.Status = ActivityStatus[item?.activityStatus];
       model.TimeStamp = this.getDateInStringFormat(item?.timeStamp);
+      for (const time of this.openTimes) {
+        const code = item?.agentScheduleChart?.charts.find(x => x.startTime <= time && x.endTime > time)?.schedulingCodeId;
+        if (code) {
+          model[time] = this.schedulingCodes.find(x => x.id === code)?.description;
+        } else {
+          model[time] = '';
+        }
+      }
+
       exportSchedule.push(model);
     }
 
