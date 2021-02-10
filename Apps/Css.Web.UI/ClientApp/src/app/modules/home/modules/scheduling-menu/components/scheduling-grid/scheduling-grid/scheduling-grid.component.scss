@@ -319,3 +319,8 @@ tr.selected td {
 a {
   color: inherit !important;
 }
+
+.disable-img {
+  pointer-events: none;
+  cursor: default;
+}
