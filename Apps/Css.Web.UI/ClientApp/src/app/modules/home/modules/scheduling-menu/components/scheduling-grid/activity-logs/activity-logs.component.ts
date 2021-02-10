@@ -139,11 +139,11 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   getIconFromSelectedAgent(id: number, openTime: string) {
     if (this.activityLogsChart.length > 0) {
       const item = this.activityLogsChart.find(x => x.id === id);
-      const weekTimeData = item?.agentScheduleChart?.charts.find(x => this.convertToDateFormat(openTime) >=
-        this.convertToDateFormat(x.startTime) &&
-        this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
+      const weekTimeData = item?.agentScheduleChart?.charts?.find(x => this.convertToDateFormat(openTime) >=
+        this.convertToDateFormat(x?.startTime) &&
+        this.convertToDateFormat(openTime) < this.convertToDateFormat(x?.endTime));
       if (weekTimeData) {
-        const code = this.schedulingCodes.find(x => x.id === weekTimeData.schedulingCodeId);
+        const code = this.schedulingCodes.find(x => x.id === weekTimeData?.schedulingCodeId);
         return code ? this.unifiedToNative(code?.icon?.value) : '';
       }
     }
@@ -154,11 +154,11 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   getAgentIconDescription(id: number, openTime: string) {
     if (this.activityLogsChart.length > 0) {
       const item = this.activityLogsChart.find(x => x.id === id);
-      const weekTimeData = item?.agentScheduleChart?.charts.find(x => this.convertToDateFormat(openTime) >=
-        this.convertToDateFormat(x.startTime) &&
-        this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
+      const weekTimeData = item?.agentScheduleChart?.charts?.find(x => this.convertToDateFormat(openTime) >=
+        this.convertToDateFormat(x?.startTime) &&
+        this.convertToDateFormat(openTime) < this.convertToDateFormat(x?.endTime));
       if (weekTimeData) {
-        const code = this.schedulingCodes.find(x => x.id === weekTimeData.schedulingCodeId);
+        const code = this.schedulingCodes?.find(x => x.id === weekTimeData?.schedulingCodeId);
         return code?.description;
       }
     }
@@ -198,12 +198,10 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
 
   changePage(page: number) {
     this.currentPage = page;
-    // this.loadActivityLogs();
   }
 
   changePageSize(pageSize: number) {
     this.pageSize = pageSize;
-    // this.loadActivityLogs();
   }
 
   search() {
@@ -261,7 +259,7 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
         this.setAgentFilters();
         let headerPaginationValues = new HeaderPagination();
         headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
-        this.totalRecord = this.activityLogsChart.length;
+        this.totalRecord = this.activityLogsChart?.length;
         this.spinnerService.hide(this.spinner);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
@@ -286,19 +284,19 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
         item.schedulingFieldDetails.agentScheduleCharts.forEach((icon, index) => {
           const chart = new ActivityLogsChart();
           chart.id = index;
-          chart.employeeId = item.employeeId;
-          chart.executedUser = item.executedUser;
-          chart.executedBy = item.executedBy;
-          chart.activityStatus = item.activityStatus;
-          chart.activityOrigin = item.activityOrigin;
-          chart.timeStamp = item.timeStamp;
-          icon.charts.map(x => {
-            x.endTime = x.endTime.trim().toLowerCase();
-            x.startTime = x.startTime.trim().toLowerCase();
+          chart.employeeId = item?.employeeId;
+          chart.executedUser = item?.executedUser;
+          chart.executedBy = item?.executedBy;
+          chart.activityStatus = item?.activityStatus;
+          chart.activityOrigin = item?.activityOrigin;
+          chart.timeStamp = item?.timeStamp;
+          icon?.charts?.map(x => {
+            x.endTime = x?.endTime.trim().toLowerCase();
+            x.startTime = x?.startTime.trim().toLowerCase();
           });
           chart.agentScheduleChart = new AgentScheduleChart();
-          chart.day = icon.day;
-          chart.agentScheduleChart.charts = icon.charts;
+          chart.day = icon?.day;
+          chart.agentScheduleChart.charts = icon?.charts;
           this.activityLogsChart.push(chart);
         });
     }
@@ -307,15 +305,15 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   private setManagerChartData() {
     for (const item of this.activityLogsData) {
       const chart = new ActivityLogsChart();
-      chart.employeeId = item.employeeId;
-      chart.executedUser = item.executedUser;
-      chart.executedBy = item.executedBy;
-      chart.activityStatus = item.activityStatus;
-      chart.activityOrigin = item.activityOrigin;
-      chart.timeStamp = item.timeStamp;
-      item.schedulingFieldDetails.agentScheduleManagerCharts[0].charts.map(x => {
-        x.endTime = x.endTime.trim().toLowerCase();
-        x.startTime = x.startTime.trim().toLowerCase();
+      chart.employeeId = item?.employeeId;
+      chart.executedUser = item?.executedUser;
+      chart.executedBy = item?.executedBy;
+      chart.activityStatus = item?.activityStatus;
+      chart.activityOrigin = item?.activityOrigin;
+      chart.timeStamp = item?.timeStamp;
+      item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts.map(x => {
+        x.endTime = x?.endTime.trim().toLowerCase();
+        x.startTime = x?.startTime.trim().toLowerCase();
       });
       chart.agentScheduleChart = new AgentScheduleChart();
       chart.agentScheduleChart.charts = item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts;
