@@ -232,11 +232,17 @@
                           {{ 'Activity Logs' | translate }}
                         </button>
                       </div>
-                      <div class="col-md-7 m-b-5"></div>
-                      <div class="col-md-1 row">
+                      <div class="col-md-6 m-b-5"></div>
+                      <div class="col-md-1  m-b-5">
                         <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
                           id="btn_save">
                           <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
+                        </button>
+                      </div>
+                      <div class="col-md-1  m-b-5">
+                        <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
+                          id="btn_cancel">
+                          <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
                         </button>
                       </div>
                     </div>
