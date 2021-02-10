@@ -46,6 +46,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   @Input() employeeId: number;
   @Input() agentScheduleId: string;
   @Input() agentScheduleType: AgentScheduleType;
+  @Input() fromDate: Date;
 
   constructor(
     public translate: TranslateService,
@@ -144,10 +145,20 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     agentSchedulesQueryParams.agentSchedulingGroupId = this.agentSchedulingGroupId;
     agentSchedulesQueryParams.pageNumber = this.currentPage;
     agentSchedulesQueryParams.pageSize = this.pageSize;
+    agentSchedulesQueryParams.fromDate = this.getDateInStringFormat(this.fromDate);
     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentSchedulesQueryParams.fields = 'employeeId,firstName,lastName';
 
     return agentSchedulesQueryParams;
+  }
+
+  private getDateInStringFormat(fromDate: any): string {
+    if (!fromDate) {
+      return undefined;
+    }
+
+    const date = new Date(fromDate);
+    return date.toDateString();
   }
 
   private loadAgents() {

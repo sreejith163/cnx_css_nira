@@ -385,6 +385,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
     this.modalRef.componentInstance.employeeId = employeeId;
     this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
+    this.modalRef.componentInstance.fromDate = new Date(this.startDate);
 
     this.modalRef.result.then((result) => {
       if (result.needRefresh) {
