@@ -98,7 +98,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   openImportSchedule() {
     this.refreshSchedulingTab = false;
-    this.refreshSchedulingTab = false;
+    this.refreshMangerTab = false;
     this.getModalPopup(ImportScheduleComponent, 'lg');
     this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
 
