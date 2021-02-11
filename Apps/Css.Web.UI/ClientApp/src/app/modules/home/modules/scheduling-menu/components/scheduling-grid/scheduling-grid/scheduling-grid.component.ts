@@ -1,10 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NgbCalendar, NgbDateParserFormatter, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateParserFormatter, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 
 import { SubscriptionLike as ISubscription } from 'rxjs';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { SchedulingCode } from '../../../../system-admin/models/scheduling-code.model';
 import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
 import { SchedulingCodeQueryParams } from '../../../../system-admin/models/scheduling-code-query-params.model';
@@ -20,7 +18,6 @@ import { LanguagePreference } from 'src/app/shared/models/language-preference.mo
 import { ActivatedRoute } from '@angular/router';
 import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
-import { SchedulingMangerExcelExportData } from '../../../constants/scheduling-manager-excel-export-data';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -30,13 +27,11 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class SchedulingGridComponent implements OnInit, OnDestroy {
 
-  tabIndex: number;
   agentSchedulingGroupId: number;
   searchText: string;
   exportFileName = 'Attendance_scheduling';
   startDate: string;
   currentLanguage: string;
-  refreshMangerTab: boolean;
   refreshSchedulingTab: boolean;
   LoggedUser;
 
@@ -54,7 +49,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     public ngbDateParserFormatter: NgbDateParserFormatter,
-    private spinnerService: NgxSpinnerService,
     private schedulingCodeService: SchedulingCodeService,
     private excelService: ExcelService,
     private authService: AuthService,
@@ -66,7 +60,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.tabIndex = AgentScheduleType.Scheduling;
     this.loadSchedulingCodes();
     this.preLoadTranslations();
     this.loadTranslations();
@@ -97,15 +90,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   openImportSchedule() {
     this.refreshSchedulingTab = false;
-    this.refreshMangerTab = false;
     this.getModalPopup(ImportScheduleComponent, 'lg');
-    this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
+    this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.Scheduling;
 
     this.modalRef.result.then((result) => {
       const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
       this.getModalPopup(MessagePopUpComponent, 'sm', message);
       this.modalRef.result.then(() => {
-        this.tabIndex === AgentScheduleType.Scheduling ? this.refreshSchedulingTab = true : this.refreshMangerTab = true;
+        this.refreshSchedulingTab = true;
       });
     });
   }
@@ -119,12 +111,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       ('0' + String(today.getDate())) : String(today.getDate());
 
     const date = year + month + day;
-    this.excelService.exportAsExcelFile(this.tabIndex === AgentScheduleType.Scheduling ?
-      SchedulingExcelExportData : SchedulingMangerExcelExportData, this.exportFileName + date);
-  }
-
-  openTab(tabIndex: number) {
-    this.tabIndex = tabIndex;
+    this.excelService.exportAsExcelFile(SchedulingExcelExportData, this.exportFileName + date);
   }
 
   private subscribeToTranslations() {

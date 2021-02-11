@@ -94,7 +94,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   @Input() searchText: string;
   @Input() startDate: string;
   @Input() agentSchedulingGroupId: number;
-  @Input() tabIndex: number;
   @Input() refreshMangerTab: boolean;
   @Input() schedulingCodes: SchedulingCode[] = [];
 
@@ -121,18 +120,15 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   ngOnChanges() {
-    if (this.tabIndex === AgentScheduleType.SchedulingManager) {
-      this.iconCount = (this.schedulingCodes?.length <= 30) ? this.schedulingCodes?.length : this.maxIconCount;
-      this.endIcon = this.iconCount;
-      this.clearIconFilters();
-      if (this.agentSchedulingGroupId) {
-        this.loadAgentScheduleManger();
-        this.refreshMangerTab = false;
-      } else {
-        this.totalSchedulingGridData = [];
-      }
+    this.iconCount = (this.schedulingCodes?.length <= 30) ? this.schedulingCodes?.length : this.maxIconCount;
+    this.endIcon = this.iconCount;
+    this.clearIconFilters();
+    if (this.agentSchedulingGroupId) {
+      this.loadAgentScheduleManger();
+      this.refreshMangerTab = false;
+    } else {
+      this.totalSchedulingGridData = [];
     }
-
   }
 
   previous() {
@@ -384,7 +380,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     this.modalRef.componentInstance.agentSchedulingGroupId = this.agentSchedulingGroupId;
     this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
     this.modalRef.componentInstance.employeeId = employeeId;
-    this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
+    this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.SchedulingManager;
     this.modalRef.componentInstance.fromDate = new Date(this.startDate);
 
     this.modalRef.result.then((result) => {
@@ -552,7 +548,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
           const weekData = weekDays?.length > 0 ? weekDays[0] : undefined;
           if (weekData) {
             this.insertIconToGrid(weekData, iconModel, 0);
-          } else if (this.tabIndex === AgentScheduleType.SchedulingManager) {
+          } else {
             const weekDay = new AgentScheduleManagerChart();
             weekDay.date = new Date(this.startDate);
             const calendarTime = new ScheduleChart(y?.startTime, y?.endTime, y?.schedulingCodeId);
@@ -636,7 +632,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
 
         if (weekData) {
           this.insertIconToGrid(weekData, iconModel, 0);
-        } else if (this.tabIndex === AgentScheduleType.SchedulingManager) {
+        } else {
           const weekDay = new AgentScheduleManagerChart();
           weekDay.date = date;
           const calendarTime = new ScheduleChart(fromTime, to, code.id);
@@ -645,7 +641,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
         }
         if (employeeWeekData) {
           this.insertIconToGrid(employeeWeekData, iconModel, 1);
-        } else if (this.tabIndex === AgentScheduleType.SchedulingManager) {
+        } else {
           const weekDay = new AgentScheduleManagerChart();
           weekDay.date = date;
           const calendarTime = new ScheduleChart(fromTime, to, code.id);

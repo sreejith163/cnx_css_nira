@@ -98,7 +98,6 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
   @Input() searchText: string;
   @Input() startDate: string;
   @Input() agentSchedulingGroupId: number;
-  @Input() tabIndex: number;
   @Input() refreshSchedulingTab: boolean;
   @Input() schedulingCodes: SchedulingCode[] = [];
 
@@ -125,19 +124,16 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.tabIndex === AgentScheduleType.Scheduling) {
-      this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
-      this.endIcon = this.iconCount;
-      if (this.agentSchedulingGroupId) {
-        this.loadAgentSchedules();
-      } else {
-        this.totalSchedulingGridData = [];
-      }
-      if (this.refreshSchedulingTab) {
-        this.selectedGrid = null;
-      }
+    this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
+    this.endIcon = this.iconCount;
+    if (this.agentSchedulingGroupId) {
+      this.loadAgentSchedules();
+    } else {
+      this.totalSchedulingGridData = [];
     }
-
+    if (this.refreshSchedulingTab) {
+      this.selectedGrid = null;
+    }
   }
 
   getGridMaxWidth() {
@@ -263,10 +259,8 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
     this.isMouseDown = true;
     const time = event.currentTarget.attributes.time.nodeValue;
     const meridiem = event.currentTarget.attributes.meridiem.nodeValue;
-    if (this.tabIndex === AgentScheduleType.Scheduling) {
-      const week = event.currentTarget.attributes.week.nodeValue;
-      days = this.selectedGrid.agentScheduleCharts.find(x => x.day === +week);
-    }
+    const week = event.currentTarget.attributes.week.nodeValue;
+    days = this.selectedGrid.agentScheduleCharts.find(x => x.day === +week);
     const fromTime = time + ' ' + meridiem;
     const object = days?.charts.find(x => this.convertToDateFormat(x.startTime) <= this.convertToDateFormat(fromTime) &&
       this.convertToDateFormat(x.endTime) > this.convertToDateFormat(fromTime));
@@ -348,16 +342,14 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
     this.modalRef.componentInstance.agentSchedulingGroupId = this.schedulingGridData?.agentSchedulingGroupId;
     this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
     this.modalRef.componentInstance.employeeId = employeeId;
-    this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
+    this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.Scheduling;
     this.modalRef.componentInstance.fromDate = new Date(this.startDate);
 
     this.modalRef.result.then((result) => {
       if (result.needRefresh) {
         this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been copied!');
         this.modalRef.result.then(() => {
-          if (this.tabIndex === AgentScheduleType.Scheduling) {
-            this.loadAgentSchedule(agentScheduleId);
-          }
+          this.loadAgentSchedule(agentScheduleId);
           this.loadAgentSchedules();
         });
       } else {
@@ -416,18 +408,15 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
       const code = this.schedulingCodes.find(x => x?.icon?.value?.trim()?.toLowerCase() === this.icon?.trim()?.toLowerCase());
       const iconModel = new ScheduleChart(fromTime, to, code?.id);
 
-
-      if (this.tabIndex === AgentScheduleType.Scheduling) {
-        week = elem.attributes.week.value;
-        weekDays = this.selectedGrid?.agentScheduleCharts;
-        weekData = weekDays.find(x => x.day === +week);
-      }
+      week = elem.attributes.week.value;
+      weekDays = this.selectedGrid?.agentScheduleCharts;
+      weekData = weekDays.find(x => x.day === +week);
 
       if (this.icon && !this.isDelete) {
 
         if (weekData) {
           this.insertIconToGrid(weekData, iconModel);
-        } else if (this.tabIndex === AgentScheduleType.Scheduling) {
+        } else {
           const weekDay = new AgentScheduleChart();
           weekDay.day = +week;
           const calendarTime = new ScheduleChart(fromTime, to, code.id);
