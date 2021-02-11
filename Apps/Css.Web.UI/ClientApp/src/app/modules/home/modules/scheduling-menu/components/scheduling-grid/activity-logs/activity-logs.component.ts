@@ -250,7 +250,6 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
     queryParams.employeeId = this.employeeId;
     queryParams.skipPageSize = true;
 
-
     return queryParams;
   }
 
