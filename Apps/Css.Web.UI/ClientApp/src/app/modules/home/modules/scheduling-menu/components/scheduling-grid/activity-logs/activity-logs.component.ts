@@ -203,7 +203,12 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    this.loadActivityLogs();
+    this.formatActivityLogsData();
+    if (this.searchKeyword) {
+      this.activityLogsChart = this.activityLogsChart.filter(x => x.executedUser.includes(this.searchKeyword) ||
+        x.executedBy.includes(this.searchKeyword));
+      this.totalRecord = this.activityLogsChart.length;
+    }
   }
 
   exportToExcel() {
@@ -261,11 +266,7 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         this.activityLogsChart = [];
         this.activityLogsData = response.body;
-        this.activityType === ActivityType.SchedulingManagerGrid ? this.setManagerChartData() : this.setScheduleChart();
-        this.setAgentFilters();
-        let headerPaginationValues = new HeaderPagination();
-        headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
-        this.totalRecord = this.activityLogsChart?.length;
+        this.formatActivityLogsData();
         this.spinnerService.hide(this.spinner);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
@@ -274,6 +275,12 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(this.getActivityLogsSubscription);
 
+  }
+
+  private formatActivityLogsData() {
+    this.activityType === ActivityType.SchedulingManagerGrid ? this.setManagerChartData() : this.setScheduleChart();
+    this.setAgentFilters();
+    this.totalRecord = this.activityLogsChart?.length;
   }
 
   private setAgentFilters() {
