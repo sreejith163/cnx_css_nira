@@ -33,7 +33,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   tabIndex: number;
   agentSchedulingGroupId: number;
   searchText: string;
-  scheduleSpinner = 'SchedulingSpinner';
   exportFileName = 'Attendance_scheduling';
   startDate: string;
   currentLanguage: string;
@@ -158,16 +157,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     const queryParams = new SchedulingCodeQueryParams();
     queryParams.skipPageSize = true;
     queryParams.fields = 'id, description, icon';
-    this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
 
     this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)
       .subscribe((response) => {
         if (response.body) {
           this.schedulingCodes = response.body;
         }
-        this.spinnerService.hide(this.scheduleSpinner);
       }, (error) => {
-        this.spinnerService.hide(this.scheduleSpinner);
         console.log(error);
       });
 

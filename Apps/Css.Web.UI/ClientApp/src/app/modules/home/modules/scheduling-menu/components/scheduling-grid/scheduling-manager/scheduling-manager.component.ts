@@ -16,7 +16,6 @@ import { AgentSchedulesResponse } from '../../../models/agent-schedules-response
 import { AgentChartResponse } from '../../../models/agent-chart-response.model';
 import { SchedulingCode } from '../../../../system-admin/models/scheduling-code.model';
 import { ScheduleChart } from '../../../models/schedule-chart.model';
-import { AgentScheduleChart } from '../../../models/agent-schedule-chart.model';
 import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manager-chart.model';
 import { AgentInfo } from '../../../models/agent-info.model';
 import { UpdateAgentScheduleMangersChart } from '../../../models/update-agent-schedule-managers-chart.model';
@@ -63,7 +62,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   endTimeFilter: string;
   orderBy = 'createdDate';
   sortBy = 'desc';
-  spinner = 'schedulig-manager';
+  spinner = 'scheduling-manager';
   selectedCellClassName = 'cell-selected';
   tableClassName = 'schedulingManagerTable';
   isMouseDown: boolean;
@@ -123,7 +122,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
 
   ngOnChanges() {
     if (this.tabIndex === AgentScheduleType.SchedulingManager) {
-      this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
+      this.iconCount = (this.schedulingCodes?.length <= 30) ? this.schedulingCodes?.length : this.maxIconCount;
       this.endIcon = this.iconCount;
       this.clearIconFilters();
       if (this.agentSchedulingGroupId) {
@@ -476,7 +475,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
     agentSchedulesQueryParams.pageNumber = undefined;
     agentSchedulesQueryParams.pageSize = undefined;
     agentSchedulesQueryParams.searchKeyword = this.searchText ?? '';
-     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
+    agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentSchedulesQueryParams.fields = 'id,employeeId,firstName,lastName';
     agentSchedulesQueryParams.employeeIds = undefined;
     agentSchedulesQueryParams.skipPageSize = true;

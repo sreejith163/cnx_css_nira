@@ -74,6 +74,7 @@
 </div>
 <br>
 <div class="row table-responsive" [style.max-width]="getGridMaxWidth()">
+
   <div class="col-md-12 col-sm-12 scrollable-table">
     <table class="jsgrid-table table" id="schedulingManagerTable">
       <thead>
@@ -107,9 +108,9 @@
             </ng-template>
           </ng-container>
         </tr>
+        <ngx-spinner [name]="spinner"></ngx-spinner>
       </thead>
       <tbody>
-        <ngx-spinner [name]="spinner"></ngx-spinner>
         <tr *ngIf="totalSchedulingGridData?.length === 0" class="valid-record">
           <td colspan="25">
             {{ 'No records found' | translate }}</td>
@@ -142,28 +143,27 @@
 <div class="row padding-10">
   <div class="col-md-12 padding-12 row">
     <div class="col-md-2 m-b-5">
-      <button class="btn btn-default copy-button m-l-10" id="btn_copy_schedule"
-      [disabled]="!agentSchedulingGroupId" (click)="openCopySchedule(selectedRow)">
+      <button class="btn btn-default copy-button m-l-10" id="btn_copy_schedule" [disabled]="!agentSchedulingGroupId"
+        (click)="openCopySchedule(selectedRow)">
         <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
       </button>
     </div>
     <div class="col-md-2 m-b-5">
-      <button class="btn btn-primary btn-activity" id="btn_activity_logs"
-      [disabled]="!agentSchedulingGroupId" (click)="openActivityLogs(selectedRow)">
+      <button class="btn btn-primary btn-activity" id="btn_activity_logs" [disabled]="!agentSchedulingGroupId"
+        (click)="openActivityLogs(selectedRow)">
         {{ 'Activity Logs' | translate }}
       </button>
     </div>
     <div class="col-md-6 m-b-5"></div>
     <div class="col-md-1 m-b-5">
       <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" id="btn_save"
-      [disabled]="!agentSchedulingGroupId" (click)="save()">
+        [disabled]="!agentSchedulingGroupId" (click)="save()">
         <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
       </button>
     </div>
     <div class="col-md-1  m-b-5">
-      <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal"
-      [disabled]="!agentSchedulingGroupId" (click)="cancel()"
-        id="btn_cancel">
+      <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" [disabled]="!agentSchedulingGroupId"
+        (click)="cancel()" id="btn_cancel">
         <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
       </button>
     </div>
