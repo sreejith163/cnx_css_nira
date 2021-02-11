@@ -205,8 +205,8 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   search() {
     this.formatActivityLogsData();
     if (this.searchKeyword) {
-      this.activityLogsChart = this.activityLogsChart.filter(x => x.executedUser.includes(this.searchKeyword) ||
-        x.executedBy.includes(this.searchKeyword));
+      this.activityLogsChart = this.activityLogsChart.filter(x => x.executedUser.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
+        x.executedBy.toLowerCase().includes(this.searchKeyword.toLowerCase()));
       this.totalRecord = this.activityLogsChart.length;
     }
   }
@@ -264,7 +264,6 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
 
     this.getActivityLogsSubscription = this.activityLogService.getActivityLogs(queryParams)
       .subscribe((response) => {
-        this.activityLogsChart = [];
         this.activityLogsData = response.body;
         this.formatActivityLogsData();
         this.spinnerService.hide(this.spinner);
@@ -278,6 +277,7 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   }
 
   private formatActivityLogsData() {
+    this.activityLogsChart = [];
     this.activityType === ActivityType.SchedulingManagerGrid ? this.setManagerChartData() : this.setScheduleChart();
     this.setAgentFilters();
     this.totalRecord = this.activityLogsChart?.length;
