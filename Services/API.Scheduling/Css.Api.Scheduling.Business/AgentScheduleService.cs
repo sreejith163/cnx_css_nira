@@ -140,6 +140,9 @@ namespace Css.Api.Scheduling.Business
             }
             else
             {
+                var agentScheduleCharts = agentSchedule.AgentScheduleCharts;
+                agentSchedule.AgentScheduleCharts = new List<AgentScheduleChart>();
+
                 if (agentScheduleChartQueryparameter.Date.HasValue && agentScheduleChartQueryparameter.Date != default(DateTimeOffset))
                 {
                     var dateTimeWithZeroTimeSpan = new DateTimeOffset(agentScheduleChartQueryparameter.Date.Value.Date, TimeSpan.Zero);
@@ -148,7 +151,7 @@ namespace Css.Api.Scheduling.Business
                     if (agentSchedule.DateFrom >= dateTimeWithZeroTimeSpan || agentSchedule.DateTo >= dateTimeWithZeroTimeSpan)
                     {
                         int weekDay = (int)dateTimeWithZeroTimeSpan.DayOfWeek;
-                        agentSchedule.AgentScheduleCharts = agentSchedule.AgentScheduleCharts.FindAll(x => x.Day == weekDay);
+                        agentSchedule.AgentScheduleCharts = agentScheduleCharts.FindAll(x => x.Day == weekDay);
                     }
                 }
 
