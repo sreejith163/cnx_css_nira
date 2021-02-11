@@ -83,7 +83,10 @@ namespace Css.Api.Scheduling.Repository
         /// <param name="activityLogRequest">The activity log request.</param>
         public void CreateActivityLogs(List<ActivityLog> activityLogRequest)
         {
-            InsertManyAsync(activityLogRequest);
+            if (activityLogRequest.Any())
+            {
+                InsertManyAsync(activityLogRequest);
+            }
         }
 
         /// <summary>Filters the activity logs.</summary>

@@ -18,6 +18,7 @@ using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
+using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 
 namespace Css.Api.Scheduling.Business.UnitTest.Services
 {
@@ -532,6 +533,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
                 (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
+            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentScheduleByEmployeeId(employeeIdDetails));
+
             var result = await agentScheduleService.ImportAgentScheduleChart(importAgentSchedule);
 
             Assert.NotNull(result);
@@ -574,6 +578,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
                 (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
+            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentScheduleByEmployeeId(employeeIdDetails));
+
             var result = await agentScheduleService.ImportAgentScheduleChart(importAgentSchedule);
 
             Assert.NotNull(result);
@@ -605,6 +612,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentSchedule(agentScheduleIdDetails));
 
+            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentScheduleByEmployeeId(employeeIdDetails));
+
             var result = await agentScheduleService.CopyAgentSchedule(agentScheduleIdDetails, copyAgentSchedule);
 
             Assert.NotNull(result);
@@ -632,6 +642,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentSchedule(agentScheduleIdDetails));
 
+            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentScheduleByEmployeeId(employeeIdDetails));
+
             var result = await agentScheduleService.CopyAgentSchedule(agentScheduleIdDetails, copyAgentSchedule);
 
             Assert.NotNull(result);
@@ -658,6 +671,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentSchedule(agentScheduleIdDetails));
+
+            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentScheduleByEmployeeId(employeeIdDetails));
 
             var result = await agentScheduleService.CopyAgentSchedule(agentScheduleIdDetails, copyAgentSchedule);
 

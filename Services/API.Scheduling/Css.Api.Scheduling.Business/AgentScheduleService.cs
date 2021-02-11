@@ -144,7 +144,7 @@ namespace Css.Api.Scheduling.Business
                 {
                     var dateTimeWithZeroTimeSpan = new DateTimeOffset(agentScheduleChartQueryparameter.Date.Value.Date, TimeSpan.Zero);
                     agentSchedule.AgentScheduleManagerCharts = agentSchedule.AgentScheduleManagerCharts.FindAll(x => x.Date == dateTimeWithZeroTimeSpan);
-                    
+
                     if (agentSchedule.DateFrom >= dateTimeWithZeroTimeSpan || agentSchedule.DateTo >= dateTimeWithZeroTimeSpan)
                     {
                         int weekDay = (int)dateTimeWithZeroTimeSpan.DayOfWeek;
@@ -198,6 +198,8 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
             }
 
+            var employeeIdDetails = new EmployeeIdDetails { Id = agentSchedule.EmployeeId };
+            var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
             var agentScheduleCharts = agentSchedule.AgentScheduleCharts;
 
             foreach (var agentScheduleChart in agentScheduleDetails.AgentScheduleCharts)
@@ -213,8 +215,10 @@ namespace Css.Api.Scheduling.Business
                 }
             }
 
-            var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
             _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleCharts, modifiedUserDetails);
+
+            OverwriteScheduleMangerCharts(agentSchedule.DateFrom, agentSchedule.DateTo, employeeIdDetails, modifiedUserDetails,
+                                          agentSchedule.AgentScheduleManagerCharts, agentScheduleDetails.AgentScheduleCharts);
 
             var employeeId = await _agentScheduleRepository.GetEmployeeIdByAgentScheduleId(agentScheduleIdDetails);
 
@@ -253,7 +257,7 @@ namespace Css.Api.Scheduling.Business
             foreach (var agentScheduleManagerChartDetail in agentScheduleManagerChartDetails.AgentScheduleManagers)
             {
                 var activityLog = GetActivityLogForSchedulingChart(agentScheduleManagerChartDetail.AgentScheduleManagerChart, agentScheduleManagerChartDetail.EmployeeId,
-                                                                   agentScheduleManagerChartDetails.ModifiedBy, agentScheduleManagerChartDetails.ModifiedUser, 
+                                                                   agentScheduleManagerChartDetails.ModifiedBy, agentScheduleManagerChartDetails.ModifiedUser,
                                                                    agentScheduleManagerChartDetails.ActivityOrigin);
                 activityLogs.Add(activityLog);
             }
@@ -282,13 +286,22 @@ namespace Css.Api.Scheduling.Business
 
             foreach (var importAgentScheduleChart in agentScheduleDetails.ImportAgentScheduleCharts)
             {
+                var employeeIdDetails = new EmployeeIdDetails { Id = importAgentScheduleChart.EmployeeId };
                 var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
+
                 _agentScheduleRepository.ImportAgentScheduleChart(importAgentScheduleChart, modifiedUserDetails);
 
-                var activityLog = GetActivityLogForSchedulingChart(importAgentScheduleChart.AgentScheduleCharts, importAgentScheduleChart.EmployeeId,
-                                                                   agentScheduleDetails.ModifiedBy, agentScheduleDetails.ModifiedUser,
-                                                                   agentScheduleDetails.ActivityOrigin);
-                activityLogs.Add(activityLog);
+                var agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
+                if (agentSchedule != null)
+                {
+                    OverwriteScheduleMangerCharts(importAgentScheduleChart.DateFrom, importAgentScheduleChart.DateTo, employeeIdDetails, modifiedUserDetails,
+                                                  agentSchedule.AgentScheduleManagerCharts, importAgentScheduleChart.AgentScheduleCharts);
+
+                    var activityLog = GetActivityLogForSchedulingChart(importAgentScheduleChart.AgentScheduleCharts, importAgentScheduleChart.EmployeeId,
+                                                                       agentScheduleDetails.ModifiedBy, agentScheduleDetails.ModifiedUser,
+                                                                       agentScheduleDetails.ActivityOrigin);
+                    activityLogs.Add(activityLog);
+                }
             }
 
             _activityLogRepository.CreateActivityLogs(activityLogs);
@@ -325,17 +338,27 @@ namespace Css.Api.Scheduling.Business
 
             foreach (var employeeId in agentScheduleDetails.EmployeeIds)
             {
-                if (agentScheduleDetails.AgentScheduleType == AgentScheduleType.SchedulingTab)
+                var employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
+                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
+
+                var employeeSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
+                if (employeeSchedule != null)
                 {
-                    var activityLog = GetActivityLogForSchedulingChart(agentSchedule.AgentScheduleCharts, employeeId, agentScheduleDetails.ModifiedBy,
-                                                                       agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
-                    activityLogs.Add(activityLog);
-                }
-                else if (agentScheduleDetails.AgentScheduleType == AgentScheduleType.SchedulingMangerTab)
-                {
-                    var activityLog = GetActivityLogForSchedulingChart(agentSchedule.AgentScheduleManagerCharts, employeeId, agentScheduleDetails.ModifiedBy,
-                                                                       agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
-                    activityLogs.Add(activityLog);
+                    OverwriteScheduleMangerCharts(employeeSchedule.DateFrom, employeeSchedule.DateTo, employeeIdDetails, modifiedUserDetails,
+                                                  employeeSchedule.AgentScheduleManagerCharts, agentSchedule.AgentScheduleCharts);
+
+                    if (agentScheduleDetails.AgentScheduleType == AgentScheduleType.SchedulingTab)
+                    {
+                        var activityLog = GetActivityLogForSchedulingChart(agentSchedule.AgentScheduleCharts, employeeId, agentScheduleDetails.ModifiedBy,
+                                                                           agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
+                        activityLogs.Add(activityLog);
+                    }
+                    else if (agentScheduleDetails.AgentScheduleType == AgentScheduleType.SchedulingMangerTab)
+                    {
+                        var activityLog = GetActivityLogForSchedulingChart(agentSchedule.AgentScheduleManagerCharts, employeeId, agentScheduleDetails.ModifiedBy,
+                                                                           agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
+                        activityLogs.Add(activityLog);
+                    }
                 }
             }
 
@@ -419,6 +442,34 @@ namespace Css.Api.Scheduling.Business
         }
 
         /// <summary>
+        /// Overwrites the schedule manger charts.
+        /// </summary>
+        /// <param name="dateFrom">The date from.</param>
+        /// <param name="dateTo">The date to.</param>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="modifiedUserDetails">The modified user details.</param>
+        /// <param name="agentScheduleManagerCharts">The agent schedule manager charts.</param>
+        /// <param name="agentScheduleCharts">The agent schedule charts.</param>
+        private void OverwriteScheduleMangerCharts(DateTimeOffset? dateFrom, DateTimeOffset? dateTo, EmployeeIdDetails employeeIdDetails,
+                                                   ModifiedUserDetails modifiedUserDetails, List<AgentScheduleManagerChart> agentScheduleManagerCharts,
+                                                   List<AgentScheduleChart> agentScheduleCharts)
+        {
+            if (dateFrom.HasValue && dateFrom != default(DateTimeOffset) && dateTo.HasValue && dateTo != default(DateTimeOffset))
+            {
+                if (agentScheduleCharts.Any())
+                {
+                    var weekDays = agentScheduleCharts.Select(x => x.Day);
+                    var filteredScheduleManagerCharts = agentScheduleManagerCharts.FindAll(x => weekDays.Contains((int)x.Date.Date.DayOfWeek));
+                    foreach (var filteredScheduleManagerChart in filteredScheduleManagerCharts)
+                    {
+                        filteredScheduleManagerChart.Charts = new List<ScheduleChart>();
+                        _agentScheduleRepository.UpdateAgentScheduleMangerChart(employeeIdDetails, filteredScheduleManagerChart, modifiedUserDetails);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the activity log for scheduling chart.
         /// </summary>
         /// <param name="scheduleCharts">The schedule charts.</param>
@@ -427,7 +478,7 @@ namespace Css.Api.Scheduling.Business
         /// <param name="executedUser">The executed user.</param>
         /// <param name="activityOrigin">The activity origin.</param>
         /// <returns></returns>
-        private ActivityLog GetActivityLogForSchedulingChart(object scheduleCharts, int employeeId, string executedBy, int executedUser, 
+        private ActivityLog GetActivityLogForSchedulingChart(object scheduleCharts, int employeeId, string executedBy, int executedUser,
                                                              ActivityOrigin activityOrigin)
         {
             var activityLog = new ActivityLog()

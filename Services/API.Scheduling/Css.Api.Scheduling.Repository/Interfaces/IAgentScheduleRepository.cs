@@ -3,7 +3,6 @@ using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
-using Css.Api.Scheduling.Models.Enums;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
