@@ -702,6 +702,7 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
     if (this.matchSchedulingGridDataChanges()) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
       const chartModel = new UpdateAgentschedulechart();
+      this.selectedGrid = this.getUpdatedScheduleChart();
       const gridData = this.formatEndTime(this.selectedGrid);
       chartModel.agentScheduleCharts = gridData.agentScheduleCharts;
       chartModel.activityOrigin = ActivityOrigin.CSS;
@@ -712,10 +713,10 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
         .updateAgentScheduleChart(agentScheduleId, chartModel)
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
-          this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
           this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been updated!');
           this.modalRef.result.then(() => {
             this.loadAgentSchedules();
+            this.loadAgentSchedule(agentScheduleId);
           });
         }, (error) => {
           this.spinnerService.hide(this.spinner);
@@ -726,6 +727,22 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
     } else {
       this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
     }
+  }
+
+  private getUpdatedScheduleChart() {
+    const updatedChart = JSON.parse(JSON.stringify(this.selectedGrid));
+    this.selectedGrid.agentScheduleCharts.forEach((x, index) => {
+      if (this.schedulingGridData?.agentScheduleCharts.findIndex(y => y.day === x.day) > -1) {
+        const gridIndex = this.schedulingGridData?.agentScheduleCharts.findIndex(y => y.day === x.day);
+        if (JSON.stringify(this.selectedGrid.agentScheduleCharts[index].charts) ===
+          JSON.stringify(this.schedulingGridData.agentScheduleCharts[gridIndex].charts)) {
+          const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
+          updatedChart.agentScheduleCharts.splice(updateIndex, 1);
+        }
+      }
+    });
+
+    return updatedChart;
   }
 
   private getModalPopup(component: any, size: string, contentMessage?: string) {
