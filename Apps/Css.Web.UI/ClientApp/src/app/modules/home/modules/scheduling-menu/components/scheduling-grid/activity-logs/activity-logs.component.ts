@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
-import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { ActivityLogsQueryParams } from '../../../models/activity-logs-query-params.model';
 import { ActivityLogsService } from '../../../services/activity-logs.service';
 import { SubscriptionLike as ISubscription } from 'rxjs';
@@ -19,8 +18,6 @@ import { ActivityOrigin } from '../../../enums/activity-origin.enum';
 import { ActivityStatus } from '../../../enums/activity-status.enum';
 import { AgentScheduleChart } from '../../../models/agent-schedule-chart.model';
 import { ExcelService } from 'src/app/shared/services/excel.service';
-import { ExcelData } from '../../../models/excel-data.model';
-import { ActivityLogExcelData } from '../../../models/activity-log-excel-data.model';
 
 
 @Component({
@@ -212,7 +209,7 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   exportToExcel() {
     const exportSchedule = new Array<any>();
     for (const item of this.activityLogsChart) {
-      let model: any = {};
+      const model: any = {};
       model.EmployeeId = +item?.executedUser;
       if (this.activityType === ActivityType.SchedulingGrid) {
         model.Day = WeekDay[item?.day];
