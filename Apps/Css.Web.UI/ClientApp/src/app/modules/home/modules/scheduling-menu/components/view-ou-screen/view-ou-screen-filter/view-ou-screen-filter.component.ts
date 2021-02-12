@@ -55,7 +55,6 @@ export class ViewOuScreenFilterComponent implements OnInit {
     private languagePreferenceService: LanguagePreferenceService,
     public translate: TranslateService,
   ) {
-    
    }
 
    ngOnInit(): void {

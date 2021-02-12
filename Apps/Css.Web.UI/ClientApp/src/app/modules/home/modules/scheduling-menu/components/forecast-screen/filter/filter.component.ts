@@ -31,6 +31,22 @@ import { SkillGroupQueryParameters } from '../../../../setup-menu/models/skill-g
 })
 
 export class FilterComponent implements OnInit, OnDestroy, OnChanges {
+  constructor(
+    private calendar: NgbCalendar,
+    private spinnerService: NgxSpinnerService,
+    private skillTagSevice: SkillTagService,
+    private languagePreferenceService: LanguagePreferenceService,
+    public translate: TranslateService,
+    private excelService: ExcelService,
+    private modalService: NgbModal,
+    private skillGroupService: SkillGroupService,
+    private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>
+  ) {
+
+  }
+  get today() {
+    return this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
+  }
   model: NgbDateStruct;
   pageNumber = 1;
   skillGroupItemsBufferSize = 10;
@@ -65,7 +81,7 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
   dateValue: string;
   tabIndex: number;
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
-  formatsDateTest: string = "MM/dd/yyyy";
+  formatsDateTest = 'MM/dd/yyyy';
   startDate: any = this.calendar.getToday();
   dateNow: Date = new Date();
   hoveredDate: NgbDate | null = null;
@@ -76,19 +92,8 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
   @Input() skillGroupId: number;
   @Output() skillGroupSelected = new EventEmitter();
   @Output() selectedDateChange = new EventEmitter<Date>();
-  constructor(
-    private calendar: NgbCalendar,
-    private spinnerService: NgxSpinnerService,
-    private skillTagSevice: SkillTagService,
-    private languagePreferenceService: LanguagePreferenceService,
-    public translate: TranslateService,
-    private excelService: ExcelService,
-    private modalService: NgbModal,
-    private skillGroupService: SkillGroupService,
-    private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>
-  ) {
 
-  }
+  date: { year: number, month: number };
 
   ngOnInit(): void {
     this.tabIndex = AgentScheduleType.Scheduling;
@@ -118,7 +123,7 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
       const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
       this.getModalPopup(MessagePopUpComponent, 'sm', message);
       this.modalRef.result.then(() => {
-        //this.tabIndex === AgentScheduleType.Scheduling ? this.loadAgentSchedules() : this.loadAgentScheduleManger();
+        // this.tabIndex === AgentScheduleType.Scheduling ? this.loadAgentSchedules() : this.loadAgentScheduleManger();
       });
     });
   }
@@ -147,9 +152,6 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
       this.totalItems = 0;
     }
   }
-  get today() {
-    return this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
-  }
   onSkillGroupScrollToEnd() {
     this.fetchMoreSkillGroups();
   }
@@ -168,8 +170,6 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
     this.skillGroupSelected.emit(event);
     // console.log(event)
   }
-
-  date: { year: number, month: number };
 
 
   change(event) {
