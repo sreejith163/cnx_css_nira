@@ -8,23 +8,24 @@ import { AddAgentProfileComponent } from './components/agent-admin/add-agent-pro
 import { EditAgentProfileComponent } from './components/agent-admin/edit-agent-profile/edit-agent-profile.component';
 
 import { HorizontalScrollPipe } from './pipes/horizontal-scroll.pipe';
+import { NumericDirective } from 'src/app/shared/directives/numeric.directive';
 
 import { AgentAdminService } from './services/agent-admin.service';
+import { ActivityLogsService } from './services/activity-logs.service';
 import { AgentSchedulesService } from './services/agent-schedules.service';
+
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid/scheduling-grid.component';
 import { ImportScheduleComponent } from './components/scheduling-grid/import-schedule/import-schedule.component';
 import { CopyScheduleComponent } from './components/scheduling-grid/copy-schedule/copy-schedule.component';
 import { SchedulingManagerComponent } from './components/scheduling-grid/scheduling-manager/scheduling-manager.component';
 import { MoveAgentsComponent } from './components/move-agents/move-agents/move-agents.component';
-
 import { SchedulingComponent } from './components/scheduling-grid/scheduling/scheduling.component';
 import { SchedulingFilterComponent } from './components/scheduling-grid/scheduling-filter/scheduling-filter.component';
-
 import { ForecastScreenListComponent } from './components/forecast-screen/forecast-screen-list/forecast-screen-list.component';
 import { FilterComponent } from './components/forecast-screen/filter/filter.component';
 import { ViewOuScreenListComponent } from './components/view-ou-screen/view-ou-screen-list/view-ou-screen-list.component';
 import { ViewOuScreenFilterComponent } from './components/view-ou-screen/view-ou-screen-filter/view-ou-screen-filter.component';
-import { NumericDirective } from 'src/app/shared/directives/numeric.directive';
+import { ActivityLogsComponent } from './components/agent-admin/activity-logs/activity-logs.component';
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
 const components =
@@ -32,6 +33,7 @@ const components =
     AddAgentProfileComponent,
     EditAgentProfileComponent,
     SchedulingGridComponent,
+    ActivityLogsComponent,
     ImportScheduleComponent,
     CopyScheduleComponent,
     SchedulingManagerComponent,
@@ -45,7 +47,7 @@ const components =
     ViewOuScreenFilterComponent,
     NumericDirective
   ];
-const providers = [AgentAdminService, AgentSchedulesService];
+const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService];
 
 @NgModule({
   declarations: components,
