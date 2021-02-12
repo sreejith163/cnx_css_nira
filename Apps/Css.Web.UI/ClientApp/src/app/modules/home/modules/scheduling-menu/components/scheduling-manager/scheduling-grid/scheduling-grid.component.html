@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-md-12">
+      <h2 id="page_title">{{ 'Scheduling_manager' | translate }}</h2> <!-- NO TRANSLATION -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a>{{ 'Scheduling_menu' | translate }}</a></li>
+        <li class="breadcrumb-item active"><b>{{ 'Scheduling_manager_list' | translate }}</b> </li><!-- NO TRANSLATION -->
+      </ol>
+    </div>
+  </div>
+
+  <app-scheduling-filter (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
+    (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)"></app-scheduling-filter>
+
+  <div class="card card-primary card-outline card-outline-tabs">
+    <div class="card-header p-0 border-bottom-0">
+      <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+        
+        <li *permission="{rolesPermitted: [1,2,3]}" class="pull-right marign-l-auto m-t-10">
+          <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
+            (click)="exportToExcel()">
+          <img src="assets/images/Import.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
+            (click)="openImportSchedule()">
+        </li>
+      </ul>
+    </div>
+  </div>
+
+      <app-scheduling-m-manager [startDate]="startDate" [currentLanguage]="currentLanguage"
+        [agentSchedulingGroupId]="agentSchedulingGroupId" [searchText]="searchText"
+        [refreshMangerTab]="refreshMangerTab" [tabIndex]="tabIndex" [schedulingCodes]="schedulingCodes">
+      </app-scheduling-m-manager>
+    
+</div>

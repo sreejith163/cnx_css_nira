@@ -4,8 +4,9 @@ import { AgentAdminListComponent } from './components/agent-admin/agent-admin-li
 import { MoveAgentsComponent } from './components/move-agents/move-agents/move-agents.component';
 import { ForecastScreenListComponent } from './components/forecast-screen/forecast-screen-list/forecast-screen-list.component';
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid/scheduling-grid.component';
+import { SchedulingGridMComponent } from './components/scheduling-manager/scheduling-grid/scheduling-grid.component';
 import { ViewOuScreenListComponent } from './components/view-ou-screen/view-ou-screen-list/view-ou-screen-list.component';
-
+import { EntityHierarchyComponent } from './components/entity-hierarchy/entity-hierarchy.component';
 
 export const SchedulingMenuRoutes: Routes = [
     {
@@ -47,5 +48,21 @@ export const SchedulingMenuRoutes: Routes = [
         canActivate: [PermissionsGuard],
         data: {permissions: [1,2,3]},
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
+    },
+    {
+        path: 'scheduling-manager',
+        component: SchedulingGridMComponent,
+        canActivate: [PermissionsGuard],
+        data: {permissions: [1,2,3,4]},
+        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
+    },
+    {
+        path: 'entity-hierarchy',
+        component: EntityHierarchyComponent,
+        canActivate: [PermissionsGuard],
+        data: {permissions: [1,2,3,4]},
+        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     }
+
+
 ];

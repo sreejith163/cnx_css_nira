@@ -1,0 +1,48 @@
+<div class="modal-dialog w-1000 add-edit-modal" role="document">
+  <div class="modal-content">
+    <ngx-spinner [name]="spinner"></ngx-spinner>
+    <div class="modal-header header-color">
+      <h6 class="modal-title w-100 font-weight-bold header">
+        <p>{{ 'Import Schedules' | translate }}
+        </p>
+      </h6>
+      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body mx-3 modal-style">
+      <div class="col-md-12 m-t-20">
+        <div class="row">
+          <div class="col-md-10 col-sm-10 p-r-0">
+            <input #file id="fileLoader" type="file" (change)="browse($event.target.files)" accept=".csv">
+            <input class="form-control" placeholder="Choose file..." #fileDropRef appDradAndDropFile
+              (change)="browse($event)" (fileDropped)="browse($event)" [(ngModel)]="uploadFile">
+          </div>
+          <div class="col-md-2 col-sm-2 p-l-0">
+            <button class="btn btn-style" (click)="file.click()">
+              {{ 'Browse' | translate }}
+            </button>
+          </div>
+        </div>
+        <div *ngIf="fileFormatValidation" class="valid-error">
+          {{'Please select a csv file in Attendance_schedulingYYYYMMDD format' | translate}}
+        </div>
+        <div *ngIf="!hasFileSelected()" class="valid-error">
+          {{'Please select a file'  | translate}}
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-center header-color">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-8"></div>
+          <div class="col-md-4">
+            <button class="btn btn-primary float-r" data-dismiss="modal" (click)="import()">
+              {{ 'Import' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

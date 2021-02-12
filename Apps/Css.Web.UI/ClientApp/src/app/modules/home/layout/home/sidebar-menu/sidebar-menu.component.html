@@ -130,11 +130,11 @@
                             <span>{{ 'Scheduling_grid' | translate }}</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-manager"
                                 routerLinkActive="active" #schMenu3="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                            <span>{{ 'Scheduling_manager' | translate }}</span> <!-- put translation here-->
+                            <span>{{ 'Scheduling_manager' | translate }}</span> <!-- NO TRANSLATION -->
                             </a>
                         </li>
                         <li [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)" class="nav-item">
@@ -152,10 +152,10 @@
                             </a>
                         </li>
                         <li [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)" class="nav-item">
-                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/view-ou-screen" routerLinkActive="active"
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/entity-hierarchy" routerLinkActive="active"
                                 #schMenu6="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                            <span>{{ 'Entity-hierarchy' | translate }}</span> <!-- put translation here-->
+                            <span>{{ 'Entity-hierarchy' | translate }}</span> <!-- NO TRANSLATION -->
                             </a>
                         </li>
                     </ul>
