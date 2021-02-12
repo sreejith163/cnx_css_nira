@@ -149,6 +149,7 @@ namespace Css.Api.Admin.Business
                     new List<SchedulingTypeCode>(schedulingCode.SchedulingTypeCode);
                 schedulingCodeDetailsPreUpdate = new SchedulingCode
                 {
+                    RefId = schedulingCode.RefId,
                     Description = schedulingCode.Description,
                     PriorityNumber = schedulingCode.PriorityNumber,
                     IconId = schedulingCode.IconId,

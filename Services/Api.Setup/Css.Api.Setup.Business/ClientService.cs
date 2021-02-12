@@ -134,6 +134,7 @@ namespace Css.Api.Setup.Business
 
             var clientDetailsPreUpdate = new Client
             {
+                RefId = client.RefId,
                 Name = client.Name,
                 ModifiedBy = client.ModifiedBy,
                 IsDeleted = client.IsDeleted,

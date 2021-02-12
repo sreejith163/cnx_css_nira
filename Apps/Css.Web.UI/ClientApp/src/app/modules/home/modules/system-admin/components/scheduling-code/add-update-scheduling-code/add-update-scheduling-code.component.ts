@@ -149,6 +149,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
 
     this.addSchedulingCodeSubscription = this.schedulingCodeService.addSchedulingCode(addSchedulingCodeModel)
       .subscribe(() => {
+        console.log(addSchedulingCodeModel)
         this.spinnerService.hide(this.spinner);
         this.activeModal.close({ needRefresh: true });
       }, (error) => {
@@ -172,6 +173,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
       this.updateSchedulingCodeSubscription = this.schedulingCodeService.updateSchedulingCode
         (this.schedulingCodeData.id, updateSchedulingCodeModel)
         .subscribe(() => {
+          console.log(updateSchedulingCodeModel)
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
         }, (error) => {
@@ -192,7 +194,8 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
       this.schedulingCodeForm.patchValue({
         description: this.schedulingCodeData.description,
         priorityNumber: this.schedulingCodeData.priorityNumber,
-        iconId: this.schedulingCodeData.icon.id
+        iconId: this.schedulingCodeData.icon.id,
+        refId: this.schedulingCodeData.refId
       });
       this.setCodeTypes();
       this.iconId = this.schedulingCodeData.icon.value;
@@ -281,6 +284,8 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
         Validators.maxLength(10)])),
       schedulingTypeCode: this.formBuilder.array([], Validators.required),
       iconId: new FormControl('', Validators.required),
+      refId: new FormControl('', Validators.compose([
+        Validators.maxLength(10)])),
     });
   }
 }

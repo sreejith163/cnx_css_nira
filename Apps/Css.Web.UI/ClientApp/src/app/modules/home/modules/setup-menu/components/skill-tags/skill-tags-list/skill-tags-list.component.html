@@ -37,7 +37,7 @@
                 {{ 'Search' | translate }}
             </button>
         </div>
-        <div class="col-md-2 text-left">
+        <div *permission="{rolesPermitted: [1,2]}" class="col-md-2 text-left">
             <button type="button" class="btn btn-primary float-r mt-4" (click)="addSkillTag()"><i
                     class="fa fa-plus pr-1" aria-hidden="true"></i>{{ 'Add' | translate }}</button>
         </div>
@@ -50,7 +50,7 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>
+                            <th *permission="{rolesPermitted: [1,2]}">
                                 {{ 'Action' | translate }}</th>
                             <!--<th class="sortable-field" (click)="sort('id', sortBy)">
                                 {{ 'ID' | translate }}
@@ -113,7 +113,7 @@
                                         [ngClass]="( skillTag?.id === el?.id ) ? 'fa-minus' : 'fa-plus'"
                                         (click)="toggleDetails(el.id)"></i>
                                 </td>
-                                <td>
+                                <td *permission="{rolesPermitted: [1,2]}">
                                     <i class="fa fa-edit padding-5 pointer" (click)="editSkillTag(el.id)"></i>
                                     <i class="fa fa-trash padding-5 pointer" (click)="deleteSkillTag(el.id)"></i>
                                 </td>

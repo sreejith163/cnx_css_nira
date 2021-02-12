@@ -31,8 +31,9 @@
                     <div class="card text-sm">
                         <ngx-spinner [name]="spinnerLeft"></ngx-spinner>
                             <div class="card-header">
-                              <h3 class="card-title text-xs">Number of agents: {{totalAgentAdminsRecordLeft}}</h3>
-              
+                              <h3 class="card-title text-xs">Number of agents: {{totalAgentAdminsRecordLeft || '0' | number }}</h3>
+                              <br/>
+                              <h3 class="card-title text-xs">Selected agents: {{selectedAgentAdminIds.length || '0' | number }}</h3>
                               <div class="card-tools">
                                 <div class="input-group input-group-sm" style="width: 150px;">
                                   <input type="text" class="form-control float-right" [(ngModel)]="searchKeywordLeft"
@@ -59,7 +60,7 @@
                                     </thead>
                                     <tbody>
                                         <ng-container *ngFor="let agentAdmin of agentAdminsLeftSide">
-                                            <tr class="agent-list-item pointer" [class.selected]="isSelected[agentAdmin.employeeId]" (click)="toggleSelected(agentAdmin); isSelected[agentAdmin.employeeId] = !isSelected[agentAdmin.employeeId];" >
+                                            <tr class="agent-list-item pointer" [class.selected]="isSelected[agentAdmin.id]" (click)="toggleSelected(agentAdmin.id); isSelected[agentAdmin.id] = !isSelected[agentAdmin.id];" >
                                                 <td>{{agentAdmin.employeeId}}</td>
                                                 <td>{{agentAdmin.firstName}} {{agentAdmin.lastName}}</td>
                                                 <td>{{agentAdmin.createdDate | date}}</td>
@@ -107,7 +108,7 @@
                     <div class="card text-sm">
                         <ngx-spinner [name]="spinnerRight"></ngx-spinner>
                             <div class="card-header">
-                              <h3 class="card-title text-xs">Number of agents: {{totalAgentAdminsRecordRight}}</h3>
+                              <h3 class="card-title text-xs">Number of agents: {{totalAgentAdminsRecordRight || '0' | number }}</h3>
               
                               <div class="card-tools">
                                 <div class="input-group input-group-sm" style="width: 150px;">
@@ -167,14 +168,13 @@
                             </ng-template>
                     </div>              
                 </div>
+    
+                <button *ngIf="selectedAgentAdminIds.length > 0 && agentSchedulingGroupIdRight > 0" (click)="confirmDeleteUserPermission()" class="btn btn-primary m-l-6 float-right mb-5">
+                <i class="fa fa-arrow-right padding-5"></i>Move
+                </button>
+                <br/>
             </div>
         </div>
-    
-        <br>
-    
-        <button *ngIf="selected.length > 0" (click)="confirmDeleteUserPermission()" class="btn btn-primary m-l-6 float-right">
-        <i class="fa fa-arrow-right padding-5"></i>Move
-        </button>
     
     </div>
 

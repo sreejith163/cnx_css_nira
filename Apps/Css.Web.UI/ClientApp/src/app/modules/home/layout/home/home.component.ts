@@ -40,6 +40,7 @@ export class HomeComponent implements OnInit {
 
   checkPermissions() {
     const employeeId = this.authService.getLoggedUserInfo().employeeId;
+
     // check user's role for permissions on the current route
     this.permissionsService.getEmployee(+employeeId).subscribe((employee: EmployeeDetails) => {
       this.employeeDetails = employee;

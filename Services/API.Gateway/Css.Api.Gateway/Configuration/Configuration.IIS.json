@@ -515,7 +515,48 @@
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
     },
+    //********* Forecast Screen Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+
+
     //********* Activity Routes *********************
+
     {
       "DownstreamPathTemplate": "/api/v1/activity",
       "DownstreamScheme": "https",

@@ -168,6 +168,7 @@ namespace Css.Api.Setup.Business
                     new List<OperationHour>(skillGroup.OperationHour);
                 skillGroupDetailsPreUpdate = new SkillGroup
                 {
+                    RefId = skillGroup.RefId,
                     Name = skillGroup.Name,
                     ClientId = skillGroup.ClientId,
                     ClientLobGroupId = skillGroup.ClientLobGroupId,

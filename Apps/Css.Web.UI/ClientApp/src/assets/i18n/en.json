@@ -157,6 +157,7 @@
 	"Scheduling_code_list": "Scheduling Code List",
 	"Scheduling_codes": "Scheduling Codes",
 	"Scheduling_grid": "Scheduling Grid",
+	"Scheduling_manager": "Scheduling Manager",
 	"Scheduling_grid_list": "Scheduling Grid List",
 	"Scheduling_group_name": "Scheduling Group Name",
 	"Scheduling_menu": "Scheduling Menu",
@@ -221,5 +222,15 @@
 	"Yes": "Yes",
 	"Yes, delete it!": "Yes, delete it!",
 	"You won’t be able to revert this!": "You won’t be able to revert this!",
-	"of": "of"
+	"of": "of",
+	"Entity-hierarchy": "Entity Heirarchy",
+	"Earned": "Earned",
+	"Credited": "Credited",
+	"CO_from_last_year": "CO from last year",
+	"Planned": "Planned",
+	"Taken": "Taken",
+	"Debited": "Debited",
+	"CO_to_next_year": "CO to next year",
+	"Remaining": "Remaining"
+	
 }

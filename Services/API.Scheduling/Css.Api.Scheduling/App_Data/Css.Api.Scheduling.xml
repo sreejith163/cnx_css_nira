@@ -211,6 +211,51 @@
               <br />
             </returns>
         </member>
+        <member name="T:Css.Api.Scheduling.Controllers.ForecastScreenController">
+            <summary>
+            Controller for handling the agent admins resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.ForecastScreenController._forecastScreenService">
+            <summary>
+            The agentAdmin service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.#ctor(Css.Api.Scheduling.Business.Interfaces.IForecastScreenService)">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.ForecastScreenController" /> class.</summary>
+            <param name="forecastScreenService">The aagent schedule service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.GetForecastScreen(Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.ForeCastScreenQueryParameter)">
+            <summary>
+            Gets the Forecast Screen
+            </summary>
+            <param name="forecastScreenQueryparameter">The agent schedule queryparameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.GetForecastScreenBySkillGroupId(System.Int32,System.String)">
+            <summary>
+            Gets the Forecast Screen by skill group id
+            </summary>
+            <param name="skillGroupId">The forecast screen query parameter</param>
+            <param name="Date">The forecast screen query parameter</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.CreateForecastData(Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.CreateForecastData)">
+            <summary>
+            Creates Forecast Data
+            </summary>
+            <param name="forecastData">forecastData query parameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.UpdateForecastData(System.String,Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.UpdateForecastData)">
+            <summary>
+            Updates the agent admin.
+            </summary>
+            <param name="skillGroupId">The agentAdmin identifier.</param>
+            <param name="forecastDetails">The client details.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.TimeZonesController">
             <summary>
             Controller for handling the Time zones resource

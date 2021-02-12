@@ -45,6 +45,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 import { PapaParseModule } from 'ngx-papaparse';
 import { LanguagePreferenceResolver } from './resolvers/language-preference.resolver';
+import { PermissionDirective } from './directives/permission.directive';
 
 const components =
   [
@@ -61,7 +62,8 @@ const components =
     SortDirective,
     TranslationPipe,
     SafeHtmlPipe,
-    TruncatePipe
+    TruncatePipe,
+    PermissionDirective
   ];
 
 const modalComponents = [ConfirmationPopUpComponent, MessagePopUpComponent, DradAndDropFileDirective];

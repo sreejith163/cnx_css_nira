@@ -11,4 +11,14 @@ export class AgentAdminBase {
     supervisorId: number;
     supervisorName: string;
     supervisorSso: string;
+    pto: {
+        earned: string;
+        credited: string;
+        cofromlastyear: string;
+        cofornextyear: string;
+        planned: string;
+        taken: string;
+        debited: string;
+        remaining: string;
+    };
 }

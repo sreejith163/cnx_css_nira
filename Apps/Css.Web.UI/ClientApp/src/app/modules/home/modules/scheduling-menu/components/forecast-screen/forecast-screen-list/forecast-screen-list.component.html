@@ -1,0 +1,175 @@
+<div class="container-fluid ">
+    <div class="row">
+        <div class="col-12 col-md-12">
+            <h2 id="page_title" class="mt-2">Forecast Screen</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-left">
+                <li class="breadcrumb-item"><a>Scheduling Menu</a></li>
+                <li class="breadcrumb-item active"><b>Forecast Screen</b> </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row m-b-10">
+        <div class="col-md-3 d-flex flex-column">
+            <ng-select [items]="skillGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id"
+                placeholder="{{'All' | translate}}" [typeahead]="typeAheadInput$" (scroll)="onSkillGroupScroll($event)"
+                (scrollToEnd)="onSkillGroupScrollToEnd()" (change)="onSkillGroupChange($event)"
+                (clear)="clearSkillGroupValues()" [(ngModel)]="skillgroupID">
+                <ng-template ng-header-tmp>
+                    <small class="form-text text-muted">{{'Loaded' | translate }} {{skillGroupItemsBuffer.length}}
+                        {{'of' | translate}}
+                        {{totalItems}}</small>
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item" let-index="index">
+                    <span container="body" ngbTooltip="{{ item.name }}">
+                        {{ item.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}
+                    </span>
+                </ng-template>
+            </ng-select>
+        </div>
+        <div class="col-md-3 d-flex flex-column">
+            <div class="input-group">
+                <input class="form-control" (ngModelChange)="change($event)" placeholder="yyyy-mm-dd" name="dp"
+                    [(ngModel)]="DateModel" ngbDatepicker #d="ngbDatepicker">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-6">
+            <button (click)="loadSkillGroup()" class="form-control" id="btn_search"><i class="fa fa-search"
+                    aria-hidden="true"></i>
+                {{ 'Search' | translate }}
+            </button>
+        </div>
+    </div>
+    <div class="nav-tabs-custom margin-b-0">
+        <ul class="nav nav-tabs" id="custom-content-above-tab" role="tablist">
+            <li class="nav-item d-none">
+                <a class="nav-link active" id="scheduling-tab" data-toggle="pill" href="#scheduling" role="tab"
+                    aria-controls="scheduling" aria-selected="true">Scheduling</a>
+            </li>
+            <!-- <li class="nav-item">
+            <a class="nav-link" id="scheduling-manager-tab" data-toggle="pill" href="#scheduling-manager" role="tab"
+              aria-controls="cscheduling-manager" aria-selected="false" (click)="openTab(1)">Scheduling Manager</a>
+          </li> -->
+
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 mt-2 table-responsive">
+
+            <ng-container>
+                <!-- forecast screen table -->
+                <form *ngIf="capabilityForm" [formGroup]="capabilityForm">
+                    <div class="row my-2">
+                        <div class="col-lg-6">
+                            <label for=""><strong>{{skillGroupBinder?.name}}</strong></label>
+                            <input type="hidden" [value]="skillGroupBinder?.id">
+                        </div>
+                        <div class="col-lg-6 pull-right marign-l-auto">
+
+                            <img src="assets/images/Export.jpg" class="icon-image float-right padding-2"
+                                [ngbTooltip]="'Export'" (click)="exportToExcel()">
+                            <img src="assets/images/Import.jpg" class="icon-image float-right padding-2"
+                                [ngbTooltip]="'Import'" (click)="openImportSchedule()">
+
+                        </div>
+                    </div>
+
+
+                    <div class="scrollable-table">
+                        <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Forecasted Contacts</th>
+                                    <th>AHT</th>
+                                    <th>Forecasted Req</th>
+                                    <th>Scheduled Open</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container formArrayName="capabilities">
+
+                                    <tr *ngFor="let capability of formData.controls; let i = index">
+                                        <ng-container [formGroupName]="i">
+
+                                            <td>
+                                                <!-- {{dataJson[i].Time}}  -->
+                                                <label for="">{{dataJson[i].Time}}</label>
+                                                <input formControlName="Time" type="hidden">
+                                            </td>
+
+                                            <td><input numberOnly (change)="showBtn()"
+                                                    formControlName="ForecastedContact" type="text"
+                                                    class="form-control">
+                                            </td>
+                                            <td><input numberOnly (change)="showBtn()" formControlName="AHT" type="text"
+                                                    class="form-control"></td>
+                                            <td><input numberOnly (change)="showBtn()" formControlName="ForecastedReq"
+                                                    type="text" class="form-control">
+                                            </td>
+                                            <td><input numberOnly (change)="showBtn()" formControlName="ScheduledOpen"
+                                                    type="text" class="form-control">
+                                            </td>
+                                        </ng-container>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                            <tfoot>
+                                <tr class="tr-1">
+                                    <td>
+                                        <span>Total</span>
+                                        <br>
+                                        <hr>
+                                        <span>Average</span>
+
+                                    </td>
+                                    <td>
+                                        <span></span>
+                                        <br>
+                                        <hr>
+                                        <span>{{ formData.controls.length }}</span>
+                                    </td>
+                                    <td> <span>Total</span>
+                                        <br>
+                                        <hr>
+                                        <span>Total</span>3
+                                    </td>
+                                    <td> <span>Total</span>
+                                        <br>
+                                        <hr>
+                                        <span>Total</span>
+                                    </td>
+                                    <td> <span>Total</span>
+                                        <br>
+                                        <hr>
+                                        <span>Total</span>
+                                    </td>
+
+                                </tr>
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </form>
+                <!-- /forecast screen table -->
+            </ng-container>
+
+
+
+        </div>
+    </div>
+    <div class="footer-button float-right">
+        <button (click)="addForecastData()" *ngIf="enableSaveButton == true" [ngClass]="{'d-block': enableSaveButton}"
+            class="btn btn-primary d-none mt-3">Save</button>
+    </div>
+</div>

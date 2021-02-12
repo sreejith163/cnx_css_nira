@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   FormBuilder,
@@ -40,19 +39,18 @@ export class LoginComponent implements OnInit {
     this.uatLoginIntialization();
   }
 
-  login() {
-    window.location.href = environment.sso.authBaseUrl + environment.sso.authAppToken;
+  login(){
+    this.authService.login();
   }
 
   // this is a temporary module and is to be deleted after UAT Testing
 
   openVerticallyCentered(content) {
     this.modalService.open(content, { centered: true });
-  }
+}
 
   checkUATCredentials(uatUsername, uatPassword) {
     if (uatUsername === 'CSS_test_agent' && uatPassword === 'Neutron47coleslaw') { return true; }
-    if (uatUsername === 'CSS_test_sup' && uatPassword === 'Dramatize63surgical') { return true; }
     if (uatUsername === 'CSS_test_mgr' && uatPassword === 'Thread25shortness') { return true; }
     if (uatUsername === 'CSS_test_reports' && uatPassword === 'Statute13scariness') { return true; }
     if (uatUsername === 'CSS_test_wfm' && uatPassword === 'Neutron47coleslaw') { return true; }
@@ -73,12 +71,10 @@ export class LoginComponent implements OnInit {
       };
 
       // pass the UAT Object to the authService for handling
-      setTimeout(() => {
-        /** spinner ends after 2.5 seconds */
-        this.spinnerService.hide(this.spinner);
-        this.modalService.dismissAll();
-        this.authService.loginUAT(userUAT);
-      }, 2500);
+
+      this.spinnerService.hide(this.spinner);
+      this.modalService.dismissAll();
+      this.authService.loginUAT(userUAT);
 
     } else {
       console.log('invalid credentials');
@@ -90,9 +86,6 @@ export class LoginComponent implements OnInit {
   convertUATUsername(uatUsername) {
     switch (uatUsername) {
       case 'CSS_test_agent': {
-        return 6;
-      }
-      case 'CSS_test_sup': {
         return 5;
       }
       case 'CSS_test_mgr': {

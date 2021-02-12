@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpBaseService } from 'src/app/core/services/http-base.service';
@@ -20,9 +21,14 @@ export class PermissionsService extends HttpBaseService {
   users: Employee[] = [];
   permissions: PermissionDetails[] = [];
 
+  public get userRoleId(){
+    return this.cookieService.get('userRoleId') ?? undefined;
+  }
+
   private baseURL = '';
 
   constructor(
+    private cookieService: CookieService,
     private http: HttpClient
   ) {
     super();
@@ -74,5 +80,28 @@ export class PermissionsService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
 
+  // for sidebar menu
+  isMenuHidden(rolesPermitted: number[], userRoleId) {
+    // if role is inside rolesPermitted do not hide element
+    if (rolesPermitted.indexOf(+userRoleId) > -1) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // for special elements
+  noPermission(rolesPermitted: number[], userRoleId) {
+    // if role is inside rolesPermitted do not hide element
+    if (rolesPermitted.indexOf(+userRoleId) > -1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  storePermission(userRoleId){
+    this.cookieService.set('userRoleId', userRoleId, null, environment.settings.cookiePath, null, false, 'Strict');
+  }
 
 }

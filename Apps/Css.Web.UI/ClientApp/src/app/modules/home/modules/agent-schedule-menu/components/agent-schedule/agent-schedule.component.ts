@@ -15,6 +15,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { WeekDay } from '@angular/common';
 import { NgbCalendar, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { CookieService } from 'ngx-cookie-service';
 
 export class DaysInWeek {
   dayName: String;
@@ -28,7 +29,7 @@ export class DaysInWeek {
 })
 
 export class AgentScheduleComponent implements OnInit {
-  activeTab = 2;
+  activeTab;
 
   selected: Date;
 
@@ -74,8 +75,8 @@ export class AgentScheduleComponent implements OnInit {
     private agentMyScheduleService: AgentMyScheduleService,
 
     ) {
-
       this.LoggedUser = this.authService.getLoggedUserInfo();
+      this.activeTab = +localStorage.getItem('activeTab') ? +localStorage.getItem('activeTab') : 1;
     }
 
   ngOnInit() {
@@ -138,6 +139,7 @@ export class AgentScheduleComponent implements OnInit {
     switch(this.activeTab) { 
       case 1: { 
         // for daily view
+        localStorage.setItem('activeTab', '1');
         this.getTodaySchedule();
         this.currentDayDateNumber = new Date().getDate();
         this.getCurrentWeek(this.currentDayDateNumber);
@@ -146,6 +148,7 @@ export class AgentScheduleComponent implements OnInit {
       } 
       case 2: { 
         // for weekly view
+        localStorage.setItem('activeTab', '2');
         this.getTodaySchedule();
         this.currentDayDateNumber = new Date().getDate();
         this.getCurrentWeek(this.currentDayDateNumber);
@@ -154,6 +157,7 @@ export class AgentScheduleComponent implements OnInit {
       
       case 3: {
         // for monthly view  
+        localStorage.setItem('activeTab', '3');
         this.getTodaySchedule();
         break; 
       }

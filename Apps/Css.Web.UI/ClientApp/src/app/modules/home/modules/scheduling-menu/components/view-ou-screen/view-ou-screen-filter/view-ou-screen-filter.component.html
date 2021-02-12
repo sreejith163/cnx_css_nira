@@ -1,0 +1,37 @@
+<div class="container-fluid ">
+    <div class="row">
+        <div class="col-12 col-md-12">
+            <h2 id="page_title" class="mt-2">View O/U Screen</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-left">
+                <li class="breadcrumb-item"><a>Scheduling Menu</a></li>
+                <li class="breadcrumb-item active"><b>View O/U Screen</b> </li>
+            </ol>
+        </div>
+    </div>
+    <div class="row m-b-10">
+        <div class="col-md-3 d-flex flex-column">
+            <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)"></app-skill-group-typeahead>
+        </div>
+        <div class="col-md-3 d-flex flex-column">
+            <div class="input-group">
+                <input class="form-control"  name="dp" ngbDatepicker [readonly]="true"
+                    [(ngModel)]="startDate" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-2 col-sm-6">
+            <button class="form-control" id="btn_search"><i class="fa fa-search" aria-hidden="true"></i>
+                {{ 'Search' | translate }}
+            </button>
+        </div>
+    </div>
+
+</div>

@@ -261,6 +261,7 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
 
   private hasSkillGroupDetailsMismatch() {
     if (this.skillGroupForm.controls.name.value !== this.skillGroup.name || this.clientId !== this.skillGroup.clientId ||
+      this.skillGroupForm.controls.refId.value !== this.skillGroup.refId ||
       this.clientLobGroupId !== this.skillGroup.clientLobGroupId ||
       this.skillGroupForm.controls.firstDayOfWeek.value !== this.skillGroup.firstDayOfWeek ||
       this.skillGroupForm.controls.timezoneId.value !== this.skillGroup.timezoneId) {
@@ -390,7 +391,20 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getSkillGroupSubscription);
   }
 
+  isNumberKey(evt) {
+    if(evt !== null){
+      const charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+      }
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   private populateFormDetails() {
+    this.skillGroupForm.controls.refId.setValue(this.skillGroup.refId);
     this.skillGroupForm.controls.name.setValue(this.skillGroup.name);
     this.skillGroupForm.controls.firstDayOfWeek.setValue(this.skillGroup.firstDayOfWeek);
     this.skillGroupForm.controls.timezoneId.setValue(this.skillGroup.timezoneId);
@@ -402,6 +416,8 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
 
   private intializeSkillGroupForm() {
     this.skillGroupForm = this.formBuilder.group({
+      refId: new FormControl('', Validators.compose([
+        Validators.maxLength(10)])),
       name: new FormControl('', Validators.compose([
         Validators.required,
         Validators.maxLength(Constants.DefaultTextMaxLength),

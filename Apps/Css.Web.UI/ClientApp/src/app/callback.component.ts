@@ -18,7 +18,7 @@ export class CallbackComponent implements OnInit {
     private cookieService: CookieService,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private permissionsService: PermissionsService
+    private permissionsService: PermissionsService,
   ) { }
 
   ngOnInit(): void {
@@ -28,8 +28,9 @@ export class CallbackComponent implements OnInit {
       if (this.authService.isLoggedIn()){
             const employeeId = this.authService.getLoggedUserInfo().employeeId;
             // check user's permissions
-            this.permissionsService.getEmployee(+employeeId).subscribe((resp) =>
+            this.permissionsService.getEmployee(+employeeId).subscribe((employee: EmployeeDetails) =>
             {
+              this.permissionsService.storePermission(employee.userRoleId);
               // redirect to home if permission exists
               this.router.navigate(['home']);
             }, error => {

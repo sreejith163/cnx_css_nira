@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes, RunGuardsAndResolvers } from '@angular/router';
 import { PermissionsGuard } from 'src/app/core/guards/permissions.guard';
 import { AgentSchedulingGroupListComponent } from './components/agent-scheduling-group/agent-scheduling-group-list/agent-scheduling-group-list.component';
 import { ClientLobGroupListComponent } from './components/client-lob-group/client-lob-group-list/client-lob-group-list.component';
@@ -14,22 +14,37 @@ export const SystemMenuRoutes: Routes = [
     },
     {
         path: 'client-name',
-        component: ClientNameListComponent
+        component: ClientNameListComponent,
+        canActivate: [PermissionsGuard],
+        data: {permissions: [1,2,3]},
+        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     },
     {
         path: 'skill-tags',
-        component: SkillTagsListComponent
+        component: SkillTagsListComponent,
+        canActivate: [PermissionsGuard],
+        data: {permissions: [1,2,3]},
+        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     },
     {
         path: 'client-lob-group',
-        component: ClientLobGroupListComponent
+        component: ClientLobGroupListComponent,
+        canActivate: [PermissionsGuard],
+        data: {permissions: [1,2,3]},
+        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     },
     {
         path: 'agent-scheduling-group',
-        component: AgentSchedulingGroupListComponent
+        component: AgentSchedulingGroupListComponent,
+        canActivate: [PermissionsGuard],
+        data: {permissions: [1,2,3]},
+        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     },
     {
         path: 'skill-groups',
-        component: SkillGroupListComponent
+        component: SkillGroupListComponent,
+        canActivate: [PermissionsGuard],
+        data: {permissions: [1,2,3]},
+        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     }
 ];

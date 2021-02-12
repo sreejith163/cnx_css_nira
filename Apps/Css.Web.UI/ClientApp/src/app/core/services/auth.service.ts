@@ -23,6 +23,7 @@ export class AuthService {
   constructor(
     private cookieService: CookieService,
     private router: Router,
+    private permissionsService: PermissionsService
   ) {
 
     // fetch the userUAT details from cookie storage
@@ -73,12 +74,20 @@ export class AuthService {
 
   }
 
+  login() {
+    window.location.href = environment.sso.authBaseUrl + environment.sso.authAppToken;
+  }
+
   loginUAT(userUAT: UAT) {
     // store the UAT details inside a cookie to persist uat session
     this.cookieService.set('employeeId', userUAT.employeeId, null, environment.settings.cookiePath, null, false, 'Strict');
     this.cookieService.set('uid', userUAT.uid, null, environment.settings.cookiePath, null, false, 'Strict');
     this.cookieService.set('displayName', userUAT.displayName, null, environment.settings.cookiePath, null, false, 'Strict');
-
+    this.permissionsService.getEmployee(+userUAT.employeeId).subscribe((user:EmployeeDetails)=>{
+      this.permissionsService.storePermission(userUAT.employeeId);
+    },error=>{
+      console.log(error);
+    })
     this.router.navigate(['home']);
   }
 }

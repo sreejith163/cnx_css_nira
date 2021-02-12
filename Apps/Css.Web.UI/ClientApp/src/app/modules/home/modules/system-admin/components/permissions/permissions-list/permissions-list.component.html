@@ -29,7 +29,7 @@
         {{ 'Search' | translate }}
       </button>
     </div>
-    <div class="col-md-7 text-right">
+    <div class="col-md-7 text-right" *permission="{rolesPermitted: [1]}">
       <button (click)="addPermission()" type="button" class="float-right  btn btn-primary" id="btn_add">
         <i class="fa fa-plus padding-5" aria-hidden="true"></i>
         {{ 'Add' | translate }} {{ 'User' | translate }}
@@ -42,7 +42,7 @@
         <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
           <thead>
             <tr>
-              <th>
+              <th *permission="{rolesPermitted: [1]}">
                 {{ 'Action' | translate }}
               </th>
               <th class="sortable-field" (click)="sort('sso', sortBy)">
@@ -114,8 +114,8 @@
             <ngx-spinner [name]="spinner">
             </ngx-spinner>
             <ng-container *ngFor="let el of employees; let i = index;">
-              <tr class="pointer" *ngIf="el.userRoleId!==6" (dblclick)="editUserPermission(el)">
-                <td>
+              <tr [class.pointer]="permissionsService.noPermission([1], permissionsService.userRoleId)" (dblclick)="editUserPermission(el)">
+                <td *permission="{rolesPermitted: [1]}">
                   <i class="fa fa-edit padding-5 pointer" (click)="editUserPermission(el)"></i>
                   <i class="fa fa-trash padding-5 pointer" (click)="confirmDeleteUserPermission(el)"></i>
                 </td>

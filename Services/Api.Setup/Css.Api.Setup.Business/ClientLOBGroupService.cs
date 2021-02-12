@@ -149,7 +149,8 @@ namespace Css.Api.Setup.Business
             if (!clientLOBGroupDetails.IsUpdateRevert)
             {
                 clientLOBDetailsPreUpdate = new ClientLobGroup
-                {
+                {   
+                    RefId = clientLOBGroup.RefId,
                     Name = clientLOBGroup.Name,
                     ClientId = clientLOBGroup.ClientId,
                     FirstDayOfWeek = clientLOBGroup.FirstDayOfWeek,

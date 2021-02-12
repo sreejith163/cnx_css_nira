@@ -83,7 +83,19 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
   }
 
   private hasClientDetailsMismatch() {
-    return this.clientDetails.name !== this.clientForm.value.name;
+    return (this.clientDetails.name !== this.clientForm.value.name || this.clientDetails.refId !== this.clientForm.value.refId);
+  }
+
+  isNumberKey(evt) {
+    if(evt !== null){
+      const charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+      }
+      return true;
+    }else{
+      return false;
+    }
   }
 
   private addClientDetails() {
@@ -110,7 +122,6 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
       this.spinnerService.show(this.spinner, SpinnerOptions);
       const updateClientModel = this.clientForm.value as UpdateClient;
       updateClientModel.ModifiedBy = this.authService.getLoggedUserInfo()?.displayName;
-
       this.updateClientSubscription = this.clientService.updateClient(this.clientDetails.id, updateClientModel)
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
@@ -139,10 +150,13 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
 
   private populateClientFormDetails() {
     this.clientForm.controls.name.setValue(this.clientDetails.name);
+    this.clientForm.controls.refId.setValue(this.clientDetails.refId);
   }
 
   private intializeClientForm() {
     this.clientForm = this.formBuilder.group({
+      refId: new FormControl('', Validators.compose([
+        Validators.maxLength(10)])),
       name: new FormControl('', Validators.compose([
         Validators.required,
         Validators.maxLength(50),

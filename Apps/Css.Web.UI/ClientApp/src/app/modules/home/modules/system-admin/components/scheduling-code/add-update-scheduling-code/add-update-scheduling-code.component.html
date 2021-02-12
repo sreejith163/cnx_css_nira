@@ -18,6 +18,26 @@
           <div class="row">
             <div class="col-md-4">
               <label>
+                {{ 'ID' | translate }}
+              </label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" class="form-control" formControlName="refId" [maxLength]="10"
+               (keypress)="isNumberKey($event)" onpaste="return false;" />
+               <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.refId.invalid">
+                <ng-template #maxLengthError>
+                  <div class="valid-error">
+                    {{ 'ID cannot exceed 10 characters' | translate }}
+                  </div>
+                </ng-template>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>
                 {{ 'Description' | translate }}
                 <span class="required">*</span>
               </label>

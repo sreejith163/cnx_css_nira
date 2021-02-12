@@ -102,7 +102,8 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
   }
 
   private hasClientLobGroupDetailsMismatch() {
-    if (this.clientLOBGroupDetails.clientId !== this.clientId ||
+    if (this.clientLOBGroupDetails.refId !== this.clientLOBGroupForm.controls.refId.value || 
+      this.clientLOBGroupDetails.clientId !== this.clientId ||
       this.clientLOBGroupDetails.name !== this.clientLOBGroupForm.controls.name.value ||
       this.clientLOBGroupDetails.firstDayOfWeek !== this.clientLOBGroupForm.controls.firstDayOfWeek.value ||
       this.clientLOBGroupDetails.timezoneId !== this.clientLOBGroupForm.controls.timeZoneId.value) {
@@ -130,6 +131,18 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptionList.push(this.addClientLOBGroupSubscription);
+  }
+
+  isNumberKey(evt) {
+    if(evt !== null){
+      const charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+      }
+      return true;
+    }else{
+      return false;
+    }
   }
 
   private updateClientLobGroupDetails() {
@@ -176,6 +189,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
   }
 
   private populateClientLobGroupFormDetails() {
+    this.clientLOBGroupForm.controls.refId.setValue(this.clientLOBGroupDetails.refId);
     this.clientLOBGroupForm.controls.name.setValue(
       this.clientLOBGroupDetails.name);
     this.editClientId = this.clientLOBGroupDetails.clientId;
@@ -199,6 +213,8 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
 
   private intializeClientLobGroupForm() {
     this.clientLOBGroupForm = this.formBuilder.group({
+      refId: new FormControl('', Validators.compose([
+        Validators.maxLength(10)])),
       name: new FormControl('', Validators.compose([
         Validators.required,
         Validators.maxLength(50)])),

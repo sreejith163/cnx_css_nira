@@ -21,16 +21,12 @@ export const HomeRoutes = [
             {
                 path: 'system-admin',
                 loadChildren: () => import('./modules/system-admin/system-admin.module').then(m => m.SystemAdminModule),
-                canActivate: [PermissionsGuard],
-                data: {permissions: [1]},
                 runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
                 resolve: { languagePreference: LanguagePreferenceResolver }
             },
             {
                 path: 'setup-menu',
                 loadChildren: () => import('./modules/setup-menu/setup-menu.module').then(m => m.SetupMenuModule),
-                canActivate: [PermissionsGuard],
-                data: {permissions: [1]},
                 runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
                 resolve: { languagePreference: LanguagePreferenceResolver }
             },

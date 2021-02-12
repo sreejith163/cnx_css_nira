@@ -36,7 +36,6 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-
     this.cssLanguages = CSS_LANGUAGES;
     this.LoggedUser = this.authService.getLoggedUserInfo();
   }

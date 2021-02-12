@@ -205,6 +205,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         if (response.body) {
           this.schedulingCodes = response.body;
+          console.log(this.schedulingCodes)
           this.headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
           this.totalSchedulingCodesRecord = this.headerPaginationValues.totalCount;
         }

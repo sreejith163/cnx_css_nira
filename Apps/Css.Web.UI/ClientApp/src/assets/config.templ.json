@@ -1,0 +1,14 @@
+{
+  "sso": {
+    "authBaseUrl": "${AUTH_URL}",
+    "authAppToken": "${AUTH_TOKEN}"
+  },
+  "services": {
+    "gatewayService": "${API_GATEWAY}"
+  },
+  "settings": {
+    "applicationUrl": "${APP_URL}",
+    "sessionName": "${SESSION_NAME}",
+    "cookiePath": "/"
+  }
+}

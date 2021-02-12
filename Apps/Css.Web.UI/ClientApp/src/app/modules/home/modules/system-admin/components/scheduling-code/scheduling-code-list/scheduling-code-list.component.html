@@ -29,7 +29,7 @@
         {{ 'Search' | translate }}
       </button>
     </div>
-    <div class="col-md-7 padding-bottom-5">
+    <div *permission="{rolesPermitted: [1]}" class="col-md-7 padding-bottom-5">
       <button type="button" class="btn btn-primary float-r" (click)="addSchedulingCode()" id="btn_add">
         <i class="fa fa-plus padding-5" aria-hidden="true"></i>
         {{ 'Add' | translate }}
@@ -43,18 +43,18 @@
         <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
           <thead>
             <tr>
-              <th>
+              <th *permission="{rolesPermitted: [1]}">
                 {{ 'Action' | translate }}
               </th>
-              <th class="sortable-field" (click)="sort('id', sortBy)">
+              <!-- <th class="sortable-field" (click)="sort('id', sortBy)">
                 {{ 'ID' | translate }}
                 <i *ngIf="orderBy !== 'id'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'id'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
-              </th>
+              </th> -->
               <th class="sortable-field" (click)="sort('refId', sortBy)">
-                {{ 'Reference_id' | translate }}
+                {{ 'ID' | translate }}
                 <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
@@ -86,11 +86,11 @@
             <ngx-spinner [name]="spinner">
             </ngx-spinner>
             <tr *ngFor="let el of schedulingCodes;let i = index;">
-              <td>
+              <td *permission="{rolesPermitted: [1]}">
                 <i class="fa fa-edit padding-5 pointer" (click)="editSchedulingCode(el)"></i>
                 <i class="fa fa-trash padding-5 pointer" (click)="deleteSchedulingCode(el.id)"></i>
               </td>
-              <td>{{ el.id }}</td>
+              <!-- <td>{{ el.id }}</td> -->
               <td>{{ el.refId }}</td>
               <td>
                 <span

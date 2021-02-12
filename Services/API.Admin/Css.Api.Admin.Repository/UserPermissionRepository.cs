@@ -55,7 +55,7 @@ namespace Css.Api.Admin.Repository
 
         public async Task<PagedList<Entity>> GetUserPermissions(UserPermissionQueryParameters userPermissionParameters)
         {
-            var userPermissions = FindByCondition(x => x.IsDeleted == false);
+            var userPermissions = FindByCondition(x => x.IsDeleted == false && x.Role.Name != "Agent");
 
             var filteredAgents = FilterUserPermissions(userPermissions, userPermissionParameters)
                 .Include(x => x.Role);

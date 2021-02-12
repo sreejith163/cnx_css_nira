@@ -69,7 +69,7 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private spinnerService: NgxSpinnerService,
     public translate: TranslateService,
-    private permissionsService: PermissionsService,
+    public permissionsService: PermissionsService,
     private authService: AuthService,
     private route: ActivatedRoute,
     private languagePreferenceService: LanguagePreferenceService
@@ -161,14 +161,6 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
     return modalRef;
   }
 
-  // heading and content message for confirm dialog
-  private setConfirmDialogMessages(headingMessage: string, contentMessage: string, confirmButton: string, cancelButton: string) {
-    this.modalRef.componentInstance.headingMessage = headingMessage;
-    this.modalRef.componentInstance.contentMessage = contentMessage;
-    this.modalRef.componentInstance.confirmButton = confirmButton;
-    this.modalRef.componentInstance.cancelButton = cancelButton;
-  }
-
   confirmDeleteUserPermission(employee: EmployeeDetails) {
     // this.getModalPopup(GenericPopUpComponent, 'md');
     // this.setConfirmDialogMessages(`Are you sure you? You won't be able to revert this!`, ``, `Yes`, `No`);
@@ -183,17 +175,19 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   }
 
   editUserPermission(employee: EmployeeDetails) {
-    this.getModalPopup(AddUpdatePermissionComponent, 'lg');
-    this.setComponentValues(ComponentOperation.Edit);
-    this.modalRef.componentInstance.employee = employee;
-
-    this.modalRef.result.then((confirmed) => {
-      if (confirmed === true) {
-        this.currentPage = 1;
-        this.loadEmployees();
-        this.showSuccessPopUpMessage('The record has been updated!');
-      }
-    });
+    if(+this.permissionsService.userRoleId == 1){
+      this.getModalPopup(AddUpdatePermissionComponent, 'lg');
+      this.setComponentValues(ComponentOperation.Edit);
+      this.modalRef.componentInstance.employee = employee;
+  
+      this.modalRef.result.then((confirmed) => {
+        if (confirmed === true) {
+          this.currentPage = 1;
+          this.loadEmployees();
+          this.showSuccessPopUpMessage('The record has been updated!');
+        }
+      });
+    }
   }
 
   search() {

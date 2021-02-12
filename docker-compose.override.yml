@@ -74,9 +74,16 @@ services:
   css.web.ui:
    environment:
      - ASPNETCORE_ENVIRONMENT=Local
+     - AUTH_URL=https://auth-api.concentrix.com/employee/authenticate?attributes[0]=mail&attributes[1]=uid&attributes[2]=displayname&attributes[3]=employeeid&client=
+     - AUTH_TOKEN=9xxo7FxS7IdXQRQpBTaVQtmpgHTZBKxOEhN
+     - API_GATEWAY=http://10.87.222.9:4201/api
+     - APP_URL=http://10.87.221.34:4200
+     - SESSION_NAME=session
    ports:
      - "4200:80"
      - "8080:443"
+   command: /bin/sh -c "envsubst '$${AUTH_URL},$${AUTH_TOKEN},$${API_GATEWAY},$${APP_URL},$${SESSION_NAME}' < /usr/share/nginx/html/assets/config.templ.json > /usr/share/nginx/html/assets/config.json && exec nginx -g 'daemon off;'"      
+
 
   css.api.gateway:
     environment:

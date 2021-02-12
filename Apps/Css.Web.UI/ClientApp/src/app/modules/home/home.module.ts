@@ -10,6 +10,7 @@ import { FooterComponent } from './layout/home/footer/footer.component';
 import { SidebarMenuComponent } from './layout/home/sidebar-menu/sidebar-menu.component';
 import { ControlSidebarComponent } from './layout/home/control-sidebar/control-sidebar.component';
 
+
 const modules = [DragDropModule, SharedModule, HomeRoutingModule];
 const components = [HomeComponent, HeaderComponent, FooterComponent, SidebarMenuComponent, DashboardComponent, ControlSidebarComponent];
 const providers = [];

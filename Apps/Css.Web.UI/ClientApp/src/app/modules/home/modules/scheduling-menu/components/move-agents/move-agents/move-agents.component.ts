@@ -59,7 +59,6 @@ export class MoveAgentsComponent implements OnInit {
   agentAdminsRightSide: AgentAdminDetails[] = [];
 
   isSelected: boolean[] = [];
-  selected: AgentAdminDetails[] = [];
   selectedAgentAdminIds: string[] = [];
 
   getAgentAdminsSubscriptionLeft: ISubscription;
@@ -129,9 +128,17 @@ export class MoveAgentsComponent implements OnInit {
   onSchedulingGroupChangeLeft(schedulingGroupId: number) {
     this.agentSchedulingGroupIdLeft = schedulingGroupId;
     if (this.agentSchedulingGroupIdLeft) {
+      this.agentAdminsLeftSide = [];
+      this.isSelected = [];
+      this.totalAgentAdminsRecordLeft = 0;
+      this.selectedAgentAdminIds = [];
       this.loadAgentAdminsLeft(schedulingGroupId);
     } else {
+      this.totalAgentAdminsRecordLeft = 0;
+      this.agentSchedulingGroupIdLeft = 0;
       this.agentAdminsLeftSide = [];
+      this.selectedAgentAdminIds = [];
+      this.isSelected = [];
     }
   }
 
@@ -143,6 +150,7 @@ export class MoveAgentsComponent implements OnInit {
     this.agentSchedulingGroupIdLeft = schedulingGroupId;
 
     if(this.agentSchedulingGroupIdRight === this.agentSchedulingGroupIdLeft){
+      this.agentSchedulingGroupIdLeft = 0;
       this.showErrorWarningPopUpMessage("Scheduling Group destination should't be the same with the source.");
     }else{
       const queryParams = this.getQueryParamsLeft(schedulingGroupId);
@@ -183,6 +191,8 @@ export class MoveAgentsComponent implements OnInit {
       if (this.agentSchedulingGroupIdRight) {
         this.loadAgentAdminsRight(schedulingGroupId);
       } else {
+        this.totalAgentAdminsRecordRight = 0;
+        this.agentSchedulingGroupIdRight = 0;
         this.agentAdminsRightSide = [];
       }
     }
@@ -194,7 +204,11 @@ export class MoveAgentsComponent implements OnInit {
     private loadAgentAdminsRight(schedulingGroupId) {
       this.agentSchedulingGroupIdRight = schedulingGroupId;
 
+      this.totalAgentAdminsRecordRight = 0;
+      this.agentAdminsRightSide = [];
+
       if(this.agentSchedulingGroupIdRight === this.agentSchedulingGroupIdLeft){
+        this.agentSchedulingGroupIdRight = 0;
         this.showErrorWarningPopUpMessage("Scheduling Group destination should't be the same with the source.");
       }else{
         const queryParams = this.getQueryParamsRight(schedulingGroupId);
@@ -220,22 +234,21 @@ export class MoveAgentsComponent implements OnInit {
     // END RIGHT BOX
   
 
-  toggleSelected(agentAdmin: AgentAdminDetails){
-    if(!this.selected.find(x => x.employeeId === agentAdmin.employeeId)){
-      this.selected.push(agentAdmin)
-
+  toggleSelected(agentAdminId){
+    // console.log(agentAdmin)
+   
+    if(!(this.selectedAgentAdminIds.includes(agentAdminId))){
       // push the ids to an array
-      this.selectedAgentAdminIds.push(agentAdmin.id);
+      this.selectedAgentAdminIds.push(agentAdminId);
       console.log(this.selectedAgentAdminIds);
     }else{
-      const index = this.selected.indexOf(agentAdmin, 0);
-      const indexId = this.selectedAgentAdminIds.indexOf(agentAdmin.id,0);
+      console.log(this.selectedAgentAdminIds, "hey");
+      const indexId = this.selectedAgentAdminIds.indexOf(agentAdminId,0);
       // remove the ids from the array
-      if (indexId > -1 && index > -1) {
-        this.selected.splice(index, 1);
+      if (indexId > -1 ) {
         this.selectedAgentAdminIds.splice(indexId, 1);
       }
-      console.log(agentAdmin.employeeId)
+      // console.log(agentAdmin.employeeId)
 
     }
   }
@@ -255,7 +268,6 @@ export class MoveAgentsComponent implements OnInit {
       this.searchKeywordRight = '';
       this.loadAgentAdminsRight(this.agentSchedulingGroupIdRight);
       this.loadAgentAdminsLeft(this.agentSchedulingGroupIdLeft);
-      this.selected = [];
       this.selectedAgentAdminIds = [];
       this.showSuccessPopUpMessage("The agent(s) has been move");
     },error=>{

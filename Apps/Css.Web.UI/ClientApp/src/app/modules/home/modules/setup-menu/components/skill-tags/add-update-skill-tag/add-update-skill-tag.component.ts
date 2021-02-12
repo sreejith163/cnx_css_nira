@@ -236,7 +236,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
   }
 
   private hasSkillTagDetailsMismatch() {
-    if (this.skillTagForm.controls.name.value !== this.skillTag.name || this.clientId !== this.skillTag.clientId ||
+    if (this.skillTagForm.controls.refId.value !== this.skillTag.refId || this.skillTagForm.controls.name.value !== this.skillTag.name || this.clientId !== this.skillTag.clientId ||
       this.clientLobGroupId !== this.skillTag.clientLobGroupId || this.skillGroupId !== this.skillTag.skillGroupId) {
       return true;
     } else {
@@ -254,7 +254,20 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
     }
   }
 
+  isNumberKey(evt) {
+    if(evt !== null){
+      const charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+      }
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   private populateFormDetails() {
+    this.skillTagForm.controls.refId.setValue(this.skillTag.refId);
     this.skillTagForm.controls.name.setValue(this.skillTag.name);
     this.clientId = this.skillTag.clientId;
     this.clientLobGroupId = this.skillTag.clientLobGroupId;
@@ -305,6 +318,8 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
 
   private intializeSkillTagForm() {
     this.skillTagForm = this.formBuilder.group({
+      refId: new FormControl('', Validators.compose([
+        Validators.maxLength(10)])),
       name: new FormControl('', Validators.compose([
         Validators.required,
         Validators.maxLength(Constants.DefaultTextMaxLength),

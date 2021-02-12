@@ -26,6 +26,7 @@ import { AgentAdminQueryParameter } from '../../../models/agent-admin-query-para
 import { AgentAdminResponse } from '../../../models/agent-admin-response.model';
 import { AgentAdminService } from '../../../services/agent-admin.service';
 import { AddAgentProfileComponent } from '../add-agent-profile/add-agent-profile.component';
+import { EditAgentProfileComponent } from '../edit-agent-profile/edit-agent-profile.component';
 
 @Component({
   selector: 'app-agent-admin-list',
@@ -145,7 +146,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
   }
 
   editAgentAdmin(agentAdminId: string) {
-    this.getModalPopup(AddAgentProfileComponent, 'lg');
+    this.getModalPopup(EditAgentProfileComponent, 'lg');
     this.setComponentValues(ComponentOperation.Edit, this.translationValues);
     this.modalRef.componentInstance.agentAdminId = agentAdminId;
 

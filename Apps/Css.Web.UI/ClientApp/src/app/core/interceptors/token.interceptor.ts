@@ -12,7 +12,7 @@ export class TokenInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const accessToken = this.cookieService.get(environment.settings.sessionName);
+    const accessToken = this.cookieService.get('session');
     if (accessToken) {
       request = this.addTokenToRequest(request, accessToken);
     }

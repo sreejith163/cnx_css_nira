@@ -12,7 +12,7 @@ export const AgentScheduleMenuRoutes: Routes = [
     {
         path: 'my-schedule',
         canActivate: [PermissionsGuard],
-        data: {permissions: [6]},
+        data: {permissions: [5]},
         component: AgentScheduleComponent
     },
 ];

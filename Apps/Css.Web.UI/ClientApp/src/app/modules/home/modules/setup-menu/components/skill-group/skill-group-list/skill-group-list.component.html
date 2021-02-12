@@ -31,7 +31,7 @@
           {{ 'Search' | translate }}
       </button>
     </div>
-    <div class="col-md-2 text-right">
+    <div *permission="{rolesPermitted: [1,2]}" class="col-md-2 text-right">
       <button type="button" class="btn btn-primary float-r mt-4" (click)="addSkillGroup()" id="btn_add"><i
           class="fa fa-plus padding-5" aria-hidden="true"></i>{{ 'Add' | translate }}</button>
     </div>
@@ -43,7 +43,7 @@
         <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
           <thead>
             <tr>
-              <th>
+              <th *permission="{rolesPermitted: [1,2]}">
                 {{ 'Action' | translate }}</th>
               <!--<th class="sortable-field" (click)="sort('Id', sortBy)">
                 {{ 'ID' | translate }}
@@ -113,7 +113,7 @@
           <tbody>
             <ngx-spinner [name]="spinner" bdColor="rgba(255, 0, 0, 0.8)"></ngx-spinner>
             <tr *ngFor="let el of skillGroupDetails; let i = index">
-              <td><i class="fa fa-edit padding-5 pointer" (click)="editSkillGroup(el.id)"></i>
+              <td *permission="{rolesPermitted: [1,2]}"><i class="fa fa-edit padding-5 pointer" (click)="editSkillGroup(el.id)"></i>
                 <i class="fa fa-trash padding-5 pointer" (click)="deleteSkillGroup(el.id)"></i>
               </td>
               <!--<td>{{el.id}}</td>-->

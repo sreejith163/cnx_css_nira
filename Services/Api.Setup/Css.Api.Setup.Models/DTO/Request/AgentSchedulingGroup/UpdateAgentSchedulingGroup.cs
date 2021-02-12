@@ -30,5 +30,7 @@ namespace Css.Api.Setup.Models.DTO.Request.AgentSchedulingGroup
         /// <value>
         ///   <c>true</c> if this instance is deleted; otherwise, <c>false</c>.</value>
         public bool IsDeleted { get; set; }
+
+ 
     }
 }

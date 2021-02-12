@@ -174,6 +174,7 @@ namespace Css.Api.Setup.Business
                     new List<OperationHour>(skillTag.OperationHour);
                 skillTagDetailsPreUpdate = new SkillTag
                 {
+                    RefId = skillTag.RefId,
                     Name = skillTag.Name,
                     ClientId = skillTag.ClientId,
                     ClientLobGroupId = skillTag.ClientLobGroupId,
