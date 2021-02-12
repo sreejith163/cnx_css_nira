@@ -24,8 +24,7 @@ import { ForecastScreenListComponent } from './components/forecast-screen/foreca
 import { FilterComponent } from './components/forecast-screen/filter/filter.component';
 import { ViewOuScreenListComponent } from './components/view-ou-screen/view-ou-screen-list/view-ou-screen-list.component';
 import { ViewOuScreenFilterComponent } from './components/view-ou-screen/view-ou-screen-filter/view-ou-screen-filter.component';
-import { NumericDirective } from '../directives/numeric.directive';
-
+import { NumericDirective } from 'src/app/shared/directives/numeric.directive';
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
 const components =
