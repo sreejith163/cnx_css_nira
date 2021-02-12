@@ -34,7 +34,6 @@ declare function highlightManagerSelectedCells(table: string, cell: string);
 declare function highlightCell(cell: string, className: string);
 import * as $ from 'jquery';
 import { AgentIconFilter } from '../../../models/agent-icon-filter.model';
-import { ActivityLogsComponent } from '../activity-logs/activity-logs.component';
 import { ActivityOrigin } from '../../../enums/activity-origin.enum';
 import { ActivityType } from 'src/app/shared/enums/activity-type.enum';
 
@@ -366,11 +365,11 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   openActivityLogs(index: number) {
-    this.getModalPopup(ActivityLogsComponent, 'xl');
-    this.modalRef.componentInstance.activityType = ActivityType.SchedulingManagerGrid;
-    this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
-    this.modalRef.componentInstance.employeeName = this.agentInfo.lastName + ' ' + this.agentInfo.firstName;
-    this.modalRef.componentInstance.startDate = new Date(this.startDate);
+    // this.getModalPopup(ActivityLogsComponent, 'xl');
+    // this.modalRef.componentInstance.activityType = ActivityType.SchedulingManagerGrid;
+    // this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
+    // this.modalRef.componentInstance.employeeName = this.agentInfo.lastName + ' ' + this.agentInfo.firstName;
+    // this.modalRef.componentInstance.startDate = new Date(this.startDate);
   }
 
   openCopySchedule(index: number) {

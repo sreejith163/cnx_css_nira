@@ -23,7 +23,6 @@ import { CopyScheduleComponent } from '../copy-schedule/copy-schedule.component'
 import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ActivityLogsComponent } from '../activity-logs/activity-logs.component';
 import { ActivityOrigin } from '../../../enums/activity-origin.enum';
 import { ActivityType } from 'src/app/shared/enums/activity-type.enum';
 
@@ -328,11 +327,11 @@ export class SchedulingComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   openActivityLogs(index: number) {
-    this.getModalPopup(ActivityLogsComponent, 'xl');
-    this.modalRef.componentInstance.activityType = ActivityType.SchedulingGrid;
-    this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
-    this.modalRef.componentInstance.employeeName = this.selectedGrid.lastName + ' ' + this.selectedGrid.firstName;
-    this.modalRef.componentInstance.startDate = new Date(this.startDate);
+    // this.getModalPopup(ActivityLogsComponent, 'xl');
+    // this.modalRef.componentInstance.activityType = ActivityType.SchedulingGrid;
+    // this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
+    // this.modalRef.componentInstance.employeeName = this.selectedGrid.lastName + ' ' + this.selectedGrid.firstName;
+    // this.modalRef.componentInstance.startDate = new Date(this.startDate);
   }
 
   openCopySchedule(index: number) {
