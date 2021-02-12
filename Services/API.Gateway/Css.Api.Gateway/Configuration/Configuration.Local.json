@@ -354,6 +354,19 @@
       "UpstreamPathTemplate": "/api/agentcategories/{agentCategoryId}",
       "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
     },
+    //*********************Entity Hierarchy *************************
+    {
+      "DownstreamPathTemplate": "/api/v1/EntityHierarchy/{ClientId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.scheduling",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/EntityHierarchy/{ClientId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
     //********* SchedulingCodes Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/schedulingcodes",
@@ -531,8 +544,8 @@
         "TimeoutValue": 300000
       }
     },
-	//********* Scheduling service Activity Log Routes *********************
-	{
+    //********* Scheduling service Activity Log Routes *********************
+    {
       "DownstreamPathTemplate": "/api/v1/activitylogs",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
