@@ -18,6 +18,7 @@ import { ActivityOrigin } from '../../../enums/activity-origin.enum';
 import { ActivityStatus } from '../../../enums/activity-status.enum';
 import { AgentScheduleChart } from '../../../models/agent-schedule-chart.model';
 import { ExcelService } from 'src/app/shared/services/excel.service';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -66,6 +67,7 @@ export class ActivityLogsComponent implements OnInit, OnDestroy {
   @Input() startDate: Date;
 
   constructor(
+    public translate: TranslateService,
     public activeModal: NgbActiveModal,
     private spinnerService: NgxSpinnerService,
     private activityLogService: ActivityLogsService,
