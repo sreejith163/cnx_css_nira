@@ -14,9 +14,9 @@ export class NumericDirective {
     if (this.specialKeys.indexOf(event.key) !== -1) {
       return;
     }
-    let current: string = this.el.nativeElement.value;
+    const current: string = this.el.nativeElement.value;
     const position = this.el.nativeElement.selectionStart;
-    const next: string = [current.slice(0, position), event.key == 'Decimal' ? '.' : event.key, current.slice(position)].join('');
+    const next: string = [current.slice(0, position), event.key === 'Decimal' ? '.' : event.key, current.slice(position)].join('');
     if (next && !String(next).match(this.regex)) {
       event.preventDefault();
     }
