@@ -4,7 +4,6 @@ import { AgentAdminListComponent } from './components/agent-admin/agent-admin-li
 import { MoveAgentsComponent } from './components/move-agents/move-agents/move-agents.component';
 import { ForecastScreenListComponent } from './components/forecast-screen/forecast-screen-list/forecast-screen-list.component';
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid/scheduling-grid.component';
-import { SchedulingManagerComponent } from './components/scheduling-grid/scheduling-manager/scheduling-manager.component';
 import { ViewOuScreenListComponent } from './components/view-ou-screen/view-ou-screen-list/view-ou-screen-list.component';
 
 
@@ -48,13 +47,5 @@ export const SchedulingMenuRoutes: Routes = [
         canActivate: [PermissionsGuard],
         data: {permissions: [1,2,3]},
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
-    },
-    {
-        path: 'scheduling-manager',
-        component: SchedulingManagerComponent,
-        canActivate: [PermissionsGuard],
-        data: {permissions: [1]},
-        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     }
-
 ];
