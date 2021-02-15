@@ -17,7 +17,6 @@ import { CopyScheduleComponent } from './components/shared/copy-schedule/copy-sc
 import { SchedulingManagerComponent } from './components/scheduling-grid/scheduling-manager/scheduling-manager.component';
 import { MoveAgentsComponent } from './components/move-agents/move-agents/move-agents.component';
 
-import { SchedulingComponent } from './components/scheduling-grid/scheduling/scheduling.component';
 import { SchedulingFilterComponent } from './components/shared/scheduling-filter/scheduling-filter.component';
 
 // for optimization and code cleaning
@@ -27,7 +26,7 @@ import { SchedulingManagerMComponent } from './components/scheduling-manager/sch
 
 import { ForecastScreenListComponent } from './components/forecast-screen/forecast-screen-list/forecast-screen-list.component';
 import { FilterComponent } from './components/forecast-screen/filter/filter.component';
-import { ActivityLogsComponent } from './components/shared/activity-logs/activity-logs.component';
+import { ActivityLogsScheuldeComponent } from './components/shared/activity-logs-schedule/activity-logs-schedule.component';
 import { ViewOuScreenComponent } from './components/view-ou-screen/view-ou-screen.component';
 
 
@@ -41,12 +40,11 @@ const components =
     AddAgentProfileComponent,
     EditAgentProfileComponent,
     SchedulingGridComponent,
-    ActivityLogsComponent,
+    ActivityLogsScheuldeComponent,
     ImportScheduleComponent,
     CopyScheduleComponent,
     SchedulingManagerComponent,
     MoveAgentsComponent,
-    SchedulingComponent,
     SchedulingFilterComponent,
     SchedulingGridMComponent,
     SchedulingManagerMComponent,
