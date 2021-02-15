@@ -11,7 +11,7 @@ import { HorizontalScrollPipe } from './pipes/horizontal-scroll.pipe';
 
 import { AgentAdminService } from './services/agent-admin.service';
 import { AgentSchedulesService } from './services/agent-schedules.service';
-import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid/scheduling-grid.component';
+import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid.component';
 import { ImportScheduleComponent } from './components/shared/import-schedule/import-schedule.component';
 import { CopyScheduleComponent } from './components/shared/copy-schedule/copy-schedule.component';
 import { MoveAgentsComponent } from './components/move-agents/move-agents/move-agents.component';
@@ -29,7 +29,7 @@ import { EntityHierarchyService } from './services/entity-hierarchy.service';
 import { EntityHierarchyComponent } from './components/entity-hierarchy/entity-hierarchy.component';
 import { NumericDirective } from 'src/app/shared/directives/numeric.directive';
 import { ActivityLogsService } from './services/activity-logs.service';
-import { SchedulingManagerComponent } from './components/scheduling-manager/scheduling-manager/scheduling-manager.component';
+import { SchedulingManagerComponent } from './components/scheduling-manager/scheduling-manager.component';
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
 const components =
   [AgentAdminListComponent,
