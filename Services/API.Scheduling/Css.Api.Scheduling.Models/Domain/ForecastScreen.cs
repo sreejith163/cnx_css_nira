@@ -17,6 +17,9 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets the date from.
         /// </summary>
 
+    
+        public long ForecastId { get; set; }
+
         public int SkillGroupId { get; set; }
 
         /// <summary>

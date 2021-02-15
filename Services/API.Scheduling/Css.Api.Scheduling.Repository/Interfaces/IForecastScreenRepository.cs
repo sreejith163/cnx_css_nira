@@ -9,14 +9,17 @@ using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Repository.Interfaces
 {
-   public interface IForecastScreenRepository
+    public interface IForecastScreenRepository
     {
         Task<PagedList<Entity>> GetForecastScreens(ForeCastScreenQueryParameter forecastScreenQueryparameter);
 
         Task<ForecastScreen> GetForecastData(CreateForecastData createForecastData);
 
-
+        Task<ForecastScreen> GetForecastDataID(long forecastID);
         Task<ForecastScreen> GetForecastScreenBySkillGroupId(CreateForecastData createForecastData);
+
+
+        //void ImportAgentScheduleChart(ImportForecast importForecast);
 
         void CreateForecastData(ForecastScreen forecastDataRequest);
 
@@ -26,6 +29,6 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="agentAdminRequest">The agent admin request.</param>
         void UpdateForecastData(ForecastScreen forecastDataRequest);
-        
+
     }
 }

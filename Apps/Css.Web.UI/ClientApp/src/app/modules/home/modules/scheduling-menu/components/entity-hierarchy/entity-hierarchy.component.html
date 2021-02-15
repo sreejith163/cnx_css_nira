@@ -30,14 +30,49 @@
                         <ngx-spinner [name]="spinnerLeft"></ngx-spinner>
                             <div class="card-header">
                               <h3 class="card-title text-m"> Entity Hierarchy</h3>
-              
-                              <div class="card-tools">
-                               
-                              </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 300px;">
-                                
+                                <div class="container p-3">
+                                    <ng-container *ngIf="entityHierarchy">
+                                        <ul class="tree">
+                                            <li>
+                                                <span [ngStyle]="{'color': 'black'}">{{entityHierarchy.client.name}}</span>
+                                                <ul>
+                                                    <li *ngFor="let clientLOB of entityClientLOBs">
+                                                        {{clientLOB.name}}
+                                                        <ul>
+                                                            <li *ngFor="let skillGroup of clientLOB.skillGroups;">
+                                                                {{skillGroup.name}}
+                                                                <ul>
+                                                                    <li *ngFor="let skillTags of skillGroup.skillTags">
+                                                                        {{skillTags.name}}
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                        
+                                        <!-- <ng-container *ngFor="let clientLOB of entityClientLOBs">
+                                            {{clientLOB.id}}
+                                            <br>
+                                            {{clientLOB.name}}
+                                            <label>Skill Groups</label>
+                                            <ng-container *ngFor="let skillGroup of clientLOB.skillGroups;">
+                                                <br>
+                                                - {{skillGroup.name}}
+                                                <ng-container *ngFor="let skillTags of skillGroup.skillTags">
+                                                    <br/>
+                                                    - {{skillTags.name}}
+                                                </ng-container>                                                
+                                            </ng-container>                                            
+                                        </ng-container>    -->
+                                                                            
+                                    </ng-container>
+                                </div>
                             </div>
                     </div>
                         
@@ -57,9 +92,32 @@
                            
                           </div>
                         </div>
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0" style="height: 300px;">
-                        </div>
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0" style="height: 300px;">
+                                <div class="container p-3">
+                                    <ng-container *ngIf="entityAgentSchedulingGroups">
+                                        <ul class="tree" *ngFor="let entityAgentSchedulingGroup of entityAgentSchedulingGroups">
+                                            <li>
+                                                <span [ngStyle]="{'color': 'black'}">{{entityAgentSchedulingGroup.name}}</span>
+                                                <ul>
+                                                    <li>
+                                                        {{entityAgentSchedulingGroup.clientName}}
+                                                    </li>
+                                                    <li>
+                                                        {{entityAgentSchedulingGroup.clientLOBName}}
+                                                    </li>
+                                                    <li>
+                                                        {{entityAgentSchedulingGroup.skillGroupName}}
+                                                    </li>
+                                                    <li>
+                                                        {{entityAgentSchedulingGroup.skillTagName}}
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>                                
+                                    </ng-container>
+                                </div>
+                            </div>
                     </div>
             </div>
         </div>

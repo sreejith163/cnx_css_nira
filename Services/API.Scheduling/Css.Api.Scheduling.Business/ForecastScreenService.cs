@@ -79,18 +79,39 @@ namespace Css.Api.Scheduling.Business
         public async Task<CSSResponse> CreateForecastData(CreateForecastData forecastData)
         {
 
+            long forecastIdDetails = forecastData.ForecastId;
+            
+            var forecastIDConflict = await _forecastScreenRepository.GetForecastDataID(forecastIdDetails);
+
+            if (forecastIDConflict != null)
+            {
+                return new CSSResponse($"Forecast data already exist.", HttpStatusCode.Conflict);
+            }
+
             var forecastDataRequest = _mapper.Map<ForecastScreen>(forecastData);
             _forecastScreenRepository.CreateForecastData(forecastDataRequest);
             await _uow.Commit();
             return new CSSResponse(forecastDataRequest, HttpStatusCode.Created);
         }
-        public async Task<CSSResponse> UpdateForecastData(CreateForecastData createForecastData, UpdateForecastData updateForecastDetails)
+        public async Task<CSSResponse> UpdateForecastData(UpdateForecastData updateForecastDetails, long forecastID)
         {
-            var forecast = await _forecastScreenRepository.GetForecastData(createForecastData);
+            var forecast = await _forecastScreenRepository.GetForecastDataID(forecastID);
             if (forecast == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
+
+            
+
+           
+
+            if (forecast.ForecastId != forecastID)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+         
+
+
 
             var forecastRequest = _mapper.Map(updateForecastDetails, forecast);
             _forecastScreenRepository.UpdateForecastData(forecastRequest);

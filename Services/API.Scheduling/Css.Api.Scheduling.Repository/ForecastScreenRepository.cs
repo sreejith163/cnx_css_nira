@@ -58,6 +58,13 @@ namespace Css.Api.Scheduling.Repository
 
             return await FindByIdAsync(query);
         }
+        public async Task<ForecastScreen> GetForecastDataID(long forecastID)
+        {
+            var query = Builders<ForecastScreen>.Filter.Eq(i => i.ForecastId, forecastID);
+          
+
+            return await FindByIdAsync(query);
+        }
 
         public async Task<ForecastScreen> GetForecastScreenBySkillGroupId(CreateForecastData createForecastData)
         {
@@ -66,6 +73,8 @@ namespace Css.Api.Scheduling.Repository
 
             return await FindByIdAsync(query);
         }
+
+
 
         private IQueryable<ForecastScreen> FilterForecastscreen(IQueryable<ForecastScreen> forecastScreens, ForeCastScreenQueryParameter forecastScreenQueryparameter)
         {
@@ -87,11 +96,17 @@ namespace Css.Api.Scheduling.Repository
             InsertOneAsync(forecastDataRequest);
         }
 
-
-        public void UpdateForecastData(ForecastScreen forecastScreen)
+     
+        public void UpdateForecastData(ForecastScreen updateForecastData)
         {
-            ReplaceOneAsync(forecastScreen);
+
+
+            ReplaceOneAsync(updateForecastData);
+          
         }
+
+        
+
     }
 
 }

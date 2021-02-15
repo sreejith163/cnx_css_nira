@@ -17,7 +17,7 @@
         <div class="col-md-3 d-flex flex-column">
             <ng-select [items]="skillGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id"
                 placeholder="{{'All' | translate}}" [typeahead]="typeAheadInput$" (scroll)="onSkillGroupScroll($event)"
-                (scrollToEnd)="onSkillGroupScrollToEnd()" (change)="onSkillGroupChange($event)"
+                (scrollToEnd)="onSkillGroupScrollToEnd()" (change)="onSkillGroupChange($event);change($event)"
                 (clear)="clearSkillGroupValues()" [(ngModel)]="skillgroupID">
                 <ng-template ng-header-tmp>
                     <small class="form-text text-muted">{{'Loaded' | translate }} {{skillGroupItemsBuffer.length}}
@@ -33,10 +33,10 @@
         </div>
         <div class="col-md-3 d-flex flex-column">
             <div class="input-group">
-                <input class="form-control" (ngModelChange)="change($event)" placeholder="yyyy-mm-dd" name="dp"
-                    [(ngModel)]="DateModel" ngbDatepicker #d="ngbDatepicker">
+                <input class="form-control" placeholder="{{today}}" name="d2" #c2="ngModel" [(ngModel)]="model2"
+                    ngbDatepicker #d2="ngbDatepicker">
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+                    <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
                 </div>
             </div>
         </div>
@@ -47,36 +47,27 @@
             </button>
         </div>
     </div>
-    <div class="nav-tabs-custom margin-b-0">
-        <ul class="nav nav-tabs" id="custom-content-above-tab" role="tablist">
-            <li class="nav-item d-none">
-                <a class="nav-link active" id="scheduling-tab" data-toggle="pill" href="#scheduling" role="tab"
-                    aria-controls="scheduling" aria-selected="true">Scheduling</a>
-            </li>
-            <!-- <li class="nav-item">
-            <a class="nav-link" id="scheduling-manager-tab" data-toggle="pill" href="#scheduling-manager" role="tab"
-              aria-controls="cscheduling-manager" aria-selected="false" (click)="openTab(1)">Scheduling Manager</a>
-          </li> -->
 
-        </ul>
-    </div>
 </div>
 <div class="container-fluid">
+
     <div class="row">
         <div class="col-md-12 mt-2 table-responsive">
 
             <ng-container>
+                <ngx-spinner [name]="forecastSpinner"></ngx-spinner>
                 <!-- forecast screen table -->
-                <form *ngIf="capabilityForm" [formGroup]="capabilityForm">
+                <form *ngIf="forecastForm" [formGroup]="forecastForm">
                     <div class="row my-2">
                         <div class="col-lg-6">
                             <label for=""><strong>{{skillGroupBinder?.name}}</strong></label>
                             <input type="hidden" [value]="skillGroupBinder?.id">
                         </div>
-                        <div class="col-lg-6 pull-right marign-l-auto">
+                        <div *ngIf="enableImportButton == true" [ngClass]="{'d-block': enableImportButton}"
+                            class="d-none col-lg-6 pull-right marign-l-auto">
 
-                            <img src="assets/images/Export.jpg" class="icon-image float-right padding-2"
-                                [ngbTooltip]="'Export'" (click)="exportToExcel()">
+                            <img (click)="exportToExcel()" src="assets/images/Export.jpg" class="icon-image float-right padding-2"
+                                [ngbTooltip]="'Export'" >
                             <img src="assets/images/Import.jpg" class="icon-image float-right padding-2"
                                 [ngbTooltip]="'Import'" (click)="openImportSchedule()">
 
@@ -84,7 +75,7 @@
                     </div>
 
 
-                    <div class="scrollable-table">
+                    <div class="scrollable-table forecastContainer" #epltable>
                         <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
                             <thead>
                                 <tr>
@@ -97,62 +88,98 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <ng-container formArrayName="capabilities">
-
-                                    <tr *ngFor="let capability of formData.controls; let i = index">
-                                        <ng-container [formGroupName]="i">
+                                <ng-container *ngIf="skillGroupBinder?.id == null;else enableField">
+                                    <tr *ngFor="let item of dataJson; let i = index">
+                                        <ng-container >
 
                                             <td>
-                                                <!-- {{dataJson[i].Time}}  -->
-                                                <label for="">{{dataJson[i].Time}}</label>
-                                                <input formControlName="Time" type="hidden">
-                                            </td>
+                                              
+                                               {{item.time}}
+                                                
+                                            </td>   
 
-                                            <td><input numberOnly (change)="showBtn()"
-                                                    formControlName="ForecastedContact" type="text"
-                                                    class="form-control">
-                                            </td>
-                                            <td><input numberOnly (change)="showBtn()" formControlName="AHT" type="text"
-                                                    class="form-control"></td>
-                                            <td><input numberOnly (change)="showBtn()" formControlName="ForecastedReq"
-                                                    type="text" class="form-control">
-                                            </td>
-                                            <td><input numberOnly (change)="showBtn()" formControlName="ScheduledOpen"
-                                                    type="text" class="form-control">
-                                            </td>
+                                            <td (dblclick)="checkSkillId()">
+                                                <span class="d-none">{{item.forecastedContact}}</span>
+                                                <input type="text" value="{{item.forecastedContact}}"></td>
+                                            <td (dblclick)="checkSkillId()"><input type="text" value="{{item.aht}}"></td>
+                                            <td (dblclick)="checkSkillId()"><input type="text" value="{{item.forecastedReq}}"></td>
+                                            <td (dblclick)="checkSkillId()"><input type="text" value="{{item.scheduledOpen}}"></td>
                                         </ng-container>
                                     </tr>
+
                                 </ng-container>
+                                <ng-template #enableField> 
+
+                                    <ng-container formArrayName="forecastFormArrays">
+
+                                        <tr *ngFor="let capability of formData.controls; let i = index; let x = index">
+                                            <ng-container [formGroupName]="i">
+
+                                                <td>
+                                                    <!-- {{dataJson[i].Time}}  -->
+                                                    <label for="">{{dataJson[i].time}}</label>
+                                                    <input formControlName="time" type="hidden">
+                                                </td>
+
+                                                <td >
+                                                 <span class="d-none">{{dataJson[i].forecastedContact}}</span>
+                                                    <input [class.enabled]="!isEnabled['forecastedContact' + i]" (click)="isEnabled['forecastedContact' + i] = !isEnabled['forecastedContact' + i];" [readonly]="isEnabled['forecastedContact' + i]" numberOnly (change)="showBtn()"
+                                                        formControlName="forecastedContact" type="text"
+                                                        class="">
+                                                </td>
+                                                <td>
+                                                    <span class="d-none">{{dataJson[i].aht}}</span>
+                                                    <input [class.enabled]="!isEnabled[i + x]" (click)="isEnabled[i + x] = !isEnabled[i + x];"  [readonly]="isEnabled[i + x]"  numberOnly (change)="showBtn()"
+                                                        formControlName="aht" type="text" class=""></td>
+                                                <td>
+                                                    <span class="d-none">{{dataJson[i].forecastedReq}}</span>
+                                                    
+                                                    <input [class.enabled]="!isEnabled[i + x]" (click)="isEnabled[i + x] = !isEnabled[i + x];"   [readonly]="isEnabled[i + x]" numberOnly (change)="showBtn()"
+                                                        formControlName="forecastedReq" type="text"
+                                                        class="">
+                                                </td>
+                                                <td>
+                                                    <span class="d-none">{{dataJson[i].scheduledOpen}}</span>
+                                                    <input [class.enabled]="!isEnabled[i + 1]" (click)="isEnabled[i + 1] = !isEnabled[i + 1];"   [readonly]="isEnabled[i + 1]" numberOnly (change)="showBtn()"
+                                                        formControlName="scheduledOpen" type="text"
+                                                        class="">
+                                                </td>
+                                            </ng-container>
+                                        </tr>
+                                    </ng-container>
+                                 </ng-template> 
                             </tbody>
                             <tfoot>
                                 <tr class="tr-1">
                                     <td>
-                                        <span>Total</span>
+                                        
+                                        <span><strong>Total</strong></span>
                                         <br>
                                         <hr>
-                                        <span>Average</span>
+                                        <span><strong>Average</strong></span>
 
                                     </td>
-                                    <td>
+                                    <td class="forecastContact">
+                                        <span><strong>{{ sumForecastContact }}</strong></span>
+                                        <br>
+                                        <hr>
                                         <span></span>
-                                        <br>
-                                        <hr>
-                                        <span>{{ formData.controls.length }}</span>
                                     </td>
-                                    <td> <span>Total</span>
+                                    <td>
+                                        <span><strong>{{ sumAHT }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span>Total</span>3
+                                        <span></span>
                                     </td>
-                                    <td> <span>Total</span>
+                                    <td> <span><strong>{{ sumForecastedReq }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span>Total</span>
+                                        <span></span>
                                     </td>
-                                    <td> <span>Total</span>
+                                    <td> <span><strong>{{ sumScheduledOpen }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span>Total</span>
+                                        <span></span>
                                     </td>
 
                                 </tr>

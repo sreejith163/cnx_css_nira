@@ -1,14 +1,14 @@
-import { Component, Input, EventEmitter, OnChanges, OnDestroy, OnInit, Output, Injectable } from '@angular/core';
+import { Component, Input, EventEmitter, OnChanges, OnDestroy, OnInit, Output, Injectable, ElementRef, ViewChild } from '@angular/core';
 import { SortingType } from '../../../enums/sorting-type.enum';
 
 import { Subject, SubscriptionLike as ISubscription } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, NumberValueAccessor, Validators } from '@angular/forms';
 import { ForecastScreenService } from '../../../services/forecast-screen.service';
 import { Forecast } from '../../../models/forecast.model';
 import { ForecastDataModel } from '../../../models/forecast-data.model';
 import { SkillGroupDetails } from '../../../../setup-menu/models/skill-group-details.model';
-import { NgbCalendar, NgbDate, NgbDateAdapter, NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDate, NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
@@ -32,16 +32,79 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { stringify } from '@angular/compiler/src/util';
 import { element } from 'protractor';
 import { HttpClient } from '@angular/common/http';
+import { UpdateAgentAdmin } from '../../../models/update-agent-admin.model';
+import { UpdateForecastData } from '../../../models/update-forecast-data.model';
+import { getLocaleDateTimeFormat } from '@angular/common';
+import * as xlsx from 'xlsx'
+/**
+ * This Service handles how the date is represented in scripts i.e. ngModel.
+ */
+@Injectable()
+export class CustomAdapter extends NgbDateAdapter<string> {
+
+  readonly DELIMITER = '/';
+
+  fromModel(value: string | null): NgbDateStruct | null {
+    if (value) {
+      let date = value.split(this.DELIMITER);
+      return {
+        month: parseInt(date[0], 10),
+        day: parseInt(date[1], 10),
+        year: parseInt(date[2], 10)
+      };
+    }
+    return null;
+  }
+
+  toModel(date: NgbDateStruct | null): string | null {
+    return date ? date.month + this.DELIMITER + date.day + this.DELIMITER + date.year : null;
+  }
+}
+
+@Injectable()
+export class CustomDateParserFormatter extends NgbDateParserFormatter {
+
+  readonly DELIMITER = '/';
+
+  parse(value: string): NgbDateStruct | null {
+    if (value) {
+      let date = value.split(this.DELIMITER);
+      return {
+        month: parseInt(date[0], 10),
+        day: parseInt(date[1], 10),
+        year: parseInt(date[2], 10)
+      };
+    }
+    return null;
+  }
+
+  format(date: NgbDateStruct | null): string {
+    return date ? date.month + this.DELIMITER + date.day + this.DELIMITER + date.year : '';
+  }
+}
+
+
+
 @Component({
   selector: 'app-forecast-screen-list',
   templateUrl: './forecast-screen-list.component.html',
-  styleUrls: ['./forecast-screen-list.component.scss']
+  styleUrls: ['./forecast-screen-list.component.scss'],
+  // NOTE: For this example we are only providing current component, but probably
+  // NOTE: you will want to provide your main App Module
+  providers: [
+    { provide: NgbDateAdapter, useClass: CustomAdapter },
+    { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter }
+  ]
 })
 
 export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges {
-
+  @ViewChild('epltable', { static: false }) epltable: ElementRef;
+  @ViewChild("epltable") divView: ElementRef;
+  isEnabled: boolean[] = [];
+  model2: string;
   skillgroupID: number;
   forecastModelBinder: Forecast[];
+  forecastBinder: ForecastDataModel;
   DateModel: NgbDateStruct;
   pageNumber = 1;
   skillGroupItemsBufferSize = 10;
@@ -66,7 +129,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   orderBy = 'createdDate';
   sortBy = 'desc';
   spinner = 'skillTags';
-
+  forecastID: number;
   clientId: number;
   clientLobGroupId: number;
   skillTags: SkillTagDetails[] = [];
@@ -88,6 +151,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   agentSchedulingGroupId?: number;
   skillGroupBinder: SkillGroupDetails;
   enableSaveButton: boolean = false;
+  enableImportButton: boolean = false;
   forecastData: ForecastDataModel[];
   forecastForm: FormGroup;
   forecastFormModel: any = [];
@@ -95,7 +159,12 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   skillGroupForecast: ForecastDataModel;
   capabilityForm: FormGroup;
   forecastFormArray = new FormArray([]);
-  sumForecastContact: number;
+  sumForecastContact: string;
+  sumAHT: string;
+  sumForecastedReq: string;
+  sumScheduledOpen: string;
+  forecastSpinner = 'forecastSpinner';
+  InsertUpdate = false;
   constructor(
     private formBuilder: FormBuilder,
     private forecastService: ForecastScreenService,
@@ -108,64 +177,70 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     private excelService: ExcelService,
     private modalService: NgbModal,
     private skillGroupService: SkillGroupService,
-    private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>,
+    private ngbCalendar: NgbCalendar,
+    private dateAdapter: NgbDateAdapter<string>,
     private http: HttpClient,
+
 
   ) {
 
   }
 
   calculate(forecastDataCalc: Forecast[]): number {
-    return forecastDataCalc.reduce((acc, product) => acc + parseInt(product.AHT), 0)
+    return forecastDataCalc.reduce((acc, product) => acc + parseInt(product.aht), 0)
   }
   ngOnInit() {
-
+    this.model2 = this.today;
     this.getForecastDefaultValue();
-    this.tabIndex = AgentScheduleType.Scheduling;
+
     this.subscribeToSkillGroups();
-    this.subscribeToSearching();
-    this.http.get('/assets/time-table.json')
-      .subscribe((data: any[]) => {
-        this.capabilityForm = this.formBuilder.group({
-          capabilities: this.formBuilder.array(data.map(datum => this.generateDatumFormGroup(datum)))
-        });
-      });
-  }
-  private generateDatumFormGroup1(datum) {
-    return this.formBuilder.group({
-      Time: this.formBuilder.control({ value: datum.time, disabled: false }),
-      ForecastedContact: this.formBuilder.control({ value: datum.forecastedContact, disabled: false }),
-      AHT: this.formBuilder.control({ value: datum.aht, disabled: false }),
-      ForecastedReq: this.formBuilder.control({ value: datum.forecastedReq, disabled: false }),
-      ScheduledOpen: this.formBuilder.control({ value: datum.scheduledOpen, disabled: false })
-    });
-  }
-  private generateDatumFormGroup(datum) {
-  
- this.sumForecastContact = this.sumForecastContact + parseFloat(datum.ForecastedContact);
- console.log(this.sumForecastContact);
-    return this.formBuilder.group({
-      Time: this.formBuilder.control({ value: datum.Time, disabled: false }),
-      ForecastedContact: this.formBuilder.control({ value: datum.ForecastedContact, disabled: false }),
-      AHT: this.formBuilder.control({ value: datum.AHT, disabled: false }),
-      ForecastedReq: this.formBuilder.control({ value: datum.ForecastedReq, disabled: false }),
-      ScheduledOpen: this.formBuilder.control({ value: datum.ScheduledOpen, disabled: false })
-    });
-  }
-  get formData() { return <FormArray>this.capabilityForm.get('capabilities'); }
 
+
+  }
   exportToExcel() {
-    const today = new Date();
-    const year = String(today.getFullYear());
-    const month = String((today.getMonth() + 1)).length === 1 ?
-      ('0' + String((today.getMonth() + 1))) : String((today.getMonth() + 1));
-    const day = String(today.getDate()).length === 1 ?
-      ('0' + String(today.getDate())) : String(today.getDate());
+    const ws: xlsx.WorkSheet =   
+    xlsx.utils.table_to_sheet(this.epltable.nativeElement);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
+    xlsx.writeFile(wb, 'epltable.xlsx');
+   }
 
-    const date = year + month + day;
-    this.excelService.exportAsExcelFile(this.tabIndex === AgentScheduleType.Scheduling ?
-      ForecastExcelExportData : ForecastExcelExportData, this.exportFileName + date);
+  checkSkillId(){
+
+    if(this.skillGroupBinder?.id == null){
+      this.showErrorWarningPopUpMessage('Please select skill group first');
+    }
   }
+  enableInput(i) {
+
+    this.isEnabled[i] = false;
+
+  }
+
+  private enableField(datum) {
+
+    return this.formBuilder.group({
+      time: this.formBuilder.control({ value: datum.time, disabled: false }),
+      forecastedContact: this.formBuilder.control({ value: datum.forecastedContact, disabled: false }),
+      aht: this.formBuilder.control({ value: datum.aht, disabled: false }),
+      forecastedReq: this.formBuilder.control({ value: datum.forecastedReq, disabled: false }),
+      scheduledOpen: this.formBuilder.control({ value: datum.scheduledOpen, disabled: false })
+    });
+  }
+
+  private generateDatumFormGroup(datum) {
+
+    return this.formBuilder.group({
+      time: this.formBuilder.control({ value: datum.time, disabled: false }),
+      forecastedContact: this.formBuilder.control({ value: datum.forecastedContact, disabled: false }),
+      aht: this.formBuilder.control({ value: datum.aht, disabled: false }),
+      forecastedReq: this.formBuilder.control({ value: datum.forecastedReq, disabled: false }),
+      scheduledOpen: this.formBuilder.control({ value: datum.scheduledOpen, disabled: false })
+    });
+  }
+  get formData() { return <FormArray>this.forecastForm.get('forecastFormArrays'); }
+
+
 
   openImportSchedule() {
     this.getModalPopup(ImportScheduleComponent, 'lg');
@@ -200,7 +275,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     }
   }
   get today() {
-    return this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
+    return this.dateAdapter.toModel(this.ngbCalendar.getToday());
   }
   onSkillGroupScrollToEnd() {
     this.fetchMoreSkillGroups();
@@ -218,7 +293,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
   onSkillGroupChange(skillGroup: SkillGroupDetails) {
 
-    console.log(skillGroup)
+
     this.skillGroupBinder = skillGroup;
 
 
@@ -226,18 +301,50 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
   loadSkillGroup() {
     this.forecastFormArray.reset()
-    var dateParse = `${this.DateModel.month}-${this.DateModel.day}-${this.DateModel.year}`
-    this.getSkillGroupForecast = this.forecastService.getForecastDataById(this.skillGroupBinder?.id, dateParse).subscribe((data: any[]) => {
-      console.log(data['forecastData'])
-      this.capabilityForm = this.formBuilder.group({
-     
-        capabilities: this.formBuilder.array(data['forecastData'].map(datum => this.generateDatumFormGroup1(datum)))
-      });
-    }, (error) => {
-      console.log(error);
-      // if (error.status == 404) {
+    // var dateParse = `${this.DateModel.month}-${this.DateModel.day}-${this.DateModel.year}`
 
-      // }
+    this.spinnerService.show(this.forecastSpinner, SpinnerOptions);
+    this.getSkillGroupForecast = this.forecastService.getForecastDataById(this.skillGroupBinder?.id, this.model2).subscribe((data) => {
+      this.spinnerService.hide(this.forecastSpinner);
+      this.forecastID = data.forecastId;
+      this.forecastForm = this.formBuilder.group({
+
+        forecastFormArrays: this.formBuilder.array(data['forecastData'].map(datum => this.generateDatumFormGroup(datum))),
+
+      });
+      this.dataJson = data['forecastData'];
+      this.dataJson.forEach(element => {
+        this.arrayGenerator(
+          element.time,
+          element.forecastedContact,
+          element.aht,
+          element.forecastedReq,
+          element.scheduledOpen
+        );
+      });
+      //console.log(data);
+      this.sumForecastContact = data['forecastData'].reduce((a, b) => +a + +b.forecastedContact, 0);
+      this.sumAHT = data['forecastData'].reduce((a, b) => +a + +b.aht, 0);
+      this.sumForecastedReq = data['forecastData'].reduce((a, b) => +a + +b.forecastedReq, 0);
+      this.sumScheduledOpen = data['forecastData'].reduce((a, b) => +a + +b.scheduledOpen, 0);
+
+      this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2)
+      this.sumAHT = parseFloat(this.sumAHT).toFixed(2)
+      this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2)
+      this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2)
+
+    }, (error) => {
+
+      this.spinnerService.hide(this.forecastSpinner);
+      if (error.status == 404) {
+        this.getForecastDefaultValue();
+        this.showErrorWarningPopUpMessage('No Forecast Found!');
+        this.InsertUpdate = true;
+
+
+      } else {
+        this.InsertUpdate = false;
+      }
     });
 
     this.subscriptions.push(this.getSkillGroupForecast);
@@ -247,7 +354,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
 
   change(event) {
-    console.log(this.DateModel);
+    this.enableImportButton = true;
   }
 
 
@@ -282,22 +389,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
 
 
-  private subscribeToSearching() {
-    this.typeAheadValueSubscription = this.typeAheadInput$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(term => this.getSkillGroups(term))
-    ).subscribe(response => {
-      if (response.body) {
-        this.setPaginationValues(response);
-        this.skillGroupItemsBuffer = response.body;
-      }
-    }, (error) => {
-      console.log(error);
-    });
 
-    this.subscriptions.push(this.typeAheadValueSubscription);
-  }
 
   private setPaginationValues(response: any) {
     const paging = JSON.parse(response.headers.get('x-pagination'));
@@ -328,32 +420,36 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   }
 
 
-  getForecastDefaultValue() {
-    this.forecastService.getForecastData().subscribe(res => {
-      this.dataJson = res;
-      this.dataJson.forEach(element => {
-        this.arrayGenerator(
-          element.Time,
-          element.ForecastedContact,
-          element.AHT,
-          element.ForecastedReq,
-          element.ScheduledOpen
-        );
-      }
-      );
+  private getForecastDefaultValue() {
+    this.http.get('/assets/time-table.json')
+      .subscribe((data: any[]) => {
+        this.forecastForm = this.formBuilder.group({
+          forecastFormArrays: this.formBuilder.array(data.map(datum => this.enableField(datum)))
+        });
 
-    }
-    )
+        this.dataJson = data;
+    
+
+        this.sumForecastContact = data.reduce((a, b) => +a + +b.forecastedContact, 0);
+        this.sumAHT = data.reduce((a, b) => +a + +b.aht, 0);
+        this.sumForecastedReq = data.reduce((a, b) => +a + +b.forecastedReq, 0);
+        this.sumScheduledOpen = data.reduce((a, b) => +a + +b.scheduledOpen, 0);
+
+        this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2)
+        this.sumAHT = parseFloat(this.sumAHT).toFixed(2)
+        this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2)
+        this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2)
+      });
   }
 
   arrayGenerator(timeValue, forecastedContactValue, ahtValue, forecastedReqValue, scheduledOpenValue) {
     // this.forecastFormArray.reset();
     const group = new FormGroup({
-      Time: new FormControl(timeValue, Validators.required),
-      ForecastedContact: new FormControl(forecastedContactValue, Validators.required),
-      AHT: new FormControl(ahtValue, Validators.required),
-      ForecastedReq: new FormControl(forecastedReqValue, Validators.required),
-      ScheduledOpen: new FormControl(scheduledOpenValue, Validators.required)
+      time: new FormControl(timeValue, Validators.required),
+      forecastedContact: new FormControl(forecastedContactValue, Validators.required),
+      aht: new FormControl(ahtValue, Validators.required),
+      forecastedReq: new FormControl(forecastedReqValue, Validators.required),
+      scheduledOpen: new FormControl(scheduledOpenValue, Validators.required)
     });
 
     this.forecastFormArray.push(group);
@@ -384,21 +480,66 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
     return modalRef;
   }
- 
+
   addForecastData() {
-    var insertObject: ForecastDataModel;
-    var forecastObjArrays: Forecast[];
-    var dateParse = `${this.DateModel.month}-${this.DateModel.day}-${this.DateModel.year}`
-    forecastObjArrays = this.formData.value;
-    insertObject = {
-      Date: dateParse,
-      SkillGroupId: this.skillGroupBinder?.id,
-      ForecastData:
-        forecastObjArrays
-    };
-    this.forecastService.addForecast(insertObject).subscribe(res => {
-      this.showSuccessPopUpMessage('The record has been added!');
+
+    if (this.InsertUpdate == true) {
+      var forecastObjArrays: Forecast[];
+
+      let now = +new Date(this.model2);
+
+      var insertObject: ForecastDataModel;
+      // let intDate = new getLocaleDateTimeFormat();
+      this.forecastID = parseInt(`${this.skillGroupBinder?.id}${now}`);
+      console.log(this.forecastID);
+      forecastObjArrays = this.formData.value;
+      insertObject = {
+        ForecastId: this.forecastID,
+        Date: this.model2,
+        SkillGroupId: this.skillGroupBinder?.id,
+        ForecastData:
+          forecastObjArrays
+      };
+
+      this.forecastService.addForecast(insertObject).subscribe(res => {
+        this.showSuccessPopUpMessage('The record has been added!');
+        this.enableSaveButton = false;
+
+      },
+        error => {
+
+          if (error.status == 409) {
+            this.updateForecast();
+          }
+
+        }
+      )
+    } else {
+      // var forecastObjArrays: Forecast[];
+
+      this.updateForecast();
+    }
+
+
+  }
+  updateForecast() {
+    var updateForecastData: UpdateForecastData;
+
+    var forecastTest: Forecast[];
+
+
+    forecastTest = this.formData.value;
+
+
+    // var returnedTarget = Object.assign(forecastTest, this.formData.value);
+    updateForecastData = new UpdateForecastData();
+    updateForecastData = { forecastData: forecastTest };
+
+
+    this.forecastService.updateForecast(this.forecastID, updateForecastData).subscribe(res => {
+      this.showSuccessPopUpMessage('The record has been updated!');
       this.enableSaveButton = false;
+      this.loadSkillGroup();
     },
       error => {
         this.showErrorWarningPopUpMessage('Error');

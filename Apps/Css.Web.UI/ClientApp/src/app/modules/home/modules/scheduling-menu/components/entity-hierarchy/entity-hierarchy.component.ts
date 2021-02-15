@@ -5,7 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { ClientDetails } from '../../../setup-menu/models/client-details.model';
 import { ClientService } from '../../../setup-menu/services/client.service';
-import { EntityHierarchyModel } from '../../models/entity-hierarchy.model';
+import { EntityAgentSchedulingGroupDetails, EntityClientDetails, EntityClientLOBDetails, EntityHierarchyModel } from '../../models/entity-hierarchy.model'
 import { EntityHierarchyService } from '../../services/entity-hierarchy.service';
 
 
@@ -15,18 +15,18 @@ import { EntityHierarchyService } from '../../services/entity-hierarchy.service'
   styleUrls: ['./entity-hierarchy.component.scss']
 })
 
-export class EntityHierarchyComponent implements OnInit, OnDestroy, OnChanges {
-
+export class EntityHierarchyComponent implements OnInit {
   clientId: number;
-
+  
   spinnerLeft = 'entityLeft';
   spinnerRight = 'entityRight';
-
-
-  clientsDetails: ClientDetails[] = [];
+  isHidden: boolean[] = [];
+  
   subscriptionList: ISubscription[] = [];
-  EntityHierarchyModel: EntityHierarchyModel[] = [];
-  EntityHierarchyVar = [];
+  entityHierarchy: EntityHierarchyModel;
+  entityClient: EntityClientDetails;
+  entityAgentSchedulingGroups: EntityAgentSchedulingGroupDetails[] = [];
+  entityClientLOBs: EntityClientLOBDetails[] = [];
 
   constructor(
     private spinnerService: NgxSpinnerService,
@@ -39,36 +39,30 @@ export class EntityHierarchyComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit() {
   }
 
-  ngOnDestroy() {
-  }
-
-  ngOnChanges() {
-  }
-
   setClient(client: number) {
     this.clientId = client;
     // logic
 
-    this.EntityHierarchyVar = this.getEntityHierarchy();
+    this.getEntityHierarchy();
   }
 
   getEntityHierarchy(){
-    console.log(this.clientId);
     if (this.clientId != null){
       let result;
       result = this.entityHierarchyService.getEntityHierarchyDataById(this.clientId)
       .subscribe((response) => {
+        console.log(response)
         this.spinnerService.hide(this.spinnerLeft);
-        if (response.body) {
-          this.EntityHierarchyModel = response.body;
+        if (response) {
+          this.entityHierarchy = response;
+          this.entityClient = this.entityHierarchy.client;
+          this.entityAgentSchedulingGroups = this.entityHierarchy.agentSchedulingGroups;
+          this.entityClientLOBs = this.entityClient.clientLOBs;
         }
       }, (error) => {
         this.spinnerService.hide(this.spinnerLeft);
         console.log(error);
       });
-      console.log(this.EntityHierarchyModel);
-      return result;
     }
-
   }
 }

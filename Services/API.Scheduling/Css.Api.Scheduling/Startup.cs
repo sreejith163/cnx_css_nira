@@ -25,6 +25,7 @@ namespace Css.Api.Scheduling
         {
             Configuration = configuration;
             HostingEnvironment = hostingEnvironment;
+
         }
 
         /// <summary>

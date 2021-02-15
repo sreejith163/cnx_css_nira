@@ -379,19 +379,6 @@
       "UpstreamPathTemplate": "/api/schedulingcodes/{schedulingCodeId}",
       "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
     },
-    //*********************Entity Hierarchy *************************
-    {
-      "DownstreamPathTemplate": "/api/v1/EntityHierarchy/{ClientId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "10.87.221.6",
-          "Port": 4203
-        }
-      ],
-      "UpstreamPathTemplate": "/api/EntityHierarchy/{ClientId}",
-      "UpstreamHttpMethod": [ "Get" ]
-    },
     //********* SchedulingCodeTypes Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/schedulingcodetypes",
@@ -416,6 +403,19 @@
         }
       ],
       "UpstreamPathTemplate": "/api/schedulingcodeicons",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //*********************Entity Hierarchy *************************
+    {
+      "DownstreamPathTemplate": "/api/v1/EntityHierarchy/{ClientId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.6",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/EntityHierarchy/{ClientId}",
       "UpstreamHttpMethod": [ "Get" ]
     },
     //********* Agent Admin Routes *********************

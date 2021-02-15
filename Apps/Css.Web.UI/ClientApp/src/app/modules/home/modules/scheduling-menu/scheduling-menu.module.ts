@@ -22,19 +22,18 @@ import { SchedulingFilterComponent } from './components/scheduling-grid/scheduli
 
 // for optimization and code cleaning
 import { SchedulingGridMComponent } from './components/scheduling-manager/scheduling-grid/scheduling-grid.component';
-import { ImportScheduleMComponent } from './components/scheduling-manager/import-schedule/import-schedule.component';
-import { CopyScheduleMComponent } from './components/scheduling-manager/copy-schedule/copy-schedule.component';
-import { SchedulingMComponent } from './components/scheduling-manager/scheduling/scheduling.component';
 import { SchedulingFilterMComponent } from './components/scheduling-manager/scheduling-filter/scheduling-filter.component';
 import { SchedulingManagerMComponent } from './components/scheduling-manager/scheduling-manager/scheduling-manager.component';
+
+
+import { ForecastScreenListComponent } from './components/forecast-screen/forecast-screen-list/forecast-screen-list.component';
+import { FilterComponent } from './components/forecast-screen/filter/filter.component';
 import { ActivityLogsComponent } from './components/scheduling-grid/activity-logs/activity-logs.component';
+import { ViewOuScreenComponent } from './components/view-ou-screen/view-ou-screen.component';
+
 
 import { EntityHierarchyService } from './services/entity-hierarchy.service';
 import { EntityHierarchyComponent } from './components/entity-hierarchy/entity-hierarchy.component';
-import { ForecastScreenListComponent } from './components/forecast-screen/forecast-screen-list/forecast-screen-list.component';
-import { FilterComponent } from './components/forecast-screen/filter/filter.component';
-import { ViewOuScreenListComponent } from './components/view-ou-screen/view-ou-screen-list/view-ou-screen-list.component';
-import { ViewOuScreenFilterComponent } from './components/view-ou-screen/view-ou-screen-filter/view-ou-screen-filter.component';
 import { NumericDirective } from 'src/app/shared/directives/numeric.directive';
 import { ActivityLogsService } from './services/activity-logs.service';
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
@@ -51,17 +50,14 @@ const components =
     SchedulingComponent,
     SchedulingFilterComponent,
     SchedulingGridMComponent,
-    ImportScheduleMComponent,
-    CopyScheduleMComponent,
-    SchedulingMComponent,
     SchedulingFilterMComponent,
     SchedulingManagerMComponent,
     EntityHierarchyComponent,
     HorizontalScrollPipe,
     ForecastScreenListComponent,
     FilterComponent,
-    ViewOuScreenListComponent,
-    ViewOuScreenFilterComponent,
+    ViewOuScreenComponent,
+   
     NumericDirective
   ];
 const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService];

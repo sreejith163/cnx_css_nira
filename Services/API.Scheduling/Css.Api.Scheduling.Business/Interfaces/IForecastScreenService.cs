@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
+using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ForecastScreen;
 using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using System;
@@ -40,7 +41,7 @@ namespace Css.Api.Scheduling.Business.Interfaces
 
         /// <param name="createForecastData">the skill group id </param>
         /// <returns></returns>
-        Task<CSSResponse> UpdateForecastData(CreateForecastData createForecastData, UpdateForecastData updateForecastData);
+        Task<CSSResponse> UpdateForecastData(UpdateForecastData updateForecastData, long forecastID);
 
         /// <summary>
         /// Updates the agent schedule chart.
@@ -49,7 +50,7 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
         //Task<CSSResponse> UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails);
-
+        //Task<CSSResponse> ImportForecast(ImportForecast importForecast);
         /// <summary>
         /// Updates the agent schedule manger chart.
         /// </summary>

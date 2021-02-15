@@ -13,7 +13,7 @@ import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { ExcelService } from 'src/app/shared/services/excel.service';
 
 
-import { ImportScheduleMComponent } from '../import-schedule/import-schedule.component';
+import { ImportScheduleComponent } from '../../scheduling-grid/import-schedule/import-schedule.component';
 import { ExcelData } from '../../../models/excel-data.model';
 import { SchedulingExcelExportData } from '../../../constants/scheduling-excel-export-data';
 import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
@@ -97,7 +97,7 @@ export class SchedulingGridMComponent implements OnInit, OnDestroy {
   }
 
   openImportSchedule() {
-    this.getModalPopup(ImportScheduleMComponent, 'lg');
+    this.getModalPopup(ImportScheduleComponent, 'lg');
     this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
 
     this.modalRef.result.then((result) => {

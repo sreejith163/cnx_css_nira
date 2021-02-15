@@ -31,7 +31,20 @@
     background-size: 23px;
     background-position: center;
   }
-  
+  .forecastContainer input:focus{
+    outline: none!important;
+}
+.forecastContainer input{
+  border: none!important;
+  background-color: transparent;
+}
+  input.enabled{
+    border: none!important;
+  }
+.scrollable-table {
+  overflow-y: auto;
+  max-height: calc(60vh)!important;
+}
   .icon-style {
     padding: 5px;
     cursor: pointer;

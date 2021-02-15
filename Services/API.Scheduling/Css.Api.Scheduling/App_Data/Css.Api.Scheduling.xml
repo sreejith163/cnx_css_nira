@@ -238,7 +238,7 @@
             Gets the Forecast Screen by skill group id
             </summary>
             <param name="skillGroupId">The forecast screen query parameter</param>
-            <param name="Date">The forecast screen query parameter</param>
+            <param name="date">The forecast screen query parameter</param>
             <returns></returns>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.CreateForecastData(Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.CreateForecastData)">
@@ -248,12 +248,12 @@
             <param name="forecastData">forecastData query parameter.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.UpdateForecastData(System.String,Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.UpdateForecastData)">
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.UpdateForecastData(System.Int64,Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.UpdateForecastData)">
             <summary>
             Updates the agent admin.
             </summary>
-            <param name="skillGroupId">The agentAdmin identifier.</param>
             <param name="forecastDetails">The client details.</param>
+            <param name="forecastId">Forecast ID</param>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Scheduling.Controllers.TimeZonesController">

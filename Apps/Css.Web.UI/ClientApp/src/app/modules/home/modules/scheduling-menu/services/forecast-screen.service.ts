@@ -8,6 +8,8 @@ import { Forecast } from '../models/forecast.model';
 import { catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ForecastDataModel } from '../models/forecast-data.model';
+import { UpdateAgentAdmin } from '../models/update-agent-admin.model';
+import { UpdateForecastData } from '../models/update-forecast-data.model';
 
 
 @Injectable({
@@ -29,13 +31,19 @@ export class ForecastScreenService extends HttpBaseService {
     return this.http.post<ApiResponseModel>(url, foreCast)
       .pipe(catchError(this.handleError));
   }
+  updateForecast(skillgroupID: number, updateForecast: UpdateForecastData) {
+    const url = `${this.baseURL}/forecastscreen/${skillgroupID}`;
+
+    return this.http.put<ApiResponseModel>(url, updateForecast)
+      .pipe(catchError(this.handleError));
+  }
 
   getForecastData(): Observable<any> {
 
     return this.http.get("/assets/time-table.json");
   }
-  getForecastDataById(skillGroupId: number, Date : string) {
-    const url = `${this.baseURL}/forecastscreen/${skillGroupId}?Date=${Date}`;
+  getForecastDataById(skillGroupId: number, Date: string) {
+    const url = `${this.baseURL}/forecastscreen/${skillGroupId}?date=${Date}`;
 
     return this.http.get<ForecastDataModel>(url)
       .pipe(catchError(this.handleError));

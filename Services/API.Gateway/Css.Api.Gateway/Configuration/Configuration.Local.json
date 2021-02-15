@@ -528,25 +528,47 @@
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
     },
-    //********* activity Routes *********************
+    //********* Forecast Screen Routes *********************
     {
-      "DownstreamPathTemplate": "/api/v1/activity",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "css.api.reporting",
+          "Host": "css.api.scheduling",
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/activity",
-      "UpstreamHttpMethod": [ "Post" ],
-      "QoSOptions": {
-        "TimeoutValue": 300000
-      }
+      "UpstreamPathTemplate": "/api/forecastscreen",
+      "UpstreamHttpMethod": [ "Get" ]
     },
-    //********* Scheduling service Activity Log Routes *********************
+
     {
-      "DownstreamPathTemplate": "/api/v1/activitylogs",
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.scheduling",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.scheduling",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* Import Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/import",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

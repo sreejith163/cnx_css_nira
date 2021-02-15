@@ -1,4 +1,5 @@
-﻿using Css.Api.Scheduling.Models.Domain;
+﻿using Css.Api.Core.Models.Domain;
+using Css.Api.Scheduling.Models.Domain;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -12,7 +13,10 @@ namespace Css.Api.Scheduling.Models.DTO.Response.ForecastScreen
    public class ForecastScreenDTO
     {
 
-        [BsonRepresentation(BsonType.ObjectId)]
+      
+        public long ForecastId { get;  set; }
+
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int SkillGroupId { get; set; }
         /// <summary>

@@ -379,19 +379,6 @@
       "UpstreamPathTemplate": "/api/schedulingcodes/{schedulingCodeId}",
       "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
     },
-    //*********************Entity Hierarchy *************************
-    {
-      "DownstreamPathTemplate": "/api/v1/EntityHierarchy/{ClientId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 44318
-        }
-      ],
-      "UpstreamPathTemplate": "/api/EntityHierarchy/{ClientId}",
-      "UpstreamHttpMethod": [ "Get" ]
-    },
     //********* SchedulingCodeTypes Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/schedulingcodetypes",
@@ -399,7 +386,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44318
+          "Port": 44393
         }
       ],
       "UpstreamPathTemplate": "/api/schedulingcodetypes",
@@ -418,6 +405,21 @@
       "UpstreamPathTemplate": "/api/schedulingcodeicons",
       "UpstreamHttpMethod": [ "Get" ]
     },
+
+    //*********************Entity Hierarchy *************************
+    {
+      "DownstreamPathTemplate": "/api/v1/entityhierarchy/{ClientId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/entityhierarchy/{ClientId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+
     //********* Agent Admin Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/agentadmins",
@@ -565,6 +567,18 @@
       ],
       "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}",
+      "UpstreamHttpMethod": [ "Put" ]
     },
 
 
