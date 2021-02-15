@@ -14,16 +14,11 @@ import { AgentSchedulesService } from './services/agent-schedules.service';
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid/scheduling-grid.component';
 import { ImportScheduleComponent } from './components/shared/import-schedule/import-schedule.component';
 import { CopyScheduleComponent } from './components/shared/copy-schedule/copy-schedule.component';
-import { SchedulingManagerComponent } from './components/scheduling-grid/scheduling-manager/scheduling-manager.component';
 import { MoveAgentsComponent } from './components/move-agents/move-agents/move-agents.component';
 
 import { SchedulingFilterComponent } from './components/shared/scheduling-filter/scheduling-filter.component';
 
 // for optimization and code cleaning
-import { SchedulingGridMComponent } from './components/scheduling-manager/scheduling-grid/scheduling-grid.component';
-import { SchedulingManagerMComponent } from './components/scheduling-manager/scheduling-manager/scheduling-manager.component';
-
-
 import { ForecastScreenListComponent } from './components/forecast-screen/forecast-screen-list/forecast-screen-list.component';
 import { FilterComponent } from './components/forecast-screen/filter/filter.component';
 import { ActivityLogsScheuldeComponent } from './components/shared/activity-logs-schedule/activity-logs-schedule.component';
@@ -34,6 +29,7 @@ import { EntityHierarchyService } from './services/entity-hierarchy.service';
 import { EntityHierarchyComponent } from './components/entity-hierarchy/entity-hierarchy.component';
 import { NumericDirective } from 'src/app/shared/directives/numeric.directive';
 import { ActivityLogsService } from './services/activity-logs.service';
+import { SchedulingManagerComponent } from './components/scheduling-manager/scheduling-manager/scheduling-manager.component';
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
 const components =
   [AgentAdminListComponent,
@@ -46,8 +42,6 @@ const components =
     SchedulingManagerComponent,
     MoveAgentsComponent,
     SchedulingFilterComponent,
-    SchedulingGridMComponent,
-    SchedulingManagerMComponent,
     EntityHierarchyComponent,
     HorizontalScrollPipe,
     ForecastScreenListComponent,

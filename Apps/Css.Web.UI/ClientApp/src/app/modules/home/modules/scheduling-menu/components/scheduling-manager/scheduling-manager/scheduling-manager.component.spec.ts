@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SchedulingManagerMComponent } from './scheduling-manager.component';
+import { SchedulingManagerComponent } from './scheduling-manager.component';
 
-describe('SchedulingManagerMComponent', () => {
-  let component: SchedulingManagerMComponent;
-  let fixture: ComponentFixture<SchedulingManagerMComponent>;
+describe('SchedulingManagerComponent', () => {
+  let component: SchedulingManagerComponent;
+  let fixture: ComponentFixture<SchedulingManagerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SchedulingManagerMComponent ]
+      declarations: [ SchedulingManagerComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SchedulingManagerMComponent);
+    fixture = TestBed.createComponent(SchedulingManagerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

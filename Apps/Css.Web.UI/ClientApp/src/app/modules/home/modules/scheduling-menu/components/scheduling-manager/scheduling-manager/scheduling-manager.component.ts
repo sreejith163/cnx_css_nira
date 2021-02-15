@@ -8,7 +8,6 @@ import { WeekDay } from '@angular/common';
 
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-
 import { SortingType } from '../../../enums/sorting-type.enum';
 import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 
@@ -21,8 +20,7 @@ import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manage
 import { AgentInfo } from '../../../models/agent-info.model';
 import { UpdateAgentScheduleMangersChart } from '../../../models/update-agent-schedule-managers-chart.model';
 import { AgentShceduleMangerData } from '../../../models/agent-schedule-manager-data.model';
-import { ScheduleChartQueryParams } from '../../../models/schedule-chart-query-params.model';import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
-
+import { ScheduleChartQueryParams } from '../../../models/schedule-chart-query-params.model';
 
 import { AgentSchedulesService } from '../../../services/agent-schedules.service';
 import { AgentAdminService } from '../../../services/agent-admin.service';
@@ -40,14 +38,24 @@ declare function setManagerRowCellIndex(cell, row);
 declare function highlightManagerSelectedCells(table: string, cell: string);
 declare function highlightCell(cell: string, className: string);
 import * as $ from 'jquery';
+import { ExcelData } from '../../../models/excel-data.model';
+import { ImportScheduleComponent } from '../../shared/import-schedule/import-schedule.component';
+import { ExcelService } from 'src/app/shared/services/excel.service';
+import { SchedulingMangerExcelExportData } from '../../../constants/scheduling-manager-excel-export-data';
+import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
+import { SchedulingCodeQueryParams } from '../../../../system-admin/models/scheduling-code-query-params.model';
+import { ActivatedRoute } from '@angular/router';
+import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
 
 
 @Component({
-  selector: 'app-scheduling-m-manager',
+  selector: 'app-scheduling-manager',
   templateUrl: './scheduling-manager.component.html',
   styleUrls: ['./scheduling-manager.component.scss']
 })
-export class SchedulingManagerMComponent implements OnInit, OnDestroy, OnChanges {
+export class SchedulingManagerComponent implements OnInit, OnDestroy {
   startIcon = 0;
   maxIconCount = 30;
   timeIntervals = 15;
@@ -56,6 +64,7 @@ export class SchedulingManagerMComponent implements OnInit, OnDestroy, OnChanges
   iconCount: number;
   selectedRow: number;
   totalSchedulingRecord: number;
+  agentSchedulingGroupId: number;
 
   iconDescription: string;
   icon: string;
@@ -68,8 +77,14 @@ export class SchedulingManagerMComponent implements OnInit, OnDestroy, OnChanges
   spinner = 'scheduling-manager';
   selectedCellClassName = 'cell-selected';
   tableClassName = 'schedulingManagerTable';
+  scheduleSpinner = 'SchedulingSpinner';
+  exportFileName = 'Attendance_scheduling';
+  startDate: string;
+  searchText: string;
+  currentLanguage: string;
   isMouseDown: boolean;
   isDelete: boolean;
+  LoggedUser;
 
   schedulingIntervals = Constants.schedulingIntervals;
   sortTypeValue = SortingType.Ascending;
@@ -80,6 +95,8 @@ export class SchedulingManagerMComponent implements OnInit, OnDestroy, OnChanges
   openTimeAgentIcon: AgentIconFilter;
   lunchAgentIcon: AgentIconFilter;
 
+  schedulingCodes: SchedulingCode[] = [];
+  importedData: ExcelData[] = [];
   sortingType: any[] = [];
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
   weekDays: Array<string> = [];
@@ -87,18 +104,12 @@ export class SchedulingManagerMComponent implements OnInit, OnDestroy, OnChanges
   schedulingMangerChart: AgentChartResponse[] = [];
   employeeChartData: AgentChartResponse[] = [];
 
+  getSchedulingCodesSubscription: ISubscription;
+  getTranslationSubscription: ISubscription;
   updateAgentManagerChartSubscription: ISubscription;
   getAgentInfoSubscription: ISubscription;
   getAgentSchedulesSubscription: ISubscription;
-  getSchedulingCodesSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
-
-  @Input() currentLanguage: string;
-  @Input() searchText: string;
-  @Input() startDate: string;
-  @Input() agentSchedulingGroupId: number;
-  @Input() refreshMangerTab: boolean;
-  @Input() schedulingCodes: SchedulingCode[] = [];
 
   constructor(
     private agentSchedulesService: AgentSchedulesService,
@@ -106,12 +117,21 @@ export class SchedulingManagerMComponent implements OnInit, OnDestroy, OnChanges
     private agentAdminService: AgentAdminService,
     private authService: AuthService,
     private modalService: NgbModal,
+    private excelService: ExcelService,
+    private schedulingCodeService: SchedulingCodeService,
+    private route: ActivatedRoute,
+    private languagePreferenceService: LanguagePreferenceService,
+    public translate: TranslateService,
   ) { }
 
   ngOnInit(): void {
     this.openTimes = this.getOpenTimes();
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
     this.sortingType = Object.keys(SortingType).filter(key => isNaN(SortingType[key]));
+    this.loadSchedulingCodes();
+    this.preLoadTranslations();
+    this.loadTranslations();
+    this.subscribeToTranslations();
   }
 
   ngOnDestroy() {
@@ -122,16 +142,54 @@ export class SchedulingManagerMComponent implements OnInit, OnDestroy, OnChanges
     });
   }
 
-  ngOnChanges() {
-    this.iconCount = (this.schedulingCodes?.length <= 30) ? this.schedulingCodes?.length : this.maxIconCount;
-    this.endIcon = this.iconCount;
-    this.clearIconFilters();
+  onSchedulingGroupChange(schedulingGroupId: number) {
+    this.agentSchedulingGroupId = schedulingGroupId;
     if (this.agentSchedulingGroupId) {
       this.loadAgentScheduleManger();
-      this.refreshMangerTab = false;
     } else {
+      this.clearIconFilters();
       this.totalSchedulingGridData = [];
+      this.totalSchedulingRecord = undefined;
     }
+  }
+
+  search(searchText: string) {
+    this.searchText = searchText;
+    if (this.agentSchedulingGroupId) {
+      this.loadAgentScheduleManger();
+    }
+  }
+
+  onSelectStartDate(date: string) {
+    this.startDate = date;
+    if (this.agentSchedulingGroupId) {
+      this.loadAgentScheduleManger();
+    }
+  }
+
+  openImportSchedule() {
+    this.getModalPopup(ImportScheduleComponent, 'lg');
+    this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.SchedulingManager;
+
+    this.modalRef.result.then((result) => {
+      const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
+      this.getModalPopup(MessagePopUpComponent, 'sm', message);
+      this.modalRef.result.then(() => {
+        this.loadAgentScheduleManger();
+      });
+    });
+  }
+
+  exportToExcel() {
+    const today = new Date();
+    const year = String(today.getFullYear());
+    const month = String((today.getMonth() + 1)).length === 1 ?
+      ('0' + String((today.getMonth() + 1))) : String((today.getMonth() + 1));
+    const day = String(today.getDate()).length === 1 ?
+      ('0' + String(today.getDate())) : String(today.getDate());
+
+    const date = year + month + day;
+    this.excelService.exportAsExcelFile(SchedulingMangerExcelExportData, this.exportFileName + date);
   }
 
   previous() {
@@ -444,6 +502,54 @@ export class SchedulingManagerMComponent implements OnInit, OnDestroy, OnChanges
       this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
     }
 
+  }
+
+  private subscribeToTranslations() {
+    this.getTranslationSubscription = this.languagePreferenceService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
+          this.loadTranslations();
+        }
+      });
+
+    this.subscriptions.push(this.getTranslationSubscription);
+  }
+
+  private preLoadTranslations() {
+    // Preload the user language //
+    const browserLang = this.route.snapshot.data.languagePreference.languagePreference;
+    this.currentLanguage = browserLang ? browserLang : 'en';
+    this.translate.use(this.currentLanguage);
+  }
+
+  private loadTranslations() {
+    // load the user language from api //
+    this.languagePreferenceService.getLanguagePreference(this.LoggedUser.employeeId).subscribe((langPref: LanguagePreference) => {
+      this.currentLanguage = langPref.languagePreference ? langPref.languagePreference : 'en';
+      this.translate.use(this.currentLanguage);
+    });
+  }
+
+  private loadSchedulingCodes() {
+    const queryParams = new SchedulingCodeQueryParams();
+    queryParams.skipPageSize = true;
+    queryParams.fields = 'id, description, icon';
+    this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
+
+    this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)
+      .subscribe((response) => {
+        if (response.body) {
+          this.schedulingCodes = response.body;
+          this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
+          this.endIcon = this.iconCount;
+        }
+        this.spinnerService.hide(this.scheduleSpinner);
+      }, (error) => {
+        this.spinnerService.hide(this.scheduleSpinner);
+        console.log(error);
+      });
+
+    this.subscriptions.push(this.getSchedulingCodesSubscription);
   }
 
   private matchManagerChartDataChanges() {

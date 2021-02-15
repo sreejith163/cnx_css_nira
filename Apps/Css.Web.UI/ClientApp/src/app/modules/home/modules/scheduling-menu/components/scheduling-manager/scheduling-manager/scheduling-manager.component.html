@@ -1,3 +1,35 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-md-12">
+      <h2 id="page_title">{{ 'Scheduling_manager' | translate }}</h2> <!-- NO TRANSLATION -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a>{{ 'Scheduling_menu' | translate }}</a></li>
+        <li class="breadcrumb-item active"><b>{{ 'Scheduling_manager_list' | translate }}</b> </li><!-- NO TRANSLATION -->
+      </ol>
+    </div>
+  </div>
+
+  <app-scheduling-filter (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
+    (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)"></app-scheduling-filter>
+
+  <div class="card card-primary card-outline card-outline-tabs">
+    <div class="card-header p-0 border-bottom-0">
+      <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+        
+        <li *permission="{rolesPermitted: [1,2,3]}" class="pull-right marign-l-auto margin-5">
+          <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
+            (click)="exportToExcel()">
+          <img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}"
+           class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
+            (click)="openImportSchedule()">
+        </li>
+      </ul>
+    </div>
+  </div>
 <div class="row col-md-12 bg-color m-t-6">
   <div class="col-md-8 row">
     <div class="col-md-1 col-sm-1">
@@ -74,6 +106,7 @@
 </div>
 <br>
 <div class="row table-responsive" [style.max-width]="getGridMaxWidth()">
+
   <div class="col-md-12 col-sm-12 scrollable-table">
     <table class="jsgrid-table table" id="schedulingManagerTable">
       <thead>
@@ -107,6 +140,7 @@
             </ng-template>
           </ng-container>
         </tr>
+        <ngx-spinner [name]="spinner"></ngx-spinner>
       </thead>
       <tbody>
         <tr *ngIf="totalSchedulingGridData?.length === 0" class="valid-record">
@@ -140,15 +174,29 @@
 </div>
 <div class="row padding-10">
   <div class="col-md-12 padding-12 row">
-    <div class="col-md-11 m-b-5">
-      <button class="btn btn-success m-l-10" id="btn_copy_schedule" [disabled]="!agentSchedulingGroupId"
-        (click)="openCopySchedule(selectedRow)">
+    <div class="col-s-2 m-b-5">
+      <button class="btn btn-success" id="btn_copy_schedule"
+      [disabled]="!agentSchedulingGroupId" (click)="openCopySchedule(selectedRow)">
         <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
       </button>
     </div>
-    <div class="col-md-1 row">
-      <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" id="btn_save" (click)="save()">
+    <div class="col-md-2 m-b-3">
+      <button class="btn btn-primary btn-activity" id="btn_activity_logs"
+      [disabled]="!agentSchedulingGroupId" (click)="openActivityLogs(selectedRow)">
+        {{ 'Activity Logs' | translate }}
+      </button>
+    </div>
+    <div class="col-md-6 m-b-5"></div>
+    <div class="col-md-1  m-b-5">
+      <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save()"
+      [disabled]="!agentSchedulingGroupId" id="btn_save">
         <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
+      </button>
+    </div>
+    <div class="col-s-1  m-b-5">
+      <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
+        id="btn_cancel" [disabled]="!agentSchedulingGroupId">
+        <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
       </button>
     </div>
   </div>
@@ -239,3 +287,4 @@
     </div>
   </div>
 </ng-container>
+</div>

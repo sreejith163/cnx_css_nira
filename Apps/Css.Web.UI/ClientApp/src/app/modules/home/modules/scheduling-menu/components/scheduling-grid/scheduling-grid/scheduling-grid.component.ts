@@ -33,13 +33,13 @@ import { ScheduleChart } from '../../../models/schedule-chart.model';
 import { AgentScheduleChart } from '../../../models/agent-schedule-chart.model';
 import { AgentSchedulesQueryParams } from '../../../models/agent-schedules-query-params.model';
 import { AgentSchedulesService } from '../../../services/agent-schedules.service';
-import * as $ from 'jquery';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { UpdateAgentSchedule } from '../../../models/update-agent-schedule.model';
 import { UpdateAgentschedulechart } from '../../../models/update-agent-schedule-chart.model';
 import { ActivityOrigin } from '../../../enums/activity-origin.enum';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ActivityLogsScheuldeComponent } from '../../shared/activity-logs-schedule/activity-logs-schedule.component';
+import * as $ from 'jquery';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
