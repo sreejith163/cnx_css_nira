@@ -386,7 +386,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44393
+          "Port": 44318
         }
       ],
       "UpstreamPathTemplate": "/api/schedulingcodetypes",

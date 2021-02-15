@@ -149,7 +149,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
 
     this.addSchedulingCodeSubscription = this.schedulingCodeService.addSchedulingCode(addSchedulingCodeModel)
       .subscribe(() => {
-        console.log(addSchedulingCodeModel)
+        console.log(addSchedulingCodeModel);
         this.spinnerService.hide(this.spinner);
         this.activeModal.close({ needRefresh: true });
       }, (error) => {
@@ -173,7 +173,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
       this.updateSchedulingCodeSubscription = this.schedulingCodeService.updateSchedulingCode
         (this.schedulingCodeData.id, updateSchedulingCodeModel)
         .subscribe(() => {
-          console.log(updateSchedulingCodeModel)
+          console.log(updateSchedulingCodeModel);
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
         }, (error) => {
