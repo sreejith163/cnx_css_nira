@@ -1,184 +1,187 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-6 col-md-6">
-            <h2 id="page_title">{{ 'Agent_admin' | translate }}</h2>
-        </div>
-
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-left">
-                <li class="breadcrumb-item"><a>{{ 'Scheduling_menu' | translate }}</a></li>
-                <li class="breadcrumb-item active"><b>{{ 'Agent_admin_list' | translate }}</b> </li>
-            </ol>
-        </div>
+  <div class="row">
+    <div class="col-6 col-md-6">
+      <h2 id="page_title">{{ 'Agent_admin' | translate }}</h2>
     </div>
 
-    <div class="row m-l-r-10">
-        <!-- <div class="col-md-3 d-flex flex-column">
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a>{{ 'Scheduling_menu' | translate }}</a></li>
+        <li class="breadcrumb-item active"><b>{{ 'Agent_admin_list' | translate }}</b> </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="row m-l-r-10">
+    <!-- <div class="col-md-3 d-flex flex-column">
             {{ 'Client Scheduling Group' | translation: 'lbl_client_scheduling_group' : translationValues }}
             <select class="form-control">
                 <option value="">{{ 'All' | translation: 'drp_list_all' : translationValues }}</option>
             </select>
         </div> -->
 
-        <div class="col-md-3 d-flex flex-column m-t-10">
-            <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
-                [maxLength]="maxLength"
-                placeholder="{{ 'Enter SSO keyword' | translate }}" />
-        </div>
-        <div class="col-md-2 col-sm-6">
-            <button class="form-control m-t-10" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
-                {{ 'Search' | translate }}
-            </button>
-        </div>
-        <div class="col-md-7 text-right">
-            <button type="button" class="btn btn-primary float-r m-t-10" (click)="addAgentAdmin()"><i
-                    class="fa fa-plus pr-1"
-                    aria-hidden="true"></i>{{ 'Add' | translate }}</button>
-        </div>
+    <div class="col-md-3 d-flex flex-column m-t-10">
+      <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
+        [maxLength]="maxLength" placeholder="{{ 'Enter SSO keyword' | translate }}" />
     </div>
-    <div class="row m-r-15 m-t-10">
-        <div class="col-md-12 mt-2 table-responsive">
-            <div class="scrollable-table">
-                <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
-                    <thead>
-                        <tr>
-                            <th>
-                                {{ 'Action' | translate }}</th>
-                            <th class="sortable-field" (click)="sort('ssn', sortBy)">
-                                {{ 'Employee_id' | translate }}
-                                <i *ngIf="orderBy !== 'ssn'" class="fa fa-sort"></i>
-                                <i id="sortIcon" *ngIf="orderBy === 'ssn'" class="fa"
-                                    [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
-                                </i>
-                            </th>
-                            <th class="sortable-field" (click)="sort('sso', sortBy)">
-                                {{ 'SSO' | translate }}
-                                <i *ngIf="orderBy !== 'sso'" class="fa fa-sort"></i>
-                                <i id="sortIcon" *ngIf="orderBy === 'sso'" class="fa"
-                                    [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
-                                </i>
-                            </th>
-                            <th class="sortable-field width-15-p" (click)="sort('firstName', sortBy)">
-                                {{ 'First_name' | translate }}
-                                <i *ngIf="orderBy !== 'firstName'" class="fa fa-sort"></i>
-                                <i id="sortIcon" *ngIf="orderBy === 'firstName'" class="fa"
-                                    [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
-                                </i>
-                            </th>
-                            <th class="sortable-field" (click)="sort('lastName', sortBy)">
-                                {{ 'Last_name' | translate }}
-                                <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
-                                <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa"
-                                    [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
-                                </i>
-                            </th>
-                            <!-- <th class="sortable-field" (click)="sort('Timezone.Name', sortBy)">
+    <div class="col-md-2 col-sm-6">
+      <button class="form-control m-t-10" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
+        {{ 'Search' | translate }}
+      </button>
+    </div>
+    <div class="col-md-7 text-right">
+      <button type="button" class="btn btn-primary float-r m-t-10" (click)="addAgentAdmin()"><i class="fa fa-plus pr-1"
+          aria-hidden="true"></i>{{ 'Add' | translate }}</button>
+    </div>
+  </div>
+  <div class="row m-r-15 m-t-10">
+    <div class="col-md-12 mt-2 table-responsive">
+      <div class="scrollable-table">
+        <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+          <thead>
+            <tr>
+              <th>
+                {{ 'Action' | translate }}</th>
+              <th class="sortable-field" (click)="sort('ssn', sortBy)">
+                {{ 'Employee_id' | translate }}
+                <i *ngIf="orderBy !== 'ssn'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'ssn'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('sso', sortBy)">
+                {{ 'SSO' | translate }}
+                <i *ngIf="orderBy !== 'sso'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'sso'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field width-15-p" (click)="sort('firstName', sortBy)">
+                {{ 'First_name' | translate }}
+                <i *ngIf="orderBy !== 'firstName'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'firstName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('lastName', sortBy)">
+                {{ 'Last_name' | translate }}
+                <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <!-- <th class="sortable-field" (click)="sort('Timezone.Name', sortBy)">
                                 {{ 'Hire Date' | translation: 'lbl_table_heading_hire_date' : translationValues }}
                                 <i *ngIf="orderBy !== 'Timezone.Name'" class="fa fa-sort"></i>
                                 <i id="sortIcon" *ngIf="orderBy === 'Timezone.Name'" class="fa"
                                     [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
                                 </i>
                             </th> -->
-                            <th class="sortable-field">
-                                {{ 'Hire_date' | translate }}
-                            </th>
-                            <th class="sortable-field" (click)="sort('createdBy', sortBy)">
-                                {{ 'Created_by' | translate }}
-                                <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
-                                <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa"
-                                    [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
-                                </i>
-                            </th>
-                            <th class="sortable-field" (click)="sort('createdDate', sortBy)">
-                                {{ 'Created_date' | translate }}
-                                <i *ngIf="orderBy !== 'createdDate'" class="fa fa-sort"></i>
-                                <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa"
-                                    [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
-                                </i></th>
-                            <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
-                                {{ 'Modified_by' | translate }}
-                                <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
-                                <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa"
-                                    [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
-                                </i>
-                            </th>
-                            <th class="sortable-field" (click)="sort('modifiedDate', sortBy)">
-                                {{ 'Modified_date' | translate }}
-                                <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
-                                <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa"
-                                    [class.fa-sort-down]="sortBy === 'desc'" [class.fa-sort-up]="sortBy === 'asc'">
-                                </i>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ngx-spinner [name]="spinner"></ngx-spinner>
-                        <ng-container *ngFor="let el of agentAdmins; let i = index">
-                            <tr class="pointer" (dblclick)="editAgentAdmin(el.id)">
-                                <td>
-                                    <i class="fa fa-edit padding-5 pointer" (click)="editAgentAdmin(el.id)"></i>
-                                    <i class="fa fa-trash padding-5 pointer" (click)="deleteAgentAdmin(el.id)"></i>
-                                </td>
-                                <td>{{el.employeeId}}</td>
-                                <td>
-                                    <div *ngIf="el.sso != null || el.sso != undefined " class="d-flex justify-content-between" [class.display-inline-contents]="el.sso.length > characterSplice">
-                                        <span ngbTooltip="{{ el.sso }}">{{ el.sso | truncate: { sliceStart: 0,
+              <th class="sortable-field">
+                {{ 'Hire_date' | translate }}
+              </th>
+              <th class="sortable-field" (click)="sort('createdBy', sortBy)">
+                {{ 'Created_by' | translate }}
+                <i *ngIf="orderBy !== 'createdBy'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'createdBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('createdDate', sortBy)">
+                {{ 'Created_date' | translate }}
+                <i *ngIf="orderBy !== 'createdDate'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'createdDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i></th>
+              <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
+                {{ 'Modified_by' | translate }}
+                <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('modifiedDate', sortBy)">
+                {{ 'Modified_date' | translate }}
+                <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ngx-spinner [name]="spinner"></ngx-spinner>
+            <tr *ngIf="agentAdmins?.length === 0" class="valid-record">
+              <td colspan="12">
+                {{ 'No records found' | translate }}</td>
+            </tr>
+            <ng-container *ngFor="let el of agentAdmins; let i = index">
+              <tr class="pointer" (dblclick)="editAgentAdmin(el.id)">
+                <td>
+                  <i class="fa fa-edit padding-5 pointer" (click)="editAgentAdmin(el.id)"></i>
+                  <i class="fa fa-trash padding-5 pointer" (click)="deleteAgentAdmin(el.id)"></i>
+                </td>
+                <td>{{el.employeeId}}</td>
+                <td>
+                  <div *ngIf="el.sso != null || el.sso != undefined " class="d-flex justify-content-between"
+                    [class.display-inline-contents]="el.sso.length > characterSplice">
+                    <span ngbTooltip="{{ el.sso }}">{{ el.sso | truncate: { sliceStart: 0,
                                             sliceEnd: characterSplice, append: '...' } }}</span>
-                                        <span class="padding-left-10 float-right">
-                                            <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle"
-                                                [placement]="'auto'" triggers="manual" #hierarchyPopOver="ngbPopover" (click)="getHierarchy(hierarchyPopOver, el.id)" container="body">
-                                                <i class="fa fa-ellipsis-h"></i>
-                                            </a>
-                                            <ng-template let-hierarchy="hierarchy" #popContent>
+                    <span class="padding-left-10 float-right">
+                      <a type="button" [ngbPopover]="popContent" [popoverTitle]="popTitle" [placement]="'auto'"
+                        triggers="manual" #hierarchyPopOver="ngbPopover" (click)="getHierarchy(hierarchyPopOver, el.id)"
+                        container="body">
+                        <i class="fa fa-ellipsis-h"></i>
+                      </a>
+                      <ng-template let-hierarchy="hierarchy" #popContent>
 
-                                                <b>Client Name : </b> {{ hierarchy.clientName }}
-                                                <br />
-                                                <br />
-                                                <b>Client LOB group Name : </b> {{ hierarchy.clientLobGroupName }}
-                                                <br />
-                                                <br />
-                                                <b>Skill Group Name :</b> {{hierarchy.skillGroupName}}
-                                                <br />
-                                                <br />
-                                                <b>Skill Tag Name :</b> {{hierarchy.skillTagName}}
- 
-                                            </ng-template>
-                                            <ng-template #popTitle>
-                                                {{ 'Hierarchy' | translate }}
-                                            </ng-template>
-                                        </span>
-                                    </div>
-                                </td>
-                                <!-- <td class="d-flex justify-content-between">{{el.sso}} <a (click)="showHierarchy(el.id)" ngbTooltip="View Agent Hierarchy Info">&nbsp; &nbsp;<i class="fa fa-ellipsis-h"></i></a></td> -->
-                                <td>{{el.firstName}}</td>
-                                <td>{{el.lastName}}</td>
-                                <td>{{getHireDateValue(el.agentData)}}</td>
-                                <td>{{el.createdBy}}</td>
-                                <td>{{el.createdDate | date: 'yyyy-MM-dd' }}</td>
-                                <td>{{el.modifiedBy}}</td>
-                                <td>{{el.modifiedDate | date: 'yyyy-MM-dd' }}</td>
-                            </tr>
-                        </ng-container>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        <b>Client Name : </b> {{ hierarchy.clientName }}
+                        <br />
+                        <br />
+                        <b>Client LOB group Name : </b> {{ hierarchy.clientLobGroupName }}
+                        <br />
+                        <br />
+                        <b>Skill Group Name :</b> {{hierarchy.skillGroupName}}
+                        <br />
+                        <br />
+                        <b>Skill Tag Name :</b> {{hierarchy.skillTagName}}
+
+                      </ng-template>
+                      <ng-template #popTitle>
+                        {{ 'Hierarchy' | translate }}
+                      </ng-template>
+                    </span>
+                  </div>
+                </td>
+                <!-- <td class="d-flex justify-content-between">{{el.sso}} <a (click)="showHierarchy(el.id)" ngbTooltip="View Agent Hierarchy Info">&nbsp; &nbsp;<i class="fa fa-ellipsis-h"></i></a></td> -->
+                <td>{{el.firstName}}</td>
+                <td>{{el.lastName}}</td>
+                <td>{{getHireDateValue(el.agentData)}}</td>
+                <td>{{el.createdBy}}</td>
+                <td>{{el.createdDate | date: 'yyyy-MM-dd' }}</td>
+                <td>{{el.modifiedBy}}</td>
+                <td>{{el.modifiedDate | date: 'yyyy-MM-dd' }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div class="row">
-        <div class="col-md-12 d-flex justify-content-end mt-3">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination p-0 float-right">
-                    <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecord"
-                        (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage"
-                        [boundaryLinks]="true"></ngb-pagination>
-                    <select class="form-control" (change)="changePageSize($event.target.value)">
-                        <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
-                            {{x.text | translate}}</option>
-                    </select>
-                </ul>
-            </nav>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end mt-3">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination p-0 float-right">
+          <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecord" (pageChange)="changePage($event)"
+            [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+          <select class="form-control" (change)="changePageSize($event.target.value)">
+            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+              {{x.text | translate}}</option>
+          </select>
+        </ul>
+      </nav>
     </div>
+  </div>
 </div>

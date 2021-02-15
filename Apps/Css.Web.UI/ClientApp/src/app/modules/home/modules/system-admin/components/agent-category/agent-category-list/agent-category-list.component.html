@@ -17,8 +17,7 @@
   <div class="row m-l-r-10">
     <div class="col-md-3 padding-bottom-5">
       <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
-        [maxLength]="maxLength"
-        placeholder="{{ 'Agent_category' | translate }}" />
+        [maxLength]="maxLength" placeholder="{{ 'Agent_category' | translate }}" />
       <ng-container *ngIf="searchKeyword?.length">
 
       </ng-container>
@@ -41,7 +40,7 @@
         <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
           <thead>
             <tr>
-              <th *permission="{rolesPermitted: [1,2]}" >
+              <th *permission="{rolesPermitted: [1,2]}">
                 {{ 'Action' | translate }}</th>
 
               <th class="sortable-field" (click)="sortAgentCategories('name', sortBy)">
@@ -96,9 +95,15 @@
           </thead>
           <tbody>
             <ngx-spinner [name]="spinner"></ngx-spinner>
+            <tr *ngIf="agentCategoryDetails?.length === 0" class="valid-record">
+              <td colspan="12">
+                {{ 'No records found' | translate }}</td>
+            </tr>
             <tr *ngFor="let el of agentCategoryDetails; let i = index">
-              <td *permission="{rolesPermitted: [1,2]}"><i class="fa fa-edit padding-5 pointer" (click)="editAgentCategory(el)"></i>
-                <i *permission="{rolesPermitted: [1]}" class="fa fa-trash padding-5 pointer" (click)="deleteAgentCategory(el.id)"></i>
+              <td *permission="{rolesPermitted: [1,2]}"><i class="fa fa-edit padding-5 pointer"
+                  (click)="editAgentCategory(el)"></i>
+                <i *permission="{rolesPermitted: [1]}" class="fa fa-trash padding-5 pointer"
+                  (click)="deleteAgentCategory(el.id)"></i>
               </td>
               <td>
                 <span ngbTooltip="{{ el.name }}">{{el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice,
@@ -106,22 +111,22 @@
               </td>
               <td>{{el.dataTypeLabel}}</td>
               <td>
-                <ng-container [ngSwitch]="el.dataTypeId">                  
-                        <ng-container *ngSwitchCase="dataType.AlphaNumeric">
-                          <b>Min:</b> > <span ngbTooltip="{{ el.dataTypeMinValue }}">{{el.dataTypeMinValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                <ng-container [ngSwitch]="el.dataTypeId">
+                  <ng-container *ngSwitchCase="dataType.AlphaNumeric">
+                    <b>Min:</b> > <span ngbTooltip="{{ el.dataTypeMinValue }}">{{el.dataTypeMinValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
                             append: '...' } }}</span> <b>Max:</b>
-                          {{ '<' }} <span ngbTooltip="{{ el.dataTypeMaxValue }}">{{el.dataTypeMaxValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                    {{ '<' }} <span ngbTooltip="{{ el.dataTypeMaxValue }}">{{el.dataTypeMaxValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
                             append: '...' } }}</span> </ng-container>
-                            <ng-container *ngSwitchCase="dataType.Numeric">
-                              <b>Min:</b> > <span ngbTooltip="{{ el.dataTypeMinValue }}">{{el.dataTypeMinValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                  <ng-container *ngSwitchCase="dataType.Numeric">
+                    <b>Min:</b> > <span ngbTooltip="{{ el.dataTypeMinValue }}">{{el.dataTypeMinValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
                                 append: '...' } }}</span> <b>Max:</b>
-                              {{ '<' }}  <span ngbTooltip="{{ el.dataTypeMaxValue }}">{{el.dataTypeMaxValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                    {{ '<' }} <span ngbTooltip="{{ el.dataTypeMaxValue }}">{{el.dataTypeMaxValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
                                 append: '...' } }}</span> </ng-container>
-                          <ng-container *ngSwitchCase="dataType.Date">
-                            {{el.dataTypeMinValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
+                  <ng-container *ngSwitchCase="dataType.Date">
+                    {{el.dataTypeMinValue | truncate: { sliceStart: 0, sliceEnd: characterSplice,
                               append: '...' } }}
-                          </ng-container>
-                      </ng-container>
+                  </ng-container>
+                </ng-container>
               </td>
               <td>{{el.createdBy}}</td>
               <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td>
