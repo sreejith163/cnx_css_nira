@@ -25,6 +25,8 @@ import { TranslationDetails } from 'src/app/shared/models/translation-details.mo
 import { TranslateService } from '@ngx-translate/core';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 
+import * as $ from 'jquery';
+
 
 @Component({
   selector: 'app-add-update-scheduling-code',
@@ -92,6 +94,19 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   onIconSelect(icon: KeyValue) {
     this.iconId = icon.value;
     this.schedulingCodeForm.controls.iconId.setValue(icon.id);
+    const item = $("[data-card-widget='collapse']");
+    //Find the box parent........
+    const box = item.parents('.card').first();
+    //Find the body and the footer
+    const bf = box.find('.card-body, .card-footer');
+    if (!item.children().hasClass('fa-plus')) {
+      item.children('.fa-minus').removeClass('fa-minus').addClass('fa-plus');
+      bf.slideUp();
+    } else {
+      //Convert plus into minus
+      item.children('.fa-plus').removeClass('fa-plus').addClass('fa-minus');
+      bf.slideDown();
+    }
   }
 
   unifiedToNative(unified: string) {
