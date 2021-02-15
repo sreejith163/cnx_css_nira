@@ -8,44 +8,44 @@ import { WeekDay } from '@angular/common';
 
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { SortingType } from '../../../enums/sorting-type.enum';
-import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
+import { SortingType } from '../../enums/sorting-type.enum';
+import { AgentScheduleType } from '../../enums/agent-schedule-type.enum';
 
-import { AgentSchedulesQueryParams } from '../../../models/agent-schedules-query-params.model';
-import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
-import { AgentChartResponse } from '../../../models/agent-chart-response.model';
-import { SchedulingCode } from '../../../../system-admin/models/scheduling-code.model';
-import { ScheduleChart } from '../../../models/schedule-chart.model';
-import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manager-chart.model';
-import { AgentInfo } from '../../../models/agent-info.model';
-import { UpdateAgentScheduleMangersChart } from '../../../models/update-agent-schedule-managers-chart.model';
-import { AgentShceduleMangerData } from '../../../models/agent-schedule-manager-data.model';
-import { ScheduleChartQueryParams } from '../../../models/schedule-chart-query-params.model';
+import { AgentSchedulesQueryParams } from '../../models/agent-schedules-query-params.model';
+import { AgentSchedulesResponse } from '../../models/agent-schedules-response.model';
+import { AgentChartResponse } from '../../models/agent-chart-response.model';
+import { SchedulingCode } from '../../../system-admin/models/scheduling-code.model';
+import { ScheduleChart } from '../../models/schedule-chart.model';
+import { AgentScheduleManagerChart } from '../../models/agent-schedule-manager-chart.model';
+import { AgentInfo } from '../../models/agent-info.model';
+import { UpdateAgentScheduleMangersChart } from '../../models/update-agent-schedule-managers-chart.model';
+import { AgentShceduleMangerData } from '../../models/agent-schedule-manager-data.model';
+import { ScheduleChartQueryParams } from '../../models/schedule-chart-query-params.model';
 
-import { AgentSchedulesService } from '../../../services/agent-schedules.service';
-import { AgentAdminService } from '../../../services/agent-admin.service';
+import { AgentSchedulesService } from '../../services/agent-schedules.service';
+import { AgentAdminService } from '../../services/agent-admin.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 
-import { CopyScheduleComponent } from '../../shared/copy-schedule/copy-schedule.component';
+import { CopyScheduleComponent } from '../shared/copy-schedule/copy-schedule.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
-import { ActivityLogsScheuldeComponent } from '../../shared/activity-logs-schedule/activity-logs-schedule.component';
+import { ActivityLogsScheuldeComponent } from '../shared/activity-logs-schedule/activity-logs-schedule.component';
 
-import { AgentIconFilter } from '../../../models/agent-icon-filter.model';
-import { ActivityOrigin } from '../../../enums/activity-origin.enum';
+import { AgentIconFilter } from '../../models/agent-icon-filter.model';
+import { ActivityOrigin } from '../../enums/activity-origin.enum';
 import { ActivityType } from 'src/app/shared/enums/activity-type.enum';
 
 declare function setManagerRowCellIndex(cell, row);
 declare function highlightManagerSelectedCells(table: string, cell: string);
 declare function highlightCell(cell: string, className: string);
 import * as $ from 'jquery';
-import { ExcelData } from '../../../models/excel-data.model';
-import { ImportScheduleComponent } from '../../shared/import-schedule/import-schedule.component';
+import { ExcelData } from '../../models/excel-data.model';
+import { ImportScheduleComponent } from '../shared/import-schedule/import-schedule.component';
 import { ExcelService } from 'src/app/shared/services/excel.service';
-import { SchedulingMangerExcelExportData } from '../../../constants/scheduling-manager-excel-export-data';
+import { SchedulingMangerExcelExportData } from '../../constants/scheduling-manager-excel-export-data';
 import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
-import { SchedulingCodeQueryParams } from '../../../../system-admin/models/scheduling-code-query-params.model';
+import { SchedulingCodeQueryParams } from '../../../system-admin/models/scheduling-code-query-params.model';
 import { ActivatedRoute } from '@angular/router';
 import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
 
