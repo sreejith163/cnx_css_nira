@@ -3,9 +3,9 @@ import { PermissionsGuard } from 'src/app/core/guards/permissions.guard';
 import { AgentAdminListComponent } from './components/agent-admin/agent-admin-list/agent-admin-list.component';
 import { MoveAgentsComponent } from './components/move-agents/move-agents/move-agents.component';
 import { ForecastScreenListComponent } from './components/forecast-screen/forecast-screen-list/forecast-screen-list.component';
-import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid.component';
 import { EntityHierarchyComponent } from './components/entity-hierarchy/entity-hierarchy.component';
 import { ViewOuScreenComponent } from './components/view-ou-screen/view-ou-screen.component';
+import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid.component';
 import { SchedulingManagerComponent } from './components/scheduling-manager/scheduling-manager.component';
 
 
