@@ -22,7 +22,6 @@ import { SchedulingFilterComponent } from './components/shared/scheduling-filter
 
 // for optimization and code cleaning
 import { SchedulingGridMComponent } from './components/scheduling-manager/scheduling-grid/scheduling-grid.component';
-import { SchedulingFilterMComponent } from './components/scheduling-manager/scheduling-filter/scheduling-filter.component';
 import { SchedulingManagerMComponent } from './components/scheduling-manager/scheduling-manager/scheduling-manager.component';
 
 
@@ -50,14 +49,12 @@ const components =
     SchedulingComponent,
     SchedulingFilterComponent,
     SchedulingGridMComponent,
-    SchedulingFilterMComponent,
     SchedulingManagerMComponent,
     EntityHierarchyComponent,
     HorizontalScrollPipe,
     ForecastScreenListComponent,
     FilterComponent,
     ViewOuScreenComponent,
-   
     NumericDirective
   ];
 const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService];
