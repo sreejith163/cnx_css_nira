@@ -3,49 +3,46 @@ import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbModal, NgbModalOptions
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 
 import { SubscriptionLike as ISubscription } from 'rxjs';
-import { SchedulingCode } from '../../../../system-admin/models/scheduling-code.model';
+import { SchedulingCode } from '../../../system-admin/models/scheduling-code.model';
 import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
-import { SchedulingCodeQueryParams } from '../../../../system-admin/models/scheduling-code-query-params.model';
+import { SchedulingCodeQueryParams } from '../../../system-admin/models/scheduling-code-query-params.model';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
+import { AgentScheduleType } from '../../enums/agent-schedule-type.enum';
 import { ExcelService } from 'src/app/shared/services/excel.service';
 
-
-import { ImportScheduleComponent } from '../../shared/import-schedule/import-schedule.component';
-import { ExcelData } from '../../../models/excel-data.model';
-import { SchedulingExcelExportData } from '../../../constants/scheduling-excel-export-data';
+import { ImportScheduleComponent } from '../shared/import-schedule/import-schedule.component';
+import { ExcelData } from '../../models/excel-data.model';
+import { SchedulingExcelExportData } from '../../constants/scheduling-excel-export-data';
 import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
 import { ActivatedRoute } from '@angular/router';
 import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { TranslateService } from '@ngx-translate/core';
-import { AgentScheduleGridResponse } from '../../../models/agent-schedule-grid-response.model';
-import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
+import { AgentScheduleGridResponse } from '../../models/agent-schedule-grid-response.model';
+import { SchedulingStatus } from '../../enums/scheduling-status.enum';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { WeekDay } from '@angular/common';
-import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
+import { AgentSchedulesResponse } from '../../models/agent-schedules-response.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ActivityType } from 'src/app/shared/enums/activity-type.enum';
-import { CopyScheduleComponent } from '../../shared/copy-schedule/copy-schedule.component';
+import { CopyScheduleComponent } from '../shared/copy-schedule/copy-schedule.component';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { ScheduleChart } from '../../../models/schedule-chart.model';
-import { AgentScheduleChart } from '../../../models/agent-schedule-chart.model';
-import { AgentSchedulesQueryParams } from '../../../models/agent-schedules-query-params.model';
-import { AgentSchedulesService } from '../../../services/agent-schedules.service';
+import { ScheduleChart } from '../../models/schedule-chart.model';
+import { AgentScheduleChart } from '../../models/agent-schedule-chart.model';
+import { AgentSchedulesQueryParams } from '../../models/agent-schedules-query-params.model';
+import { AgentSchedulesService } from '../../services/agent-schedules.service';
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
-import { UpdateAgentSchedule } from '../../../models/update-agent-schedule.model';
-import { UpdateAgentschedulechart } from '../../../models/update-agent-schedule-chart.model';
-import { ActivityOrigin } from '../../../enums/activity-origin.enum';
+import { UpdateAgentSchedule } from '../../models/update-agent-schedule.model';
+import { UpdateAgentschedulechart } from '../../models/update-agent-schedule-chart.model';
+import { ActivityOrigin } from '../../enums/activity-origin.enum';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ActivityLogsScheuldeComponent } from '../../shared/activity-logs-schedule/activity-logs-schedule.component';
+import { ActivityLogsScheuldeComponent } from '../shared/activity-logs-schedule/activity-logs-schedule.component';
 import * as $ from 'jquery';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
-declare function removeHighlightedCells(table: string, className: string);
 declare function highlightCell(cell: string, className: string);
-
 
 @Component({
   selector: 'app-scheduling-grid',
