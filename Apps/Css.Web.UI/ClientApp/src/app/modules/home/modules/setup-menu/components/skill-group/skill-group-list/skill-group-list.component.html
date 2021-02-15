@@ -28,7 +28,7 @@
     <div class="col-md-2">
       <button class="form-control mt-4" (click)="searchSkillGroups()" id="btn_search"><i class="fa fa-search"
           aria-hidden="true"></i>
-          {{ 'Search' | translate }}
+        {{ 'Search' | translate }}
       </button>
     </div>
     <div *permission="{rolesPermitted: [1,2]}" class="col-md-2 text-right">
@@ -53,7 +53,8 @@
                 </i>
               </th>-->
               <th class="sortable-field" (click)="sort('RefId', sortBy)">
-                {{ 'ID' | translate }}<!--{{ 'Reference_id' | translate }}-->
+                {{ 'ID' | translate }}
+                <!--{{ 'Reference_id' | translate }}-->
                 <i *ngIf="orderBy !== 'RefId'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'RefId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
@@ -112,14 +113,20 @@
           </thead>
           <tbody>
             <ngx-spinner [name]="spinner" bdColor="rgba(255, 0, 0, 0.8)"></ngx-spinner>
+            <tr *ngIf="skillGroupDetails?.length === 0" class="valid-record">
+              <td colspan="12">
+                {{ 'No records found' | translate }}</td>
+            </tr>
             <tr *ngFor="let el of skillGroupDetails; let i = index">
-              <td *permission="{rolesPermitted: [1,2]}"><i class="fa fa-edit padding-5 pointer" (click)="editSkillGroup(el.id)"></i>
+              <td *permission="{rolesPermitted: [1,2]}"><i class="fa fa-edit padding-5 pointer"
+                  (click)="editSkillGroup(el.id)"></i>
                 <i class="fa fa-trash padding-5 pointer" (click)="deleteSkillGroup(el.id)"></i>
               </td>
               <!--<td>{{el.id}}</td>-->
               <td>{{el.refId}}</td>
               <td>
-                <div class="d-flex justify-content-between" [class.display-inline-flex]="el.name.length > characterSplice">
+                <div class="d-flex justify-content-between"
+                  [class.display-inline-flex]="el.name.length > characterSplice">
                   <span ngbTooltip="{{ el.name }}">{{ el.name | truncate: { sliceStart: 0, sliceEnd: characterSplice,
                     append: '...' } }}</span>
                   <span class="padding-left-10 float-right">
@@ -158,7 +165,8 @@
           <ngb-pagination class="p-r-5" [collectionSize]="totalSkillGroupRecord" (pageChange)="changePage($event)"
             [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
           <select class="form-control" (change)="changePageSize($event.target.value)">
-            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">{{x.text | translate}}
+            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+              {{x.text | translate}}
             </option>
           </select>
         </ul>

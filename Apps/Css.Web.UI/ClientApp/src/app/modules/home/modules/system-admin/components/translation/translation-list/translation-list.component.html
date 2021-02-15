@@ -102,6 +102,10 @@
           </thead>
           <tbody>
             <ngx-spinner [name]="spinner"></ngx-spinner>
+            <tr *ngIf="translations?.length === 0" class="valid-record">
+              <td colspan="12">
+                {{ 'No records found' | translate }}</td>
+            </tr>
             <tr *ngFor="let el of translations;let i = index">
               <td>
                 <i class="fa fa-edit padding-5 pointer" (click)="editTranslation(el.id)"></i>

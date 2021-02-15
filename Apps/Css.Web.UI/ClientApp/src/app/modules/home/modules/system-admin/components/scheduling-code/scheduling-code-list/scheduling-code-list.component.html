@@ -15,8 +15,7 @@
 
   <div class="row m-l-r-10">
     <div class="col-md-3 padding-bottom-5">
-      <input type="text" class="form-control"
-        placeholder="{{ 'Enter_a_description' | translate }}"
+      <input type="text" class="form-control" placeholder="{{ 'Enter_a_description' | translate }}"
         [(ngModel)]="searchKeyword" />
       <ng-container *ngIf="searchKeyword?.length">
         <!-- <i id="input_close_btn" class="fa fa-times-circle cursor-pointer closable-icon" type="button"
@@ -85,6 +84,10 @@
           <tbody>
             <ngx-spinner [name]="spinner">
             </ngx-spinner>
+            <tr *ngIf="schedulingCodes?.length === 0" class="valid-record">
+              <td colspan="12">
+                {{ 'No records found' | translate }}</td>
+            </tr>
             <tr *ngFor="let el of schedulingCodes;let i = index;">
               <td *permission="{rolesPermitted: [1]}">
                 <i class="fa fa-edit padding-5 pointer" (click)="editSchedulingCode(el)"></i>

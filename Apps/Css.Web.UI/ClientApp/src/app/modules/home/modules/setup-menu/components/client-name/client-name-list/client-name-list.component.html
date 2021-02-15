@@ -19,8 +19,7 @@
   <div class="row m-l-r-10">
     <div class="col-md-3 padding-bottom-5">
       <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
-        [maxLength]="maxLength"
-        placeholder="{{ 'Enter_a_client_name' | translate }}" />
+        [maxLength]="maxLength" placeholder="{{ 'Enter_a_client_name' | translate }}" />
       <ng-container *ngIf="searchKeyword?.length">
         <!-- <i id="input_close_btn" class="fa fa-times-circle cursor-pointer closable-icon" type="button"
           (click)="clearSearchKeyword()"></i> -->
@@ -56,7 +55,8 @@
                 </i>
               </th>-->
               <th class="sortable-field" (click)="sortClients('refId', sortBy)">
-                {{ 'ID' | translate }}<!--{{ 'Reference_id' | translate }}-->
+                {{ 'ID' | translate }}
+                <!--{{ 'Reference_id' | translate }}-->
                 <i *ngIf="orderBy !== 'refId'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'refId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
@@ -101,8 +101,13 @@
           </thead>
           <tbody>
             <ngx-spinner [name]="spinner"></ngx-spinner>
+            <tr *ngIf="clientsDetails?.length === 0" class="valid-record">
+              <td colspan="12">
+                {{ 'No records found' | translate }}</td>
+            </tr>
             <tr *ngFor="let el of clientsDetails; let i = index">
-              <td *permission="{rolesPermitted: [1,2]}"><i class="fa fa-edit padding-5 pointer" (click)="editClient(el)"></i>
+              <td *permission="{rolesPermitted: [1,2]}"><i class="fa fa-edit padding-5 pointer"
+                  (click)="editClient(el)"></i>
                 <i class="fa fa-trash padding-5 pointer" (click)="deleteClient(el.id)"></i>
               </td>
               <!--<td>{{el.id}}</td>-->
