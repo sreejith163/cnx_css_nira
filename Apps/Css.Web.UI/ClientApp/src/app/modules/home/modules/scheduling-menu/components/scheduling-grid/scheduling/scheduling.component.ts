@@ -19,12 +19,12 @@ import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/mess
 import { UpdateAgentschedulechart } from '../../../models/update-agent-schedule-chart.model';
 import { AgentSchedulesQueryParams } from '../../../models/agent-schedules-query-params.model';
 import { WeekDay } from '@angular/common';
-import { CopyScheduleComponent } from '../copy-schedule/copy-schedule.component';
+import { CopyScheduleComponent } from '../../shared/copy-schedule/copy-schedule.component';
 import { SchedulingStatus } from '../../../enums/scheduling-status.enum';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ActivityOrigin } from '../../../enums/activity-origin.enum';
-import { ActivityLogsComponent } from '../activity-logs/activity-logs.component';
+import { ActivityLogsComponent } from '../../shared/activity-logs/activity-logs.component';
 import { ActivityType } from 'src/app/shared/enums/activity-type.enum';
 
 declare function setRowCellIndex(cell: string);

@@ -16,7 +16,7 @@ import { LanguagePreferenceService } from 'src/app/shared/services/language-pref
 import { ExcelService } from 'src/app/shared/services/excel.service';
 import { SchedulingMangerExcelExportData } from '../../../constants/scheduling-manager-excel-export-data';
 import { SchedulingExcelExportData } from '../../../constants/scheduling-excel-export-data';
-import { ImportScheduleComponent } from '../../scheduling-grid/import-schedule/import-schedule.component';
+import { ImportScheduleComponent } from '../../shared/import-schedule/import-schedule.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { ForecastExcelExportData } from '../../../constants/forecast-excel-export-data';
 import { SkillGroupService } from '../../../../setup-menu/services/skill-group.service';

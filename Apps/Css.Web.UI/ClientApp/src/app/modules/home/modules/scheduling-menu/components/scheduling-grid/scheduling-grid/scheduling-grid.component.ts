@@ -11,7 +11,7 @@ import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { ExcelService } from 'src/app/shared/services/excel.service';
 
 
-import { ImportScheduleComponent } from '../import-schedule/import-schedule.component';
+import { ImportScheduleComponent } from '../../shared/import-schedule/import-schedule.component';
 import { ExcelData } from '../../../models/excel-data.model';
 import { SchedulingExcelExportData } from '../../../constants/scheduling-excel-export-data';
 import { LanguagePreference } from 'src/app/shared/models/language-preference.model';

@@ -28,9 +28,9 @@ import { AgentSchedulesService } from '../../../services/agent-schedules.service
 import { AgentAdminService } from '../../../services/agent-admin.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 
-import { CopyScheduleComponent } from '../../scheduling-grid/copy-schedule/copy-schedule.component';
+import { CopyScheduleComponent } from '../../shared/copy-schedule/copy-schedule.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
-import { ActivityLogsComponent } from '../../scheduling-grid/activity-logs/activity-logs.component';
+import { ActivityLogsComponent } from '../../shared/activity-logs/activity-logs.component';
 
 import { AgentIconFilter } from '../../../models/agent-icon-filter.model';
 import { ActivityOrigin } from '../../../enums/activity-origin.enum';

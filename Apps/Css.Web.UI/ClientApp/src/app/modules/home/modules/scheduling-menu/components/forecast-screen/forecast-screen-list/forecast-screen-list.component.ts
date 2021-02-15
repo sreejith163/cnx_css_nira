@@ -26,7 +26,7 @@ import { Constants } from 'src/app/shared/util/constants.util';
 import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
 import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { SkillGroupQueryParameters } from '../../../../setup-menu/models/skill-group-query-parameters.model';
-import { ImportScheduleComponent } from '../../scheduling-grid/import-schedule/import-schedule.component';
+import { ImportScheduleComponent } from '../../shared/import-schedule/import-schedule.component';
 import { ForecastExcelExportData } from '../../../constants/forecast-excel-export-data';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { stringify } from '@angular/compiler/src/util';

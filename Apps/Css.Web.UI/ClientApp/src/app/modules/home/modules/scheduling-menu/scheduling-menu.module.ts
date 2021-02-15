@@ -12,13 +12,13 @@ import { HorizontalScrollPipe } from './pipes/horizontal-scroll.pipe';
 import { AgentAdminService } from './services/agent-admin.service';
 import { AgentSchedulesService } from './services/agent-schedules.service';
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid/scheduling-grid.component';
-import { ImportScheduleComponent } from './components/scheduling-grid/import-schedule/import-schedule.component';
-import { CopyScheduleComponent } from './components/scheduling-grid/copy-schedule/copy-schedule.component';
+import { ImportScheduleComponent } from './components/shared/import-schedule/import-schedule.component';
+import { CopyScheduleComponent } from './components/shared/copy-schedule/copy-schedule.component';
 import { SchedulingManagerComponent } from './components/scheduling-grid/scheduling-manager/scheduling-manager.component';
 import { MoveAgentsComponent } from './components/move-agents/move-agents/move-agents.component';
 
 import { SchedulingComponent } from './components/scheduling-grid/scheduling/scheduling.component';
-import { SchedulingFilterComponent } from './components/scheduling-grid/scheduling-filter/scheduling-filter.component';
+import { SchedulingFilterComponent } from './components/shared/scheduling-filter/scheduling-filter.component';
 
 // for optimization and code cleaning
 import { SchedulingGridMComponent } from './components/scheduling-manager/scheduling-grid/scheduling-grid.component';
@@ -28,7 +28,7 @@ import { SchedulingManagerMComponent } from './components/scheduling-manager/sch
 
 import { ForecastScreenListComponent } from './components/forecast-screen/forecast-screen-list/forecast-screen-list.component';
 import { FilterComponent } from './components/forecast-screen/filter/filter.component';
-import { ActivityLogsComponent } from './components/scheduling-grid/activity-logs/activity-logs.component';
+import { ActivityLogsComponent } from './components/shared/activity-logs/activity-logs.component';
 import { ViewOuScreenComponent } from './components/view-ou-screen/view-ou-screen.component';
 
 
