@@ -95,15 +95,15 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
     this.iconId = icon.value;
     this.schedulingCodeForm.controls.iconId.setValue(icon.id);
     const item = $("[data-card-widget='collapse']");
-    //Find the box parent........
+    // Find the box parent........
     const box = item.parents('.card').first();
-    //Find the body and the footer
+    // Find the body and the footer
     const bf = box.find('.card-body, .card-footer');
     if (!item.children().hasClass('fa-plus')) {
       item.children('.fa-minus').removeClass('fa-minus').addClass('fa-plus');
       bf.slideUp();
     } else {
-      //Convert plus into minus
+      // Convert plus into minus
       item.children('.fa-plus').removeClass('fa-plus').addClass('fa-minus');
       bf.slideDown();
     }

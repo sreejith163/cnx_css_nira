@@ -138,13 +138,15 @@
                         </div>
                       </div>
                       <div class="card-body icon-div">
-                        <div class="icon-inner">
-                          <ng-container *ngFor="let icon of schedulingIcons">
+                        <cdk-virtual-scroll-viewport itemSize="0" minBufferPx="500" maxBufferPx="1000" class="example-viewport">
+                        <div class="icon-inner list">
+                          <ng-container *cdkVirtualFor="let icon of schedulingIcons;">
                             <i class="icon-style icon" [ngClass]="{'icon-active': iconId === icon?.value}"
                               (click)="onIconSelect(icon)">
                               {{ unifiedToNative(icon?.value) }}</i>
                           </ng-container>
                         </div>
+                      </cdk-virtual-scroll-viewport>
                       </div>
                     </div>
                     <div *ngIf="hasFormControlValidationError('iconId')" class="valid-error">
