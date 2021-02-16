@@ -35,9 +35,10 @@
 
   </div>
   <div class="row m-l-r-10">
-    <div class="col-md-4 d-flex flex-column m-t-10">
+    <div class="col-md-4 m-t-10">
       <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
         [maxLength]="maxLength" placeholder="{{ 'Enter_an_agent_scheduling_group_name' | translate }}" />
+      <span class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
     </div>
     <div class="col-md-2 col-sm-6">
       <button class="form-control m-t-10" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>

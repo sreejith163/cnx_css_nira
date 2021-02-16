@@ -18,10 +18,8 @@
     <div class="col-md-3 padding-bottom-5">
       <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
         [maxLength]="maxLength" placeholder="{{ 'Agent_category' | translate }}" />
-      <ng-container *ngIf="searchKeyword?.length">
-
-      </ng-container>
-    </div>
+        <span class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
+      </div>
     <div class="col-md-2">
       <button class="form-control" (click)="searchAgentCategories()"><i class="fa fa-search" aria-hidden="true"></i>
         {{ 'Search' | translate }}

@@ -21,8 +21,9 @@
 
   <div class="row m-l-r-10">
     <div class="col-md-3 p-b-5">
-      <input type="text" class="form-control" [(ngModel)]="searchKeyword"
-        placeholder="{{ 'Search_employee' | translate }}" />
+      <input type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
+        placeholder="{{ 'Search_employee' | translate }}" [maxLength]="maxLength"/>
+        <span class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
     </div>
     <div class="col-md-2">
       <button class="form-control" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>

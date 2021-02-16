@@ -56,6 +56,7 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
 
   modalRef: NgbModalRef;
   headerPaginationValues: HeaderPagination;
+  maxLength = Constants.DefaultTextMaxLength;
   paginationSize: PaginationSize[] = [];
   translationValues: TranslationDetails[];
   clientLOBGroupDetails: ClientLOBGroupDetails[] = [];
@@ -105,7 +106,7 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
     this.loadClientLOBGroups();
   }
 
-  clearSearchKeyword() {
+  clearSearchText() {
     this.searchKeyword = undefined;
   }
 

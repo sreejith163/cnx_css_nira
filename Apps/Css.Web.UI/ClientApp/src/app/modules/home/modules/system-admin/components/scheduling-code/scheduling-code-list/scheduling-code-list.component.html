@@ -15,12 +15,9 @@
 
   <div class="row m-l-r-10">
     <div class="col-md-3 padding-bottom-5">
-      <input type="text" class="form-control" placeholder="{{ 'Enter_a_description' | translate }}"
-        [(ngModel)]="searchKeyword" />
-      <ng-container *ngIf="searchKeyword?.length">
-        <!-- <i id="input_close_btn" class="fa fa-times-circle cursor-pointer closable-icon" type="button"
-          (click)="clearSearchKeyword()"></i> -->
-      </ng-container>
+      <input type="text" class="form-control padding-right-35" placeholder="{{ 'Enter_a_description' | translate }}"
+        [(ngModel)]="searchKeyword" [maxLength]="maxLength"/>
+        <span class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
     </div>
     <div class="col-md-2 padding-bottom-5">
       <button class="form-control" id="btn_search" (click)="searchSchedulingCode()">

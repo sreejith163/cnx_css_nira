@@ -54,6 +54,7 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   characterSplice = 25;
   paginationSize = Constants.paginationSize;
+  maxLength = Constants.DefaultTextMaxLength;
   orderBy = 'CreatedDate';
   sortBy = 'desc';
   spinner = 'skillGroups';
@@ -101,6 +102,10 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
         subscription.unsubscribe();
       }
     });
+  }
+
+  clearSearchText() {
+    this.searchKeyword = undefined;
   }
 
   changePageSize(pageSize: number) {

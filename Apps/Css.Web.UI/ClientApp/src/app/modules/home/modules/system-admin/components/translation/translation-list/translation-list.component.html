@@ -15,8 +15,9 @@
 
   <div class="row m-l-r-10">
     <div class="col-md-4 padding-bottom-5">
-      <input type="text" class="form-control" placeholder="Enter a text to search" [(ngModel)]="searchKeyword"
+      <input type="text" class="form-control padding-right-35" placeholder="Enter a text to search" [(ngModel)]="searchKeyword"
         [maxLength]="maxLength" />
+        <span class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
     </div>
     <div class="col-md-2 padding-bottom-5">
       <button class="form-control" id="btn_search" (click)="search()">

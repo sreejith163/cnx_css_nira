@@ -48,6 +48,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
 
   spinnerOptions = SpinnerOptions;
   paginationSize = Constants.paginationSize;
+  maxLength = Constants.DefaultTextMaxLength;
   modalRef: NgbModalRef;
   headerPaginationValues: HeaderPagination;
   schedulingCodes: SchedulingCode[] = [];
@@ -89,7 +90,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     return String.fromCodePoint(...codePoints);
   }
 
-  clearSearchKeyword() {
+  clearSearchText() {
     this.searchKeyword = undefined;
   }
 

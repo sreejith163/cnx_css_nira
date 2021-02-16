@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { Constants } from 'src/app/shared/util/constants.util';
 
 @Component({
   selector: 'app-scheduling-filter',
@@ -12,6 +13,7 @@ export class SchedulingFilterComponent implements OnInit {
   searchKeyword: string;
   today = this.calendar.getToday();
   agentSchedulingGroupId: number;
+  maxLength = Constants.DefaultTextMaxLength;
 
   @Output() agentSchedulingGroupSelected = new EventEmitter();
   @Output() startDateSelected = new EventEmitter();
@@ -23,6 +25,10 @@ export class SchedulingFilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.setStartDateAsToday();
+  }
+
+  clearSearchText() {
+    this.searchKeyword = undefined;
   }
 
   onSchedulingGroupChange(agentSchedulingGroupId: number) {

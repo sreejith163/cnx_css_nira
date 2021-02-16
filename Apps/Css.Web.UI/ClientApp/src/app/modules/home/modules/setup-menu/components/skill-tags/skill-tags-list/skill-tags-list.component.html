@@ -28,9 +28,10 @@
       {{ 'Skill_groups' | translate }}
       <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)"></app-skill-group-typeahead>
     </div>
-    <div class="col-md-3 d-flex flex-column m-t-25">
+    <div class="col-md-3 m-t-25">
       <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
         [maxLength]="maxLength" placeholder="{{ 'Enter_a_skill_tag_name' | translate }}" />
+      <span class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
     </div>
     <div class="col-md-3 col-sm-6">
       <button class="form-control mt-4" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>

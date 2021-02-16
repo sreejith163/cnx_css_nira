@@ -52,6 +52,7 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   spinnerOptions = SpinnerOptions;
   headerPaginationValues: HeaderPagination;
   paginationSize = Constants.paginationSize;
+  maxLength = Constants.DefaultTextMaxLength;
   employees: Employee[] = [];
 
   roles: UserRole;
@@ -90,6 +91,10 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
         subscription.unsubscribe();
       }
     });
+  }
+
+  clearSearchText() {
+    this.searchKeyword = undefined;
   }
 
   changePageSize(pageSize: number) {
