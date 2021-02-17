@@ -1,6 +1,8 @@
 ﻿using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.Enums;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +13,9 @@ namespace Css.Api.Scheduling.Models.DTO.Response.ActivityLog
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the employee identifier.
