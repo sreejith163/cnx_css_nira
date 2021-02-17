@@ -100,7 +100,7 @@
             <ngx-spinner [name]="spinner"></ngx-spinner>
             <tr *ngIf="clientsDetails?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No records found' | translate }}</td>
+                {{ 'No data to show' | translate }}</td>
             </tr>
             <tr *ngFor="let el of clientsDetails; let i = index">
               <td *permission="{rolesPermitted: [1,2]}"><i class="fa fa-edit padding-5 pointer"

@@ -83,7 +83,7 @@
             </ngx-spinner>
             <tr *ngIf="schedulingCodes?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No records found' | translate }}</td>
+                {{ 'No data to show' | translate }}</td>
             </tr>
             <tr *ngFor="let el of schedulingCodes;let i = index;">
               <td *permission="{rolesPermitted: [1]}">

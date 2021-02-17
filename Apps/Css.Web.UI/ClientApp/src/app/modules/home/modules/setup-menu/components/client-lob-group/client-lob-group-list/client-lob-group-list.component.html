@@ -113,7 +113,7 @@
             <ngx-spinner [name]="spinner" bdColor="rgba(255, 0, 0, 0.8)"></ngx-spinner>
             <tr *ngIf="clientLOBGroupDetails?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No records found' | translate }}</td>
+                {{ 'No data to show' | translate }}</td>
             </tr>
             <tr *ngFor="let el of clientLOBGroupDetails; let i = index">
               <td *permission="{rolesPermitted: [1,2]}"><i class="fa fa-edit padding-5 pointer"

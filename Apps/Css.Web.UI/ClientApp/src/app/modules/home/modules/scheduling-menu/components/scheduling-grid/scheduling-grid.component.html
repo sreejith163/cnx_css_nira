@@ -97,7 +97,7 @@
             <ngx-spinner [name]="spinner"></ngx-spinner>
             <tr *ngIf="totalSchedulingGridData?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No records found' | translate }}</td>
+                {{ 'No data to show' | translate }}</td>
             </tr>
             <ng-container *ngFor="let el of totalSchedulingGridData; let i = index">
               <tr class="table-row">

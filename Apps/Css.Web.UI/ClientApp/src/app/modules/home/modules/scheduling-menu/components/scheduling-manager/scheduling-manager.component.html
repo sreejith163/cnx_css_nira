@@ -145,7 +145,7 @@
       <tbody>
         <tr *ngIf="totalSchedulingGridData?.length === 0" class="valid-record">
           <td colspan="25">
-            {{ 'No records found' | translate }}</td>
+            {{ 'No data to show' | translate }}</td>
         </tr>
         <tr class="jsgrid-row user-select-none" *ngFor="let el of totalSchedulingGridData; let i = index"
           [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.id, i)">
