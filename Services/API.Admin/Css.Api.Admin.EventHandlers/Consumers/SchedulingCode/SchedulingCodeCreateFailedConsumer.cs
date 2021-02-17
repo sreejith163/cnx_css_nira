@@ -41,6 +41,7 @@ namespace Css.Api.Admin.EventHandlers.Consumers.SchedulingCode
             {
                 Description = context.Message.Name,
                 PriorityNumber = context.Message.PriorityNumber,
+                TimeOffCode = context.Message.TimeOffCode,
                 IconId = context.Message.IconId,
                 ModifiedDate = context.Message.ModifiedDate,
                 SchedulingTypeCode =

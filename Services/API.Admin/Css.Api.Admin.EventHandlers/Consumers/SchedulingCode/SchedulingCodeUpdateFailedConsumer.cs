@@ -35,6 +35,7 @@ namespace Css.Api.Admin.EventHandlers.Consumers.SchedulingCode
             {
                 Description = context.Message.NameOldValue,
                 PriorityNumber = context.Message.PriorityNumberOldValue,
+                TimeOffCode = context.Message.TimeOffCodeOldValue,
                 IconId = context.Message.IconIdOldValue,
                 SchedulingTypeCode =
                 JsonConvert.DeserializeObject<List<SchedulingCodeTypes>>(context.Message.SchedulingTypeCodeOldValue),

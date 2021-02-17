@@ -39,6 +39,7 @@ namespace Css.Api.Admin.EventHandlers.Consumers.SchedulingCode
                 IsDeleted = context.Message.IsDeletedOldValue,
                 ModifiedDate = context.Message.ModifiedDateOldValue,
                 PriorityNumber = context.Message.PriorityNumber,
+                TimeOffCode = context.Message.TimeOffCode,
                 IconId = context.Message.IconId,
                 SchedulingTypeCode =
                     JsonConvert.DeserializeObject<List<SchedulingCodeTypes>>(context.Message.SchedulingTypeCode),

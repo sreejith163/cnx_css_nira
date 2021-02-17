@@ -19,6 +19,11 @@ namespace Css.Api.Core.EventBus.Commands.SchedulingCode
         /// <value>The priority number old value.</value>
         public int PriorityNumberOldValue { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [time off code old value].
+        /// </summary>
+        public bool TimeOffCodeOldValue { get; set; }
+
         /// <summary>Gets or sets the icon identifier old value.</summary>
         /// <value>The icon identifier old value.</value>
         public int IconIdOldValue { get; set; }
@@ -47,6 +52,11 @@ namespace Css.Api.Core.EventBus.Commands.SchedulingCode
         /// <summary>Gets or sets the priority number new value.</summary>
         /// <value>The priority number new value.</value>
         public int PriorityNumberNewValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [time off code new value].
+        /// </summary>
+        public bool TimeOffCodeNewValue { get; set; }
 
         /// <summary>Gets or sets the icon identifier new value.</summary>
         /// <value>The icon identifier new value.</value>

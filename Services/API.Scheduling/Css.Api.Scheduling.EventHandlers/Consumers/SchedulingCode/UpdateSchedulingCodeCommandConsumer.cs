@@ -58,6 +58,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
 
                 schedulingCode.SchedulingCodeId = context.Message.Id;
                 schedulingCode.Name = context.Message.NameNewValue;
+                schedulingCode.TimeOffCode = context.Message.TimeOffCodeNewValue;
                 schedulingCode.IsDeleted = context.Message.IsDeletedNewValue;
 
                 _schedulingCodeRepository.UpdateSchedulingCode(schedulingCode);
@@ -84,6 +85,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
                 Id = context.Message.Id,
                 NameOldValue = context.Message.NameOldValue,
                 PriorityNumberOldValue = context.Message.PriorityNumberOldValue,
+                TimeOffCodeOldValue = context.Message.TimeOffCodeOldValue,
                 IconIdOldValue = context.Message.IconIdOldValue,
                 SchedulingTypeCodeOldValue = context.Message.SchedulingTypeCodeOldValue,
                 ModifiedByOldValue = context.Message.ModifiedByOldValue,

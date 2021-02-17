@@ -16,6 +16,11 @@ namespace Css.Api.Core.EventBus.Events.SchedulingCode
         /// <value>The priority number old value.</value>
         public int PriorityNumberOldValue { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [time off code old value].
+        /// </summary>
+        public bool TimeOffCodeOldValue { get; set; }
+
         /// <summary>Gets or sets the icon identifier old value.</summary>
         /// <value>The icon identifier old value.</value>
         public int IconIdOldValue { get; set; }

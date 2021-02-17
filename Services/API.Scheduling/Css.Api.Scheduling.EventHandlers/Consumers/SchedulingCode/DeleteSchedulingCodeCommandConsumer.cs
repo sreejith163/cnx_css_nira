@@ -83,6 +83,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
                 context.Message.Id,
                 context.Message.Name,
                 context.Message.PriorityNumber,
+                context.Message.TimeOffCode,
                 context.Message.IconId,
                 context.Message.SchedulingTypeCode,
                 context.Message.ModifiedByOldValue,
