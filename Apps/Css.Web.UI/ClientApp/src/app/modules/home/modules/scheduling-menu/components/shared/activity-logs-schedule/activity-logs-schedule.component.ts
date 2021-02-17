@@ -295,10 +295,12 @@ export class ActivityLogsScheuldeComponent implements OnInit, OnDestroy {
   }
 
   private setScheduleChart() {
+    let id = 0;
     for (const item of this.activityLogsData) {
-        item.schedulingFieldDetails.agentScheduleCharts.forEach((icon, index) => {
+        item.schedulingFieldDetails.agentScheduleCharts.forEach((icon) => {
+          id = id + 1;
           const chart = new ActivityLogsChart();
-          chart.id = index;
+          chart.id = id;
           chart.employeeId = item?.employeeId;
           chart.executedUser = item?.executedUser;
           chart.executedBy = item?.executedBy;
