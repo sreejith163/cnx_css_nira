@@ -85,6 +85,10 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
     });
   }
 
+  getTimeOffCodeValue(timeOffCode: boolean) {
+    return timeOffCode ? 'Yes' : 'No';
+  }
+
   unifiedToNative(unified: string) {
     const codePoints = unified.split('-').map(u => parseInt(`0x${u}`, 16));
     return String.fromCodePoint(...codePoints);

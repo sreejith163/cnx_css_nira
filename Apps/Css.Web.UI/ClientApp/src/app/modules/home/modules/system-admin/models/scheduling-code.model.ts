@@ -4,6 +4,7 @@ export class SchedulingCode {
     id: number;
     refId?: number;
     description: string;
+    timeOffCode: boolean;
     priorityNumber: number;
     schedulingTypeCode: KeyValue[];
     icon: KeyValue;
