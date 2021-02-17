@@ -208,6 +208,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
     if (this.operation === ComponentOperation.Edit) {
       this.schedulingCodeForm.patchValue({
         description: this.schedulingCodeData.description,
+        timeOffCode: this.schedulingCodeData.timeOffCode,
         priorityNumber: this.schedulingCodeData.priorityNumber,
         iconId: this.schedulingCodeData.icon.id,
         refId: this.schedulingCodeData.refId
@@ -294,6 +295,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.maxLength(50),
         CustomValidators.cannotContainSpace])),
+      timeOffCode: new FormControl(false),
       priorityNumber: new FormControl('', Validators.compose([
         Validators.required,
         Validators.maxLength(10)])),

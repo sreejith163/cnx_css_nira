@@ -56,6 +56,9 @@
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
+              <th>
+                {{ 'Time Off Code' | translate }}
+              </th>
               <th class="sortable-field" (click)="sort('description', sortBy)">
                 {{ 'Description' | translate }}
                 <i *ngIf="orderBy !== 'description'" class="fa fa-sort"></i>
@@ -92,6 +95,7 @@
               </td>
               <!-- <td>{{ el.id }}</td> -->
               <td>{{ el.refId }}</td>
+              <td>{{getTimeOffCodeValue(el?.timeOffCode)}}</td>
               <td>
                 <span
                   ngbTooltip="{{ el.description }}">{{ el.description | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>

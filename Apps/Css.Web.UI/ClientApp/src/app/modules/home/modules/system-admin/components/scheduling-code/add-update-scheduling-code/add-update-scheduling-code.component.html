@@ -6,7 +6,7 @@
         <!-- <p>{{ getTitle() }} {{ 'Scheduling Code' | translation: 'lbl_add_edit_page_title' : translationValues }}
         </p> -->
         <p>{{ getTitle() }} {{ 'Scheduling_codes' | translate }}</p>
-        
+
       </h6>
       <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
@@ -23,8 +23,8 @@
             </div>
             <div class="col-md-8">
               <input type="text" class="form-control" formControlName="refId" [maxLength]="10"
-               (keypress)="isNumberKey($event)" onpaste="return false;" />
-               <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.refId.invalid">
+                (keypress)="isNumberKey($event)" onpaste="return false;" />
+              <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.refId.invalid">
                 <ng-template #maxLengthError>
                   <div class="valid-error">
                     {{ 'ID cannot exceed 10 characters' | translate }}
@@ -43,7 +43,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control" formControlName="description" [maxLength]="maxLength"/>
+              <input type="text" class="form-control" formControlName="description" [maxLength]="maxLength" />
               <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.description.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('description'); else maxLengthError">
                   <div *ngIf="hasFormControlValidationError('description')" class="valid-error">
@@ -68,8 +68,8 @@
             </div>
             <div class="col-md-8">
               <input type="text" class="form-control" formControlName="priorityNumber" [maxLength]="maxPriority"
-               (keypress)="isNumberKey($event)" onpaste="return false;" />
-               <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.priorityNumber.invalid">
+                (keypress)="isNumberKey($event)" onpaste="return false;" />
+              <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.priorityNumber.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('priorityNumber'); else maxLengthError">
                   <div *ngIf="hasFormControlValidationError('priorityNumber')" class="valid-error">
                     {{ 'Priority # is required' | translate }}
@@ -89,9 +89,9 @@
           <div class="row">
             <div class="col-md-4">
               <label>
-                {{ 'Type_of_code' | translate }} 
-              </label> 
-               <span class="required"> *</span>
+                {{ 'Type_of_code' | translate }}
+              </label>
+              <span class="required"> *</span>
             </div>
             <div class="col-md-8 grid">
               <div class="form-group clearfix margin-b-05-rem" *ngFor="let data of codeList; let i = index">
@@ -105,6 +105,25 @@
               </div>
               <div *ngIf="hasFormControlValidationError('schedulingTypeCode')" class="valid-error">
                 {{ 'Type of Code is required' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>
+                {{ 'Time Off Code' | translate }}
+              </label>
+            </div>
+            <div class="col-md-8 grid">
+              <div class="form-group clearfix margin-b-05-rem">
+                <div class="icheck-primary d-inline">
+                  <input type="checkbox" id="timeOffCode" formControlName="timeOffCode">
+                  <label for="timeOffCode">
+                    {{'Yes' | translate}}
+                    </label>
+                </div>
               </div>
             </div>
           </div>
@@ -138,15 +157,16 @@
                         </div>
                       </div>
                       <div class="card-body icon-div">
-                        <cdk-virtual-scroll-viewport itemSize="0" minBufferPx="500" maxBufferPx="1000" class="example-viewport">
-                        <div class="icon-inner list">
-                          <ng-container *cdkVirtualFor="let icon of schedulingIcons;">
-                            <i class="icon-style icon" [ngClass]="{'icon-active': iconId === icon?.value}"
-                              (click)="onIconSelect(icon)">
-                              {{ unifiedToNative(icon?.value) }}</i>
-                          </ng-container>
-                        </div>
-                      </cdk-virtual-scroll-viewport>
+                        <cdk-virtual-scroll-viewport itemSize="0" minBufferPx="500" maxBufferPx="1000"
+                          class="example-viewport">
+                          <div class="icon-inner list">
+                            <ng-container *cdkVirtualFor="let icon of schedulingIcons;">
+                              <i class="icon-style icon" [ngClass]="{'icon-active': iconId === icon?.value}"
+                                (click)="onIconSelect(icon)">
+                                {{ unifiedToNative(icon?.value) }}</i>
+                            </ng-container>
+                          </div>
+                        </cdk-virtual-scroll-viewport>
                       </div>
                     </div>
                     <div *ngIf="hasFormControlValidationError('iconId')" class="valid-error">
