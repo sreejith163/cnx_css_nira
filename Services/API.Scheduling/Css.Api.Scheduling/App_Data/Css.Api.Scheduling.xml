@@ -21,9 +21,9 @@
             </summary>
             <param name="activityLogService">The activity log service.</param>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.ActivityLogsController.ActivityLogs(Css.Api.Scheduling.Models.DTO.Request.ActivityLog.ActivityLogQueryParameter)">
+        <member name="M:Css.Api.Scheduling.Controllers.ActivityLogsController.GetActivityLogs(Css.Api.Scheduling.Models.DTO.Request.ActivityLog.ActivityLogQueryParameter)">
             <summary>
-            Gets the time zones.
+            Gets the activity logs.
             </summary>
             <param name="activityLogQueryParameter">The activity log query parameter.</param>
             <returns></returns>

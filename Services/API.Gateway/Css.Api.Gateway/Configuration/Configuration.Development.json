@@ -528,6 +528,57 @@
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
     },
+     //********* Forecast Screen Routes *********************
+     {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.14",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.14",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.14",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.87.221.14",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+
     //********* Activity Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/activity",
