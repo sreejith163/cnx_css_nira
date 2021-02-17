@@ -106,6 +106,7 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.loadSkillGroups();
   }
 
   changePageSize(pageSize: number) {

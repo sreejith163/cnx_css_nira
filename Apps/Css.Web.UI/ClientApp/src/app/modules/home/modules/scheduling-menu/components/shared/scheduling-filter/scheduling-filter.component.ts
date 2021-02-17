@@ -29,6 +29,7 @@ export class SchedulingFilterComponent implements OnInit {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.keywordToSearch.emit(this.searchKeyword);
   }
 
   onSchedulingGroupChange(agentSchedulingGroupId: number) {

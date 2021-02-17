@@ -84,6 +84,7 @@ export class AgentCategoryListComponent implements OnInit, OnDestroy {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.loadAgentcategories();
   }
 
   changePageSize(pageSize: number) {

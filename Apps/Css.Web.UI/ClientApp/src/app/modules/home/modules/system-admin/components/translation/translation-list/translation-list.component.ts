@@ -71,6 +71,7 @@ export class TranslationListComponent implements OnInit, OnDestroy {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.loadTranslations();
   }
 
   changePageSize(pageSize: number) {

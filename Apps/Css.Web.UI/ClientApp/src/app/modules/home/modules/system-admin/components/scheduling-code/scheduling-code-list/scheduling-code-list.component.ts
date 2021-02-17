@@ -92,6 +92,7 @@ export class SchedulingCodeListComponent implements OnInit, OnDestroy {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.loadSchedulingCodes();
   }
 
   addSchedulingCode() {

@@ -91,6 +91,7 @@ export class ClientNameListComponent implements OnInit, OnDestroy {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.loadClients();
   }
 
   changePageSize(pageSize: number) {

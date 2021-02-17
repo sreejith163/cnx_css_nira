@@ -24,7 +24,7 @@
     <div class="col-md-3 padding-bottom-5">
       <input type="text" class="form-control mt-4 padding-right-35" [(ngModel)]="searchKeyword"
         placeholder="{{ 'Enter_a_skill_group_name' | translate }}" [maxLength]="maxLength" />
-      <span class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
+      <span *ngIf="searchKeyword?.length > 0" class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
     </div>
     <div class="col-md-2">
       <button class="form-control mt-4" (click)="searchSkillGroups()" id="btn_search"><i class="fa fa-search"

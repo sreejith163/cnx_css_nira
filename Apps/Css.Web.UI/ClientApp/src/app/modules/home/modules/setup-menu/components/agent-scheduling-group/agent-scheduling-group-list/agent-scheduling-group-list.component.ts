@@ -105,6 +105,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.loadAgentSchedulingGroups();
   }
 
   changePageSize(pageSize: number) {

@@ -108,6 +108,7 @@ export class ClientLobGroupListComponent implements OnInit, OnDestroy {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.loadClientLOBGroups();
   }
 
   setClient(client: number) {

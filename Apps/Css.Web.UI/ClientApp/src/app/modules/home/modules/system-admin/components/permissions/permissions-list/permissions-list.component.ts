@@ -95,6 +95,7 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.loadEmployees();
   }
 
   changePageSize(pageSize: number) {

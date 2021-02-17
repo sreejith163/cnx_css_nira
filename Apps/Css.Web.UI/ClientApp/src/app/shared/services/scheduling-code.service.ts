@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpBaseService } from 'src/app/core/services/http-base.service';
 import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
@@ -38,7 +37,7 @@ export class SchedulingCodeService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
 
-  addSchedulingCode(schedulingCode: AddSchedulingCode): Observable<ApiResponseModel> {
+  addSchedulingCode(schedulingCode: AddSchedulingCode) {
     const url = `${this.baseURL}/schedulingCodes`;
 
     return this.http.post<ApiResponseModel>(url, schedulingCode)

@@ -524,7 +524,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
 
   private loadTranslations() {
     // load the user language from api //
-    this.languagePreferenceService.getLanguagePreference(this.LoggedUser.employeeId).subscribe((langPref: LanguagePreference) => {
+    this.languagePreferenceService.getLanguagePreference(this.LoggedUser?.employeeId).subscribe((langPref: LanguagePreference) => {
       this.currentLanguage = langPref.languagePreference ? langPref.languagePreference : 'en';
       this.translate.use(this.currentLanguage);
     });

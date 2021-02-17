@@ -107,6 +107,7 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.loadAgentAdmins();
   }
 
   changePageSize(pageSize: number) {

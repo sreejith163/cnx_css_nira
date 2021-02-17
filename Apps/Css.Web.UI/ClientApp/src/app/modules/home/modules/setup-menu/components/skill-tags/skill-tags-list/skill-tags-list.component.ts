@@ -102,6 +102,7 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.loadSkillTags();
   }
 
   changePageSize(pageSize: number) {
