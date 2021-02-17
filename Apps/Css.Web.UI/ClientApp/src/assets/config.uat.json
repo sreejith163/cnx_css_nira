@@ -1,0 +1,14 @@
+{
+  "sso": {
+    "authBaseUrl": "https://auth-api.concentrix.com/employee/authenticate?attributes[0]=mail&attributes[1]=uid&attributes[2]=displayname&attributes[3]=employeeid&client=",
+    "authAppToken": "m7IfGMPeKpiiRZeKggZlWBw4xdVbUAQZVjg"
+  },
+  "services": {
+    "gatewayService": "https://css-apig-uat.concentrix.com/api"
+  },
+  "settings": {
+    "applicationUrl": "https://css-uat.concentrix.com/",
+    "sessionName": "session",
+    "cookiePath": "/"
+  }
+}

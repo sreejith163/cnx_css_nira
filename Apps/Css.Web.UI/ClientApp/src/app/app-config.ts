@@ -28,13 +28,40 @@ export class AppConfig {
         return new Promise((resolve, reject) => {
             let request: any = null;
 
-            // use config.test if on local environment
-            if (location.hostname === "localhost" || location.hostname === "127.0.0.1"){
-                request = this.http.get<Config>('assets/config.test.json');
-            }else{
-            // otherwise use the config set on Docker env
-                request = this.http.get<Config>('assets/config.json');
-            }
+            switch(location.hostname) { 
+                case "localhost": { 
+                    console.log(location.hostname)
+                    request = this.http.get<Config>('assets/config.test.json');
+                    break; 
+                } 
+                case "127.0.0.1": { 
+                    request = this.http.get<Config>('assets/config.test.json');
+                    break; 
+                }
+                
+                case "css-dev.concentrix.com": {
+                    request = this.http.get<Config>('assets/config.dev.json');
+                    break; 
+                }
+                
+                case "css-uat.concentrix.com": {
+                    request = this.http.get<Config>('assets/config.uat.json');
+                    break; 
+                }
+
+                default: { 
+                    request = this.http.get<Config>('assets/config.dev.json');
+                    break; 
+                } 
+            } 
+
+            // // use config.test if on local environment
+            // if (location.hostname === "localhost" || location.hostname === "127.0.0.1"){
+            //     request = this.http.get<Config>('assets/config.test.json');
+            // }else{
+            // // otherwise use the config set on Docker env
+            //     request = this.http.get<Config>('assets/config.json');
+            // }
 
             // process the request from config.json
             if (request) {

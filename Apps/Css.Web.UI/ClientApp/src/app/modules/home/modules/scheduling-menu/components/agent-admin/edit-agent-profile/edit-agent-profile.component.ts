@@ -17,6 +17,7 @@ import {
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { ActivityType } from 'src/app/shared/enums/activity-type.enum';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
@@ -157,9 +158,12 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     this.agentProfileModel = new AgentAdminBase();
     this.agentProfileModel = this.agentProfileForm.value;
     const myDate = this.ngbDateParserFormatter.format(this.agentProfileForm.controls.hireDate.value);
+    this.agentProfileModel.skillGroupId = this.skillGroupId;
+    this.agentProfileModel.clientId = this.clientId;
+    this.agentProfileModel.clientLobGroupId = this.clientLobGroupId;
     this.agentProfileModel.skillTagId = this.skillTagId;
     this.agentProfileModel.agentData = [];
-    
+
     const newGroup = new AgentAdminAgentGroup();
     newGroup.description = 'Hire Date';
     newGroup.value = myDate;
@@ -190,14 +194,13 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
   private updateAgentAdminProfileDetails() {
     if (this.hasAgentAdminDetailsMismatch()) {
       const updateAgentAdminModel = this.agentProfileModel as UpdateAgentAdmin;
+      console.log(updateAgentAdminModel);
       updateAgentAdminModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
       this.updateAgentAdminSubscription = this.agentService.updateAgentAdmin(
         this.agentAdminId, updateAgentAdminModel)
         .subscribe((resp) => {
-          console.log(resp);
-          console.log(updateAgentAdminModel);
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
         }, (error) => {
@@ -216,7 +219,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     if (this.agentProfileModel.employeeId !== this.agentAdminDetails.employeeId ||
       this.agentProfileModel.sso !== this.agentAdminDetails.sso ||
       this.agentProfileModel.skillTagId !== this.agentAdminDetails.skillTagId ||
-      this.agentProfileModel.pto !== this.agentAdminDetails.pto||
+      this.agentProfileModel.pto !== this.agentAdminDetails.pto ||
       this.agentProfileModel.firstName !== this.agentAdminDetails.firstName ||
       this.agentProfileModel.lastName !== this.agentAdminDetails.lastName ||
       this.agentProfileModel.supervisorId !== this.agentAdminDetails.supervisorId ||
@@ -248,12 +251,11 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
 
 
   private populateAgentDetailsOnAgentForm() {
-    console.log(this.agentAdminDetails);
     this.clientId = this.agentAdminDetails.clientId;
     this.clientLobGroupId = this.agentAdminDetails.clientLobGroupId;
     this.skillGroupId = this.agentAdminDetails.skillGroupId;
     this.skillTagId = this.agentAdminDetails.skillTagId;
-    const tempPTO = this.agentAdminDetails.pto != null ? this.agentAdminDetails.pto : "";
+    const tempPTO = this.agentAdminDetails.pto != null ? this.agentAdminDetails.pto : '';
 
     this.agentProfileForm.patchValue({
       employeeId: this.agentAdminDetails.employeeId,
@@ -303,15 +305,13 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
   }
 
   showActivityLogs(){
-    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'lg' };
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'xl' };
     this.modalRef = this.modalService.open(ActivityLogsComponent, options);
-    // this.modalRef.componentInstance.employee = employee;
+    this.modalRef.componentInstance.activityType = ActivityType.AgentAdmin;
+    this.modalRef.componentInstance.employeeId = this.agentAdminDetails.employeeId;
+    this.modalRef.componentInstance.employeeName = this.agentAdminDetails.firstName + ' ' + this.agentAdminDetails.firstName;
     this.modalRef.result.then((confirmed) => {
       if (confirmed === true){
-        console.log(closed);
-        // this.currentPage = 1;
-        // this.loadEmployees();
-        // this.showSuccessPopUpMessage('The record has been updated!');
       }
     });
   }

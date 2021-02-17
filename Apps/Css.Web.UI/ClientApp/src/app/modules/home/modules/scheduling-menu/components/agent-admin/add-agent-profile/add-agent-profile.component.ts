@@ -158,6 +158,9 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     this.agentProfileModel = new AgentAdminBase();
     this.agentProfileModel = this.agentProfileForm.value;
     const myDate = this.ngbDateParserFormatter.format(this.agentProfileForm.controls.hireDate.value);
+    this.agentProfileModel.skillGroupId = this.skillGroupId;
+    this.agentProfileModel.clientId = this.clientId;
+    this.agentProfileModel.clientLobGroupId = this.clientLobGroupId;
     this.agentProfileModel.skillTagId = this.skillTagId;
     this.agentProfileModel.agentData = [];
     const newGroup = new AgentAdminAgentGroup();

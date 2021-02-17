@@ -25,4 +25,10 @@ export class ActivityLogsService extends HttpBaseService {
       observe: 'response'
     }).pipe(catchError(this.handleError));
   }
+
+  getActivityLogById(activityLogsId) {
+    const url = `${this.baseURL}/activityLogs?Id=${activityLogsId}`;
+    return this.http.get<ActivityLogsResponse>(url).pipe(catchError(this.handleError));
+  }
+
 }

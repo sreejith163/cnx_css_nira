@@ -1,4 +1,6 @@
-﻿namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
+﻿using Css.Api.Scheduling.Models.Enums;
+
+namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
 {
     public class UpdateAgentAdmin : AgentAdminAttribute
     {
@@ -9,5 +11,10 @@
         /// The modified by.
         /// </value>
         public string ModifiedBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the activity origin.
+        /// </summary>
+        public ActivityOrigin ActivityOrigin { get; set; }
     }
 }

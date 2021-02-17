@@ -1,5 +1,7 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
 using Css.Api.Scheduling.Models.Enums;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
 {
@@ -12,6 +14,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
         }
 
         /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
         public int? EmployeeId { get; set; }
@@ -20,6 +27,17 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
         /// Gets or sets the executed user.
         /// </summary>
         public int? ExecutedUser { get; set; }
+
+        /// <summary>
+        /// Gets or sets the executed user.
+        /// </summary>
+        public string ExecutedBy { get; set; }
+
+        public string Field { get; set; }
+
+        public string NewValue { get; set; }
+
+        public string OldValue { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the activity.

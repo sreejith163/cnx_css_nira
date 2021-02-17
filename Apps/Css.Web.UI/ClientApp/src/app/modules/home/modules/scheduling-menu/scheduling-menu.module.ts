@@ -30,6 +30,7 @@ import { EntityHierarchyComponent } from './components/entity-hierarchy/entity-h
 import { NumericDirective } from 'src/app/shared/directives/numeric.directive';
 import { ActivityLogsService } from './services/activity-logs.service';
 import { SchedulingManagerComponent } from './components/scheduling-manager/scheduling-manager.component';
+import { ActivityLogsComponent } from './components/agent-admin/activity-logs/activity-logs.component';
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
 const components =
   [AgentAdminListComponent,
@@ -47,7 +48,8 @@ const components =
     ForecastScreenListComponent,
     FilterComponent,
     ViewOuScreenComponent,
-    NumericDirective
+    NumericDirective,
+    ActivityLogsComponent
   ];
 const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService];
 

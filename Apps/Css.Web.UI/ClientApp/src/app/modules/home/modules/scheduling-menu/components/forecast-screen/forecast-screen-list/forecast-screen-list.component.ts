@@ -35,7 +35,7 @@ import { HttpClient } from '@angular/common/http';
 import { UpdateAgentAdmin } from '../../../models/update-agent-admin.model';
 import { UpdateForecastData } from '../../../models/update-forecast-data.model';
 import { getLocaleDateTimeFormat } from '@angular/common';
-import * as xlsx from 'xlsx'
+import * as xlsx from 'xlsx';
 /**
  * This Service handles how the date is represented in scripts i.e. ngModel.
  */
@@ -46,7 +46,7 @@ export class CustomAdapter extends NgbDateAdapter<string> {
 
   fromModel(value: string | null): NgbDateStruct | null {
     if (value) {
-      let date = value.split(this.DELIMITER);
+      const date = value.split(this.DELIMITER);
       return {
         month: parseInt(date[0], 10),
         day: parseInt(date[1], 10),
@@ -68,7 +68,7 @@ export class CustomDateParserFormatter extends NgbDateParserFormatter {
 
   parse(value: string): NgbDateStruct | null {
     if (value) {
-      let date = value.split(this.DELIMITER);
+      const date = value.split(this.DELIMITER);
       return {
         month: parseInt(date[0], 10),
         day: parseInt(date[1], 10),
@@ -99,7 +99,7 @@ export class CustomDateParserFormatter extends NgbDateParserFormatter {
 
 export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('epltable', { static: false }) epltable: ElementRef;
-  @ViewChild("epltable") divView: ElementRef;
+  @ViewChild('epltable') divView: ElementRef;
   isEnabled: boolean[] = [];
   model2: string;
   skillgroupID: number;
@@ -140,7 +140,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   tabIndex: number;
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
   forecastScreenGridData: Forecast[] = [];
-  formatsDateTest: string = "MM/dd/yyyy";
+  formatsDateTest = 'MM/dd/yyyy';
   startDate: any = this.calendar.getToday();
   dateNow: Date = new Date();
   hoveredDate: NgbDate | null = null;
@@ -150,8 +150,8 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   modalRef: NgbModalRef;
   agentSchedulingGroupId?: number;
   skillGroupBinder: SkillGroupDetails;
-  enableSaveButton: boolean = false;
-  enableImportButton: boolean = false;
+  enableSaveButton = false;
+  enableImportButton = false;
   forecastData: ForecastDataModel[];
   forecastForm: FormGroup;
   forecastFormModel: any = [];
@@ -187,7 +187,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   }
 
   calculate(forecastDataCalc: Forecast[]): number {
-    return forecastDataCalc.reduce((acc, product) => acc + parseInt(product.aht), 0)
+    return forecastDataCalc.reduce((acc, product) => acc + +product.aht, 0);
   }
   ngOnInit() {
     this.model2 = this.today;
@@ -198,16 +198,16 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
   }
   exportToExcel() {
-    const ws: xlsx.WorkSheet =   
-    xlsx.utils.table_to_sheet(this.epltable.nativeElement);
+    const ws: xlsx.WorkSheet =
+      xlsx.utils.table_to_sheet(this.epltable.nativeElement);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
     xlsx.writeFile(wb, 'epltable.xlsx');
-   }
+  }
 
-  checkSkillId(){
+  checkSkillId() {
 
-    if(this.skillGroupBinder?.id == null){
+    if (this.skillGroupBinder?.id == null) {
       this.showErrorWarningPopUpMessage('Please select skill group first');
     }
   }
@@ -238,7 +238,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       scheduledOpen: this.formBuilder.control({ value: datum.scheduledOpen, disabled: false })
     });
   }
-  get formData() { return <FormArray>this.forecastForm.get('forecastFormArrays'); }
+  get formData() { return this.forecastForm.get('forecastFormArrays') as FormArray; }
 
 
 
@@ -300,7 +300,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   }
 
   loadSkillGroup() {
-    this.forecastFormArray.reset()
+    this.forecastFormArray.reset();
     // var dateParse = `${this.DateModel.month}-${this.DateModel.day}-${this.DateModel.year}`
 
     this.spinnerService.show(this.forecastSpinner, SpinnerOptions);
@@ -309,34 +309,34 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       this.forecastID = data.forecastId;
       this.forecastForm = this.formBuilder.group({
 
-        forecastFormArrays: this.formBuilder.array(data['forecastData'].map(datum => this.generateDatumFormGroup(datum))),
+        forecastFormArrays: this.formBuilder.array(data.forecastData.map(datum => this.generateDatumFormGroup(datum))),
 
       });
-      this.dataJson = data['forecastData'];
-      this.dataJson.forEach(element => {
+      this.dataJson = data.forecastData;
+      this.dataJson.forEach(ele => {
         this.arrayGenerator(
-          element.time,
-          element.forecastedContact,
-          element.aht,
-          element.forecastedReq,
-          element.scheduledOpen
+          ele.time,
+          ele.forecastedContact,
+          ele.aht,
+          ele.forecastedReq,
+          ele.scheduledOpen
         );
       });
-      //console.log(data);
-      this.sumForecastContact = data['forecastData'].reduce((a, b) => +a + +b.forecastedContact, 0);
-      this.sumAHT = data['forecastData'].reduce((a, b) => +a + +b.aht, 0);
-      this.sumForecastedReq = data['forecastData'].reduce((a, b) => +a + +b.forecastedReq, 0);
-      this.sumScheduledOpen = data['forecastData'].reduce((a, b) => +a + +b.scheduledOpen, 0);
+      // console.log(data);
+      this.sumForecastContact = data.forecastData.reduce((a, b) => +a + +b.forecastedContact, 0);
+      this.sumAHT = data.forecastData.reduce((a, b) => +a + +b.aht, 0);
+      this.sumForecastedReq = data.forecastData.reduce((a, b) => +a + +b.forecastedReq, 0);
+      this.sumScheduledOpen = data.forecastData.reduce((a, b) => +a + +b.scheduledOpen, 0);
 
-      this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2)
-      this.sumAHT = parseFloat(this.sumAHT).toFixed(2)
-      this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2)
-      this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2)
+      this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2);
+      this.sumAHT = parseFloat(this.sumAHT).toFixed(2);
+      this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
+      this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
 
     }, (error) => {
 
       this.spinnerService.hide(this.forecastSpinner);
-      if (error.status == 404) {
+      if (error.status === 404) {
         this.getForecastDefaultValue();
         this.showErrorWarningPopUpMessage('No Forecast Found!');
         this.InsertUpdate = true;
@@ -428,17 +428,17 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
         });
 
         this.dataJson = data;
-    
+
 
         this.sumForecastContact = data.reduce((a, b) => +a + +b.forecastedContact, 0);
         this.sumAHT = data.reduce((a, b) => +a + +b.aht, 0);
         this.sumForecastedReq = data.reduce((a, b) => +a + +b.forecastedReq, 0);
         this.sumScheduledOpen = data.reduce((a, b) => +a + +b.scheduledOpen, 0);
 
-        this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2)
-        this.sumAHT = parseFloat(this.sumAHT).toFixed(2)
-        this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2)
-        this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2)
+        this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2);
+        this.sumAHT = parseFloat(this.sumAHT).toFixed(2);
+        this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
+        this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
       });
   }
 
@@ -483,14 +483,14 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
   addForecastData() {
 
-    if (this.InsertUpdate == true) {
-      var forecastObjArrays: Forecast[];
+    if (this.InsertUpdate === true) {
+      let forecastObjArrays: Forecast[];
 
-      let now = +new Date(this.model2);
+      const now = +new Date(this.model2);
 
-      var insertObject: ForecastDataModel;
+      let insertObject: ForecastDataModel;
       // let intDate = new getLocaleDateTimeFormat();
-      this.forecastID = parseInt(`${this.skillGroupBinder?.id}${now}`);
+      this.forecastID = +`${this.skillGroupBinder?.id}${now}`;
       console.log(this.forecastID);
       forecastObjArrays = this.formData.value;
       insertObject = {
@@ -508,12 +508,12 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       },
         error => {
 
-          if (error.status == 409) {
+          if (error.status === 409) {
             this.updateForecast();
           }
 
         }
-      )
+      );
     } else {
       // var forecastObjArrays: Forecast[];
 
@@ -523,9 +523,9 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
   }
   updateForecast() {
-    var updateForecastData: UpdateForecastData;
+    let updateForecastData: UpdateForecastData;
 
-    var forecastTest: Forecast[];
+    let forecastTest: Forecast[];
 
 
     forecastTest = this.formData.value;
@@ -544,7 +544,6 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       error => {
         this.showErrorWarningPopUpMessage('Error');
       }
-    )
+    );
   }
-
 }

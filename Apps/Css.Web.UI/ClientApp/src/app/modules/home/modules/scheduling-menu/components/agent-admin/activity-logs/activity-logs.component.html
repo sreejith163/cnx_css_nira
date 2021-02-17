@@ -1,18 +1,183 @@
-<div class="modal-dialog w-1000 add-edit-modal" role="document">
-    <div class="modal-content">
+
       <div class="modal-header header-color">
         <h6 class="modal-title w-100 font-weight-bold header">
-          <p>Activity Logs</p>
+          <p>Agent Admin Activity Logs</p>
           
         </h6>
-        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <button type="button" class="close" style="outline: none;" aria-label="Close" (click)="closeModal()">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
-  
-      <div class="modal-body mx-3 modal-style">
-
-      </div>
+      </div>      
+        <div class="modal-body mx-3 modal-style">
+          <div class="well">
+              <div class="card text-sm">
+                  <ngx-spinner [name]="spinner"></ngx-spinner>
+                      <div class="card-header"> 
+                        <div class="card-tools">
+                          <div class="card-tools d-flex justify-content-end">
+                              <div class="container-fluid">
+                                <div class="input-group">
+                                  <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchKeyword">
+                                  <div class="input-group-append">
+                                    <button class="btn btn-secondary" type="button" (click)="search()">
+                                      <i class="fa fa-search"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="btn-group">
+                                <button class="btn btn-secondary icon" type="button" [ngbPopover]="popContent"
+                                  [popoverTitle]="popTitle" [placement]="'top'" container="body" [autoClose]="'outside'">
+                                  <i class="fa fa-sort pointer-down"></i>
+                                  <ng-template #popContent>
+                                    <div class="form-group clearfix margin-b-05-rem" *ngFor="let x of this.columnList; let i = index">
+                                      <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="{{ x }}" [value]="x" [checked]="hasHiddenColumnSelected(x)"
+                                          (change)="onCheckColumnsToHide($event)">
+                                        <label for="{{ x }}">
+                                          {{ x }}
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </ng-template>
+                                  <ng-template #popTitle>
+                                    {{ 'Select_columns_to_hide' | translate }}
+                                  </ng-template>
+                                </button>
+                                &nbsp;
+                                <button (click)="exportActivityLogs()" class="btn btn-secondary icon"><i class="fa fa-download"></i></button>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- /.card-header -->
+                      <ng-container *ngIf="activityLogsData.length > 0;else noData">                            
+                          <div class="card-body table-responsive p-0" style="height: 300px;">
+                          <table class="table-hover table table-head-fixed" id="agentAdminActivityLogsTable">
+                              <thead>
+                              <tr>
+                                  <th class="sortable-field" (click)="sort('employeeId', sortBy)">
+                                    Employee ID
+                                    <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort pointer"></i>
+                                    <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa pointer" [class.fa-sort-down]="sortBy === 'desc'"
+                                      [class.fa-sort-up]="sortBy === 'asc'">
+                                    </i>
+                                  </th>
+                                  <th *ngIf="hasColumnHidden('Timestamp')" (click)="sort('timeStamp', sortBy)">
+                                    Timestamp
+                                    <i *ngIf="orderBy !== 'timeStamp'" class="fa fa-sort pointer"></i>
+                                    <i id="sortIcon" *ngIf="orderBy === 'timeStamp'" class="fa pointer" [class.fa-sort-down]="sortBy === 'desc'"
+                                      [class.fa-sort-up]="sortBy === 'asc'">
+                                    </i>
+                                  </th>
+                                  <th *ngIf="hasColumnHidden('Executed By')" (click)="sort('executedBy', sortBy)">
+                                    Executed By
+                                    <i *ngIf="orderBy !== 'executedBy'" class="fa fa-sort pointer"></i>
+                                    <i id="sortIcon" *ngIf="orderBy === 'executedBy'" class="fa pointer" [class.fa-sort-down]="sortBy === 'desc'"
+                                      [class.fa-sort-up]="sortBy === 'asc'">
+                                    </i>
+                                  </th>
+                                  <th>Fields</th>
+                                  <!-- <th>Old Value</th>
+                                  <th>New value</th> -->
+                                  <th *ngIf="hasColumnHidden('Origin')" (click)="sort('activityOrigin', sortBy)">
+                                    Origin
+                                    <i *ngIf="orderBy !== 'activityOrigin'" class="fa fa-sort pointer"></i>
+                                    <i id="sortIcon" *ngIf="orderBy === 'activityOrigin'" class="fa pointer" [class.fa-sort-down]="sortBy === 'desc'"
+                                      [class.fa-sort-up]="sortBy === 'asc'">
+                                    </i>
+                                  </th>
+                                  <th *ngIf="hasColumnHidden('Status')" (click)="sort('activityStatus', sortBy)">
+                                    Status
+                                    <i *ngIf="orderBy !== 'activityStatus'" class="fa fa-sort pointer"></i>
+                                    <i id="sortIcon" *ngIf="orderBy === 'activityStatus'" class="fa pointer" [class.fa-sort-down]="sortBy === 'desc'"
+                                      [class.fa-sort-up]="sortBy === 'asc'">
+                                    </i>
+                                  </th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                                  <ng-container *ngFor="let activityLog of activityLogsData">
+                                      <tr class="agent-list-item">                               
+                                        <td>{{activityLog.employeeId}}</td>
+                                        <td *ngIf="hasColumnHidden('Timestamp')">{{activityLog.timeStamp | date}}</td>
+                                        <td *ngIf="hasColumnHidden('Executed By')">{{activityLog.executedBy}}</td>
+                                        <td>
+                                          <i class="expand-icon fa padding-5 pointer fa-plus"
+                                              [ngClass]="( activityLogDetails?.id === activityLog?.id ) ? 'fa-minus' : 'fa-plus'"
+                                              (click)="toggleDetails(activityLog.id)"></i>
+                                        </td>         
+                                        <td *ngIf="hasColumnHidden('Origin')">{{activityOrigin[activityLog.activityOrigin]}}</td>
+                                        <td *ngIf="hasColumnHidden('Status')">{{activityStatus[activityLog.activityStatus]}}</td>
+                                      </tr>
+                                    <tr class="row-details text-xs" *ngIf="activityLogDetails?.id === activityLog?.id"
+                                        [@enterAnimation]="activityLogDetails?.id === activityLog?.id">
+                                        <td [attr.colspan]="12">
+                                            <div class="px-3">
+                                                <table class="w-100 expanding-table mb-2">
+                                                    <thead>
+                                                        <tr>
+                                                            <th (click)="sortFieldData('name', sortBy)">Field
+                                                              <i *ngIf="orderBy !== 'name'" class="fa fa-sort pointer"></i>
+                                                              <i id="sortIcon" *ngIf="orderBy === 'name'" class="fa pointer" [class.fa-sort-down]="sortBy === 'desc'"
+                                                                [class.fa-sort-up]="sortBy === 'asc'">
+                                                              </i>
+                                                            </th>
+                                                            <th (click)="sortFieldData('oldValue', sortBy)">Old Value
+                                                              <i *ngIf="orderBy !== 'oldValue'" class="fa fa-sort pointer"></i>
+                                                              <i id="sortIcon" *ngIf="orderBy === 'oldValue'" class="fa pointer" [class.fa-sort-down]="sortBy === 'desc'"
+                                                                [class.fa-sort-up]="sortBy === 'asc'">
+                                                              </i>
+                                                            </th>
+                                                            <th (click)="sortFieldData('newValue', sortBy)">New Value
+                                                              <i *ngIf="orderBy !== 'newValue'" class="fa fa-sort pointer"></i>
+                                                              <i id="sortIcon" *ngIf="orderBy === 'newValue'" class="fa pointer" [class.fa-sort-down]="sortBy === 'desc'"
+                                                                [class.fa-sort-up]="sortBy === 'asc'">
+                                                              </i>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let details of activityLogDetails?.fieldDetails">
+                                                            <td>{{details.name}}</td>
+                                                            <td>{{details.oldValue ? details.oldValue  : 'None'}}
+                                                            </td>
+                                                            <td>{{details.newValue}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>     
+                                  </ng-container>                   
+                              </tbody>
+                          </table>
+                          </div>
+                          <div class="row p-2">
+                              <div class="col-md-12 d-flex justify-content-end mt-3">
+                                  <nav aria-label="Page navigation example">
+                                      <ul class="pagination p-0 float-">
+                                          <ngb-pagination class="p-r-5" [collectionSize]="totalRecord"
+                                              (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage"
+                                              [boundaryLinks]="true"></ngb-pagination>
+                                              &nbsp;
+                                          <select class="form-control" (change)="changePageSize($event.target.value)">
+                                              <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+                                                  {{x.text}}</option>
+                                          </select>
+                                      </ul>
+                                  </nav>
+                              </div>
+                          </div>
+                          <!-- /.card-body -->
+                      </ng-container>
+                      <ng-template #noData>
+                          <p class="text-center p-2 mt-2">No data to show</p>
+                      </ng-template>
+              </div>              
+          </div>
+        </div>
+      
   
       <div class="modal-footer d-flex justify-content-center header-color">
         <div class="col-md-12">
@@ -23,5 +188,4 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
+  

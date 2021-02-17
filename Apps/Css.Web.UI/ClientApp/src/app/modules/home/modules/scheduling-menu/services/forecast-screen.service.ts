@@ -39,9 +39,9 @@ export class ForecastScreenService extends HttpBaseService {
   }
 
   getForecastData(): Observable<any> {
-
-    return this.http.get("/assets/time-table.json");
+    return this.http.get('/assets/time-table.json');
   }
+
   getForecastDataById(skillGroupId: number, Date: string) {
     const url = `${this.baseURL}/forecastscreen/${skillGroupId}?date=${Date}`;
 

@@ -1,0 +1,17 @@
+{
+  "Jobs": {
+    "Cron": [
+      {
+        "Key": "UDWImport",
+        "CronExpression": "0 */4 * * *",
+        "Url": "http://cnx-css-api-gateway.css-uat:4201/api/activity",
+        "Method": "POST",
+        "Headers": {
+          "activity": "UDW-Import"
+        },
+        "Content": "",
+        "TimeZone": "UTC"
+      }
+    ]
+  }
+}

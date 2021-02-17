@@ -1,4 +1,6 @@
-﻿namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
+﻿using Css.Api.Scheduling.Models.Enums;
+
+namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
 {
     public class CreateAgentAdmin : AgentAdminAttribute
     {
@@ -6,5 +8,10 @@
         /// Gets or sets the created by.
         /// </summary>
         public string CreatedBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the activity origin.
+        /// </summary>
+        public ActivityOrigin ActivityOrigin { get; set; }
     }
 }

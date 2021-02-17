@@ -94,7 +94,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   onIconSelect(icon: KeyValue) {
     this.iconId = icon.value;
     this.schedulingCodeForm.controls.iconId.setValue(icon.id);
-    const item = $("[data-card-widget='collapse']");
+    const item = $('[data-card-widget=\'collapse\']');
     // Find the box parent........
     const box = item.parents('.card').first();
     // Find the body and the footer

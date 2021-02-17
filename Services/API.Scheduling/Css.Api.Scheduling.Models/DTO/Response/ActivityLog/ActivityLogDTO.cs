@@ -1,5 +1,6 @@
 ﻿using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.Enums;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +8,11 @@ namespace Css.Api.Scheduling.Models.DTO.Response.ActivityLog
 {
     public class ActivityLogDTO
     {
+        /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        public ObjectId Id { get; set; }
+
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
