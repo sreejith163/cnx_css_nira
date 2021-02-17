@@ -15,6 +15,11 @@ namespace Css.Api.Admin.Models.DTO.Request.SchedulingCode
         public int PriorityNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [time off code].
+        /// </summary>
+        public bool TimeOffCode { get; set; }
+
+        /// <summary>
         /// Gets or sets the scheduling type code.
         /// </summary>
         public List<SchedulingCodeTypes> SchedulingTypeCode { get; set; }

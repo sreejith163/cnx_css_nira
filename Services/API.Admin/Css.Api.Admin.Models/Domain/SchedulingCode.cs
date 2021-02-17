@@ -13,6 +13,7 @@ namespace Css.Api.Admin.Models.Domain
         public int Id { get; set; }
         public int? RefId { get; set; }
         public string Description { get; set; }
+        public bool TimeOffCode { get; set; }
         public int PriorityNumber { get; set; }
         public int IconId { get; set; }
         public string CreatedBy { get; set; }
