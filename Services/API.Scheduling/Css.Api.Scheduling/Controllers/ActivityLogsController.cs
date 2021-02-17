@@ -30,12 +30,12 @@ namespace Css.Api.Scheduling.Controllers
         }
 
         /// <summary>
-        /// Gets the time zones.
+        /// Gets the activity logs.
         /// </summary>
         /// <param name="activityLogQueryParameter">The activity log query parameter.</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetTimeZones([FromQuery] ActivityLogQueryParameter activityLogQueryParameter)
+        public async Task<IActionResult> GetActivityLogs([FromQuery] ActivityLogQueryParameter activityLogQueryParameter)
         {
             var result = await _activityLogService.GetActivityLogs(activityLogQueryParameter);
             return StatusCode((int)result.Code, result.Value);
