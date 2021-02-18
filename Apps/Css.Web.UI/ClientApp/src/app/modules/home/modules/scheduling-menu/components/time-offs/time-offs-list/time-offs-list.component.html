@@ -1,0 +1,31 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-md-12">
+      <h2 id="page_title">{{ 'Time Offs' | translate }}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-left">
+        <li class="breadcrumb-item"><a>{{ 'Scheduling Menu' | translate }}</a></li>
+        <li class="breadcrumb-item active"><b>{{ 'Time Offs List' | translate }}</b> </li>
+      </ol>
+    </div>
+  </div>
+  <div class="row m-l-r-10">
+    <div class="col-md-3 m-t-10">
+      <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
+        [maxLength]="maxLength" placeholder="{{ 'Enter keyword to search' | translate }}" />
+      <span *ngIf="searchKeyword?.length > 0" class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
+    </div>
+    <div class="col-md-2 col-sm-6">
+      <button class="form-control m-t-10" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
+        {{ 'Search' | translate }}
+      </button>
+    </div>
+    <div class="col-md-7 text-right">
+      <button type="button" class="btn btn-primary float-r m-t-10" (click)="addTimeOff()"><i class="fa fa-plus pr-1"
+          aria-hidden="true"></i>{{ 'Add' | translate }}</button>
+    </div>
+  </div>
+  </div>
