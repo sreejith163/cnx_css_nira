@@ -29,6 +29,11 @@ namespace Css.Api.Admin.Models.DTO.Response.SchedulingCode
         public int PriorityNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [time off code].
+        /// </summary>
+        public bool TimeOffCode { get; set; }
+
+        /// <summary>
         /// Gets or sets the icon.
         /// </summary>
         public KeyValue Icon { get; set; }
