@@ -122,7 +122,9 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private languagePreferenceService: LanguagePreferenceService,
     public translate: TranslateService,
-  ) { }
+  ) {
+    this.LoggedUser = this.authService.getLoggedUserInfo();
+  }
 
   ngOnInit(): void {
     this.openTimes = this.getOpenTimes();
