@@ -4181,6 +4181,48 @@ export class Constants {
     },
   ];
 
+  public static readonly TimeOffAgentAccess: KeyValue[] = [
+    {
+      id: 1,
+      value: 'Allow agents to view time off allotments'
+    },
+    {
+      id: 2,
+      value: 'Allow agents to see the wait list for any day'
+    },
+    {
+      id: 3,
+      value: 'Allow agents to see who has time off for any day'
+    },
+    {
+      id: 4,
+      value: 'Allow agents to add notes allotments'
+    },
+    {
+      id: 5,
+      value: 'Show past days as full if allowed time was all taken allotments'
+    },
+  ];
+
+  public static readonly TimeOffDeselectedTimeOption: KeyValue[] = [
+    {
+      id: 1,
+      value: 'Released'
+    },
+    {
+      id: 2,
+      value: 'Always Reserve'
+    },
+    {
+      id: 3,
+      value: 'Only reserve if wait list exists'
+    },
+    {
+      id: 4,
+      value: 'Allow agents to deselect saved days'
+    }
+  ];
+
   // tslint:disable-next-line:max-line-length
   // public static readonly EmailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{3,}))$/;
   public static readonly EmailRegex = /^(?=[^@]*[A-Za-z])([a-zA-Z0-9])(([a-zA-Z0-9])*([\._-])?([a-zA-Z0-9]))*@(([a-zA-Z0-9\-])+(\.))+([a-zA-Z]{2,4})+$/;
