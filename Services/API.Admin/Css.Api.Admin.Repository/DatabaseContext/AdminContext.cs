@@ -394,6 +394,10 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                     .HasColumnName("priority_number")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.TimeOffCode)
+                    .HasColumnName("time_off_code")
+                    .HasColumnType("tinyint(4)");
+
                 entity.Property(e => e.RefId)
                     .HasColumnName("ref_id")
                     .HasColumnType("int(11)");
