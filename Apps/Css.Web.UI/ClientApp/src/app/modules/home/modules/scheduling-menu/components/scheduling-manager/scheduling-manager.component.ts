@@ -658,7 +658,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
           const weekDays = x?.agentScheduleManagerCharts;
           const weekData = weekDays?.length > 0 ? weekDays[0] : undefined;
           if (weekData) {
-            this.insertIconToGrid(weekData, iconModel);
+            this.insertIconToGrid(weekData, iconModel, true);
           } else {
             const weekDay = new AgentScheduleManagerChart();
             weekDay.date = new Date(this.startDate);
@@ -742,7 +742,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
       if (this.icon && !this.isDelete) {
 
         if (weekData) {
-          this.insertIconToGrid(weekData, iconModel);
+          this.insertIconToGrid(weekData, iconModel, true);
         } else {
           const weekDay = new AgentScheduleManagerChart();
           weekDay.date = date;
@@ -751,7 +751,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
           weekDays.push(weekDay);
         }
         if (employeeWeekData) {
-          this.insertIconToGrid(employeeWeekData, iconModel);
+          this.insertIconToGrid(employeeWeekData, iconModel, false);
         } else {
           const weekDay = new AgentScheduleManagerChart();
           weekDay.date = date;
@@ -774,6 +774,10 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         }
       }
     });
+    this.sortSelectedGridCalendarTimes(this.managerCharts);
+    this.formatTimeValuesInSchedulingGrid(this.managerCharts);
+    this.sortSelectedGridCalendarTimes(this.employeeChartData);
+    this.formatTimeValuesInSchedulingGrid(this.employeeChartData);
     this.spinnerService.hide(this.spinner);
     this.isDelete = false;
     this.icon = undefined;
@@ -781,7 +785,36 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     table.find('.' + this.selectedCellClassName).removeClass(this.selectedCellClassName);
   }
 
-  private insertIconToGrid(weekData: AgentScheduleManagerChart, insertIcon: ScheduleChart) {
+  private formatTimeValuesInSchedulingGrid(chartArray: AgentChartResponse[]) {
+    for (const item of chartArray) {
+    const weekDays = item.agentScheduleManagerCharts;
+    weekDays.forEach((element) => {
+      element.charts = this.adjustSchedulingCalendarTimesRange(element.charts);
+    });
+  }
+  }
+
+  private sortSelectedGridCalendarTimes(chartArray: AgentChartResponse[]) {
+    for (const item of chartArray) {
+    const weekDays = item.agentScheduleManagerCharts;
+    weekDays.forEach((element) => {
+      if (element.charts.length > 0) {
+        element.charts.sort((a, b): number => {
+          if (this.convertToDateFormat(a.startTime) < this.convertToDateFormat(b.startTime)) {
+            return -1;
+          } else if (this.convertToDateFormat(a.startTime) > this.convertToDateFormat(b.startTime)) {
+            return 1;
+          }
+          else {
+            return 0;
+          }
+        });
+      }
+    });
+  }
+  }
+
+  private insertIconToGrid(weekData: AgentScheduleManagerChart, insertIcon: ScheduleChart, managerData: boolean) {
     if (weekData.charts.find(x => x.startTime === insertIcon.startTime && x.endTime === insertIcon.endTime)) {
       const item = weekData.charts.find(x => x.startTime === insertIcon.startTime && x.endTime === insertIcon.endTime);
       item.schedulingCodeId = insertIcon.schedulingCodeId;
@@ -793,8 +826,14 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
       timeDataArray.forEach(ele => {
         ele.schedulingCodeId = insertIcon.schedulingCodeId;
       });
-      this.sortSelectedGridCalendarTimes(weekData);
-      this.adjustSchedulingCalendarTimesRange(weekData?.charts);
+      if (managerData) {
+        this.sortSelectedGridCalendarTimes(this.managerCharts);
+        this.formatTimeValuesInSchedulingGrid(this.managerCharts);
+      } else {
+        this.sortSelectedGridCalendarTimes(this.employeeChartData);
+        this.formatTimeValuesInSchedulingGrid(this.employeeChartData);
+      }
+
     }
     if (!weekData.charts.find(x => x.startTime === insertIcon.startTime && x.endTime ===
       insertIcon.endTime && x.schedulingCodeId === insertIcon.schedulingCodeId)) {
@@ -882,21 +921,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     }
   }
 
-  private sortSelectedGridCalendarTimes(weekDays: AgentScheduleManagerChart) {
-    if (weekDays.charts.length > 0) {
-      weekDays.charts.sort((a, b): number => {
-        if (this.convertToDateFormat(a.startTime) < this.convertToDateFormat(b.startTime)) {
-          return -1;
-        } else if (this.convertToDateFormat(a.startTime) > this.convertToDateFormat(b.startTime)) {
-          return 1;
-        }
-        else {
-          return 0;
-        }
-      });
-    }
-  }
-
   private adjustSchedulingCalendarTimesRange(times: Array<ScheduleChart>) {
     const newTimesarray = new Array<ScheduleChart>();
     let calendarTimes = new ScheduleChart(null, null, null);
@@ -925,7 +949,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     const modelvalue = new ScheduleChart(calendarTimes.startTime, calendarTimes.endTime, calendarTimes.schedulingCodeId);
     newTimesarray.push(modelvalue);
 
-    times = newTimesarray;
+    return newTimesarray;
 
   }
 
