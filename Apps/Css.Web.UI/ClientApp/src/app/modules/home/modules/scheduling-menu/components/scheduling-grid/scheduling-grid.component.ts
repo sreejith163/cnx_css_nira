@@ -607,7 +607,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
     if (weekData.charts.length === 0) {
       const index = this.selectedGrid?.agentScheduleCharts.findIndex(x => x.day === weekData.day);
-      this.selectedGrid.agentScheduleCharts.splice(index, 1);
+      this.selectedGrid.agentScheduleCharts[index].charts = [];
     }
   }
 
@@ -795,6 +795,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           JSON.stringify(this.schedulingGridData.agentScheduleCharts[gridIndex].charts)) {
           const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
           updatedChart.agentScheduleCharts.splice(updateIndex, 1);
+        } else {
+          if (updatedChart.agentScheduleCharts[index].charts[0].schedulingCodeId === null) {
+            updatedChart.agentScheduleCharts[index].charts = [];
+          }
         }
       }
     });
@@ -804,13 +808,15 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   private formatEndTime(scheduleResponse: AgentScheduleGridResponse) {
     for (const weekData of scheduleResponse.agentScheduleCharts) {
-      const responseIndex = weekData?.charts.findIndex(x => x.endTime.trim().toLowerCase() === '00:00 am');
-      if (responseIndex > -1) {
-        weekData.charts[responseIndex].endTime = '11:60 pm';
-      } else {
-        const requestIndex = weekData?.charts.findIndex(x => x.endTime.trim().toLowerCase() === '11:60 pm');
-        if (requestIndex > -1) {
-          weekData.charts[requestIndex].endTime = '00:00 am';
+      if (weekData.charts.length > 0) {
+        const responseIndex = weekData?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '00:00 am');
+        if (responseIndex > -1) {
+          weekData.charts[responseIndex].endTime = '11:60 pm';
+        } else {
+          const requestIndex = weekData?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
+          if (requestIndex > -1) {
+            weekData.charts[requestIndex].endTime = '00:00 am';
+          }
         }
       }
     }
