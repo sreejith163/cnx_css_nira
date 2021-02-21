@@ -34,7 +34,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <select class="form-control" id="icon" formControlname="timeOffCode">
+              <select class="form-control" id="icon" formControlName="timeOffCode">
                 <option></option>
                 <option *ngFor="let fonts of timeOffCodes" class="fa" [value]="fonts.value" [innerHTML]="fonts.data">
                 </option>
@@ -53,8 +53,8 @@
             <div class="col-md-8">
               <div class="input-group">
                 <input class="form-control" name="dp" [readonly]="true"
-                  [ngClass]="{'valid-border-error': hasFormControlValidationError('startDate')}"
-                  formControlName="startDate" ngbDatepicker [footerTemplate]="footerTemplate"
+                  [ngClass]="{'valid-border-error': hasFormControlValidationError('startDate')}" [ngModelOptions]="{standalone: true}"
+                  [(ngModel)]="startDateValue" ngbDatepicker [footerTemplate]="footerTemplate" (dateSelect)="onStartDateChange($event)"
                   [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary calendar"
@@ -80,9 +80,9 @@
             </div>
             <div class="col-md-8">
               <div class="input-group">
-                <input class="form-control" name="dpp" [readonly]="true"
-                  [ngClass]="{'valid-border-error': hasFormControlValidationError('endDate')}" formControlName="endDate"
-                  ngbDatepicker [footerTemplate]="footerTemplate" [minDate]="{year: 1990, month: 1, day: 1}"
+                <input class="form-control" name="dpp" [readonly]="true" [ngModelOptions]="{standalone: true}"
+                  [ngClass]="{'valid-border-error': hasFormControlValidationError('endDate')}" (dateSelect)="onEndDateChange($event)"
+                  [(ngModel)]="endDateValue" ngbDatepicker [footerTemplate]="footerTemplate" [minDate]="{year: 1990, month: 1, day: 1}"
                   #e="ngbDatepicker">
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary calendar"
@@ -112,8 +112,8 @@
                 <ng-container *ngFor="let day of weekDays">
                   <div class="form-group clearfix margin-b-05-rem">
                     <div class="icheck-primary d-inline">
-                      <input type="checkbox" id="{{ 'check_box' + getWeekDay(day) }}" name="allowDayRequestOn"
-                        [value]="day" formControlName="allowDayRequestOn">
+                      <input type="checkbox" id="{{ 'check_box' + getWeekDay(day) }}" [value]="day"
+                        [checked]="hasDayRequestOnValueSelected(day)" (change)="onDayRequestOnCheckboxChange($event)">
                       <label class="mr-1" for="{{ 'check_box' + getWeekDay(day) }}">
                         {{ getWeekDay(day) | translate }}
                       </label>
@@ -134,10 +134,7 @@
             </div>
             <div class="col-md-8">
               <div class="input-group clockpicker">
-                <input type="text" class="form-control" value="00:00" formControlName="FTEDayLength">
-                <!-- <span class="input-group-addon">
-                  <span class="fa fa-times" (click)="set()"></span>
-                </span> -->
+                <ngb-timepicker [(ngModel)]="time" [ngModelOptions]="{standalone: true}" (change)="onDayLengthChange()"></ngb-timepicker>
               </div>
             </div>
           </div>
@@ -150,7 +147,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <select class="form-control" formControlname="firstDayOfWeek">
+              <select class="form-control" formControlName="firstDayOfWeek">
                 <option></option>
                 <option *ngFor="let day of weekDays" class="fa" [value]="day">{{ getWeekDay(day) | translate }}</option>
               </select>
@@ -162,14 +159,50 @@
           <p>{{ 'Agent Access' | translate }}
           </p>
         </h6>
-        <div class="form-group">
-          <ng-container *ngFor="let x of timeOffAgentAccess; let i=index;">
+        <div class="form-group" >
+          <ng-container formGroupName="agentAccess">
             <div class="form-group clearfix margin-b-05-rem">
               <div class="icheck-primary d-inline">
-                <input type="checkbox" id="{{ 'check_box' + i }}" name="agentAccess" [value]="x.id"
-                  formControlName="agentAccess">
-                <label class="mr-1" for="{{ 'check_box' + i }}">
-                  {{ x.value | translate }}
+                <input type="checkbox" id="{{ 'check_box_1' }}" name="agentAccess"
+                  formControlName="timeOffAllotments">
+                <label class="mr-1" for="{{ 'check_box_1' }}">
+                  {{ 'Allow agents to view time off allotments' | translate }}
+                </label>
+              </div>
+            </div>
+            <div class="form-group clearfix margin-b-05-rem">
+              <div class="icheck-primary d-inline">
+                <input type="checkbox" id="{{ 'check_box_2' }}" name="agentAccess"
+                  formControlName="waitList">
+                <label class="mr-1" for="{{ 'check_box_2' }}">
+                  {{ 'Allow agents to see the wait list for any day' | translate }}
+                </label>
+              </div>
+            </div>
+            <div class="form-group clearfix margin-b-05-rem">
+              <div class="icheck-primary d-inline">
+                <input type="checkbox" id="{{ 'check_box_3' }}" name="agentAccess"
+                  formControlName="timeOffAnyDay">
+                <label class="mr-1" for="{{ 'check_box_3' }}">
+                  {{ 'Allow agents to see who has time off for any day' | translate }}
+                </label>
+              </div>
+            </div>
+            <div class="form-group clearfix margin-b-05-rem">
+              <div class="icheck-primary d-inline">
+                <input type="checkbox" id="{{ 'check_box_4' }}" name="agentAccess"
+                  formControlName="addNoteAllotments">
+                <label class="mr-1" for="{{ 'check_box_4' }}">
+                  {{ 'Allow agents to add notes allotments' | translate }}
+                </label>
+              </div>
+            </div>
+            <div class="form-group clearfix margin-b-05-rem">
+              <div class="icheck-primary d-inline">
+                <input type="checkbox" id="{{ 'check_box_5' }}" name="agentAccess"
+                  formControlName="showPastDays">
+                <label class="mr-1" for="{{ 'check_box_5' }}">
+                  {{ 'Show past days as full if allowed time was all taken allotments' | translate }}
                 </label>
               </div>
             </div>
@@ -180,6 +213,7 @@
           <p>{{ 'Full Weeks' | translate }}
           </p>
         </h6>
+        <ng-container formGroupName="fullWeeks">
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
@@ -188,7 +222,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control" [maxLength]="50" />
+              <input type="number" class="form-control" formControlName="daysBeforeWeek" />
             </div>
           </div>
         </div>
@@ -200,7 +234,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control" [maxLength]="50" />
+              <input type="number" class="form-control" formControlName="daysAfterWeek"/>
             </div>
           </div>
         </div>
@@ -216,8 +250,8 @@
                 <ng-container *ngFor="let day of weekDays">
                   <div class="form-group clearfix margin-b-05-rem">
                     <div class="icheck-primary d-inline">
-                      <input type="checkbox" id="{{ 'request_check_box' + getWeekDay(day) }}" name="allowDayRequestOn"
-                        [value]="day" formControlName="allowDayRequestOn">
+                      <input type="checkbox" id="{{ 'request_check_box' + getWeekDay(day) }}" [value]="day"
+                       [checked]="hasFullWeeksListValueSelected(day)" (change)="onFullWeeksListCheckboxChange($event)">
                       <label class="mr-1" for="{{ 'request_check_box' + getWeekDay(day) }}">
                         {{ getWeekDay(day) | translate }}
                       </label>
@@ -228,32 +262,25 @@
             </div>
           </div>
         </div>
+      </ng-container>
         <hr>
         <h6 class="font-weight-bold">
           <p>{{ 'Deselected Time' | translate }}
           </p>
         </h6>
         <div class="form-group">
-          <ng-container *ngFor="let x of deselectedTimeOption; let i=index;">
-            <div *ngIf="i < 2" class="form-group clearfix margin-b-05-rem">
+          <ng-container formGroupName="deselectedTime" *ngFor="let x of deselectedTimeOption; let i=index;">
+            <div *ngIf="i < 3" class="form-group clearfix margin-b-05-rem">
               <div class="icheck-primary d-inline">
-                <input type="radio" id="{{ 'radio_box' + i }}" name="deselectedTime" [value]="x.id">
+                <input type="radio" id="{{ 'radio_box' + i }}" name="deselectTime" [value]="x.id" formControlName="deselectTime">
                 <label class="mr-1" for="{{ 'radio_box' + i }}">
-                  {{ x.value | translate }}
-                </label>
-              </div>
-            </div>
-            <div *ngIf="i == 2" class="form-group clearfix margin-b-05-rem">
-              <div class="icheck-primary d-inline">
-                <input type="radio" id="{{ 'radio_box_o' + i }}" name="deselectedTimeRadio" [value]="x.id">
-                <label class="mr-1" for="{{ 'radio_box_o' + i }}">
                   {{ x.value | translate }}
                 </label>
               </div>
             </div>
             <div *ngIf="i==3" class="form-group clearfix margin-b-05-rem">
               <div class="icheck-primary d-inline">
-                <input type="checkbox" id="{{ 'deselect_check_box' + i }}" name="deselectedTime" [value]="x.id">
+                <input type="checkbox" id="{{ 'deselect_check_box' + i }}" name="deselectedTime" [value]="x.id" formControlName="deselectSavedDays">
                 <label class="mr-1" for="{{ 'deselect_check_box' + i }}">
                   {{ x.value | translate }}
                 </label>

@@ -124,7 +124,7 @@
                 <td>{{el.description}}</td>
                 <td>{{getTimeOffCode(el.timeOffCode)}}</td>
                 <td>{{el.startDate | date: 'yyyy-MM-dd'}} - {{el.endDate | date: 'yyyy-MM-dd'}}</td>
-                <td>{{getDayRequestOn(el.allowDayRequestOn)}}</td>
+                <td>{{getDayRequestOn(el?.allowDayRequestOn)}}</td>
                 <td>{{el.FTEDayLength }}</td>
                 <td>{{weekDay[el.firstDayOfWeek]}}</td>
                 <td>{{el.agentAccess }}</td>

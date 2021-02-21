@@ -14,6 +14,7 @@ import { ComponentOperation } from 'src/app/shared/enums/component-operation.enu
 import { AddUpdateTimeOffsComponent } from '../add-update-time-offs/add-update-time-offs.component';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
+import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
 @Component({
   selector: 'app-time-offs-list',
@@ -38,6 +39,7 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
   timeOffs: TimeOffResponse[] = [];
   schedulingCodes: SchedulingCode[] = [];
 
+  deleteTimeOffSubscription: ISubscription;
   getTimeOffsSubscription: ISubscription;
   getSchedulingCodesSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
@@ -63,7 +65,7 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
   }
 
   getTimeOffCode(id: number) {
-    const item = this.schedulingCodes.find(x => x.id === id);
+    const item = this.schedulingCodes.find(x => x.id === +id);
     if (item) {
       const codePoints = item?.icon?.value.split('-').map(u => parseInt(`0x${u}`, 16));
       const icon = String.fromCodePoint(...codePoints);
@@ -138,6 +140,27 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
     this.modalRef.componentInstance.deleteRecordIndex = id;
     this.modalRef.componentInstance.headingMessage = 'Are you sure?';
     this.modalRef.componentInstance.contentMessage = 'You won’t be able to revert this!';
+
+    this.modalRef.result.then((result) => {
+      if (result && result === id) {
+
+        this.spinnerService.show(this.spinner, SpinnerOptions);
+        this.deleteTimeOffSubscription = this.timeOffsService.deleteTimeoff(id)
+          .subscribe(() => {
+            this.spinnerService.hide(this.spinner);
+            this.showSuccessPopUpMessage('The record has been deleted!');
+          }, (error) => {
+            this.spinnerService.hide(this.spinner);
+            if (error.status === 424) {
+              this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
+              this.modalRef.componentInstance.headingMessage = 'Error?';
+              this.modalRef.componentInstance.contentMessage = error.error;
+            }
+          });
+
+        this.subscriptions.push(this.deleteTimeOffSubscription);
+      }
+    });
   }
 
   private showSuccessPopUpMessage(contentMessage: string, needRefresh = true) {

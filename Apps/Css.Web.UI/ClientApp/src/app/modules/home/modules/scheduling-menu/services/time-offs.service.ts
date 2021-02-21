@@ -23,6 +23,18 @@ export class TimeOffsService {
       timeOff.firstDayOfWeek = i - 1;
       timeOff.timeOffCode = i;
       timeOff.FTEDayLength = '0' + i + ':' + '00';
+      timeOff.agentAccess = {
+        addNoteAllotments: true,
+        waitList: true,
+        timeOffAnyDay: true,
+        timeOffAllotments: true,
+        showPastDays: true
+      };
+      timeOff.fullWeeks = {
+        daysAfterWeek: 22,
+        daysBeforeWeek: 99,
+        fullWeekList: [1, 2, 3]
+      };
       this.timeOffs.push(timeOff);
     }
   }
@@ -32,6 +44,7 @@ export class TimeOffsService {
   }
 
   addTimeOff(data: TimeOffResponse) {
+    data.id = this.timeOffs.length + 1;
     this.timeOffs.push(data);
     return of(undefined);
   }

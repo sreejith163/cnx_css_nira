@@ -1,5 +1,7 @@
 import { WeekDay } from '@angular/common';
 import { KeyValue } from 'src/app/shared/models/key-value.model';
+import { AgentAccess } from './agent-access.model';
+import { DeselectedTime } from './deselected-time.model';
 import { FullWeeks } from './full-weeks.model';
 
 export class TimeOffsBase {
@@ -11,7 +13,7 @@ export class TimeOffsBase {
     allowDayRequestOn: number[];
     FTEDayLength: string;
     firstDayOfWeek: WeekDay;
-    agentAccess: KeyValue[];
+    agentAccess: AgentAccess;
     fullWeeks: FullWeeks;
-    deselectedTime: KeyValue[];
+    deselectedTime: DeselectedTime;
 }
