@@ -31,6 +31,9 @@ import { NumericDirective } from 'src/app/shared/directives/numeric.directive';
 import { ActivityLogsService } from './services/activity-logs.service';
 import { SchedulingManagerComponent } from './components/scheduling-manager/scheduling-manager.component';
 import { ActivityLogsComponent } from './components/agent-admin/activity-logs/activity-logs.component';
+import { TimeOffsListComponent } from './components/time-offs/time-offs-list/time-offs-list.component';
+import { TimeOffsService } from './services/time-offs.service';
+import { AddUpdateTimeOffsComponent } from './components/time-offs/add-update-time-offs/add-update-time-offs.component';
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
 const components =
   [AgentAdminListComponent,
@@ -49,9 +52,11 @@ const components =
     FilterComponent,
     ViewOuScreenComponent,
     NumericDirective,
-    ActivityLogsComponent
+    ActivityLogsComponent,
+    TimeOffsListComponent,
+    AddUpdateTimeOffsComponent
   ];
-const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService];
+const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService, TimeOffsService];
 
 @NgModule({
   declarations: components,
