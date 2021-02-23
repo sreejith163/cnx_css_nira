@@ -111,6 +111,7 @@ namespace Css.Api.Admin.Business
                    schedulingCodeRequest.Id,
                    Name = schedulingCodeRequest.Description,
                    schedulingCodeRequest.PriorityNumber,
+                   schedulingCodeRequest.TimeOffCode,
                    schedulingCodeRequest.IconId,
                    SchedulingTypeCode = JsonConvert.SerializeObject(schedulingCodeDetails.SchedulingTypeCode),
                    schedulingCodeRequest.ModifiedDate
@@ -145,13 +146,13 @@ namespace Css.Api.Admin.Business
             SchedulingCode schedulingCodeDetailsPreUpdate = null;
             if (!schedulingCodeDetails.IsUpdateRevert)
             {
-                List<SchedulingTypeCode> schedulingTypeCodePreUpdated =
-                    new List<SchedulingTypeCode>(schedulingCode.SchedulingTypeCode);
+                List<SchedulingTypeCode> schedulingTypeCodePreUpdated = new List<SchedulingTypeCode>(schedulingCode.SchedulingTypeCode);
                 schedulingCodeDetailsPreUpdate = new SchedulingCode
                 {
                     RefId = schedulingCode.RefId,
                     Description = schedulingCode.Description,
                     PriorityNumber = schedulingCode.PriorityNumber,
+                    TimeOffCode = schedulingCode.TimeOffCode,
                     IconId = schedulingCode.IconId,
                     SchedulingTypeCode = schedulingTypeCodePreUpdated,
                     ModifiedBy = schedulingCode.ModifiedBy,
@@ -185,9 +186,9 @@ namespace Css.Api.Admin.Business
                         schedulingCodeRequest.Id,
                         NameOldValue = schedulingCodeDetailsPreUpdate.Description,
                         PriorityNumberOldValue = schedulingCodeDetailsPreUpdate.PriorityNumber,
+                        TimeOffCodeOldValue = schedulingCodeDetailsPreUpdate.TimeOffCode,
                         IconIdOldValue = schedulingCodeDetailsPreUpdate.IconId,
-                        SchedulingTypeCodeOldValue =
-                            JsonConvert.SerializeObject(schedulingCodePreRequest.SchedulingTypeCode),
+                        SchedulingTypeCodeOldValue = JsonConvert.SerializeObject(schedulingCodePreRequest.SchedulingTypeCode),
                         ModifiedByOldValue = schedulingCodeDetailsPreUpdate.ModifiedBy,
                         ModifiedDateOldValue = schedulingCodeDetailsPreUpdate.ModifiedDate,
                         IsDeletedOldValue = schedulingCodeDetailsPreUpdate.IsDeleted,
@@ -249,6 +250,7 @@ namespace Css.Api.Admin.Business
             {
                 Description = schedulingCode.Description,
                 PriorityNumber = schedulingCode.PriorityNumber,
+                TimeOffCode = schedulingCode.TimeOffCode,
                 IconId = schedulingCode.IconId,
                 SchedulingTypeCode = schedulingCode.SchedulingTypeCode,
                 ModifiedBy = schedulingCode.ModifiedBy,
@@ -264,7 +266,6 @@ namespace Css.Api.Admin.Business
             UpdateSchedulingCode schedulingCodePreUpdate = null;
             var schedulingCodePreRequest = _mapper.Map(schedulingCodeDetailsPreUpdate, schedulingCodePreUpdate);
 
-
             await _bus.SendCommand<DeleteSchedulingCodeCommand>(
                MassTransitConstants.SchedulingCodeDeleteCommandRouteKey,
                new
@@ -272,6 +273,7 @@ namespace Css.Api.Admin.Business
                    schedulingCode.Id,
                    Name = schedulingCodeDetailsPreUpdate.Description,
                    schedulingCodeDetailsPreUpdate.PriorityNumber,
+                   schedulingCodeDetailsPreUpdate.TimeOffCode,
                    schedulingCodeDetailsPreUpdate.IconId,
                    SchedulingTypeCode = JsonConvert.SerializeObject(schedulingCodePreRequest.SchedulingTypeCode),
                    ModifiedByOldValue = schedulingCodeDetailsPreUpdate.ModifiedBy,

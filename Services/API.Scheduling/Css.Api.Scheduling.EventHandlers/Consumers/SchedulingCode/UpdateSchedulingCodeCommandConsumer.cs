@@ -82,15 +82,15 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
         {
             await _busUtility.PublishEvent<ISchedulingCodeUpdateFailed>(MassTransitConstants.SchedulingCodeUpdateFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                NameOldValue = context.Message.NameOldValue,
-                PriorityNumberOldValue = context.Message.PriorityNumberOldValue,
-                TimeOffCodeOldValue = context.Message.TimeOffCodeOldValue,
-                IconIdOldValue = context.Message.IconIdOldValue,
-                SchedulingTypeCodeOldValue = context.Message.SchedulingTypeCodeOldValue,
-                ModifiedByOldValue = context.Message.ModifiedByOldValue,
-                ModifiedDateOldValue = context.Message.ModifiedDateOldValue,
-                IsDeletedOldValue = context.Message.IsDeletedOldValue
+                context.Message.Id,
+                context.Message.NameOldValue,
+                context.Message.PriorityNumberOldValue,
+                context.Message.TimeOffCodeOldValue,
+                context.Message.IconIdOldValue,
+                context.Message.SchedulingTypeCodeOldValue,
+                context.Message.ModifiedByOldValue,
+                context.Message.ModifiedDateOldValue,
+                context.Message.IsDeletedOldValue
             });
         }
     }

@@ -531,7 +531,7 @@
      //********* Forecast Screen Routes *********************
      {
       "DownstreamPathTemplate": "/api/v1/ForecastScreen",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.14",
@@ -544,7 +544,7 @@
 
     {
       "DownstreamPathTemplate": "/api/v1/ForecastScreen",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.14",
@@ -556,7 +556,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.14",
@@ -568,7 +568,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "10.87.221.14",
@@ -585,7 +585,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.34",
+          "Host": "10.87.221.13",
           "Port": 4206
         }
       ],

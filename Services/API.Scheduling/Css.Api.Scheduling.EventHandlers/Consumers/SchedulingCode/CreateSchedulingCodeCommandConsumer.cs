@@ -54,7 +54,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
                 }
 
                 _schedulingCodeGroupRepository.CreateSchedulingCode(
-                        new Css.Api.Core.Models.Domain.NoSQL.SchedulingCode
+                        new NoSQL.SchedulingCode
                         {
                             SchedulingCodeId = context.Message.Id,
                             Name = context.Message.Name,
@@ -67,7 +67,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
 
                 await _busUtility.PublishEvent<ISchedulingCodeCreateSuccess>(MassTransitConstants.SchedulingCodeCreateSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)
@@ -82,13 +82,13 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
         {
             await _busUtility.PublishEvent<ISchedulingCodeCreateFailed>(MassTransitConstants.SchedulingCodeCreateFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                Name = context.Message.Name,
-                PriorityNumber = context.Message.PriorityNumber,
-                TimeOffCode = context.Message.TimeOffCode,
-                IconId = context.Message.IconId,
-                SchedulingTypeCode = context.Message.SchedulingTypeCode,
-                ModifiedDate = context.Message.ModifiedDate
+                context.Message.Id,
+                context.Message.Name,
+                context.Message.PriorityNumber,
+                context.Message.TimeOffCode,
+                context.Message.IconId,
+                context.Message.SchedulingTypeCode,
+                context.Message.ModifiedDate
             });
         }
     }

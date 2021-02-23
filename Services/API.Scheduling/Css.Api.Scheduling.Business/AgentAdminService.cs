@@ -255,6 +255,11 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse($"Agent Admin with SSO '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
+            if (agentAdminDetails.Sso == agentAdminDetails.SupervisorSso)
+            {
+                return new CSSResponse($"Please enter a unique email address for SSO and Team Lead SSO.", HttpStatusCode.Conflict);
+            }
+
             var agentSchedulingGroupBasedonSkillTag = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBasedonSkillTag(skillTagIdDetails);
 
             if (agentSchedulingGroupBasedonSkillTag == null)
@@ -267,6 +272,10 @@ namespace Css.Api.Scheduling.Business
             agentAdminRequest.AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId;
 
             _agentAdminRepository.CreateAgentAdmin(agentAdminRequest);
+
+            var agentScheduleRequest = _mapper.Map<AgentSchedule>(agentAdminRequest);
+            _agentScheduleRepository.CreateAgentSchedule(agentScheduleRequest);
+
 
             // get the preUpdated details and compare it with the updated details to check changes
             var fieldDetails = addActivityLogFields(null, agentAdminRequest, "");
@@ -341,6 +350,11 @@ namespace Css.Api.Scheduling.Business
                 !string.Equals(agentAdminsBasedonSSO.Id.ToString(), agentAdminIdDetails.AgentAdminId))
             {
                 return new CSSResponse($"Agent Admin with SSO '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
+            }
+
+            if (agentAdminDetails.Sso == agentAdminDetails.SupervisorSso)
+            {
+                return new CSSResponse($"Please enter a unique email address for SSO and Team Lead SSO.", HttpStatusCode.Conflict);
             }
 
             var agentSchedulingGroupBasedonSkillTag = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBasedonSkillTag(skillTagIdDetails);
