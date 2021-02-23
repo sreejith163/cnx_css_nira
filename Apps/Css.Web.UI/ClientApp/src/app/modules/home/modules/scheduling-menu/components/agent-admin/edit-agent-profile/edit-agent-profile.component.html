@@ -54,7 +54,7 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" (keypress)="isNumberKey($event)" onpaste="return false;"
+                  <input [maxLength]="8" type="text" class="form-control" (keypress)="isNumberKey($event)" onpaste="return false;"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('employeeId')}"
                     formControlName="employeeId" placeholder="{{ 'Employee_id' | translate }}" />
                   <div *ngIf="hasFormControlValidationError('employeeId')" class="valid-error">
@@ -71,7 +71,7 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control"
+                  <input [maxLength]="40" type="text" class="form-control"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('sso')}" formControlName="sso"
                     placeholder="SSO" />
                   <ng-container *ngIf="formSubmitted && form.sso.invalid">
@@ -165,7 +165,7 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control"
+                  <input [maxLength]="50" type="text" class="form-control"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('firstName')}"
                     formControlName="firstName" placeholder="{{ 'First_name' | translate }}" />
                   <div *ngIf="hasFormControlValidationError('firstName')" class="valid-error">
@@ -181,7 +181,7 @@
                     <span class="required">*</span></label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control"
+                  <input [maxLength]="50" type="text" class="form-control"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('lastName')}" formControlName="lastName"
                     placeholder="{{ 'Last_name' | translate }}" />
                   <div *ngIf="hasFormControlValidationError('lastName')" class="valid-error">
@@ -230,7 +230,7 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control"
+                  <input [maxLength]="50" type="text" class="form-control"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorName')}"
                     formControlName="supervisorName" placeholder="{{ 'Team Lead Name' | translate }}" />
                   <div *ngIf="hasFormControlValidationError('supervisorName')" class="valid-error">
@@ -247,20 +247,26 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control"
+                  <input [maxLength]="40" type="text" class="form-control"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorSso')}"
                     formControlName="supervisorSso" placeholder="SSO" />
                   <ng-container *ngIf="formSubmitted && form.supervisorSso.invalid">
-                    <ng-container *ngIf="hasFormControlValidationError('supervisorSso'); else invalidTeamLeadSso">
-                      <div *ngIf="hasFormControlValidationError('supervisorSso')" class="valid-error">
+                    <ng-container *ngIf="hasFormControlValidationError('supervisorSso');">
+                      <div *ngIf="form.supervisorSso.errors.required" class="valid-error">
                         {{ 'Team Lead SSO is required' | translate }}
                       </div>
                     </ng-container>
-                    <ng-template #invalidTeamLeadSso>
+                    <ng-container *ngIf="form.supervisorSso.errors.sameSSO">
+                      <div class="valid-error">
+                        {{ 'Employee SSO and Team Lead SSO should not be the same' | translate }}
+                      </div>
+                    </ng-container>
+                    
+                    <ng-container *ngIf="!form.supervisorSso.errors.required && form.supervisorSso.errors.invalid">
                       <div class="valid-error">
                         {{ 'Team Lead SSO is invalid' | translate }}
                       </div>
-                    </ng-template>
+                    </ng-container>
                   </ng-container>
                 </div>
               </div>
@@ -273,12 +279,19 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" (keypress)="isNumberKey($event)" onpaste="return false;"
+                  <input [maxLength]="8" type="text" class="form-control" (keypress)="isNumberKey($event)" onpaste="return false;"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorId')}"
                     formControlName="supervisorId" placeholder="{{ 'Team Lead EID' | translate }}" />
-                  <div *ngIf="hasFormControlValidationError('supervisorId')" class="valid-error">
-                    {{ 'Team Lead EID is required' | translate }}
-                  </div>
+                  <ng-container *ngIf="formSubmitted && form.supervisorId.invalid">
+                    <div *ngIf="form.supervisorId.errors.required" class="valid-error">
+                      {{ 'Team Lead EID is required' | translate }}
+                    </div>
+                    <ng-container *ngIf="form.supervisorId.errors.sameEmployeeId">
+                      <div class="valid-error">
+                        {{ 'Employee ID and Team Lead ID should not be the same' | translate }}
+                      </div>
+                    </ng-container>
+                  </ng-container>
                 </div>
               </div>
             </div>

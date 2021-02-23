@@ -1,7 +1,36 @@
-import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Constants } from './constants.util';
 
 export class CustomValidators {
+
+    static sameSSO(firstControl, secondControl) {
+        return (group: FormGroup): { [key: string]: boolean } | null => {
+            const employeeSSO = group.controls[firstControl].value;
+            const supervisorSSO = group.controls[secondControl].value;
+            if(employeeSSO !== '' || supervisorSSO !== ''){
+                if (employeeSSO == supervisorSSO) {
+                    group.controls[secondControl].setErrors({sameSSO: true});
+                    return { sameSSO: true };
+                }
+            }
+            return null;
+        };
+    }
+
+    static sameEmployeeId(firstControl, secondControl) {
+        return (group: FormGroup): { [key: string]: boolean } | null => {
+            const employeeId = group.controls[firstControl].value;
+            const supervisorId = group.controls[secondControl].value;
+            if(employeeId !== '' || supervisorId !== ''){
+                if (employeeId == supervisorId) {
+                    group.controls[secondControl].setErrors({sameEmployeeId: true});
+                    return { sameEmployeeId: true };
+                }
+            }
+            return null;
+        };
+    }
+
 
     static isValidEmail(control: AbstractControl): ValidationErrors | null {
         const value = control.value;

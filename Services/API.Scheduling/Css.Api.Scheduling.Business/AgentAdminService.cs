@@ -255,6 +255,11 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse($"Agent Admin with SSO '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
+            if (agentAdminDetails.Sso == agentAdminDetails.SupervisorSso)
+            {
+                return new CSSResponse($"Please enter a unique email address for SSO and Team Lead SSO.", HttpStatusCode.Conflict);
+            }
+
             var agentSchedulingGroupBasedonSkillTag = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBasedonSkillTag(skillTagIdDetails);
 
             if (agentSchedulingGroupBasedonSkillTag == null)
@@ -345,6 +350,11 @@ namespace Css.Api.Scheduling.Business
                 !string.Equals(agentAdminsBasedonSSO.Id.ToString(), agentAdminIdDetails.AgentAdminId))
             {
                 return new CSSResponse($"Agent Admin with SSO '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
+            }
+
+            if (agentAdminDetails.Sso == agentAdminDetails.SupervisorSso)
+            {
+                return new CSSResponse($"Please enter a unique email address for SSO and Team Lead SSO.", HttpStatusCode.Conflict);
             }
 
             var agentSchedulingGroupBasedonSkillTag = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBasedonSkillTag(skillTagIdDetails);
