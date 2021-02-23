@@ -795,9 +795,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           JSON.stringify(this.schedulingGridData.agentScheduleCharts[gridIndex].charts)) {
           const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
           updatedChart.agentScheduleCharts.splice(updateIndex, 1);
-        } else {
-          if (updatedChart.agentScheduleCharts[index].charts[0].schedulingCodeId === null) {
-            updatedChart.agentScheduleCharts[index].charts = [];
+        } else if (this.selectedGrid.agentScheduleCharts[index].charts[0].schedulingCodeId === null) {
+          if (this.schedulingGridData.agentScheduleCharts[gridIndex]?.charts[0]?.schedulingCodeId &&
+            !this.selectedGrid.agentScheduleCharts[index]?.charts[0]?.schedulingCodeId) {
+              const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
+              updatedChart.agentScheduleCharts[updateIndex].charts = [];
+          } else {
+            const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
+            updatedChart.agentScheduleCharts.splice(updateIndex, 1);
           }
         }
       }
