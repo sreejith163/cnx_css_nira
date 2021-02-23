@@ -111,6 +111,7 @@ namespace Css.Api.Admin.Business
                    schedulingCodeRequest.Id,
                    Name = schedulingCodeRequest.Description,
                    schedulingCodeRequest.PriorityNumber,
+                   schedulingCodeRequest.TimeOffCode,
                    schedulingCodeRequest.IconId,
                    SchedulingTypeCode = JsonConvert.SerializeObject(schedulingCodeDetails.SchedulingTypeCode),
                    schedulingCodeRequest.ModifiedDate
@@ -152,6 +153,7 @@ namespace Css.Api.Admin.Business
                     RefId = schedulingCode.RefId,
                     Description = schedulingCode.Description,
                     PriorityNumber = schedulingCode.PriorityNumber,
+                    TimeOffCode = schedulingCode.TimeOffCode,
                     IconId = schedulingCode.IconId,
                     SchedulingTypeCode = schedulingTypeCodePreUpdated,
                     ModifiedBy = schedulingCode.ModifiedBy,
