@@ -54,7 +54,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
                 }
 
                 _schedulingCodeGroupRepository.CreateSchedulingCode(
-                        new Css.Api.Core.Models.Domain.NoSQL.SchedulingCode
+                        new NoSQL.SchedulingCode
                         {
                             SchedulingCodeId = context.Message.Id,
                             Name = context.Message.Name,
