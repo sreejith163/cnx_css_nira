@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { EmployeeDetails } from '../../modules/system-admin/models/employee-details.model';
+import { EmployeeRole } from '../../modules/system-admin/models/employee-role.model';
 import { PermissionsService } from '../../modules/system-admin/services/permissions.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { PermissionsService } from '../../modules/system-admin/services/permissi
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  employee: EmployeeDetails;
+  employeeRole: EmployeeRole;
 
   constructor(private authService: AuthService, private permissionsService: PermissionsService) { }
 
@@ -18,10 +18,11 @@ export class DashboardComponent implements OnInit {
   }
 
   checkPermissions() {
-    const employeeId = this.authService.getLoggedUserInfo().employeeId;
     // check user's role for permissions on the current route
-    this.permissionsService.getEmployee(+employeeId).subscribe((employee: EmployeeDetails) => {
-      this.employee = employee;
+    let roleId = this.permissionsService.userRoleId;
+
+    this.permissionsService.getRoleName(+roleId).subscribe((userRole: EmployeeRole) => {
+      this.employeeRole = userRole;
     });
   }
 

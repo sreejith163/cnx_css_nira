@@ -12,7 +12,7 @@
             <div class="info user-info">
                 <a class="d-block">{{ loggedUser?.displayName }}</a>
 
-                <a class="d-block">{{ employee?.roleName | translate }}</a>
+                <a class="d-block">{{ role?.name | translate }}</a>
             </div>
         </div>
         <nav class="mt-2 treeview-menu">
@@ -23,7 +23,7 @@
                             <span>{{ 'Dashboard' | translate }} </span>
                     </a>
                 </li>
-                <li class="nav-item has-treeview" [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)">
+                <li class="nav-item has-treeview" [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)">
                     <a class="nav-link d-flex flex-row"
                         [ngClass]="{'active': sysAdmin1.isActive || sysAdmin2.isActive || sysAdmin3.isActive}">
                         <i class="nav-icon fa fa-th"></i>
@@ -31,14 +31,14 @@
                             <i class="fa fa-angle-right right"></i>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item" [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)">
+                        <li class="nav-item" [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)">
                             <a class="nav-link d-flex flex-row" routerLink="system-admin/scheduling-codes" routerLinkActive="active"
                                 #sysAdmin1="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
                                 <span>{{ 'Scheduling_codes' | translate }}</span>
                             </a>
                         </li>
-                        <li [hidden]="permissionService.isMenuHidden([1,2],employee?.userRoleId)"  class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2],role?.roleId)"  class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="system-admin/permissions" routerLinkActive="active"
                                 #sysAdmin2="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
@@ -54,7 +54,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item has-treeview" [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)">
+                <li class="nav-item has-treeview" [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)">
                     <a class="nav-link d-flex flex-row"
                         [ngClass]="{'active': setUpMenu1.isActive || setUpMenu2.isActive || setUpMenu3.isActive || setUpMenu4.isActive || setUpMenu5.isActive }">
                         <i class="nav-icon fa fa-cog"></i>
@@ -90,7 +90,7 @@
                             <span>{{ 'Skill_tags' | translate }}</span>
                             </a>
                         </li>
-                        <li [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)" class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="setup-menu/agent-scheduling-group" routerLinkActive="active"
                                 #setUpMenu5="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
@@ -99,7 +99,7 @@
                         </li>
                     </ul>
                 </li>
-                <li [hidden]="permissionService.isMenuHidden([1,2,3,4],employee?.userRoleId)" class="nav-item has-treeview">
+                <li [hidden]="permissionService.isMenuHidden([1,2,3,4],role?.roleId)" class="nav-item has-treeview">
                     <a class="nav-link d-flex flex-row" [ngClass]="{'active': schMenu1.isActive || schMenu2.isActive || 
                     schMenu3.isActive || schMenu4.isActive || schMenu5.isActive || schMenu6.isActive }">
                         <i class="nav-icon fa fa-calendar"></i>
@@ -109,56 +109,49 @@
                         
                     </a>
                     <ul class="nav nav-treeview">
-                        <li [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)" class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/agent-admin" routerLinkActive="active"
                                 #schMenu1="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
                             <span>{{ 'Agent_admin' | translate }}</span>
                             </a>
                         </li>
-                        <li [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)" class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/move-agents" routerLinkActive="active"
                                 #schMenu1="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
                             <span>{{ 'Move Agents' | translate }}</span>
                             </a>
                         </li>
-                        <li [hidden]="permissionService.isMenuHidden([1,2,3,4],employee?.userRoleId)" class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3,4],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-grid" routerLinkActive="active"
                                 #schMenu2="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
                             <span>{{ 'Scheduling_grid' | translate }}</span>
                             </a>
                         </li>
-                        <li [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)" class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-manager"
                                 routerLinkActive="active" #schMenu3="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
                             <span>{{ 'Scheduling_manager' | translate }}</span> <!-- NO TRANSLATION -->
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/time-offs"
-                                routerLinkActive="active" #schMenu3="routerLinkActive">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                            <span>{{ 'Time Offs' | translate }}</span> <!-- NO TRANSLATION -->
-                            </a>
-                        </li>
-                        <li [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)" class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/forecast-screen" routerLinkActive="active"
                                 #schMenu4="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
                             <span>{{ 'Forecast_screen' | translate }}</span>
                             </a>
                         </li>
-                        <li [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)" class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/view-ou-screen"
                                 routerLinkActive="active" #schMenu5="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
                             <span>{{ 'View_ou_screen' | translate }}</span>
                             </a>
                         </li>
-                        <li [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)" class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/entity-hierarchy" routerLinkActive="active"
                                 #schMenu6="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
@@ -167,7 +160,7 @@
                         </li>
                     </ul>
                 </li>
-                <li [hidden]="permissionService.isMenuHidden([5],employee?.userRoleId)" class="nav-item">
+                <li [hidden]="permissionService.isMenuHidden([5],role?.roleId)" class="nav-item">
                     <a class="nav-link d-flex flex-row" routerLink="agent-schedule-menu/my-schedule" routerLinkActive="active">
                         <i class="nav-icon fa fa-calendar"></i>
                             <span>{{ 'My Schedule' | translate }} </span>

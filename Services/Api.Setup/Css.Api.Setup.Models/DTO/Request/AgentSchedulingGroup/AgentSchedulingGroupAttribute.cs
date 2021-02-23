@@ -21,6 +21,8 @@ namespace Css.Api.Setup.Models.DTO.Request.AgentSchedulingGroup
         /// <value>The first day of week.</value>
         public int FirstDayOfWeek { get; set; }
 
+
+        public bool EstartProvision { get; set; }
         /// <summary>
         /// Gets or sets the operation hour.
         /// </summary>

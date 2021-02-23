@@ -84,6 +84,8 @@ namespace Css.Api.Setup.Models.DTO.Response.AgentSchedulingGroup
         /// </summary>
         public DateTimeOffset CreatedDate { get; set; }
 
+        public bool EstartProvision { get; set; }
+
         /// <summary>
         /// Gets or sets the modified by.
         /// </summary>

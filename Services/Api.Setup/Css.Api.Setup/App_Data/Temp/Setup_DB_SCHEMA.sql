@@ -37,6 +37,7 @@ CREATE TABLE `agent_scheduling_group` (
   `modified_by` varchar(50) DEFAULT NULL,
   `modified_date` timestamp NULL DEFAULT NULL,
   `is_deleted` tinyint(4) NOT NULL DEFAULT '0',
+ `estart_provision` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_agent_scheduling_group_client_id_idx` (`client_id`),
   KEY `FK_agent_scheduling_group_client_lob_group_id_idx` (`client_lob_group_id`),

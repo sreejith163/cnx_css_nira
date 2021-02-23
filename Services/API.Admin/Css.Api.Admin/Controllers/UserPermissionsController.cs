@@ -77,19 +77,6 @@ namespace Css.Api.Admin.Controllers
         }
 
         /// <summary>
-        /// Updates the agent.
-        /// </summary>
-        /// <param name="employeeId">The agent identifier.</param>
-        /// <param name="languagePreferenceDetails">The language details.</param>
-        /// <returns></returns>
-        [HttpPut("{employeeId}/language")]
-        public async Task<IActionResult> UpdateAgentLanguagePreference(string employeeId, [FromBody] UserLanguagePreference languagePreferenceDetails)
-        {
-            var result = await _agentService.UpdateUserLanguagePreference(new UserPermissionEmployeeIdDetails { EmployeeId = employeeId }, languagePreferenceDetails);
-            return StatusCode((int)result.Code, result.Value);
-        }
-
-        /// <summary>
         /// Deletes the agent.
         /// </summary>
         /// <param name="employeeId">The agent identifier.</param>

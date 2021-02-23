@@ -30,7 +30,6 @@ export class AppConfig {
 
             switch(location.hostname) { 
                 case "localhost": { 
-                    console.log(location.hostname)
                     request = this.http.get<Config>('assets/config.test.json');
                     break; 
                 } 

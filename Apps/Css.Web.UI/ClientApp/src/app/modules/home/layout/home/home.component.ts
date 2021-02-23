@@ -11,6 +11,7 @@ import { LanguagePreference } from 'src/app/shared/models/language-preference.mo
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PermissionsService } from '../../modules/system-admin/services/permissions.service';
 import { EmployeeDetails } from '../../modules/system-admin/models/employee-details.model';
+import { EmployeeRole } from '../../modules/system-admin/models/employee-role.model';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +20,8 @@ import { EmployeeDetails } from '../../modules/system-admin/models/employee-deta
 })
 export class HomeComponent implements OnInit {
   employeeDetails: EmployeeDetails;
+  employeeRole: EmployeeRole;
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -39,11 +42,10 @@ export class HomeComponent implements OnInit {
 
 
   checkPermissions() {
-    const employeeId = this.authService.getLoggedUserInfo().employeeId;
-
     // check user's role for permissions on the current route
-    this.permissionsService.getEmployee(+employeeId).subscribe((employee: EmployeeDetails) => {
-      this.employeeDetails = employee;
+    let roleId = this.permissionsService.userRoleId;
+    this.permissionsService.getRoleName(+roleId).subscribe((userRole: EmployeeRole) => {
+      this.employeeRole = userRole;
     });
   }
 }

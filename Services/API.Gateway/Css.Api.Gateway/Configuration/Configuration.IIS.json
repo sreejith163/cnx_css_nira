@@ -167,7 +167,7 @@
 
     //********* Language Preference Route *********************
     {
-      "DownstreamPathTemplate": "/api/v1/userpermissions/{agentEmployeeId}/language",
+      "DownstreamPathTemplate": "/api/v1/UserLanguage/{employeeId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -175,8 +175,8 @@
           "Port": 44318
         }
       ],
-      "UpstreamPathTemplate": "/api/user/{agentEmployeeId}/language/",
-      "UpstreamHttpMethod": [ "Put" ]
+      "UpstreamPathTemplate": "/api/UserLanguage/{employeeId}",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
     },
 
     //********* Role Routes *********************

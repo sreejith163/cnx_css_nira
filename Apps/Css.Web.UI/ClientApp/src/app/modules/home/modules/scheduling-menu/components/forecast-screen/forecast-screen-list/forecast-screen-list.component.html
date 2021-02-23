@@ -140,7 +140,7 @@
                                                 </td>
                                                 <td>
                                                     <span class="d-none">{{dataJson[i].scheduledOpen}}</span>
-                                                    <input [class.enabled]="!isEnabled[i + 1]" (click)="isEnabled[i + 1] = !isEnabled[i + 1];"   [readonly]="isEnabled[i + 1]" numberOnly (change)="showBtn()"
+                                                    <input [readonly]="true" [class.enabled]="!isEnabled[i + 1]" (click)="isEnabled[i + 1] = !isEnabled[i + 1];"  numberOnly (change)="showBtn()"
                                                         formControlName="scheduledOpen" type="text"
                                                         class="">
                                                 </td>

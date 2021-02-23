@@ -59,7 +59,9 @@ label:not(.form-check-label):not(.custom-file-label) {
     }
   }
 }
-
+.grid {
+  display: grid;
+}
 .seperator {
   border-top: 1px dashed #dadada;
   margin-top: 10px;

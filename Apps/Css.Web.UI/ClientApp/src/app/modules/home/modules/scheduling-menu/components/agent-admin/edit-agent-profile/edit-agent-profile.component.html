@@ -28,11 +28,11 @@
           <li class="nav-item">
             <a class="nav-link active" id="general-tab" data-toggle="pill" href="#general" role="tab"
               aria-controls="general" aria-selected="true" >General</a>
-          </li>
+          </li><!--
           <li class="nav-item">
             <a class="nav-link" id="pto-tab" data-toggle="pill" href="#pto" role="tab"
               aria-controls="pto" aria-selected="false" >PTO</a>
-          </li>
+          </li>-->
         </ul>
       </div>
     </div>
@@ -54,12 +54,17 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input [maxLength]="8" type="text" class="form-control" (keypress)="isNumberKey($event)" onpaste="return false;"
+                  <input type="number" class="form-control" (keypress)="isNumberKey($event)"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('employeeId')}"
                     formControlName="employeeId" placeholder="{{ 'Employee_id' | translate }}" />
-                  <div *ngIf="hasFormControlValidationError('employeeId')" class="valid-error">
+                  <div *ngIf="agentSchForm.employeeId?.errors?.required" class="valid-error">
                     {{ 'Employee ID is required' | translate }}
                   </div>
+                  <ng-container *ngIf="agentSchForm.employeeId?.errors?.max">
+                    <div class="valid-error">
+                      {{ 'Employee ID max length is 10 digits only.' | translate }}
+                    </div>
+                  </ng-container>
                 </div>
               </div>
             </div>
@@ -279,7 +284,7 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input [maxLength]="8" type="text" class="form-control" (keypress)="isNumberKey($event)" onpaste="return false;"
+                  <input [maxLength]="10" type="number" class="form-control" (keypress)="isNumberKey($event)"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorId')}"
                     formControlName="supervisorId" placeholder="{{ 'Team Lead EID' | translate }}" />
                   <ng-container *ngIf="formSubmitted && form.supervisorId.invalid">
@@ -289,6 +294,11 @@
                     <ng-container *ngIf="form.supervisorId.errors.sameEmployeeId">
                       <div class="valid-error">
                         {{ 'Employee ID and Team Lead ID should not be the same' | translate }}
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="agentSchForm.supervisorId?.errors?.max">
+                      <div class="valid-error">
+                        {{ 'Supervisor ID max length is 10 digits only.' | translate }}
                       </div>
                     </ng-container>
                   </ng-container>

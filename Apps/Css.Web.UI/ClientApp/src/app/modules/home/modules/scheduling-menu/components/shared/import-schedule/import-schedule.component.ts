@@ -72,6 +72,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   import() {
     this.fileSubmitted = true;
     if (this.uploadFile && this.jsonData.length > 0) {
+      console.log(this.jsonData)
       this.jsonData.map(ele => {
         if (ele.StartTime.split(':')[0].length === 1) {
           ele.StartTime = '0' + ele.StartTime.split(':')[0] + ':' + ele.StartTime.split(':')[1];

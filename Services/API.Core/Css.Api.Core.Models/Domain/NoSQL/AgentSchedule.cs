@@ -28,12 +28,14 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the date from.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset? DateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the date to.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset? DateTo { get; set; }
 
@@ -45,16 +47,19 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the charts.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
 
         /// <summary>
         /// Gets or sets the agent schedule manager.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<AgentScheduleManagerChart> AgentScheduleManagerCharts { get; set; }
 
         /// <summary>
@@ -71,11 +76,13 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the modified by.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ModifiedBy { get; set; }
 
         /// <summary>
         /// Gets or sets the modified date.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset? ModifiedDate { get; set; }
 
@@ -84,9 +91,6 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// </summary>
         public bool IsDeleted { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AgentSchedule"/> class.
-        /// </summary>
         public AgentSchedule()
         {
             AgentScheduleCharts = new List<AgentScheduleChart>();

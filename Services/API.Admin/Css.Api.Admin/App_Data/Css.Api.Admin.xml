@@ -339,6 +339,35 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Css.Api.Admin.Controllers.UserLanguageController">
+            <summary>Controller for handling Agent resource</summary>
+        </member>
+        <member name="F:Css.Api.Admin.Controllers.UserLanguageController._userLanguageService">
+            <summary>
+            The language service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.UserLanguageController.#ctor(Css.Api.Admin.Business.Interfaces.IUserLanguageService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.UserLanguageController"/> class.
+            </summary>
+            <param name="userLanguageService">The user language service.</param>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.UserLanguageController.GetUserLanguagePreference(System.String)">
+            <summary>
+            Gets the User Language Preference.
+            </summary>
+            <param name="employeeId">The employeeId identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.UserLanguageController.UpdateUserLanguagePreference(System.String,Css.Api.Admin.Models.DTO.Request.UserLanguage.UpdateUserLanguagePreferenceDTO)">
+            <summary>
+            Updates or Creates the User Language Preference.
+            </summary>
+            <param name="employeeId">The employee identifier.</param>
+            <param name="userLanguagePreference">The userLanguagePreference identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Admin.Controllers.UserPermissionsController">
             <summary>Controller for handling Agent resource</summary>
         </member>
@@ -380,14 +409,6 @@
             </summary>
             <param name="employeeId">The agent identifier.</param>
             <param name="agentDetails">The agent details.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Admin.Controllers.UserPermissionsController.UpdateAgentLanguagePreference(System.String,Css.Api.Admin.Models.DTO.Request.UserPermission.UserLanguagePreference)">
-            <summary>
-            Updates the agent.
-            </summary>
-            <param name="employeeId">The agent identifier.</param>
-            <param name="languagePreferenceDetails">The language details.</param>
             <returns></returns>
         </member>
         <member name="M:Css.Api.Admin.Controllers.UserPermissionsController.DeleteAgent(System.String)">

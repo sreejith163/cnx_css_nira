@@ -70,6 +70,10 @@ namespace Css.Api.Admin.Repository
         /// </value>
         private IUserPermissionRepository _userPermissionRepository { get; set; }
 
+        /// <summary>
+        /// Gets or sets the user language repository.
+        /// </summary>
+        private IUserLanguageRepository _userLanguageRepository { get; set; }
 
         /// <summary>
         /// Gets or sets the role repository.
@@ -78,6 +82,18 @@ namespace Css.Api.Admin.Repository
         /// The role repository.
         /// </value>
         private IRoleRepository _roleRepository { get; set; }
+
+        public IUserLanguageRepository UserLanguage
+        {
+            get
+            {
+                if (_userLanguageRepository == null)
+                {
+                    _userLanguageRepository = new UserLanguageRepository(_repositoryContext, _mapper);
+                }
+                return _userLanguageRepository;
+            }
+        }
 
         public IUserPermissionRepository UserPermissions
         {

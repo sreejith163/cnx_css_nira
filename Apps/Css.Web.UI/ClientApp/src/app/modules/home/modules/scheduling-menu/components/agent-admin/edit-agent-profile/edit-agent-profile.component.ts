@@ -81,6 +81,8 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     private spinnerService: NgxSpinnerService,
   ) { }
 
+    get agentSchForm() { return this.agentProfileForm.controls; }
+
   ngOnInit(): void {
     this.agentFormIntialization();
 
@@ -282,12 +284,12 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
 
   private agentFormIntialization() {
     this.agentProfileForm = this.formBuilder.group({
-      employeeId: new FormControl('', Validators.required),
+      employeeId: new FormControl('', Validators.compose([Validators.required, Validators.max(9999999999)])),
       sso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
       firstName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
       lastName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
       hireDate: new FormControl('', Validators.required),
-      supervisorId: new FormControl('', Validators.required),
+      supervisorId: new FormControl('', Validators.compose([Validators.required, Validators.max(9999999999)])),
       supervisorName: new FormControl('', Validators.required),
       supervisorSso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
       pto: this.formBuilder.group ({

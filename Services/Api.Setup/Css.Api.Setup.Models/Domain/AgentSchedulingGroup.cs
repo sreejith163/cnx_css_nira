@@ -25,6 +25,7 @@ namespace Css.Api.Setup.Models.Domain
         public DateTimeOffset? ModifiedDate { get; set; }
         public bool IsDeleted { get; set; }
 
+        public bool EstartProvision { get; set; }
         public virtual Client Client { get; set; }
         public virtual ClientLobGroup ClientLobGroup { get; set; }
         public virtual SkillGroup SkillGroup { get; set; }
