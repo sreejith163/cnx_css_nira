@@ -528,6 +528,58 @@
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
     },
+
+    //********* Forecast Screen Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+
     //********* Activity Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/activity",

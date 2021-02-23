@@ -84,6 +84,10 @@ namespace Css.Api.Core.EventBus.Commands.AgentSchedulingGroup
         /// <value>The skill tag identifier new value.</value>
         public int SkillTagIdNewValue { get; set; }
 
+        /// <summary>Gets or sets the timezone identifier new value.</summary>
+        /// <value>The timezone identifier new value.</value>
+        public int TimezoneIdNewValue { get; set; }
+
         /// <summary>Gets or sets a value indicating whether this instance is deleted new value.</summary>
         /// <value>
         ///   <c>true</c> if this instance is deleted new value; otherwise, <c>false</c>.</value>

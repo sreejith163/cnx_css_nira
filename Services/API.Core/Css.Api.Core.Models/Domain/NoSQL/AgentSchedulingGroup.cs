@@ -31,6 +31,11 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        public int TimezoneId { get; set; }
+
+        /// <summary>
         /// Gets or sets the name.
         /// </summary>
         public string Name { get; set; }

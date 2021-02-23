@@ -203,21 +203,27 @@ namespace Css.Api.Reporting.Business.Targets
             var schedulingGroups = await _agentSchedulingGroupRepository.GetAgentSchedulingGroups();
             var refIds = schedulingGroups.Select(x => x.RefId).ToList();
 
-            var newAgents = (from ag in source.NewAgents
-                             join up in dest on ag.SSN equals up.Ssn
-                             where (ag.SenDate != null && up.SenDate == null)
-                             || (ag.MU == null)
-                             || (ag.SenExt != null && up.SenExt == null)
-                             select ag).ToList();
+            var newAgents = source.NewAgents.Where(x => x.SSN == 0)
+                            .Union(
+                                (from ag in source.NewAgents.Where(x => x.SSN != 0)
+                                 join up in dest on ag.SSN equals up.Ssn
+                                 where (ag.SenDate != null && up.SenDate == null)
+                                 || (ag.MU == null)
+                                 || (ag.SenExt != null && up.SenExt == null)
+                                 select ag)
+                             ).ToList();
             
             var invalidSchedulingGroupNewAgents = source.NewAgents.Where(x => !refIds.Contains(x.MU)).ToList();
             newAgents = newAgents.Union(invalidSchedulingGroupNewAgents).ToList();
 
-            var changeAgents = (from ag in source.ChangedAgents
-                                join up in dest on ag.SSN equals up.Ssn
-                                where (ag.SenDate != null && up.SenDate == null)
-                                || (ag.SenExt != null && up.SenExt == null)
-                                select ag).ToList();
+            var changeAgents = source.ChangedAgents.Where(x => x.SSN == 0)
+                               .Union(
+                                    (from ag in source.ChangedAgents.Where(x => x.SSN != 0)
+                                    join up in dest on ag.SSN equals up.Ssn
+                                    where (ag.SenDate != null && up.SenDate == null)
+                                    || (ag.SenExt != null && up.SenExt == null)
+                                    select ag)
+                               ).ToList();
             
             var invalidSchedulingGroupChangeAgents = source.ChangedAgents.Where(x => x.MU.HasValue && !refIds.Contains(x.MU)).ToList();
             changeAgents = changeAgents.Union(invalidSchedulingGroupChangeAgents).ToList();
