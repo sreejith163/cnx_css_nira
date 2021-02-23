@@ -278,6 +278,8 @@ namespace Css.Api.Admin.Repository
 
         public IUserPermissionRepository UserPermissions => throw new System.NotImplementedException();
 
+        public IUserLanguageRepository UserLanguage => throw new System.NotImplementedException();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryWrapper" /> class.
         /// </summary>
