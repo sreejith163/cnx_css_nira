@@ -295,7 +295,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
 
     this.skillGroupBinder = skillGroup;
-
+    this.loadSkillGroup();
 
   }
 
@@ -338,7 +338,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       this.spinnerService.hide(this.forecastSpinner);
       if (error.status === 404) {
         this.getForecastDefaultValue();
-        this.showErrorWarningPopUpMessage('No Forecast Found!');
+      
         this.InsertUpdate = true;
 
 
@@ -504,7 +504,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       this.forecastService.addForecast(insertObject).subscribe(res => {
         this.showSuccessPopUpMessage('The record has been added!');
         this.enableSaveButton = false;
-
+this.loadSkillGroup();
       },
         error => {
 

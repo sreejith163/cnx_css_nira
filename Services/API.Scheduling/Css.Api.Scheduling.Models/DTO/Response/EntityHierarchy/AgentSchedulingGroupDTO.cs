@@ -21,19 +21,41 @@ namespace Css.Api.Scheduling.Models.DTO.Response.EntityHierarchy
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ClientName { get; set; }
 
+        /// <summary>Gets or sets the identifier.</summary>
+        /// <value>The identifier.</value>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int ClientId { get; set; }
+
         /// <summary>Gets or sets the name of the client lob.</summary>
         /// <value>The name of the client lob.</value>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ClientLOBName { get; set; }
+
+        /// <summary>Gets or sets the identifier.</summary>
+        /// <value>The identifier.</value>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int ClientLOBId { get; set; }
 
         /// <summary>Gets or sets the name of the skill group.</summary>
         /// <value>The name of the skill group.</value>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string SkillGroupName { get; set; }
 
+        /// <summary>Gets or sets the identifier.</summary>
+        /// <value>The identifier.</value>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int SkillGroupId { get; set; }
+
         /// <summary>Gets or sets the name of the skill tag.</summary>
         /// <value>The name of the skill tag.</value>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string SkillTagName { get; set; }
+
+        /// <summary>Gets or sets the identifier.</summary>
+        /// <value>The identifier.</value>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int SkillTagId { get; set; }
+
+
     }
 }

@@ -8,6 +8,11 @@ namespace Css.Api.Admin.Repository.Interfaces
     public interface IRepositoryWrapper
     {
         /// <summary>
+        /// Gets the user language.
+        /// </summary>
+        IUserLanguageRepository UserLanguage { get; }
+
+        /// <summary>
         /// Gets the user permissions.
         /// </summary>
         IUserPermissionRepository UserPermissions { get; }

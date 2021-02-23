@@ -77,7 +77,8 @@ namespace Css.Api.Admin.Business
             var userPermission = await _repository.UserPermissions.GetUserPermission(userPermissionEmployeeIdDetails);
             if (userPermission == null)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                userPermission = new UserPermission { EmployeeId = userPermissionEmployeeIdDetails.EmployeeId, Firstname = "NA", Lastname = "NA", UserRoleId = -1, Sso = "NA" };
+                //return new CSSResponse(HttpStatusCode.NotFound);
             }
 
             var mappedPermission = _mapper.Map<UserPermissionDTO>(userPermission);
@@ -142,63 +143,12 @@ namespace Css.Api.Admin.Business
                 }
             }
 
-            var userPermissionDetailsPreUpdate = new UserPermission
-            {
-                Sso = userPermission.Sso,
-                UserRoleId = userPermission.UserRoleId,
-                LanguagePreference = userPermission.LanguagePreference,
-                EmployeeId = userPermission.EmployeeId,
-                Firstname = userPermission.Firstname,
-                Lastname = userPermission.Lastname,
-                IsDeleted = userPermission.IsDeleted,
-                ModifiedDate = userPermission.ModifiedDate,
-                ModifiedBy = userPermission.ModifiedBy
-            };
 
             var userPermissionRequest = _mapper.Map(userPermissionDetails, userPermission);
 
             _repository.UserPermissions.UpdateUserPermission(userPermissionRequest);
 
             await _repository.SaveAsync();
-
-            return new CSSResponse(HttpStatusCode.NoContent);
-        }
-
-
-        /// <summary>
-        /// Updates the userPermission.
-        /// </summary>
-        /// <param name="userPermissionEmployeeIdDetails">The userPermission identifier details.</param>
-        /// <param name="userPermissionDetails">The userPermission details.</param>
-        /// <returns></returns>
-        public async Task<CSSResponse> UpdateUserLanguagePreference(UserPermissionEmployeeIdDetails userPermissionEmployeeIdDetails, UserLanguagePreference userPermissionLanguagePreference)
-        {
-            UserPermission userPermission = await _repository.UserPermissions.GetUserPermission(userPermissionEmployeeIdDetails);
-
-            if (userPermission == null)
-            {
-                return new CSSResponse(HttpStatusCode.NotFound);
-            }
-
-
-            var updateLanguagePreferencePreRequest = new UserPermission
-            {
-                Sso = userPermission.Sso,
-                UserRoleId = userPermission.UserRoleId,
-                LanguagePreference = userPermission.LanguagePreference,
-                EmployeeId = userPermission.EmployeeId,
-                Firstname = userPermission.Firstname,
-                Lastname = userPermission.Lastname,
-                IsDeleted = userPermission.IsDeleted,
-                ModifiedDate = userPermission.ModifiedDate
-            };
-
-            var userPermissionRequest = _mapper.Map(userPermissionLanguagePreference, userPermission);
-
-            _repository.UserPermissions.UpdateUserPermission(userPermissionRequest);
-
-            await _repository.SaveAsync();
-
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }
@@ -244,18 +194,6 @@ namespace Css.Api.Admin.Business
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
-
-            var userPermissionDetailsPreUpdate = new UserPermission
-            {
-                Sso = userPermission.Sso,
-                EmployeeId = userPermission.EmployeeId,
-                LanguagePreference = userPermission.LanguagePreference,
-                Firstname = userPermission.Firstname,
-                Lastname = userPermission.Lastname,
-                IsDeleted = userPermission.IsDeleted,
-                ModifiedDate = userPermission.ModifiedDate
-
-            };
 
             userPermission.IsDeleted = true;
 

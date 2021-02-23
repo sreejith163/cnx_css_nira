@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { LoggedUserInfo } from 'src/app/core/models/logged-user-info.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { EmployeeDetails } from '../../../modules/system-admin/models/employee-details.model';
+import { EmployeeRole } from '../../../modules/system-admin/models/employee-role.model';
 import { PermissionsService } from '../../../modules/system-admin/services/permissions.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { PermissionsService } from '../../../modules/system-admin/services/permi
 })
 export class SidebarMenuComponent implements OnInit {
   loggedUser: LoggedUserInfo;
-  @Input() employee: EmployeeDetails;
+  @Input() role: EmployeeRole;
   constructor(public permissionService: PermissionsService, private authService: AuthService) { 
     this.loggedUser = this.authService.getLoggedUserInfo();
   }

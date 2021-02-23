@@ -165,6 +165,11 @@ namespace Css.Api.Scheduling.Business
                                         agentSchedulingGroupDTO.ClientLOBName = clientLobGroup.Name;
                                         agentSchedulingGroupDTO.SkillGroupName = skillGroup.Name;
                                         agentSchedulingGroupDTO.SkillTagName = skillTag.Name;
+                                        agentSchedulingGroupDTO.ClientId = clientDetails.ClientId;
+                                        agentSchedulingGroupDTO.ClientLOBId = clientLobGroup.ClientLobGroupId;
+                                        agentSchedulingGroupDTO.SkillGroupId = skillGroup.SkillGroupId;
+                                        agentSchedulingGroupDTO.SkillTagId = skillTag.SkillTagId;
+
 
                                         entityHierarchyDTO.AgentSchedulingGroups.Add(agentSchedulingGroupDTO);
                                     }

@@ -37,16 +37,16 @@
                                     <ng-container *ngIf="entityHierarchy">
                                         <ul class="tree">
                                             <li>
-                                                <span [ngStyle]="{'color': 'black'}">{{entityHierarchy.client.name}}</span>
+                                                <span [ngStyle]="{'color': 'black'}">{{entityHierarchy.client.id}} - (Client) {{entityHierarchy.client.name}}</span>
                                                 <ul>
                                                     <li *ngFor="let clientLOB of entityClientLOBs">
-                                                        {{clientLOB.name}}
+                                                        {{clientLOB.id}} - (LOB) {{clientLOB.name}}
                                                         <ul>
                                                             <li *ngFor="let skillGroup of clientLOB.skillGroups;">
-                                                                {{skillGroup.name}}
+                                                                {{skillGroup.id}} - (Skill Group) {{skillGroup.name}}
                                                                 <ul>
                                                                     <li *ngFor="let skillTags of skillGroup.skillTags">
-                                                                        {{skillTags.name}}
+                                                                        {{skillTags.id}} - (Tags) {{skillTags.name}}
                                                                     </li>
                                                                 </ul>
                                                             </li>
@@ -55,22 +55,6 @@
                                                 </ul>
                                             </li>
                                         </ul>
-                                        
-                                        <!-- <ng-container *ngFor="let clientLOB of entityClientLOBs">
-                                            {{clientLOB.id}}
-                                            <br>
-                                            {{clientLOB.name}}
-                                            <label>Skill Groups</label>
-                                            <ng-container *ngFor="let skillGroup of clientLOB.skillGroups;">
-                                                <br>
-                                                - {{skillGroup.name}}
-                                                <ng-container *ngFor="let skillTags of skillGroup.skillTags">
-                                                    <br/>
-                                                    - {{skillTags.name}}
-                                                </ng-container>                                                
-                                            </ng-container>                                            
-                                        </ng-container>    -->
-                                                                            
                                     </ng-container>
                                 </div>
                             </div>
@@ -98,18 +82,21 @@
                                     <ng-container *ngIf="entityAgentSchedulingGroups">
                                         <ul class="tree" *ngFor="let entityAgentSchedulingGroup of entityAgentSchedulingGroups">
                                             <li>
-                                                <span [ngStyle]="{'color': 'black'}">{{entityAgentSchedulingGroup.name}}</span>
+                                                <span [ngStyle]="{'color': 'black'}">{{entityAgentSchedulingGroup.id}} - (Agent Scheduling Group) {{entityAgentSchedulingGroup.name}}</span>
                                                 <ul>
-                                                    <li>
+                                                    <li>{{entityAgentSchedulingGroup.clientId}} - (Client)
                                                         {{entityAgentSchedulingGroup.clientName}}
                                                     </li>
                                                     <li>
+                                                        {{entityAgentSchedulingGroup.clientLOBId}} - (LOB)
                                                         {{entityAgentSchedulingGroup.clientLOBName}}
                                                     </li>
                                                     <li>
+                                                        {{entityAgentSchedulingGroup.skillGroupId}} - (Skill Group)
                                                         {{entityAgentSchedulingGroup.skillGroupName}}
                                                     </li>
                                                     <li>
+                                                        {{entityAgentSchedulingGroup.skillTagId}} - (Tag)
                                                         {{entityAgentSchedulingGroup.skillTagName}}
                                                     </li>
                                                 </ul>

@@ -21,8 +21,6 @@ namespace Css.Api.Admin.Models.DTO.Response.UserPermission
         public string Sso { get; set; }
         public string EmployeeId { get; set; }
 
-        public string LanguagePreference { get; set; }
-
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset? ModifiedDate { get; set; }
 

@@ -30,13 +30,13 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
   spinner = 'agentSchedulingGroup';
   maxLength = Constants.DefaultTextMaxLength;
   openTypes = Constants.OperationHourTypes;
-
+  theCheckbox = false;
   formSubmitted: boolean;
   clientId: number;
   clientLobGroupId: number;
   skillGroupId: number;
   skillTagId: number;
-
+  estartProvisions: boolean;
   weekDays: Array<WeekDay>;
   openTime: Array<any>;
   agentSchedulingGroupForm: FormGroup;
@@ -48,6 +48,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
   getTimeZonesSubscription: ISubscription;
   timeZoneList: TimeZone[] = [];
   subscriptions: ISubscription[] = [];
+  marked = false;
 
   @Input() operation: ComponentOperation;
   @Input() agentSchedulingGroupId: number;
@@ -63,7 +64,11 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
     private spinnerService: NgxSpinnerService,
     public activeModal: NgbActiveModal
   ) { }
-
+  public onChangeProvision(event){
+    this.estartProvisions = event.checked;
+    console.log(event);
+    
+}
   ngOnInit(): void {
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key])).map(x => +x);
     this.openTime = this.genericDataService.openTimes();
@@ -335,7 +340,8 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
       this.clientId !== this.agentSchedulingGroup.clientId ||
       this.clientLobGroupId !== this.agentSchedulingGroup.clientLobGroupId || this.skillGroupId !== this.agentSchedulingGroup.skillGroupId
       || this.skillTagId !== this.agentSchedulingGroup.skillTagId
-      || this.agentSchedulingGroupForm.controls.firstDayOfWeek.value !== this.agentSchedulingGroup.firstDayOfWeek ||
+      || this.agentSchedulingGroupForm.controls.firstDayOfWeek.value !== this.agentSchedulingGroup.firstDayOfWeek || 
+      this.estartProvisions !==  this.agentSchedulingGroup.estartProvision ||
       this.agentSchedulingGroupForm.controls.timezoneId.value !== this.agentSchedulingGroup.timezoneId) {
       return true;
     } else {
@@ -355,11 +361,14 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
 
   private populateFormDetails() {
     this.agentSchedulingGroupForm.controls.name.setValue(this.agentSchedulingGroup.name);
+    this.agentSchedulingGroupForm.controls.es
     this.agentSchedulingGroupForm.controls.refId.setValue(this.agentSchedulingGroup.refId);
     this.clientId = this.agentSchedulingGroup.clientId;
     this.clientLobGroupId = this.agentSchedulingGroup.clientLobGroupId;
     this.skillGroupId = this.agentSchedulingGroup.skillGroupId;
     this.skillTagId = this.agentSchedulingGroup.skillTagId;
+    this.estartProvisions = this.agentSchedulingGroup.estartProvision;
+
     this.agentSchedulingGroupForm.controls.firstDayOfWeek.setValue(this.agentSchedulingGroup.firstDayOfWeek);
     this.agentSchedulingGroupForm.controls.timezoneId.setValue(this.agentSchedulingGroup.timezoneId);
     this.sortOperatingHoursArray(this.agentSchedulingGroup.firstDayOfWeek);
@@ -395,8 +404,10 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
     this.getAgentSchedulingGroupSubscription = this.agentSchedulingGroupService.getAgentSchedulingGroup(this.agentSchedulingGroupId)
       .subscribe((response) => {
         this.agentSchedulingGroup = response;
+       
         this.populateFormDetails();
         this.spinnerService.hide(this.spinner);
+   
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         if (error.status === 409) {
@@ -415,6 +426,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
       refId: new FormControl(''),
       firstDayOfWeek: new FormControl('', Validators.required),
       timezoneId: new FormControl('', Validators.required),
+      estartProvision: new FormControl(),
       operationHour: this.createOperationHoursArray()
     });
   }

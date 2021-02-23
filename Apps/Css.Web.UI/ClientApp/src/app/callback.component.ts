@@ -30,13 +30,27 @@ export class CallbackComponent implements OnInit {
             // check user's permissions
             this.permissionsService.getEmployee(+employeeId).subscribe((employee: EmployeeDetails) =>
             {
-              this.permissionsService.storePermission(employee.userRoleId);
-              // redirect to home if permission exists
-              this.router.navigate(['home']);
+              if(+employee.userRoleId > 0){
+                this.permissionsService.storePermission(employee.userRoleId);
+                // redirect to home if permission exists
+                this.router.navigate(['home']);
+              }else{
+                //check if the user exists on agent admin
+                this.permissionsService.getAgentInfo(+employeeId).subscribe(resp => {
+                  // permission is default as agent
+                  this.permissionsService.storePermission(5);
+                  // redirect to home if permission exists
+                  this.router.navigate(['home']);
+                }, error => {
+                  this.router.navigate(['login']);
+                })
+              }
             }, error => {
-              // redirect to login if permission doesn't exists and delete stored cookies
-              this.router.navigate(['login']);
-              this.cookieService.deleteAll(environment.settings.cookiePath);
+              var userRoleId = 5;
+              // default to agent
+              this.permissionsService.storePermission(userRoleId);
+              this.router.navigate(['home']);
+              console.log(this.permissionsService.userRoleId)
             });
       }else{
         this.router.navigate(['login']);

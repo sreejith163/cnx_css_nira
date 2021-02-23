@@ -21,7 +21,7 @@
         "Key": "CSSMongo",
         "Type": "MongoDB",
         "Options": {
-          "ConnectionString": "mongodb://cssuser:cssuser_UAT@10.195.136.20:30000,10.195.136.21:30000,10.164.82.20:30000/admin?replicaSet=cphconfigReplSet",
+          "ConnectionString": "mongodb://cssuat:cssuat@10.195.136.20:40000,10.195.136.21:40000,10.164.82.20:40000/admin?replicaSet=css&w=majority",
           "DatabaseName": "css_uat"
         }
       },

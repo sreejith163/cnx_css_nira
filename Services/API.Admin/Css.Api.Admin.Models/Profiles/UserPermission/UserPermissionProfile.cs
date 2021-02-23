@@ -30,9 +30,7 @@ namespace Css.Api.Admin.Models.Profiles.Agent
                 .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(o => o.ModifiedDate.HasValue ? o.ModifiedDate : DateTime.UtcNow))
                 .ReverseMap();
 
-            CreateMap<Domain.UserPermission, UserLanguagePreference>()
-                .ReverseMap();
-             
+
             CreateMap<Domain.UserPermission, UserPermissionDTO>()
                 .ForMember(x => x.UserRoleId, opt => opt.MapFrom(o => o.Role.RoleId))
                 .ForMember(x => x.RoleIndex, opt => opt.MapFrom(o => o.Role.Id))

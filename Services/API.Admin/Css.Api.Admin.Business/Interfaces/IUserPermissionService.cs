@@ -35,14 +35,6 @@ namespace Css.Api.Admin.Business.Interfaces
         /// <returns></returns>
         Task<CSSResponse> UpdateUserPermission(UserPermissionEmployeeIdDetails userPermissionEmployeeIdDetails, UpdateUserPermissionDTO userPermissionDetails);
 
-        /// <summary>
-        /// Updates the userPermission's Language Preference.
-        /// </summary>
-        /// <param name="userPermissionEmployeeIdDetails">The userPermission identifier details.</param>
-        /// <param name="userPermissionLanguagePreference">The language details.</param>
-        /// <returns></returns>
-        Task<CSSResponse> UpdateUserLanguagePreference(UserPermissionEmployeeIdDetails userPermissionEmployeeIdDetails, UserLanguagePreference userPermissionLanguagePreference);
-
         /// <summary>Reverts the userPermission.</summary>
         /// <param name="userPermissionEmployeeIdDetails">The userPermission identifier details.</param>
         /// <param name="userPermissionDetails">The userPermission details.</param>

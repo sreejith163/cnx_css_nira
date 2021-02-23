@@ -94,6 +94,10 @@ namespace Css.Api.Setup.Repository.DatabaseContext
                     .HasColumnName("is_deleted")
                     .HasColumnType("tinyint(4)");
 
+                entity.Property(e => e.EstartProvision)
+           .HasColumnName("estart_provision")
+           .HasColumnType("tinyint(4)");
+
                 entity.Property(e => e.ModifiedBy)
                     .HasColumnName("modified_by")
                     .HasMaxLength(50)

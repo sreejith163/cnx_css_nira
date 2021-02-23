@@ -7,11 +7,13 @@ import { HttpBaseService } from 'src/app/core/services/http-base.service';
 import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { environment } from 'src/environments/environment';
+import { AgentInfo } from '../../scheduling-menu/models/agent-info.model';
 import { EmployeeDetails } from '../models/employee-details.model';
 import { EmployeeRole } from '../models/employee-role.model';
 import { Employee } from '../models/employee.model';
 import { PermissionDetails } from '../models/permission-details.model';
 import { Permission } from '../models/permission.model';
+import { UserRole } from '../models/user-role.model';
 
 @Injectable()
 export class PermissionsService extends HttpBaseService {
@@ -35,6 +37,11 @@ export class PermissionsService extends HttpBaseService {
     this.baseURL = environment.services.gatewayService;
   }
 
+  getRoleName(roleId){
+    const url = `${this.baseURL}/roles/${roleId}`;
+    return this.http.get<EmployeeRole>(url)
+      .pipe(catchError(this.handleError));
+  }
 
   getEmployees(queryParams: QueryStringParameters) {
     const url = `${this.baseURL}/userpermissions`;
@@ -44,11 +51,25 @@ export class PermissionsService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
 
+  getAgentInfo(employeeId: number) {
+    const url = `${this.baseURL}/agentAdmins/employees/${employeeId}`;
+
+    return this.http.get<AgentInfo>(url)
+      .pipe(catchError(this.handleError));
+  }
+
   getEmployee(employeeId: number) {
     const url = `${this.baseURL}/userpermissions/${employeeId}`;
 
     return this.http.get<EmployeeDetails>(url)
       .pipe(catchError(this.handleError));
+  }
+
+  getEmployeePermission(employeeId: number){
+    const url = `${this.baseURL}/userpermissions/${employeeId}`;
+
+    return this.http.get<EmployeeDetails>(url);
+      // .pipe(catchError(this.handleError));
   }
 
   deleteEmployee(employeeId: number) {

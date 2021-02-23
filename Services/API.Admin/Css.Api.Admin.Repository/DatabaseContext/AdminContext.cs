@@ -52,6 +52,23 @@ namespace Css.Api.Admin.Repository.DatabaseContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            modelBuilder.Entity<UserLanguagePreference>(entity =>
+            {
+                entity.ToTable("user_language");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.EmployeeId)
+                    .HasColumnName("employee_id")
+                    .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.LanguagePreference)
+                    .HasColumnName("language_code")
+                    .HasColumnType("varchar(50)");
+            });
+
             modelBuilder.Entity<UserPermission>(entity =>
             {
                 entity.ToTable("user_permissions");
@@ -67,9 +84,6 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                     .HasColumnName("sso")
                     .HasColumnType("varchar(50)");
 
-                entity.Property(e => e.LanguagePreference)
-                    .HasColumnName("language_code")
-                    .HasColumnType("varchar(50)");
 
                 entity.Property(e => e.Firstname)
                     .HasColumnName("firstname")

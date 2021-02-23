@@ -16,8 +16,6 @@ namespace Css.Api.Admin.Models.Domain
 
         public string EmployeeId { get; set; }
 
-        public string LanguagePreference { get; set; }
-
         public DateTimeOffset CreatedDate { get; set; }
 
         public string CreatedBy { get; set; }

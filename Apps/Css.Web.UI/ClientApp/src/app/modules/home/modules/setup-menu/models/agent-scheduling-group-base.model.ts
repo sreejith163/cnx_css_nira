@@ -15,4 +15,5 @@ export class AgentSchedulingGroupBase {
     timezoneId: number;
     timezoneLabel: string;
     firstDayOfWeek: WeekDay;
+    estartProvision: boolean;
 }
