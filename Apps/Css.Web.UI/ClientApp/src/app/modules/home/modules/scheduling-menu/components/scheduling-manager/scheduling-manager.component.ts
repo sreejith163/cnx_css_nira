@@ -470,10 +470,18 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         if (item.agentScheduleManagerCharts.length > 0) {
           const employeeData = new AgentShceduleMangerData();
           employeeData.employeeId = this.totalSchedulingGridData.find(x => x.id === item?.id)?.employeeId;
-          const index = item?.agentScheduleManagerCharts[0]?.charts.findIndex(x => x.endTime === '11:60 pm');
+          const index = item?.agentScheduleManagerCharts[0]?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
           if (index > -1) {
-            item.agentScheduleManagerCharts[0].charts[index].endTime = '00:00 am';
+            item.agentScheduleManagerCharts[0].charts[index].endTime = '12:00 am';
           }
+          item?.agentScheduleManagerCharts[0]?.charts.map(x => {
+            if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
+              x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+            }
+            if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
+              x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+            }
+          });
           const nullValueIndex = item?.agentScheduleManagerCharts[0]?.charts.findIndex(x => x.schedulingCodeId === null);
           if (nullValueIndex > -1) {
             item.agentScheduleManagerCharts[0].charts.splice(nullValueIndex, 1);
@@ -610,14 +618,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         this.spinnerService.show(this.spinner, SpinnerOptions);
         if (response) {
-          const index = response?.agentScheduleManagerCharts[0]?.charts.findIndex(x => x.endTime.trim().toLowerCase() === '00:00 am');
-          if (index > -1) {
-            response.agentScheduleManagerCharts[0].charts[index].endTime = '11:60 pm';
-          }
-          const scheduleIndex = response?.agentScheduleCharts?.charts.findIndex(x => x.endTime.trim().toLowerCase() === '00:00 am');
-          if (scheduleIndex > -1) {
-            response.agentScheduleManagerCharts[0].charts[scheduleIndex].endTime = '11:60 pm';
-          }
+          this.formatTime(response);
         }
         if (response?.agentScheduleManagerCharts[0]?.charts.length === 0) {
           response.agentScheduleManagerCharts = [];
@@ -648,10 +649,39 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getAgentSchedulesSubscription);
   }
 
+  private formatTime(response: AgentChartResponse) {
+    const index = response?.agentScheduleManagerCharts[0]?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '00:00 am' ||
+      x.endTime.trim().toLowerCase() === '12:00 am');
+    if (index > -1) {
+      response.agentScheduleManagerCharts[0].charts[index].endTime = '11:60 pm';
+    }
+    response?.agentScheduleManagerCharts[0]?.charts.map(x => {
+      if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
+        x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+      }
+      if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
+        x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+      }
+    });
+    const scheduleIndex = response?.agentScheduleChart?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '00:00 am' ||
+      x.endTime.trim().toLowerCase() === '12:00 am');
+    if (scheduleIndex > -1) {
+      response.agentScheduleChart.charts[scheduleIndex].endTime = '11:60 pm';
+    }
+    response?.agentScheduleChart?.charts.map(x => {
+      if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
+        x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+      }
+      if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
+        x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+      }
+    });
+  }
+
   private setManagerGridData() {
     this.managerCharts.forEach(x => {
-      if (x.agentScheduleChart && x.agentScheduleManagerCharts.length > 0) {
-        const managerChart = x?.agentScheduleManagerCharts[0]?.charts;
+      if (x?.agentScheduleChart?.charts?.length > 0 && x?.agentScheduleManagerCharts?.length > 0) {
+        const managerChart = JSON.parse(JSON.stringify(x?.agentScheduleManagerCharts[0]?.charts));
         x.agentScheduleManagerCharts[0].charts = x?.agentScheduleChart?.charts;
         managerChart.forEach(y => {
           const iconModel = new ScheduleChart(y?.startTime, y?.endTime, y?.schedulingCodeId);
@@ -674,6 +704,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         x.agentScheduleManagerCharts.push(agentScheduleManagerChart);
       }
     });
+    this.sortSelectedGridCalendarTimes(this.managerCharts);
+    this.formatTimeValuesInSchedulingGrid(this.managerCharts);
 
   }
 
@@ -841,6 +873,9 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         if (this.convertToDateFormat(ele.startTime) < this.convertToDateFormat(insertIcon.startTime) &&
           this.convertToDateFormat(ele.endTime) === this.convertToDateFormat(insertIcon.startTime)) {
           ele.endTime = insertIcon.startTime;
+        } else if (this.convertToDateFormat(ele.startTime) === this.convertToDateFormat(insertIcon.startTime) &&
+          this.convertToDateFormat(ele.endTime) < this.convertToDateFormat(insertIcon.endTime)) {
+          ele.endTime = insertIcon.endTime;
         } else if (this.convertToDateFormat(ele.startTime) > this.convertToDateFormat(insertIcon.startTime) &&
           this.convertToDateFormat(ele.endTime) <= this.convertToDateFormat(insertIcon.endTime)) {
           ele.startTime = insertIcon.endTime;

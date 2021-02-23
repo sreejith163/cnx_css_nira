@@ -24,7 +24,7 @@
 
     <div class="col-md-3 m-t-10">
       <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"
-        [maxLength]="maxLength" placeholder="{{ 'Enter SSO keyword' | translate }}" />
+        [maxLength]="maxLength" placeholder="{{ 'Enter keyword' | translate }}" />
       <span *ngIf="searchKeyword?.length > 0" class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
     </div>
     <div class="col-md-2 col-sm-6">
@@ -157,8 +157,14 @@
                   </div>
                 </td>
                 <!-- <td class="d-flex justify-content-between">{{el.sso}} <a (click)="showHierarchy(el.id)" ngbTooltip="View Agent Hierarchy Info">&nbsp; &nbsp;<i class="fa fa-ellipsis-h"></i></a></td> -->
-                <td>{{el.firstName}}</td>
-                <td>{{el.lastName}}</td>
+                <td>
+                  <span
+                  ngbTooltip="{{ el.firstName }}">{{el.firstName | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
+                </td>
+                <td>
+                  <span
+                  ngbTooltip="{{ el.lastName }}">{{el.lastName | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
+                </td>
                 <td>{{getHireDateValue(el.agentData)}}</td>
                 <td>{{el.createdBy}}</td>
                 <td>{{el.createdDate | date: 'yyyy-MM-dd' }}</td>
@@ -170,19 +176,19 @@
         </table>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12 d-flex justify-content-end mt-3">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination p-0 float-right">
-          <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecord" (pageChange)="changePage($event)"
-            [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
-          <select class="form-control" (change)="changePageSize($event.target.value)">
-            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
-              {{x.text | translate}}</option>
-          </select>
-        </ul>
-      </nav>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-end mt-3">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination p-0 float-right">
+                    <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecord"
+                        (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage"
+                        [boundaryLinks]="true"></ngb-pagination>
+                    <select class="form-control" (change)="changePageSize($event.target.value)">
+                        <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+                            {{x.text | translate}}</option>
+                    </select>
+                </ul>
+            </nav>
+        </div>
     </div>
-  </div>
 </div>

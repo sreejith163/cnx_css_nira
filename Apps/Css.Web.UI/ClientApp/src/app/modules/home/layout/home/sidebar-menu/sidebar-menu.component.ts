@@ -12,7 +12,9 @@ import { PermissionsService } from '../../../modules/system-admin/services/permi
 export class SidebarMenuComponent implements OnInit {
   loggedUser: LoggedUserInfo;
   @Input() employee: EmployeeDetails;
-  constructor(public permissionService: PermissionsService) { }
+  constructor(public permissionService: PermissionsService, private authService: AuthService) { 
+    this.loggedUser = this.authService.getLoggedUserInfo();
+  }
 
   ngOnInit(): void {
 

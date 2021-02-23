@@ -131,6 +131,33 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     }
   }
 
+  private formatTimeFormat(importRecord: any[]) {
+    for (const item of importRecord) {
+      if (this.agentScheduleType === AgentScheduleType.Scheduling) {
+        for (const record of item.agentScheduleCharts) {
+          record.charts.map(x => {
+            if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
+              x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+            }
+            if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
+              x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+            }
+          });
+        }
+      } else {
+        const chartData = item.agentScheduleManagerChart;
+        chartData.charts.map(x => {
+          if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
+            x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+          }
+          if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
+            x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+          }
+        });
+      }
+    }
+  }
+
   private validateHeading() {
     for (const item of this.csvTableHeader) {
       if (this.agentScheduleType === AgentScheduleType.Scheduling &&
@@ -257,6 +284,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private importAgentScheduleChart(scheduleResponse: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[], hasMismatch?: boolean) {
     const model = this.getImportAgentScheduleChartModel(scheduleResponse, schedulingCodes);
     if (!this.validateInputRecord(model.importAgentScheduleCharts)) {
+      this.formatTimeFormat(model?.importAgentScheduleCharts);
       this.spinnerService.show(this.spinner, SpinnerOptions);
       this.importAgentScheduleChartSubscription = this.agentSchedulesService.importAgentScheduleChart(model)
         .subscribe(() => {
@@ -277,6 +305,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private updateManagerChart(scheduleResponse: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[], hasMismatch?: boolean) {
     const model = this.getImportAgentManagerChartModel(scheduleResponse, schedulingCodes);
     if (!this.validateInputRecord(model?.agentScheduleManagers)) {
+      this.formatTimeFormat(model?.agentScheduleManagers);
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
       this.updateManagerChartSubscription = this.agentSchedulesService.updateScheduleManagerChart(model)

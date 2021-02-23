@@ -62,7 +62,13 @@
                                         <ng-container *ngFor="let agentAdmin of agentAdminsLeftSide">
                                             <tr class="agent-list-item pointer" [class.selected]="isSelected[agentAdmin.id]" (click)="toggleSelected(agentAdmin.id); isSelected[agentAdmin.id] = !isSelected[agentAdmin.id];" >
                                                 <td>{{agentAdmin.employeeId}}</td>
-                                                <td>{{agentAdmin.firstName}} {{agentAdmin.lastName}}</td>
+                                                <td>
+                                                    <span ngbTooltip="{{agentAdmin.firstName}} {{agentAdmin.lastName}}">
+                                                        {{agentAdmin.firstName + agentAdmin.lastName | truncate: { sliceStart: 0,
+                                                            sliceEnd: 15, append: '...' }
+                                                        }}
+                                                    </span>
+                                                </td>
                                                 <td>{{agentAdmin.createdDate | date}}</td>
                                                 <td>{{agentAdmin.modifiedDate | date}}</td>    
                                             </tr>
@@ -138,7 +144,13 @@
                                         <ng-container *ngFor="let agentAdmin of agentAdminsRightSide">
                                             <tr class="agent-list-item">
                                                 <td>{{agentAdmin.employeeId}}</td>
-                                                <td>{{agentAdmin.firstName}} {{agentAdmin.lastName}}</td>
+                                                <td>
+                                                    <span ngbTooltip="{{agentAdmin.firstName}} {{agentAdmin.lastName}}">
+                                                        {{agentAdmin.firstName + agentAdmin.lastName | truncate: { sliceStart: 0,
+                                                            sliceEnd: 15, append: '...' }
+                                                        }}
+                                                    </span>
+                                                </td>
                                                 <td>{{agentAdmin.createdDate | date}}</td>
                                                 <td>{{agentAdmin.modifiedDate | date}}</td>    
                                             </tr>

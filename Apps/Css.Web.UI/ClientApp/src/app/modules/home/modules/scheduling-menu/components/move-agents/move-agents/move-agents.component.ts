@@ -268,8 +268,15 @@ export class MoveAgentsComponent implements OnInit {
       this.searchKeywordRight = '';
       this.loadAgentAdminsRight(this.agentSchedulingGroupIdRight);
       this.loadAgentAdminsLeft(this.agentSchedulingGroupIdLeft);
+
+      var msg;
+      if(this.selectedAgentAdminIds.length > 1){
+          msg = "The agents have been move";       
+      }else if(this.selectedAgentAdminIds.length == 1){
+          msg = "The agent has been move"; 
+      }
+      this.showSuccessPopUpMessage(msg);
       this.selectedAgentAdminIds = [];
-      this.showSuccessPopUpMessage("The agent(s) has been move");
     },error=>{
       console.log(error)
     });
@@ -295,7 +302,14 @@ export class MoveAgentsComponent implements OnInit {
     // this.getModalPopup(GenericPopUpComponent, 'md');
     // this.setConfirmDialogMessages(`Are you sure you? You won't be able to revert this!`, ``, `Yes`, `No`);
     this.getModalPopup(GenericPopUpComponent, 'sm');
-    this.setComponentMessages('', 'Are you sure you want to move the agent(s)?');
+    var msg;
+    if(this.selectedAgentAdminIds.length > 1){
+      msg = "Are you sure you want to move these agents?";
+    }else if(this.selectedAgentAdminIds.length == 1){
+      msg = "Are you sure you want to move this agent?";
+    }
+
+    this.setComponentMessages('', msg);
     this.modalRef.componentInstance.warning = true;
     this.modalRef.result.then((result) => {
       if (result && result === true) {

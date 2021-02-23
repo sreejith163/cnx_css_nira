@@ -107,10 +107,10 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
 
   saveAgentAdminDetails() {
     this.formSubmitted = true;
-    if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId && this.skillTagId) {
-      this.saveAgentProfileDetailsOnModel();
-      this.updateAgentAdminProfileDetails();
-    }
+      if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId && this.skillTagId) {
+        this.saveAgentProfileDetailsOnModel();
+        this.updateAgentAdminProfileDetails();
+      }
   }
 
   isNumberKey(event) {
@@ -194,7 +194,6 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
   private updateAgentAdminProfileDetails() {
     if (this.hasAgentAdminDetailsMismatch()) {
       const updateAgentAdminModel = this.agentProfileModel as UpdateAgentAdmin;
-      console.log(updateAgentAdminModel);
       updateAgentAdminModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
@@ -301,7 +300,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
         cofornextyear: new FormControl(),
         remaining: new FormControl(),
       }),
-    });
+    },{ validators: [CustomValidators.sameSSO('sso', 'supervisorSso'), CustomValidators.sameEmployeeId('employeeId', 'supervisorId')]});
   }
 
   showActivityLogs(){

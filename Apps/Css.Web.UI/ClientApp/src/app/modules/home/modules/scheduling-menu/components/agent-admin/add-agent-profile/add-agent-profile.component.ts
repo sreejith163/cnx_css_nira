@@ -292,13 +292,13 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     this.agentProfileForm = this.formBuilder.group({
       employeeId: new FormControl('', Validators.required),
       sso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
-      firstName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
-      lastName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
+      firstName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace,  Validators.maxLength(Constants.DefaultTextMaxLength)])),
+      lastName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace,  Validators.maxLength(Constants.DefaultTextMaxLength)])),
       hireDate: new FormControl('', Validators.required),
       supervisorId: new FormControl('', Validators.required),
-      supervisorName: new FormControl('', Validators.required),
+      supervisorName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace,  Validators.maxLength(Constants.DefaultTextMaxLength)])),
       supervisorSso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
-    });
+    },{ validators: [CustomValidators.sameSSO('sso', 'supervisorSso'), CustomValidators.sameEmployeeId('employeeId', 'supervisorId')]});
   }
 
   showActivityLogs(){

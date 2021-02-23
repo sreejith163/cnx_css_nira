@@ -707,10 +707,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.getAgentScheduleSubscription = this.agentSchedulesService.getAgentSchedule(agentScheduleId)
       .subscribe((response) => {
         if (response) {
-          this.selectedGrid = this.formatEndTime(response);
+          this.selectedGrid = response;
+          this.selectedGrid = this.formatEndTime(this.selectedGrid, false);
           this.selectedGrid.agentScheduleCharts.map(x => x?.charts.map(y => {
-            y.startTime = y?.startTime.trim().toLowerCase();
-            y.endTime = y?.endTime.trim().toLowerCase();
+            y.startTime = y?.startTime?.trim().toLowerCase();
+            y.endTime = y?.endTime?.trim().toLowerCase();
           }));
           this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
         }
@@ -760,7 +761,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       this.spinnerService.show(this.spinner, SpinnerOptions);
       const chartModel = new UpdateAgentschedulechart();
       this.selectedGrid = this.getUpdatedScheduleChart();
-      const gridData = this.formatEndTime(this.selectedGrid);
+      const gridData = this.formatEndTime(this.selectedGrid, true);
       chartModel.agentScheduleCharts = gridData.agentScheduleCharts;
       chartModel.activityOrigin = ActivityOrigin.CSS;
       chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
@@ -795,9 +796,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           JSON.stringify(this.schedulingGridData.agentScheduleCharts[gridIndex].charts)) {
           const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
           updatedChart.agentScheduleCharts.splice(updateIndex, 1);
-        } else {
-          if (updatedChart.agentScheduleCharts[index].charts[0].schedulingCodeId === null) {
-            updatedChart.agentScheduleCharts[index].charts = [];
+        } else if (!this.selectedGrid.agentScheduleCharts[index].charts[0].schedulingCodeId) {
+          if (this.schedulingGridData.agentScheduleCharts[gridIndex]?.charts[0]?.schedulingCodeId &&
+            !this.selectedGrid.agentScheduleCharts[index]?.charts[0]?.schedulingCodeId) {
+            const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
+            updatedChart.agentScheduleCharts[updateIndex].charts = [];
+          } else {
+            const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
+            updatedChart.agentScheduleCharts.splice(updateIndex, 1);
           }
         }
       }
@@ -806,16 +812,46 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     return updatedChart;
   }
 
-  private formatEndTime(scheduleResponse: AgentScheduleGridResponse) {
+  private formatEndTime(scheduleResponse: AgentScheduleGridResponse, updateChart: boolean) {
     for (const weekData of scheduleResponse.agentScheduleCharts) {
       if (weekData.charts.length > 0) {
-        const responseIndex = weekData?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '00:00 am');
-        if (responseIndex > -1) {
-          weekData.charts[responseIndex].endTime = '11:60 pm';
+        if (!updateChart) {
+          const responseIndex = weekData?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '12:00 am');
+          if (responseIndex > -1) {
+            weekData.charts[responseIndex].endTime = '11:60 pm';
+          }
+          const twelveHourTime = weekData.charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '12' ||
+            x?.startTime?.trim().toLowerCase().slice(0, 2) === '12');
+          if (twelveHourTime.length > 0) {
+            twelveHourTime.map(x => {
+              if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
+                x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+              }
+              if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
+                x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+              }
+              this.sortSelectedGridCalendarTimes();
+              this.formatTimeValuesInSchedulingGrid();
+            });
+          }
         } else {
           const requestIndex = weekData?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
           if (requestIndex > -1) {
-            weekData.charts[requestIndex].endTime = '00:00 am';
+            weekData.charts[requestIndex].endTime = '12:00 am';
+          }
+          const zeroHourTime = weekData.charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '00' ||
+            x?.startTime?.trim().toLowerCase().slice(0, 2) === '00');
+          if (zeroHourTime.length > 0) {
+            zeroHourTime.map(x => {
+              if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
+                x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+              }
+              if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
+                x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+              }
+              this.sortSelectedGridCalendarTimes();
+              this.formatTimeValuesInSchedulingGrid();
+            });
           }
         }
       }
