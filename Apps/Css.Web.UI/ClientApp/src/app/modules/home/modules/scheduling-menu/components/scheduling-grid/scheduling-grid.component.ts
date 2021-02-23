@@ -710,8 +710,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           this.selectedGrid = response;
           this.selectedGrid = this.formatEndTime(this.selectedGrid, false);
           this.selectedGrid.agentScheduleCharts.map(x => x?.charts.map(y => {
-            y.startTime = y?.startTime.trim().toLowerCase();
-            y.endTime = y?.endTime.trim().toLowerCase();
+            y.startTime = y?.startTime?.trim().toLowerCase();
+            y.endTime = y?.endTime?.trim().toLowerCase();
           }));
           this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
         }
