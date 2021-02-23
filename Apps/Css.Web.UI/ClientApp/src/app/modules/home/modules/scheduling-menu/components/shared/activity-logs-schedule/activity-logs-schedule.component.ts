@@ -310,8 +310,14 @@ export class ActivityLogsScheuldeComponent implements OnInit, OnDestroy {
           icon?.charts?.map(x => {
             x.endTime = x?.endTime.trim().toLowerCase();
             x.startTime = x?.startTime.trim().toLowerCase();
-            if (x.endTime.trim().toLowerCase() === '00:00 am') {
+            if (x.endTime.trim().toLowerCase() === '00:00 am' || x.endTime.trim().toLowerCase() === '12:00 am') {
               x.endTime = '11:60 pm';
+            }
+            if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
+              x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+            }
+            if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
+              x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
             }
           });
           chart.agentScheduleChart = new AgentScheduleChart();
@@ -335,8 +341,14 @@ export class ActivityLogsScheuldeComponent implements OnInit, OnDestroy {
         item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts.map(x => {
           x.endTime = x?.endTime.trim().toLowerCase();
           x.startTime = x?.startTime.trim().toLowerCase();
-          if (x.endTime.trim().toLowerCase() === '00:00 am') {
+          if (x.endTime.trim().toLowerCase() === '00:00 am' || x.endTime.trim().toLowerCase() === '12:00 am') {
             x.endTime = '11:60 pm';
+          }
+          if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
+            x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+          }
+          if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
+            x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
         });
         chart.agentScheduleChart = new AgentScheduleChart();
