@@ -16,8 +16,8 @@ export class EntityAgentSchedulingGroupDetails {
 
 export class EntityClientDetails {
     clientLOBs: EntityClientLOBDetails [] = [];
-    id: "5"
-    name: "IEX"
+    id: number;
+    name: string;
 }
 
 export class EntityClientLOBDetails {
