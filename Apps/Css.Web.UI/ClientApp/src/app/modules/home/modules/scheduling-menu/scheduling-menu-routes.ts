@@ -7,7 +7,6 @@ import { EntityHierarchyComponent } from './components/entity-hierarchy/entity-h
 import { ViewOuScreenComponent } from './components/view-ou-screen/view-ou-screen.component';
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid.component';
 import { SchedulingManagerComponent } from './components/scheduling-manager/scheduling-manager.component';
-import { TimeOffsListComponent } from './components/time-offs/time-offs-list/time-offs-list.component';
 
 
 export const SchedulingMenuRoutes: Routes = [
@@ -61,13 +60,6 @@ export const SchedulingMenuRoutes: Routes = [
     {
         path: 'entity-hierarchy',
         component: EntityHierarchyComponent,
-        canActivate: [PermissionsGuard],
-        data: { permissions: [1, 2, 3, 4] },
-        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
-    },
-    {
-        path: 'time-offs',
-        component: TimeOffsListComponent,
         canActivate: [PermissionsGuard],
         data: { permissions: [1, 2, 3, 4] },
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,

@@ -137,13 +137,6 @@
                             <span>{{ 'Scheduling_manager' | translate }}</span> <!-- NO TRANSLATION -->
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/time-offs"
-                                routerLinkActive="active" #schMenu3="routerLinkActive">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                            <span>{{ 'Time Offs' | translate }}</span> <!-- NO TRANSLATION -->
-                            </a>
-                        </li>
                         <li [hidden]="permissionService.isMenuHidden([1,2,3],employee?.userRoleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/forecast-screen" routerLinkActive="active"
                                 #schMenu4="routerLinkActive">
