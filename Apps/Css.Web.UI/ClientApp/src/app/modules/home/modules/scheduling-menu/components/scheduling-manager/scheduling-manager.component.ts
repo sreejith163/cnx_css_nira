@@ -655,7 +655,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     if (index > -1) {
       response.agentScheduleManagerCharts[0].charts[index].endTime = '11:60 pm';
     }
-    response.agentScheduleManagerCharts[0]?.charts.map(x => {
+    response?.agentScheduleManagerCharts[0]?.charts.map(x => {
       if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
         x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
       }
@@ -668,7 +668,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     if (scheduleIndex > -1) {
       response.agentScheduleChart.charts[scheduleIndex].endTime = '11:60 pm';
     }
-    response.agentScheduleChart.charts.map(x => {
+    response?.agentScheduleChart?.charts.map(x => {
       if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
         x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
       }
@@ -704,6 +704,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         x.agentScheduleManagerCharts.push(agentScheduleManagerChart);
       }
     });
+    this.sortSelectedGridCalendarTimes(this.managerCharts);
+    this.formatTimeValuesInSchedulingGrid(this.managerCharts);
 
   }
 
