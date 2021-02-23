@@ -61,6 +61,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
                 agentSchedulingGroup.ClientLobGroupId = context.Message.ClientLobGroupIdNewValue;
                 agentSchedulingGroup.SkillGroupId = context.Message.SkillGroupIdNewValue;
                 agentSchedulingGroup.SkillTagId = context.Message.SkillTagIdNewValue;
+                agentSchedulingGroup.TimezoneId = context.Message.TimezoneIdNewValue;
                 agentSchedulingGroup.Name = context.Message.NameNewValue;
                 agentSchedulingGroup.RefId = context.Message.RefIdNewValue;
                 agentSchedulingGroup.IsDeleted = context.Message.IsDeletedNewValue;

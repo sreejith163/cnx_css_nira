@@ -63,6 +63,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
                             ClientLobGroupId = context.Message.ClientLobGroupId,
                             SkillGroupId = context.Message.SkillGroupId,
                             SkillTagId = context.Message.SkillTagId,
+                            TimezoneId = context.Message.TimezoneId,
                             IsDeleted = false
                         }
                     );
