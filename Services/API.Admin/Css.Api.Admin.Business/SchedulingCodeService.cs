@@ -187,9 +187,9 @@ namespace Css.Api.Admin.Business
                         schedulingCodeRequest.Id,
                         NameOldValue = schedulingCodeDetailsPreUpdate.Description,
                         PriorityNumberOldValue = schedulingCodeDetailsPreUpdate.PriorityNumber,
+                        TimeOffCodeOldValue = schedulingCodeDetailsPreUpdate.TimeOffCode,
                         IconIdOldValue = schedulingCodeDetailsPreUpdate.IconId,
-                        SchedulingTypeCodeOldValue =
-                            JsonConvert.SerializeObject(schedulingCodePreRequest.SchedulingTypeCode),
+                        SchedulingTypeCodeOldValue = JsonConvert.SerializeObject(schedulingCodePreRequest.SchedulingTypeCode),
                         ModifiedByOldValue = schedulingCodeDetailsPreUpdate.ModifiedBy,
                         ModifiedDateOldValue = schedulingCodeDetailsPreUpdate.ModifiedDate,
                         IsDeletedOldValue = schedulingCodeDetailsPreUpdate.IsDeleted,
@@ -200,37 +200,6 @@ namespace Css.Api.Admin.Business
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }
-
-
-        public async Task<CSSResponse> RevertSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails, UpdateSchedulingCode schedulingCodeDetails)
-        {
-            var schedulingCode = await _repository.SchedulingCodes.GetAllSchedulingCode(schedulingCodeIdDetails);
-            if (schedulingCode == null)
-            {
-                return new CSSResponse(HttpStatusCode.NotFound);
-            }
-
-            var schedulingCodes = await _repository.SchedulingCodes.GetAllSchedulingCodesByDescription(new SchedulingCodeNameDetails { Name = schedulingCodeDetails.Description });
-            if (schedulingCodes?.Count > 0 && schedulingCodes.IndexOf(schedulingCodeIdDetails.SchedulingCodeId) == -1)
-            {
-                return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' already exists.", HttpStatusCode.Conflict);
-            }
-
-            _repository.SchedulingTypeCodes.RemoveSchedulingTypeCodes(schedulingCode.SchedulingTypeCode.ToList());
-
-            var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);
-
-
-            schedulingCodeRequest.ModifiedDate = schedulingCodeDetails.ModifiedDate;
-
-
-            _repository.SchedulingCodes.UpdateSchedulingCode(schedulingCodeRequest);
-
-            await _repository.SaveAsync();
-
-            return new CSSResponse(HttpStatusCode.NoContent);
-        }
-
 
         /// <summary>
         /// Deletes the scheduling code.
@@ -245,12 +214,11 @@ namespace Css.Api.Admin.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            SchedulingCode schedulingCodeDetailsPreUpdate = null;
-
-            schedulingCodeDetailsPreUpdate = new SchedulingCode
+            SchedulingCode schedulingCodeDetailsPreUpdate = new SchedulingCode
             {
                 Description = schedulingCode.Description,
                 PriorityNumber = schedulingCode.PriorityNumber,
+                TimeOffCode = schedulingCode.TimeOffCode,
                 IconId = schedulingCode.IconId,
                 SchedulingTypeCode = schedulingCode.SchedulingTypeCode,
                 ModifiedBy = schedulingCode.ModifiedBy,
@@ -274,6 +242,7 @@ namespace Css.Api.Admin.Business
                    schedulingCode.Id,
                    Name = schedulingCodeDetailsPreUpdate.Description,
                    schedulingCodeDetailsPreUpdate.PriorityNumber,
+                   schedulingCodeDetailsPreUpdate.TimeOffCode,
                    schedulingCodeDetailsPreUpdate.IconId,
                    SchedulingTypeCode = JsonConvert.SerializeObject(schedulingCodePreRequest.SchedulingTypeCode),
                    ModifiedByOldValue = schedulingCodeDetailsPreUpdate.ModifiedBy,
@@ -281,6 +250,41 @@ namespace Css.Api.Admin.Business
                    ModifiedDateOldValue = schedulingCodeDetailsPreUpdate.ModifiedDate,
                    IsDeletedNewValue = schedulingCode.IsDeleted
                });
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Reverts the scheduling code.
+        /// </summary>
+        /// <param name="schedulingCodeIdDetails">The scheduling code identifier details.</param>
+        /// <param name="schedulingCodeDetails">The scheduling code details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<CSSResponse> RevertSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails, UpdateSchedulingCode schedulingCodeDetails)
+        {
+            var schedulingCode = await _repository.SchedulingCodes.GetAllSchedulingCode(schedulingCodeIdDetails);
+            if (schedulingCode == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var schedulingCodes = await _repository.SchedulingCodes.GetAllSchedulingCodesByDescription(new SchedulingCodeNameDetails { Name = schedulingCodeDetails.Description });
+            if (schedulingCodes?.Count > 0 && schedulingCodes.IndexOf(schedulingCodeIdDetails.SchedulingCodeId) == -1)
+            {
+                return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' already exists.", HttpStatusCode.Conflict);
+            }
+
+            _repository.SchedulingTypeCodes.RemoveSchedulingTypeCodes(schedulingCode.SchedulingTypeCode.ToList());
+
+            var schedulingCodeRequest = _mapper.Map(schedulingCodeDetails, schedulingCode);
+
+            schedulingCodeRequest.ModifiedDate = schedulingCodeDetails.ModifiedDate;
+
+            _repository.SchedulingCodes.UpdateSchedulingCode(schedulingCodeRequest);
+
+            await _repository.SaveAsync();
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }
