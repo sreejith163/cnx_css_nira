@@ -40,7 +40,7 @@ namespace Css.Api.Reporting.Business.Services
 			_options = new FTPOptions();
 			SetConnectionProperties(options["FTPServer"]);
 			_options.Inbox = options["FTPInbox"];
-			_options.Outbox = options["FTPInbox"];
+			_options.Outbox = options["FTPOutbox"];
 		}
 
 		/// <summary>
@@ -162,7 +162,7 @@ namespace Css.Api.Reporting.Business.Services
 		private void SetConnectionProperties(string connectionString)
         {
 			//var validFTPWithIPRegex = @"^(sftp|ftp):\/\/(\w*):([@#$_a-zA-Z0-9]*)@((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])+){1})$";
-			var validFTPHostRegex = @"^(sftp|ftp):\/\/(?'user'\w*):(?'pwd'[@#$_a-zA-Z0-9]*)@(?'host'(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))$";
+			var validFTPHostRegex = @"^(sftp|ftp):\/\/(?'user'\w*):(?'pwd'[@#^%$\(\)\[\],:;_a-zA-Z0-9]*)@(?'host'(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))$";
 
 			Regex rg = new Regex(validFTPHostRegex);
 			Match match = rg.Match(connectionString);
