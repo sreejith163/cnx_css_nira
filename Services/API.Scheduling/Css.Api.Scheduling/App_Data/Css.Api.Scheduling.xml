@@ -441,6 +441,26 @@
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator"/> class.
             </summary>
         </member>
+        <member name="T:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator">
+            <summary>
+            Validator for handling the validation of update AgentSchedulingGroup object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator">
+            <summary>
+            Validator for handling the validation of update AgentSchedulingGroup object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator"/> class.
+            </summary>
+        </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleChartValidator`1">
             <summary>
             Custom validator for agent chart time range

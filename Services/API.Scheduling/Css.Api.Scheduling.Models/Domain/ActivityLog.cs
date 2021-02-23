@@ -8,7 +8,6 @@ namespace Css.Api.Scheduling.Models.Domain
     [BsonCollection("activity_log")]
     public class ActivityLog : BaseDocument
     {
-
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
