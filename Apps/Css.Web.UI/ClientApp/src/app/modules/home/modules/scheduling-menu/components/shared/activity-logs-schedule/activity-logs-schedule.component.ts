@@ -285,20 +285,20 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
   }
 
   private setAgentFilters() {
-    const openTime = this.schedulingCodes.find(x => x.description.trim().toLowerCase() === 'open time');
+    const openTime = this.schedulingCodes.find(x => x?.description?.trim().toLowerCase() === 'open time');
     const openTimeIndex = this.activityLogsChart[0]?.agentScheduleChart?.charts.findIndex(x => x?.schedulingCodeId === +openTime.id);
     if (openTimeIndex > -1) {
       this.iconCode = openTime?.icon?.value;
       this.iconDescription = openTime?.description;
       this.startTimeFilter = this.formatTimeFormat(this.activityLogsChart[0]?.agentScheduleChart?.charts[openTimeIndex]?.startTime);
-      this.endTimeFilter = this.formatTimeFormat(this.activityLogsChart[0]?.agentScheduleChart.charts[openTimeIndex]?.endTime);
+      this.endTimeFilter = this.formatTimeFormat(this.activityLogsChart[0]?.agentScheduleChart?.charts[openTimeIndex]?.endTime);
     } else {
       const codeId = this.activityLogsChart[0]?.agentScheduleChart?.charts[0]?.schedulingCodeId;
       const code = this.schedulingCodes.find(x => x.id === codeId);
       this.iconCode = code?.icon?.value;
       this.iconDescription = code?.description;
       this.startTimeFilter = this.formatTimeFormat(this.activityLogsChart[0]?.agentScheduleChart?.charts[0]?.startTime);
-      this.endTimeFilter = this.formatTimeFormat(this.activityLogsChart[0]?.agentScheduleChart.charts[0]?.endTime);
+      this.endTimeFilter = this.formatTimeFormat(this.activityLogsChart[0]?.agentScheduleChart?.charts[0]?.endTime);
     }
   }
 
@@ -306,7 +306,7 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
     if (timeData?.trim().toLowerCase().slice(0, 2) === '00') {
       timeData = '12' + timeData?.trim().toLowerCase().slice(2, 8);
     }
-    if (timeData.trim().toLowerCase() === '11:60 pm') {
+    if (timeData?.trim().toLowerCase() === '11:60 pm') {
       timeData = '12:00 am';
     }
 
@@ -327,9 +327,9 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
           chart.activityOrigin = item?.activityOrigin;
           chart.timeStamp = item?.timeStamp;
           icon?.charts?.map(x => {
-            x.endTime = x?.endTime.trim().toLowerCase();
-            x.startTime = x?.startTime.trim().toLowerCase();
-            if (x.endTime.trim().toLowerCase() === '00:00 am' || x.endTime.trim().toLowerCase() === '12:00 am') {
+            x.endTime = x?.endTime?.trim().toLowerCase();
+            x.startTime = x?.startTime?.trim().toLowerCase();
+            if (x?.endTime?.trim().toLowerCase() === '00:00 am' || x?.endTime?.trim().toLowerCase() === '12:00 am') {
               x.endTime = '11:60 pm';
             }
             if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {

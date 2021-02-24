@@ -325,6 +325,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.agentSchedulingGroupId) {
       this.pageSize = pageSize;
       this.loadAgentSchedules();
+      if (this.selectedGrid) {
+        this.cancel();
+      }
     }
   }
 
@@ -332,6 +335,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.agentSchedulingGroupId) {
       this.currentPage = page;
       this.loadAgentSchedules();
+      this.selectedGrid = null;
     }
   }
 
@@ -346,6 +350,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       this.orderBy = columnName;
 
       this.loadAgentSchedules();
+      this.selectedGrid = null;
     }
   }
 
@@ -404,7 +409,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   onSchedulingGroupChange(schedulingGroupId: number) {
     this.agentSchedulingGroupId = schedulingGroupId;
     if (this.agentSchedulingGroupId) {
+      this.currentPage = 1;
+      this.pageSize = 3;
       this.loadAgentSchedules();
+      this.selectedGrid = null;
     } else {
       this.totalSchedulingGridData = [];
       this.totalSchedulingRecord = undefined;
@@ -415,6 +423,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.searchText = searchText;
     if (this.agentSchedulingGroupId) {
       this.loadAgentSchedules();
+      if (this.selectedGrid) {
+        this.cancel();
+      }
     }
   }
 
@@ -422,6 +433,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.startDate = date;
     if (this.agentSchedulingGroupId) {
       this.loadAgentSchedules();
+      if (this.selectedGrid) {
+        this.cancel();
+      }
     }
   }
 
@@ -653,15 +667,17 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private formatTimeValuesInSchedulingGrid() {
-    const weekDays = this.selectedGrid.agentScheduleCharts;
-    weekDays.forEach((element) => {
-      element.charts = this.adjustSchedulingCalendarTimesRange(element.charts);
+    const agentScheduleCharts = this.selectedGrid.agentScheduleCharts;
+    agentScheduleCharts.forEach((element) => {
+      if (element.charts.length > 0) {
+        element.charts = this.adjustSchedulingCalendarTimesRange(element.charts);
+      }
     });
   }
 
   private sortSelectedGridCalendarTimes() {
-    const weekDays = this.selectedGrid.agentScheduleCharts;
-    weekDays.forEach((element) => {
+    const agentScheduleCharts = this.selectedGrid.agentScheduleCharts;
+    agentScheduleCharts.forEach((element) => {
       if (element.charts.length > 0) {
         element.charts.sort((a, b): number => {
           if (this.convertToDateFormat(a.startTime) < this.convertToDateFormat(b.startTime)) {
@@ -718,11 +734,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         if (response) {
           this.selectedGrid = response;
-          this.selectedGrid = this.formatEndTime(this.selectedGrid, false);
+          this.formatEndTime(this.selectedGrid, false);
           this.selectedGrid.agentScheduleCharts.map(x => x?.charts.map(y => {
             y.startTime = y?.startTime?.trim().toLowerCase();
             y.endTime = y?.endTime?.trim().toLowerCase();
           }));
+          this.sortSelectedGridCalendarTimes();
+          this.formatTimeValuesInSchedulingGrid();
           this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
         }
         this.spinnerService.hide(this.scheduleSpinner);
@@ -770,8 +788,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.matchSchedulingGridDataChanges()) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
       const chartModel = new UpdateAgentschedulechart();
-      this.selectedGrid = this.getUpdatedScheduleChart();
-      const gridData = this.formatEndTime(this.selectedGrid, true);
+      const gridData = this.getUpdatedScheduleChart();
+      this.formatEndTime(gridData, true);
+
       chartModel.agentScheduleCharts = gridData.agentScheduleCharts;
       chartModel.activityOrigin = ActivityOrigin.CSS;
       chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
@@ -783,7 +802,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           this.spinnerService.hide(this.spinner);
           this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been updated!');
           this.modalRef.result.then(() => {
-            this.loadAgentSchedules();
+            this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
             this.loadAgentSchedule(agentScheduleId);
           });
         }, (error) => {
@@ -805,18 +824,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         if (JSON.stringify(this.selectedGrid.agentScheduleCharts[index].charts) ===
           JSON.stringify(this.schedulingGridData.agentScheduleCharts[gridIndex].charts)) {
           const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
-          updatedChart.agentScheduleCharts.splice(updateIndex, 1);
-        } else if (!this.selectedGrid.agentScheduleCharts[index].charts[0].schedulingCodeId) {
-          if (this.schedulingGridData.agentScheduleCharts[gridIndex]?.charts[0]?.schedulingCodeId &&
-            !this.selectedGrid.agentScheduleCharts[index]?.charts[0]?.schedulingCodeId) {
-            const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
-            updatedChart.agentScheduleCharts[updateIndex].charts = [];
-          } else if (!this.selectedGrid.agentScheduleCharts[index].charts[0].schedulingCodeId &&
-            this.selectedGrid.agentScheduleCharts[index].charts.length > 1) {
-            const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
-            updatedChart.agentScheduleCharts[updateIndex].charts.splice(0, 1);
-          } else {
-            const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
+          if (updateIndex > -1) {
             updatedChart.agentScheduleCharts.splice(updateIndex, 1);
           }
         }
@@ -870,8 +878,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         }
       }
     }
-
-    return scheduleResponse;
 
   }
 
