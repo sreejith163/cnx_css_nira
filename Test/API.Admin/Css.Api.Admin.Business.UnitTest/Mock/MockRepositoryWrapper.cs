@@ -50,22 +50,37 @@ namespace Css.Api.Admin.Repository
         /// <summary>
         /// Gets or sets the CSS language repository.
         /// </summary>
-        public ICssLanguageRepository _cssLanguageRepository { get; set; }
+        private ICssLanguageRepository _cssLanguageRepository { get; set; }
 
         /// <summary>
         /// Gets or sets the CSS menu repository.
         /// </summary>
-        public ICssMenuRepository _cssMenuRepository { get; set; }
+        private ICssMenuRepository _cssMenuRepository { get; set; }
 
         /// <summary>
         /// Gets or sets the CSS variable repository.
         /// </summary>
-        public ICssVariableRepository _cssVariableRepository { get; set; }
+        private ICssVariableRepository _cssVariableRepository { get; set; }
 
         /// <summary>
         /// Gets or sets the language translation repository.
         /// </summary>
-        public ILanguageTranslationRepository _languageTranslationRepository { get; set; }
+        private ILanguageTranslationRepository _languageTranslationRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the role repository.
+        /// </summary>
+        private IRoleRepository _roleRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user permission repository.
+        /// </summary>
+        private IUserPermissionRepository _userPermissionRepository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user language repository.
+        /// </summary>
+        private IUserLanguageRepository _userLanguageRepository { get; set; }
 
         /// <summary>
         /// Gets the scheduling codes.
@@ -277,6 +292,8 @@ namespace Css.Api.Admin.Repository
         public IRoleRepository Roles => throw new System.NotImplementedException();
 
         public IUserPermissionRepository UserPermissions => throw new System.NotImplementedException();
+
+        public IUserLanguageRepository UserLanguage => throw new System.NotImplementedException();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryWrapper" /> class.

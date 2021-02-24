@@ -19,9 +19,9 @@ namespace Css.Api.Scheduling.Validators.Agent
             RuleFor(x => x.EndDate).NotEmpty();   
             RuleFor(x => x.AllowDayRequest).NotEmpty();   
             RuleFor(x => x.FTEDayLength).NotEmpty();   
-            RuleFor(x => x.FirstDayOfWeek).NotEmpty();   
-            RuleFor(x => x.ForceOffDaysBeforeWeek).NotEmpty();
-            RuleFor(x => x.ForceOffDaysAfterWeek).NotEmpty();
+            RuleFor(x => x.FirstDayOfWeek).NotNull();   
+            RuleFor(x => x.ForceOffDaysBeforeWeek).NotNull();
+            RuleFor(x => x.ForceOffDaysAfterWeek).NotNull();
             RuleFor(x => x.DeSelectedTime).IsInEnum();
             RuleFor(x => x.ModifiedBy).NotEmpty();
         }

@@ -119,6 +119,11 @@ namespace Css.Api.Scheduling.Models.Domain
         public DateTimeOffset? ModifiedDate { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TimeOff"/> class.
         /// </summary>
         public TimeOff()
