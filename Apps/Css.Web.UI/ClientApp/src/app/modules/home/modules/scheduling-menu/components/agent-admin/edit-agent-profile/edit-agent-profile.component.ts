@@ -109,7 +109,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
 
   saveAgentAdminDetails() {
     this.formSubmitted = true;
-      if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId && this.skillTagId) {
+    if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId && this.skillTagId) {
         this.saveAgentProfileDetailsOnModel();
         this.updateAgentAdminProfileDetails();
       }
@@ -302,7 +302,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
         cofornextyear: new FormControl(),
         remaining: new FormControl(),
       }),
-    },{ validators: [CustomValidators.sameSSO('sso', 'supervisorSso'), CustomValidators.sameEmployeeId('employeeId', 'supervisorId')]});
+    }, { validators: [CustomValidators.sameSSO('sso', 'supervisorSso'), CustomValidators.sameEmployeeId('employeeId', 'supervisorId')]});
   }
 
   showActivityLogs(){

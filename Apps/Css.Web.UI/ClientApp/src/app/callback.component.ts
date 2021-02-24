@@ -30,12 +30,12 @@ export class CallbackComponent implements OnInit {
             // check user's permissions
             this.permissionsService.getEmployee(+employeeId).subscribe((employee: EmployeeDetails) =>
             {
-              if(+employee.userRoleId > 0){
+              if (+employee.userRoleId > 0){
                 this.permissionsService.storePermission(employee.userRoleId);
                 // redirect to home if permission exists
                 this.router.navigate(['home']);
               }else{
-                //check if the user exists on agent admin
+                // check if the user exists on agent admin
                 this.permissionsService.getAgentInfo(+employeeId).subscribe(resp => {
                   // permission is default as agent
                   this.permissionsService.storePermission(5);
@@ -43,14 +43,14 @@ export class CallbackComponent implements OnInit {
                   this.router.navigate(['home']);
                 }, error => {
                   this.router.navigate(['login']);
-                })
+                });
               }
             }, error => {
-              var userRoleId = 5;
+              const userRoleId = 5;
               // default to agent
               this.permissionsService.storePermission(userRoleId);
               this.router.navigate(['home']);
-              console.log(this.permissionsService.userRoleId)
+              console.log(this.permissionsService.userRoleId);
             });
       }else{
         this.router.navigate(['login']);

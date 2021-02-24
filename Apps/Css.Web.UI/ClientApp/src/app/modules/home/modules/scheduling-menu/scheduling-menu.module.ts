@@ -21,7 +21,7 @@ import { SchedulingFilterComponent } from './components/shared/scheduling-filter
 // for optimization and code cleaning
 import { ForecastScreenListComponent } from './components/forecast-screen/forecast-screen-list/forecast-screen-list.component';
 import { FilterComponent } from './components/forecast-screen/filter/filter.component';
-import { ActivityLogsScheuldeComponent } from './components/shared/activity-logs-schedule/activity-logs-schedule.component';
+import { ActivityLogsScheduleComponent } from './components/shared/activity-logs-schedule/activity-logs-schedule.component';
 import { ViewOuScreenComponent } from './components/view-ou-screen/view-ou-screen.component';
 
 
@@ -37,7 +37,7 @@ const components =
     AddAgentProfileComponent,
     EditAgentProfileComponent,
     SchedulingGridComponent,
-    ActivityLogsScheuldeComponent,
+    ActivityLogsScheduleComponent,
     ImportScheduleComponent,
     CopyScheduleComponent,
     SchedulingManagerComponent,

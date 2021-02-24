@@ -26,7 +26,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './activity-logs-schedule.component.html',
   styleUrls: ['./activity-logs-schedule.component.scss']
 })
-export class ActivityLogsScheuldeComponent implements OnInit, OnDestroy {
+export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
 
   spinner = 'activity-logs';
   orderBy = 'TimeStamp';

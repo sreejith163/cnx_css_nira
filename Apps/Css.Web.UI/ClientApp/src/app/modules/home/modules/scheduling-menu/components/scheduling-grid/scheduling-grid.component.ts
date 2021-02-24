@@ -37,7 +37,7 @@ import { UpdateAgentSchedule } from '../../models/update-agent-schedule.model';
 import { UpdateAgentschedulechart } from '../../models/update-agent-schedule-chart.model';
 import { ActivityOrigin } from '../../enums/activity-origin.enum';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ActivityLogsScheuldeComponent } from '../shared/activity-logs-schedule/activity-logs-schedule.component';
+import { ActivityLogsScheduleComponent } from '../shared/activity-logs-schedule/activity-logs-schedule.component';
 import * as $ from 'jquery';
 
 declare function setRowCellIndex(cell: string);
@@ -346,10 +346,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   openActivityLogs(index: number) {
-    this.getModalPopup(ActivityLogsScheuldeComponent, 'xl');
+    this.getModalPopup(ActivityLogsScheduleComponent, 'xl');
     this.modalRef.componentInstance.activityType = ActivityType.SchedulingGrid;
     this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
-    this.modalRef.componentInstance.employeeName = this.selectedGrid.lastName + ' ' + this.selectedGrid.firstName;
+    this.modalRef.componentInstance.employeeName = this.selectedGrid.lastName + ', ' + this.selectedGrid.firstName;
     this.modalRef.componentInstance.startDate = new Date(this.startDate);
   }
 

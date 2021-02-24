@@ -28,7 +28,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 
 import { CopyScheduleComponent } from '../shared/copy-schedule/copy-schedule.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
-import { ActivityLogsScheuldeComponent } from '../shared/activity-logs-schedule/activity-logs-schedule.component';
+import { ActivityLogsScheduleComponent } from '../shared/activity-logs-schedule/activity-logs-schedule.component';
 
 import { AgentIconFilter } from '../../models/agent-icon-filter.model';
 import { ActivityOrigin } from '../../enums/activity-origin.enum';
@@ -429,10 +429,10 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   }
 
   openActivityLogs(index: number) {
-    this.getModalPopup(ActivityLogsScheuldeComponent, 'xl');
+    this.getModalPopup(ActivityLogsScheduleComponent, 'xl');
     this.modalRef.componentInstance.activityType = ActivityType.SchedulingManagerGrid;
     this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
-    this.modalRef.componentInstance.employeeName = this.agentInfo.lastName + ' ' + this.agentInfo.firstName;
+    this.modalRef.componentInstance.employeeName = this.agentInfo.lastName + ', ' + this.agentInfo.firstName;
     this.modalRef.componentInstance.startDate = new Date(this.startDate);
   }
 
