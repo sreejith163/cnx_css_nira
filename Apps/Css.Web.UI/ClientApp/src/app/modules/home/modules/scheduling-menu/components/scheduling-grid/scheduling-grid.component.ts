@@ -615,7 +615,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
     if (weekData.charts.length === 0) {
       const index = this.selectedGrid?.agentScheduleCharts.findIndex(x => x.day === weekData.day);
-      this.selectedGrid.agentScheduleCharts[index].charts = [];
+      if (index > -1) {
+        this.selectedGrid.agentScheduleCharts[index].charts = [];
+      }
     }
   }
 
