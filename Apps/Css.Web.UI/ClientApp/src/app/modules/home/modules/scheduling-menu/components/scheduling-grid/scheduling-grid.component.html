@@ -257,7 +257,7 @@
                           </button>
                         </div>
                         <div class="col-md-2 m-b-3">
-                          <button class="btn btn-primary btn-activity" id="btn_activity_logs"
+                          <button class="btn btn-primary btn-activity" id="btn_activity_logs" *ngIf="canShowActivityLog()"
                             (click)="openActivityLogs(i)">
                             {{ 'Activity Logs' | translate }}
                           </button>

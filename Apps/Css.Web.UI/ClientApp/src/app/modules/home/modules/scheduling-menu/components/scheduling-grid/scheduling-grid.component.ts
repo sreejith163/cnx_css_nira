@@ -5,6 +5,7 @@ import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/mess
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { SchedulingCode } from '../../../system-admin/models/scheduling-code.model';
 import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
+import { PermissionsService } from '../../../system-admin/services/permissions.service';
 import { SchedulingCodeQueryParams } from '../../../system-admin/models/scheduling-code-query-params.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AgentScheduleType } from '../../enums/agent-schedule-type.enum';
@@ -128,6 +129,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     private schedulingCodeService: SchedulingCodeService,
     private excelService: ExcelService,
     private authService: AuthService,
+    private permissionsService: PermissionsService,
     private route: ActivatedRoute,
     private languagePreferenceService: LanguagePreferenceService,
     private agentSchedulesService: AgentSchedulesService,
@@ -152,6 +154,12 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         subscription.unsubscribe();
       }
     });
+  }
+
+  canShowActivityLog() {
+    const rolesPermitted = [1, 2, 3, 5];
+    const userRoleId = this.permissionsService.userRoleId;
+    return rolesPermitted.indexOf(+userRoleId) > -1;
   }
 
   getGridMaxWidth() {

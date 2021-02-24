@@ -44,9 +44,9 @@ export class AuthService {
 
   isLoggedIn() {
     const isLoggedIn = this.cookieService.get(environment.settings.sessionName);
-    if (isLoggedIn){
+    if (isLoggedIn) {
       return isLoggedIn ?? false;
-    }else{
+    } else {
       return this.currentUserUATValue ?? false;
     }
   }
@@ -55,23 +55,21 @@ export class AuthService {
     if (this.isLoggedIn()) {
       const token = this.cookieService.get(environment.settings.sessionName);
 
-      if (token){
-          const decodedToken = jwt_decode(token);
-          const user = new LoggedUserInfo();
-          user.uid = decodedToken.uid;
-          user.employeeId = decodedToken.employeeid;
-          user.displayName = decodedToken.displayname;
-          return user;
-      }else{
-          const user = new LoggedUserInfo();
-          user.uid = this.cookieService.get('uid');
-          user.employeeId = this.cookieService.get('employeeId');
-          user.displayName = this.cookieService.get('displayName');
-          return user;
+      if (token) {
+        const decodedToken = jwt_decode(token);
+        const user = new LoggedUserInfo();
+        user.uid = decodedToken.uid;
+        user.employeeId = decodedToken.employeeid;
+        user.displayName = decodedToken.displayname;
+        return user;
+      } else {
+        const user = new LoggedUserInfo();
+        user.uid = this.cookieService.get('uid');
+        user.employeeId = this.cookieService.get('employeeId');
+        user.displayName = this.cookieService.get('displayName');
+        return user;
       }
-
     }
-
   }
 
   login() {
@@ -83,11 +81,11 @@ export class AuthService {
     this.cookieService.set('employeeId', userUAT.employeeId, null, environment.settings.cookiePath, null, false, 'Strict');
     this.cookieService.set('uid', userUAT.uid, null, environment.settings.cookiePath, null, false, 'Strict');
     this.cookieService.set('displayName', userUAT.displayName, null, environment.settings.cookiePath, null, false, 'Strict');
-    this.permissionsService.getEmployee(+userUAT.employeeId).subscribe((user:EmployeeDetails)=>{
+    this.permissionsService.getEmployee(+userUAT.employeeId).subscribe((user: EmployeeDetails) => {
       this.permissionsService.storePermission(userUAT.employeeId);
-    },error=>{
+    }, error => {
       console.log(error);
-    })
+    });
     this.router.navigate(['home']);
   }
 }
