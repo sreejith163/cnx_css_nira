@@ -245,8 +245,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     if (agent) {
       const schedulingCode = this.schedulingCodes.find(x => x.id === agent?.schedulingCodeId);
       this.iconDescription = schedulingCode?.description;
-      this.startTimeFilter = agent?.startTime;
-      this.endTimeFilter = agent?.endTime;
+      this.startTimeFilter = this.formatFilterTimeFormat(agent?.startTime);
+      this.endTimeFilter = this.formatFilterTimeFormat(agent?.endTime);
       this.iconCode = schedulingCode?.icon?.value;
     } else {
       this.clearIconFilters();
@@ -264,10 +264,10 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         if (openTimeIndex > -1) {
           this.openTimeAgentIcon = new AgentIconFilter();
           this.openTimeAgentIcon.codeValue = openTime?.icon?.value;
-          this.openTimeAgentIcon.startTime = agentScheduleData?.
-            agentScheduleManagerCharts[0]?.charts[openTimeIndex]?.startTime;
-          this.openTimeAgentIcon.endTime = agentScheduleData?.
-            agentScheduleManagerCharts[0]?.charts[openTimeIndex]?.endTime;
+          this.openTimeAgentIcon.startTime = this.formatFilterTimeFormat(agentScheduleData?.
+            agentScheduleManagerCharts[0]?.charts[openTimeIndex]?.startTime);
+          this.openTimeAgentIcon.endTime = this.formatFilterTimeFormat(agentScheduleData?.
+            agentScheduleManagerCharts[0]?.charts[openTimeIndex]?.endTime);
         } else {
           this.openTimeAgentIcon = undefined;
         }
@@ -278,10 +278,10 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         if (lunchIndex > -1) {
           this.lunchAgentIcon = new AgentIconFilter();
           this.lunchAgentIcon.codeValue = lunch?.icon?.value;
-          this.lunchAgentIcon.startTime = agentScheduleData?.
-            agentScheduleManagerCharts[0]?.charts[lunchIndex]?.startTime;
-          this.lunchAgentIcon.endTime = agentScheduleData?.
-            agentScheduleManagerCharts[0]?.charts[lunchIndex]?.endTime;
+          this.lunchAgentIcon.startTime = this.formatFilterTimeFormat(agentScheduleData?.
+            agentScheduleManagerCharts[0]?.charts[lunchIndex]?.startTime);
+          this.lunchAgentIcon.endTime = this.formatFilterTimeFormat(agentScheduleData?.
+            agentScheduleManagerCharts[0]?.charts[lunchIndex]?.endTime);
         } else {
           this.lunchAgentIcon = undefined;
         }
@@ -520,6 +520,17 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
       this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
     }
 
+  }
+
+  private formatFilterTimeFormat(timeData: string) {
+    if (timeData?.trim().toLowerCase().slice(0, 2) === '00') {
+      timeData = '12' + timeData?.trim().toLowerCase().slice(2, 8);
+    }
+    if (timeData.trim().toLowerCase() === '11:60 pm') {
+      timeData = '12:00 am';
+    }
+
+    return timeData;
   }
 
   private subscribeToTranslations() {
