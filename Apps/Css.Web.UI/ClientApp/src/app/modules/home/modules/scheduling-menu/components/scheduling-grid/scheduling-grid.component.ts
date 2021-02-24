@@ -809,6 +809,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
             !this.selectedGrid.agentScheduleCharts[index]?.charts[0]?.schedulingCodeId) {
             const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
             updatedChart.agentScheduleCharts[updateIndex].charts = [];
+          } else if (!this.selectedGrid.agentScheduleCharts[index].charts[0].schedulingCodeId &&
+            this.selectedGrid.agentScheduleCharts[index].charts.length > 1) {
+            const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
+            updatedChart.agentScheduleCharts[updateIndex].charts.splice(0, 1);
           } else {
             const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
             updatedChart.agentScheduleCharts.splice(updateIndex, 1);

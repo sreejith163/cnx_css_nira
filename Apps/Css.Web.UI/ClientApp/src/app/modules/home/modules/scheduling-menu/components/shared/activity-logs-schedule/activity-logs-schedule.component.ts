@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { ActivityLogsQueryParams } from '../../../models/activity-logs-query-params.model';
 import { ActivityLogsService } from '../../../services/activity-logs.service';
 import { SubscriptionLike as ISubscription } from 'rxjs';
@@ -19,6 +18,7 @@ import { ActivityStatus } from '../../../enums/activity-status.enum';
 import { AgentScheduleChart } from '../../../models/agent-schedule-chart.model';
 import { ExcelService } from 'src/app/shared/services/excel.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ScheduleChart } from '../../../models/schedule-chart.model';
 
 
 @Component({
@@ -281,17 +281,36 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
   private formatActivityLogsData() {
     this.activityLogsChart = [];
     this.activityType === ActivityType.SchedulingManagerGrid ? this.setManagerChartData() : this.setScheduleChart();
-    this.setAgentFilters();
     this.totalRecord = this.activityLogsChart?.length;
   }
 
   private setAgentFilters() {
-    const codeId = this.activityLogsChart[0]?.agentScheduleChart?.charts[0]?.schedulingCodeId;
-    const code = this.schedulingCodes.find(x => x.id === codeId);
-    this.iconCode = code?.icon?.value;
-    this.iconDescription = code?.description;
-    this.startTimeFilter = this.activityLogsChart[0]?.agentScheduleChart?.charts[0]?.startTime;
-    this.endTimeFilter = this.activityLogsChart[0]?.agentScheduleChart.charts[0]?.endTime;
+    const openTime = this.schedulingCodes.find(x => x.description.trim().toLowerCase() === 'open time');
+    const openTimeIndex = this.activityLogsChart[0]?.agentScheduleChart?.charts.findIndex(x => x?.schedulingCodeId === +openTime.id);
+    if (openTimeIndex > -1) {
+      this.iconCode = openTime?.icon?.value;
+      this.iconDescription = openTime?.description;
+      this.startTimeFilter = this.formatTimeFormat(this.activityLogsChart[0]?.agentScheduleChart?.charts[openTimeIndex]?.startTime);
+      this.endTimeFilter = this.formatTimeFormat(this.activityLogsChart[0]?.agentScheduleChart.charts[openTimeIndex]?.endTime);
+    } else {
+      const codeId = this.activityLogsChart[0]?.agentScheduleChart?.charts[0]?.schedulingCodeId;
+      const code = this.schedulingCodes.find(x => x.id === codeId);
+      this.iconCode = code?.icon?.value;
+      this.iconDescription = code?.description;
+      this.startTimeFilter = this.formatTimeFormat(this.activityLogsChart[0]?.agentScheduleChart?.charts[0]?.startTime);
+      this.endTimeFilter = this.formatTimeFormat(this.activityLogsChart[0]?.agentScheduleChart.charts[0]?.endTime);
+    }
+  }
+
+  private formatTimeFormat(timeData: string) {
+    if (timeData?.trim().toLowerCase().slice(0, 2) === '00') {
+      timeData = '12' + timeData?.trim().toLowerCase().slice(2, 8);
+    }
+    if (timeData.trim().toLowerCase() === '11:60 pm') {
+      timeData = '12:00 am';
+    }
+
+    return timeData;
   }
 
   private setScheduleChart() {
@@ -320,12 +339,14 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
               x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
             }
           });
+          this.sortChartData(icon?.charts);
           chart.agentScheduleChart = new AgentScheduleChart();
           chart.day = icon?.day;
           chart.agentScheduleChart.charts = icon?.charts;
           this.activityLogsChart.push(chart);
         });
     }
+    this.setAgentFilters();
   }
 
   private setManagerChartData() {
@@ -351,10 +372,27 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
             x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
         });
+        this.sortChartData(item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts);
         chart.agentScheduleChart = new AgentScheduleChart();
         chart.agentScheduleChart.charts = item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts;
         this.activityLogsChart.push(chart);
       });
+      this.setAgentFilters();
+  }
+
+  private sortChartData(chart: ScheduleChart[]) {
+    if (chart.length > 0) {
+      chart.sort((a, b): number => {
+        if (this.convertToDateFormat(a.startTime) < this.convertToDateFormat(b.startTime)) {
+          return -1;
+        } else if (this.convertToDateFormat(a.startTime) > this.convertToDateFormat(b.startTime)) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      });
+    }
   }
 
   private loadSchedulingCodes() {
