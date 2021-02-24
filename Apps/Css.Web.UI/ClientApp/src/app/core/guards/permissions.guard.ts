@@ -20,8 +20,8 @@ export class PermissionsGuard implements CanActivate {
     if (this.authService.isLoggedIn()) {
       // const employeeId = this.authService.getLoggedUserInfo().employeeId;
           // check user's role for permissions on the current route
-      let roleId = this.permissionsService.userRoleId;
-      
+      const roleId = this.permissionsService.userRoleId;
+
       this.permissionsService.getRoleName(+roleId).subscribe((userRole: EmployeeRole) => {
         if (!next.data.permissions.includes(userRole.roleId)) {
           if (state.url !== '/home/dashboard') {
