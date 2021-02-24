@@ -48,6 +48,7 @@ import { LanguagePreference } from 'src/app/shared/models/language-preference.mo
 import { SchedulingCodeQueryParams } from '../../../system-admin/models/scheduling-code-query-params.model';
 import { ActivatedRoute } from '@angular/router';
 import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
+import { PermissionsService } from '../../../system-admin/services/permissions.service';
 
 
 @Component({
@@ -121,6 +122,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     private schedulingCodeService: SchedulingCodeService,
     private route: ActivatedRoute,
     private languagePreferenceService: LanguagePreferenceService,
+    private permissionsService: PermissionsService,
     public translate: TranslateService,
   ) {
     this.LoggedUser = this.authService.getLoggedUserInfo();
@@ -142,6 +144,12 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         subscription.unsubscribe();
       }
     });
+  }
+
+  canShowActivityLog() {
+    const rolesPermitted = [1, 2, 3, 5];
+    const userRoleId = this.permissionsService.userRoleId;
+    return rolesPermitted.indexOf(+userRoleId) > -1;
   }
 
   onSchedulingGroupChange(schedulingGroupId: number) {
