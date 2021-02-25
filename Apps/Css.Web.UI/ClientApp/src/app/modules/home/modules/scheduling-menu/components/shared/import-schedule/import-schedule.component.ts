@@ -87,7 +87,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           ele.EndTime = '00' + ':' + ele.EndTime.split(':')[1];
         }
       });
-      if (!this.fileFormatValidation && !this.validateHeading()) {
+      if (!this.fileFormatValidation && !this.validateHeading() && !this.validateDateAndTime()) {
         const employees = new Array<number>();
         this.jsonData.forEach(data => {
           if (employees.filter(x => x === +data.EmployeeId).length === 0) {
@@ -229,180 +229,74 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   private setSchedulingImportChartToUpdate(charts: ScheduleChart[]) {
+    const eleArray = [];
     const newArray = new Array<ScheduleChart>();
-    for (const ele of charts) {
-      if (this.convertTimeFormat(ele.startTime) < this.convertTimeFormat(ele.endTime)) {
-        if (newArray.length === 0) {
-          const calendarTime = new ScheduleChart(ele.startTime, ele.endTime, ele.schedulingCodeId);
-          newArray.push(calendarTime);
-        } else {
-          const calendarTime = new ScheduleChart(ele.startTime, ele.endTime, ele.schedulingCodeId);
-          this.insertIconToGrid(newArray, calendarTime);
-        }
-      } else {
-        const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
-        this.showErrorWarningPopUpMessage(errorMessage);
+    charts.forEach(x => {
+      eleArray.push(x.startTime);
+      eleArray.push(x.endTime);
+    });
+    eleArray.sort((a, b): number => {
+      if (this.convertTimeFormat(a) < this.convertTimeFormat(b)) {
+        return -1;
+      } else if (this.convertTimeFormat(a) > this.convertTimeFormat(b)) {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    });
+    for (let i = 0; i < eleArray.length; i++) {
+      if (i !== eleArray.length - 1) {
+        const icon = charts.find(x => this.convertTimeFormat(x?.startTime) === this.convertTimeFormat(eleArray[i]))?.schedulingCodeId;
+        const calendarTime = new ScheduleChart(eleArray[i], eleArray[i + 1], icon);
+        newArray.push(calendarTime);
       }
     }
+    const items = newArray.filter(x => !x.schedulingCodeId);
+    items.forEach(ele => {
+      const icon = charts.find(x => this.convertTimeFormat(x?.startTime) < this.convertTimeFormat(ele?.startTime) &&
+        this.convertTimeFormat(x?.endTime) >= this.convertTimeFormat(ele?.endTime))?.schedulingCodeId;
+      ele.schedulingCodeId = icon;
+    });
+
     return newArray;
   }
 
-  private insertIconToGrid(charts: ScheduleChart[], insertIcon: ScheduleChart) {
-    if (charts.find(x => x.startTime === insertIcon.startTime && x.endTime === insertIcon.endTime)) {
-      const item = charts.find(x => x.startTime === insertIcon.startTime && x.endTime === insertIcon.endTime);
-      item.schedulingCodeId = insertIcon.schedulingCodeId;
-    } else if (charts.filter(x => this.convertTimeFormat(x.startTime) >= this.convertTimeFormat(insertIcon.startTime) &&
-      this.convertTimeFormat(x.endTime) <= this.convertTimeFormat(insertIcon.endTime)).length > 0) {
-      const timeDataArray = charts.filter(x => this.convertTimeFormat(x.startTime) >=
-        this.convertTimeFormat(insertIcon.startTime) &&
-        this.convertTimeFormat(x.endTime) <= this.convertTimeFormat(insertIcon.endTime));
-      timeDataArray.forEach(ele => {
-        ele.schedulingCodeId = insertIcon.schedulingCodeId;
-      });
-      this.sortSelectedGridCalendarTimes(charts);
-      this.formatTimeValuesInSchedulingGrid(charts);
-    }
-    if (!charts.find(x => x.startTime === insertIcon.startTime && x.endTime ===
-      insertIcon.endTime && x.schedulingCodeId === insertIcon.schedulingCodeId)) {
-      charts.forEach(ele => {
-        if (this.convertTimeFormat(ele.startTime) < this.convertTimeFormat(insertIcon.startTime) &&
-          this.convertTimeFormat(ele.endTime) === this.convertTimeFormat(insertIcon.startTime)) {
-          ele.endTime = insertIcon.startTime;
-        } else if (this.convertTimeFormat(ele.startTime) === this.convertTimeFormat(insertIcon.startTime) &&
-          this.convertTimeFormat(ele.endTime) < this.convertTimeFormat(insertIcon.endTime)) {
-          ele.endTime = insertIcon.endTime;
-        } else if (this.convertTimeFormat(ele.startTime) > this.convertTimeFormat(insertIcon.startTime) &&
-          this.convertTimeFormat(ele.endTime) <= this.convertTimeFormat(insertIcon.endTime)) {
-          ele.startTime = insertIcon.endTime;
-        } else if (this.convertTimeFormat(ele.startTime) === this.convertTimeFormat(insertIcon.startTime) &&
-          this.convertTimeFormat(ele.endTime) > this.convertTimeFormat(insertIcon.endTime)) {
-          ele.startTime = insertIcon.endTime;
-        } else if (this.convertTimeFormat(ele.startTime) < this.convertTimeFormat(insertIcon.startTime) &&
-          this.convertTimeFormat(insertIcon.endTime) < this.convertTimeFormat(ele.endTime)) {
-          const calendarTime = new ScheduleChart(insertIcon.endTime, ele.endTime, ele.schedulingCodeId);
-          charts.push(calendarTime);
-          ele.endTime = insertIcon.startTime;
-        } else if (this.convertTimeFormat(ele.endTime) === this.convertTimeFormat(insertIcon.endTime) &&
-          this.convertTimeFormat(ele.startTime) < this.convertTimeFormat(insertIcon.startTime)) {
-          ele.endTime = insertIcon.startTime;
-        } else if (this.convertTimeFormat(ele.startTime) < this.convertTimeFormat(insertIcon.startTime) &&
-          this.convertTimeFormat(ele.endTime) < this.convertTimeFormat(insertIcon.endTime) &&
-          this.convertTimeFormat(ele.endTime) > this.convertTimeFormat(insertIcon.startTime)) {
-          ele.endTime = insertIcon.startTime;
-          const calendarTime = new ScheduleChart(insertIcon.startTime, insertIcon.endTime, insertIcon.schedulingCodeId);
-          charts.push(calendarTime);
-        }
-      });
-      const timeDataArray = charts.filter(x => this.convertTimeFormat(x.startTime) >=
-        this.convertTimeFormat(insertIcon.startTime) &&
-        this.convertTimeFormat(x.endTime) <= this.convertTimeFormat(insertIcon.endTime));
-      if (timeDataArray.length > 0) {
-        timeDataArray.forEach(ele => {
-          ele.schedulingCodeId = insertIcon.schedulingCodeId;
-        });
-      } else {
-        const calendarTime = new ScheduleChart(insertIcon.startTime, insertIcon.endTime, insertIcon.schedulingCodeId);
-        charts.push(calendarTime);
+  private validateDateAndTime() {
+    for (const item of this.jsonData) {
+      if (!item.StartTime || !item.EndTime) {
+        return true;
       }
-    }
-  }
-
-  private sortSelectedGridCalendarTimes(charts: ScheduleChart[]) {
-    if (charts.length > 0) {
-      charts.sort((a, b): number => {
-        if (this.convertTimeFormat(a.startTime) < this.convertTimeFormat(b.startTime)) {
-          return -1;
-        } else if (this.convertTimeFormat(a.startTime) > this.convertTimeFormat(b.startTime)) {
-          return 1;
-        }
-        else {
-          return 0;
-        }
-      });
-    }
-  }
-
-  private formatTimeValuesInSchedulingGrid(charts: ScheduleChart[]) {
-
-    if (charts.length > 0) {
-      const newTimesarray = new Array<ScheduleChart>();
-      let calendarTimes = new ScheduleChart(null, null, null);
-
-      for (const index in charts) {
-        if (+index === 0) {
-          calendarTimes = charts[index];
-          if (+index === charts.length - 1) {
-            break;
-          }
-        } else if (calendarTimes.endTime === charts[index].startTime && calendarTimes.schedulingCodeId === charts[index].schedulingCodeId) {
-          calendarTimes.endTime = charts[index].endTime;
-          if (+index === charts.length - 1) {
-            break;
+      if (this.convertTimeFormat(item.StartTime) >= this.convertTimeFormat(item.EndTime)) {
+        return true;
+      }
+      if (this.agentScheduleType === AgentScheduleType.Scheduling) {
+        if (item?.StartTime && item?.EndTime) {
+          if (item.StartTime.indexOf(':') > -1 && item.StartTime.indexOf(' ') > -1 &&
+            item.EndTime.indexOf(':') > -1 && item.EndTime.indexOf(' ') > -1) {
+            if (!item.StartTime.split(':')[0] && !item.StartTime.split(':')[1].split(' ')[0] &&
+              !item.EndTime.split(':')[0] && !item.EndTime.split(':')[1].split(' ')[0]) {
+              return true;
+            }
+          } else {
+            return true;
           }
         } else {
-          const model = new ScheduleChart(calendarTimes.startTime, calendarTimes.endTime, calendarTimes.schedulingCodeId);
-          newTimesarray.push(model);
-          calendarTimes = charts[index];
-          if (+index === charts.length - 1) {
-            break;
-          }
-        }
-      }
-
-      const modelvalue = new ScheduleChart(calendarTimes.startTime, calendarTimes.endTime, calendarTimes.schedulingCodeId);
-      newTimesarray.push(modelvalue);
-
-      charts = newTimesarray;
-    }
-  }
-
-  private validateChart(charts: ScheduleChart[]) {
-    for (const chartItem of charts) {
-      if (charts.filter(x => this.convertTimeFormat(x.startTime) === this.convertTimeFormat(chartItem.startTime) &&
-        this.convertTimeFormat(x.endTime) === this.convertTimeFormat(chartItem.endTime)).length > 1) {
-        return true;
-      }
-      if (charts.filter(x => this.convertTimeFormat(x.startTime) >= this.convertTimeFormat(chartItem.startTime) &&
-        this.convertTimeFormat(x.startTime) < this.convertTimeFormat(chartItem.endTime)).length > 1) {
-        return true;
-      }
-      if (charts.filter(x => this.convertTimeFormat(x.startTime) > this.convertTimeFormat(chartItem.startTime) &&
-        this.convertTimeFormat(x.endTime) <= this.convertTimeFormat(chartItem.endTime)).length > 1) {
-        return true;
-      }
-      if (charts.find(x => this.convertTimeFormat(x.startTime) < this.convertTimeFormat(chartItem.startTime) &&
-        this.convertTimeFormat(x.endTime) >= this.convertTimeFormat(chartItem.endTime))) {
-        return true;
-      }
-      if (charts.find(x => this.convertTimeFormat(x.startTime) < this.convertTimeFormat(chartItem.startTime) &&
-        this.convertTimeFormat(x.endTime) === this.convertTimeFormat(chartItem.endTime))) {
-        return true;
-      }
-      if (this.validateTimeFormat(chartItem) === true) {
-        return true;
-      }
-    }
-  }
-
-  private validateTimeFormat(data: ScheduleChart) {
-    if (data.startTime && data.endTime) {
-      if (data.startTime.indexOf(':') > -1 && data.startTime.indexOf(' ') > -1 &&
-        data.endTime.indexOf(':') > -1 && data.endTime.indexOf(' ') > -1) {
-        if (!data.startTime.split(':')[0] && !data.startTime.split(':')[1].split(' ')[0] &&
-          !data.endTime.split(':')[0] && !data.endTime.split(':')[1].split(' ')[0]) {
           return true;
         }
       } else {
-        return true;
+        if (item?.StartDate !== item?.EndDate) {
+          if (item.StartDate > item.EndDate) {
+            return true;
+          }
+        }
       }
-    } else {
-      return true;
     }
   }
 
   private importAgentScheduleChart(scheduleResponse: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[], hasMismatch?: boolean) {
     const model = this.getImportAgentScheduleChartModel(scheduleResponse, schedulingCodes);
-    if (!this.validateInputRecord(model.importAgentScheduleCharts)) {
+    if (!this.validateInputRecord(model?.importAgentScheduleCharts)) {
       this.formatTimeFormat(model?.importAgentScheduleCharts);
       this.spinnerService.show(this.spinner, SpinnerOptions);
       this.importAgentScheduleChartSubscription = this.agentSchedulesService.importAgentScheduleChart(model)
@@ -481,7 +375,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       }
 
       this.spinnerService.hide(this.spinner);
-      if (scheduleRepsonse.length > 0 && schedulingCodesResponse.length > 0) {
+      if (scheduleRepsonse?.length > 0 && schedulingCodesResponse?.length > 0) {
         const hasMismatch = activityCodes.length !== schedulingCodesResponse?.length;
         this.agentScheduleType === AgentScheduleType.Scheduling ?
           this.importAgentScheduleChart(scheduleRepsonse, schedulingCodesResponse, hasMismatch) :
