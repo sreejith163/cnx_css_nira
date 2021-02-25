@@ -226,11 +226,14 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
       model.Status = ActivityStatus[item?.activityStatus];
       model.TimeStamp = this.getDateInStringFormat(item?.timeStamp);
       for (const time of this.openTimes) {
-        const code = item?.agentScheduleChart?.charts.find(x => x.startTime <= time && x.endTime > time)?.schedulingCodeId;
+        const code = item?.agentScheduleChart?.charts
+          .find(x => x?.startTime?.trim().toLowerCase() <= time?.trim().toLowerCase() &&
+            x.endTime?.trim().toLowerCase() > time?.trim().toLowerCase())?.schedulingCodeId;
+        const formattedTime = this.formatTimeFormat(time);
         if (code) {
-          model[time] = this.schedulingCodes.find(x => x.id === code)?.description;
+          model[formattedTime] = this.schedulingCodes.find(x => x?.id === code)?.description;
         } else {
-          model[time] = '';
+          model[formattedTime] = '';
         }
       }
 
