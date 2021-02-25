@@ -31,6 +31,8 @@ import { NumericDirective } from 'src/app/shared/directives/numeric.directive';
 import { ActivityLogsService } from './services/activity-logs.service';
 import { SchedulingManagerComponent } from './components/scheduling-manager/scheduling-manager.component';
 import { ActivityLogsComponent } from './components/agent-admin/activity-logs/activity-logs.component';
+import { ContenteditableValueAccessor } from 'src/app/shared/directives/contenteditable.directive';
+import { BypassHtmlPipe } from 'src/app/shared/directives/bypassHtml.pipe';
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
 const components =
   [AgentAdminListComponent,
@@ -49,7 +51,9 @@ const components =
     FilterComponent,
     ViewOuScreenComponent,
     NumericDirective,
-    ActivityLogsComponent
+    ActivityLogsComponent,
+    ContenteditableValueAccessor, 
+    BypassHtmlPipe
   ];
 const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService];
 

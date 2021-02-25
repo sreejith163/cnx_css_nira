@@ -1,15 +1,15 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-6 col-md-6">
-            <h2 id="page_title">{{ 'Move Agents'}}</h2>
+            <h2 id="page_title">{{'Move Agents' | translate }}</h2>
         </div>
 
     </div>
     <div class="row">
         <div class="col-sm-12">
             <ol class="breadcrumb float-sm-left">
-                <li class="breadcrumb-item"><a>{{ 'Scheduling_menu'}}</a></li>
-                <li class="breadcrumb-item active"><b>{{ 'Move Agents'}}</b> </li>
+                <li class="breadcrumb-item"><a>{{'Scheduling_menu' | translate }}</a></li>
+                <li class="breadcrumb-item active"><b>{{'Move Agents' | translate }}</b> </li>
             </ol>
         </div>
     </div>
@@ -31,14 +31,14 @@
                     <div class="card text-sm">
                         <ngx-spinner [name]="spinnerLeft"></ngx-spinner>
                             <div class="card-header">
-                              <h3 class="card-title text-xs">Number of agents: {{totalAgentAdminsRecordLeft || '0' | number }}</h3>
+                              <h3 class="card-title text-xs">{{'Number of agents' | translate }}: {{totalAgentAdminsRecordLeft || '0' | number }}</h3>
                               <br/>
-                              <h3 class="card-title text-xs">Selected agents: {{selectedAgentAdminIds.length || '0' | number }}</h3>
+                              <h3 class="card-title text-xs">{{'Number of agents' | translate }}: {{selectedAgentAdminIds.length || '0' | number }}</h3>
                               <div class="card-tools">
                                 <div class="input-group input-group-sm" style="width: 150px;">
                                   <input type="text" class="form-control float-right" [(ngModel)]="searchKeywordLeft"
                                   [maxLength]="maxLengthLeft"
-                                  placeholder="Search" />
+                                  placeholder="{{'Search' | translate }}" />
                                   
                                   <div class="input-group-append">
                                     <button (click)="searchLeft()" class="btn btn-default"><i class="fa fa-search"></i></button>
@@ -52,10 +52,10 @@
                                 <table class="table-hover table table-head-fixed">
                                     <thead>
                                     <tr>
-                                        <th>Employee ID</th>
-                                        <th>Name</th>
-                                        <th>Starting</th>
-                                        <th>Ending</th>
+                                        <th>{{'Employee ID' | translate }}</th>
+                                        <th>{{'Name' | translate }}</th>
+                                        <th>{{'Starting' | translate }}</th>
+                                        <th>{{'Ending' | translate }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -94,7 +94,7 @@
                                 <!-- /.card-body -->
                             </ng-container>
                             <ng-template #noListLeftSide>
-                                <p class="text-center p-2 mt-2">No data to show</p>
+                                <p class="text-center p-2 mt-2">{{'No data to show' | translate }}</p>
                             </ng-template>
                     </div>
                 </div>
@@ -114,13 +114,13 @@
                     <div class="card text-sm">
                         <ngx-spinner [name]="spinnerRight"></ngx-spinner>
                             <div class="card-header">
-                              <h3 class="card-title text-xs">Number of agents: {{totalAgentAdminsRecordRight || '0' | number }}</h3>
+                              <h3 class="card-title text-xs">{{'Number of agents' | translate }}: {{totalAgentAdminsRecordRight || '0' | number }}</h3>
               
                               <div class="card-tools">
                                 <div class="input-group input-group-sm" style="width: 150px;">
                                   <input type="text" class="form-control float-right" [(ngModel)]="searchKeywordRight"
                                   [maxLength]="maxLengthRight"
-                                  placeholder="Search" />
+                                  placeholder="{{'Search' | translate }}" />
                                   
                                   <div class="input-group-append">
                                     <button (click)="searchRight()" class="btn btn-default"><i class="fa fa-search"></i></button>
@@ -134,10 +134,10 @@
                                 <table class="table-hover table table-head-fixed">
                                     <thead>
                                     <tr>
-                                        <th>Employee ID</th>
-                                        <th>Name</th>
-                                        <th>Starting</th>
-                                        <th>Ending</th>
+                                        <th>{{'Employee ID' | translate }}</th>
+                                        <th>{{'Name' | translate }}</th>
+                                        <th>{{'Starting' | translate }}</th>
+                                        <th>{{'Ending' | translate }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -176,13 +176,13 @@
                                 <!-- /.card-body -->
                             </ng-container>
                             <ng-template #noListRightSide>
-                                <p class="text-center p-2 mt-2">No data to show</p>
+                                <p class="text-center p-2 mt-2">{{'No data to show' | translate }}</p>
                             </ng-template>
                     </div>              
                 </div>
     
                 <button *ngIf="selectedAgentAdminIds.length > 0 && agentSchedulingGroupIdRight > 0" (click)="confirmDeleteUserPermission()" class="btn btn-primary m-l-6 float-right mb-5">
-                <i class="fa fa-arrow-right padding-5"></i>Move
+                <i class="fa fa-arrow-right padding-5"></i>{{'Move' | translate }}
                 </button>
                 <br/>
             </div>

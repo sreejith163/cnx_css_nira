@@ -36,50 +36,58 @@ import { UpdateAgentAdmin } from '../../../models/update-agent-admin.model';
 import { UpdateForecastData } from '../../../models/update-forecast-data.model';
 import { getLocaleDateTimeFormat } from '@angular/common';
 import * as xlsx from 'xlsx';
+import { ActivatedRoute } from '@angular/router';
+import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
+import { AuthService } from 'src/app/core/services/auth.service';
+import * as Papa from 'papaparse';
+
+
 /**
  * This Service handles how the date is represented in scripts i.e. ngModel.
  */
 @Injectable()
 export class CustomAdapter extends NgbDateAdapter<string> {
 
-  readonly DELIMITER = '/';
+  readonly DELIMITER = '-';
 
   fromModel(value: string | null): NgbDateStruct | null {
     if (value) {
       const date = value.split(this.DELIMITER);
       return {
-        month: parseInt(date[0], 10),
-        day: parseInt(date[1], 10),
-        year: parseInt(date[2], 10)
+        year: parseInt(date[0], 10),
+        month: parseInt(date[1], 10),
+        day: parseInt(date[2], 10),
+
       };
     }
     return null;
   }
 
   toModel(date: NgbDateStruct | null): string | null {
-    return date ? date.month + this.DELIMITER + date.day + this.DELIMITER + date.year : null;
+    return date ? date.year + this.DELIMITER + date.month + this.DELIMITER + date.day : null;
   }
 }
 
 @Injectable()
 export class CustomDateParserFormatter extends NgbDateParserFormatter {
 
-  readonly DELIMITER = '/';
+  readonly DELIMITER = '-';
 
   parse(value: string): NgbDateStruct | null {
     if (value) {
       const date = value.split(this.DELIMITER);
       return {
-        month: parseInt(date[0], 10),
-        day: parseInt(date[1], 10),
-        year: parseInt(date[2], 10)
+        year: parseInt(date[0], 10),
+        month: parseInt(date[1], 10),
+        day: parseInt(date[2], 10),
+
       };
     }
     return null;
   }
 
   format(date: NgbDateStruct | null): string {
-    return date ? date.month + this.DELIMITER + date.day + this.DELIMITER + date.year : '';
+    return date ? date.year + this.DELIMITER + date.month + this.DELIMITER + date.day : '';
   }
 }
 
@@ -151,6 +159,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   agentSchedulingGroupId?: number;
   skillGroupBinder: SkillGroupDetails;
   enableSaveButton = false;
+  enableCancelButton = false;
   enableImportButton = false;
   forecastData: ForecastDataModel[];
   forecastForm: FormGroup;
@@ -159,12 +168,28 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   skillGroupForecast: ForecastDataModel;
   capabilityForm: FormGroup;
   forecastFormArray = new FormArray([]);
+  forecastDataAttribute: Forecast[] = [];
   sumForecastContact: string;
   sumAHT: string;
   sumForecastedReq: string;
   sumScheduledOpen: string;
+  avgForecastContact: number;
+  avgAHT: number;
+  avgForecastedReq: number;
+  avgScheduledOpen: number;
+
+  avgForecastContactValue: string;
+  avgAHTValue: string;
+  avgForecastedReqValue: string;
+  avgScheduledOpenValue: string;
   forecastSpinner = 'forecastSpinner';
   InsertUpdate = false;
+  currentLanguage: string;
+  LoggedUser;
+  getTranslationSubscription: ISubscription;
+  uploadFile: string;
+  importForecastData: string;
+  fileUploaded: File;
   constructor(
     private formBuilder: FormBuilder,
     private forecastService: ForecastScreenService,
@@ -180,10 +205,10 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     private ngbCalendar: NgbCalendar,
     private dateAdapter: NgbDateAdapter<string>,
     private http: HttpClient,
-
-
+    private route: ActivatedRoute,
+    private authService: AuthService
   ) {
-
+    this.LoggedUser = this.authService.getLoggedUserInfo();
   }
 
   calculate(forecastDataCalc: Forecast[]): number {
@@ -194,17 +219,60 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     this.getForecastDefaultValue();
 
     this.subscribeToSkillGroups();
+    this.preLoadTranslations();
+    this.loadTranslations();
+    this.subscribeToTranslations();
 
 
   }
-  exportToExcel() {
-    const ws: xlsx.WorkSheet =
-      xlsx.utils.table_to_sheet(this.epltable.nativeElement);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
-    xlsx.writeFile(wb, 'epltable.xlsx');
+  exportAsXLSX(): void {
+
+    const replaceKeys = {
+      time: "Time",
+      forecastedContact: "Forecasted Contacts",
+      aht: "AHT",
+      forecastedReq: "Forecasted Req",
+      scheduledOpen: "Scheduled Open"
+    };
+    for (var i = 0; i < this.dataJson.length; i++)
+      delete this.dataJson[i].scheduledOpen;
+
+
+
+
+    console.log(this.dataJson);
+    const newArray = this.changeKeyObjects(this.dataJson, replaceKeys);
+
+
+
+    this.excelService.exportAsExcelFile(newArray, `Forecast-Template`);
   }
 
+  download() {
+    let fileName = 'ForecastTemplate.csv';
+    let columnNames = ["Time", "Forecasted Contact", "AHT", "Forecasted Req"];
+    let header = columnNames.join(',');
+
+    let csv = header;
+    csv += '\r\n';
+
+    this.dataJson.map(c => {
+      csv += [c["time"], c["forecastedContact"], c["aht"], c["forecastedReq"]].join(',');
+      csv += '\r\n';
+    })
+
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+
+    var link = document.createElement("a");
+    if (link.download !== undefined) {
+      var url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
   checkSkillId() {
 
     if (this.skillGroupBinder?.id == null) {
@@ -235,13 +303,27 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       forecastedContact: this.formBuilder.control({ value: datum.forecastedContact, disabled: false }),
       aht: this.formBuilder.control({ value: datum.aht, disabled: false }),
       forecastedReq: this.formBuilder.control({ value: datum.forecastedReq, disabled: false }),
-      scheduledOpen: this.formBuilder.control({ value: datum.scheduledOpen, disabled: false })
+      scheduledOpen: this.formBuilder.control({ value: '0.00', disabled: false })
     });
   }
   get formData() { return this.forecastForm.get('forecastFormArrays') as FormArray; }
 
 
+  openVerticallyCentered(content) {
 
+    var specific_date = new Date(this.model2);
+    var current_date = new Date();
+    if (current_date.getTime() > specific_date.getTime()) {
+
+      this.showErrorWarningPopUpMessage('Please select other dates to import a file.');
+     
+      
+    }
+    else {
+      this.modalService.open(content, { centered: true, size: 'lg' });
+    }
+   
+  }
   openImportSchedule() {
     this.getModalPopup(ImportScheduleComponent, 'lg');
     this.modalRef.componentInstance.translationValues = this.translationValues;
@@ -256,6 +338,33 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     // });
   }
 
+  onFileChange(ev) {
+    let workBook = null;
+    let jsonData = null;
+    const reader = new FileReader();
+    this.fileUploaded = ev.target.files[0];
+    this.uploadFile = this.fileUploaded?.name;
+
+
+    const file = ev.target.files[0];
+    reader.onload = (event) => {
+      const data = reader.result;
+      workBook = xlsx.read(data, { type: 'binary' });
+      jsonData = workBook.SheetNames.reduce((initial, name) => {
+        const sheet = workBook.Sheets[name];
+        initial[name] = xlsx.utils.sheet_to_json(sheet);
+
+        return initial;
+      }, {});
+
+
+      this.importForecastData = jsonData;
+
+
+
+    }
+    reader.readAsBinaryString(file);
+  }
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
@@ -312,6 +421,9 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
         forecastFormArrays: this.formBuilder.array(data.forecastData.map(datum => this.generateDatumFormGroup(datum))),
 
       });
+
+
+
       this.dataJson = data.forecastData;
       this.dataJson.forEach(ele => {
         this.arrayGenerator(
@@ -323,22 +435,50 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
         );
       });
       // console.log(data);
+
       this.sumForecastContact = data.forecastData.reduce((a, b) => +a + +b.forecastedContact, 0);
       this.sumAHT = data.forecastData.reduce((a, b) => +a + +b.aht, 0);
       this.sumForecastedReq = data.forecastData.reduce((a, b) => +a + +b.forecastedReq, 0);
       this.sumScheduledOpen = data.forecastData.reduce((a, b) => +a + +b.scheduledOpen, 0);
 
+
+      let nonZeroforecastedContact = data.forecastData.map(item => item.forecastedContact).filter(item => (isFinite(item) && item !== '0.00'));
+      let nonZeroaht = data.forecastData.map(item => item.aht).filter(item => (isFinite(item) && item !== '0.00'));
+      let nonZeroForecastedReq = data.forecastData.map(item => item.forecastedReq).filter(item => (isFinite(item) && item !== '0.00'));
+
+      let nonZeroScheduledOpen = data.forecastData.map(item => item.scheduledOpen).filter(item => (isFinite(item) && item !== '0.00'));
+      //sum
       this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2);
       this.sumAHT = parseFloat(this.sumAHT).toFixed(2);
       this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
       this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+
+
+      //avg
+
+      this.avgForecastContact = parseFloat(this.sumForecastContact) / nonZeroforecastedContact.length;
+      this.avgAHT = parseFloat(this.sumAHT) / nonZeroaht.length;
+      this.avgForecastedReq = parseFloat(this.sumForecastedReq) / nonZeroForecastedReq.length;
+      this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / nonZeroScheduledOpen.length;
+
+      // parse to string first
+      this.avgForecastContactValue = this.avgForecastContact.toString();
+      this.avgAHTValue = this.avgAHT.toString();
+      this.avgForecastedReqValue = this.avgForecastedReq.toString();
+      this.avgScheduledOpenValue = '0.00';
+
+
+      this.avgAHTValue = parseFloat(this.avgAHTValue).toFixed(2);
+      this.avgForecastContactValue = parseFloat(this.avgForecastContactValue).toFixed(2);
+      this.avgForecastedReqValue = parseFloat(this.avgForecastedReqValue).toFixed(2);
+
 
     }, (error) => {
 
       this.spinnerService.hide(this.forecastSpinner);
       if (error.status === 404) {
         this.getForecastDefaultValue();
-      
+
         this.InsertUpdate = true;
 
 
@@ -439,6 +579,13 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
         this.sumAHT = parseFloat(this.sumAHT).toFixed(2);
         this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
         this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+
+        this.avgScheduledOpenValue = '0.00';
+
+
+        this.avgAHTValue = '0.00';
+        this.avgForecastContactValue = '0.00';
+        this.avgForecastedReqValue = '0.00';
       });
   }
 
@@ -457,6 +604,11 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
   showBtn() {
     this.enableSaveButton = true;
+    this.enableCancelButton = true;
+  }
+  hideBtn() {
+    this.enableSaveButton = false;
+    this.enableCancelButton = false;
   }
   private getModalPopup(component: any, size: string) {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
@@ -481,6 +633,141 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     return modalRef;
   }
 
+
+  onChangeFile(files: File[]) {
+    console.log(files)
+    if (files[0]) {
+
+      Papa.parse(files[0], {
+        header: true,
+        skipEmptyLines: true,
+        complete: (result, file) => {
+          console.log(result);
+          this.importForecastData = result.data;
+
+
+          this.uploadFile = files[0].name;
+        }
+      });
+    }
+  }
+  changeKeyObjects = (arr, replaceKeys) => {
+    return arr.map(item => {
+      const newItem = {};
+      Object.keys(item).forEach(index => {
+        newItem[replaceKeys[index]] = item[index];
+      });
+      return newItem;
+    });
+  };
+  deleteColnameRecursive(obj) {
+    delete obj.scheduledOpen;
+    if (obj.children) {
+      for (var i = 0; i < obj.children.length; i++)
+        this.deleteColnameRecursive(obj.children[i]);
+    }
+  }
+  importForecast() {
+    // const groupByKey = (list, key, {omitKey=false}) => list.reduce((hash, {[key]:value, ...rest}) => ({...hash, [value]:( hash[value] || [] ).concat(omitKey ? {...rest} : {[key]:value, ...rest})} ), {})
+    // var datatoImport = groupByKey(this.importForecastData['data'], 'Date', {omitKey:true});
+
+    // console.log(datatoImport);
+    const replaceKeys = {
+      "Time": "Time",
+      "Forecasted Contact": "forecastedContact",
+      "AHT": "Aht",
+      "Forecasted Req": "forecastedReq"
+
+
+    };
+    //console.log(this.importForecastData);
+    const newArrays = this.changeKeyObjects(this.importForecastData, replaceKeys);
+
+    if (this.InsertUpdate === true) {
+      let forecastObjArrays: Forecast[];
+
+      const now = +new Date(this.model2);
+
+      let insertObject: ForecastDataModel;
+      // let intDate = new getLocaleDateTimeFormat();
+      this.forecastID = +`${this.skillGroupBinder?.id}${now}`;
+
+      forecastObjArrays = this.formData.value;
+      insertObject = {
+        ForecastId: this.forecastID,
+        Date: this.model2,
+        SkillGroupId: this.skillGroupBinder?.id,
+        ForecastData: newArrays
+      };
+
+      this.forecastService.addForecast(insertObject).subscribe(res => {
+        this.modalService.dismissAll();
+
+        this.showSuccessPopUpMessage('The record has been added!');
+        this.handleClear();
+        this.enableSaveButton = false;
+        this.loadSkillGroup();
+      },
+        error => {
+
+          if (error.status === 409) {
+            this.updateImport();
+          }
+
+        }
+      );
+    } else {
+      // var forecastObjArrays: Forecast[];
+
+      this.updateImport();
+    }
+
+
+
+
+  }
+  updateImport() {
+    const replaceKeys = {
+      "Time": "Time",
+      "Forecasted Contact": "forecastedContact",
+      "AHT": "Aht",
+      "Forecasted Req": "forecastedReq"
+
+
+    };
+    const newArrays = this.changeKeyObjects(this.importForecastData, replaceKeys);
+    let updateForecastData: UpdateForecastData;
+
+    let forecastTest: Forecast[];
+
+
+    forecastTest = newArrays;
+
+
+    // var returnedTarget = Object.assign(forecastTest, this.formData.value);
+    updateForecastData = new UpdateForecastData();
+    updateForecastData = { forecastData: forecastTest };
+
+
+    this.forecastService.updateForecast(this.forecastID, updateForecastData).subscribe(res => {
+      this.modalService.dismissAll();
+      this.showSuccessPopUpMessage('The record has been updated!');
+      this.handleClear();
+      this.enableSaveButton = false;
+      this.loadSkillGroup();
+    },
+      error => {
+        this.showErrorWarningPopUpMessage('Error');
+      }
+    );
+  }
+  handleClear() {
+    this.uploadFile = '';
+  }
+
+
+
+
   addForecastData() {
 
     if (this.InsertUpdate === true) {
@@ -502,9 +789,12 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       };
 
       this.forecastService.addForecast(insertObject).subscribe(res => {
+
+
         this.showSuccessPopUpMessage('The record has been added!');
         this.enableSaveButton = false;
-this.loadSkillGroup();
+        this.loadSkillGroup();
+
       },
         error => {
 
@@ -545,5 +835,31 @@ this.loadSkillGroup();
         this.showErrorWarningPopUpMessage('Error');
       }
     );
+  }
+
+  private subscribeToTranslations() {
+    this.getTranslationSubscription = this.languagePreferenceService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
+          this.loadTranslations();
+        }
+      });
+
+    this.subscriptions.push(this.getTranslationSubscription);
+  }
+
+  private preLoadTranslations() {
+    // Preload the user language //
+    const browserLang = this.route.snapshot.data.languagePreference.languagePreference;
+    this.currentLanguage = browserLang ? browserLang : 'en';
+    this.translate.use(this.currentLanguage);
+  }
+
+  private loadTranslations() {
+    // load the user language from api //
+    this.languagePreferenceService.getLanguagePreference(this.LoggedUser.employeeId).subscribe((langPref: LanguagePreference) => {
+      this.currentLanguage = langPref.languagePreference ? langPref.languagePreference : 'en';
+      this.translate.use(this.currentLanguage);
+    });
   }
 }

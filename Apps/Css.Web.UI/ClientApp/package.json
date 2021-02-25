@@ -28,6 +28,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "admin-lte": "^3.0.5",
+    "angular2-csv": "^0.2.9",
     "bootstrap": "^4.5.2",
     "date-picker-custom": "^2.0.4",
     "file-saver": "^2.0.5",

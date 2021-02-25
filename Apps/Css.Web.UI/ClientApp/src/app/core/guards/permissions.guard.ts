@@ -20,8 +20,8 @@ export class PermissionsGuard implements CanActivate {
     if (this.authService.isLoggedIn()) {
       // const employeeId = this.authService.getLoggedUserInfo().employeeId;
           // check user's role for permissions on the current route
-      const roleId = this.permissionsService.userRoleId;
-
+      let roleId = this.permissionsService.userRoleId;
+      
       this.permissionsService.getRoleName(+roleId).subscribe((userRole: EmployeeRole) => {
         if (!next.data.permissions.includes(userRole.roleId)) {
           if (state.url !== '/home/dashboard') {
@@ -30,17 +30,6 @@ export class PermissionsGuard implements CanActivate {
           }
         }
       });
-      // // check user's role for permissions on the current route
-      // this.permissionsService.getEmployee(+employeeId).subscribe((employee: EmployeeDetails) => {
-      //   if (!next.data.permissions.includes(employee.userRoleId)) {
-      //     if (state.url !== '/home/dashboard') {
-      //       // redirect to home if not permitted
-      //       this.router.navigate(['/home/dashboard']);
-      //     }
-      //   }
-      // }, error => {
-
-      // });
       return true;
     } else {
       this.router.navigate(['/login']);

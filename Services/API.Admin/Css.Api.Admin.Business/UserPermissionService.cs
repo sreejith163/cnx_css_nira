@@ -14,6 +14,11 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Http;
+using System.Text.Json;
+using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace Css.Api.Admin.Business
 {
@@ -36,6 +41,8 @@ namespace Css.Api.Admin.Business
 
         private readonly IBusService _bus;
 
+        private readonly IConfiguration _config;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="userPermissionService" /> class.
         /// </summary>
@@ -43,11 +50,13 @@ namespace Css.Api.Admin.Business
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="mapper">The mapper.</param>
         public UserPermissionService(
+            IConfiguration config,
             IRepositoryWrapper repository,
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper,
             IBusService bus)
         {
+            _config = config;
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
@@ -77,8 +86,30 @@ namespace Css.Api.Admin.Business
             var userPermission = await _repository.UserPermissions.GetUserPermission(userPermissionEmployeeIdDetails);
             if (userPermission == null)
             {
-                userPermission = new UserPermission { EmployeeId = userPermissionEmployeeIdDetails.EmployeeId, Firstname = "NA", Lastname = "NA", UserRoleId = -1, Sso = "NA" };
-                //return new CSSResponse(HttpStatusCode.NotFound);
+
+                // call the agent admins api to check if the user exists on agent admins
+                HttpClient client = new HttpClient();
+                var apiUrl = _config.GetValue<string>("GlobalConfiguration:GatewayUrl");
+                client.BaseAddress = new Uri(apiUrl);
+                var urlParameters = $"agentadmins/employees/{userPermissionEmployeeIdDetails.EmployeeId}";
+
+                // Add an Accept header for JSON format.
+                client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = client.GetAsync(urlParameters).Result;
+
+                if (response.IsSuccessStatusCode)
+                {   
+                    string responseStream = await response.Content.ReadAsStringAsync();
+                    UserPermissionAgent agentPermission = JsonConvert.DeserializeObject<UserPermissionAgent>(responseStream);
+                    // map the response to new userPermission intended for agents
+                    userPermission = new UserPermission { EmployeeId = agentPermission.EmployeeId, Firstname = agentPermission.Firstname, Lastname = agentPermission.Lastname, Sso = agentPermission.Sso };
+                }
+                else
+                {
+                    return new CSSResponse(HttpStatusCode.NotFound);
+                }
             }
 
             var mappedPermission = _mapper.Map<UserPermissionDTO>(userPermission);

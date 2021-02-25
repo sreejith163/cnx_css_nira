@@ -71,13 +71,29 @@ namespace Css.Api.Admin.Business
             /// <returns></returns>
             public async Task<CSSResponse> GetRole(RoleIdDetails roleIdDetails)
             {
-                var role = await _repository.Roles.GetRole(roleIdDetails);
-                if (role == null)
+                Role roleDetails;
+                if (roleIdDetails.RoleId == 0)
                 {
-                    return new CSSResponse(HttpStatusCode.NotFound);
+                    roleDetails = new Role
+                    {
+                        RoleId = 0,
+                        Name = "Agent"
+                    };
+                }
+                else
+                {
+                    roleDetails = await _repository.Roles.GetRole(roleIdDetails);
+
+                    if (roleDetails == null)
+                    {
+                        return new CSSResponse(HttpStatusCode.NotFound);
+                    }
+
                 }
 
-                var mappedRole = _mapper.Map<RoleDTO>(role);
+                     
+
+                var mappedRole = _mapper.Map<RoleDTO>(roleDetails);
                 return new CSSResponse(mappedRole, HttpStatusCode.OK);
             }
 

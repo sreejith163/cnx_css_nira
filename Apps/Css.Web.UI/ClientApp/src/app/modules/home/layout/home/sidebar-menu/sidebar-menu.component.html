@@ -155,12 +155,12 @@
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/entity-hierarchy" routerLinkActive="active"
                                 #schMenu6="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                            <span>{{ 'Entity-hierarchy' | translate }}</span> <!-- NO TRANSLATION -->
+                            <span>{{ 'Entity-hierarchy' | translate }}</span>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li [hidden]="permissionService.isMenuHidden([5],role?.roleId)" class="nav-item">
+                <li [hidden]="permissionService.isMenuHidden([0],role?.roleId)" class="nav-item">
                     <a class="nav-link d-flex flex-row" routerLink="agent-schedule-menu/my-schedule" routerLinkActive="active">
                         <i class="nav-icon fa fa-calendar"></i>
                             <span>{{ 'My Schedule' | translate }} </span>

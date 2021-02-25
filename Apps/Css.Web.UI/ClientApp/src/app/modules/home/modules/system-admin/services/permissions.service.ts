@@ -65,13 +65,6 @@ export class PermissionsService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
 
-  getEmployeePermission(employeeId: number){
-    const url = `${this.baseURL}/userpermissions/${employeeId}`;
-
-    return this.http.get<EmployeeDetails>(url);
-      // .pipe(catchError(this.handleError));
-  }
-
   deleteEmployee(employeeId: number) {
     const url = `${this.baseURL}/userpermissions/${employeeId}`;
 
