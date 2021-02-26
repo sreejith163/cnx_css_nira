@@ -40,6 +40,9 @@ import { ActivityOrigin } from '../../enums/activity-origin.enum';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ActivityLogsScheduleComponent } from '../shared/activity-logs-schedule/activity-logs-schedule.component';
 import * as $ from 'jquery';
+import { DateRangePopUpComponent } from 'src/app/modules/home/modules/scheduling-menu/components/shared/date-range-pop-up/date-range-pop-up.component';
+import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
+import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -61,6 +64,29 @@ declare function highlightCell(cell: string, className: string);
   styleUrls: ['./scheduling-grid.component.scss']
 })
 export class SchedulingGridComponent implements OnInit, OnDestroy {
+
+  dateRangeList = [
+    {
+      id: 1,
+      startDate: '2021-02-01',
+      endDate: '2021-02-28'
+    },
+    {
+      id: 2,
+      startDate: '2021-02-10',
+      endDate: '2021-02-15'
+    },
+    {
+      id: 3,
+      startDate: '2021-02-15',
+      endDate: '2021-02-20'
+    },
+    {
+      id: 4,
+      startDate: '2021-02-20',
+      endDate: '2021-02-25'
+    },
+  ];
 
   agentSchedulingGroupId: number;
   timeIntervals = 15;
@@ -154,6 +180,51 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         subscription.unsubscribe();
       }
     });
+  }
+
+  addDateRange() {
+    this.getModalPopup(DateRangePopUpComponent, 'sm');
+    this.modalRef.componentInstance.operation = ComponentOperation.Add;
+    this.modalRef.result.then((result) => {
+      if (result.needRefresh) {
+        this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been added!');
+      } else {
+        this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
+      }
+    });
+  }
+
+  editDateRange(el: AgentScheduleGridResponse) {
+    this.getModalPopup(DateRangePopUpComponent, 'sm');
+    this.modalRef.componentInstance.dateFrom = el.dateFrom;
+    this.modalRef.componentInstance.dateTo = el.dateTo;
+    this.modalRef.componentInstance.operation = ComponentOperation.Edit;
+
+    this.modalRef.result.then((result) => {
+      if (result.needRefresh) {
+        this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been updated!');
+      } else {
+        this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
+      }
+    });
+  }
+
+  deleteDateRange(id: number) {
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
+    this.modalRef = this.modalService.open(ConfirmationPopUpComponent, options);
+    this.modalRef.componentInstance.headingMessage = 'Are you sure?';
+    this.modalRef.componentInstance.contentMessage = 'You won’t be able to revert this!';
+    this.modalRef.componentInstance.deleteRecordIndex = id;
+
+    this.modalRef.result.then((result) => {
+      if (result && result === id) {
+        // api call
+      }
+    });
+  }
+
+  onDateRangeChange(e) {
+
   }
 
   canShowActivityLog() {

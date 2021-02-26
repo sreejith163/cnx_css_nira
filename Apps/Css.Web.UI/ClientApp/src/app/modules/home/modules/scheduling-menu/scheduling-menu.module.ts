@@ -33,6 +33,7 @@ import { SchedulingManagerComponent } from './components/scheduling-manager/sche
 import { ActivityLogsComponent } from './components/agent-admin/activity-logs/activity-logs.component';
 import { ContenteditableValueAccessor } from 'src/app/shared/directives/contenteditable.directive';
 import { BypassHtmlPipe } from 'src/app/shared/directives/bypassHtml.pipe';
+import { DateRangePopUpComponent } from './components/shared/date-range-pop-up/date-range-pop-up.component';
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
 const components =
   [AgentAdminListComponent,
@@ -48,7 +49,7 @@ const components =
     EntityHierarchyComponent,
     HorizontalScrollPipe,
     ForecastScreenListComponent,
-
+    DateRangePopUpComponent,
     ViewOuScreenComponent,
     NumericDirective,
     ActivityLogsComponent,

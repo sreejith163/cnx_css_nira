@@ -49,7 +49,7 @@
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field width-18-p" (click)="sort('dateFrom', sortBy)">
+              <th class="sortable-field" (click)="sort('dateFrom', sortBy)">
                 {{ 'Date_range' | translate }}
                 <i *ngIf="orderBy !== 'dateFrom'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'dateFrom'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
@@ -113,11 +113,20 @@
                         characterSplice, append: '...' } }}
                   </span>
                 </td>
-                <td>{{el.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="el.dateTo">-</span> {{ el.dateTo | date:
-                      'yyyy-MM-dd'}}
-                  <i class="fa fa-calendar float-right padding-5" aria-hidden="true"
-                    (click)="onClickDateIcon(i); datepicker.toggle()"></i>
-                  <input name="datepicker" class="hidden-datepicker" ngbDatepicker #datepicker="ngbDatepicker"
+                <td class="d-flex">
+                  <select class="form-control w-auto" (change)="onDateRangeChange($event)">
+                    <option [value]="range.id" [selected]="el.dateFrom === range.startDate" *ngFor="let range of dateRangeList">
+                      {{range.startDate}} <span *ngIf="range.endDate">-</span> {{ range.endDate}}
+                    </option>
+                  </select>
+                  <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el.status !== 1" (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
+                  <i class="fa fa-trash padding-5 pointer m-t-5" *ngIf="el.status !== 1" (click)="deleteDateRange(el.id)" [ngbTooltip]="'Delete'"></i>
+                  <i class="fa fa-calendar float-right padding-5 m-t-5" aria-hidden="true" (click)="addDateRange()" [ngbTooltip]="'Add'"></i>
+                  <!-- {{el.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="el.dateTo">-</span> {{ el.dateTo | date:
+                      'yyyy-MM-dd'}} -->
+                  <!-- <i class="fa fa-calendar float-right padding-5" aria-hidden="true"
+                    (click)="onClickDateIcon(i); datepicker.toggle()"></i> -->
+                 <!--  <input name="datepicker" class="hidden-datepicker" ngbDatepicker #datepicker="ngbDatepicker"
                     [autoClose]="'outside'" (dateSelect)="onDateSelection($event, i)" [displayMonths]="2"
                     [dayTemplate]="t" [container]="'body'" [placement]="'bottom'" outsideDays="hidden">
                   <ng-template #t let-date let-focused="focused">
@@ -126,7 +135,7 @@
                       (mouseleave)="hoveredDate = null">
                       {{ date.day }}
                     </span>
-                  </ng-template>
+                  </ng-template> -->
                 </td>
                 <td>
                   <select class="form-control" (change)="setSchedulingStatus($event.target.value, i)">
