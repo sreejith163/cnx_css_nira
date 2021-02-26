@@ -21,6 +21,7 @@ namespace Css.Api.Scheduling.Business
 {
     public class ForecastScreenService : IForecastScreenService
     {
+      
         private readonly IForecastScreenRepository _forecastScreenRepository;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -70,7 +71,7 @@ namespace Css.Api.Scheduling.Business
 
             return new CSSResponse(timezone, HttpStatusCode.OK);
         }
-
+  
         /// <summary>
         /// Creates the agent admin.
         /// </summary>
@@ -78,10 +79,14 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> CreateForecastData(CreateForecastData forecastData)
         {
+        
+
+           
 
             long forecastIdDetails = forecastData.ForecastId;
             
             var forecastIDConflict = await _forecastScreenRepository.GetForecastDataID(forecastIdDetails);
+
 
             if (forecastIDConflict != null)
             {

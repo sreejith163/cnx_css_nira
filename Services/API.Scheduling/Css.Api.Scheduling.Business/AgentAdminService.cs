@@ -675,7 +675,19 @@ namespace Css.Api.Scheduling.Business
                 movingAgent.ModifiedDate = DateTime.Now;
                 movingAgent.MovedDate = DateTime.Now;
 
+                var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
+                {
+                    EmployeeId = movingAgent.Ssn,
+                    FirstName = movingAgent.FirstName,
+                    LastName = movingAgent.LastName,
+                    AgentSchedulingGroupId = movingAgent.AgentSchedulingGroupId,
+                    ModifiedBy = movingAgent.ModifiedBy
+                };
+
+                var employeeIdDetails = new EmployeeIdDetails { Id = movingAgent.Ssn };
+
                 _agentAdminRepository.UpdateAgentAdmin(movingAgent);
+                _agentScheduleRepository.UpdateAgentSchedule(employeeIdDetails, updateAgentScheduleEmployeeDetails);
             }
 
             await _uow.Commit();

@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Css.Api.Scheduling.Models.Domain
@@ -14,17 +15,20 @@ namespace Css.Api.Scheduling.Models.Domain
 
 
 
-        public string ForecastedContact { get; set; }
+        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
+        public decimal ForecastedContact { get; set; }
 
 
-      
-        public string Aht { get; set; }
+        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
+        public decimal Aht { get; set; }
 
 
-        public string ForecastedReq { get; set; }
+        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
+        public decimal ForecastedReq { get; set; }
 
-      
-        public string ScheduledOpen { get; set; }
+
+        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
+        public decimal ScheduledOpen { get; set; }
 
 
 
