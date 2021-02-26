@@ -34,7 +34,7 @@
             </ng-select>
         </div>
         <div class="col-md-3 d-flex flex-column">
-           
+
             <div class="input-group">
                 <input class="form-control" placeholder="{{today}}" name="d2" #c2="ngModel" [(ngModel)]="model2"
                     ngbDatepicker #d2="ngbDatepicker">
@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="col-md-2 col-sm-6">
-           
+
             <button (click)="loadSkillGroup()" class="form-control" id="btn_search"><i class="fa fa-search"
                     aria-hidden="true"></i>
                 {{ 'Search' | translate }}
@@ -54,21 +54,31 @@
 
 </div>
 <div class="container-fluid">
-    <div class="row my-2">
+    <div class="row my-2 align-items-center">
         <div class="col-lg-6">
             <div class="badge badge-primary" *ngIf="skillGroupBinder?.name != null">
                 {{skillGroupBinder?.name}}
             </div>
-           
+
             <input type="hidden" [value]="skillGroupBinder?.id">
         </div>
         <div *ngIf="enableImportButton == true" [ngClass]="{'d-block': enableImportButton}"
             class="d-none col-lg-6 pull-right marign-l-auto">
+            <div class="footer-button float-right d-flex">
+               
+                <button (click)="hideBtn()" *ngIf="enableCancelButton == true"
+                [ngClass]="{'d-block': enableCancelButton}" class="btn btn-default d-none  mr-2">Cancel</button>
+                    <button [ngbTooltip]="'Import csv'" (click)="openVerticallyCentered(content)" class="btn btn-primary d  mr-2"><i class="fa fa-upload"></i></button>
+                    <button [ngbTooltip]="'Export csv'" (click)="download()" class="btn btn-primary d  mr-2"><i class="fa fa-download"></i></button>
+                
+                <button (click)="addForecastData()" *ngIf="enableSaveButton == true"
+                    [ngClass]="{'d-block': enableSaveButton}" class="btn btn-primary d-none mr-2">Save&nbsp;<i class="fa fa-save"></i></button>
 
-            <img (click)="download()" src="assets/images/Export.jpg" class="icon-image float-right padding-2"
-                [ngbTooltip]="'Export'">
-            <img src="assets/images/Import.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
-                (click)="openVerticallyCentered(content)">
+            </div>
+            <!-- <img (click)="download()" src="assets/images/Export.jpg" class="icon-image float-right padding-2"
+                [ngbTooltip]="'Export'"> -->
+            <!-- <img src="assets/images/Import.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
+                (click)="openVerticallyCentered(content)"> -->
 
         </div>
     </div>
@@ -135,42 +145,40 @@
                                                     <input formControlName="time" type="hidden">
                                                 </td>
 
-                                                <td (dblclick)="showBtn()" numberOnly class="contenteditable"
-                                                contenteditable
-                                                formControlName="forecastedContact">
-                                                   
+                                                <td (keypress)="_keyUp($event)" (dblclick)="showBtn()" numberOnly
+                                                    class="contenteditable" contenteditable
+                                                    formControlName="forecastedContact">
+
                                                     <!-- <input [class.enabled]="!isEnabled['forecastedContact' + i]"
                                                         (click)="isEnabled['forecastedContact' + i] = !isEnabled['forecastedContact' + i];"
                                                         [readonly]="isEnabled['forecastedContact' + i]" numberOnly
                                                         (change)="showBtn()" formControlName="forecastedContact"
                                                         type="text" class=""> -->
-                                                       
+
                                                 </td>
-                                                <td  (dblclick)="showBtn()" numberOnly class="contenteditable"
-                                                contenteditable
-                                                formControlName="aht"> 
-                                                  
+                                                <td (dblclick)="showBtn()" numberOnly class="contenteditable"
+                                                    contenteditable formControlName="aht">
+
                                                     <!-- <input [class.enabled]="!isEnabled[i + x]"
                                                         (click)="isEnabled[i + x] = !isEnabled[i + x];"
                                                         [readonly]="isEnabled[i + x]" numberOnly (change)="showBtn()"
                                                         formControlName="aht" type="text" class=""> -->
                                                 </td>
                                                 <td (dblclick)="showBtn()" numberOnly class="contenteditable"
-                                                contenteditable
-                                                formControlName="forecastedReq">
-                                                   
+                                                    contenteditable formControlName="forecastedReq">
+
 
                                                     <!-- <input [class.enabled]="!isEnabled[i + x]"
                                                         (click)="isEnabled[i + x] = !isEnabled[i + x];"
                                                         [readonly]="isEnabled[i + x]" numberOnly (change)="showBtn()"
                                                         formControlName="forecastedReq" type="text" class=""> -->
                                                 </td>
-                                                <td >
-                                                  
+                                                <td>
+
                                                     <input [readonly]="true" [class.enabled]="!isEnabled[i + 1]"
                                                         (click)="isEnabled[i + 1] = !isEnabled[i + 1];" numberOnly
                                                         (change)="showBtn()" formControlName="scheduledOpen" type="text"
-                                                        class=""> 
+                                                        class="">
                                                 </td>
                                             </ng-container>
                                         </tr>
@@ -223,12 +231,6 @@
 
         </div>
         <div class="col-md-12 mb-5">
-            <div class="footer-button float-right d-flex">
-                <button (click)="hideBtn()" *ngIf="enableCancelButton == true"
-                [ngClass]="{'d-block': enableCancelButton}" class="btn btn-default d-none mt-3 mr-2">Cancel</button> <!-- NO TRANSLATION -->
-                <button (click)="addForecastData()" *ngIf="enableSaveButton == true"
-                    [ngClass]="{'d-block': enableSaveButton}" class="btn btn-primary d-none mt-3">{{'Save' | translate}}</button>
-            </div>
         </div>
     </div>
 
@@ -253,8 +255,10 @@
                     <!-- <input  type="file" name="files" class="form-control" 
                     #uploads  (change)="onChangeFile(uploads.files)" accept=".csv" multiple
                     value="process"/> -->
-            <input value="process" name="files" #file id="fileLoader" type="file" (change)="onChangeFile(file.files)" accept=".csv">
-              <input  (change)="onChangeFile(file.files)" (fileDropped)="onChangeFile(file.files)" class="form-control" placeholder="Choose file..."   [(ngModel)]="uploadFile">
+                    <input value="process" name="files" #file id="fileLoader" type="file"
+                        (change)="onChangeFile(file.files)" accept=".csv">
+                    <input (change)="onChangeFile(file.files)" (fileDropped)="onChangeFile(file.files)"
+                        class="form-control" placeholder="Choose file..." [(ngModel)]="uploadFile">
                 </div>
                 <div class="col-md-2 col-sm-2 p-l-0">
                     <button class="btn btn-style" (click)="file.click()">

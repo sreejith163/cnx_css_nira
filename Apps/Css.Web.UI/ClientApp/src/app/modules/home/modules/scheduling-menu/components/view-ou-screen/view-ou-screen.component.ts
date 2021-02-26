@@ -193,7 +193,7 @@ export class ViewOuScreenComponent implements OnInit {
   }
 
   calculate(forecastDataCalc: Forecast[]): number {
-    return forecastDataCalc.reduce((acc, product) => acc + parseInt(product.aht), 0)
+    return forecastDataCalc.reduce((acc, product) => acc + product.aht, 0)
   }
   ngOnInit() {
     this.model2 = this.today;

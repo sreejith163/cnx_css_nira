@@ -19,21 +19,21 @@ export const SystemAdminRoutes: Routes = [
     {
         path: 'agent-categories',
         canActivate: [PermissionsGuard],
-        data: {permissions: [1, 2, 3]},
+        data: {permissions: [1,2,3]},
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
         component: AgentCategoryListComponent
     },
     {
         path: 'scheduling-codes',
         canActivate: [PermissionsGuard],
-        data: {permissions: [1, 2, 3]},
+        data: {permissions: [1,2,3]},
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
         component: SchedulingCodeListComponent
     },
     {
         path: 'permissions',
         canActivate: [PermissionsGuard],
-        data: {permissions: [1, 2]},
+        data: {permissions: [1,2]},
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
         component: PermissionsListComponent
     }

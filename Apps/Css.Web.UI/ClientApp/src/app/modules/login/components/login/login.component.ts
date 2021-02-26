@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import {
   FormBuilder,
   FormControl,
@@ -11,6 +11,10 @@ import { AuthService, UAT } from 'src/app/core/services/auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
+import { environment } from 'src/environments/environment';
+import { EmployeeDetails } from 'src/app/modules/home/modules/system-admin/models/employee-details.model';
+import { PermissionsService } from 'src/app/modules/home/modules/system-admin/services/permissions.service';
+import { ErrorPopUpComponent } from 'src/app/shared/popups/error-pop-up/error-pop-up.component';
 
 @Component({
   selector: 'app-login',
@@ -18,11 +22,11 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
+  modalRef: NgbModalRef;
   public uatUsername: any;
   public uatPassword: any;
   uatLoginForm: FormGroup;
-  spinner = 'uatLoginSpinner';
+  spinner = "spinner";
 
   constructor(
     private spinnerService: NgxSpinnerService,
@@ -31,8 +35,8 @@ export class LoginComponent implements OnInit {
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private route: ActivatedRoute
-
+    private route: ActivatedRoute,
+    private permissionService: PermissionsService,
   ) { }
 
   ngOnInit(): void {
@@ -59,11 +63,9 @@ export class LoginComponent implements OnInit {
   }
 
   login_uat_test() {
+    this.spinnerService.show(this.spinner);
     // redirect to home if permission exists
     if (this.checkUATCredentials(this.uatUsername, this.uatPassword)) {
-
-      this.spinnerService.show(this.spinner, SpinnerOptions);
-
       const userUAT: UAT = {
         uid: this.uatUsername,
         employeeId: this.convertUATUsername(this.uatUsername).toString(),
@@ -71,15 +73,41 @@ export class LoginComponent implements OnInit {
       };
 
       // pass the UAT Object to the authService for handling
-
-      this.spinnerService.hide(this.spinner);
       this.modalService.dismissAll();
-      this.authService.loginUAT(userUAT);
+      this.loginUAT(userUAT);
 
     } else {
       console.log('invalid credentials');
     }
 
+  }
+
+  private getModalPopup(component: any, size: string) {
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
+    this.modalRef = this.modalService.open(component, options);
+  }
+
+  loginUAT(userUAT: UAT) {
+    // store the UAT details inside a cookie to persist uat session
+    this.cookieService.set('employeeId', userUAT.employeeId, null, environment.settings.cookiePath, null, false, 'Strict');
+    this.cookieService.set('uid', userUAT.uid, null, environment.settings.cookiePath, null, false, 'Strict');
+    this.cookieService.set('displayName', userUAT.displayName, null, environment.settings.cookiePath, null, false, 'Strict');
+    this.permissionService.getEmployee(+userUAT.employeeId).subscribe((user:EmployeeDetails)=>{
+      this.permissionService.storePermission(user.userRoleId);
+
+      this.router.navigate(['home']);
+      this.spinnerService.hide(this.spinner);
+
+    },error=>{
+
+      this.router.navigate(['login']);
+      this.spinnerService.hide(this.spinner);
+      
+      this.getModalPopup(ErrorPopUpComponent, 'sm');
+      this.modalRef.componentInstance.headingMessage = 'Invalid Credentials';
+      this.modalRef.componentInstance.contentMessage = "You don't have the permissions needed to access this.";
+
+    })
   }
 
 

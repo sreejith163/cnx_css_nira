@@ -27,7 +27,7 @@ import { AgentSchedulesResponse } from '../../../models/agent-schedules-response
 import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 import { SkillGroupQueryParameters } from '../../../../setup-menu/models/skill-group-query-parameters.model';
 import { ImportScheduleComponent } from '../../shared/import-schedule/import-schedule.component';
-import { ForecastExcelExportData } from '../../../constants/forecast-excel-export-data';
+
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { stringify } from '@angular/compiler/src/util';
 import { element } from 'protractor';
@@ -225,6 +225,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
 
   }
+  
   exportAsXLSX(): void {
 
     const replaceKeys = {
@@ -247,21 +248,28 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
     this.excelService.exportAsExcelFile(newArray, `Forecast-Template`);
   }
-
+  _keyUp(event) {
+    if (event.length == 0 && event.which == 48 ){
+      return false;
+   }
+}
   download() {
-    let fileName = 'ForecastTemplate.csv';
+    let fileName = `ForecastTemplate-${this.skillGroupBinder?.name}-${this.model2}.csv`;
     let columnNames = ["Time", "Forecasted Contact", "AHT", "Forecasted Req"];
     let header = columnNames.join(',');
 
     let csv = header;
     csv += '\r\n';
-
+  
     this.dataJson.map(c => {
-      csv += [c["time"], c["forecastedContact"], c["aht"], c["forecastedReq"]].join(',');
+      let fc = c["forecastedContact"].toLocaleString();
+      console.log(fc);
+      csv += [c["time"], fc , c["aht"], c["forecastedReq"]].join(',');
       csv += '\r\n';
+      console.log(csv);
     })
 
-    var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    var blob = new Blob([csv], { type: "text/csv" });
 
     var link = document.createElement("a");
     if (link.download !== undefined) {
@@ -289,9 +297,9 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
     return this.formBuilder.group({
       time: this.formBuilder.control({ value: datum.time, disabled: false }),
-      forecastedContact: this.formBuilder.control({ value: datum.forecastedContact, disabled: false }),
-      aht: this.formBuilder.control({ value: datum.aht, disabled: false }),
-      forecastedReq: this.formBuilder.control({ value: datum.forecastedReq, disabled: false }),
+      forecastedContact: this.formBuilder.control({ value: parseFloat(datum.forecastedContact).toFixed(2), disabled: false }),
+      aht: this.formBuilder.control({ value: parseFloat(datum.aht).toFixed(2), disabled: false }),
+      forecastedReq: this.formBuilder.control({ value: parseFloat(datum.forecastedReq).toFixed(2), disabled: false }),
       scheduledOpen: this.formBuilder.control({ value: datum.scheduledOpen, disabled: false })
     });
   }
@@ -300,19 +308,24 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
     return this.formBuilder.group({
       time: this.formBuilder.control({ value: datum.time, disabled: false }),
-      forecastedContact: this.formBuilder.control({ value: datum.forecastedContact, disabled: false }),
-      aht: this.formBuilder.control({ value: datum.aht, disabled: false }),
-      forecastedReq: this.formBuilder.control({ value: datum.forecastedReq, disabled: false }),
+      forecastedContact: this.formBuilder.control({ value: parseFloat(datum.forecastedContact).toFixed(2), disabled: false }),
+      aht: this.formBuilder.control({ value: parseFloat(datum.aht).toFixed(2), disabled: false }),
+      forecastedReq: this.formBuilder.control({ value: parseFloat(datum.forecastedReq).toFixed(2), disabled: false }),
       scheduledOpen: this.formBuilder.control({ value: '0.00', disabled: false })
     });
   }
+ 
   get formData() { return this.forecastForm.get('forecastFormArrays') as FormArray; }
 
 
   openVerticallyCentered(content) {
 
     var specific_date = new Date(this.model2);
-    var current_date = new Date();
+    var current_date = new Date(this.today);
+
+   
+
+  
     if (current_date.getTime() > specific_date.getTime()) {
 
       this.showErrorWarningPopUpMessage('Please select other dates to import a file.');
@@ -323,19 +336,6 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       this.modalService.open(content, { centered: true, size: 'lg' });
     }
    
-  }
-  openImportSchedule() {
-    this.getModalPopup(ImportScheduleComponent, 'lg');
-    this.modalRef.componentInstance.translationValues = this.translationValues;
-    this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
-
-    // this.modalRef.result.then((result) => {
-    //   const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
-    //   this.getModalPopup(MessagePopUpComponent, 'sm', message);
-    //   this.modalRef.result.then(() => {
-    //     //this.tabIndex === AgentScheduleType.Scheduling ? this.loadAgentSchedules() : this.loadAgentScheduleManger();
-    //   });
-    // });
   }
 
   onFileChange(ev) {
@@ -635,14 +635,17 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
 
   onChangeFile(files: File[]) {
-    console.log(files)
+   
     if (files[0]) {
 
       Papa.parse(files[0], {
         header: true,
         skipEmptyLines: true,
+        // step: function(row) {
+        //   console.log("Row:", row.data);
+        // },
         complete: (result, file) => {
-          console.log(result);
+         
           this.importForecastData = result.data;
 
 
@@ -682,7 +685,9 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     };
     //console.log(this.importForecastData);
     const newArrays = this.changeKeyObjects(this.importForecastData, replaceKeys);
+ 
 
+    console.log(newArrays['forecastedReq']);
     if (this.InsertUpdate === true) {
       let forecastObjArrays: Forecast[];
 
@@ -706,12 +711,17 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
         this.showSuccessPopUpMessage('The record has been added!');
         this.handleClear();
         this.enableSaveButton = false;
+        this.enableCancelButton = false;
         this.loadSkillGroup();
       },
         error => {
-
+      console.log(error.status);
           if (error.status === 409) {
             this.updateImport();
+          }
+          
+          if(error.status == 400){
+            this.showErrorWarningPopUpMessage('Data mismatch');
           }
 
         }
@@ -754,10 +764,13 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       this.showSuccessPopUpMessage('The record has been updated!');
       this.handleClear();
       this.enableSaveButton = false;
+      this.enableCancelButton = false;
       this.loadSkillGroup();
     },
       error => {
-        this.showErrorWarningPopUpMessage('Error');
+      if(error.status == 400){
+        this.showErrorWarningPopUpMessage('Data mismatch');
+      }
       }
     );
   }
@@ -775,11 +788,16 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
       const now = +new Date(this.model2);
 
+
+      console.log(this.formData.value);
+      
       let insertObject: ForecastDataModel;
       // let intDate = new getLocaleDateTimeFormat();
       this.forecastID = +`${this.skillGroupBinder?.id}${now}`;
       console.log(this.forecastID);
+      
       forecastObjArrays = this.formData.value;
+
       insertObject = {
         ForecastId: this.forecastID,
         Date: this.model2,
@@ -788,27 +806,28 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
           forecastObjArrays
       };
 
-      this.forecastService.addForecast(insertObject).subscribe(res => {
+       this.forecastService.addForecast(insertObject).subscribe(res => {
 
 
-        this.showSuccessPopUpMessage('The record has been added!');
-        this.enableSaveButton = false;
-        this.loadSkillGroup();
+       this.showSuccessPopUpMessage('The record has been added!');
+       this.enableSaveButton = false;
+       this.enableCancelButton = false;
+       this.loadSkillGroup();
 
       },
         error => {
 
           if (error.status === 409) {
-            this.updateForecast();
+           this.updateForecast();
           }
 
         }
-      );
+     );
     } else {
-      // var forecastObjArrays: Forecast[];
+     // var forecastObjArrays: Forecast[];
 
       this.updateForecast();
-    }
+     }
 
 
   }
@@ -829,6 +848,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     this.forecastService.updateForecast(this.forecastID, updateForecastData).subscribe(res => {
       this.showSuccessPopUpMessage('The record has been updated!');
       this.enableSaveButton = false;
+      this.enableCancelButton = false;
       this.loadSkillGroup();
     },
       error => {

@@ -13,7 +13,6 @@
     </div>
     <!-- temporary for UAT -->
     <ng-template #content let-modal>
-      <ngx-spinner [name]="spinner"></ngx-spinner>
       <div class="modal-header">
         <h4 class="modal-title">UAT Testing Login</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -58,3 +57,7 @@
     </div>
   </div>
 </div>
+
+<ngx-spinner [name]="spinner" bdOpacity=0.9 bdColor="#343a40" size="large" color="#ffffff" type="square-loader" [fullScreen]="true">
+  <p style="color: white">Redirecting. Please wait.</p>
+</ngx-spinner>

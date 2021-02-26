@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorPopUpComponent } from 'src/app/shared/popups/error-pop-up/error-pop-up.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 // temporary model for UAT
 export class UAT {
@@ -21,13 +22,9 @@ export class UAT {
 @Injectable()
 export class AuthService {
   private currentUserUATSubject: BehaviorSubject<UAT>;
-  modalRef: NgbModalRef;
 
   constructor(
     private cookieService: CookieService,
-    private router: Router,
-    private permissionsService: PermissionsService,
-    private modalService: NgbModal,
   ) {
 
     // fetch the userUAT details from cookie storage
@@ -82,26 +79,4 @@ export class AuthService {
     window.location.href = environment.sso.authBaseUrl + environment.sso.authAppToken;
   }
 
-  private getModalPopup(component: any, size: string) {
-    const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
-    this.modalRef = this.modalService.open(component, options);
-  }
-
-  loginUAT(userUAT: UAT) {
-    // store the UAT details inside a cookie to persist uat session
-    this.cookieService.set('employeeId', userUAT.employeeId, null, environment.settings.cookiePath, null, false, 'Strict');
-    this.cookieService.set('uid', userUAT.uid, null, environment.settings.cookiePath, null, false, 'Strict');
-    this.cookieService.set('displayName', userUAT.displayName, null, environment.settings.cookiePath, null, false, 'Strict');
-    this.permissionsService.getEmployee(+userUAT.employeeId).subscribe((user:EmployeeDetails)=>{
-      this.permissionsService.storePermission(user.userRoleId);
-      this.router.navigate(['home']);
-    },error=>{
-
-      this.getModalPopup(ErrorPopUpComponent, 'sm');
-      this.modalRef.componentInstance.headingMessage = 'Invalid Credentials';
-      this.modalRef.componentInstance.contentMessage = "You don't have the permissions needed to access this.";
-
-      this.router.navigate(['login']);
-    })
-  }
 }
