@@ -72,7 +72,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   import() {
     this.fileSubmitted = true;
     if (this.uploadFile && this.jsonData.length > 0) {
-      console.log(this.jsonData)
       this.jsonData.map(ele => {
         if (ele.StartTime.split(':')[0].length === 1) {
           ele.StartTime = '0' + ele.StartTime.split(':')[0] + ':' + ele.StartTime.split(':')[1];
@@ -99,6 +98,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
         this.showErrorWarningPopUpMessage(errorMessage);
       }
+    } else {
+      const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time`;
+      this.showErrorWarningPopUpMessage(errorMessage);
     }
   }
 
@@ -143,6 +145,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
             if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
               x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
             }
+            if (x?.endTime === '11:60 pm') {
+              x.endTime = '12:00 am';
+            }
           });
         }
       } else {
@@ -153,6 +158,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           }
           if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
             x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+          }
+          if (x?.endTime === '11:60 pm') {
+            x.endTime = '12:00 am';
           }
         });
       }
@@ -249,23 +257,71 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       if (i !== eleArray.length - 1) {
         const icon = charts.find(x => this.convertTimeFormat(x?.startTime) === this.convertTimeFormat(eleArray[i]))?.schedulingCodeId;
         const calendarTime = new ScheduleChart(eleArray[i], eleArray[i + 1], icon);
-        newArray.push(calendarTime);
+        if (calendarTime.startTime !== calendarTime.endTime) {
+          newArray.push(calendarTime);
+        }
       }
     }
     const items = newArray.filter(x => !x.schedulingCodeId);
     items.forEach(ele => {
       const icon = charts.find(x => this.convertTimeFormat(x?.startTime) < this.convertTimeFormat(ele?.startTime) &&
         this.convertTimeFormat(x?.endTime) >= this.convertTimeFormat(ele?.endTime))?.schedulingCodeId;
-      ele.schedulingCodeId = icon;
+      if (icon) {
+        ele.schedulingCodeId = icon;
+      } else {
+        const index = newArray.findIndex(x => x.startTime === ele.startTime);
+        if (index > -1) {
+          newArray.splice(index, 1);
+        }
+      }
     });
+    const finalArray = newArray.length > 0 ? this.adjustSchedulingCalendarTimesRange(newArray) : newArray;
 
-    return newArray;
+    return finalArray;
+  }
+
+  private adjustSchedulingCalendarTimesRange(times: Array<ScheduleChart>) {
+    const newTimesarray = new Array<ScheduleChart>();
+    let calendarTimes = new ScheduleChart(null, null, null);
+
+    for (const index in times) {
+      if (+index === 0) {
+        calendarTimes = times[index];
+        if (+index === times.length - 1) {
+          break;
+        }
+      } else if (calendarTimes.endTime === times[index].startTime && calendarTimes.schedulingCodeId === times[index].schedulingCodeId) {
+        calendarTimes.endTime = times[index].endTime;
+        if (+index === times.length - 1) {
+          break;
+        }
+      } else {
+        const model = new ScheduleChart(calendarTimes.startTime, calendarTimes.endTime, calendarTimes.schedulingCodeId);
+        newTimesarray.push(model);
+        calendarTimes = times[index];
+        if (+index === times.length - 1) {
+          break;
+        }
+      }
+    }
+
+    const modelvalue = new ScheduleChart(calendarTimes.startTime, calendarTimes.endTime, calendarTimes.schedulingCodeId);
+    newTimesarray.push(modelvalue);
+
+    return newTimesarray;
+
   }
 
   private validateDateAndTime() {
     for (const item of this.jsonData) {
       if (!item.StartTime || !item.EndTime) {
         return true;
+      }
+      if (item?.EndTime?.trim().toLowerCase().slice(2, 3) !== ':' || item?.StartTime?.trim().toLowerCase().slice(2, 3) !== ':') {
+        return true;
+      }
+      if (item.EndTime.trim().toLowerCase() === '00:00 am') {
+        item.EndTime = '11:60 pm';
       }
       if (this.convertTimeFormat(item.StartTime) >= this.convertTimeFormat(item.EndTime)) {
         return true;
@@ -463,11 +519,11 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private convertTimeFormat(time: string) {
     if (time) {
-      const count = time.split(' ')[1].trim().toLowerCase() === 'pm' ? 12 : undefined;
+      const count = time?.split(' ')[1]?.trim().toLowerCase() === 'pm' ? 12 : undefined;
       if (count) {
-        time = (+time.split(':')[0] + 12) + ':' + time.split(':')[1].split(' ')[0];
+        time = (+time?.split(':')[0] + 12) + ':' + time?.split(':')[1]?.split(' ')[0];
       } else {
-        time = time.split(':')[0] + ':' + time.split(':')[1].split(' ')[0];
+        time = time?.split(':')[0] + ':' + time?.split(':')[1]?.split(' ')[0];
       }
 
       return time;
