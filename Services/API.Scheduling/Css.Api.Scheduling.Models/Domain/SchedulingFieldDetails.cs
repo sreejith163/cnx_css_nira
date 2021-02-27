@@ -1,6 +1,5 @@
 ﻿using Css.Api.Core.Models.Domain.NoSQL;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.Domain
 {
@@ -10,12 +9,12 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets the charts.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
+        public ActivityLogScheduleRange ActivityLogScheduleRange { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent schedule manager.
+        /// Gets or sets the agent schedule manager chart.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleManagerChart> AgentScheduleManagerCharts { get; set; }
+        public ActivityLogScheduleManager ActivityLogScheduleManager { get; set; }
     }
 }

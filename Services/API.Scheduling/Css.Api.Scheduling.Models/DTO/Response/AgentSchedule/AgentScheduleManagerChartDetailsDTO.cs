@@ -1,4 +1,4 @@
-﻿using Css.Api.Core.Models.Domain.NoSQL;
+﻿using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -19,13 +19,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         /// Gets or sets the agent schedule manager.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleManagerChart> AgentScheduleManagerCharts { get; set; }
-
-        /// <summary>
-        /// Gets or sets the chart.
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public AgentScheduleChart AgentScheduleChart { get; set; }
+        public List<AgentScheduleManagerChartDTO> AgentScheduleManagerCharts { get; set; }
     }
 }
 

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 namespace Css.Api.Core.Models.Domain.NoSQL
 {
-    [BsonCollection("agent_schedule")]
-    public class AgentSchedule : BaseDocument
+    [BsonCollection("agent_schedule_manager")]
+    public class AgentScheduleManager : BaseDocument
     {
         /// <summary>
         /// Gets or sets the employee identifier.
@@ -29,9 +29,9 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public int CurrentAgentShedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent schedule date range.
+        /// Gets or sets the agent schedule manager charts.
         /// </summary>
-        public List<AgentScheduleRange> AgentScheduleRanges { get; set; }
+        public List<AgentScheduleManagerChart> AgentScheduleManagerCharts { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
@@ -61,11 +61,11 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public bool IsDeleted { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentSchedule"/> class.
+        /// Initializes a new instance of the <see cref="AgentScheduleManager"/> class.
         /// </summary>
-        public AgentSchedule()
+        public AgentScheduleManager()
         {
-            AgentScheduleRanges = new List<AgentScheduleRange>();
+            AgentScheduleManagerCharts = new List<AgentScheduleManagerChart>();
         }
     }
 }

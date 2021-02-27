@@ -4,9 +4,9 @@ using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
+namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
 {
-    public class AgentScheduleChartDetailsDTO
+    public class AgentScheduleManagerChartDetailsDTO
     {
         /// <summary>
         /// Gets or sets the agent schedule identifier.
@@ -16,10 +16,10 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent schedule range.
+        /// Gets or sets the agent schedule manager.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleRange> AgentScheduleRange { get; set; }
+        public List<AgentScheduleManagerChart> AgentScheduleManagerCharts { get; set; }
     }
 }
 

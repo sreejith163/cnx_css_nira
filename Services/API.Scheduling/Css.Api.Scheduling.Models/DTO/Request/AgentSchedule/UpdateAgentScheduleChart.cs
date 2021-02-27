@@ -1,5 +1,7 @@
 ﻿using Css.Api.Core.Models.Domain.NoSQL;
+using Css.Api.Core.Models.Enums;
 using Css.Api.Scheduling.Models.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
@@ -15,6 +17,21 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// Gets or sets the activity origin.
         /// </summary>
         public ActivityOrigin ActivityOrigin { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date from.
+        /// </summary>
+        public DateTimeOffset DateFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date to.
+        /// </summary>
+        public DateTimeOffset DateTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        public SchedulingStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the modified user.

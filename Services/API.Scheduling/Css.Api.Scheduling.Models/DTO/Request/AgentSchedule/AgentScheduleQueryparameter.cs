@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
+using Css.Api.Core.Models.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -16,14 +17,29 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         }
 
         /// <summary>
-        /// Gets or sets from date.
-        /// </summary>
-        public DateTimeOffset? FromDate { get; set; }
-
-        /// <summary>
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
         public int? AgentSchedulingGroupId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        public SchedulingStatus? Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date from.
+        /// </summary>
+        public DateTimeOffset? DateFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date to.
+        /// </summary>
+        public DateTimeOffset? DateTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [exclude conflict schedule].
+        /// </summary>
+        public bool? ExcludeConflictSchedule { get; set; }
 
         /// <summary>
         /// Gets or sets the employee ids.

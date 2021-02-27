@@ -109,6 +109,52 @@
               <br />
             </returns>
         </member>
+        <member name="T:Css.Api.Scheduling.Controllers.AgentScheduleManagersController">
+            <summary>
+            Controller for handling the agent schedules resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.AgentScheduleManagersController._agentScheduleManagerService">
+            <summary>
+            The agentAdmin service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.#ctor(Css.Api.Scheduling.Business.Interfaces.IAgentScheduleManagerService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.AgentScheduleManagersController" /> class.
+            </summary>
+            <param name="agentScheduleManagerService">The agent schedule manager service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.GetAgentScheduleManagerCharts(Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager.AgentScheduleManagerChartQueryparameter)">
+            <summary>
+            Gets the agent schedule manager charts.
+            </summary>
+            <param name="agentScheduleManagerChartQueryparameter">The agent schedule manager chart queryparameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.GetAgentScheduleManagerChart(System.String)">
+            <summary>
+            Gets the agent schedule manager chart.
+            </summary>
+            <param name="agentScheduleManagerId">The agent schedule manager identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.UpdateAgentScheduleMangerChart(Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager.UpdateAgentScheduleManagerChart)">
+            <summary>
+            Updates the agent schedule manger chart.
+            </summary>
+            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.CopyAgentScheduleManagerChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.CopyAgentScheduleManager)">
+            <summary>
+            Copies the agent schedule.
+            </summary>
+            <param name="agentScheduleManagerId">The agent schedule manager identifier.</param>
+            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.AgentSchedulesController">
             <summary>
             Controller for handling the agent schedules resource
@@ -140,6 +186,14 @@
             <param name="agentScheduleId">The agent schedule identifier.</param>
             <returns></returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.IsAgentScheduleRangeExist(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.DateRange)">
+            <summary>
+            Determines whether [is agent schedule range exist] [the specified agent schedule identifier].
+            </summary>
+            <param name="agentScheduleId">The agent schedule identifier.</param>
+            <param name="dateRangeDetails">The date range details.</param>
+            <returns></returns>
+        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.GetAgentScheduleCharts(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.AgentScheduleChartQueryparameter)">
             <summary>
             Gets the agent schedule.
@@ -164,13 +218,6 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.UpdateAgentScheduleManagerChart(Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.UpdateAgentScheduleManagerChart)">
-            <summary>
-            Updates the agent schedule manager chart.
-            </summary>
-            <param name="agentScheduleDetails">The agent schedule details.</param>
-            <returns></returns>
-        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.ImportAgentScheduleChart(Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.ImportAgentSchedule)">
             <summary>
             Updates the agent schedule chart.
@@ -178,12 +225,28 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.CopyAgentSchedule(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.CopyAgentSchedule)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.CopyAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.CopyAgentSchedule)">
             <summary>
-            Copies the agent schedule.
+            Copies the agent schedule chart.
             </summary>
             <param name="agentScheduleId">The agent schedule identifier.</param>
             <param name="agentScheduleDetails">The agent schedule details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.UpdateAgentScheduleRange(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.UpdateAgentScheduleDateRange)">
+            <summary>
+            Updates the agent schedule range.
+            </summary>
+            <param name="agentScheduleId">The agent schedule identifier.</param>
+            <param name="dateRangeDetails">The date range details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.DeleteAgentScheduleRange(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.DateRange)">
+            <summary>
+            Deletes the agent schedule range.
+            </summary>
+            <param name="agentScheduleId">The agent schedule identifier.</param>
+            <param name="dateRangeDetails">The date range details.</param>
             <returns></returns>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.GetAgentMySchedule(System.Int32,Css.Api.Scheduling.Models.DTO.Request.MySchedule.MyScheduleQueryParameter)">
@@ -441,34 +504,6 @@
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator"/> class.
             </summary>
         </member>
-        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleChartValidator`1">
-            <summary>
-            Custom validator for agent chart time range
-            </summary>
-            <typeparam name="T"></typeparam>
-            <seealso cref="T:FluentValidation.Validators.PropertyValidator" />
-        </member>
-        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleChartValidator`1.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleChartValidator`1" /> class.
-            </summary>
-        </member>
-        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleChartValidator`1.Validate(FluentValidation.Validators.PropertyValidatorContext)">
-            <summary>
-            </summary>
-            <param name="context"></param>
-            <returns></returns>
-            <inheritdoc />
-        </member>
-        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleChartValidator`1.IsValid(FluentValidation.Validators.PropertyValidatorContext)">
-            <summary>
-            Returns true if ... is valid.
-            </summary>
-            <param name="context">The context.</param>
-            <returns>
-              <c>true</c> if the specified context is valid; otherwise, <c>false</c>.
-            </returns>
-        </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerValidator`1">
             <summary>
             custom validator for agent schedule manager
@@ -497,6 +532,44 @@
               <c>true</c> if the specified context is valid; otherwise, <c>false</c>.
             </returns>
         </member>
+        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.CopyAgentScheduleManagerValidator">
+            <summary>
+            Validator for handling the validation of update agent schedule managerobject
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.CopyAgentScheduleManagerValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.CopyAgentScheduleManagerValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleChartValidator`1">
+            <summary>
+            Custom validator for agent chart time range
+            </summary>
+            <typeparam name="T"></typeparam>
+            <seealso cref="T:FluentValidation.Validators.PropertyValidator" />
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleChartValidator`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleChartValidator`1" /> class.
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleChartValidator`1.Validate(FluentValidation.Validators.PropertyValidatorContext)">
+            <summary>
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+            <inheritdoc />
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleChartValidator`1.IsValid(FluentValidation.Validators.PropertyValidatorContext)">
+            <summary>
+            Returns true if ... is valid.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>
+              <c>true</c> if the specified context is valid; otherwise, <c>false</c>.
+            </returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.CopyAgentScheduleValidator">
             <summary>
             Validator for handling the validation of update agent schedule object
@@ -505,6 +578,16 @@
         <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.CopyAgentScheduleValidator.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.CopyAgentScheduleValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.DateRangeValidator">
+            <summary>
+            Validator for handling the validation of date range object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.DateRangeValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.DateRangeValidator"/> class.
             </summary>
         </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleValidator">
@@ -547,14 +630,14 @@
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleChartValidator"/> class.
             </summary>
         </member>
-        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleManagerChartValidator">
+        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleDateRangeValidator">
             <summary>
-            Validator for handling the validation of update agent schedule chart
+            Validator for handling the validation of update agent schedule object
             </summary>
         </member>
-        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleManagerChartValidator.#ctor">
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleDateRangeValidator.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleManagerChartValidator"/> class.
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleDateRangeValidator"/> class.
             </summary>
         </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleValidator">
@@ -565,6 +648,16 @@
         <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleValidator.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerChartValidator">
+            <summary>
+            Validator for handling the validation of update agent schedule chart
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerChartValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerChartValidator"/> class.
             </summary>
         </member>
     </members>

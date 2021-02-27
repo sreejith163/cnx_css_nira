@@ -14,6 +14,8 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         public UpdateAgentScheduleValidator()
         {
             RuleFor(x => x.Status).IsInEnum();
+            RuleFor(x => x.DateFrom).NotEmpty();
+            RuleFor(x => x.DateTo).NotEmpty();
             RuleFor(x => x.ModifiedBy).NotEmpty();
         }
     }

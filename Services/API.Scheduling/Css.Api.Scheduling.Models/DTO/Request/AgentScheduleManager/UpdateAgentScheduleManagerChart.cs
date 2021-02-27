@@ -1,7 +1,7 @@
 ﻿using Css.Api.Scheduling.Models.Enums;
 using System.Collections.Generic;
 
-namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
+namespace Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager
 {
     public class UpdateAgentScheduleManagerChart
     {
@@ -11,7 +11,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <value>
         /// The agent schedule manager.
         /// </value>
-        public List<AgentScheduleManager> AgentScheduleManagers { get; set; }
+        public List<AgentScheduleManagerDTO> AgentScheduleManagers { get; set; }
 
         /// <summary>
         /// Gets or sets the activity origin.

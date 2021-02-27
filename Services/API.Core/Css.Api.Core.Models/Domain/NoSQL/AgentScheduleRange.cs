@@ -1,11 +1,13 @@
-﻿using MongoDB.Bson;
+﻿using Css.Api.Core.Models.Enums;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
 namespace Css.Api.Core.Models.Domain.NoSQL
 {
-    public class AgentScheduleManagerChart
+    public class AgentScheduleRange
     {
         /// <summary>
         /// Gets or sets the agent scheduling group identifier.
@@ -13,15 +15,28 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the date.
+        /// Gets or sets the date from.
         /// </summary>
         [BsonRepresentation(BsonType.String)]
-        public DateTimeOffset Date { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DateTimeOffset DateFrom { get; set; }
 
         /// <summary>
-        /// Gets or sets the charts.
+        /// Gets or sets the date to.
         /// </summary>
-        public List<ScheduleChart> Charts { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DateTimeOffset DateTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        public SchedulingStatus Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent schedule charts.
+        /// </summary>
+        public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
@@ -46,11 +61,11 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public DateTimeOffset? ModifiedDate { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentScheduleManagerChart"/> class.
+        /// Initializes a new instance of the <see cref="AgentScheduleRange"/> class.
         /// </summary>
-        public AgentScheduleManagerChart()
+        public AgentScheduleRange()
         {
-            Charts = new List<ScheduleChart>();
+            AgentScheduleCharts = new List<AgentScheduleChart>();
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
-    public class CopyAgentSchedule
+    public class CopyAgentScheduleManager
     {
         /// <summary>
         /// Gets or sets the employee identifier.
@@ -22,14 +22,9 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         public ActivityOrigin ActivityOrigin { get; set; }
 
         /// <summary>
-        /// Gets or sets the date from.
+        /// Gets or sets the date.
         /// </summary>
-        public DateTimeOffset DateFrom { get; set; }
-
-        /// <summary>
-        /// Gets or sets the date to.
-        /// </summary>
-        public DateTimeOffset DateTo { get; set; }
+        public DateTimeOffset Date { get; set; }
 
         /// <summary>
         /// Gets or sets the modified user.

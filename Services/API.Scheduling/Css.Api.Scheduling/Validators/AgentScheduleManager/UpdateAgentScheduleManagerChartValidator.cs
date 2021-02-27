@@ -1,8 +1,8 @@
-﻿using Css.Api.Core.Models.Domain.NoSQL;
-using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+﻿using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
+using Css.Api.Scheduling.Validators.AgentSchedule;
 using FluentValidation;
 
-namespace Css.Api.Scheduling.Validators.AgentSchedule
+namespace Css.Api.Scheduling.Validators.AgentScheduleManager
 {
     /// <summary>
     /// Validator for handling the validation of update agent schedule chart
@@ -22,7 +22,7 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
                 .ChildRules(x => x.RuleFor(x => x.EmployeeId).NotEmpty());
             RuleForEach(x => x.AgentScheduleManagers)
                 .ChildRules(x => x.RuleFor(x => x.AgentScheduleManagerChart)
-                .SetValidator(new AgentScheduleManagerValidator<AgentScheduleManagerChart>()));
+                .SetValidator(new AgentScheduleManagerValidator<AgentScheduleManagerChartDTO>()));
         }
     }
 }

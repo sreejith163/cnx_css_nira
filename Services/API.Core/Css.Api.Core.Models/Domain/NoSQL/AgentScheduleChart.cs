@@ -13,5 +13,13 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// Gets or sets the charts.
         /// </summary>
         public List<ScheduleChart> Charts { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgentScheduleChart"/> class.
+        /// </summary>
+        public AgentScheduleChart()
+        {
+            Charts = new List<ScheduleChart>();
+        }
     }
 }

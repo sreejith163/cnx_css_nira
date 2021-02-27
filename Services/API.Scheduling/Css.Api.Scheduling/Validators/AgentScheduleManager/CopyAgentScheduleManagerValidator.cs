@@ -4,18 +4,17 @@ using FluentValidation;
 namespace Css.Api.Scheduling.Validators.AgentSchedule
 {
     /// <summary>
-    /// Validator for handling the validation of update agent schedule object
+    /// Validator for handling the validation of update agent schedule managerobject
     /// </summary>
-    public class CopyAgentScheduleValidator : AbstractValidator<CopyAgentSchedule>
+    public class CopyAgentScheduleManagerValidator : AbstractValidator<CopyAgentScheduleManager>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CopyAgentScheduleValidator"/> class.
+        /// Initializes a new instance of the <see cref="CopyAgentScheduleManagerValidator"/> class.
         /// </summary>
-        public CopyAgentScheduleValidator()
+        public CopyAgentScheduleManagerValidator()
         {
             RuleFor(x => x.AgentSchedulingGroupId).NotEmpty();
-            RuleFor(x => x.DateFrom).NotEmpty();
-            RuleFor(x => x.DateTo).NotEmpty();
+            RuleFor(x => x.Date).NotEmpty();
             RuleFor(x => x.ModifiedUser).NotEmpty();
             RuleFor(x => x.ActivityOrigin).IsInEnum();
             RuleFor(x => x.ModifiedBy).NotEmpty();

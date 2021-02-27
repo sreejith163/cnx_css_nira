@@ -322,11 +322,11 @@ namespace Css.Api.Reporting.Business.Targets
             agentSchedules.ForEach(x =>
             {
                 var exSch = existingSchedules.FirstOrDefault(y => y.EmployeeId == x.EmployeeId);
-                if (exSch != null && exSch.AgentSchedulingGroupId != x.AgentSchedulingGroupId)
-                {
-                    x.ModifiedBy = "UDW Import";
-                    x.ModifiedDate = DateTime.UtcNow;
-                }
+                //if (exSch != null && exSch.AgentSchedulingGroupId != x.AgentSchedulingGroupId)
+                //{
+                //    x.ModifiedBy = "UDW Import";
+                //    x.ModifiedDate = DateTime.UtcNow;
+                //}
             });
         }
         #endregion

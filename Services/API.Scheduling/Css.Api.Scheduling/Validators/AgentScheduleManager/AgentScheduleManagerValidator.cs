@@ -1,4 +1,4 @@
-﻿using Css.Api.Core.Models.Domain.NoSQL;
+﻿using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using FluentValidation.Results;
 using FluentValidation.Validators;
 using System;
@@ -29,7 +29,7 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context)
         {
             var validationFailures = new List<ValidationFailure>();
-            var item = context.PropertyValue as AgentScheduleManagerChart;
+            var item = context.PropertyValue as AgentScheduleManagerChartDTO;
 
             if (item.Date == null)
             {
