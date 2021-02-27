@@ -116,8 +116,7 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.ElemMatch(
                     i => i.AgentScheduleRanges, range => range.Status != SchedulingStatus.Rejected &&
-                                                         (dateFrom > range.DateFrom || dateFrom < range.DateTo) &&
-                                                         (dateTo > range.DateFrom || dateTo < range.DateTo)) &
+                                                         dateRange.DateFrom <= range.DateTo && dateRange.DateTo >= range.DateFrom) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var count = await FindCountByIdAsync(query);
@@ -336,8 +335,7 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentSchedule>.Filter.ElemMatch(
                     i => i.AgentScheduleRanges, range => range.Status != SchedulingStatus.Pending_Schedule &&
                                                          oldDateFrom != range.DateFrom && oldDateTo != range.DateTo &&
-                                                         (newDateFrom > range.DateFrom || newDateFrom < range.DateTo) &&
-                                                         (newDateTo > range.DateFrom || newDateTo < range.DateTo)) &
+                                                         dateRange.NewDateFrom <= range.DateTo && dateRange.NewDateTo >= range.DateFrom) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
@@ -440,8 +438,7 @@ namespace Css.Api.Scheduling.Repository
                 var dateTo = new DateTimeOffset(agentScheduleQueryparameter.DateTo.Value.Date.ToUniversalTime(), TimeSpan.Zero);
 
                 agentSchedules = agentSchedules.Where(x => x.AgentScheduleRanges.Exists(y => y.Status != SchedulingStatus.Approved &&
-                                                                                             dateFrom > y.DateFrom && dateFrom < y.DateTo &&
-                                                                                             dateTo > y.DateFrom && dateTo < y.DateTo));
+                                                                                             dateFrom <= y.DateTo && dateTo >= y.DateFrom));
             }
 
             return agentSchedules;
