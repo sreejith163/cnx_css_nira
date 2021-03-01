@@ -39,7 +39,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets a value indicating whether [exclude conflict schedule].
         /// </summary>
-        public bool? ExcludeConflictSchedule { get; set; }
+        public bool ExcludeConflictSchedule { get; set; }
 
         /// <summary>
         /// Gets or sets the employee ids.

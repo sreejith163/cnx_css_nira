@@ -483,32 +483,32 @@ namespace Css.Api.Scheduling.Repository
                 agentSchedules = agentSchedules.Where(x => x.Ranges.Exists(y => y.Status == agentScheduleQueryparameter.Status));
             }
 
-            if (agentScheduleQueryparameter.ExcludeConflictSchedule.HasValue && agentScheduleQueryparameter.DateFrom.HasValue &&
-                agentScheduleQueryparameter.DateFrom != default(DateTime) && agentScheduleQueryparameter.DateTo.HasValue &&
-                agentScheduleQueryparameter.DateTo != default(DateTime))
+            if (agentScheduleQueryparameter.DateFrom.HasValue && agentScheduleQueryparameter.DateFrom != default(DateTime) && 
+                agentScheduleQueryparameter.DateTo.HasValue && agentScheduleQueryparameter.DateTo != default(DateTime) &&
+                !agentScheduleQueryparameter.ExcludeConflictSchedule)
             {
                 agentScheduleQueryparameter.DateFrom = new DateTime(agentScheduleQueryparameter.DateFrom.Value.Year, agentScheduleQueryparameter.DateFrom.Value.Month,
                                                                     agentScheduleQueryparameter.DateFrom.Value.Day, 0, 0, 0);
                 agentScheduleQueryparameter.DateTo = new DateTime(agentScheduleQueryparameter.DateTo.Value.Year, agentScheduleQueryparameter.DateTo.Value.Month,
                                                                     agentScheduleQueryparameter.DateTo.Value.Day, 0, 0, 0);
 
-                agentSchedules = agentSchedules.Where(x => x.Ranges.Exists(y => y.Status != SchedulingStatus.Approved &&
-                                                                                             agentScheduleQueryparameter.DateFrom < y.DateFrom &&
-                                                                                             agentScheduleQueryparameter.DateTo > y.DateTo));
+                agentSchedules = agentSchedules.Where(x => x.Ranges.Any(y => agentScheduleQueryparameter.DateFrom == y.DateFrom &&
+                                                                             agentScheduleQueryparameter.DateTo == y.DateTo));
             }
 
-            if (!agentScheduleQueryparameter.ExcludeConflictSchedule.HasValue && agentScheduleQueryparameter.DateFrom.HasValue &&
-                agentScheduleQueryparameter.DateFrom != default(DateTime) && agentScheduleQueryparameter.DateTo.HasValue &&
-                agentScheduleQueryparameter.DateTo != default(DateTime))
+            if (agentScheduleQueryparameter.DateFrom.HasValue && agentScheduleQueryparameter.DateFrom != default(DateTime) &&
+                agentScheduleQueryparameter.DateTo.HasValue && agentScheduleQueryparameter.DateTo != default(DateTime) &&
+                agentScheduleQueryparameter.ExcludeConflictSchedule)
             {
                 agentScheduleQueryparameter.DateFrom = new DateTime(agentScheduleQueryparameter.DateFrom.Value.Year, agentScheduleQueryparameter.DateFrom.Value.Month,
                                                                     agentScheduleQueryparameter.DateFrom.Value.Day, 0, 0, 0);
                 agentScheduleQueryparameter.DateTo = new DateTime(agentScheduleQueryparameter.DateTo.Value.Year, agentScheduleQueryparameter.DateTo.Value.Month,
                                                                     agentScheduleQueryparameter.DateTo.Value.Day, 0, 0, 0);
 
-                agentSchedules = agentSchedules.Where(x => x.Ranges.Exists(y => y.Status != SchedulingStatus.Approved &&
-                                                                                agentScheduleQueryparameter.DateFrom == y.DateFrom &&
-                                                                                agentScheduleQueryparameter.DateTo == y.DateTo));
+                agentSchedules = agentSchedules.Where(x => !x.Ranges.Any(y => agentScheduleQueryparameter.DateFrom == y.DateFrom &&
+                                                                              agentScheduleQueryparameter.DateTo == y.DateTo &&
+                                                                              agentScheduleQueryparameter.DateFrom < y.DateTo &&
+                                                                              agentScheduleQueryparameter.DateTo > y.DateFrom));
             }
 
             return agentSchedules;

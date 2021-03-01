@@ -106,11 +106,14 @@ namespace Css.Api.Scheduling.Business
                 var mappedAgentScheduleManagers = JsonConvert.DeserializeObject<List<AgentScheduleManagerChartDetailsDTO>>(JsonConvert.SerializeObject(agentScheduleManagers));
                 foreach (var mappedAgentScheduleManager in mappedAgentScheduleManagers)
                 {
-                    var date = agentScheduleManagerChartQueryparameter.Date.Value;
-                    var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+                    if (mappedAgentScheduleManager.ManagerCharts != null)
+                    {
+                        var date = agentScheduleManagerChartQueryparameter.Date.Value;
+                        var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
 
-                    mappedAgentScheduleManager.ManagerCharts = mappedAgentScheduleManager.ManagerCharts
-                        .Where(x => x.Date == dateTimeWithZeroTimeSpan).ToList();
+                        mappedAgentScheduleManager.ManagerCharts = mappedAgentScheduleManager.ManagerCharts
+                            .Where(x => x.Date == dateTimeWithZeroTimeSpan).ToList();
+                    }
                 }
 
                 return new CSSResponse(mappedAgentScheduleManagers, HttpStatusCode.OK);

@@ -19,7 +19,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
         /// Gets or sets the employee identifier.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the first name.
@@ -37,7 +37,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
         /// Gets or sets the current agent scheduling group identifier.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ActiveAgentShedulingGroupId { get; set; }
+        public int? ActiveAgentShedulingGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the agent schedule manager.

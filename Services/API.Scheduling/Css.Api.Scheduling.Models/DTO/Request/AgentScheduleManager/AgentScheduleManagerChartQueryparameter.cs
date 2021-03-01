@@ -1,5 +1,4 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
-using Css.Api.Core.Models.Enums;
 using System;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager
@@ -27,7 +26,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager
         /// <summary>
         /// Gets or sets a value indicating whether [exclude conflict schedule].
         /// </summary>
-        public bool? ExcludeConflictSchedule { get; set; }
+        public bool ExcludeConflictSchedule { get; set; }
 
         /// <summary>
         /// Gets or sets from date.
