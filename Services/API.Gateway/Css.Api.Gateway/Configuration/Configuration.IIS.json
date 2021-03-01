@@ -491,6 +491,18 @@
           "Port": 44393
         }
       ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/exists",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/exists",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}",
       "UpstreamHttpMethod": [ "Get", "Put" ]
     },
@@ -529,6 +541,18 @@
       ],
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/copy",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/range",
+      "UpstreamHttpMethod": [ "Put", "Delete" ]
     },
     //********* Agent Schedule Manager Routes *********************
     {

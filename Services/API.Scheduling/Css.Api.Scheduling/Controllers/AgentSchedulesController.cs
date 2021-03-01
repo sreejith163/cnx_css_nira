@@ -138,7 +138,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
         /// <param name="dateRangeDetails">The date range details.</param>
         /// <returns></returns>
-        [HttpPut("{agentScheduleId}/scheduleRange")]
+        [HttpPut("{agentScheduleId}/range")]
         public async Task<IActionResult> UpdateAgentScheduleRange(string agentScheduleId, [FromBody] UpdateAgentScheduleDateRange dateRangeDetails)
         {
             var result = await _agentScheduleService.UpdateAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
@@ -151,7 +151,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
         /// <param name="dateRangeDetails">The date range details.</param>
         /// <returns></returns>
-        [HttpDelete("{agentScheduleId}/scheduleRange")]
+        [HttpDelete("{agentScheduleId}/range")]
         public async Task<IActionResult> DeleteAgentScheduleRange(string agentScheduleId, [FromBody] DateRange dateRangeDetails)
         {
             var result = await _agentScheduleService.DeleteAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
