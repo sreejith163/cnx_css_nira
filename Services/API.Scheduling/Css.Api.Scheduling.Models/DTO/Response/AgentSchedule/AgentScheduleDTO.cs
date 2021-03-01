@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Css.Api.Core.Models.Domain.NoSQL;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
@@ -43,7 +44,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         /// Gets or sets the ranges.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<Test> Ranges { get; set; }
+        public List<AgentScheduleRange> Ranges { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
