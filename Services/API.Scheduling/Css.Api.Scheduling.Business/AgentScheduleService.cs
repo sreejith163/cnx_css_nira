@@ -329,9 +329,11 @@ namespace Css.Api.Scheduling.Business
                     importAgentScheduleChart.DateFrom = new DateTime(importAgentScheduleChart.DateFrom.Year, importAgentScheduleChart.DateFrom.Month, importAgentScheduleChart.DateFrom.Day, 0, 0, 0);
                     importAgentScheduleChart.DateTo = new DateTime(importAgentScheduleChart.DateTo.Year, importAgentScheduleChart.DateTo.Month, importAgentScheduleChart.DateTo.Day, 0, 0, 0);
 
-                    var agentScheduleRangeExist = agentSchedule.Ranges.Exists(x => x.DateFrom == importAgentScheduleChart.DateFrom &&
-                                                                                                x.DateTo == importAgentScheduleChart.DateTo);
-                    if (!agentScheduleRangeExist)
+                    var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => x.Status != SchedulingStatus.Rejected &&
+                                                                                   importAgentScheduleChart.DateFrom < x.DateTo && 
+                                                                                   importAgentScheduleChart.DateTo > x.DateFrom);
+
+                    if (!hasConflictingSchedules)
                     {
                         var agentAdmin = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(employeeIdDetails);
                         if (agentAdmin != null)
@@ -400,7 +402,7 @@ namespace Css.Api.Scheduling.Business
                 if (employeeSchedule != null)
                 {
                     var agentScheduleRangeExist = employeeSchedule.Ranges.Exists(x => x.DateFrom == agentScheduleDetails.DateFrom &&
-                                                                                                   x.DateTo == agentScheduleDetails.DateTo);
+                                                                                      x.DateTo == agentScheduleDetails.DateTo);
                     if (!agentScheduleRangeExist)
                     {
                         var copiedAgentScheduleRange = agentSchedule.Ranges
