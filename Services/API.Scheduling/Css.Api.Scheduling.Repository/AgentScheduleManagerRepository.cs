@@ -15,6 +15,7 @@ using AutoMapper.QueryableExtensions;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using System.Collections.Generic;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
+using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -57,7 +58,7 @@ namespace Css.Api.Scheduling.Repository
             }
 
             var mappedAgentScheduleManagers = pagedAgentScheduleManagers
-                .ProjectTo<AgentScheduleManagerDTO>(_mapper.ConfigurationProvider);
+                .ProjectTo<AgentScheduleManagerChartDetailsDTO>(_mapper.ConfigurationProvider);
 
             var shapedAgentScheduleManagers = DataShaper.ShapeData(mappedAgentScheduleManagers, agentScheduleManagerChartQueryparameter.Fields);
 
@@ -111,6 +112,15 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
+        /// Creates the agent schedule manager.
+        /// </summary>
+        /// <param name="agentScheduleManagerRequest">The agent schedule manager request.</param>
+        public void CreateAgentScheduleManager(AgentScheduleManager agentScheduleManagerRequest)
+        {
+            InsertOneAsync(agentScheduleManagerRequest);
+        }
+
+        /// <summary>
         /// Updates the agent schedule manger chart.
         /// </summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
@@ -121,7 +131,7 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.IsDeleted, false);
 
-            agentScheduleManagerChart.Date = agentScheduleManagerChart.Date.Add(TimeSpan.Zero);
+            agentScheduleManagerChart.Date = new DateTime(agentScheduleManagerChart.Date.Year, agentScheduleManagerChart.Date.Month, agentScheduleManagerChart.Date.Day, 0, 0, 0);
 
             var documentQuery = query & Builders<AgentScheduleManager>.Filter
                 .ElemMatch(i => i.AgentScheduleManagerCharts, chart => chart.Date == agentScheduleManagerChart.Date);
@@ -206,16 +216,18 @@ namespace Css.Api.Scheduling.Repository
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.CurrentAgentShedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId);
             }
 
-            if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime) &&
-                !agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule.HasValue)
+            if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime))
             {
-                var dateTimeWithZeroTimeSpan = agentScheduleManagerChartQueryparameter.Date.Value.Add(TimeSpan.Zero);
+                var date = agentScheduleManagerChartQueryparameter.Date.Value;
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Exists(y => y.Date == dateTimeWithZeroTimeSpan));
             }
 
-            if (agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule.HasValue)
+            if (agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule.HasValue && agentScheduleManagerChartQueryparameter.Date.HasValue && 
+                agentScheduleManagerChartQueryparameter.Date != default(DateTime))
             {
-                var dateTimeWithZeroTimeSpan = agentScheduleManagerChartQueryparameter.Date.Value.Add(TimeSpan.Zero);
+                var date = agentScheduleManagerChartQueryparameter.Date.Value;
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Exists(y => y.Date != dateTimeWithZeroTimeSpan));
             }
 

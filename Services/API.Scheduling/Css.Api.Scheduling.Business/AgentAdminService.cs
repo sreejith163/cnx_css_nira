@@ -49,6 +49,11 @@ namespace Css.Api.Scheduling.Business
         private readonly IAgentScheduleRepository _agentScheduleRepository;
 
         /// <summary>
+        /// The agent schedule manager repository
+        /// </summary>
+        private readonly IAgentScheduleManagerRepository _agentScheduleManagerRepository;
+
+        /// <summary>
         /// The client name repository
         /// </summary>
         private readonly IClientRepository _clientRepository;
@@ -93,18 +98,21 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="agentAdminRepository">The agent admin repository.</param>
-        /// <param name="_agentScheduleRepository">The agent schedule repository.</param>
+        /// <param name="agentScheduleRepository">The agent schedule repository.</param>
+        /// <param name="agentScheduleManagerRepository">The agent schedule manager repository.</param>
         /// <param name="clientRepository">The client repository.</param>
         /// <param name="clientLobGroupRepository">The client lob group repository.</param>
         /// <param name="skillGroupRepository">The skill group repository.</param>
         /// <param name="skillTagRepository">The skill tag repository.</param>
         /// <param name="agentSchedulingGroupRepository">The agent scheduling group repository.</param>
+        /// <param name="activityLogRepository">The activity log repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
         public AgentAdminService(
             IHttpContextAccessor httpContextAccessor,
             IAgentAdminRepository agentAdminRepository,
-            IAgentScheduleRepository _agentScheduleRepository,
+            IAgentScheduleRepository agentScheduleRepository,
+            IAgentScheduleManagerRepository agentScheduleManagerRepository,
             IClientRepository clientRepository,
             IClientLobGroupRepository clientLobGroupRepository,
             ISkillGroupRepository skillGroupRepository,
@@ -116,7 +124,8 @@ namespace Css.Api.Scheduling.Business
         {
             _httpContextAccessor = httpContextAccessor;
             _agentAdminRepository = agentAdminRepository;
-            this._agentScheduleRepository = _agentScheduleRepository;
+            _agentScheduleRepository = agentScheduleRepository;
+            _agentScheduleManagerRepository = agentScheduleManagerRepository;
             _clientRepository = clientRepository;
             _clientLobGroupRepository = clientLobGroupRepository;
             _skillGroupRepository = skillGroupRepository;
@@ -276,6 +285,8 @@ namespace Css.Api.Scheduling.Business
             var agentScheduleRequest = _mapper.Map<AgentSchedule>(agentAdminRequest);
             _agentScheduleRepository.CreateAgentSchedule(agentScheduleRequest);
 
+            var agentScheduleManagerRequest = _mapper.Map<AgentScheduleManager>(agentAdminRequest);
+            _agentScheduleManagerRepository.CreateAgentScheduleManager(agentScheduleManagerRequest);
 
             // get the preUpdated details and compare it with the updated details to check changes
             var fieldDetails = addActivityLogFields(null, agentAdminRequest, "");

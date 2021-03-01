@@ -1,7 +1,6 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
-using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using System.Collections.Generic;
@@ -42,6 +41,12 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
         Task<List<int>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
+
+        /// <summary>
+        /// Creates the agent schedule manager.
+        /// </summary>
+        /// <param name="agentScheduleManagerRequest">The agent schedule manager request.</param>
+        void CreateAgentScheduleManager(AgentScheduleManager agentScheduleManagerRequest);
 
         /// <summary>
         /// Updates the agent schedule manger chart.
