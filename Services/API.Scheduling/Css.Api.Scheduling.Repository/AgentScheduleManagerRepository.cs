@@ -216,7 +216,7 @@ namespace Css.Api.Scheduling.Repository
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.ActiveAgentShedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId);
             }
 
-            if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime))
+            if (!agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule.HasValue && agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime))
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
                 var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
