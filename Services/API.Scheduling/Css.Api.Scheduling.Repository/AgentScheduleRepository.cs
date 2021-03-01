@@ -203,7 +203,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) &
-                Builders<AgentSchedule>.Filter.ElemMatch(i => i.Ranges, range => range.AgentSchedulingGroupId == agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
+                Builders<AgentSchedule>.Filter.Eq(i => i.ActiveAgentShedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
 
             var agentSchedules = FilterBy(query);
 

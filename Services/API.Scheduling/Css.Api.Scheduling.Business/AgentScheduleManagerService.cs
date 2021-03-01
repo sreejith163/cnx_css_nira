@@ -146,7 +146,7 @@ namespace Css.Api.Scheduling.Business
             var hasValidCodes = await HasValidSchedulingCodes(agentScheduleManagerChartDetails);
             if (!hasValidCodes)
             {
-                // return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
             }
 
             var activityLogs = new List<ActivityLog>();
@@ -222,7 +222,6 @@ namespace Css.Api.Scheduling.Business
                 var employeeSchedule = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails);
                 if (employeeSchedule != null)
                 {
-
                     agentScheduleDetails.Date = new DateTime(agentScheduleDetails.Date.Year, agentScheduleDetails.Date.Month, agentScheduleDetails.Date.Day, 0, 0, 0);
                     var agentScheduleManagerChartExist = employeeSchedule.ManagerCharts.Exists(x => x.Date == agentScheduleDetails.Date);
                     

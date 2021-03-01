@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Business
@@ -380,7 +379,6 @@ namespace Css.Api.Scheduling.Business
 
             _agentAdminRepository.UpdateAgentAdmin(agentAdminRequest);
 
-
             var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
             {
                 EmployeeId = agentAdminDetails.EmployeeId,
@@ -392,11 +390,8 @@ namespace Css.Api.Scheduling.Business
 
             _agentScheduleRepository.UpdateAgentSchedule(employeeIdDetails, updateAgentScheduleEmployeeDetails);
 
-
-            // get the preUpdated details and compare it with the updated details to check changes
             var fieldDetails = addActivityLogFields(preUpdateAgentAdmin, agentAdminRequest, preUpdateAgentAdminHireDate);
 
-            // create activity log based on the changed fields
             var activityLog = new ActivityLog() {
                 ActivityType = ActivityType.AgentAdmin,
                 FieldDetails = fieldDetails,
@@ -415,147 +410,158 @@ namespace Css.Api.Scheduling.Business
             return new CSSResponse(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Adds the activity log fields.
+        /// </summary>
+        /// <param name="preUpdateDetails">The pre update details.</param>
+        /// <param name="updatedDetails">The updated details.</param>
+        /// <param name="preUpdateAgentAdminHireDate">The pre update agent admin hire date.</param>
+        /// <returns></returns>
         private List<FieldDetail> addActivityLogFields(UpdateAgentAdmin preUpdateDetails, Agent updatedDetails, string preUpdateAgentAdminHireDate)
         {
             var fielDetails = new List<FieldDetail>();
-            var agentUpdatedHireDate = updatedDetails.AgentData.Find(x => x.Group.Description == "Hire Date").Group.Value;
+            var agentUpdatedHireDate = updatedDetails.AgentData.Find(x => x.Group.Description == "Hire Date")?.Group?.Value;
 
-            if (preUpdateDetails != null){
-                if (preUpdateAgentAdminHireDate != agentUpdatedHireDate)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "Hire Date",
-                        OldValue = preUpdateAgentAdminHireDate != null ? preUpdateAgentAdminHireDate.ToString() : "",
-                        NewValue = agentUpdatedHireDate.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.EmployeeId != updatedDetails.Ssn)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "EmployeeId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.EmployeeId.ToString() : "",
-                        NewValue = updatedDetails.Ssn.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.FirstName != updatedDetails.FirstName)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "FirstName",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.FirstName.ToString() : "",
-                        NewValue = updatedDetails.FirstName.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.LastName != updatedDetails.LastName)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "LastName",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.LastName.ToString() : "",
-                        NewValue = updatedDetails.LastName.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-
-                if (preUpdateDetails.ClientId != updatedDetails.ClientId)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "ClientId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.ClientId.ToString() : "",
-                        NewValue = updatedDetails.ClientId.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.ClientLobGroupId != updatedDetails.ClientLobGroupId)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "ClientLobGroupId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.ClientLobGroupId.ToString() : "",
-                        NewValue = updatedDetails.ClientLobGroupId.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.SkillGroupId != updatedDetails.SkillGroupId)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "SkillGroupId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.SkillGroupId.ToString() : "",
-                        NewValue = updatedDetails.SkillGroupId.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.SkillTagId != updatedDetails.SkillTagId)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "SkillTagId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.SkillTagId.ToString() : "",
-                        NewValue = updatedDetails.SkillTagId.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.Sso != updatedDetails.Sso)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "Sso",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.Sso.ToString() : "",
-                        NewValue = updatedDetails.Sso.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.SupervisorId != updatedDetails.SupervisorId)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "SupervisorId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorId.ToString() : "",
-                        NewValue = updatedDetails.SupervisorId.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.SupervisorSso != updatedDetails.SupervisorSso)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "SupervisorSso",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorSso.ToString() : "",
-                        NewValue = updatedDetails.SupervisorSso.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.SupervisorName != updatedDetails.SupervisorName)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "SupervisorName",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorName.ToString() : "",
-                        NewValue = updatedDetails.SupervisorName.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-            }else if(preUpdateDetails == null)
+            if (!string.IsNullOrWhiteSpace(agentUpdatedHireDate))
             {
-                var createFieldDetails = new List<FieldDetail>()
+                if (preUpdateDetails != null)
+                {
+                    if (preUpdateAgentAdminHireDate != agentUpdatedHireDate)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "Hire Date",
+                            OldValue = preUpdateAgentAdminHireDate != null ? preUpdateAgentAdminHireDate.ToString() : "",
+                            NewValue = agentUpdatedHireDate.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.EmployeeId != updatedDetails.Ssn)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "EmployeeId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.EmployeeId.ToString() : "",
+                            NewValue = updatedDetails.Ssn.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.FirstName != updatedDetails.FirstName)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "FirstName",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.FirstName.ToString() : "",
+                            NewValue = updatedDetails.FirstName.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.LastName != updatedDetails.LastName)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "LastName",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.LastName.ToString() : "",
+                            NewValue = updatedDetails.LastName.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+
+                    if (preUpdateDetails.ClientId != updatedDetails.ClientId)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "ClientId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.ClientId.ToString() : "",
+                            NewValue = updatedDetails.ClientId.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.ClientLobGroupId != updatedDetails.ClientLobGroupId)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "ClientLobGroupId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.ClientLobGroupId.ToString() : "",
+                            NewValue = updatedDetails.ClientLobGroupId.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.SkillGroupId != updatedDetails.SkillGroupId)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "SkillGroupId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.SkillGroupId.ToString() : "",
+                            NewValue = updatedDetails.SkillGroupId.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.SkillTagId != updatedDetails.SkillTagId)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "SkillTagId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.SkillTagId.ToString() : "",
+                            NewValue = updatedDetails.SkillTagId.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.Sso != updatedDetails.Sso)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "Sso",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.Sso.ToString() : "",
+                            NewValue = updatedDetails.Sso.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.SupervisorId != updatedDetails.SupervisorId)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "SupervisorId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorId.ToString() : "",
+                            NewValue = updatedDetails.SupervisorId.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.SupervisorSso != updatedDetails.SupervisorSso)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "SupervisorSso",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorSso.ToString() : "",
+                            NewValue = updatedDetails.SupervisorSso.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.SupervisorName != updatedDetails.SupervisorName)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "SupervisorName",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorName.ToString() : "",
+                            NewValue = updatedDetails.SupervisorName.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+                }
+                else if (preUpdateDetails == null)
+                {
+                    var createFieldDetails = new List<FieldDetail>()
                     {
                         new FieldDetail()
                         {
@@ -611,7 +617,7 @@ namespace Css.Api.Scheduling.Business
                             OldValue = "",
                             NewValue = updatedDetails.Sso.ToString()
                         },
-                
+
                         new FieldDetail()
                         {
                             Name = "SupervisorId",
@@ -633,11 +639,11 @@ namespace Css.Api.Scheduling.Business
 
                 };
 
-                fielDetails = createFieldDetails;
+                    fielDetails = createFieldDetails;
+                }
             }
 
             return fielDetails;
-
         }
 
         /// <summary>Moves the agent admins.</summary>
