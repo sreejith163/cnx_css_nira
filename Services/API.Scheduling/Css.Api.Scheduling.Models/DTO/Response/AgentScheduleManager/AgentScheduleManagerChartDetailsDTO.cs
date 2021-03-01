@@ -34,6 +34,12 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
         public string LastName { get; set; }
 
         /// <summary>
+        /// Gets or sets the current agent scheduling group identifier.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int ActiveAgentShedulingGroupId { get; set; }
+
+        /// <summary>
         /// Gets or sets the agent schedule manager.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

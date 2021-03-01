@@ -37,7 +37,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? AgentSchedulingGroupId { get; set; }
+        public int ActiveAgentSchedulingGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the ranges.
