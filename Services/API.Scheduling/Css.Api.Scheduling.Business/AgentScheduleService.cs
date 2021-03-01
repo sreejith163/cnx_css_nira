@@ -156,17 +156,17 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            if (agentScheduleChartQueryparameter.FromDate.HasValue && agentScheduleChartQueryparameter.FromDate != default(DateTimeOffset))
+            if (agentScheduleChartQueryparameter.FromDate.HasValue && agentScheduleChartQueryparameter.FromDate != default(DateTime))
             {
                 agentSchedule.AgentScheduleRanges = agentSchedule.AgentScheduleRanges
-                    .Where(x => x.DateFrom == agentScheduleChartQueryparameter.FromDate.Value.ToUniversalTime())
+                    .Where(x => x.DateFrom == agentScheduleChartQueryparameter.FromDate.Value.Add(TimeSpan.Zero))
                     .ToList();
             }
 
-            if (agentScheduleChartQueryparameter.ToDate.HasValue && agentScheduleChartQueryparameter.ToDate != default(DateTimeOffset))
+            if (agentScheduleChartQueryparameter.ToDate.HasValue && agentScheduleChartQueryparameter.ToDate != default(DateTime))
             {
                 agentSchedule.AgentScheduleRanges = agentSchedule.AgentScheduleRanges
-                    .Where(x => x.DateTo == agentScheduleChartQueryparameter.ToDate.Value.ToUniversalTime())
+                    .Where(x => x.DateTo == agentScheduleChartQueryparameter.ToDate.Value.Add(TimeSpan.Zero))
                     .ToList();
             }
 
@@ -192,8 +192,8 @@ namespace Css.Api.Scheduling.Business
 
             if (agentScheduleDetails.Status == SchedulingStatus.Approved)
             {
-                agentScheduleDetails.DateFrom = new DateTimeOffset(agentScheduleDetails.DateFrom.Date.ToUniversalTime(), TimeSpan.Zero);
-                agentScheduleDetails.DateTo = new DateTimeOffset(agentScheduleDetails.DateTo.Date.ToUniversalTime(), TimeSpan.Zero);
+                agentScheduleDetails.DateFrom.Add(TimeSpan.Zero);
+                agentScheduleDetails.DateTo.Add(TimeSpan.Zero);
 
                 var activityLogs = new List<ActivityLog>();
                 var employeeIdDetails = new EmployeeIdDetails { Id = agentSchedule.EmployeeId };
@@ -253,8 +253,8 @@ namespace Css.Api.Scheduling.Business
 
             var employeeIdDetails = new EmployeeIdDetails { Id = agentSchedule.EmployeeId };
             var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
-            var agentScheduleRange = agentSchedule.AgentScheduleRanges.FirstOrDefault(x => x.DateFrom == agentScheduleDetails.DateFrom.ToUniversalTime() && 
-                                                                                           x.DateTo == agentScheduleDetails.DateTo.ToUniversalTime());
+            var agentScheduleRange = agentSchedule.AgentScheduleRanges.FirstOrDefault(x => x.DateFrom == agentScheduleDetails.DateFrom.Add(TimeSpan.Zero) && 
+                                                                                           x.DateTo == agentScheduleDetails.DateTo.Add(TimeSpan.Zero));
             if (agentScheduleRange.AgentScheduleCharts.Any())
             {
                 foreach (var agentScheduleChart in agentScheduleDetails.AgentScheduleCharts)
@@ -314,8 +314,8 @@ namespace Css.Api.Scheduling.Business
                 var agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
                 if (agentSchedule != null)
                 {
-                    importAgentScheduleChart.DateFrom = new DateTimeOffset(importAgentScheduleChart.DateFrom.Date.ToUniversalTime(), TimeSpan.Zero);
-                    importAgentScheduleChart.DateTo = new DateTimeOffset(importAgentScheduleChart.DateTo.Date.ToUniversalTime(), TimeSpan.Zero);
+                    importAgentScheduleChart.DateFrom.Add(TimeSpan.Zero);
+                    importAgentScheduleChart.DateTo.Add(TimeSpan.Zero);
 
                     var agentScheduleRangeExist = agentSchedule.AgentScheduleRanges.Exists(x => x.DateFrom == importAgentScheduleChart.DateFrom &&
                                                                                                 x.DateTo == importAgentScheduleChart.DateTo);
@@ -374,8 +374,8 @@ namespace Css.Api.Scheduling.Business
                 agentScheduleDetails.EmployeeIds = agentScheduleDetails.EmployeeIds.FindAll(x => x != agentSchedule.EmployeeId);
             }
 
-            agentScheduleDetails.DateFrom = new DateTimeOffset(agentScheduleDetails.DateFrom.Date.ToUniversalTime(), TimeSpan.Zero);
-            agentScheduleDetails.DateTo = new DateTimeOffset(agentScheduleDetails.DateTo.Date.ToUniversalTime(), TimeSpan.Zero);
+            agentScheduleDetails.DateFrom.Add(TimeSpan.Zero);
+            agentScheduleDetails.DateTo.Add(TimeSpan.Zero);
 
             var activityLogs = new List<ActivityLog>();
 

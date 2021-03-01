@@ -1,7 +1,7 @@
-﻿using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
-using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
+﻿using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
 using System;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
+using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
 
 namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
 {
