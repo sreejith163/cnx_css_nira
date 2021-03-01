@@ -29,6 +29,23 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails);
 
         /// <summary>
+        /// Gets the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <param name="status">The status.</param>
+        /// <returns></returns>
+        Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange, SchedulingStatus status);
+
+        /// <summary>
+        /// Gets the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <returns></returns>
+        Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
+
+        /// <summary>
         /// Gets the agent schedule range.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>

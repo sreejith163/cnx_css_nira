@@ -82,6 +82,47 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
+        /// Gets the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <param name="status">The status.</param>
+        /// <returns></returns>
+        public async Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange, SchedulingStatus status)
+        {
+            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0);
+            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0);
+
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
+                Builders<AgentSchedule>.Filter.ElemMatch(
+                    i => i.Ranges, range => range.Status == status && range.DateFrom == dateRange.DateFrom && range.DateTo == dateRange.DateTo) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            return await FindByIdAsync(query);
+        }
+
+        /// <summary>
+        /// Gets the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <returns></returns>
+        public async Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange)
+        {
+            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0);
+            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0);
+
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
+                Builders<AgentSchedule>.Filter.ElemMatch(
+                    i => i.Ranges, range => range.DateFrom == dateRange.DateFrom && range.DateTo == dateRange.DateTo) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            return await FindByIdAsync(query);
+        }
+
+        /// <summary>
         /// Gets the agent schedule range.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
@@ -117,7 +158,7 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.ElemMatch(
                     i => i.Ranges, range => range.Status != SchedulingStatus.Rejected &&
-                                                         dateRange.DateFrom < range.DateTo && dateRange.DateTo > range.DateFrom) &
+                                            dateRange.DateFrom < range.DateTo && dateRange.DateTo > range.DateFrom) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var count = await FindCountByIdAsync(query);
@@ -272,38 +313,42 @@ namespace Css.Api.Scheduling.Repository
 
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
-                Builders<AgentSchedule>.Filter.ElemMatch(
-                    i => i.Ranges, range => range.Status == SchedulingStatus.Pending_Schedule &&
-                                                         range.DateFrom == agentScheduleRange.DateFrom &&
-                                                         range.DateTo == agentScheduleRange.DateTo) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            var scheduleRangeQuery = query & Builders<AgentSchedule>.Filter
+                .ElemMatch(i => i.Ranges, range => range.Status == SchedulingStatus.Pending_Schedule &&
+                                                   range.DateFrom == agentScheduleRange.DateFrom &&
+                                                   range.DateTo == agentScheduleRange.DateTo);
 
             var document = FindByIdAsync(query).Result;
             if (document != null)
             {
-                var scheduleRange = document.Ranges.FirstOrDefault(
-                    x => x.Status == SchedulingStatus.Pending_Schedule &&
-                    x.DateFrom == agentScheduleRange.DateFrom &&
-                    x.DateTo == agentScheduleRange.DateTo);
+                var scheduleRange = document.Ranges.FirstOrDefault(x => x.Status == SchedulingStatus.Pending_Schedule &&
+                                                                        x.DateFrom == agentScheduleRange.DateFrom &&
+                                                                        x.DateTo == agentScheduleRange.DateTo);
 
-                if (scheduleRange.ScheduleCharts.Any())
+                if (scheduleRange != null)
                 {
-                    var update = Builders<AgentSchedule>.Update.Set(x => x.Ranges[-1], agentScheduleRange);
-                    UpdateOneAsync(query, update);
+                    query = scheduleRangeQuery;
+                    if (agentScheduleRange.ScheduleCharts.Any())
+                    {
+                        var update = Builders<AgentSchedule>.Update.Set(x => x.Ranges[-1], agentScheduleRange);
+                        UpdateOneAsync(query, update);
+                    }
+                    else
+                    {
+                        var update = Builders<AgentSchedule>.Update
+                            .PullFilter(x => x.Ranges, builder => builder.Status == SchedulingStatus.Pending_Schedule &&
+                                                                  builder.DateFrom == agentScheduleRange.DateFrom &&
+                                                                  builder.DateTo == agentScheduleRange.DateTo);
+                        UpdateOneAsync(query, update);
+                    }
                 }
                 else
                 {
-                    var update = Builders<AgentSchedule>.Update
-                        .PullFilter(x => x.Ranges, builder => builder.Status == SchedulingStatus.Pending_Schedule &&
-                                                                           builder.DateFrom == agentScheduleRange.DateFrom &&
-                                                                           builder.DateTo == agentScheduleRange.DateTo);
+                    var update = Builders<AgentSchedule>.Update.AddToSet(x => x.Ranges, agentScheduleRange);
                     UpdateOneAsync(query, update);
                 }
-            }
-            else
-            {
-                var update = Builders<AgentSchedule>.Update.AddToSet(x => x.Ranges, agentScheduleRange);
-                UpdateOneAsync(query, update);
             }
         }
 
@@ -339,9 +384,8 @@ namespace Css.Api.Scheduling.Repository
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.ElemMatch(
-                    i => i.Ranges, range => range.Status != SchedulingStatus.Pending_Schedule &&
-                                                         oldDateFrom != range.DateFrom && oldDateTo != range.DateTo &&
-                                                         dateRange.NewDateFrom < range.DateTo && dateRange.NewDateTo > range.DateFrom) &
+                    i => i.Ranges, range => range.Status == SchedulingStatus.Pending_Schedule &&
+                                            range.DateFrom == dateRange.OldDateFrom && range.DateTo == dateRange.OldDateTo) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
@@ -369,8 +413,8 @@ namespace Css.Api.Scheduling.Repository
 
             var update = Builders<AgentSchedule>.Update
                 .PullFilter(x => x.Ranges, builder => builder.Status == SchedulingStatus.Pending_Schedule &&
-                                                                   builder.DateFrom == dateRange.DateFrom &&
-                                                                   builder.DateTo == dateRange.DateTo);
+                                                      builder.DateFrom == dateRange.DateFrom &&
+                                                      builder.DateTo == dateRange.DateTo);
 
             UpdateOneAsync(query, update);
         }

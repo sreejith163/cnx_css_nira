@@ -154,7 +154,7 @@ namespace Css.Api.Scheduling.Repository
             else
             {
                 var update = Builders<AgentScheduleManager>.Update.AddToSet(x => x.ManagerCharts, agentScheduleManagerChart);
-                UpdateOneAsync(query, update, new UpdateOptions { IsUpsert = true });
+                UpdateOneAsync(query, update);
             }
         }
 
