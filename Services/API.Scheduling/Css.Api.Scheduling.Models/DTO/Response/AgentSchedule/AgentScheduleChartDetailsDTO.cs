@@ -18,7 +18,6 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         /// <summary>
         /// Gets or sets the ranges.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<AgentScheduleRange> Ranges { get; set; }
     }
 }
