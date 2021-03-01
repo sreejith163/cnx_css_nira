@@ -422,7 +422,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (agentScheduleQueryparameter.AgentSchedulingGroupId.HasValue && agentScheduleQueryparameter.AgentSchedulingGroupId != default(int))
             {
-                agentSchedules = agentSchedules.Where(x => x.AgentScheduleRanges.Exists(y => y.AgentSchedulingGroupId == agentScheduleQueryparameter.AgentSchedulingGroupId));
+                agentSchedules = agentSchedules.Where(x => x.CurrentAgentShedulingGroupId == agentScheduleQueryparameter.AgentSchedulingGroupId);
             }
 
             if (agentScheduleQueryparameter.Status.HasValue)
@@ -441,7 +441,7 @@ namespace Css.Api.Scheduling.Repository
                                                                                              dateFrom < y.DateFrom && dateTo > y.DateTo));
             }
 
-            return agentSchedules;
+            return agentSchedules
 
         }
     }

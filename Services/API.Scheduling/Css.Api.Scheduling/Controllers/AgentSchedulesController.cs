@@ -62,7 +62,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="dateRangeDetails">The date range details.</param>
         /// <returns></returns>
         [HttpGet("{agentScheduleId}/exists")]
-        public async Task<IActionResult> IsAgentScheduleRangeExist(string agentScheduleId, [FromBody] DateRange dateRangeDetails)
+        public async Task<IActionResult> IsAgentScheduleRangeExist(string agentScheduleId, [FromQuery] DateRange dateRangeDetails)
         {
             var result = await _agentScheduleService.IsAgentScheduleRangeExist(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
             return StatusCode((int)result.Code, result.Value);

@@ -203,7 +203,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId.HasValue && agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId != default(int))
             {
-                agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Exists(y => y.AgentSchedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId));
+                agentScheduleManagers = agentScheduleManagers.Where(x => x.CurrentAgentShedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId);
             }
 
             if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime) &&
