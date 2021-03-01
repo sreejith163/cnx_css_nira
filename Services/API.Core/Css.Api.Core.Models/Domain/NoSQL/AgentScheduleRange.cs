@@ -19,14 +19,14 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// </summary>
         [BsonRepresentation(BsonType.String)]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTimeOffset DateFrom { get; set; }
+        public DateTime DateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the date to.
         /// </summary>
         [BsonRepresentation(BsonType.String)]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTimeOffset DateTo { get; set; }
+        public DateTime DateTo { get; set; }
 
         /// <summary>
         /// Gets or sets the status.

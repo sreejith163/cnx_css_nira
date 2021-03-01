@@ -92,8 +92,8 @@ namespace Css.Api.Scheduling.Repository
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.ElemMatch(
-                    i => i.AgentScheduleRanges, range => range.DateFrom == new DateTimeOffset(dateRange.DateFrom.Date.ToUniversalTime(), TimeSpan.Zero) &&
-                                                         range.DateTo == new DateTimeOffset(dateRange.DateTo.Date.ToUniversalTime(), TimeSpan.Zero)) &
+                    i => i.AgentScheduleRanges, range => range.DateFrom == dateRange.DateFrom.Add(TimeSpan.Zero) &&
+                                                         range.DateTo == dateRange.DateTo.Add(TimeSpan.Zero)) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var agentSchedule = await FindByIdAsync(query);
@@ -109,8 +109,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<bool> IsAgentScheduleRangeExist(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange)
         {
-            var dateFrom = new DateTimeOffset(dateRange.DateFrom.Date.ToUniversalTime(), TimeSpan.Zero);
-            var dateTo = new DateTimeOffset(dateRange.DateTo.Date.ToUniversalTime(), TimeSpan.Zero);
+            var dateFrom = dateRange.DateFrom.Add(TimeSpan.Zero);
+            var dateTo = dateRange.DateTo.Add(TimeSpan.Zero);
 
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
@@ -215,8 +215,8 @@ namespace Css.Api.Scheduling.Repository
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.ElemMatch(
-                    i => i.AgentScheduleRanges, range => range.DateFrom == new DateTimeOffset(agentScheduleDetails.DateFrom.Date.ToUniversalTime(), TimeSpan.Zero) &&
-                                                         range.DateTo == new DateTimeOffset(agentScheduleDetails.DateTo.Date.ToUniversalTime(), TimeSpan.Zero)) &
+                    i => i.AgentScheduleRanges, range => range.DateFrom == agentScheduleDetails.DateFrom.Add(TimeSpan.Zero) &&
+                                                         range.DateTo == agentScheduleDetails.DateTo.Add(TimeSpan.Zero)) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentSchedule>.Update
@@ -268,8 +268,8 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.ElemMatch(
                     i => i.AgentScheduleRanges, range => range.Status == SchedulingStatus.Pending_Schedule &&
-                                                         range.DateFrom == new DateTimeOffset(agentScheduleRange.DateFrom.Date.ToUniversalTime(), TimeSpan.Zero) &&
-                                                         range.DateTo == new DateTimeOffset(agentScheduleRange.DateTo.Date.ToUniversalTime(), TimeSpan.Zero)) &
+                                                         range.DateFrom == agentScheduleRange.DateFrom.Add(TimeSpan.Zero) &&
+                                                         range.DateTo == agentScheduleRange.DateTo.Add(TimeSpan.Zero)) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var document = FindByIdAsync(query).Result;
@@ -277,8 +277,8 @@ namespace Css.Api.Scheduling.Repository
             {
                 var scheduleRange = document.AgentScheduleRanges.FirstOrDefault(
                     x => x.Status == SchedulingStatus.Pending_Schedule &&
-                    x.DateFrom == new DateTimeOffset(agentScheduleRange.DateFrom.Date.ToUniversalTime(), TimeSpan.Zero) &&
-                    x.DateTo == new DateTimeOffset(agentScheduleRange.DateTo.Date.ToUniversalTime(), TimeSpan.Zero));
+                    x.DateFrom == agentScheduleRange.DateFrom.Add(TimeSpan.Zero) &&
+                    x.DateTo == agentScheduleRange.DateTo.Add(TimeSpan.Zero));
 
                 if (scheduleRange.AgentScheduleCharts.Any())
                 {
@@ -289,8 +289,8 @@ namespace Css.Api.Scheduling.Repository
                 {
                     var update = Builders<AgentSchedule>.Update
                         .PullFilter(x => x.AgentScheduleRanges, builder => builder.Status == SchedulingStatus.Pending_Schedule &&
-                                                                           builder.DateFrom == new DateTimeOffset(agentScheduleRange.DateFrom.Date.ToUniversalTime(), TimeSpan.Zero) &&
-                                                                           builder.DateTo == new DateTimeOffset(agentScheduleRange.DateTo.Date.ToUniversalTime(), TimeSpan.Zero));
+                                                                           builder.DateFrom == agentScheduleRange.DateFrom.Add(TimeSpan.Zero) &&
+                                                                           builder.DateTo == agentScheduleRange.DateTo.Add(TimeSpan.Zero));
                     UpdateOneAsync(query, update);
                 }
             }
@@ -325,10 +325,10 @@ namespace Css.Api.Scheduling.Repository
         /// <param name="dateRange">The date range.</param>
         public void UpdateAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleDateRange dateRange)
         {
-            var newDateFrom = new DateTimeOffset(dateRange.NewDateFrom.Date.ToUniversalTime(), TimeSpan.Zero);
-            var newDateTo = new DateTimeOffset(dateRange.NewDateTo.Date.ToUniversalTime(), TimeSpan.Zero);
-            var oldDateFrom = new DateTimeOffset(dateRange.OldDateFrom.Date.ToUniversalTime(), TimeSpan.Zero);
-            var oldDateTo = new DateTimeOffset(dateRange.OldDateTo.Date.ToUniversalTime(), TimeSpan.Zero);
+            var newDateFrom = dateRange.NewDateFrom.Add(TimeSpan.Zero);
+            var newDateTo = dateRange.NewDateTo.Date.Add(TimeSpan.Zero);
+            var oldDateFrom = dateRange.OldDateFrom.Date.Add(TimeSpan.Zero);
+            var oldDateTo = dateRange.OldDateTo.Date.Add(TimeSpan.Zero);
 
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
@@ -360,8 +360,8 @@ namespace Css.Api.Scheduling.Repository
 
             var update = Builders<AgentSchedule>.Update
                 .PullFilter(x => x.AgentScheduleRanges, builder => builder.Status == SchedulingStatus.Pending_Schedule &&
-                                                                   builder.DateFrom == new DateTimeOffset(dateRange.DateFrom.Date.ToUniversalTime(), TimeSpan.Zero) &&
-                                                                   builder.DateTo == new DateTimeOffset(dateRange.DateTo.Date.ToUniversalTime(), TimeSpan.Zero));
+                                                                   builder.DateFrom == dateRange.DateFrom.Add(TimeSpan.Zero) &&
+                                                                   builder.DateTo == dateRange.DateTo.Add(TimeSpan.Zero));
 
             UpdateOneAsync(query, update);
         }
@@ -431,11 +431,11 @@ namespace Css.Api.Scheduling.Repository
             }
 
             if (agentScheduleQueryparameter.ExcludeConflictSchedule.HasValue && agentScheduleQueryparameter.DateFrom.HasValue &&
-                agentScheduleQueryparameter.DateFrom != default(DateTimeOffset) && agentScheduleQueryparameter.DateTo.HasValue &&
-                agentScheduleQueryparameter.DateTo != default(DateTimeOffset))
+                agentScheduleQueryparameter.DateFrom != default(DateTime) && agentScheduleQueryparameter.DateTo.HasValue &&
+                agentScheduleQueryparameter.DateTo != default(DateTime))
             {
-                var dateFrom = new DateTimeOffset(agentScheduleQueryparameter.DateFrom.Value.Date.ToUniversalTime(), TimeSpan.Zero);
-                var dateTo = new DateTimeOffset(agentScheduleQueryparameter.DateTo.Value.Date.ToUniversalTime(), TimeSpan.Zero);
+                var dateFrom = agentScheduleQueryparameter.DateFrom.Value.Add(TimeSpan.Zero);
+                var dateTo = agentScheduleQueryparameter.DateTo.Value.Add(TimeSpan.Zero);
 
                 agentSchedules = agentSchedules.Where(x => x.AgentScheduleRanges.Exists(y => y.Status != SchedulingStatus.Approved &&
                                                                                              dateFrom < y.DateFrom && dateTo > y.DateTo));

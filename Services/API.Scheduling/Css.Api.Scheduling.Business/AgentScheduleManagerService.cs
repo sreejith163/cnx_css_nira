@@ -9,7 +9,7 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
-using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -143,9 +143,10 @@ namespace Css.Api.Scheduling.Business
                 var agentScheduleMangerSchedule = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails);
                 if (agentScheduleMangerSchedule != null)
                 {
-                    agentScheduleManager.AgentScheduleManagerChart.Date = new DateTimeOffset(agentScheduleManager.AgentScheduleManagerChart.Date.Date.ToUniversalTime(), TimeSpan.Zero);
 
-                    var agentScheduleManagerChartExist = agentScheduleMangerSchedule.AgentScheduleManagerCharts.Exists(x => x.Date == agentScheduleManager.AgentScheduleManagerChart.Date);
+                    var agentScheduleManagerChartExist = agentScheduleMangerSchedule.AgentScheduleManagerCharts
+                        .Exists(x => x.Date == agentScheduleManager.AgentScheduleManagerChart.Date.Add(TimeSpan.Zero));
+
                     if (!agentScheduleManagerChartExist)
                     {
                         var agentAdmin = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(employeeIdDetails);
@@ -162,8 +163,8 @@ namespace Css.Api.Scheduling.Business
 
                             _agentScheduleManagerRepository.UpdateAgentScheduleMangerChart(employeeIdDetails, agentScheduleManagerChart);
                             var activityLog = GetActivityLogForSchedulingManager(agentScheduleManagerChart, employeeIdDetails.Id,
-                                                                               agentScheduleManagerChartDetails.ModifiedBy, agentScheduleManagerChartDetails.ModifiedUser,
-                                                                               agentScheduleManagerChartDetails.ActivityOrigin);
+                                                                                 agentScheduleManagerChartDetails.ModifiedBy, agentScheduleManagerChartDetails.ModifiedUser,
+                                                                                 agentScheduleManagerChartDetails.ActivityOrigin);
                             activityLogs.Add(activityLog);
                         }
                     }
@@ -198,8 +199,6 @@ namespace Css.Api.Scheduling.Business
                 agentScheduleDetails.EmployeeIds = agentScheduleDetails.EmployeeIds.FindAll(x => x != agentScheduleManager.EmployeeId);
             }
 
-            agentScheduleDetails.Date = new DateTimeOffset(agentScheduleDetails.Date.Date.ToUniversalTime(), TimeSpan.Zero);
-
             var activityLogs = new List<ActivityLog>();
 
             foreach (var employeeId in agentScheduleDetails.EmployeeIds)
@@ -210,7 +209,7 @@ namespace Css.Api.Scheduling.Business
                 var employeeSchedule = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails);
                 if (employeeSchedule != null)
                 {
-                    var agentScheduleManagerChartExist = employeeSchedule.AgentScheduleManagerCharts.Exists(x => x.Date == agentScheduleDetails.Date);
+                    var agentScheduleManagerChartExist = employeeSchedule.AgentScheduleManagerCharts.Exists(x => x.Date == agentScheduleDetails.Date.Add(TimeSpan.Zero));
                     if (!agentScheduleManagerChartExist)
                     {
                         var copiedAgentScheduleManagerChart = agentScheduleManager.AgentScheduleManagerCharts
@@ -233,7 +232,7 @@ namespace Css.Api.Scheduling.Business
                                 _agentScheduleManagerRepository.CopyAgentScheduleManagerChart(employeeIdDetails, agentScheduleManagerChart);
 
                                 var activityLog = GetActivityLogForSchedulingManager(agentScheduleManagerChart, employeeId, agentScheduleDetails.ModifiedBy,
-                                                                                   agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
+                                                                                     agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
                                 activityLogs.Add(activityLog);
                             }
                         }

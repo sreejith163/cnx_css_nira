@@ -32,6 +32,6 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager
         /// <summary>
         /// Gets or sets from date.
         /// </summary>
-        public DateTimeOffset? Date { get; set; }
+        public DateTime? Date { get; set; }
     }
 }

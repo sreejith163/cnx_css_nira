@@ -7,11 +7,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets from date.
         /// </summary>
-        public DateTimeOffset? FromDate { get; set; }
+        public DateTime? FromDate { get; set; }
 
         /// <summary>
         /// Converts to date.
         /// </summary>
-        public DateTimeOffset? ToDate { get; set; }
+        public DateTime? ToDate { get; set; }
     }
 }

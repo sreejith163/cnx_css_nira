@@ -7,22 +7,22 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the old date from.
         /// </summary>
-        public DateTimeOffset OldDateFrom { get; set; }
+        public DateTime OldDateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the old date to.
         /// </summary>
-        public DateTimeOffset OldDateTo { get; set; }
+        public DateTime OldDateTo { get; set; }
 
         /// <summary>
         /// Gets or sets the new date from.
         /// </summary>
-        public DateTimeOffset NewDateFrom { get; set; }
+        public DateTime NewDateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the new date to.
         /// </summary>
-        public DateTimeOffset NewDateTo { get; set; }
+        public DateTime NewDateTo { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.

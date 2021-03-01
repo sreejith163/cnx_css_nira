@@ -13,14 +13,14 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         [BsonRepresentation(BsonType.String)]
-        public DateTimeOffset? DateFrom { get; set; }
+        public DateTime? DateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the date to.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         [BsonRepresentation(BsonType.String)]
-        public DateTimeOffset? DateTo { get; set; }
+        public DateTime? DateTo { get; set; }
 
         /// <summary>
         /// Gets or sets the status.

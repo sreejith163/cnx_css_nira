@@ -17,7 +17,7 @@ namespace Css.Api.Scheduling.Models.Domain
         /// Gets or sets the date.
         /// </summary>
         [BsonRepresentation(BsonType.String)]
-        public DateTimeOffset Date { get; set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
         /// Gets or sets the charts.

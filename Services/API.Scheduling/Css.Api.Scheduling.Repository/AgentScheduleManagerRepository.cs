@@ -121,7 +121,7 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.IsDeleted, false);
 
-            agentScheduleManagerChart.Date = new DateTimeOffset(agentScheduleManagerChart.Date.Date.ToUniversalTime(), TimeSpan.Zero);
+            agentScheduleManagerChart.Date = agentScheduleManagerChart.Date.Add(TimeSpan.Zero);
 
             var documentQuery = query & Builders<AgentScheduleManager>.Filter
                 .ElemMatch(i => i.AgentScheduleManagerCharts, chart => chart.Date == agentScheduleManagerChart.Date);
@@ -206,18 +206,16 @@ namespace Css.Api.Scheduling.Repository
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Exists(y => y.AgentSchedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId));
             }
 
-            if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTimeOffset) &&
+            if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime) &&
                 !agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule.HasValue)
             {
-                var dateTimeWithZeroTimeSpan = new DateTimeOffset(agentScheduleManagerChartQueryparameter.Date.Value.Date.ToUniversalTime(), TimeSpan.Zero);
+                var dateTimeWithZeroTimeSpan = agentScheduleManagerChartQueryparameter.Date.Value.Add(TimeSpan.Zero);
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Exists(y => y.Date == dateTimeWithZeroTimeSpan));
             }
 
             if (agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule.HasValue)
             {
-                var dateTimeWithZeroTimeSpan = new DateTimeOffset(agentScheduleManagerChartQueryparameter.Date.Value.Date.ToUniversalTime(), TimeSpan.Zero);
-
-
+                var dateTimeWithZeroTimeSpan = agentScheduleManagerChartQueryparameter.Date.Value.Add(TimeSpan.Zero);
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Exists(y => y.Date != dateTimeWithZeroTimeSpan));
             }
 
