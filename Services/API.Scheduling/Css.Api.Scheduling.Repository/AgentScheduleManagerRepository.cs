@@ -104,7 +104,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.IsDeleted, false) &
-                Builders<AgentScheduleManager>.Filter.ElemMatch(i => i.AgentScheduleManagerCharts, range => range.AgentSchedulingGroupId == agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
+                Builders<AgentScheduleManager>.Filter.ElemMatch(i => i.ManagerCharts, range => range.AgentSchedulingGroupId == agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
 
             var agentSchedules = FilterBy(query);
 
@@ -134,7 +134,7 @@ namespace Css.Api.Scheduling.Repository
             agentScheduleManagerChart.Date = new DateTime(agentScheduleManagerChart.Date.Year, agentScheduleManagerChart.Date.Month, agentScheduleManagerChart.Date.Day, 0, 0, 0);
 
             var documentQuery = query & Builders<AgentScheduleManager>.Filter
-                .ElemMatch(i => i.AgentScheduleManagerCharts, chart => chart.Date == agentScheduleManagerChart.Date);
+                .ElemMatch(i => i.ManagerCharts, chart => chart.Date == agentScheduleManagerChart.Date);
 
             var documentCount = FindCountByIdAsync(documentQuery).Result;
             if (documentCount > 0)
@@ -142,18 +142,18 @@ namespace Css.Api.Scheduling.Repository
                 query = documentQuery;
                 if (agentScheduleManagerChart.Charts.Any())
                 {
-                    var update = Builders<AgentScheduleManager>.Update.Set(x => x.AgentScheduleManagerCharts[-1], agentScheduleManagerChart);
+                    var update = Builders<AgentScheduleManager>.Update.Set(x => x.ManagerCharts[-1], agentScheduleManagerChart);
                     UpdateOneAsync(query, update);
                 }
                 else
                 {
-                    var update = Builders<AgentScheduleManager>.Update.PullFilter(x => x.AgentScheduleManagerCharts, builder => builder.Date == agentScheduleManagerChart.Date);
+                    var update = Builders<AgentScheduleManager>.Update.PullFilter(x => x.ManagerCharts, builder => builder.Date == agentScheduleManagerChart.Date);
                     UpdateOneAsync(query, update);
                 }
             }
             else
             {
-                var update = Builders<AgentScheduleManager>.Update.AddToSet(x => x.AgentScheduleManagerCharts, agentScheduleManagerChart);
+                var update = Builders<AgentScheduleManager>.Update.AddToSet(x => x.ManagerCharts, agentScheduleManagerChart);
                 UpdateOneAsync(query, update, new UpdateOptions { IsUpsert = true });
             }
         }
@@ -170,7 +170,7 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.IsDeleted, false);
 
             var update = Builders<AgentScheduleManager>.Update
-                .AddToSet(x => x.AgentScheduleManagerCharts, agentScheduleManagerChart);
+                .AddToSet(x => x.ManagerCharts, agentScheduleManagerChart);
 
             UpdateOneAsync(query, update);
         }
@@ -213,14 +213,14 @@ namespace Css.Api.Scheduling.Repository
 
             if (agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId.HasValue && agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId != default(int))
             {
-                agentScheduleManagers = agentScheduleManagers.Where(x => x.CurrentAgentShedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId);
+                agentScheduleManagers = agentScheduleManagers.Where(x => x.ActiveAgentShedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId);
             }
 
             if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime))
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
                 var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-                agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Any(y => y.Date == dateTimeWithZeroTimeSpan));
+                agentScheduleManagers = agentScheduleManagers.Where(x => x.ManagerCharts.Any(y => y.Date == dateTimeWithZeroTimeSpan));
             }
 
             if (agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule.HasValue && agentScheduleManagerChartQueryparameter.Date.HasValue && 
@@ -228,7 +228,7 @@ namespace Css.Api.Scheduling.Repository
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
                 var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-                agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Any(y => y.Date != dateTimeWithZeroTimeSpan));
+                agentScheduleManagers = agentScheduleManagers.Where(x => x.ManagerCharts.Any(y => y.Date != dateTimeWithZeroTimeSpan));
             }
 
             return agentScheduleManagers;

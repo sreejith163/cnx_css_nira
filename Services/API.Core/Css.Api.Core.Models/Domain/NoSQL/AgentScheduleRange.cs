@@ -34,9 +34,9 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public SchedulingStatus Status { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent schedule charts.
+        /// Gets or sets the schedule charts.
         /// </summary>
-        public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
+        public List<AgentScheduleChart> ScheduleCharts { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
@@ -65,7 +65,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// </summary>
         public AgentScheduleRange()
         {
-            AgentScheduleCharts = new List<AgentScheduleChart>();
+            ScheduleCharts = new List<AgentScheduleChart>();
         }
     }
 }

@@ -1,26 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace Css.Api.Core.Models.Domain.NoSQL
 {
-    [BsonCollection("agent_scheduling_group_id")]
-    public class AgentSchedulingGroupHistory : BaseDocument
+    public class AgentSchedulingGroupHistory
     {
         /// <summary>
-        /// Gets or sets the employee identifier.
+        /// Gets or sets the agent scheduling group identifier.
         /// </summary>
-        public int EmployeeId { get; set; }
+        public int AgentSchedulingGroupID { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent scheduling group details.
+        /// Gets or sets the start date.
         /// </summary>
-        public List<AgentSchedulingGroupDetails> AgentSchedulingGroupDetails { get; set; }
+        public DateTime StartDate { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentSchedulingGroupHistory"/> class.
+        /// Gets or sets the end date.
         /// </summary>
-        public AgentSchedulingGroupHistory()
-        {
-            AgentSchedulingGroupDetails = new List<AgentSchedulingGroupDetails>();
-        }
+        public DateTime EndDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the created by.
+        /// </summary>
+        public string CreatedBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the modified date.
+        /// </summary>
+        [BsonRepresentation(BsonType.String)]
+        public DateTimeOffset CreatedDate { get; set; }
     }
 }

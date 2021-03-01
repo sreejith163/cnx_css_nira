@@ -24,14 +24,19 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public string LastName { get; set; }
 
         /// <summary>
-        /// Gets or sets the current agent scheduling group identifier.
+        /// Gets or sets the active scheduling group identifier.
         /// </summary>
-        public int CurrentAgentShedulingGroupId { get; set; }
+        public int ActiveAgentShedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent schedule date range.
+        /// Gets or sets the history.
         /// </summary>
-        public List<AgentScheduleRange> AgentScheduleRanges { get; set; }
+        public List<AgentSchedulingGroupHistory> History { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ranges.
+        /// </summary>
+        public List<AgentScheduleRange> Ranges { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
@@ -65,7 +70,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// </summary>
         public AgentSchedule()
         {
-            AgentScheduleRanges = new List<AgentScheduleRange>();
+            Ranges = new List<AgentScheduleRange>();
         }
     }
 }

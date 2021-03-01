@@ -224,11 +224,11 @@ namespace Css.Api.Scheduling.Business
                 {
 
                     agentScheduleDetails.Date = new DateTime(agentScheduleDetails.Date.Year, agentScheduleDetails.Date.Month, agentScheduleDetails.Date.Day, 0, 0, 0);
-                    var agentScheduleManagerChartExist = employeeSchedule.AgentScheduleManagerCharts.Exists(x => x.Date == agentScheduleDetails.Date);
+                    var agentScheduleManagerChartExist = employeeSchedule.ManagerCharts.Exists(x => x.Date == agentScheduleDetails.Date);
                     
                     if (!agentScheduleManagerChartExist)
                     {
-                        var copiedAgentScheduleManagerChart = agentScheduleManager.AgentScheduleManagerCharts
+                        var copiedAgentScheduleManagerChart = agentScheduleManager.ManagerCharts
                            .FirstOrDefault(x => x.Date == agentScheduleDetails.Date);
 
                         if (copiedAgentScheduleManagerChart != null && copiedAgentScheduleManagerChart.Charts.Any())

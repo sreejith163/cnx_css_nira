@@ -161,7 +161,7 @@ namespace Css.Api.Scheduling.Business
                 var date = agentScheduleChartQueryparameter.FromDate.Value;
                 var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
 
-                agentSchedule.AgentScheduleRanges = agentSchedule.AgentScheduleRanges.Where(x => x.DateFrom == dateTimeWithZeroTimeSpan).ToList();
+                agentSchedule.Ranges = agentSchedule.Ranges.Where(x => x.DateFrom == dateTimeWithZeroTimeSpan).ToList();
             }
 
             if (agentScheduleChartQueryparameter.ToDate.HasValue && agentScheduleChartQueryparameter.ToDate != default(DateTime))
@@ -169,7 +169,7 @@ namespace Css.Api.Scheduling.Business
                 var date = agentScheduleChartQueryparameter.ToDate.Value;
                 var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
 
-                agentSchedule.AgentScheduleRanges = agentSchedule.AgentScheduleRanges.Where(x => x.DateTo == dateTimeWithZeroTimeSpan).ToList();
+                agentSchedule.Ranges = agentSchedule.Ranges.Where(x => x.DateTo == dateTimeWithZeroTimeSpan).ToList();
             }
 
             var mappedAgentScheduleChart = _mapper.Map<AgentScheduleChartDetailsDTO>(agentSchedule);
@@ -205,13 +205,13 @@ namespace Css.Api.Scheduling.Business
                 for (var date = agentScheduleDetails.DateFrom; date <= agentScheduleDetails.DateTo; date = date.AddDays(1))
                 {
                     var dayOfWeek = date.Date.DayOfWeek;
-                    if (agentScheduleRange.AgentScheduleCharts.Exists(x => x.Day == (int)dayOfWeek))
+                    if (agentScheduleRange.ScheduleCharts.Exists(x => x.Day == (int)dayOfWeek))
                     {
                         AgentScheduleManagerChart scheduleManagerChart = new AgentScheduleManagerChart()
                         {
                             AgentSchedulingGroupId = agentScheduleRange.AgentSchedulingGroupId,
                             Date = date,
-                            Charts = agentScheduleRange.AgentScheduleCharts.FirstOrDefault(x => x.Day == (int)dayOfWeek).Charts,
+                            Charts = agentScheduleRange.ScheduleCharts.FirstOrDefault(x => x.Day == (int)dayOfWeek).Charts,
                             CreatedBy = agentScheduleDetails.ModifiedBy,
                             CreatedDate = DateTimeOffset.UtcNow,
                         };
@@ -259,20 +259,20 @@ namespace Css.Api.Scheduling.Business
             var employeeIdDetails = new EmployeeIdDetails { Id = agentSchedule.EmployeeId };
             var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
 
-            var agentScheduleRange = agentSchedule.AgentScheduleRanges.FirstOrDefault(x => x.DateFrom == agentScheduleDetails.DateFrom && 
+            var agentScheduleRange = agentSchedule.Ranges.FirstOrDefault(x => x.DateFrom == agentScheduleDetails.DateFrom && 
                                                                                            x.DateTo == agentScheduleDetails.DateTo);
-            if (agentScheduleRange.AgentScheduleCharts.Any())
+            if (agentScheduleRange.ScheduleCharts.Any())
             {
                 foreach (var agentScheduleChart in agentScheduleDetails.AgentScheduleCharts)
                 {
-                    if (agentScheduleRange.AgentScheduleCharts.Exists(x => x.Day == agentScheduleChart.Day))
+                    if (agentScheduleRange.ScheduleCharts.Exists(x => x.Day == agentScheduleChart.Day))
                     {
-                        var scheduleChart = agentScheduleRange.AgentScheduleCharts.Find(x => x.Day == agentScheduleChart.Day);
+                        var scheduleChart = agentScheduleRange.ScheduleCharts.Find(x => x.Day == agentScheduleChart.Day);
                         scheduleChart.Charts = agentScheduleChart.Charts;
                     }
                     else
                     {
-                        agentScheduleRange.AgentScheduleCharts.Add(agentScheduleChart);
+                        agentScheduleRange.ScheduleCharts.Add(agentScheduleChart);
                     }
                 }
 
@@ -284,7 +284,7 @@ namespace Css.Api.Scheduling.Business
                     DateFrom = agentScheduleDetails.DateFrom,
                     DateTo = agentScheduleDetails.DateTo,
                     Status = agentScheduleDetails.Status,
-                    AgentScheduleCharts = agentScheduleDetails.AgentScheduleCharts,
+                    ScheduleCharts = agentScheduleDetails.AgentScheduleCharts,
                 };
                 var activityLog = GetActivityLogForSchedulingChart(changedAgentScheduleRange, agentSchedule.EmployeeId, agentScheduleDetails.ModifiedBy,
                                                                    agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
@@ -323,7 +323,7 @@ namespace Css.Api.Scheduling.Business
                     importAgentScheduleChart.DateFrom = new DateTime(importAgentScheduleChart.DateFrom.Year, importAgentScheduleChart.DateFrom.Month, importAgentScheduleChart.DateFrom.Day, 0, 0, 0);
                     importAgentScheduleChart.DateTo = new DateTime(importAgentScheduleChart.DateTo.Year, importAgentScheduleChart.DateTo.Month, importAgentScheduleChart.DateTo.Day, 0, 0, 0);
 
-                    var agentScheduleRangeExist = agentSchedule.AgentScheduleRanges.Exists(x => x.DateFrom == importAgentScheduleChart.DateFrom &&
+                    var agentScheduleRangeExist = agentSchedule.Ranges.Exists(x => x.DateFrom == importAgentScheduleChart.DateFrom &&
                                                                                                 x.DateTo == importAgentScheduleChart.DateTo);
                     if (!agentScheduleRangeExist)
                     {
@@ -336,7 +336,7 @@ namespace Css.Api.Scheduling.Business
                                 DateFrom = importAgentScheduleChart.DateFrom,
                                 DateTo = importAgentScheduleChart.DateTo,
                                 Status = SchedulingStatus.Pending_Schedule,
-                                AgentScheduleCharts = importAgentScheduleChart.AgentScheduleCharts,
+                                ScheduleCharts = importAgentScheduleChart.AgentScheduleCharts,
                                 CreatedBy = modifiedUserDetails.ModifiedBy,
                                 CreatedDate = DateTimeOffset.UtcNow
                             };
@@ -393,15 +393,15 @@ namespace Css.Api.Scheduling.Business
                 var employeeSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
                 if (employeeSchedule != null)
                 {
-                    var agentScheduleRangeExist = employeeSchedule.AgentScheduleRanges.Exists(x => x.DateFrom == agentScheduleDetails.DateFrom &&
+                    var agentScheduleRangeExist = employeeSchedule.Ranges.Exists(x => x.DateFrom == agentScheduleDetails.DateFrom &&
                                                                                                    x.DateTo == agentScheduleDetails.DateTo);
                     if (!agentScheduleRangeExist)
                     {
-                        var copiedAgentScheduleRange = agentSchedule.AgentScheduleRanges
+                        var copiedAgentScheduleRange = agentSchedule.Ranges
                             .FirstOrDefault(x => x.Status != SchedulingStatus.Rejected &&
                                                  x.DateFrom == agentScheduleDetails.DateFrom &&
                                                  x.DateTo == agentScheduleDetails.DateTo);
-                        if (copiedAgentScheduleRange != null && copiedAgentScheduleRange.AgentScheduleCharts.Any())
+                        if (copiedAgentScheduleRange != null && copiedAgentScheduleRange.ScheduleCharts.Any())
                         {
                             var agentAdmin = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(employeeIdDetails);
                             if (agentAdmin != null)
@@ -412,13 +412,13 @@ namespace Css.Api.Scheduling.Business
                                     DateFrom = agentScheduleDetails.DateFrom,
                                     DateTo = agentScheduleDetails.DateTo,
                                     Status = SchedulingStatus.Pending_Schedule,
-                                    AgentScheduleCharts = copiedAgentScheduleRange.AgentScheduleCharts,
+                                    ScheduleCharts = copiedAgentScheduleRange.ScheduleCharts,
                                     CreatedBy = modifiedUserDetails.ModifiedBy,
                                     CreatedDate = DateTimeOffset.UtcNow
                                 };
 
-                                var agentScheduleCharts = agentSchedule.AgentScheduleRanges
-                                    .FirstOrDefault(x => x.DateFrom == agentScheduleDetails.DateFrom && x.DateTo == agentScheduleDetails.DateTo)?.AgentScheduleCharts;
+                                var agentScheduleCharts = agentSchedule.Ranges
+                                    .FirstOrDefault(x => x.DateFrom == agentScheduleDetails.DateFrom && x.DateTo == agentScheduleDetails.DateTo)?.ScheduleCharts;
 
                                 _agentScheduleRepository.CopyAgentSchedules(employeeIdDetails, agentScheduleRange);
 
