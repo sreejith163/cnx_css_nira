@@ -19,7 +19,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
         /// Gets or sets the agent schedule manager.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleManagerChart> AgentScheduleManagerCharts { get; set; }
+        public List<AgentScheduleManagerChart> ManagerCharts { get; set; }
     }
 }
 

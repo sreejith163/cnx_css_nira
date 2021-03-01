@@ -109,7 +109,7 @@ namespace Css.Api.Scheduling.Business
                     var date = agentScheduleManagerChartQueryparameter.Date.Value;
                     var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
 
-                    mappedAgentScheduleManager.AgentScheduleManagerCharts = mappedAgentScheduleManager.AgentScheduleManagerCharts
+                    mappedAgentScheduleManager.ManagerCharts = mappedAgentScheduleManager.ManagerCharts
                         .Where(x => x.Date == dateTimeWithZeroTimeSpan).ToList();
                 }
 
@@ -284,7 +284,7 @@ namespace Css.Api.Scheduling.Business
                 ActivityOrigin = activityOrigin,
                 ActivityStatus = ActivityStatus.Updated,
                 ActivityType = ActivityType.SchedulingmanagerGrid,
-                SchedulingFieldDetails = new SchedulingFieldDetails() { ActivityLogScheduleManager = _mapper.Map<ActivityLogScheduleManager>(agentScheduleManagerChart) }
+                SchedulingFieldDetails = new SchedulingFieldDetails() { ActivityLogManager = _mapper.Map<ActivityLogScheduleManager>(agentScheduleManagerChart) }
             };
         }
 

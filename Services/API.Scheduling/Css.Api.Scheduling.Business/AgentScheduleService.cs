@@ -574,7 +574,7 @@ namespace Css.Api.Scheduling.Business
                 ActivityOrigin = activityOrigin,
                 ActivityStatus = ActivityStatus.Updated,
                 ActivityType = ActivityType.SchedulingGrid,
-                SchedulingFieldDetails = new SchedulingFieldDetails() { ActivityLogScheduleRange = _mapper.Map<ActivityLogScheduleRange>(agentScheduleRange) }
+                SchedulingFieldDetails = new SchedulingFieldDetails() { ActivityLogRange = _mapper.Map<ActivityLogScheduleRange>(agentScheduleRange) }
             };
         }
 
@@ -599,7 +599,7 @@ namespace Css.Api.Scheduling.Business
                 ActivityOrigin = activityOrigin,
                 ActivityStatus = ActivityStatus.Updated,
                 ActivityType = ActivityType.SchedulingmanagerGrid,
-                SchedulingFieldDetails = new SchedulingFieldDetails() { ActivityLogScheduleManager = _mapper.Map<ActivityLogScheduleManager>(agentScheduleManagerChart) }
+                SchedulingFieldDetails = new SchedulingFieldDetails() { ActivityLogManager = _mapper.Map<ActivityLogScheduleManager>(agentScheduleManagerChart) }
             };
         }
 

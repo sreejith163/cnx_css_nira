@@ -15,7 +15,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the date.
         /// </summary>
-        [BsonRepresentation(BsonType.String)]
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
         public DateTime Date { get; set; }
 
         /// <summary>
