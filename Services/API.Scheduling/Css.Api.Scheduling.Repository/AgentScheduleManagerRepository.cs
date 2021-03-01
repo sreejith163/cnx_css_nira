@@ -220,7 +220,7 @@ namespace Css.Api.Scheduling.Repository
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
                 var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-                agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Exists(y => y.Date == dateTimeWithZeroTimeSpan));
+                agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Any(y => y.Date == dateTimeWithZeroTimeSpan));
             }
 
             if (agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule.HasValue && agentScheduleManagerChartQueryparameter.Date.HasValue && 
@@ -228,7 +228,7 @@ namespace Css.Api.Scheduling.Repository
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
                 var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-                agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Exists(y => y.Date != dateTimeWithZeroTimeSpan));
+                agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentScheduleManagerCharts.Any(y => y.Date != dateTimeWithZeroTimeSpan));
             }
 
             return agentScheduleManagers;

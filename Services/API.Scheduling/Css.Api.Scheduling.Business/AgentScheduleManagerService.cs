@@ -13,6 +13,7 @@ using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,7 +103,7 @@ namespace Css.Api.Scheduling.Business
 
             if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime))
             {
-                var mappedAgentScheduleManagers = _mapper.Map<List<AgentScheduleManagerChartDetailsDTO>>(agentScheduleManagers);
+                var mappedAgentScheduleManagers = JsonConvert.DeserializeObject<List<AgentScheduleManagerChartDetailsDTO>>(JsonConvert.SerializeObject(agentScheduleManagers));
                 foreach (var mappedAgentScheduleManager in mappedAgentScheduleManagers)
                 {
                     var date = agentScheduleManagerChartQueryparameter.Date.Value;
