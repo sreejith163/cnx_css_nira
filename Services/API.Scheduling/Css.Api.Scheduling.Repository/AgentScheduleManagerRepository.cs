@@ -104,7 +104,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.IsDeleted, false) &
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.ActiveAgentShedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.ActiveAgentSchedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
 
             var agentSchedules = FilterBy(query);
 
@@ -213,7 +213,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId.HasValue && agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId != default(int))
             {
-                agentScheduleManagers = agentScheduleManagers.Where(x => x.ActiveAgentShedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId);
+                agentScheduleManagers = agentScheduleManagers.Where(x => x.ActiveAgentSchedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId);
             }
 
             if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime) &&

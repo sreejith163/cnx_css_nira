@@ -203,7 +203,7 @@ namespace Css.Api.Scheduling.Repository
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) &
-                Builders<AgentSchedule>.Filter.Eq(i => i.ActiveAgentShedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
+                Builders<AgentSchedule>.Filter.Eq(i => i.ActiveAgentSchedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
 
             var agentSchedules = FilterBy(query);
 
@@ -292,7 +292,7 @@ namespace Css.Api.Scheduling.Repository
                 .Set(x => x.EmployeeId, updateAgentScheduleEmployeeDetails.EmployeeId)
                 .Set(x => x.FirstName, updateAgentScheduleEmployeeDetails.FirstName)
                 .Set(x => x.LastName, updateAgentScheduleEmployeeDetails.LastName)
-                .Set(x => x.ActiveAgentShedulingGroupId, updateAgentScheduleEmployeeDetails.AgentSchedulingGroupId)
+                .Set(x => x.ActiveAgentSchedulingGroupId, updateAgentScheduleEmployeeDetails.AgentSchedulingGroupId)
                 .Set(x => x.Ranges[-1].AgentSchedulingGroupId, updateAgentScheduleEmployeeDetails.AgentSchedulingGroupId)
                 .Set(x => x.ModifiedBy, updateAgentScheduleEmployeeDetails.ModifiedBy)
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
@@ -475,7 +475,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (agentScheduleQueryparameter.AgentSchedulingGroupId.HasValue && agentScheduleQueryparameter.AgentSchedulingGroupId != default(int))
             {
-                agentSchedules = agentSchedules.Where(x => x.ActiveAgentShedulingGroupId == agentScheduleQueryparameter.AgentSchedulingGroupId);
+                agentSchedules = agentSchedules.Where(x => x.ActiveAgentSchedulingGroupId == agentScheduleQueryparameter.AgentSchedulingGroupId);
             }
 
             if (agentScheduleQueryparameter.Status.HasValue)

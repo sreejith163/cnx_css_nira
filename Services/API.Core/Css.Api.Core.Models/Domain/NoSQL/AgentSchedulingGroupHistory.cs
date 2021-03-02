@@ -9,7 +9,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
-        public int AgentSchedulingGroupID { get; set; }
+        public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the start date.

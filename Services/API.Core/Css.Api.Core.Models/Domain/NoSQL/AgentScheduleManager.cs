@@ -26,7 +26,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the current agent scheduling group identifier.
         /// </summary>
-        public int ActiveAgentShedulingGroupId { get; set; }
+        public int ActiveAgentSchedulingGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the manager charts.
