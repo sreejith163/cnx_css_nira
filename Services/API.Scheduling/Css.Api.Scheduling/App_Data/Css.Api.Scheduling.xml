@@ -133,13 +133,6 @@
             <param name="agentScheduleManagerChartQueryparameter">The agent schedule manager chart queryparameter.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.GetAgentScheduleManagerChart(System.DateTime)">
-            <summary>
-            Gets the agent schedule manager chart.
-            </summary>
-            <param name="dateTime">The date time.</param>
-            <returns></returns>
-        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.UpdateAgentScheduleMangerChart(Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager.UpdateAgentScheduleManagerChart)">
             <summary>
             Updates the agent schedule manger chart.

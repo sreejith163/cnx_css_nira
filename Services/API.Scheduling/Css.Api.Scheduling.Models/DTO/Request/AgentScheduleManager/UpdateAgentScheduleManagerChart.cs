@@ -25,6 +25,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager
         public ActivityOrigin ActivityOrigin { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is import.
+        /// </summary>
+        public bool IsImport { get; set; }
+
+        /// <summary>
         /// Gets or sets the modified user.
         /// </summary>
         public int ModifiedUser { get; set; }

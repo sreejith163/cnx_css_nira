@@ -15,9 +15,6 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
 
             CreateMap<NoSQL.AgentScheduleManager, AgentScheduleManagerChartDetailsDTO>()
                 .ReverseMap();
-
-            CreateMap<PagedList<Entity>, AgentScheduleManagerChartDetailsDTO>()
-                .ReverseMap();
         }
     }
 }

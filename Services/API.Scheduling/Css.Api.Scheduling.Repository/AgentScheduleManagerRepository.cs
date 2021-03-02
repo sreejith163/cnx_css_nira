@@ -69,21 +69,6 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>
         /// Gets the agent schedule manager chart.
         /// </summary>
-        /// <param name="dateDetails">The date details.</param>
-        /// <returns></returns>
-        public async Task<AgentScheduleManager> GetAgentScheduleManagerChart(DateDetails dateDetails)
-        {
-            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0);
-
-            var query =
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, dateDetails.Date);
-
-            return await FindByIdAsync(query);
-        }
-
-        /// <summary>
-        /// Gets the agent schedule manager chart.
-        /// </summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="dateDetails">The date details.</param>
         /// <returns></returns>
@@ -96,6 +81,26 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, dateDetails.Date);
 
             return await FindByIdAsync(query);
+        }
+
+        /// <summary>
+        /// Determines whether [is agent schedule manager chart exists] [the specified employee identifier details].
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="dateDetails">The date details.</param>
+        /// <returns>
+        ///   <c>true</c> if [is agent schedule manager chart exists] [the specified employee identifier details]; otherwise, <c>false</c>.
+        /// </returns>
+        public async Task<bool> IsAgentScheduleManagerChartExists(EmployeeIdDetails employeeIdDetails, DateDetails dateDetails)
+        {
+            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0);
+
+            var query =
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, dateDetails.Date);
+
+            var count = await FindCountByIdAsync(query);
+            return count > 0;
         }
 
         /// <summary>
@@ -127,40 +132,11 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
-        /// Creates the agent schedule manager.
-        /// </summary>
-        /// <param name="agentScheduleManagerRequest">The agent schedule manager request.</param>
-        public void CreateAgentScheduleManager(AgentScheduleManager agentScheduleManagerRequest)
-        {
-            InsertOneAsync(agentScheduleManagerRequest);
-        }
-
-        /// <summary>
         /// Updates the agent schedule manger chart.
         /// </summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="agentScheduleManager">The agent schedule manager.</param>
         public void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManager agentScheduleManager)
-        {
-            agentScheduleManager.Date = new DateTime(agentScheduleManager.Date.Year, agentScheduleManager.Date.Month, 
-                                                     agentScheduleManager.Date.Day, 0, 0, 0);
-
-            var query =
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, agentScheduleManager.Date);
-
-            var update = Builders<AgentScheduleManager>.Update
-                .AddToSetEach(x => x.Charts, agentScheduleManager.Charts);
-
-            UpdateOneAsync(query, update, new UpdateOptions { IsUpsert = true });
-        }
-
-        /// <summary>
-        /// Copies the agent schedules.
-        /// </summary>
-        /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <param name="agentScheduleManager">The agent schedule manager.</param>
-        public void CopyAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManager agentScheduleManager)
         {
             agentScheduleManager.Date = new DateTime(agentScheduleManager.Date.Year, agentScheduleManager.Date.Month,
                                                      agentScheduleManager.Date.Day, 0, 0, 0);
@@ -169,10 +145,28 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, agentScheduleManager.Date);
 
-            var update = Builders<AgentScheduleManager>.Update
-                .AddToSetEach(x => x.Charts, agentScheduleManager.Charts);
+            var documentCount = FindCountByIdAsync(query).Result;
+            if (documentCount > 0)
+            {
+                if (agentScheduleManager.Charts.Any())
+                {
+                    var update = Builders<AgentScheduleManager>.Update
+                        .Set(x => x.AgentSchedulingGroupId, agentScheduleManager.AgentSchedulingGroupId)
+                        .Set(x => x.Charts, agentScheduleManager.Charts)
+                        .Set(x => x.ModifiedBy, agentScheduleManager.CreatedBy)
+                        .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 
-            UpdateOneAsync(query, update);
+                    UpdateOneAsync(query, update);
+                }
+                else
+                {
+                    DeleteOneAsync(query);
+                }
+            }
+            else
+            {
+                InsertOneAsync(agentScheduleManager);
+            }
         }
 
         /// <summary>

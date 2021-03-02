@@ -206,6 +206,7 @@ namespace Css.Api.Scheduling.Business
                     {
                         AgentScheduleManager scheduleManagerChart = new AgentScheduleManager()
                         {
+                            EmployeeId = agentSchedule.EmployeeId,
                             AgentSchedulingGroupId = agentScheduleRange.AgentSchedulingGroupId,
                             Date = date,
                             Charts = agentScheduleRange.ScheduleCharts.FirstOrDefault(x => x.Day == (int)dayOfWeek).Charts,
@@ -276,7 +277,7 @@ namespace Css.Api.Scheduling.Business
             }
             else
             {
-                var agentAdmin = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(employeeIdDetails);
+                var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
                 if (agentAdmin != null)
                 {
                     agentScheduleRange = new AgentScheduleRange()
@@ -335,7 +336,7 @@ namespace Css.Api.Scheduling.Business
 
                     if (!hasConflictingSchedules)
                     {
-                        var agentAdmin = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(employeeIdDetails);
+                        var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
                         if (agentAdmin != null)
                         {
                             var agentScheduleRange = new AgentScheduleRange
@@ -411,7 +412,7 @@ namespace Css.Api.Scheduling.Business
                                                  x.DateTo == agentScheduleDetails.DateTo);
                         if (copiedAgentScheduleRange != null && copiedAgentScheduleRange.ScheduleCharts.Any())
                         {
-                            var agentAdmin = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(employeeIdDetails);
+                            var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
                             if (agentAdmin != null)
                             {
                                 var agentScheduleRange = new AgentScheduleRange

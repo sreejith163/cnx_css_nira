@@ -6,6 +6,7 @@ using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Bson;
@@ -98,12 +99,12 @@ namespace Css.Api.Scheduling.Repository
             return await FindByIdAsync(query);
         }
 
-        /// <summary>Gets the agent admin ids by sso.</summary>
+        /// <summary>Gets the agent admin by sso.</summary>
         /// <param name="agentAdminSsoDetails">The agent admin sso details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<Agent> GetAgentAdminIdsBySso(AgentAdminSsoDetails agentAdminSsoDetails)
+        public async Task<Agent> GetAgentAdminBySso(AgentAdminSsoDetails agentAdminSsoDetails)
         {
             var query =
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
@@ -113,11 +114,11 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
-        /// Gets the agent admin ids by employee identifier.
+        /// Gets the agent admin by employee identifier.
         /// </summary>
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
         /// <returns></returns>
-        public async Task<Agent> GetAgentAdminIdsByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails)
+        public async Task<Agent> GetAgentAdminByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails)
         {
             var query =
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
@@ -159,6 +160,22 @@ namespace Css.Api.Scheduling.Repository
             var agentAdmins = FilterBy(query);
 
             return await Task.FromResult(agentAdmins.ToList());
+        }
+
+        /// <summary>
+        /// Gets the employee ids by agent scheduling group.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <returns></returns>
+        public async Task<List<int>> GetEmployeeIdsByAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
+                Builders<Agent>.Filter.Eq(i => i.AgentSchedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
+
+            var employees = FilterBy(query);
+
+            return await Task.FromResult(employees?.Select(x => x.Ssn).ToList());
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
-﻿using Css.Api.Core.Models.Domain.NoSQL;
-using Css.Api.Core.Models.DTO.Response;
+﻿using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
@@ -15,13 +14,6 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <param name="agentScheduleManagerChartQueryparameter">The agent schedule manager chart queryparameter.</param>
         /// <returns></returns>
         Task<CSSResponse> GetAgentScheduleManagerCharts(AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter);
-
-        /// <summary>
-        /// Gets the agent schedule manager chart.
-        /// </summary>
-        /// <param name="aateDetails">The aate details.</param>
-        /// <returns></returns>
-        Task<CSSResponse> GetAgentScheduleManagerChart(DateDetails aateDetails);
 
         /// <summary>
         /// Updates the agent schedule manger chart.

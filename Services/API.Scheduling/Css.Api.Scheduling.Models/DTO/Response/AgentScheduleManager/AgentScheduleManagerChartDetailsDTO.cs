@@ -26,7 +26,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
         /// Gets or sets the current agent scheduling group identifier.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? ActiveAgentSchedulingGroupId { get; set; }
+        public int? AgentSchedulingGroupId { get; set; }
         /// <summary>
         /// Gets or sets the date.
         /// </summary>

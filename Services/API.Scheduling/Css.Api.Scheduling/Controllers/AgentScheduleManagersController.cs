@@ -1,5 +1,4 @@
-﻿using Css.Api.Core.Models.Domain.NoSQL;
-using Css.Api.Scheduling.Business.Interfaces;
+﻿using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
@@ -42,18 +41,6 @@ namespace Css.Api.Scheduling.Controllers
         public async Task<IActionResult> GetAgentScheduleManagerCharts([FromQuery] AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
         {
             var result = await _agentScheduleManagerService.GetAgentScheduleManagerCharts(agentScheduleManagerChartQueryparameter);
-            return StatusCode((int)result.Code, result.Value);
-        }
-
-        /// <summary>
-        /// Gets the agent schedule manager chart.
-        /// </summary>
-        /// <param name="dateTime">The date time.</param>
-        /// <returns></returns>
-        [HttpGet("{date}")]
-        public async Task<IActionResult> GetAgentScheduleManagerChart(DateTime dateTime)
-        {
-            var result = await _agentScheduleManagerService.GetAgentScheduleManagerChart(new DateDetails { Date = dateTime });
             return StatusCode((int)result.Code, result.Value);
         }
 

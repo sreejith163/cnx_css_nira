@@ -24,17 +24,18 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <summary>
         /// Gets the agent schedule manager chart.
         /// </summary>
-        /// <param name="dateDetails">The date details.</param>
-        /// <returns></returns>
-        Task<AgentScheduleManager> GetAgentScheduleManagerChart(DateDetails dateDetails);
-
-        /// <summary>
-        /// Gets the agent schedule manager chart.
-        /// </summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="dateDetails">The date details.</param>
         /// <returns></returns>
         Task<AgentScheduleManager> GetAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, DateDetails dateDetails);
+
+        /// <summary>
+        /// Determines whether [is agent schedule manager chart exists] [the specified employee identifier details].
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="dateDetails">The date details.</param>
+        /// <returns></returns>
+        Task<bool> IsAgentScheduleManagerChartExists(EmployeeIdDetails employeeIdDetails, DateDetails dateDetails);
 
         /// <summary>
         /// Gets the agent schedule manager chart by employee identifier.
@@ -51,24 +52,11 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<List<int>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
 
         /// <summary>
-        /// Creates the agent schedule manager.
-        /// </summary>
-        /// <param name="agentScheduleManagerRequest">The agent schedule manager request.</param>
-        void CreateAgentScheduleManager(AgentScheduleManager agentScheduleManagerRequest);
-
-        /// <summary>
         /// Updates the agent schedule manger chart.
         /// </summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="agentScheduleManager">The agent schedule manager.</param>
         void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManager agentScheduleManager);
-
-        /// <summary>
-        /// Copies the agent schedule manager chart.
-        /// </summary>
-        /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <param name="agentScheduleManager">The agent schedule manager.</param>
-        void CopyAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManager agentScheduleManager);
     }
 }
 
