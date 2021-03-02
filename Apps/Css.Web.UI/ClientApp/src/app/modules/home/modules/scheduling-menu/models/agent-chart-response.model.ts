@@ -3,10 +3,13 @@ import { AgentScheduleManagerChart } from './agent-schedule-manager-chart.model'
 
 export class AgentChartResponse {
     id: string;
-    agentScheduleChart: AgentScheduleChart;
-    agentScheduleManagerCharts: AgentScheduleManagerChart[];
+    employeeId: number;
+    firstName: string;
+    lastName: string;
+    activeAgentShedulingGroupId: number;
+    managerCharts: AgentScheduleManagerChart[];
 
     constructor() {
-        this.agentScheduleManagerCharts = [];
+        this.managerCharts = [];
     }
 }

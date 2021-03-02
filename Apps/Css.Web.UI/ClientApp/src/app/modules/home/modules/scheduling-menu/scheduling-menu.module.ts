@@ -11,6 +11,7 @@ import { HorizontalScrollPipe } from './pipes/horizontal-scroll.pipe';
 
 import { AgentAdminService } from './services/agent-admin.service';
 import { AgentSchedulesService } from './services/agent-schedules.service';
+import { AgentScheduleManagersService } from './services/agent-schedule-managers.service';
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid.component';
 import { ImportScheduleComponent } from './components/shared/import-schedule/import-schedule.component';
 import { CopyScheduleComponent } from './components/shared/copy-schedule/copy-schedule.component';
@@ -34,6 +35,7 @@ import { ActivityLogsComponent } from './components/agent-admin/activity-logs/ac
 import { ContenteditableValueAccessor } from 'src/app/shared/directives/contenteditable.directive';
 import { BypassHtmlPipe } from 'src/app/shared/directives/bypassHtml.pipe';
 import { DateRangePopUpComponent } from './components/shared/date-range-pop-up/date-range-pop-up.component';
+
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
 const components =
   [AgentAdminListComponent,
@@ -56,7 +58,7 @@ const components =
     ContenteditableValueAccessor, 
     BypassHtmlPipe
   ];
-const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService];
+const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService, AgentScheduleManagersService];
 
 @NgModule({
   declarations: components,

@@ -1,10 +1,10 @@
-import { SchedulingStatus } from '../enums/scheduling-status.enum';
+import { AgentScheduleRange } from './agent-schedule-range.model';
 
 export class AgentScheduleBase {
     id: string;
     employeeId: number;
     firstName: string;
     lastName: string;
-    status: SchedulingStatus;
+    agentScheduleRange: AgentScheduleRange;
     agentSchedulingGroupId: number;
 }

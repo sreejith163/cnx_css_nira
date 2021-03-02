@@ -5,7 +5,7 @@
       (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
     </app-agent-scheduling-group-typeahead>
   </div>
-  <!-- <div class="col-md-3 d-flex flex-column padding-t-24">
+  <div *ngIf="agentScheduleType == 1" class="col-md-3 d-flex flex-column padding-t-24">
     <div class="input-group">
       <input class="form-control" placeholder="{{'Select Start Date' | translate}}" name="dp" ngbDatepicker
         [readonly]="true" [(ngModel)]="startDate" [footerTemplate]="footerTemplate"
@@ -18,7 +18,7 @@
           id="btn_today">{{'Today' | translate}}</button>
       </ng-template>
     </div>
-  </div> -->
+  </div>
   <div class="col-md-2 col-sm-6 padding-t-24">
     <input type="text" class="form-control padding-right-35" placeholder="{{'Type_here_to_search' | translate}}"
       [(ngModel)]="searchKeyword" [maxLength]="maxLength">

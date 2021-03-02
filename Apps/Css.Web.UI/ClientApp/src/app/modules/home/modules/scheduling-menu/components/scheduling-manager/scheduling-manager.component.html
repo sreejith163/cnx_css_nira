@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <app-scheduling-filter (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
+  <app-scheduling-filter [agentScheduleType]="1" (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
     (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)"></app-scheduling-filter>
 
   <div class="card card-primary card-outline card-outline-tabs">
@@ -143,11 +143,11 @@
         <ngx-spinner [name]="spinner"></ngx-spinner>
       </thead>
       <tbody>
-        <tr *ngIf="totalSchedulingGridData?.length === 0" class="valid-record">
+        <tr *ngIf="managerCharts?.length === 0" class="valid-record">
           <td colspan="25">
             {{ 'No data to show' | translate }}</td>
         </tr>
-        <tr class="jsgrid-row user-select-none" *ngFor="let el of totalSchedulingGridData; let i = index"
+        <tr class="jsgrid-row user-select-none" *ngFor="let el of managerCharts; let i = index"
           [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.id, i)">
           <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
           <td class="jsgrid-cell-empName">
@@ -202,7 +202,7 @@
   </div>
 </div>
 
-<ng-container *ngIf="totalSchedulingGridData?.length">
+<ng-container *ngIf="managerCharts?.length">
   <!-- Agent Info -->
   <div class="row">
     <div class="col-12 col-md-12">
