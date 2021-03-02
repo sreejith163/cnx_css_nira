@@ -402,14 +402,17 @@ namespace Css.Api.Scheduling.Business
                 var employeeSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
                 if (employeeSchedule != null)
                 {
-                    var agentScheduleRangeExist = employeeSchedule.Ranges.Exists(x => x.DateFrom == agentScheduleDetails.DateFrom &&
-                                                                                      x.DateTo == agentScheduleDetails.DateTo);
-                    if (!agentScheduleRangeExist)
+                    var hasConflictingSchedules = employeeSchedule.Ranges.Exists(x => x.Status != SchedulingStatus.Rejected &&
+                                                                                      agentScheduleDetails.DateFrom < x.DateTo &&
+                                                                                      agentScheduleDetails.DateTo > x.DateFrom);
+
+                    if (!hasConflictingSchedules)
                     {
                         var copiedAgentScheduleRange = agentSchedule.Ranges
                             .FirstOrDefault(x => x.Status != SchedulingStatus.Rejected &&
                                                  x.DateFrom == agentScheduleDetails.DateFrom &&
                                                  x.DateTo == agentScheduleDetails.DateTo);
+
                         if (copiedAgentScheduleRange != null && copiedAgentScheduleRange.ScheduleCharts.Any())
                         {
                             var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
