@@ -1,7 +1,5 @@
 ﻿using Css.Api.Core.Models.Domain.NoSQL;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager
@@ -9,18 +7,19 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager
     public class AgentScheduleManagerChartDTO
     {
         /// <summary>
-        /// Gets or sets the date.
+        /// Gets or sets the employee identifier.
         /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
-        public DateTime Date { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the charts.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<ScheduleChart> Charts { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentScheduleManagerChart"/> class.
+        /// Initializes a new instance of the <see cref="Core.Models.Domain.NoSQL.AgentScheduleManager"/> class.
         /// </summary>
         public AgentScheduleManagerChartDTO()
         {

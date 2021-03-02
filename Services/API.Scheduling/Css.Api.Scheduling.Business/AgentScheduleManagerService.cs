@@ -3,6 +3,7 @@ using Css.Api.Core.DataAccess.Repository.UnitOfWork.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Models.DTO.Response;
+using Css.Api.Core.Models.Enums;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
@@ -13,7 +14,6 @@ using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,35 +101,17 @@ namespace Css.Api.Scheduling.Business
             var agentScheduleManagers = await _agentScheduleManagerRepository.GetAgentScheduleManagerCharts(agentScheduleManagerChartQueryparameter);
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentScheduleManagers));
 
-            if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime))
-            {
-                var mappedAgentScheduleManagers = JsonConvert.DeserializeObject<List<AgentScheduleManagerChartDetailsDTO>>(JsonConvert.SerializeObject(agentScheduleManagers));
-                foreach (var mappedAgentScheduleManager in mappedAgentScheduleManagers)
-                {
-                    if (mappedAgentScheduleManager.ManagerCharts != null)
-                    {
-                        var date = agentScheduleManagerChartQueryparameter.Date.Value;
-                        var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-
-                        mappedAgentScheduleManager.ManagerCharts = mappedAgentScheduleManager.ManagerCharts
-                            .Where(x => x.Date == dateTimeWithZeroTimeSpan).ToList();
-                    }
-                }
-
-                return new CSSResponse(mappedAgentScheduleManagers, HttpStatusCode.OK);
-            }
-
             return new CSSResponse(agentScheduleManagers, HttpStatusCode.OK);
         }
 
         /// <summary>
         /// Gets the agent schedule manager chart.
         /// </summary>
-        /// <param name="agentScheduleManagerIdDetails">The agent schedule manager identifier details.</param>
+        /// <param name="dateDetails">The date details.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> GetAgentScheduleManagerChart(AgentScheduleManagerIdDetails agentScheduleManagerIdDetails)
+        public async Task<CSSResponse> GetAgentScheduleManagerChart(DateDetails dateDetails)
         {
-            var agentScheduleManager = await _agentScheduleManagerRepository.GetAgentScheduleManagerChart(agentScheduleManagerIdDetails);
+            var agentScheduleManager = await _agentScheduleManagerRepository.GetAgentScheduleManagerChart(dateDetails);
             if (agentScheduleManager == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -142,11 +124,11 @@ namespace Css.Api.Scheduling.Business
         /// <summary>
         /// Updates the agent schedule manger chart.
         /// </summary>
-        /// <param name="agentScheduleManagerChartDetails">The agent schedule manager chart details.</param>
+        /// <param name="agentScheduleManagerChart">The agent schedule manager chart.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> UpdateAgentScheduleMangerChart(UpdateAgentScheduleManagerChart agentScheduleManagerChartDetails)
+        public async Task<CSSResponse> UpdateAgentScheduleMangerChart(UpdateAgentScheduleManagerChart agentScheduleManagerChart)
         {
-            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleManagerChartDetails);
+            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleManagerChart);
             if (!hasValidCodes)
             {
                 return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
@@ -154,14 +136,13 @@ namespace Css.Api.Scheduling.Business
 
             var activityLogs = new List<ActivityLog>();
 
-            foreach (var agentScheduleManager in agentScheduleManagerChartDetails.AgentScheduleManagers)
-            {
-                var employeeIdDetails = new EmployeeIdDetails { Id = agentScheduleManager.EmployeeId };
-                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleManagerChartDetails.ModifiedBy };
+            agentScheduleManagerChart.Date = new DateTime(agentScheduleManagerChart.Date.Year, agentScheduleManagerChart.Date.Month,
+                                                          agentScheduleManagerChart.Date.Day, 0, 0, 0);
 
-                agentScheduleManager.AgentScheduleManagerChart.Date = new DateTime(agentScheduleManager.AgentScheduleManagerChart.Date.Year, 
-                                                                                   agentScheduleManager.AgentScheduleManagerChart.Date.Month, 
-                                                                                   agentScheduleManager.AgentScheduleManagerChart.Date.Day, 0, 0, 0);
+            foreach (var scheduleManager in agentScheduleManagerChart.AgentScheduleManagers)
+            {
+                var employeeIdDetails = new EmployeeIdDetails { Id = scheduleManager.EmployeeId };
+                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleManagerChart.ModifiedBy };
 
                 var agentScheduleMangerSchedule = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails);
                 if (agentScheduleMangerSchedule != null)
@@ -169,19 +150,19 @@ namespace Css.Api.Scheduling.Business
                     var agentAdmin = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(employeeIdDetails);
                     if (agentAdmin != null)
                     {
-                        var agentScheduleManagerChart = new AgentScheduleManagerChart
+                        var agentScheduleManager = new AgentScheduleManager
                         {
                             AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
-                            Date = agentScheduleManager.AgentScheduleManagerChart.Date,
-                            Charts = agentScheduleManager.AgentScheduleManagerChart.Charts,
+                            Date = agentScheduleManagerChart.Date,
+                            Charts = scheduleManager.Charts,
                             CreatedBy = modifiedUserDetails.ModifiedBy,
                             CreatedDate = DateTimeOffset.UtcNow
                         };
 
-                        _agentScheduleManagerRepository.UpdateAgentScheduleMangerChart(employeeIdDetails, agentScheduleManagerChart);
-                        var activityLog = GetActivityLogForSchedulingManager(agentScheduleManagerChart, employeeIdDetails.Id,
-                                                                             agentScheduleManagerChartDetails.ModifiedBy, agentScheduleManagerChartDetails.ModifiedUser,
-                                                                             agentScheduleManagerChartDetails.ActivityOrigin);
+                        _agentScheduleManagerRepository.UpdateAgentScheduleMangerChart(employeeIdDetails, agentScheduleManager);
+                        var activityLog = GetActivityLogForSchedulingManager(agentScheduleManager, employeeIdDetails.Id,
+                                                                             agentScheduleManagerChart.ModifiedBy, agentScheduleManagerChart.ModifiedUser,
+                                                                             agentScheduleManagerChart.ActivityOrigin);
                         activityLogs.Add(activityLog);
                     }
                 }
@@ -193,16 +174,17 @@ namespace Css.Api.Scheduling.Business
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }
-    
+
         /// <summary>
         /// Copies the agent schedule.
         /// </summary>
-        /// <param name="agentScheduleManagerIdDetails">The agent schedule manager identifier details.</param>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> CopyAgentScheduleManagerChart(AgentScheduleManagerIdDetails agentScheduleManagerIdDetails, CopyAgentScheduleManager agentScheduleDetails)
+        public async Task<CSSResponse> CopyAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, CopyAgentScheduleManager agentScheduleDetails)
         {
-            var agentScheduleManager = await _agentScheduleManagerRepository.GetAgentScheduleManagerChart(agentScheduleManagerIdDetails);
+            var dateDetails = new DateDetails { Date = agentScheduleDetails.Date };
+            var agentScheduleManager = await _agentScheduleManagerRepository.GetAgentScheduleManagerChart(employeeIdDetails, dateDetails);
             if (agentScheduleManager == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -216,43 +198,35 @@ namespace Css.Api.Scheduling.Business
             }
 
             var activityLogs = new List<ActivityLog>();
+            agentScheduleDetails.Date = new DateTime(agentScheduleDetails.Date.Year, agentScheduleDetails.Date.Month, agentScheduleDetails.Date.Day, 0, 0, 0);
 
             foreach (var employeeId in agentScheduleDetails.EmployeeIds)
             {
-                var employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
+                var employeeDetails = new EmployeeIdDetails { Id = employeeId };
                 var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
 
-                var employeeSchedule = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails);
-                if (employeeSchedule != null)
+                var employeeSchedule = await _agentScheduleManagerRepository.GetAgentScheduleManagerChart(employeeDetails, dateDetails);
+                if (employeeSchedule == null)
                 {
-                    agentScheduleDetails.Date = new DateTime(agentScheduleDetails.Date.Year, agentScheduleDetails.Date.Month, agentScheduleDetails.Date.Day, 0, 0, 0);
-                    var agentScheduleManagerChartExist = employeeSchedule.ManagerCharts.Exists(x => x.Date == agentScheduleDetails.Date);
-                    
-                    if (!agentScheduleManagerChartExist)
+                    if (agentScheduleManager.Charts.Any())
                     {
-                        var copiedAgentScheduleManagerChart = agentScheduleManager.ManagerCharts
-                           .FirstOrDefault(x => x.Date == agentScheduleDetails.Date);
-
-                        if (copiedAgentScheduleManagerChart != null && copiedAgentScheduleManagerChart.Charts.Any())
+                        var agentAdmin = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(employeeDetails);
+                        if (agentAdmin != null)
                         {
-                            var agentAdmin = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(employeeIdDetails);
-                            if (agentAdmin != null)
+                            var agentScheduleManagerChart = new AgentScheduleManager
                             {
-                                var agentScheduleManagerChart = new AgentScheduleManagerChart
-                                {
-                                    AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
-                                    Date = agentScheduleDetails.Date,
-                                    Charts = copiedAgentScheduleManagerChart.Charts,
-                                    CreatedBy = modifiedUserDetails.ModifiedBy,
-                                    CreatedDate = DateTimeOffset.UtcNow
-                                };
+                                AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
+                                Date = agentScheduleDetails.Date,
+                                Charts = agentScheduleManager.Charts,
+                                CreatedBy = modifiedUserDetails.ModifiedBy,
+                                CreatedDate = DateTimeOffset.UtcNow
+                            };
 
-                                _agentScheduleManagerRepository.CopyAgentScheduleManagerChart(employeeIdDetails, agentScheduleManagerChart);
+                            _agentScheduleManagerRepository.CopyAgentScheduleManagerChart(employeeDetails, agentScheduleManagerChart);
 
-                                var activityLog = GetActivityLogForSchedulingManager(agentScheduleManagerChart, employeeId, agentScheduleDetails.ModifiedBy,
-                                                                                     agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
-                                activityLogs.Add(activityLog);
-                            }
+                            var activityLog = GetActivityLogForSchedulingManager(agentScheduleManagerChart, employeeId, agentScheduleDetails.ModifiedBy,
+                                                                                 agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
+                            activityLogs.Add(activityLog);
                         }
                     }
                 }
@@ -274,8 +248,8 @@ namespace Css.Api.Scheduling.Business
         /// <param name="executedUser">The executed user.</param>
         /// <param name="activityOrigin">The activity origin.</param>
         /// <returns></returns>
-        private ActivityLog GetActivityLogForSchedulingManager(AgentScheduleManagerChart agentScheduleManagerChart, int employeeId, string executedBy, int executedUser,
-                                                             ActivityOrigin activityOrigin)
+        private ActivityLog GetActivityLogForSchedulingManager(AgentScheduleManager agentScheduleManagerChart, int employeeId, string executedBy, int executedUser,
+                                                               ActivityOrigin activityOrigin)
         {
             return new ActivityLog()
             {
@@ -316,7 +290,7 @@ namespace Css.Api.Scheduling.Business
                 var details = agentScheduleDetails as UpdateAgentScheduleManagerChart;
                 foreach (var agentScheduleManager in details.AgentScheduleManagers)
                 {
-                    var scheduleManagerCodes = agentScheduleManager.AgentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList().ToList();
+                    var scheduleManagerCodes = agentScheduleManager.Charts.Select(x => x.SchedulingCodeId).ToList().ToList();
                     codes.AddRange(scheduleManagerCodes);
                 }
             }

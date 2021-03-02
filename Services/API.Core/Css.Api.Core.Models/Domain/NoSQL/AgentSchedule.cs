@@ -29,11 +29,6 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public int ActiveAgentSchedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the history.
-        /// </summary>
-        public List<AgentSchedulingGroupHistory> History { get; set; }
-
-        /// <summary>
         /// Gets or sets the ranges.
         /// </summary>
         public List<AgentScheduleRange> Ranges { get; set; }

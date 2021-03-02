@@ -5,7 +5,6 @@ using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Linq;
@@ -42,7 +41,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<PagedList<Entity>> GetAgentScheduleManagerCharts(AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
         {
-            var agentScheduleManagers = FilterBy(x => x.IsDeleted == false);
+            var agentScheduleManagers = FilterBy(x => true);
 
             var filteredAgentScheduleManagers = FilterAgentScheduleManagers(agentScheduleManagers, agentScheduleManagerChartQueryparameter);
 
@@ -70,13 +69,31 @@ namespace Css.Api.Scheduling.Repository
         /// <summary>
         /// Gets the agent schedule manager chart.
         /// </summary>
-        /// <param name="agentScheduleManagerIdDetails">The agent schedule manager identifier details.</param>
+        /// <param name="dateDetails">The date details.</param>
         /// <returns></returns>
-        public async Task<AgentScheduleManager> GetAgentScheduleManagerChart(AgentScheduleManagerIdDetails agentScheduleManagerIdDetails)
+        public async Task<AgentScheduleManager> GetAgentScheduleManagerChart(DateDetails dateDetails)
         {
+            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0);
+
             var query =
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleManagerIdDetails.AgentScheduleManagerId)) &
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.IsDeleted, false);
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, dateDetails.Date);
+
+            return await FindByIdAsync(query);
+        }
+
+        /// <summary>
+        /// Gets the agent schedule manager chart.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="dateDetails">The date details.</param>
+        /// <returns></returns>
+        public async Task<AgentScheduleManager> GetAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, DateDetails dateDetails)
+        {
+            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0);
+
+            var query =
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, dateDetails.Date);
 
             return await FindByIdAsync(query);
         }
@@ -89,8 +106,7 @@ namespace Css.Api.Scheduling.Repository
         public async Task<AgentScheduleManager> GetAgentScheduleManagerChartByEmployeeId(EmployeeIdDetails employeeIdDetails)
         {
             var query =
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.IsDeleted, false);
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
 
             return await FindByIdAsync(query);
         }
@@ -103,8 +119,7 @@ namespace Css.Api.Scheduling.Repository
         public async Task<List<int>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
         {
             var query =
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.IsDeleted, false) &
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.ActiveAgentSchedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.AgentSchedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
 
             var agentSchedules = FilterBy(query);
 
@@ -124,70 +139,38 @@ namespace Css.Api.Scheduling.Repository
         /// Updates the agent schedule manger chart.
         /// </summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <param name="agentScheduleManagerChart">The agent schedule manager chart.</param>
-        public void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManagerChart agentScheduleManagerChart)
+        /// <param name="agentScheduleManager">The agent schedule manager.</param>
+        public void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManager agentScheduleManager)
         {
+            agentScheduleManager.Date = new DateTime(agentScheduleManager.Date.Year, agentScheduleManager.Date.Month, 
+                                                     agentScheduleManager.Date.Day, 0, 0, 0);
+
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.IsDeleted, false);
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, agentScheduleManager.Date);
 
-            agentScheduleManagerChart.Date = new DateTime(agentScheduleManagerChart.Date.Year, agentScheduleManagerChart.Date.Month, agentScheduleManagerChart.Date.Day, 0, 0, 0);
+            var update = Builders<AgentScheduleManager>.Update
+                .AddToSetEach(x => x.Charts, agentScheduleManager.Charts);
 
-            var documentQuery = query & Builders<AgentScheduleManager>.Filter
-                .ElemMatch(i => i.ManagerCharts, chart => chart.Date == agentScheduleManagerChart.Date);
-
-            var documentCount = FindCountByIdAsync(documentQuery).Result;
-            if (documentCount > 0)
-            {
-                query = documentQuery;
-                if (agentScheduleManagerChart.Charts.Any())
-                {
-                    var update = Builders<AgentScheduleManager>.Update.Set(x => x.ManagerCharts[-1], agentScheduleManagerChart);
-                    UpdateOneAsync(query, update);
-                }
-                else
-                {
-                    var update = Builders<AgentScheduleManager>.Update.PullFilter(x => x.ManagerCharts, builder => builder.Date == agentScheduleManagerChart.Date);
-                    UpdateOneAsync(query, update);
-                }
-            }
-            else
-            {
-                var update = Builders<AgentScheduleManager>.Update.AddToSet(x => x.ManagerCharts, agentScheduleManagerChart);
-                UpdateOneAsync(query, update);
-            }
+            UpdateOneAsync(query, update, new UpdateOptions { IsUpsert = true });
         }
 
         /// <summary>
         /// Copies the agent schedules.
         /// </summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <param name="agentScheduleManagerChart">The agent schedule manager chart.</param>
-        public void CopyAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManagerChart agentScheduleManagerChart)
+        /// <param name="agentScheduleManager">The agent schedule manager.</param>
+        public void CopyAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManager agentScheduleManager)
         {
+            agentScheduleManager.Date = new DateTime(agentScheduleManager.Date.Year, agentScheduleManager.Date.Month,
+                                                     agentScheduleManager.Date.Day, 0, 0, 0);
+
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.IsDeleted, false);
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, agentScheduleManager.Date);
 
             var update = Builders<AgentScheduleManager>.Update
-                .AddToSet(x => x.ManagerCharts, agentScheduleManagerChart);
-
-            UpdateOneAsync(query, update);
-        }
-
-        /// <summary>
-        /// Deletes the agent schedule manager.
-        /// </summary>
-        /// <param name="employeeIdDetails">The employee identifier details.</param>
-        public void DeleteAgentScheduleManager(EmployeeIdDetails employeeIdDetails)
-        {
-            var query =
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.IsDeleted, false);
-
-            var update = Builders<AgentScheduleManager>.Update
-                .Set(x => x.IsDeleted, true)
-                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
+                .AddToSetEach(x => x.Charts, agentScheduleManager.Charts);
 
             UpdateOneAsync(query, update);
         }
@@ -199,7 +182,7 @@ namespace Css.Api.Scheduling.Repository
         /// <param name="agentScheduleManagerChartQueryparameter">The agent schedule manager chart queryparameter.</param>
         /// <returns></returns>
         private IQueryable<AgentScheduleManager> FilterAgentScheduleManagers(IQueryable<AgentScheduleManager> agentScheduleManagers,
-                                                                              AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
+                                                                             AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
         {
             if (!agentScheduleManagers.Any())
             {
@@ -213,7 +196,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId.HasValue && agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId != default(int))
             {
-                agentScheduleManagers = agentScheduleManagers.Where(x => x.ActiveAgentSchedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId);
+                agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentSchedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId);
             }
 
             if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime) &&
@@ -221,7 +204,7 @@ namespace Css.Api.Scheduling.Repository
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
                 var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-                agentScheduleManagers = agentScheduleManagers.Where(x => x.ManagerCharts.Any(y => y.Date == dateTimeWithZeroTimeSpan));
+                agentScheduleManagers = agentScheduleManagers.Where(x => x.Date == dateTimeWithZeroTimeSpan);
             }
 
             if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime) &&
@@ -229,7 +212,7 @@ namespace Css.Api.Scheduling.Repository
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
                 var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-                agentScheduleManagers = agentScheduleManagers.Where(x => !x.ManagerCharts.Any(y => y.Date == dateTimeWithZeroTimeSpan));
+                agentScheduleManagers = agentScheduleManagers.Where(x => x.Date != dateTimeWithZeroTimeSpan);
             }
 
             return agentScheduleManagers;

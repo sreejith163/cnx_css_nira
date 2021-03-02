@@ -1,4 +1,6 @@
-﻿using Css.Api.Core.Models.DTO.Response;
+﻿using Css.Api.Core.Models.Domain.NoSQL;
+using Css.Api.Core.Models.DTO.Response;
+using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using System.Threading.Tasks;
@@ -17,9 +19,9 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <summary>
         /// Gets the agent schedule manager chart.
         /// </summary>
-        /// <param name="agentScheduleManagerIdDetails">The agent schedule manager identifier details.</param>
+        /// <param name="aateDetails">The aate details.</param>
         /// <returns></returns>
-        Task<CSSResponse> GetAgentScheduleManagerChart(AgentScheduleManagerIdDetails agentScheduleManagerIdDetails);
+        Task<CSSResponse> GetAgentScheduleManagerChart(DateDetails aateDetails);
 
         /// <summary>
         /// Updates the agent schedule manger chart.
@@ -31,9 +33,9 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <summary>
         /// Copies the agent schedule manager chart.
         /// </summary>
-        /// <param name="agentScheduleManagerIdDetails">The agent schedule manager identifier details.</param>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
-        Task<CSSResponse> CopyAgentScheduleManagerChart(AgentScheduleManagerIdDetails agentScheduleManagerIdDetails, CopyAgentScheduleManager agentScheduleDetails);
+        Task<CSSResponse> CopyAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, CopyAgentScheduleManager agentScheduleDetails);
     }
 }

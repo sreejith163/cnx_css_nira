@@ -615,7 +615,7 @@
       "UpstreamHttpMethod": [ "Get" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers/{agentScheduleManagerId}",
+      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers/{date}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -623,11 +623,11 @@
           "Port": 4205
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedulemanagers/{agentScheduleManagerId}",
-      "UpstreamHttpMethod": [ "Get", "Put" ]
+      "UpstreamPathTemplate": "/api/agentschedulemanagers/{date}",
+      "UpstreamHttpMethod": [ "Get" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers/managercharts",
+      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers/charts",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -635,11 +635,11 @@
           "Port": 4205
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedulemanagers/managercharts",
+      "UpstreamPathTemplate": "/api/agentschedulemanagers/charts",
       "UpstreamHttpMethod": [ "Put" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers/{agentScheduleManagerId}/copy",
+      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers/{employeeId}/copy",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -647,7 +647,7 @@
           "Port": 4205
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedulemanagers/{agentScheduleManagerId}/copy",
+      "UpstreamPathTemplate": "/api/agentschedulemanagers/{employeeId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
     },
     //********* Forecast Screen Routes *********************

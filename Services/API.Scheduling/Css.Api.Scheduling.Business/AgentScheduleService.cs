@@ -204,7 +204,7 @@ namespace Css.Api.Scheduling.Business
                     var dayOfWeek = date.Date.DayOfWeek;
                     if (agentScheduleRange.ScheduleCharts.Exists(x => x.Day == (int)dayOfWeek))
                     {
-                        AgentScheduleManagerChart scheduleManagerChart = new AgentScheduleManagerChart()
+                        AgentScheduleManager scheduleManagerChart = new AgentScheduleManager()
                         {
                             AgentSchedulingGroupId = agentScheduleRange.AgentSchedulingGroupId,
                             Date = date,
@@ -609,7 +609,7 @@ namespace Css.Api.Scheduling.Business
         /// <param name="executedUser">The executed user.</param>
         /// <param name="activityOrigin">The activity origin.</param>
         /// <returns></returns>
-        private ActivityLog GetActivityLogForSchedulingManager(AgentScheduleManagerChart agentScheduleManagerChart, int employeeId, string executedBy, int executedUser,
+        private ActivityLog GetActivityLogForSchedulingManager(AgentScheduleManager agentScheduleManagerChart, int employeeId, string executedBy, int executedUser,
                                                                ActivityOrigin activityOrigin)
         {
             return new ActivityLog()

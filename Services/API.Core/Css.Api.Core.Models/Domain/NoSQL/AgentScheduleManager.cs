@@ -14,24 +14,20 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public int EmployeeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the first name.
+        /// Gets or sets the agent scheduling group identifier.
         /// </summary>
-        public string FirstName { get; set; }
+        public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the last name.
+        /// Gets or sets the date.
         /// </summary>
-        public string LastName { get; set; }
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
+        public DateTime Date { get; set; }
 
         /// <summary>
-        /// Gets or sets the current agent scheduling group identifier.
+        /// Gets or sets the charts.
         /// </summary>
-        public int ActiveAgentSchedulingGroupId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the manager charts.
-        /// </summary>
-        public List<AgentScheduleManagerChart> ManagerCharts { get; set; }
+        public List<ScheduleChart> Charts { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
@@ -56,16 +52,11 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public DateTimeOffset? ModifiedDate { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is deleted.
-        /// </summary>
-        public bool IsDeleted { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="AgentScheduleManager"/> class.
         /// </summary>
         public AgentScheduleManager()
         {
-            ManagerCharts = new List<AgentScheduleManagerChart>();
+            Charts = new List<ScheduleChart>();
         }
     }
 }

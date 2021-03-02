@@ -12,7 +12,7 @@ namespace Css.Api.Scheduling.Models.Profiles.ActivityLog
             CreateMap<NoSQL.AgentScheduleRange, ActivityLogScheduleRange>()
                 .ReverseMap();
 
-            CreateMap<NoSQL.AgentScheduleManagerChart, ActivityLogScheduleManager>()
+            CreateMap<NoSQL.AgentScheduleManager, ActivityLogScheduleManager>()
                 .ReverseMap();
         }
     }

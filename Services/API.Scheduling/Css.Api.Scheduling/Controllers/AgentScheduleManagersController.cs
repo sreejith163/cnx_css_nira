@@ -1,7 +1,10 @@
-﻿using Css.Api.Scheduling.Business.Interfaces;
+﻿using Css.Api.Core.Models.Domain.NoSQL;
+using Css.Api.Scheduling.Business.Interfaces;
+using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Controllers
@@ -45,12 +48,12 @@ namespace Css.Api.Scheduling.Controllers
         /// <summary>
         /// Gets the agent schedule manager chart.
         /// </summary>
-        /// <param name="agentScheduleManagerId">The agent schedule manager identifier.</param>
+        /// <param name="dateTime">The date time.</param>
         /// <returns></returns>
-        [HttpGet("{agentScheduleManagerId}")]
-        public async Task<IActionResult> GetAgentScheduleManagerChart(string agentScheduleManagerId)
+        [HttpGet("{date}")]
+        public async Task<IActionResult> GetAgentScheduleManagerChart(DateTime dateTime)
         {
-            var result = await _agentScheduleManagerService.GetAgentScheduleManagerChart(new AgentScheduleManagerIdDetails { AgentScheduleManagerId = agentScheduleManagerId });
+            var result = await _agentScheduleManagerService.GetAgentScheduleManagerChart(new DateDetails { Date = dateTime });
             return StatusCode((int)result.Code, result.Value);
         }
 
@@ -59,7 +62,7 @@ namespace Css.Api.Scheduling.Controllers
         /// </summary>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
-        [HttpPut("managercharts")]
+        [HttpPut("charts")]
         public async Task<IActionResult> UpdateAgentScheduleMangerChart([FromBody] UpdateAgentScheduleManagerChart agentScheduleDetails)
         {
             var result = await _agentScheduleManagerService.UpdateAgentScheduleMangerChart(agentScheduleDetails);
@@ -69,13 +72,13 @@ namespace Css.Api.Scheduling.Controllers
         /// <summary>
         /// Copies the agent schedule.
         /// </summary>
-        /// <param name="agentScheduleManagerId">The agent schedule manager identifier.</param>
+        /// <param name="employeeId">The employee identifier.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
-        [HttpPut("{agentScheduleManagerId}/copy")]
-        public async Task<IActionResult> CopyAgentScheduleManagerChart(string agentScheduleManagerId, [FromBody] CopyAgentScheduleManager agentScheduleDetails)
+        [HttpPut("{employeeId}/copy")]
+        public async Task<IActionResult> CopyAgentScheduleManagerChart(int employeeId, [FromBody] CopyAgentScheduleManager agentScheduleDetails)
         {
-            var result = await _agentScheduleManagerService.CopyAgentScheduleManagerChart(new AgentScheduleManagerIdDetails { AgentScheduleManagerId = agentScheduleManagerId }, agentScheduleDetails);
+            var result = await _agentScheduleManagerService.CopyAgentScheduleManagerChart(new EmployeeIdDetails { Id = employeeId }, agentScheduleDetails);
             return StatusCode((int)result.Code, result.Value);
         }
     }

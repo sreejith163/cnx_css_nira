@@ -1,4 +1,4 @@
-﻿using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
+﻿using Css.Api.Core.Models.Domain.NoSQL;
 using FluentValidation.Results;
 using FluentValidation.Validators;
 using System;
@@ -29,15 +29,9 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context)
         {
             var validationFailures = new List<ValidationFailure>();
-            var item = context.PropertyValue as AgentScheduleManagerChartDTO;
+            var item = context.PropertyValue as List<ScheduleChart>;
 
-            if (item.Date == null)
-            {
-                validationFailures.Add(new ValidationFailure("Agent Scheduling Manager", "Date should not be empty"));
-                return validationFailures;
-            }
-
-            foreach (var chart in item.Charts)
+            foreach (var chart in item)
             {
                 if (chart.SchedulingCodeId == 0)
                 {

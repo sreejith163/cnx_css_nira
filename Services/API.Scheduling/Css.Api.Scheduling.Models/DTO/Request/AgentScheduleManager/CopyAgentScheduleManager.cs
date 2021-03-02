@@ -1,4 +1,4 @@
-﻿using Css.Api.Scheduling.Models.Enums;
+﻿using Css.Api.Core.Models.Enums;
 using System;
 using System.Collections.Generic;
 

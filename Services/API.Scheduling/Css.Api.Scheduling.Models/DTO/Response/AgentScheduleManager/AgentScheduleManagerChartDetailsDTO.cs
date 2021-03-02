@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
@@ -22,28 +23,21 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
         public int? EmployeeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the first name.
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string FirstName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the last name.
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string LastName { get; set; }
-
-        /// <summary>
         /// Gets or sets the current agent scheduling group identifier.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? ActiveAgentSchedulingGroupId { get; set; }
-
         /// <summary>
-        /// Gets or sets the agent schedule manager.
+        /// Gets or sets the date.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleManagerChart> ManagerCharts { get; set; }
+        public DateTime Date { get; set; }
+
+        /// <summary>
+        /// Gets or sets the charts.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<ScheduleChart> Charts { get; set; }
     }
 }
 
