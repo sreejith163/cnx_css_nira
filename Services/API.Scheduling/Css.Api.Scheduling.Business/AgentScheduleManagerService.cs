@@ -10,9 +10,12 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
+using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,10 +100,20 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> GetAgentScheduleManagerCharts(AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
         {
+            var agents = await GetAgents(agentScheduleManagerChartQueryparameter);
             var agentScheduleManagers = await _agentScheduleManagerRepository.GetAgentScheduleManagerCharts(agentScheduleManagerChartQueryparameter);
-            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentScheduleManagers));
 
-            return new CSSResponse(agentScheduleManagers, HttpStatusCode.OK);
+            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentScheduleManagers));
+            
+            var mappedAgentScheduleManagers = JsonConvert.DeserializeObject<List<AgentScheduleManagerChartDetailsDTO>>(JsonConvert.SerializeObject(agentScheduleManagers)); ;
+            foreach (var mappedAgentScheduleManager in mappedAgentScheduleManagers)
+            {
+                var agent = agents.FirstOrDefault(x => x.EmployeeId == mappedAgentScheduleManager.EmployeeId);
+                mappedAgentScheduleManager.FirstName = agent?.FirstName;
+                mappedAgentScheduleManager.LastName = agent?.LastName;
+            }
+
+            return new CSSResponse(mappedAgentScheduleManagers, HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -281,6 +294,22 @@ namespace Css.Api.Scheduling.Business
             }
 
             return isValid;
+        }
+
+        /// <summary>
+        /// Gets the agents.
+        /// </summary>
+        /// <param name="agentScheduleManagerChartQueryparameter">The agent schedule manager chart queryparameter.</param>
+        /// <returns></returns>
+        private async Task<List<AgentAdminDTO>> GetAgents(AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
+        {
+            var agentAdminQueryParameter = _mapper.Map<AgentAdminQueryParameter>(agentScheduleManagerChartQueryparameter);
+            agentAdminQueryParameter.Fields = "EmployeeId, FirstName, LastName";
+
+            var agents = await _agentAdminRepository.GetAgentAdmins(agentAdminQueryParameter);
+
+            var mappedAgents = JsonConvert.DeserializeObject<List<AgentAdminDTO>>(JsonConvert.SerializeObject(agents));
+            return mappedAgents;
         }
     }
 }

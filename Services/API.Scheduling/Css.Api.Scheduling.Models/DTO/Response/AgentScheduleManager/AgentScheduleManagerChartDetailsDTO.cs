@@ -23,6 +23,16 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
         public int? EmployeeId { get; set; }
 
         /// <summary>
+        /// Gets or sets the first name.
+        /// </summary>
+        public string FirstName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last name.
+        /// </summary>
+        public string LastName { get; set; }
+
+        /// <summary>
         /// Gets or sets the current agent scheduling group identifier.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -31,7 +41,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
         /// Gets or sets the date.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         /// <summary>
         /// Gets or sets the charts.

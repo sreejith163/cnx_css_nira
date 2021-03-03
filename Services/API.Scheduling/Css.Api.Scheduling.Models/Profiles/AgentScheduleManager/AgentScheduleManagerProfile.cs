@@ -1,6 +1,7 @@
 ﻿using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
+using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Core.Models.Domain;
 
 namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
@@ -14,6 +15,9 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
                 .ReverseMap();
 
             CreateMap<NoSQL.AgentScheduleManager, AgentScheduleManagerChartDetailsDTO>()
+                .ReverseMap();
+
+            CreateMap<AgentScheduleManagerChartQueryparameter, AgentAdminQueryParameter>()
                 .ReverseMap();
         }
     }

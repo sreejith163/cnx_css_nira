@@ -27,7 +27,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
 
         /// <summary>Gets or sets the skill tag identifier.</summary>
         /// <value>The skill tag identifier.</value>
-        public int SkillTagId { get; set; }       
+        public int SkillTagId { get; set; }
 
         /// <summary>
         /// Gets or sets the first name.
