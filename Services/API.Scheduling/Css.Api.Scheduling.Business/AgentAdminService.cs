@@ -679,7 +679,7 @@ namespace Css.Api.Scheduling.Business
                 movingAgent.SkillTagId = destinationSchedulingGroup.SkillTagId;
                 movingAgent.ModifiedBy = moveAgentAdminsDetails.ModifiedBy;
                 movingAgent.ModifiedDate = DateTime.Now;
-                movingAgent.MovedDate = DateTime.Now;
+                // movingAgent.MovedDate = DateTime.Now;
 
                 var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
                 {

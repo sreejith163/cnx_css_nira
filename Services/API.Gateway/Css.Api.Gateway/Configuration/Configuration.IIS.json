@@ -568,7 +568,7 @@
       "UpstreamHttpMethod": [ "Get" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers",
+      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers/charts",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -576,7 +576,7 @@
           "Port": 44393
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedulemanagers",
+      "UpstreamPathTemplate": "/api/agentschedulemanagers/charts",
       "UpstreamHttpMethod": [ "Put" ]
     },
     {

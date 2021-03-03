@@ -9,6 +9,11 @@ namespace Css.Api.Core.Models.Domain.NoSQL
     public class AgentSchedulingGroupHistory : BaseDocument
     {
         /// <summary>
+        /// Gets or sets the employee identifier.
+        /// </summary>
+        public int EmployeeId {​​​​​​​​​​​​ get; set; }​​​​​​​​​​​​​​​​​​​
+
+        /// <summary>
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
         public int AgentSchedulingGroupId { get; set; }
@@ -21,7 +26,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the end date.
         /// </summary>
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         /// <summary>
         /// Gets or sets the activity origin.
