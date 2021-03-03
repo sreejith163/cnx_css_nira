@@ -81,7 +81,7 @@
                                     <div class="col-md-12 d-flex justify-content-end mt-3">
                                         <nav aria-label="Page navigation example">
                                             <ul class="pagination p-0 float-right">
-                                                <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecordLeft"
+                                                <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecordLeft" [rotate]="true" [maxSize]="5" 
                                                     (pageChange)="changePageLeft($event)" [pageSize]="pageSizeLeft" [(page)]="currentPageLeft"
                                                     [boundaryLinks]="true"></ngb-pagination>
                                                 <select class="form-control" (change)="changePageSizeLeft($event.target.value)">
@@ -164,7 +164,7 @@
                                     <div class="col-md-12 d-flex justify-content-end mt-3">
                                         <nav aria-label="Page navigation example">
                                             <ul class="pagination p-0 float-right">
-                                                <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecordRight"
+                                                <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecordRight" [rotate]="true" [maxSize]="5" 
                                                     (pageChange)="changePageRight($event)" [pageSize]="pageSizeRight" [(page)]="currentPageRight"
                                                     [boundaryLinks]="true"></ngb-pagination>
                                                 <select class="form-control" (change)="changePageSizeRight($event.target.value)">
