@@ -127,7 +127,7 @@
     <div class="col-md-12 d-flex justify-content-end mt-3">
       <nav aria-label="Page navigation example">
         <ul class="pagination p-0 float-right">
-          <ngb-pagination class="p-r-5" [collectionSize]="totalClientRecord" (pageChange)="changePage($event)"
+          <ngb-pagination class="p-r-5" [collectionSize]="totalClientRecord" (pageChange)="changePage($event)" [rotate]="true" [maxSize]="10" 
             [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
           <select class="form-control" (change)="changePageSize($event.target.value)">
             <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
