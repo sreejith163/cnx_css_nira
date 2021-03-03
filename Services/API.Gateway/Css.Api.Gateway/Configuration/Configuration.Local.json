@@ -457,7 +457,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentadmins/move",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "css.api.scheduling",
@@ -489,8 +489,8 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/exists",
-      "UpstreamHttpMethod": [ "Get" ]
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/exists",
@@ -501,7 +501,7 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}",
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/exists",
       "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {
@@ -517,7 +517,7 @@
       "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/import",
+      "DownstreamPathTemplate": "/api/v1/agentschedules/import",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -525,7 +525,7 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/import",
+      "UpstreamPathTemplate": "/api/agentschedules/import",
       "UpstreamHttpMethod": [ "Put" ]
     },
     {
@@ -541,7 +541,7 @@
       "UpstreamHttpMethod": [ "Put" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/copy",
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/range",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -551,6 +551,18 @@
       ],
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/range",
       "UpstreamHttpMethod": [ "Put", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentEmployeeId}/myschedule",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.scheduling",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentEmployeeId}/myschedule",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     //********* Agent Schedule Manager Routes *********************
     {
@@ -592,7 +604,7 @@
     //********* Forecast Screen Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/ForecastScreen",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "css.api.scheduling",
@@ -605,7 +617,7 @@
 
     {
       "DownstreamPathTemplate": "/api/v1/ForecastScreen",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "css.api.scheduling",
@@ -617,7 +629,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "css.api.scheduling",
@@ -642,6 +654,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:5001/"
+    "BaseUrl": "http://localhost:5001/"
   }
 }

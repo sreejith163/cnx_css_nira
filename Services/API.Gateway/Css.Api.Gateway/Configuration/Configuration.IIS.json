@@ -491,8 +491,8 @@
           "Port": 44393
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/exists",
-      "UpstreamHttpMethod": [ "Get" ]
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/exists",
@@ -503,7 +503,7 @@
           "Port": 44393
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}",
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/exists",
       "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {
@@ -519,7 +519,7 @@
       "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/import",
+      "DownstreamPathTemplate": "/api/v1/agentschedules/import",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -527,7 +527,7 @@
           "Port": 44393
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/import",
+      "UpstreamPathTemplate": "/api/agentschedules/import",
       "UpstreamHttpMethod": [ "Put" ]
     },
     {
@@ -543,7 +543,7 @@
       "UpstreamHttpMethod": [ "Put" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/copy",
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/range",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -553,6 +553,18 @@
       ],
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/range",
       "UpstreamHttpMethod": [ "Put", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentEmployeeId}/myschedule",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentEmployeeId}/myschedule",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     //********* Agent Schedule Manager Routes *********************
     {
