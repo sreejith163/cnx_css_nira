@@ -106,14 +106,18 @@ namespace Css.Api.Scheduling.Business
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentScheduleManagers));
             
             var mappedAgentScheduleManagers = JsonConvert.DeserializeObject<List<AgentScheduleManagerChartDetailsDTO>>(JsonConvert.SerializeObject(agentScheduleManagers)); ;
+            
             foreach (var mappedAgentScheduleManager in mappedAgentScheduleManagers)
             {
                 var agent = agents.FirstOrDefault(x => x.EmployeeId == mappedAgentScheduleManager.EmployeeId);
-                mappedAgentScheduleManager.FirstName = agent?.FirstName;
-                mappedAgentScheduleManager.LastName = agent?.LastName;
+                if (agent != null)
+                {
+                    mappedAgentScheduleManager.FirstName = agent?.FirstName;
+                    mappedAgentScheduleManager.LastName = agent?.LastName;
+                }
             }
 
-            return new CSSResponse(mappedAgentScheduleManagers, HttpStatusCode.OK);
+            return new CSSResponse(mappedAgentScheduleManagers.Distinct(), HttpStatusCode.OK);
         }
 
         /// <summary>
