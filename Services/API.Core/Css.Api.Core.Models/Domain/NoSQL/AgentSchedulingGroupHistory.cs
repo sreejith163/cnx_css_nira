@@ -9,9 +9,9 @@ namespace Css.Api.Core.Models.Domain.NoSQL
     public class AgentSchedulingGroupHistory : BaseDocument
     {
         /// <summary>
-        /// Gets or sets the employee identifier.
+        /// Gets or sets the e mployee identifier.
         /// </summary>
-        public int EmployeeId {​​​​​​​​​​​​ get; set; }​​​​​​​​​​​​​​​​​​​
+        public int EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the agent scheduling group identifier.

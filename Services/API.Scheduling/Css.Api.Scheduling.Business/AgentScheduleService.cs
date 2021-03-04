@@ -274,30 +274,44 @@ namespace Css.Api.Scheduling.Business
                         agentScheduleRange.ScheduleCharts.Add(agentScheduleChart);
                     }
                 }
+
+                agentScheduleRange.ScheduleCharts = agentScheduleRange.ScheduleCharts.Where(x => x.Charts.Any()).ToList();
+                agentScheduleRange.ModifiedBy = agentScheduleDetails.ModifiedBy;
+                agentScheduleRange.ModifiedDate = DateTimeOffset.UtcNow;
+
+                _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleRange, modifiedUserDetails);
+
+                var activityLog = GetActivityLogForSchedulingChart(agentScheduleRange, agentSchedule.EmployeeId, agentScheduleDetails.ModifiedBy,
+                                                                   agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
+                _activityLogRepository.CreateActivityLog(activityLog);
             }
             else
             {
                 var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
                 if (agentAdmin != null)
                 {
-                    agentScheduleRange = new AgentScheduleRange()
+                    agentScheduleDetails.AgentScheduleCharts = agentScheduleDetails.AgentScheduleCharts.Where(x => x.Charts.Any()).ToList();
+                    if (agentScheduleDetails.AgentScheduleCharts.Any())
                     {
-                        AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
-                        DateFrom = agentScheduleDetails.DateFrom,
-                        DateTo = agentScheduleDetails.DateTo,
-                        Status = SchedulingStatus.Pending_Schedule,
-                        ScheduleCharts = agentScheduleDetails.AgentScheduleCharts,
-                        CreatedBy = agentScheduleDetails.ModifiedBy,
-                        CreatedDate = DateTimeOffset.UtcNow
-                    };
+                        agentScheduleRange = new AgentScheduleRange()
+                        {
+                            AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
+                            DateFrom = agentScheduleDetails.DateFrom,
+                            DateTo = agentScheduleDetails.DateTo,
+                            Status = SchedulingStatus.Pending_Schedule,
+                            ScheduleCharts = agentScheduleDetails.AgentScheduleCharts,
+                            CreatedBy = agentScheduleDetails.ModifiedBy,
+                            CreatedDate = DateTimeOffset.UtcNow
+                        };
+
+                        _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleRange, modifiedUserDetails);
+
+                        var activityLog = GetActivityLogForSchedulingChart(agentScheduleRange, agentSchedule.EmployeeId, agentScheduleDetails.ModifiedBy,
+                                                                           agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
+                        _activityLogRepository.CreateActivityLog(activityLog);
+                    }
                 }
             }
-
-            _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleRange, modifiedUserDetails);
-
-            var activityLog = GetActivityLogForSchedulingChart(agentScheduleRange, agentSchedule.EmployeeId, agentScheduleDetails.ModifiedBy,
-                                                               agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
-            _activityLogRepository.CreateActivityLog(activityLog);
 
             await _uow.Commit();
 

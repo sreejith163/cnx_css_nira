@@ -34,14 +34,14 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the agent schedule charts.
         /// </summary>
-        public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
+        public List<AgentScheduleChart> ScheduleCharts { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentScheduleRange"/> class.
         /// </summary>
         public ActivityLogScheduleRange()
         {
-            AgentScheduleCharts = new List<AgentScheduleChart>();
+            ScheduleCharts = new List<AgentScheduleChart>();
         }
     }
 }

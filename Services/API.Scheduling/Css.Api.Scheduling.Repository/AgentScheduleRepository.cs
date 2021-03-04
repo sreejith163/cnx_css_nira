@@ -332,7 +332,8 @@ namespace Css.Api.Scheduling.Repository
                     query = scheduleRangeQuery;
                     if (agentScheduleRange.ScheduleCharts.Any())
                     {
-                        var update = Builders<AgentSchedule>.Update.Set(x => x.Ranges[-1], agentScheduleRange);
+                        var update = Builders<AgentSchedule>.Update
+                            .Set(x => x.Ranges[-1], agentScheduleRange);
                         UpdateOneAsync(query, update);
                     }
                     else
