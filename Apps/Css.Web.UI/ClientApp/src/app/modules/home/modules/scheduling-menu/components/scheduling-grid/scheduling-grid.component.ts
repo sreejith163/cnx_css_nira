@@ -43,6 +43,7 @@ import * as $ from 'jquery';
 import { DateRangePopUpComponent } from 'src/app/modules/home/modules/scheduling-menu/components/shared/date-range-pop-up/date-range-pop-up.component';
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
+import { AgentScheduleRange } from '../../models/agent-schedule-range.model';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -65,29 +66,6 @@ declare function highlightCell(cell: string, className: string);
 })
 export class SchedulingGridComponent implements OnInit, OnDestroy {
 
-  dateRangeList = [
-    {
-      id: 1,
-      startDate: '2021-02-01',
-      endDate: '2021-02-28'
-    },
-    {
-      id: 2,
-      startDate: '2021-02-10',
-      endDate: '2021-02-15'
-    },
-    {
-      id: 3,
-      startDate: '2021-02-15',
-      endDate: '2021-02-20'
-    },
-    {
-      id: 4,
-      startDate: '2021-02-20',
-      endDate: '2021-02-25'
-    },
-  ];
-
   agentSchedulingGroupId: number;
   timeIntervals = 15;
   currentPage = 1;
@@ -98,6 +76,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   startIcon = 0;
   endIcon: number;
   totalSchedulingRecord: number;
+  rangeIndex: number;
 
   selectedIconId: string;
   icon: string;
@@ -117,8 +96,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   refreshSchedulingTab: boolean;
   LoggedUser;
 
-  selectedGrid: AgentScheduleGridResponse;
-  schedulingGridData: AgentScheduleGridResponse;
+  selectedGrid: AgentSchedulesResponse;
+  schedulingGridData: AgentSchedulesResponse;
   modalRef: NgbModalRef;
   scheduleStatus = SchedulingStatus;
   paginationSize = Constants.schedulingPaginationSize;
@@ -144,8 +123,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   getSchedulingCodesSubscription: ISubscription;
   getTranslationSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
-
-  @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
 
   constructor(
     private calendar: NgbCalendar,
@@ -182,11 +159,22 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  addDateRange() {
+  getRangeIndex(el: AgentSchedulesResponse) {
+    return el?.rangeIndex;
+  }
+
+  addDateRange(el: AgentScheduleGridResponse) {
     this.getModalPopup(DateRangePopUpComponent, 'sm');
     this.modalRef.componentInstance.operation = ComponentOperation.Add;
     this.modalRef.result.then((result) => {
-      if (result.needRefresh) {
+      if (result) {
+        const range = new AgentScheduleRange();
+        range.dateFrom = result?.fromDate;
+        range.dateTo = result?.toDate;
+        range.status = SchedulingStatus['Pending Schedule'];
+        range.scheduleCharts = [];
+        el.ranges.push(range);
+        el.rangeIndex = el.ranges.length - 1;
         this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been added!');
       } else {
         this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
@@ -223,7 +211,15 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDateRangeChange(e) {
+  onDateRangeChange(e: any, el: AgentSchedulesResponse) {
+    const rangeIndex = +e.target.value;
+    // rangeIndex > -1 ?  el.rangeIndex = rangeIndex :  el.rangeIndex = undefined;
+    if (rangeIndex > -1) {
+      el.rangeIndex = rangeIndex;
+    }
+
+    const item = this.totalSchedulingGridData.find(x => x.id === el.id);
+    this.selectedGrid = item;
 
   }
 
@@ -242,30 +238,30 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   onClickDateIcon(index: number) {
-    const fromDate = this.totalSchedulingGridData[index]?.dateFrom;
-    const to = this.totalSchedulingGridData[index]?.dateTo;
-    this.fromDate = this.convertToNgbDate(fromDate) ?? this.today;
-    this.toDate = this.convertToNgbDate(to) ?? this.today;
+    // const fromDate = this.totalSchedulingGridData[index]?.agentScheduleRange.dateFrom;
+    // const to = this.totalSchedulingGridData[index]?.agentScheduleRange.dateTo;
+    // this.fromDate = this.convertToNgbDate(fromDate) ?? this.today;
+    // this.toDate = this.convertToNgbDate(to) ?? this.today;
   }
 
-  onDateSelection(date: NgbDate, index: number) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
-      this.totalSchedulingGridData[index].dateFrom = newDate;
-    } else if (this.fromDate && !this.toDate && date && !date.before(this.fromDate)) {
-      this.toDate = date;
-      const newDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day, 0, 0, 0, 0);
-      this.totalSchedulingGridData[index].dateTo = newDate;
-    } else {
-      this.toDate = null;
-      this.totalSchedulingGridData[index].dateTo = null;
-      this.fromDate = date;
-      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
-      this.totalSchedulingGridData[index].dateFrom = newDate;
-    }
-    this.updateAgentSchedule(index);
-  }
+  // onDateSelection(date: NgbDate, index: number) {
+  //   if (!this.fromDate && !this.toDate) {
+  //     this.fromDate = date;
+  //     const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
+  //     // this.totalSchedulingGridData[index].agentScheduleRange.dateFrom = newDate;
+  //   } else if (this.fromDate && !this.toDate && date && !date.before(this.fromDate)) {
+  //     this.toDate = date;
+  //     const newDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day, 0, 0, 0, 0);
+  //     // this.totalSchedulingGridData[index].agentScheduleRange.dateTo = newDate;
+  //   } else {
+  //     this.toDate = null;
+  //     // this.totalSchedulingGridData[index].agentScheduleRange.dateTo = null;
+  //     this.fromDate = date;
+  //     const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
+  //     // this.totalSchedulingGridData[index].agentScheduleRange.dateFrom = newDate;
+  //   }
+  //   this.updateAgentSchedule(index);
+  // }
 
   isHovered(date: NgbDate) {
     return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
@@ -290,16 +286,18 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.selectedGrid && this.selectedGrid.employeeId === el.employeeId) {
       this.selectedGrid = null;
     } else {
-      this.loadAgentSchedule(el.id);
+      const item = this.totalSchedulingGridData.find(x => x.id === el.id);
+      this.selectedGrid = item;
+      // this.loadAgentSchedule(el.id);
     }
   }
 
   getIconFromSelectedGrid(week: number, openTime: any) {
-    const weekData = this.selectedGrid.agentScheduleCharts.find(x => x.day === +week);
+    const weekData = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.find(x => x.day === +week);
 
     if (weekData) {
-      const weekTimeData = weekData.charts.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x.startTime) &&
-        this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
+      const weekTimeData = weekData?.charts?.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x?.startTime) &&
+        this.convertToDateFormat(openTime) < this.convertToDateFormat(x?.endTime));
       if (weekTimeData) {
         const code = this.schedulingCodes.find(x => x.id === weekTimeData.schedulingCodeId);
         return code ? this.unifiedToNative(code?.icon?.value) : '';
@@ -357,12 +355,12 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     const time = event.currentTarget.attributes.time.nodeValue;
     const meridiem = event.currentTarget.attributes.meridiem.nodeValue;
     const week = event.currentTarget.attributes.week.nodeValue;
-    days = this.selectedGrid.agentScheduleCharts.find(x => x.day === +week);
+    days = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.find(x => x?.day === +week);
     const fromTime = time + ' ' + meridiem;
-    const object = days?.charts.find(x => this.convertToDateFormat(x.startTime) <= this.convertToDateFormat(fromTime) &&
-      this.convertToDateFormat(x.endTime) > this.convertToDateFormat(fromTime));
+    const object = days?.charts.find(x => this.convertToDateFormat(x?.startTime) <= this.convertToDateFormat(fromTime) &&
+      this.convertToDateFormat(x?.endTime) > this.convertToDateFormat(fromTime));
     if (object) {
-      const code = this.schedulingCodes.find(x => x.id === object.schedulingCodeId);
+      const code = this.schedulingCodes.find(x => x.id === object?.schedulingCodeId);
       this.icon = code?.icon?.value ?? undefined;
       if (this.isMouseDown && this.icon) {
         setRowCellIndex(event.currentTarget.id);
@@ -410,9 +408,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  setSchedulingStatus(status: string, index: number) {
-    this.totalSchedulingGridData[index].status = Number(status);
-    this.updateAgentSchedule(index);
+  setSchedulingStatus(status: string, el: AgentSchedulesResponse) {
+    el.ranges[el?.rangeIndex].status = Number(status);
+    this.updateAgentSchedule(el);
   }
 
   sort(columnName: string, sortBy: string) {
@@ -462,13 +460,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   getIconDescription(week: number, openTime: any) {
-    const weekData = this.selectedGrid.agentScheduleCharts.find(x => x.day === +week);
+    const weekData = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.find(x => x.day === +week);
 
     if (weekData) {
-      const weekTimeData = weekData.charts.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x.startTime) &&
-        this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
+      const weekTimeData = weekData.charts.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x?.startTime) &&
+        this.convertToDateFormat(openTime) < this.convertToDateFormat(x?.endTime));
       if (weekTimeData) {
-        const code = this.schedulingCodes.find(x => x.id === weekTimeData.schedulingCodeId);
+        const code = this.schedulingCodes.find(x => x.id === weekTimeData?.schedulingCodeId);
         return code?.description;
       }
     }
@@ -570,7 +568,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       const iconModel = new ScheduleChart(fromTime, to, code?.id);
 
       week = elem.attributes.week.value;
-      weekDays = this.selectedGrid?.agentScheduleCharts;
+      weekDays = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts;
       weekData = weekDays.find(x => x.day === +week);
 
       if (this.icon && !this.isDelete) {
@@ -699,9 +697,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       }
     }
     if (weekData.charts.length === 0) {
-      const index = this.selectedGrid?.agentScheduleCharts.findIndex(x => x.day === weekData.day);
+      const index = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.findIndex(x => x.day === weekData?.day);
       if (index > -1) {
-        this.selectedGrid.agentScheduleCharts[index].charts = [];
+        this.selectedGrid.ranges[this.selectedGrid.rangeIndex].scheduleCharts[index].charts = [];
       }
     }
   }
@@ -738,7 +736,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private formatTimeValuesInSchedulingGrid() {
-    const agentScheduleCharts = this.selectedGrid.agentScheduleCharts;
+    const agentScheduleCharts = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts;
     agentScheduleCharts.forEach((element) => {
       if (element.charts.length > 0) {
         element.charts = this.adjustSchedulingCalendarTimesRange(element.charts);
@@ -747,13 +745,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private sortSelectedGridCalendarTimes() {
-    const agentScheduleCharts = this.selectedGrid.agentScheduleCharts;
+    const agentScheduleCharts = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts;
     agentScheduleCharts.forEach((element) => {
       if (element.charts.length > 0) {
         element.charts.sort((a, b): number => {
-          if (this.convertToDateFormat(a.startTime) < this.convertToDateFormat(b.startTime)) {
+          if (this.convertToDateFormat(a?.startTime) < this.convertToDateFormat(b?.startTime)) {
             return -1;
-          } else if (this.convertToDateFormat(a.startTime) > this.convertToDateFormat(b.startTime)) {
+          } else if (this.convertToDateFormat(a?.startTime) > this.convertToDateFormat(b?.startTime)) {
             return 1;
           }
           else {
@@ -767,11 +765,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   private getQueryParams(fields?: string) {
     const agentSchedulesQueryParams = new AgentSchedulesQueryParams();
     agentSchedulesQueryParams.agentSchedulingGroupId = this.agentSchedulingGroupId;
-    agentSchedulesQueryParams.fromDate = this.getDateInStringFormat(this.startDate);
     agentSchedulesQueryParams.pageNumber = this.currentPage;
     agentSchedulesQueryParams.pageSize = this.pageSize;
     agentSchedulesQueryParams.searchKeyword = this.searchText ?? '';
-    agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
+    // agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentSchedulesQueryParams.fields = fields ?? undefined;
     agentSchedulesQueryParams.employeeIds = undefined;
 
@@ -785,6 +782,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
       .subscribe((response) => {
         this.totalSchedulingGridData = response.body;
+        this.totalSchedulingGridData.map(x => {
+          x.rangeIndex = 0;
+        });
         let headerPaginationValues = new HeaderPagination();
         headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
         this.totalSchedulingRecord = headerPaginationValues.totalCount;
@@ -801,12 +801,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   private loadAgentSchedule(agentScheduleId: string) {
     this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
 
-    this.getAgentScheduleSubscription = this.agentSchedulesService.getAgentSchedule(agentScheduleId)
+    this.getAgentScheduleSubscription = this.agentSchedulesService.getCharts(agentScheduleId)
       .subscribe((response) => {
         if (response) {
           this.selectedGrid = response;
-          this.formatEndTime(this.selectedGrid, false);
-          this.selectedGrid.agentScheduleCharts.map(x => x?.charts.map(y => {
+          if (this.selectedGrid.ranges.length > 0) {
+            this.formatEndTime(this.selectedGrid, false);
+          }
+          this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.map(x => x?.charts.map(y => {
             y.startTime = y?.startTime?.trim().toLowerCase();
             y.endTime = y?.endTime?.trim().toLowerCase();
           }));
@@ -823,24 +825,26 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getAgentScheduleSubscription);
   }
 
-  private updateAgentSchedule(index: number) {
+  private updateAgentSchedule(el: AgentSchedulesResponse) {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const updateModel = new UpdateAgentSchedule();
-    updateModel.dateFrom = this.totalSchedulingGridData[index].dateFrom;
-    updateModel.dateTo = this.totalSchedulingGridData[index].dateTo;
-    updateModel.status = this.totalSchedulingGridData[index].status;
+    updateModel.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
+    updateModel.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
+    updateModel.status = el?.ranges[el?.rangeIndex]?.status;
     updateModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
 
+    const scheduleId = this.totalSchedulingGridData.find(x => x.id === el?.id)?.id;
+
     this.updateAgentScheduleSubscription = this.agentSchedulesService.
-      updateAgentSchedule(this.totalSchedulingGridData[index].id, updateModel)
+      updateAgentSchedule(scheduleId, updateModel)
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
         if (this.selectedGrid) {
-          this.selectedGrid.dateFrom = updateModel.dateFrom;
-          this.selectedGrid.dateTo = updateModel.dateTo;
+          this.selectedGrid.ranges[this.selectedGrid?.rangeIndex].dateFrom = updateModel?.dateFrom;
+          this.selectedGrid.ranges[this.selectedGrid?.rangeIndex].dateTo = updateModel?.dateTo;
         }
-        this.totalSchedulingGridData[index].modifiedBy = updateModel.modifiedBy;
-        this.totalSchedulingGridData[index].modifiedDate = new Date();
+        el.modifiedBy = updateModel.modifiedBy;
+        el.modifiedDate = new Date();
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         console.log(error);
@@ -859,10 +863,15 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.matchSchedulingGridDataChanges()) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
       const chartModel = new UpdateAgentschedulechart();
-      const gridData = this.getUpdatedScheduleChart();
-      this.formatEndTime(gridData, true);
-
-      chartModel.agentScheduleCharts = gridData.agentScheduleCharts;
+      let gridData = new AgentSchedulesResponse();
+      gridData = this.getUpdatedScheduleChart();
+      if (gridData.ranges.length > 0) {
+        this.formatEndTime(gridData, true);
+      }
+      chartModel.dateFrom = gridData?.ranges[gridData?.rangeIndex]?.dateFrom;
+      chartModel.dateTo = gridData?.ranges[gridData?.rangeIndex]?.dateTo;
+      chartModel.status = gridData?.ranges[gridData?.rangeIndex]?.status;
+      chartModel.agentScheduleCharts = gridData?.ranges[gridData?.rangeIndex]?.scheduleCharts;
       chartModel.activityOrigin = ActivityOrigin.CSS;
       chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
       chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
@@ -889,14 +898,16 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   private getUpdatedScheduleChart() {
     const updatedChart = JSON.parse(JSON.stringify(this.selectedGrid));
-    this.selectedGrid.agentScheduleCharts.forEach((x, index) => {
-      if (this.schedulingGridData?.agentScheduleCharts.findIndex(y => y.day === x.day) > -1) {
-        const gridIndex = this.schedulingGridData?.agentScheduleCharts.findIndex(y => y.day === x.day);
-        if (JSON.stringify(this.selectedGrid.agentScheduleCharts[index].charts) ===
-          JSON.stringify(this.schedulingGridData.agentScheduleCharts[gridIndex].charts)) {
-          const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
-          if (updateIndex > -1) {
-            updatedChart.agentScheduleCharts.splice(updateIndex, 1);
+    this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.forEach((x, index) => {
+      if (this.schedulingGridData?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.findIndex(y => y.day === x?.day) > -1) {
+        const gridIndex = this.schedulingGridData?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.findIndex(y => y.day === x.day);
+        if (gridIndex > -1) {
+          if (JSON.stringify(this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts[index]?.charts) ===
+            JSON.stringify(this.schedulingGridData?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts[gridIndex]?.charts)) {
+            const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
+            if (updateIndex > -1) {
+              updatedChart.agentScheduleCharts.splice(updateIndex, 1);
+            }
           }
         }
       }
@@ -905,8 +916,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     return updatedChart;
   }
 
-  private formatEndTime(scheduleResponse: AgentScheduleGridResponse, updateChart: boolean) {
-    for (const weekData of scheduleResponse.agentScheduleCharts) {
+  private formatEndTime(scheduleResponse: AgentSchedulesResponse, updateChart: boolean) {
+    for (const weekData of scheduleResponse?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts) {
       if (weekData.charts.length > 0) {
         if (!updateChart) {
           const responseIndex = weekData?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '12:00 am');

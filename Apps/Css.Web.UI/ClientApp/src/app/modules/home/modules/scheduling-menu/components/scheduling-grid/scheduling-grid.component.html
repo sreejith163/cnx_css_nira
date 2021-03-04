@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <app-scheduling-filter (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
+  <app-scheduling-filter [agentScheduleType]="0" (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
     (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)"></app-scheduling-filter>
 
   <div class="card card-primary card-outline card-outline-tabs">
@@ -102,7 +102,7 @@
             <ng-container *ngFor="let el of totalSchedulingGridData; let i = index">
               <tr class="table-row">
                 <td>
-                  <i class="expand-icon fa padding-5 pointer"
+                  <i *ngIf="el.ranges.length !== 0" class="expand-icon fa padding-5 pointer"
                     [ngClass]="( selectedGrid?.employeeId === el?.employeeId ) ? 'fa-minus' : 'fa-plus'"
                     (click)="toggleDetails(el)"></i>
                 </td>
@@ -114,14 +114,17 @@
                   </span>
                 </td>
                 <td class="d-flex">
-                  <select class="form-control w-auto" (change)="onDateRangeChange($event)">
-                    <option [value]="range.id" [selected]="el.dateFrom === range.startDate" *ngFor="let range of dateRangeList">
-                      {{range.startDate}} <span *ngIf="range.endDate">-</span> {{ range.endDate}}
+                  <select class="form-control w-auto" (change)="onDateRangeChange($event, el)">
+                    <option *ngIf="el?.ranges.length == 0">{{ 'Please select a date range' | translate }}</option>
+                    <option [value]="i" [selected]="el?.ranges[getRangeIndex(el)]?.dateFrom === range.dateFrom && el?.ranges[getRangeIndex(el)]?.dateTo === range.dateFrom" *ngFor="let range of el.ranges; let i = index;">
+                      {{range.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="range.dateTo">-</span> {{ range.dateTo | date: 'yyyy-MM-dd'}}
                     </option>
                   </select>
-                  <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el.status !== 1" (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
-                  <i class="fa fa-trash padding-5 pointer m-t-5" *ngIf="el.status !== 1" (click)="deleteDateRange(el.id)" [ngbTooltip]="'Delete'"></i>
-                  <i class="fa fa-calendar float-right padding-5 m-t-5" aria-hidden="true" (click)="addDateRange()" [ngbTooltip]="'Add'"></i>
+                  <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status !== 1" (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
+                  <i class="fa fa-trash padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status !== 1" (click)="deleteDateRange(el.id)" [ngbTooltip]="'Delete'"></i>
+                  <i class="fa fa-calendar float-right padding-5 m-t-5" aria-hidden="true" (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
+                 
+                 
                   <!-- {{el.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="el.dateTo">-</span> {{ el.dateTo | date:
                       'yyyy-MM-dd'}} -->
                   <!-- <i class="fa fa-calendar float-right padding-5" aria-hidden="true"
@@ -138,8 +141,9 @@
                   </ng-template> -->
                 </td>
                 <td>
-                  <select class="form-control" (change)="setSchedulingStatus($event.target.value, i)">
-                    <option [value]="status" [selected]="el.status === +status" *ngFor="let status of schedulingStatus">
+                  <select class="form-control" (change)="setSchedulingStatus($event.target.value, el)" [disabled]="el?.ranges.length == 0">
+                    <option *ngIf="el?.ranges.length == 0">{{ 'Please select a status' | translate }}</option>
+                    <option [value]="status" [selected]="el?.ranges[getRangeIndex(el)]?.status === +status" *ngFor="let status of schedulingStatus">
                       {{ scheduleStatus[status] }}
                     </option>
                   </select>
@@ -299,7 +303,7 @@
     <div class="col-md-12 d-flex justify-content-end mt-3">
       <nav aria-label="Page navigation example">
         <ul class="pagination p-0 float-right">
-          <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalSchedulingRecord" [rotate]="true" [maxSize]="10" 
+          <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalSchedulingRecord" [rotate]="true" [maxSize]="10"
             (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
           </ngb-pagination>
           <select class="form-control" (change)="changePageSize($event.target.value)">

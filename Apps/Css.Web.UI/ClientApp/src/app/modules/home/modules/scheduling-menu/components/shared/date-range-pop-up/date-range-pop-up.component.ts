@@ -76,13 +76,20 @@ export class DateRangePopUpComponent implements OnInit {
   }
 
   save() {
-    if (this.startDate !== this.fromDate || this.endDate !== this.toDate) {
-      // update api call
-      this.activeModal.close({ needRefresh: true });
+    if (this.operation === ComponentOperation.Edit) {
+      if (this.startDate !== this.fromDate || this.endDate !== this.toDate) {
+        // update api call
+        this.activeModal.close({ needRefresh: true });
+      } else {
+        this.activeModal.close({ needRefresh: false });
+      }
     } else {
-      this.activeModal.close({ needRefresh: false });
+      const model = {
+        fromDate: this.dateFrom,
+        toDate: this.dateTo
+      }
+      this.activeModal.close(model);
     }
-
   }
 
   private convertToNgbDate(date: Date) {
