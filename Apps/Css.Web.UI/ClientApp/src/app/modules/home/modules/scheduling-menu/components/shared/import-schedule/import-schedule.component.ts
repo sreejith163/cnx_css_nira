@@ -427,6 +427,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     chartModel.activityOrigin = ActivityOrigin.CSS;
     chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
+    chartModel.date = new Date(this.jsonData[0].Date);
     for (const employee of schedules) {
       const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);
       const importData = new AgentShceduleMangerData();
@@ -439,10 +440,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           chartArray.push(chart);
         }
       });
-      const chartData = new AgentScheduleManagerChart();
-      chartData.date = new Date(this.jsonData[0].Date);
-      chartData.charts = chartArray;
-      importData.agentScheduleManagerChart = chartData;
+      // const chartData = new AgentScheduleManagerChart();
+      // chartData.charts = chartArray;
+      importData.charts = chartArray;
       chartModel.agentScheduleManagers.push(importData);
     }
 

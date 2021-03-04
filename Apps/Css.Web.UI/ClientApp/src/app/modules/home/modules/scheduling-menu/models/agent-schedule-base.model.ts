@@ -5,6 +5,7 @@ export class AgentScheduleBase {
     employeeId: number;
     firstName: string;
     lastName: string;
-    agentScheduleRange: AgentScheduleRange;
+    ranges: AgentScheduleRange[];
     agentSchedulingGroupId: number;
+    rangeIndex: number;
 }

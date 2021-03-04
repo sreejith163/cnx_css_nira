@@ -1,5 +1,4 @@
-import { AgentScheduleChart } from './agent-schedule-chart.model';
-import { AgentScheduleManagerChart } from './agent-schedule-manager-chart.model';
+import { ScheduleChart } from './schedule-chart.model';
 
 export class AgentChartResponse {
     id: string;
@@ -7,9 +6,10 @@ export class AgentChartResponse {
     firstName: string;
     lastName: string;
     activeAgentShedulingGroupId: number;
-    managerCharts: AgentScheduleManagerChart[];
+    date: Date;
+    charts: ScheduleChart[];
 
     constructor() {
-        this.managerCharts = [];
+        this.charts = [];
     }
 }

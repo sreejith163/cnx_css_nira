@@ -30,15 +30,15 @@ export class AgentScheduleManagersService extends HttpBaseService {
     }).pipe(catchError(this.handleError));
   }
 
-  getAgentScheduleManager(agentScheduleManagerId: string) {
-    const url = `${this.baseURL}/AgentScheduleManagers/${agentScheduleManagerId}`;
+  // getAgentScheduleManager(agentScheduleManagerId: string) {
+  //   const url = `${this.baseURL}/AgentScheduleManagers/${agentScheduleManagerId}`;
 
-    return this.http.get<AgentChartResponse>(url)
-    .pipe(catchError(this.handleError));
-  }
+  //   return this.http.get<AgentChartResponse>(url)
+  //   .pipe(catchError(this.handleError));
+  // }
 
   updateScheduleManagerChart(updateAgentScheduleMangagerChart: UpdateAgentScheduleMangersChart) {
-    const url = `${this.baseURL}/AgentScheduleManagers/managercharts`;
+    const url = `${this.baseURL}/AgentScheduleManagers/charts`;
 
     return this.http.put<ApiResponseModel>(url, updateAgentScheduleMangagerChart)
     .pipe(catchError(this.handleError));

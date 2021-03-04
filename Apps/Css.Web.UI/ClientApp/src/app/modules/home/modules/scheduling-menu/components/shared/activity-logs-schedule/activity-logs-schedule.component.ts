@@ -362,7 +362,7 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
         chart.activityStatus = item?.activityStatus;
         chart.activityOrigin = item?.activityOrigin;
         chart.timeStamp = item?.timeStamp;
-        item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts.map(x => {
+        item?.schedulingFieldDetails?.activityLogManager?.charts.map(x => {
           x.endTime = x?.endTime.trim().toLowerCase();
           x.startTime = x?.startTime.trim().toLowerCase();
           if (x.endTime.trim().toLowerCase() === '00:00 am' || x.endTime.trim().toLowerCase() === '12:00 am') {
@@ -375,9 +375,9 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
             x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
         });
-        this.sortChartData(item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts);
+        this.sortChartData(item?.schedulingFieldDetails?.activityLogManager?.charts);
         chart.agentScheduleChart = new AgentScheduleChart();
-        chart.agentScheduleChart.charts = item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts;
+        chart.agentScheduleChart.charts = item?.schedulingFieldDetails?.activityLogManager?.charts;
         this.activityLogsChart.push(chart);
       });
       this.setAgentFilters();
