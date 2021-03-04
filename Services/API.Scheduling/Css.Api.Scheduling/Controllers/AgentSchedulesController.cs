@@ -152,7 +152,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="dateRangeDetails">The date range details.</param>
         /// <returns></returns>
         [HttpDelete("{agentScheduleId}/range")]
-        public async Task<IActionResult> DeleteAgentScheduleRange(string agentScheduleId, [FromBody] DateRange dateRangeDetails)
+        public async Task<IActionResult> DeleteAgentScheduleRange(string agentScheduleId, [FromQuery] DateRange dateRangeDetails)
         {
             var result = await _agentScheduleService.DeleteAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
             return StatusCode((int)result.Code, result.Value);
