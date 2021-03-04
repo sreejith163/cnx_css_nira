@@ -85,6 +85,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         if (ele.EndTime.split(':')[0] === '12') {
           ele.EndTime = '00' + ':' + ele.EndTime.split(':')[1];
         }
+        if (ele.EndTime.trim().toLowerCase() === '12:00 am') {
+          ele.EndTime = '11:60 pm';
+        }
       });
       if (!this.fileFormatValidation && !this.validateHeading()) {
         const employees = new Array<number>();
@@ -145,6 +148,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
             if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
               x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
             }
+            if (x?.endTime?.trim().toLowercase() === '11:60 pm') {
+              x.endTime = '12:00 am';
+            }
           });
         }
       } else {
@@ -155,6 +161,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           }
           if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
             x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+          }
+          if (x?.endTime?.trim().toLowercase() === '11:60 pm') {
+            x.endTime = '12:00 am';
           }
         });
       }

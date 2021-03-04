@@ -10,7 +10,7 @@ import { MessagePopUpComponent } from '../message-pop-up/message-pop-up.componen
 export class ConfirmationPopUpComponent implements OnInit {
   @Input() headingMessage = '';
   @Input() contentMessage = '';
-  @Input() deleteRecordIndex ;
+  @Input() deleteRecordIndex: any;
 
   constructor(
     public activeModal: NgbActiveModal,

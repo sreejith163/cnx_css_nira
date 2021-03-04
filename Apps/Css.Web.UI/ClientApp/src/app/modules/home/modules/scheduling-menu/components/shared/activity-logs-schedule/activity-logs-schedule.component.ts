@@ -319,7 +319,7 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
   private setScheduleChart() {
     let id = 0;
     for (const item of this.activityLogsData) {
-        item.schedulingFieldDetails.agentScheduleCharts.forEach((icon) => {
+        item.schedulingFieldDetails.activityLogRange.forEach((icon) => {
           id = id + 1;
           const chart = new ActivityLogsChart();
           chart.id = id;

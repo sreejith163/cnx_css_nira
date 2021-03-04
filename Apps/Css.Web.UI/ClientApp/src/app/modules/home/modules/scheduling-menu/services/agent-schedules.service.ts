@@ -9,11 +9,11 @@ import { UpdateAgentSchedule } from '../models/update-agent-schedule.model';
 import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
 import { UpdateAgentschedulechart } from '../models/update-agent-schedule-chart.model';
 import { CopyAgentScheduleChart } from '../models/copy-agent-schedule-chart.model';
-import { AgentChartResponse } from '../models/agent-chart-response.model';
 import { ImportShceduleChart } from '../models/import-schedule-chart.model';
 import { UpdateAgentScheduleMangersChart } from '../models/update-agent-schedule-managers-chart.model';
-import { ScheduleChartQueryParams } from '../models/schedule-chart-query-params.model';
 import { AgentScheduleChartResponse } from '../models/agent-schedule-chart-response.model';
+import { DeleteScheduleDateRange } from '../models/delete-schedule-date-range.model';
+import { UpdateScheduleDateRange } from '../models/update-schedule-date-range.model';
 
 @Injectable()
 export class AgentSchedulesService extends HttpBaseService {
@@ -92,10 +92,20 @@ export class AgentSchedulesService extends HttpBaseService {
     .pipe(catchError(this.handleError));
   }
 
-  // deleteAgentScheduleRange(agentScheduleId: string) {
-  //   const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}`;
+  updateAgentScheduleRange(agentScheduleId: string, updateModel: UpdateScheduleDateRange) {
+    const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/range`;
 
-  //   return this.http.put<ApiResponseModel>(url, copyAgentScheduleChart)
-  //   .pipe(catchError(this.handleError));
-  // }
+    return this.http.put<ApiResponseModel>(url, updateModel)
+    .pipe(catchError(this.handleError));
+  }
+
+  deleteAgentScheduleRange(agentScheduleId: string, queryparams: DeleteScheduleDateRange) {
+    const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/range`;
+
+    return this.http.delete<ApiResponseModel>(url, {
+        params: this.convertToHttpParam(queryparams),
+        observe: 'response'
+      })
+    .pipe(catchError(this.handleError));
+  }
 }

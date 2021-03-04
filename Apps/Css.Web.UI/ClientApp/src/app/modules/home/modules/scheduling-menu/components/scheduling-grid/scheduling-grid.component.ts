@@ -44,6 +44,8 @@ import { DateRangePopUpComponent } from 'src/app/modules/home/modules/scheduling
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { AgentScheduleRange } from '../../models/agent-schedule-range.model';
+import { DeleteScheduleDateRange } from '../../models/delete-schedule-date-range.model';
+import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -96,8 +98,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   refreshSchedulingTab: boolean;
   LoggedUser;
 
-  selectedGrid: AgentSchedulesResponse;
-  schedulingGridData: AgentSchedulesResponse;
+  selectedGrid: AgentScheduleGridResponse;
+  schedulingGridData: AgentScheduleGridResponse;
   modalRef: NgbModalRef;
   scheduleStatus = SchedulingStatus;
   paginationSize = Constants.schedulingPaginationSize;
@@ -116,6 +118,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   schedulingCodes: SchedulingCode[] = [];
   importedData: ExcelData[] = [];
 
+  deleteScheduleDateRangeSubscription: ISubscription;
   updateAgentScheduleChartSubscription: ISubscription;
   getAgentSchedulesSubscription: ISubscription;
   getAgentScheduleSubscription: ISubscription;
@@ -163,7 +166,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     return el?.rangeIndex;
   }
 
-  addDateRange(el: AgentScheduleGridResponse) {
+  addDateRange(el: AgentSchedulesResponse) {
     this.getModalPopup(DateRangePopUpComponent, 'sm');
     this.modalRef.componentInstance.operation = ComponentOperation.Add;
     this.modalRef.result.then((result) => {
@@ -175,38 +178,65 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         range.scheduleCharts = [];
         el.ranges.push(range);
         el.rangeIndex = el.ranges.length - 1;
-        this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been added!');
+        el.modifiedBy = this.authService.getLoggedUserInfo().displayName;
+        el.modifiedDate = new Date();
+        if (this.selectedGrid) {
+          this.selectedGrid.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
+          this.selectedGrid.dateTo = el?.ranges[el?.rangeIndex]?.dateFrom;
+          this.selectedGrid.status = el?.ranges[el?.rangeIndex]?.status;
+        }
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'The record has been added!');
       } else {
-        this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'No changes has been made!');
       }
     });
   }
 
-  editDateRange(el: AgentScheduleGridResponse) {
+  editDateRange(el: AgentSchedulesResponse) {
     this.getModalPopup(DateRangePopUpComponent, 'sm');
-    this.modalRef.componentInstance.dateFrom = el.dateFrom;
-    this.modalRef.componentInstance.dateTo = el.dateTo;
+    this.modalRef.componentInstance.dateFrom = el.ranges[el.rangeIndex].dateFrom;
+    this.modalRef.componentInstance.dateTo = el.ranges[el.rangeIndex].dateTo;
+    this.modalRef.componentInstance.agentScheduleId = el.id;
     this.modalRef.componentInstance.operation = ComponentOperation.Edit;
 
     this.modalRef.result.then((result) => {
       if (result.needRefresh) {
-        this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been updated!');
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'The record has been updated!');
       } else {
-        this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'No changes has been made!');
       }
     });
   }
 
-  deleteDateRange(id: number) {
+  deleteDateRange(el: AgentSchedulesResponse) {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
     this.modalRef = this.modalService.open(ConfirmationPopUpComponent, options);
     this.modalRef.componentInstance.headingMessage = 'Are you sure?';
     this.modalRef.componentInstance.contentMessage = 'You won’t be able to revert this!';
-    this.modalRef.componentInstance.deleteRecordIndex = id;
+    this.modalRef.componentInstance.deleteRecordIndex = el.id;
 
     this.modalRef.result.then((result) => {
-      if (result && result === id) {
-        // api call
+      if (result && result === el.id) {
+        const model = new DeleteScheduleDateRange();
+        model.dateFrom = el.ranges[el.rangeIndex].dateFrom;
+        model.dateTo = el.ranges[el.rangeIndex].dateTo;
+        this.deleteScheduleDateRangeSubscription = this.agentSchedulesService.deleteAgentScheduleRange(el.id, model)
+          .subscribe((response) => {
+            this.spinnerService.hide(this.spinner);
+            this.getModalPopup(MessagePopUpComponent, 'sm');
+            this.setComponentMessages('Success', 'The record has been deleted!');
+          }, (error) => {
+            this.spinnerService.hide(this.spinner);
+            this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
+            this.setComponentMessages('Error', error.message);
+            console.log(error);
+          });
+
+        this.subscriptions.push(this.deleteScheduleDateRangeSubscription);
       }
     });
   }
@@ -219,7 +249,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
 
     const item = this.totalSchedulingGridData.find(x => x.id === el.id);
-    this.selectedGrid = item;
+    this.setSelectedGrid(item);
 
   }
 
@@ -287,13 +317,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       this.selectedGrid = null;
     } else {
       const item = this.totalSchedulingGridData.find(x => x.id === el.id);
-      this.selectedGrid = item;
+      this.setSelectedGrid(item);
       // this.loadAgentSchedule(el.id);
     }
   }
 
   getIconFromSelectedGrid(week: number, openTime: any) {
-    const weekData = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.find(x => x.day === +week);
+    const weekData = this.selectedGrid?.agentScheduleCharts.find(x => x.day === +week);
 
     if (weekData) {
       const weekTimeData = weekData?.charts?.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x?.startTime) &&
@@ -355,7 +385,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     const time = event.currentTarget.attributes.time.nodeValue;
     const meridiem = event.currentTarget.attributes.meridiem.nodeValue;
     const week = event.currentTarget.attributes.week.nodeValue;
-    days = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.find(x => x?.day === +week);
+    days = this.selectedGrid?.agentScheduleCharts.find(x => x?.day === +week);
     const fromTime = time + ' ' + meridiem;
     const object = days?.charts.find(x => this.convertToDateFormat(x?.startTime) <= this.convertToDateFormat(fromTime) &&
       this.convertToDateFormat(x?.endTime) > this.convertToDateFormat(fromTime));
@@ -447,20 +477,22 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then((result) => {
       if (result.needRefresh) {
-        this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been copied!');
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'The record has been copied!');
         this.modalRef.result.then(() => {
-          this.loadAgentSchedule(agentScheduleId);
+          // this.loadAgentSchedule(agentScheduleId);
           this.loadAgentSchedules();
         });
       } else {
-        this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'No changes has been made!');
       }
     });
 
   }
 
   getIconDescription(week: number, openTime: any) {
-    const weekData = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.find(x => x.day === +week);
+    const weekData = this.selectedGrid?.agentScheduleCharts.find(x => x.day === +week);
 
     if (weekData) {
       const weekTimeData = weekData.charts.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x?.startTime) &&
@@ -514,7 +546,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then((result) => {
       const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
-      this.getModalPopup(MessagePopUpComponent, 'sm', message);
+      this.getModalPopup(MessagePopUpComponent, 'sm');
+      this.setComponentMessages('Success', message);
       this.modalRef.result.then(() => {
         this.loadAgentSchedules();
         this.selectedGrid = null;
@@ -532,6 +565,35 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
     const date = year + month + day;
     this.excelService.exportAsExcelFile(SchedulingExcelExportData, this.exportFileName + date);
+  }
+
+  private setSelectedGrid(el: AgentSchedulesResponse) {
+    this.selectedGrid = new AgentScheduleGridResponse();
+    this.selectedGrid.id = el?.id;
+    this.selectedGrid.employeeId = el?.employeeId;
+    this.selectedGrid.firstName = el?.firstName;
+    this.selectedGrid.lastName = el?.lastName;
+    this.selectedGrid.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
+    this.selectedGrid.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
+    this.selectedGrid.status = el?.ranges[el?.rangeIndex]?.status;
+    this.selectedGrid.agentSchedulingGroupId = el?.agentSchedulingGroupId;
+    this.selectedGrid.agentScheduleCharts = el?.ranges[el?.rangeIndex]?.scheduleCharts;
+
+    if (this.selectedGrid?.agentScheduleCharts?.length > 0) {
+      this.selectedGrid.agentScheduleCharts.forEach(ele => {
+        this.formatEndTime(ele.charts, false);
+      });
+      this.selectedGrid?.agentScheduleCharts.map(x => x?.charts.map(y => {
+        y.startTime = y?.startTime?.trim().toLowerCase();
+        y.endTime = y?.endTime?.trim().toLowerCase();
+      }));
+    } else {
+      this.selectedGrid.agentScheduleCharts = [];
+    }
+   
+    this.sortSelectedGridCalendarTimes();
+    this.formatTimeValuesInSchedulingGrid();
+    this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
   }
 
   private removeHighlightedCells() {
@@ -568,7 +630,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       const iconModel = new ScheduleChart(fromTime, to, code?.id);
 
       week = elem.attributes.week.value;
-      weekDays = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts;
+      weekDays = this.selectedGrid?.agentScheduleCharts;
       weekData = weekDays.find(x => x.day === +week);
 
       if (this.icon && !this.isDelete) {
@@ -697,9 +759,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       }
     }
     if (weekData.charts.length === 0) {
-      const index = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.findIndex(x => x.day === weekData?.day);
+      const index = this.selectedGrid?.agentScheduleCharts.findIndex(x => x.day === weekData?.day);
       if (index > -1) {
-        this.selectedGrid.ranges[this.selectedGrid.rangeIndex].scheduleCharts[index].charts = [];
+        this.selectedGrid.agentScheduleCharts[index].charts = [];
       }
     }
   }
@@ -736,7 +798,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private formatTimeValuesInSchedulingGrid() {
-    const agentScheduleCharts = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts;
+    const agentScheduleCharts = this.selectedGrid?.agentScheduleCharts;
     agentScheduleCharts.forEach((element) => {
       if (element.charts.length > 0) {
         element.charts = this.adjustSchedulingCalendarTimesRange(element.charts);
@@ -745,7 +807,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private sortSelectedGridCalendarTimes() {
-    const agentScheduleCharts = this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts;
+    const agentScheduleCharts = this.selectedGrid?.agentScheduleCharts;
     agentScheduleCharts.forEach((element) => {
       if (element.charts.length > 0) {
         element.charts.sort((a, b): number => {
@@ -798,32 +860,34 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getAgentSchedulesSubscription);
   }
 
-  private loadAgentSchedule(agentScheduleId: string) {
-    this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
+  // private loadAgentSchedule(agentScheduleId: string) {
+  //   this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
 
-    this.getAgentScheduleSubscription = this.agentSchedulesService.getCharts(agentScheduleId)
-      .subscribe((response) => {
-        if (response) {
-          this.selectedGrid = response;
-          if (this.selectedGrid.ranges.length > 0) {
-            this.formatEndTime(this.selectedGrid, false);
-          }
-          this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.map(x => x?.charts.map(y => {
-            y.startTime = y?.startTime?.trim().toLowerCase();
-            y.endTime = y?.endTime?.trim().toLowerCase();
-          }));
-          this.sortSelectedGridCalendarTimes();
-          this.formatTimeValuesInSchedulingGrid();
-          this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
-        }
-        this.spinnerService.hide(this.scheduleSpinner);
-      }, (error) => {
-        this.spinnerService.hide(this.scheduleSpinner);
-        console.log(error);
-      });
+  //   this.getAgentScheduleSubscription = this.agentSchedulesService.getCharts(agentScheduleId)
+  //     .subscribe((response) => {
+  //       if (response) {
+  //         this.selectedGrid = response;
+  //         if (this.selectedGrid.agentScheduleCharts.length > 0) {
+  //           this.selectedGrid.agentScheduleCharts.forEach(el => {
+  //             this.formatEndTime(el.charts, false);
+  //           });
+  //         }
+  //         this.selectedGrid?.agentScheduleCharts.map(x => x?.charts.map(y => {
+  //           y.startTime = y?.startTime?.trim().toLowerCase();
+  //           y.endTime = y?.endTime?.trim().toLowerCase();
+  //         }));
+  //         this.sortSelectedGridCalendarTimes();
+  //         this.formatTimeValuesInSchedulingGrid();
+  //         this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
+  //       }
+  //       this.spinnerService.hide(this.scheduleSpinner);
+  //     }, (error) => {
+  //       this.spinnerService.hide(this.scheduleSpinner);
+  //       console.log(error);
+  //     });
 
-    this.subscriptions.push(this.getAgentScheduleSubscription);
-  }
+  //   this.subscriptions.push(this.getAgentScheduleSubscription);
+  // }
 
   private updateAgentSchedule(el: AgentSchedulesResponse) {
     this.spinnerService.show(this.spinner, SpinnerOptions);
@@ -840,8 +904,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
         if (this.selectedGrid) {
-          this.selectedGrid.ranges[this.selectedGrid?.rangeIndex].dateFrom = updateModel?.dateFrom;
-          this.selectedGrid.ranges[this.selectedGrid?.rangeIndex].dateTo = updateModel?.dateTo;
+          this.selectedGrid.dateFrom = updateModel?.dateFrom;
+          this.selectedGrid.dateTo = updateModel?.dateTo;
         }
         el.modifiedBy = updateModel.modifiedBy;
         el.modifiedDate = new Date();
@@ -863,15 +927,17 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.matchSchedulingGridDataChanges()) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
       const chartModel = new UpdateAgentschedulechart();
-      let gridData = new AgentSchedulesResponse();
+      let gridData = new AgentScheduleGridResponse();
       gridData = this.getUpdatedScheduleChart();
-      if (gridData.ranges.length > 0) {
-        this.formatEndTime(gridData, true);
+      if (gridData.agentScheduleCharts.length > 0) {
+        gridData.agentScheduleCharts.forEach(ele => {
+          this.formatEndTime(ele.charts, true);
+        })
       }
-      chartModel.dateFrom = gridData?.ranges[gridData?.rangeIndex]?.dateFrom;
-      chartModel.dateTo = gridData?.ranges[gridData?.rangeIndex]?.dateTo;
-      chartModel.status = gridData?.ranges[gridData?.rangeIndex]?.status;
-      chartModel.agentScheduleCharts = gridData?.ranges[gridData?.rangeIndex]?.scheduleCharts;
+      chartModel.dateFrom = gridData?.dateFrom;
+      chartModel.dateTo = gridData?.dateTo;
+      chartModel.status = gridData?.status;
+      chartModel.agentScheduleCharts = gridData?.agentScheduleCharts;
       chartModel.activityOrigin = ActivityOrigin.CSS;
       chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
       chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
@@ -880,10 +946,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         .updateAgentScheduleChart(agentScheduleId, chartModel)
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
-          this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been updated!');
+          this.getModalPopup(MessagePopUpComponent, 'sm');
+          this.setComponentMessages('Success', 'The record has been updated!');
           this.modalRef.result.then(() => {
             this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
-            this.loadAgentSchedule(agentScheduleId);
+            // this.loadAgentSchedule(agentScheduleId);
           });
         }, (error) => {
           this.spinnerService.hide(this.spinner);
@@ -892,18 +959,19 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
       this.subscriptions.push(this.updateAgentScheduleChartSubscription);
     } else {
-      this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
+      this.getModalPopup(MessagePopUpComponent, 'sm');
+      this.setComponentMessages('Success', 'No changes has been made!');
     }
   }
 
   private getUpdatedScheduleChart() {
     const updatedChart = JSON.parse(JSON.stringify(this.selectedGrid));
-    this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.forEach((x, index) => {
-      if (this.schedulingGridData?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.findIndex(y => y.day === x?.day) > -1) {
-        const gridIndex = this.schedulingGridData?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts.findIndex(y => y.day === x.day);
+    this.selectedGrid?.agentScheduleCharts.forEach((x, index) => {
+      if (this.schedulingGridData?.agentScheduleCharts.findIndex(y => y.day === x?.day) > -1) {
+        const gridIndex = this.schedulingGridData?.agentScheduleCharts.findIndex(y => y.day === x.day);
         if (gridIndex > -1) {
-          if (JSON.stringify(this.selectedGrid?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts[index]?.charts) ===
-            JSON.stringify(this.schedulingGridData?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts[gridIndex]?.charts)) {
+          if (JSON.stringify(this.selectedGrid?.agentScheduleCharts[index]?.charts) ===
+            JSON.stringify(this.schedulingGridData?.agentScheduleCharts[gridIndex]?.charts)) {
             const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
             if (updateIndex > -1) {
               updatedChart.agentScheduleCharts.splice(updateIndex, 1);
@@ -916,15 +984,15 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     return updatedChart;
   }
 
-  private formatEndTime(scheduleResponse: AgentSchedulesResponse, updateChart: boolean) {
-    for (const weekData of scheduleResponse?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts) {
-      if (weekData.charts.length > 0) {
+  private formatEndTime(charts: ScheduleChart[], updateChart: boolean) {
+    // for (const weekData of scheduleResponse?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts) {
+    //   if (weekData.charts.length > 0) {
         if (!updateChart) {
-          const responseIndex = weekData?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '12:00 am');
+          const responseIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '12:00 am');
           if (responseIndex > -1) {
-            weekData.charts[responseIndex].endTime = '11:60 pm';
+            charts[responseIndex].endTime = '11:60 pm';
           }
-          const twelveHourTime = weekData.charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '12' ||
+          const twelveHourTime = charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '12' ||
             x?.startTime?.trim().toLowerCase().slice(0, 2) === '12');
           if (twelveHourTime.length > 0) {
             twelveHourTime.map(x => {
@@ -939,11 +1007,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
             });
           }
         } else {
-          const requestIndex = weekData?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
+          const requestIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
           if (requestIndex > -1) {
-            weekData.charts[requestIndex].endTime = '12:00 am';
+            charts[requestIndex].endTime = '12:00 am';
           }
-          const zeroHourTime = weekData.charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '00' ||
+          const zeroHourTime = charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '00' ||
             x?.startTime?.trim().toLowerCase().slice(0, 2) === '00');
           if (zeroHourTime.length > 0) {
             zeroHourTime.map(x => {
@@ -957,8 +1025,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
               this.formatTimeValuesInSchedulingGrid();
             });
           }
-        }
-      }
+        // }
+      // }
     }
 
   }
@@ -1038,10 +1106,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getSchedulingCodesSubscription);
   }
 
-  private getModalPopup(component: any, size: string, contentMessage?: string) {
+  private getModalPopup(component: any, size: string) {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
     this.modalRef = this.modalService.open(component, options);
-    this.modalRef.componentInstance.headingMessage = 'Success';
+  }
+
+  private setComponentMessages(headingMessage: string, contentMessage: string) {
+    this.modalRef.componentInstance.headingMessage = headingMessage;
     this.modalRef.componentInstance.contentMessage = contentMessage;
   }
 

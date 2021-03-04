@@ -102,7 +102,7 @@
             <ng-container *ngFor="let el of totalSchedulingGridData; let i = index">
               <tr class="table-row">
                 <td>
-                  <i *ngIf="el.ranges.length !== 0" class="expand-icon fa padding-5 pointer"
+                  <i class="expand-icon fa padding-5 pointer"
                     [ngClass]="( selectedGrid?.employeeId === el?.employeeId ) ? 'fa-minus' : 'fa-plus'"
                     (click)="toggleDetails(el)"></i>
                 </td>
@@ -121,35 +121,17 @@
                     </option>
                   </select>
                   <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status !== 1" (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
-                  <i class="fa fa-trash padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status !== 1" (click)="deleteDateRange(el.id)" [ngbTooltip]="'Delete'"></i>
+                  <i class="fa fa-trash padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status !== 1" (click)="deleteDateRange(el)" [ngbTooltip]="'Delete'"></i>
                   <i class="fa fa-calendar float-right padding-5 m-t-5" aria-hidden="true" (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
-                 
-                 
-                  <!-- {{el.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="el.dateTo">-</span> {{ el.dateTo | date:
-                      'yyyy-MM-dd'}} -->
-                  <!-- <i class="fa fa-calendar float-right padding-5" aria-hidden="true"
-                    (click)="onClickDateIcon(i); datepicker.toggle()"></i> -->
-                 <!--  <input name="datepicker" class="hidden-datepicker" ngbDatepicker #datepicker="ngbDatepicker"
-                    [autoClose]="'outside'" (dateSelect)="onDateSelection($event, i)" [displayMonths]="2"
-                    [dayTemplate]="t" [container]="'body'" [placement]="'bottom'" outsideDays="hidden">
-                  <ng-template #t let-date let-focused="focused">
-                    <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                      [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                      (mouseleave)="hoveredDate = null">
-                      {{ date.day }}
-                    </span>
-                  </ng-template> -->
                 </td>
                 <td>
-                  <select class="form-control" (change)="setSchedulingStatus($event.target.value, el)" [disabled]="el?.ranges.length == 0">
-                    <option *ngIf="el?.ranges.length == 0">{{ 'Please select a status' | translate }}</option>
+                  <select class="form-control" (change)="setSchedulingStatus($event.target.value, el)" [disabled]="el?.ranges.length === 0">
+                    <option *ngIf="!el?.ranges[getRangeIndex(el)]?.status">{{ 'Please select a status' | translate }}</option>
                     <option [value]="status" [selected]="el?.ranges[getRangeIndex(el)]?.status === +status" *ngFor="let status of schedulingStatus">
                       {{ scheduleStatus[status] }}
                     </option>
                   </select>
                 </td>
-                <!-- <td>{{el.createdBy}}</td>
-              <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td> -->
                 <td>{{el.modifiedBy}}</td>
                 <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
               </tr>
@@ -264,26 +246,26 @@
                     <div class="row padding-10">
                       <div class="col-md-12 padding-12 row">
                         <div class="col-s-2 m-b-5">
-                          <button class="btn btn-success" id="btn_copy_schedule"
+                          <button [disabled]="!selectedGrid.dateFrom" class="btn btn-success" id="btn_copy_schedule"
                             (click)="openCopySchedule(i)">
                             <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
                           </button>
                         </div>
                         <div class="col-md-2 m-b-3">
-                          <button class="btn btn-primary btn-activity" id="btn_activity_logs" *ngIf="canShowActivityLog()"
+                          <button [disabled]="!selectedGrid.dateFrom" class="btn btn-primary btn-activity" id="btn_activity_logs" *ngIf="canShowActivityLog()"
                             (click)="openActivityLogs(i)">
                             {{ 'Activity Logs' | translate }}
                           </button>
                         </div>
                         <div class="col-md-6 m-b-5"></div>
                         <div class="col-md-1  m-b-5">
-                          <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
+                          <button [disabled]="!selectedGrid.dateFrom" class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
                             id="btn_save">
                             <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
                           </button>
                         </div>
                         <div class="col-s-1  m-b-5">
-                          <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
+                          <button [disabled]="!selectedGrid.dateFrom" class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
                             id="btn_cancel">
                             <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
                           </button>
