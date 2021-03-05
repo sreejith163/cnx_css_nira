@@ -123,7 +123,7 @@
                   <span>
                     <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2" (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
                     <i class="fa fa-trash padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2" (click)="deleteDateRange(el)" [ngbTooltip]="'Delete'"></i>
-                    <i class="fa fa-calendar float-right padding-5 m-t-5" aria-hidden="true" (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
+                    <i class="fa fa--plus-o float-right padding-5 m-t-5" aria-hidden="true" (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
                   </span>
                   </td>
                 <td>
