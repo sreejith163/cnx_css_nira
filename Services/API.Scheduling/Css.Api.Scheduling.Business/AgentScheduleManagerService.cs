@@ -100,14 +100,14 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> GetAgentScheduleManagerCharts(AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
         {
-            var agents = await GetAgents(agentScheduleManagerChartQueryparameter);
-            var agentScheduleManagers = await _agentScheduleManagerRepository.GetAgentScheduleManagerCharts(agentScheduleManagerChartQueryparameter);
+            var agents = await GetAgents(agentScheduleManagerChartQueryparameter); 
+            var mappedAgents = JsonConvert.DeserializeObject<List<AgentAdminDTO>>(JsonConvert.SerializeObject(agents));
 
-            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentScheduleManagers));
-            
+            var agentScheduleManagers = await _agentScheduleManagerRepository.GetAgentScheduleManagerCharts(agentScheduleManagerChartQueryparameter);
+                        
             var mappedAgentScheduleManagers = JsonConvert.DeserializeObject<List<AgentScheduleManagerChartDetailsDTO>>(JsonConvert.SerializeObject(agentScheduleManagers)); ;
 
-            foreach (var agent in agents)
+            foreach (var agent in mappedAgents)
             {
                 var mappedAgentScheduleManager = mappedAgentScheduleManagers.FirstOrDefault(x => x.EmployeeId == agent.EmployeeId);
                 if (mappedAgentScheduleManager == null)
@@ -127,6 +127,8 @@ namespace Css.Api.Scheduling.Business
                     mappedAgentScheduleManager.LastName = agent?.LastName;
                 }
             }
+
+            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agents));
 
             return new CSSResponse(mappedAgentScheduleManagers.Distinct(), HttpStatusCode.OK);
         }
@@ -232,6 +234,7 @@ namespace Css.Api.Scheduling.Business
                     {
                         var agentScheduleManagerChart = new AgentScheduleManager
                         {
+                            EmployeeId = agentAdmin.Ssn,
                             AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
                             Date = agentScheduleDetails.Date,
                             Charts = agentScheduleManager.Charts,
@@ -317,15 +320,12 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         /// <param name="agentScheduleManagerChartQueryparameter">The agent schedule manager chart queryparameter.</param>
         /// <returns></returns>
-        private async Task<List<AgentAdminDTO>> GetAgents(AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
+        private async Task<PagedList<Entity>> GetAgents(AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
         {
             var agentAdminQueryParameter = _mapper.Map<AgentAdminQueryParameter>(agentScheduleManagerChartQueryparameter);
             agentAdminQueryParameter.Fields = "EmployeeId, FirstName, LastName";
 
-            var agents = await _agentAdminRepository.GetAgentAdmins(agentAdminQueryParameter);
-
-            var mappedAgents = JsonConvert.DeserializeObject<List<AgentAdminDTO>>(JsonConvert.SerializeObject(agents));
-            return mappedAgents;
+            return await _agentAdminRepository.GetAgentAdmins(agentAdminQueryParameter);
         }
     }
 }
