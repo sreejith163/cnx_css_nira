@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { WeekDay } from '@angular/common';
+import { DatePipe, WeekDay } from '@angular/common';
 
 import { Constants } from 'src/app/shared/util/constants.util';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
@@ -47,11 +47,11 @@ import { PermissionsService } from '../../../system-admin/services/permissions.s
 import { AgentScheduleManagersService } from '../../services/agent-schedule-managers.service';
 import { AgentScheduleManagersQueryParams } from '../../models/agent-schedule-mangers-query-params.model';
 
-
 @Component({
   selector: 'app-scheduling-manager',
   templateUrl: './scheduling-manager.component.html',
-  styleUrls: ['./scheduling-manager.component.scss']
+  styleUrls: ['./scheduling-manager.component.scss'],
+  providers: [DatePipe]
 })
 export class SchedulingManagerComponent implements OnInit, OnDestroy {
   startIcon = 0;
@@ -118,6 +118,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private languagePreferenceService: LanguagePreferenceService,
     private permissionsService: PermissionsService,
+    private datepipe: DatePipe,
     public translate: TranslateService,
   ) {
     this.LoggedUser = this.authService.getLoggedUserInfo();
@@ -466,7 +467,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         if (JSON.stringify(item.charts) !== JSON.stringify(this.schedulingMangerChart.find(x => x.id === item.id).charts)) {
           const employeeData = new AgentShceduleMangerData();
           employeeData.employeeId = item?.employeeId;
-          managerChartModel.date = item?.date;
+          managerChartModel.date = this.getFormattedDate(item?.date);
           employeeData.charts = item?.charts;
           managerChartModel.agentScheduleManagers.push(employeeData);
         }
@@ -962,4 +963,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getFormattedDate(date: Date) {
+    const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
+    return new Date(transformedDate);
+  }
 }

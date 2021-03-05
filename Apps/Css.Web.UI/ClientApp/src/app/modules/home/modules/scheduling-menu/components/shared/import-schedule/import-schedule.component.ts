@@ -453,8 +453,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           chartArray.push(chart);
         }
       });
-      // const chartData = new AgentScheduleManagerChart();
-      // chartData.charts = chartArray;
       importData.charts = chartArray;
       chartModel.agentScheduleManagers.push(importData);
     }
