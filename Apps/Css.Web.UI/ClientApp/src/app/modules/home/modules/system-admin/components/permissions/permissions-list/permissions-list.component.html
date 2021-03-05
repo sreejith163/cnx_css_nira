@@ -116,7 +116,7 @@
             </ngx-spinner>
             <tr *ngIf="employees?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No data to show' | translate }}</td>
+                {{ 'No match records found' | translate }}</td>
             </tr>
             <ng-container *ngFor="let el of employees; let i = index;">
               <tr [class.pointer]="permissionsService.noPermission([1], permissionsService.userRoleId)" (dblclick)="editUserPermission(el)">
