@@ -128,7 +128,7 @@
             <ngx-spinner [name]="spinner"></ngx-spinner>
             <tr *ngIf="agentSchedulingGroups?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No data to show' | translate }}</td>
+                {{ 'No match records found' | translate }}</td>
             </tr>
             <ng-container *ngFor="let el of agentSchedulingGroups; let i = index">
               <tr>
