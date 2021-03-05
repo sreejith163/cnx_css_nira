@@ -117,6 +117,22 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
+        /// Determines whether [has agent schedule manager chart by employee identifier] [the specified employee identifier details].
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <returns>
+        ///   <c>true</c> if [has agent schedule manager chart by employee identifier] [the specified employee identifier details]; otherwise, <c>false</c>.
+        /// </returns>
+        public async Task<bool> HasAgentScheduleManagerChartByEmployeeId(EmployeeIdDetails employeeIdDetails)
+        {
+            var query =
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
+
+            var count = await FindCountByIdAsync(query);
+            return count > 0;
+        }
+
+        /// <summary>
         /// Gets the employee ids by agent schedule group identifier.
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>

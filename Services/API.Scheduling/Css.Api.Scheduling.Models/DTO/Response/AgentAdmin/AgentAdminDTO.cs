@@ -42,7 +42,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
         /// <summary>
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
-        public int AgentSchedulingGroupId { get; set; }
+        public int? AgentSchedulingGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the agent data.

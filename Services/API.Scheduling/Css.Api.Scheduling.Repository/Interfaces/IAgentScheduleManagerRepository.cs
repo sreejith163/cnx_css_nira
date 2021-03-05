@@ -45,6 +45,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<AgentScheduleManager> GetAgentScheduleManagerChartByEmployeeId(EmployeeIdDetails employeeIdDetails);
 
         /// <summary>
+        /// Determines whether [has agent schedule manager chart by employee identifier] [the specified employee identifier details].
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <returns></returns>
+        Task<bool> HasAgentScheduleManagerChartByEmployeeId(EmployeeIdDetails employeeIdDetails);
+
+        /// <summary>
         /// Gets the employee ids by agent schedule group identifier.
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>

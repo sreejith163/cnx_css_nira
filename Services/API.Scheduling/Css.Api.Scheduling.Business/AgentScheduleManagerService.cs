@@ -100,26 +100,30 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> GetAgentScheduleManagerCharts(AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
         {
-            var agents = await GetAgents(agentScheduleManagerChartQueryparameter); 
+            var agents = await GetAgents(agentScheduleManagerChartQueryparameter);
             var mappedAgents = JsonConvert.DeserializeObject<List<AgentAdminDTO>>(JsonConvert.SerializeObject(agents));
 
             var agentScheduleManagers = await _agentScheduleManagerRepository.GetAgentScheduleManagerCharts(agentScheduleManagerChartQueryparameter);
-                        
-            var mappedAgentScheduleManagers = JsonConvert.DeserializeObject<List<AgentScheduleManagerChartDetailsDTO>>(JsonConvert.SerializeObject(agentScheduleManagers)); ;
+
+            var mappedAgentScheduleManagers = JsonConvert.DeserializeObject<List<AgentScheduleManagerChartDetailsDTO>>(JsonConvert.SerializeObject(agentScheduleManagers));
 
             foreach (var agent in mappedAgents)
             {
                 var mappedAgentScheduleManager = mappedAgentScheduleManagers.FirstOrDefault(x => x.EmployeeId == agent.EmployeeId);
                 if (mappedAgentScheduleManager == null)
                 {
-                    var scheduleManager = new AgentScheduleManagerChartDetailsDTO 
+                    var scheduleManagerExists = await _agentScheduleManagerRepository.HasAgentScheduleManagerChartByEmployeeId(new EmployeeIdDetails { Id = agent.EmployeeId });
+                    if (!scheduleManagerExists)
                     {
-                        EmployeeId = agent.EmployeeId,
-                        FirstName = agent.FirstName,
-                        LastName = agent.LastName,
-                        AgentSchedulingGroupId = agent.AgentSchedulingGroupId
-                    };
-                    mappedAgentScheduleManagers.Add(scheduleManager);
+                        var agentScheduleManager = new AgentScheduleManagerChartDetailsDTO
+                        {
+                            EmployeeId = agent.EmployeeId,
+                            FirstName = agent.FirstName,
+                            LastName = agent.LastName,
+                            AgentSchedulingGroupId = agent.AgentSchedulingGroupId,
+                        };
+                        mappedAgentScheduleManagers.Add(agentScheduleManager);
+                    }
                 }
                 else
                 {
