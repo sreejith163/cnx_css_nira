@@ -134,8 +134,8 @@
                     </option>
                   </select>
                 </td>
-                <td>{{el.modifiedBy}}</td>
-                <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
+                <td>{{el?.ranges[getRangeIndex(el)]?.modifiedBy}}</td>
+                <td>{{el?.ranges[getRangeIndex(el)]?.modifiedDate | date: 'yyyy-MM-dd'}}</td>
               </tr>
               <ng-container>
                 <tr class="row-details" *ngIf="selectedGrid?.employeeId === el?.employeeId"

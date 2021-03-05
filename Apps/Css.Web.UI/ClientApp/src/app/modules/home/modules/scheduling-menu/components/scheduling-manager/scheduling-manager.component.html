@@ -148,7 +148,7 @@
             {{ 'No match records found' | translate }}</td>
         </tr>
         <tr class="jsgrid-row user-select-none" *ngFor="let el of managerCharts; let i = index"
-          [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.id, i)">
+          [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.employeeId, i)">
           <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
           <td class="jsgrid-cell-empName">
             <span ngbTooltip="{{ el.lastName + ' ' + el.firstName }}">
@@ -157,7 +157,7 @@
             </span>
           </td>
           <td id="grid_manager_col_{{i+1}}_{{j}}" class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
-            attr.scheduleId="{{el.id}}" attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
+            attr.employeeId="{{el.employeeId}}" attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
             *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
             (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event,j,i+1)"
             [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">

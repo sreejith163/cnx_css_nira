@@ -439,6 +439,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     chartModel.activityOrigin = ActivityOrigin.CSS;
     chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
+    chartModel.isImport = true;
     chartModel.date = new Date(this.jsonData[0].Date);
     for (const employee of schedules) {
       const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);

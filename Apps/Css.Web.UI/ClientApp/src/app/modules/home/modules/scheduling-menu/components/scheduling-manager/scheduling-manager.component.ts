@@ -235,8 +235,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   }
 
   setIconFilters(employeeId: number) {
-    const agent = this.schedulingMangerChart.find(x => x.employeeId === +employeeId)?.charts[0];
-    if (agent) {
+    if (this.schedulingMangerChart.find(x => x.employeeId === +employeeId)?.charts?.length > 0) {
+      const agent = this.schedulingMangerChart.find(x => x.employeeId === +employeeId)?.charts[0];
       const schedulingCode = this.schedulingCodes.find(x => x.id === agent?.schedulingCodeId);
       this.iconDescription = schedulingCode?.description;
       this.startTimeFilter = this.formatFilterTimeFormat(agent?.startTime);
@@ -245,13 +245,14 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     } else {
       this.clearIconFilters();
     }
+
   }
 
   setAgentIconFilters(employeeId: number) {
     const openTime = this.schedulingCodes?.find(x => x.description.trim().toLowerCase() === 'open time');
     const lunch = this.schedulingCodes?.find(x => x.description.trim().toLowerCase() === 'lunch');
     const agentScheduleData = this.schedulingMangerChart.find(x => x.employeeId === +employeeId);
-    if (agentScheduleData) {
+    if (agentScheduleData?.charts?.length > 0) {
       if (openTime) {
         const openTimeIndex = this.schedulingMangerChart.find(x => x.employeeId === +employeeId)?.charts
           .findIndex(x => x.schedulingCodeId === openTime?.id);
@@ -280,6 +281,9 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
           this.lunchAgentIcon = undefined;
         }
       }
+    } else {
+      this.openTimeAgentIcon = undefined;
+      this.lunchAgentIcon = undefined;
     }
   }
 
@@ -308,8 +312,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     const time = event.currentTarget.attributes.time.nodeValue;
     const meridiem = event.currentTarget.attributes.meridiem.nodeValue;
     const fromTime = time + ' ' + meridiem;
-    const scheduleId = event.currentTarget.attributes.scheduleId.nodeValue;
-    const chart = this.managerCharts.find(x => x.id === scheduleId);
+    const employeeId = event.currentTarget.attributes.employeeId.nodeValue;
+    const chart = this.managerCharts.find(x => x.employeeId === +employeeId);
     object = chart?.charts.find(x => this.convertToDateFormat(x.startTime) <= this.convertToDateFormat(fromTime) &&
       this.convertToDateFormat(x.endTime) > this.convertToDateFormat(fromTime));
     if (object) {
@@ -424,17 +428,15 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   openActivityLogs(index: number) {
     this.getModalPopup(ActivityLogsScheduleComponent, 'xl');
     this.modalRef.componentInstance.activityType = ActivityType.SchedulingManagerGrid;
-    this.modalRef.componentInstance.employeeId = this.managerCharts[index].employeeId;
-    this.modalRef.componentInstance.employeeName = this.agentInfo.lastName + ', ' + this.agentInfo.firstName;
+    this.modalRef.componentInstance.employeeId = this.managerCharts[index]?.employeeId;
+    this.modalRef.componentInstance.employeeName = this.agentInfo?.lastName + ', ' + this.agentInfo?.firstName;
     this.modalRef.componentInstance.startDate = new Date(this.startDate);
   }
 
   openCopySchedule(index: number) {
-    const agentScheduleId = this.managerCharts[index]?.id;
     const employeeId = this.managerCharts[index]?.employeeId;
     this.getModalPopup(CopyScheduleComponent, 'lg');
     this.modalRef.componentInstance.agentSchedulingGroupId = this.agentSchedulingGroupId;
-    this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
     this.modalRef.componentInstance.employeeId = employeeId;
     this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.SchedulingManager;
     this.modalRef.componentInstance.fromDate = new Date(this.startDate);
@@ -472,6 +474,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
       managerChartModel.activityOrigin = ActivityOrigin.CSS;
       managerChartModel.modifiedUser = +this.authService.getLoggedUserInfo().employeeId;
       managerChartModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
+      managerChartModel.isImport = false;
 
       this.updateAgentManagerChartSubscription = this.agentScheduleMangerService.updateScheduleManagerChart(managerChartModel)
         .subscribe((response) => {
@@ -596,10 +599,16 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     this.getAgentSchedulesSubscription = this.agentScheduleMangerService.getAgentScheduleManagers(queryParams)
       .subscribe((response) => {
         this.managerCharts = response.body;
-        this.managerCharts.map(x => x?.charts?.map(chart => {
-          chart.endTime = chart?.endTime?.trim().toLowerCase();
-          chart.startTime = chart?.startTime?.trim().toLowerCase();
-        }));
+        this.managerCharts.map(x => {
+          if (!x.charts || x.charts.length === 0) {
+            x.charts = [];
+          } else {
+            x?.charts?.map(chart => {
+              chart.endTime = chart?.endTime?.trim().toLowerCase();
+              chart.startTime = chart?.startTime?.trim().toLowerCase();
+            });
+          }
+        });
         this.formatTime(false);
         this.schedulingMangerChart = JSON.parse(JSON.stringify(this.managerCharts));
         const employeeId = this.managerCharts[0]?.employeeId;
@@ -673,7 +682,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     const table = $('#' + this.tableClassName);
     table.find('.' + this.selectedCellClassName).each((index, elem) => {
       let chartArray;
-      let scheduleId;
+      let employeeId;
       let to;
       this.spinnerService.show(this.spinner, SpinnerOptions);
       let meridiem = elem.attributes.meridiem.value;
@@ -699,20 +708,20 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
 
       const date = new Date(this.startDate);
 
-      scheduleId = elem?.attributes?.scheduleId?.value;
-      const chart = this.managerCharts.find(x => x.id === scheduleId);
-      chartArray = chart?.charts;
+      employeeId = elem?.attributes?.employeeId?.value;
+      const chart = this.managerCharts.find(x => x.employeeId === +employeeId);
+      chartArray = chart?.charts?.length > 0 ? chart.charts : chart.charts = [];
       chart.date = date;
 
       if (this.icon && !this.isDelete) {
 
-        if (chartArray.length > 0) {
+        if (chartArray?.length > 0) {
           this.insertIconToGrid(chartArray, iconModel);
         } else {
-          const weekDay = new AgentScheduleManagerChart();
+          // const weekDay = new AgentScheduleManagerChart();
           const calendarTime = new ScheduleChart(fromTime, to, code.id);
-          weekDay.charts.push(calendarTime);
-          chartArray.push(weekDay);
+          // weekDay.charts.push(calendarTime);
+          chartArray.push(calendarTime);
         }
       } else if (this.isDelete) {
         if (chartArray.length > 0) {
@@ -740,8 +749,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
 
   private sortSelectedGridCalendarTimes() {
     this.managerCharts.forEach((element) => {
-      if (element.charts.length > 0) {
-        element.charts.sort((a, b): number => {
+      if (element?.charts?.length > 0) {
+        element?.charts.sort((a, b): number => {
           if (this.convertToDateFormat(a.startTime) < this.convertToDateFormat(b.startTime)) {
             return -1;
           } else if (this.convertToDateFormat(a.startTime) > this.convertToDateFormat(b.startTime)) {

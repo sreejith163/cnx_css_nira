@@ -6,6 +6,7 @@ export class UpdateAgentScheduleMangersChart {
     activityOrigin: number;
     modifiedUser: number;
     modifiedBy: string;
+    isImport: boolean;
 
     constructor() {
         this.agentScheduleManagers = [];
