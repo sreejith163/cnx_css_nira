@@ -195,8 +195,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.modalRef.result.then((result: ScheduleDateRangeBase) => {
       if (result) {
         const range = new AgentScheduleRange();
-        range.dateFrom = result?.dateFrom;
-        range.dateTo = result?.dateTo;
+        range.dateFrom = this.getFormattedDate(result?.dateFrom);
+        range.dateTo = this.getFormattedDate(result?.dateTo);
         range.status = SchedulingStatus['Pending Schedule'];
         range.scheduleCharts = [];
         el.ranges.push(range);
