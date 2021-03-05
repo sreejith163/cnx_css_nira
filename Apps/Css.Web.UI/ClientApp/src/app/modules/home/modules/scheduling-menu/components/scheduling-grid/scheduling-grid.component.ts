@@ -46,6 +46,8 @@ import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-p
 import { AgentScheduleRange } from '../../models/agent-schedule-range.model';
 import { ScheduleDateRangeBase } from '../../models/schedule-date-range-base.model';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { ContentType } from 'src/app/shared/enums/content-type.enum';
+import { DateRangeQueryParms } from '../../models/date-range-query-params.model';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -241,9 +243,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then((result) => {
       if (result && result === el.id) {
-        const model = new ScheduleDateRangeBase();
-        model.dateFrom = this.getFormattedDate(el.ranges[el.rangeIndex].dateFrom);
-        model.dateTo = this.getFormattedDate(el.ranges[el.rangeIndex].dateTo);
+        const model = new DateRangeQueryParms();
+        model.dateFrom = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateFrom);
+        model.dateTo = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateTo);
         this.deleteScheduleDateRangeSubscription = this.agentSchedulesService.deleteAgentScheduleRange(el.id, model)
           .subscribe((response) => {
             this.spinnerService.hide(this.spinner);
@@ -254,6 +256,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
             this.spinnerService.hide(this.spinner);
             this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
             this.setComponentMessages('Error', error.message);
+            this.modalRef.componentInstance.messageType = ContentType.String;
             console.log(error);
           });
 
@@ -935,6 +938,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         this.spinnerService.hide(this.spinner);
         this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
         this.setComponentMessages('Error', error?.message);
+        this.modalRef.componentInstance.messageType = ContentType.String;
         this.loadAgentSchedules();
         console.log(error);
       });

@@ -103,7 +103,7 @@ export class AgentSchedulesService extends HttpBaseService {
     .pipe(catchError(this.handleError));
   }
 
-  deleteAgentScheduleRange(agentScheduleId: string, queryparams: ScheduleDateRangeBase) {
+  deleteAgentScheduleRange(agentScheduleId: string, queryparams: DateRangeQueryParms) {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/range`;
 
     return this.http.delete<ApiResponseModel>(url, {
