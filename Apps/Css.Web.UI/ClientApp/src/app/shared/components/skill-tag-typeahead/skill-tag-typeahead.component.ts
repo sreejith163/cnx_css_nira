@@ -140,7 +140,7 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
     queryParams.pageSize = this.skillTagItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
-    queryParams.skipPageSize = true;
+    queryParams.skipPageSize = false;
     queryParams.orderBy = undefined;
     queryParams.fields = 'id, name';
 

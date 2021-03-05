@@ -124,7 +124,7 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
     queryParams.pageSize = this.clientItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
-    queryParams.skipPageSize = true;
+    queryParams.skipPageSize = false;
     queryParams.orderBy = undefined;
     queryParams.fields = 'id, name';
 

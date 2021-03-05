@@ -136,7 +136,7 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
     queryParams.pageSize = this.clientLobItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
-    queryParams.skipPageSize = true;
+    queryParams.skipPageSize = false;
     queryParams.orderBy = undefined;
     queryParams.fields = 'id, name';
 
