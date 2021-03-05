@@ -22,7 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AgentScheduleGridResponse } from '../../models/agent-schedule-grid-response.model';
 import { SchedulingStatus } from '../../enums/scheduling-status.enum';
 import { Constants } from 'src/app/shared/util/constants.util';
-import { WeekDay } from '@angular/common';
+import { DatePipe, WeekDay } from '@angular/common';
 import { AgentSchedulesResponse } from '../../models/agent-schedules-response.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
@@ -140,6 +140,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     private languagePreferenceService: LanguagePreferenceService,
     private agentSchedulesService: AgentSchedulesService,
     public translate: TranslateService,
+    private datepipe: DatePipe,
   ) {
     this.LoggedUser = this.authService.getLoggedUserInfo();
   }
@@ -240,8 +241,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.modalRef.result.then((result) => {
       if (result && result === el.id) {
         const model = new ScheduleDateRangeBase();
-        model.dateFrom = el.ranges[el.rangeIndex].dateFrom;
-        model.dateTo = el.ranges[el.rangeIndex].dateTo;
+        model.dateFrom = this.getFormattedDate(el.ranges[el.rangeIndex].dateFrom);
+        model.dateTo = this.getFormattedDate(el.ranges[el.rangeIndex].dateTo);
         this.deleteScheduleDateRangeSubscription = this.agentSchedulesService.deleteAgentScheduleRange(el.id, model)
           .subscribe((response) => {
             this.spinnerService.hide(this.spinner);
@@ -913,8 +914,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   private updateAgentSchedule(el: AgentSchedulesResponse) {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const updateModel = new UpdateAgentSchedule();
-    updateModel.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
-    updateModel.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
+    updateModel.dateFrom = this.getFormattedDate(el?.ranges[el?.rangeIndex]?.dateFrom);
+    updateModel.dateTo = this.getFormattedDate(el?.ranges[el?.rangeIndex]?.dateTo);
     updateModel.status = el?.ranges[el?.rangeIndex]?.status;
     updateModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     updateModel.activityOrigin = ActivityOrigin.CSS;
@@ -957,8 +958,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           this.formatEndTime(ele.charts, true);
         });
       }
-      chartModel.dateFrom = gridData?.dateFrom;
-      chartModel.dateTo = gridData?.dateTo;
+      chartModel.dateFrom = this.getFormattedDate(gridData?.dateFrom);
+      chartModel.dateTo = this.getFormattedDate(gridData?.dateTo);
       chartModel.status = gridData?.status;
       chartModel.agentScheduleCharts = gridData?.agentScheduleCharts;
       chartModel.activityOrigin = ActivityOrigin.CSS;
@@ -1158,6 +1159,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       tt = tt + x;
     }
     return times;
+  }
+
+  private getFormattedDate(date: Date) {
+    const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
+    return new Date(transformedDate);
   }
 
 }
