@@ -324,8 +324,6 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
     return new Date(transformedDate);
   }
-
-
 }
 
 
