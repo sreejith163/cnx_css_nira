@@ -11,13 +11,16 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { ScheduleDateRangeBase } from '../../../models/schedule-date-range-base.model';
 import { DateRangeQueryParms } from '../../../models/date-range-query-params.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-date-range-pop-up',
   templateUrl: './date-range-pop-up.component.html',
-  styleUrls: ['./date-range-pop-up.component.scss']
+  styleUrls: ['./date-range-pop-up.component.scss'],
+  providers: [DatePipe]
 })
 export class DateRangePopUpComponent implements OnInit, OnDestroy {
+
   hoveredDate: NgbDate | null = null;
   toDate: NgbDate | null = null;
   fromDate = this.calendar.getToday();
@@ -43,6 +46,7 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private spinnerService: NgxSpinnerService,
     private modalService: NgbModal,
+    private datepipe: DatePipe,
     public formatter: NgbDateParserFormatter,
     public translate: TranslateService,
   ) {}
@@ -116,11 +120,10 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
             this.updateScheduleDateRange();
           } else {
             const rangeModel = new ScheduleDateRangeBase();
-            rangeModel.dateFrom = this.dateFrom;
-            rangeModel.dateTo = this.dateTo;
+            rangeModel.dateFrom = this.getFormattedDate(this.dateFrom);
+            rangeModel.dateTo = this.getFormattedDate(this.dateTo);
             this.activeModal.close(rangeModel);
           }
-          // this.activeModal.close({ needRefresh: true });
         }, (error) => {
           this.spinnerService.hide(this.spinner);
           this.getModalPopup(ErrorWarningPopUpComponent, 'sm', error.message);
@@ -135,10 +138,10 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   private updateScheduleDateRange() {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const model = new UpdateScheduleDateRange();
-    model.oldDateFrom = this.startDate;
-    model.oldDateTo = this.endDate;
-    model.newDateFrom = this.dateFrom;
-    model.newDateTo = this.dateTo;
+    model.oldDateFrom = this.getFormattedDate(this.startDate);
+    model.oldDateTo = this.getFormattedDate(this.endDate);
+    model.newDateFrom = this.getFormattedDate(this.dateFrom);
+    model.newDateTo = this.getFormattedDate(this.dateTo);
     model.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     this.updateScheduleDateRangeSubscription = this.agentSchedulesService.updateAgentScheduleRange(this.agentScheduleId, model)
       .subscribe((response) => {
@@ -177,4 +180,8 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
     return date.toDateString();
   }
 
+  private getFormattedDate(date: Date) {
+    const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
+    return new Date(transformedDate);
+  }
 }

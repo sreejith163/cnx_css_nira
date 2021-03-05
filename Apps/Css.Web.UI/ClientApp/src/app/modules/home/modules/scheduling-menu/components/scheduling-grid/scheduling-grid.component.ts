@@ -202,11 +202,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         el.modifiedBy = this.authService.getLoggedUserInfo().displayName;
         el.modifiedDate = new Date();
         this.onDateRangeChange(el.rangeIndex, el);
-        // if (this.selectedGrid) {
-        //   this.selectedGrid.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
-        //   this.selectedGrid.dateTo = el?.ranges[el?.rangeIndex]?.dateFrom;
-        //   this.selectedGrid.status = el?.ranges[el?.rangeIndex]?.status;
-        // }
         this.getModalPopup(MessagePopUpComponent, 'sm');
         this.setComponentMessages('Success', 'The record has been added!');
       } else {
