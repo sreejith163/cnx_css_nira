@@ -213,7 +213,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           if (!item.dateFrom || !item.dateTo) {
             return true;
           }
-          if (Date.parse(item?.dateFrom) !== Date.parse(item[0]?.dateTo)) {
+          if (Date.parse(item?.dateFrom) === Date.parse(item?.dateTo)) {
+            return true;
+          } else {
             if (Date.parse(item?.dateFrom) > Date.parse(item?.dateTo)) {
               return true;
             }
@@ -486,5 +488,14 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private getFormattedDate(date: Date) {
     const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
     return new Date(transformedDate);
+  }
+
+  private getDateInStringFormat(startDate: any): string {
+    if (!startDate) {
+      return undefined;
+    }
+
+    const date = new Date(startDate);
+    return date.toDateString();
   }
 }
