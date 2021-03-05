@@ -24,6 +24,7 @@ import { AgentShceduleMangerData } from '../../../models/agent-schedule-manager-
 import { ManagerExcelData } from '../../../models/manager-excel-data.model';
 import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manager-chart.model';
 import { ActivityOrigin } from '../../../enums/activity-origin.enum';
+import { AgentScheduleManagersService } from '../../../services/agent-schedule-managers.service';
 
 @Component({
   selector: 'app-import-schedule',
@@ -53,6 +54,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     private spinnerService: NgxSpinnerService,
     private schedulingCodeService: SchedulingCodeService,
     private agentSchedulesService: AgentSchedulesService,
+    private agentScheduleManagerService: AgentScheduleManagersService,
     private authService: AuthService,
     private modalService: NgbModal,
     private papa: Papa
@@ -85,7 +87,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         if (ele.EndTime.split(':')[0] === '12') {
           ele.EndTime = '00' + ':' + ele.EndTime.split(':')[1];
         }
-        if (ele.EndTime.trim().toLowerCase() === '12:00 am') {
+        if (ele.EndTime.trim().toLowerCase() === '12:00 am' || ele.EndTime.trim().toLowerCase() === '00:00 am') {
           ele.EndTime = '11:60 pm';
         }
       });
@@ -115,6 +117,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   browse(files: any) {
+    this.jsonData = [];
     const exportFileName = 'Attendance_scheduling';
     this.fileUploaded = files[0];
     this.uploadFile = this.fileUploaded?.name;
@@ -142,27 +145,27 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       if (this.agentScheduleType === AgentScheduleType.Scheduling) {
         for (const record of item.agentScheduleCharts) {
           record.charts.map(x => {
-            if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
-              x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+            if (x?.endTime?.trim()?.toLowerCase()?.slice(0, 2) === '00') {
+              x.endTime = '12' + x?.endTime?.trim()?.toLowerCase()?.slice(2, 8);
             }
-            if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
-              x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+            if (x?.startTime?.trim()?.toLowerCase()?.slice(0, 2) === '00') {
+              x.startTime = '12' + x?.startTime?.trim()?.toLowerCase()?.slice(2, 8);
             }
-            if (x?.endTime?.trim().toLowercase() === '11:60 pm') {
+            if (x?.endTime === '11:60 pm') {
               x.endTime = '12:00 am';
             }
           });
         }
       } else {
-        const chartData = item.agentScheduleManagerChart;
-        chartData.charts.map(x => {
+        const chartData = item.charts;
+        chartData.map(x => {
           if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
             x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
           }
           if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
             x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
-          if (x?.endTime?.trim().toLowercase() === '11:60 pm') {
+          if (x?.endTime === '11:60 pm') {
             x.endTime = '12:00 am';
           }
         });
@@ -226,8 +229,10 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
             }
           }
           for (const x of item.agentScheduleCharts) {
-            if (this.validateChart(x?.charts)) {
-              return true;
+            if (x?.charts?.length > 0) {
+              if (this.validateChart(x.charts)) {
+                return true;
+              }
             }
           }
         } else if (this.agentScheduleType === AgentScheduleType.SchedulingManager) {
@@ -235,9 +240,11 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
             return true;
           }
 
-          const chartData = item.agentScheduleManagerChart;
-          if (this.validateChart(chartData?.charts)) {
-            return true;
+          const chartData = item.charts;
+          if (chartData?.length > 0) {
+            if (this.validateChart(chartData)) {
+              return true;
+            }
           }
 
           const date = this.jsonData[0]?.Date;
@@ -333,7 +340,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       this.formatTimeFormat(model?.agentScheduleManagers);
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
-      this.updateManagerChartSubscription = this.agentSchedulesService.updateScheduleManagerChart(model)
+      this.updateManagerChartSubscription = this.agentScheduleManagerService.updateScheduleManagerChart(model)
         .subscribe(() => {
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ partialImport: hasMismatch });
