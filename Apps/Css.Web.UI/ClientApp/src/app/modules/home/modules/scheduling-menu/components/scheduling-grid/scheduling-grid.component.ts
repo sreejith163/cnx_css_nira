@@ -994,10 +994,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private getUpdatedScheduleChart() {
-    const updatedChart = JSON.parse(JSON.stringify(this.selectedGrid)) as AgentScheduleGridResponse;
-    updatedChart.dateFrom = new Date(this.selectedGrid.dateFrom.toLocaleString());
-    updatedChart.dateTo = new Date(this.selectedGrid.dateTo.toLocaleString());
-
+    const updatedChart = JSON.parse(JSON.stringify(this.selectedGrid));
     this.selectedGrid?.agentScheduleCharts.forEach((x, index) => {
       if (this.schedulingGridData?.agentScheduleCharts.findIndex(y => y.day === x?.day) > -1) {
         const gridIndex = this.schedulingGridData?.agentScheduleCharts.findIndex(y => y.day === x.day);
