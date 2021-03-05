@@ -64,7 +64,8 @@ declare function highlightCell(cell: string, className: string);
     )
   ],
   templateUrl: './scheduling-grid.component.html',
-  styleUrls: ['./scheduling-grid.component.scss']
+  styleUrls: ['./scheduling-grid.component.scss'],
+  providers: [DatePipe]
 })
 export class SchedulingGridComponent implements OnInit, OnDestroy {
 

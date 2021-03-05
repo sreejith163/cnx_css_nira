@@ -22,14 +22,15 @@ import { UpdateAgentScheduleMangersChart } from '../../../models/update-agent-sc
 import { ImportScheduleData } from '../../../models/import-schedule-data.model';
 import { AgentShceduleMangerData } from '../../../models/agent-schedule-manager-data.model';
 import { ManagerExcelData } from '../../../models/manager-excel-data.model';
-import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manager-chart.model';
 import { ActivityOrigin } from '../../../enums/activity-origin.enum';
 import { AgentScheduleManagersService } from '../../../services/agent-schedule-managers.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-import-schedule',
   templateUrl: './import-schedule.component.html',
-  styleUrls: ['./import-schedule.component.scss']
+  styleUrls: ['./import-schedule.component.scss'],
+  providers: [DatePipe]
 })
 export class ImportScheduleComponent implements OnInit, OnDestroy {
 
@@ -57,6 +58,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     private agentScheduleManagerService: AgentScheduleManagersService,
     private authService: AuthService,
     private modalService: NgbModal,
+    private datepipe: DatePipe,
     private papa: Papa
   ) { }
 
@@ -122,19 +124,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     this.fileUploaded = files[0];
     this.uploadFile = this.fileUploaded?.name;
     if (this.uploadFile.split('.')[1].toLowerCase() === 'csv'.toLowerCase()) {
-      // const dateSection = this.uploadFile.split(exportFileName)[1].split('.')[0];
-      // const year = dateSection?.substr(0, 4);
-      // const month = dateSection?.substr(4, 2);
-      // const day = dateSection?.substr(6, 2);
-      // const date = new Date(year + '/' + month + '/' + day);
-      // if (date instanceof Date && dateSection.length === 8) {
       this.readCsvFile();
-      //   this.fileFormatValidation = false;
-      // }
-      // else {
-      //   this.fileFormatValidation = true;
-      // }
-
     } else {
       this.fileFormatValidation = true;
     }
@@ -414,13 +404,14 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     chartModel.activityOrigin = ActivityOrigin.CSS;
     chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
+
     for (const employee of schedules) {
       const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);
       const importData = new ImportScheduleData();
       const chartArray = new Array<ScheduleChart>();
       importData.employeeId = employee.employeeId;
-      importData.dateFrom = new Date(employeeDetails[0].StartDate);
-      importData.dateTo = new Date(employeeDetails[0].EndDate);
+      importData.dateFrom = this.getFormattedDate(employeeDetails[0].StartDate);
+      importData.dateTo = this.getFormattedDate(employeeDetails[0].EndDate);
       employeeDetails.forEach(ele => {
         const data = schedulingCodes.find(x => x.description.trim().toLowerCase() === ele.ActivityCode.trim().toLowerCase());
         if (data) {
@@ -447,7 +438,8 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     chartModel.isImport = true;
-    chartModel.date = new Date(this.jsonData[0].Date);
+    chartModel.date = this.getFormattedDate(this.jsonData[0].Date);
+
     for (const employee of schedules) {
       const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);
       const importData = new AgentShceduleMangerData();
@@ -489,5 +481,10 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
       return time;
     }
+  }
+
+  private getFormattedDate(date: Date) {
+    const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
+    return new Date(transformedDate);
   }
 }

@@ -21,7 +21,8 @@ import { AgentSchedulesService } from '../../../services/agent-schedules.service
 @Component({
   selector: 'app-copy-schedule',
   templateUrl: './copy-schedule.component.html',
-  styleUrls: ['./copy-schedule.component.scss']
+  styleUrls: ['./copy-schedule.component.scss'],
+  providers: [DatePipe]
 })
 export class CopyScheduleComponent implements OnInit, OnDestroy {
 
@@ -323,8 +324,6 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
     return new Date(transformedDate);
   }
-
-
 }
 
 
