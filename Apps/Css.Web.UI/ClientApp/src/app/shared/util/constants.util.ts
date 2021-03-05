@@ -4186,7 +4186,7 @@ export class Constants {
   public static readonly EmailRegex = /^(?=[^@]*[A-Za-z])([a-zA-Z0-9])(([a-zA-Z0-9])*([\._-])?([a-zA-Z0-9]))*@(([a-zA-Z0-9\-])+(\.))+([a-zA-Z]{2,4})+$/;
   public static readonly DefaultTextMaxLength = 50;
 
-  public static readonly DateRangeConflictMessage = 'Date range already exists';
+  public static readonly DateRangeConflictMessage = `You cannot change schedule that overlaps to the existing schedules. Please select a new date range.`;
   public static readonly DateRangeValidationMessage = 'From date and to date cannot be same';
   public static readonly DateRangeRequiredMessage = 'Please select from date and to date';
 
