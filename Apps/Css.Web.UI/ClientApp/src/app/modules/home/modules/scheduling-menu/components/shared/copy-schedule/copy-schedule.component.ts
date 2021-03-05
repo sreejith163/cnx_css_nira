@@ -21,8 +21,7 @@ import { AgentSchedulesService } from '../../../services/agent-schedules.service
 @Component({
   selector: 'app-copy-schedule',
   templateUrl: './copy-schedule.component.html',
-  styleUrls: ['./copy-schedule.component.scss'],
-  providers: [DatePipe]
+  styleUrls: ['./copy-schedule.component.scss']
 })
 export class CopyScheduleComponent implements OnInit, OnDestroy {
 
@@ -63,8 +62,8 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     private spinnerService: NgxSpinnerService,
     private agentSchedulesService: AgentSchedulesService,
     private agentScheduleManagerService: AgentScheduleManagersService,
+    private authService: AuthService,
     private datepipe: DatePipe,
-    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -149,6 +148,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
       this.agentScheduleType === AgentScheduleType.Scheduling ?
         this.copyAgentSchedule(copiedAgents) : this.copyAgentScheduleManager(copiedAgents);
     }
+
   }
 
   private getSchedulingQueryParams() {
@@ -277,12 +277,12 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const copyData = new CopyAgentScheduleChart();
     copyData.agentSchedulingGroupId = this.agentSchedulingGroupId;
-    copyData.dateFrom = this.getFormattedDate(this.dateFrom);
-    copyData.dateTo = this.getFormattedDate(this.dateTo);
     copyData.activityOrigin = ActivityOrigin.CSS;
     copyData.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
     copyData.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     copyData.employeeIds = this.masterSelected ? [] : copiedAgents;
+    copyData.dateFrom = this.getFormattedDate(this.dateFrom);
+    copyData.dateTo = this.getFormattedDate(this.dateTo);
 
     this.copyAgentScheduleChartSubscription = this.agentSchedulesService.copyAgentScheduleChart(this.agentScheduleId, copyData)
       .subscribe(() => {
@@ -323,6 +323,8 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
     return new Date(transformedDate);
   }
+
+
 }
 
 
