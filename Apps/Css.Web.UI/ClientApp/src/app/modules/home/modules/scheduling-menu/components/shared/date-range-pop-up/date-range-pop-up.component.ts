@@ -9,6 +9,8 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { ScheduleDateRangeBase } from '../../../models/schedule-date-range-base.model';
+import { DateRangeQueryParms } from '../../../models/date-range-query-params.model';
 
 @Component({
   selector: 'app-date-range-pop-up',
@@ -30,6 +32,7 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   @Input() dateTo: Date;
   @Input() operation: ComponentOperation;
 
+  getShceduleDateRangeSubscription: ISubscription;
   updateScheduleDateRangeSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
@@ -68,17 +71,17 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
-      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
+      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day + 1, 0, 0, 0, 0);
       this.dateFrom = newDate;
     } else if (this.fromDate && !this.toDate && date && !date.before(this.fromDate)) {
       this.toDate = date;
-      const newDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day, 0, 0, 0, 0);
+      const newDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day + 1, 0, 0, 0, 0);
       this.dateTo = newDate;
     } else {
       this.toDate = null;
       this.dateTo = null;
       this.fromDate = date;
-      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
+      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day + 1, 0, 0, 0, 0);
       this.dateFrom = newDate;
     }
   }
@@ -101,18 +104,31 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    if (this.operation === ComponentOperation.Edit) {
-      if (this.startDate !== this.fromDate || this.endDate !== this.toDate) {
-        this.updateScheduleDateRange();
-      } else {
-        this.activeModal.close({ needRefresh: false });
-      }
+    if (this.startDate !== this.dateFrom || this.endDate !== this.dateTo) {
+      this.spinnerService.show(this.spinner, SpinnerOptions);
+      const model = new DateRangeQueryParms();
+      model.dateFrom = this.getDateInStringFormat(this.dateFrom);
+      model.dateTo = this.getDateInStringFormat(this.dateTo);
+      this.getShceduleDateRangeSubscription = this.agentSchedulesService.getAgentScheduleRange(this.agentScheduleId, model)
+        .subscribe((response) => {
+          this.spinnerService.hide(this.spinner);
+          if (this.operation === ComponentOperation.Edit) {
+            this.updateScheduleDateRange();
+          } else {
+            const rangeModel = new ScheduleDateRangeBase();
+            rangeModel.dateFrom = this.dateFrom;
+            rangeModel.dateTo = this.dateTo;
+            this.activeModal.close(rangeModel);
+          }
+          // this.activeModal.close({ needRefresh: true });
+        }, (error) => {
+          this.spinnerService.hide(this.spinner);
+          this.getModalPopup(ErrorWarningPopUpComponent, 'sm', error.message);
+          console.log(error);
+        });
+      this.subscriptions.push(this.getShceduleDateRangeSubscription);
     } else {
-      const model = {
-        fromDate: this.dateFrom,
-        toDate: this.dateTo
-      };
-      this.activeModal.close(model);
+      this.activeModal.close({ needRefresh: false });
     }
   }
 
@@ -150,6 +166,15 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
       const newDate: NgbDate = new NgbDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate() + 1);
       return newDate ?? undefined;
     }
+  }
+
+  private getDateInStringFormat(startDate: any): string {
+    if (!startDate) {
+      return undefined;
+    }
+
+    const date = new Date(startDate);
+    return date.toDateString();
   }
 
 }

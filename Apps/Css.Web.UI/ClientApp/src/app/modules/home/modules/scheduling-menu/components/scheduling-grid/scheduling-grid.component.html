@@ -120,12 +120,14 @@
                       {{range.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="range.dateTo">-</span> {{ range.dateTo | date: 'yyyy-MM-dd'}}
                     </option>
                   </select>
-                  <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status !== 1" (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
-                  <i class="fa fa-trash padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status !== 1" (click)="deleteDateRange(el)" [ngbTooltip]="'Delete'"></i>
-                  <i class="fa fa-calendar float-right padding-5 m-t-5" aria-hidden="true" (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
-                </td>
+                  <span>
+                    <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2" (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
+                    <i class="fa fa-trash padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2" (click)="deleteDateRange(el)" [ngbTooltip]="'Delete'"></i>
+                    <i class="fa fa-calendar float-right padding-5 m-t-5" aria-hidden="true" (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
+                  </span>
+                  </td>
                 <td>
-                  <select class="form-control" (change)="setSchedulingStatus($event.target.value, el)" [disabled]="el?.ranges.length === 0">
+                  <select class="form-control" (change)="setSchedulingStatus($event.target.value, el)" [disabled]="hasStatusDisabled(el)">
                     <option *ngIf="!el?.ranges[getRangeIndex(el)]?.status">{{ 'Please select a status' | translate }}</option>
                     <option [value]="status" [selected]="el?.ranges[getRangeIndex(el)]?.status === +status" *ngFor="let status of schedulingStatus">
                       {{ scheduleStatus[status] }}
@@ -259,13 +261,13 @@
                         </div>
                         <div class="col-md-6 m-b-5"></div>
                         <div class="col-md-1  m-b-5">
-                          <button [disabled]="!selectedGrid.dateFrom" class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
+                          <button [disabled]="!selectedGrid.dateFrom || selectedGrid.status == 1" class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
                             id="btn_save">
                             <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
                           </button>
                         </div>
                         <div class="col-s-1  m-b-5">
-                          <button [disabled]="!selectedGrid.dateFrom" class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
+                          <button [disabled]="!selectedGrid.dateFrom || selectedGrid.status == 1" class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
                             id="btn_cancel">
                             <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
                           </button>

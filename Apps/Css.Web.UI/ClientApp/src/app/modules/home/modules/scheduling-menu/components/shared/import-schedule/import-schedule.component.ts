@@ -288,6 +288,9 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     if (this.convertTimeFormat(data.startTime) >= this.convertTimeFormat(data.endTime)) {
       return true;
     }
+    if (+data.startTime.slice(4, 6) % 5 !== 0 || +data.endTime.slice(4, 6) % 5 !== 0) {
+      return true;
+    }
     if (data.startTime && data.endTime) {
       if (data.startTime.indexOf(':') > -1 && data.startTime.indexOf(' ') > -1 &&
         data.endTime.indexOf(':') > -1 && data.endTime.indexOf(' ') > -1) {

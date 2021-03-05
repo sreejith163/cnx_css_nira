@@ -12,8 +12,9 @@ import { CopyAgentScheduleChart } from '../models/copy-agent-schedule-chart.mode
 import { ImportShceduleChart } from '../models/import-schedule-chart.model';
 import { UpdateAgentScheduleMangersChart } from '../models/update-agent-schedule-managers-chart.model';
 import { AgentScheduleChartResponse } from '../models/agent-schedule-chart-response.model';
-import { DeleteScheduleDateRange } from '../models/delete-schedule-date-range.model';
+import { ScheduleDateRangeBase } from '../models/schedule-date-range-base.model';
 import { UpdateScheduleDateRange } from '../models/update-schedule-date-range.model';
+import { DateRangeQueryParms } from '../models/date-range-query-params.model';
 
 @Injectable()
 export class AgentSchedulesService extends HttpBaseService {
@@ -43,10 +44,13 @@ export class AgentSchedulesService extends HttpBaseService {
     .pipe(catchError(this.handleError));
   }
 
-  getAgentScheduleRange(agentScheduleId: string) {
+  getAgentScheduleRange(agentScheduleId: string, model: DateRangeQueryParms) {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/exists`;
 
-    return this.http.get<AgentSchedulesResponse>(url)
+    return this.http.get<AgentSchedulesResponse>(url,{
+      params: this.convertToHttpParam(model),
+      observe: 'response'
+    })
     .pipe(catchError(this.handleError));
   }
 
@@ -99,7 +103,7 @@ export class AgentSchedulesService extends HttpBaseService {
     .pipe(catchError(this.handleError));
   }
 
-  deleteAgentScheduleRange(agentScheduleId: string, queryparams: DeleteScheduleDateRange) {
+  deleteAgentScheduleRange(agentScheduleId: string, queryparams: ScheduleDateRangeBase) {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/range`;
 
     return this.http.delete<ApiResponseModel>(url, {

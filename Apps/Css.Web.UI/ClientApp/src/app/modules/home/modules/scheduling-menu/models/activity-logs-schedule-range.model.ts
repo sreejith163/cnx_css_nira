@@ -1,5 +1,5 @@
 import { SchedulingStatus } from '../enums/scheduling-status.enum';
-import { AgentScheduleChart } from './agent-schedule-chart.model'
+import { AgentScheduleChart } from './agent-schedule-chart.model';
 
 export class ActivityLogsScheduleRange {
     agentSchedulingGroupId: number;

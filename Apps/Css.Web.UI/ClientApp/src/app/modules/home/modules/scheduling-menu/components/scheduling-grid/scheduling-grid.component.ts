@@ -44,7 +44,7 @@ import { DateRangePopUpComponent } from 'src/app/modules/home/modules/scheduling
 import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { AgentScheduleRange } from '../../models/agent-schedule-range.model';
-import { DeleteScheduleDateRange } from '../../models/delete-schedule-date-range.model';
+import { ScheduleDateRangeBase } from '../../models/schedule-date-range-base.model';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 
 declare function setRowCellIndex(cell: string);
@@ -162,6 +162,17 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
 
+  hasStatusDisabled(el: AgentSchedulesResponse) {
+    if (el?.ranges.length <= 1) {
+      if (el?.ranges.length === 1 && el?.ranges[el?.rangeIndex].scheduleCharts.length > 0) {
+        return false;
+      }
+      return true;
+    } else if (el.ranges.length === 1 && el.ranges[el.rangeIndex].status === SchedulingStatus['Pending Schedule']) {
+      return true;
+    }
+  }
+
   getRangeIndex(el: AgentSchedulesResponse) {
     return el?.rangeIndex;
   }
@@ -221,7 +232,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then((result) => {
       if (result && result === el.id) {
-        const model = new DeleteScheduleDateRange();
+        const model = new ScheduleDateRangeBase();
         model.dateFrom = el.ranges[el.rangeIndex].dateFrom;
         model.dateTo = el.ranges[el.rangeIndex].dateTo;
         this.deleteScheduleDateRangeSubscription = this.agentSchedulesService.deleteAgentScheduleRange(el.id, model)
@@ -229,6 +240,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
             this.spinnerService.hide(this.spinner);
             this.getModalPopup(MessagePopUpComponent, 'sm');
             this.setComponentMessages('Success', 'The record has been deleted!');
+            this.loadAgentSchedules();
           }, (error) => {
             this.spinnerService.hide(this.spinner);
             this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
@@ -590,7 +602,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     } else {
       this.selectedGrid.agentScheduleCharts = [];
     }
-   
     this.sortSelectedGridCalendarTimes();
     this.formatTimeValuesInSchedulingGrid();
     this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
@@ -906,6 +917,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         if (this.selectedGrid) {
           this.selectedGrid.dateFrom = updateModel?.dateFrom;
           this.selectedGrid.dateTo = updateModel?.dateTo;
+          this.selectedGrid.status = updateModel?.status;
         }
         el.modifiedBy = updateModel.modifiedBy;
         el.modifiedDate = new Date();
@@ -932,7 +944,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       if (gridData.agentScheduleCharts.length > 0) {
         gridData.agentScheduleCharts.forEach(ele => {
           this.formatEndTime(ele.charts, true);
-        })
+        });
       }
       chartModel.dateFrom = gridData?.dateFrom;
       chartModel.dateTo = gridData?.dateTo;
@@ -987,45 +999,45 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   private formatEndTime(charts: ScheduleChart[], updateChart: boolean) {
     // for (const weekData of scheduleResponse?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts) {
     //   if (weekData.charts.length > 0) {
-        if (!updateChart) {
-          const responseIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '12:00 am');
-          if (responseIndex > -1) {
-            charts[responseIndex].endTime = '11:60 pm';
+    if (!updateChart) {
+      const responseIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '12:00 am');
+      if (responseIndex > -1) {
+        charts[responseIndex].endTime = '11:60 pm';
+      }
+      const twelveHourTime = charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '12' ||
+        x?.startTime?.trim().toLowerCase().slice(0, 2) === '12');
+      if (twelveHourTime.length > 0) {
+        twelveHourTime.map(x => {
+          if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
+            x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
           }
-          const twelveHourTime = charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '12' ||
-            x?.startTime?.trim().toLowerCase().slice(0, 2) === '12');
-          if (twelveHourTime.length > 0) {
-            twelveHourTime.map(x => {
-              if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
-                x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
-              }
-              if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
-                x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
-              }
-              this.sortSelectedGridCalendarTimes();
-              this.formatTimeValuesInSchedulingGrid();
-            });
+          if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
+            x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
-        } else {
-          const requestIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
-          if (requestIndex > -1) {
-            charts[requestIndex].endTime = '12:00 am';
+          this.sortSelectedGridCalendarTimes();
+          this.formatTimeValuesInSchedulingGrid();
+        });
+      }
+    } else {
+      const requestIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
+      if (requestIndex > -1) {
+        charts[requestIndex].endTime = '12:00 am';
+      }
+      const zeroHourTime = charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '00' ||
+        x?.startTime?.trim().toLowerCase().slice(0, 2) === '00');
+      if (zeroHourTime.length > 0) {
+        zeroHourTime.map(x => {
+          if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
+            x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
           }
-          const zeroHourTime = charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '00' ||
-            x?.startTime?.trim().toLowerCase().slice(0, 2) === '00');
-          if (zeroHourTime.length > 0) {
-            zeroHourTime.map(x => {
-              if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
-                x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
-              }
-              if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
-                x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
-              }
-              this.sortSelectedGridCalendarTimes();
-              this.formatTimeValuesInSchedulingGrid();
-            });
+          if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
+            x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
-        // }
+          this.sortSelectedGridCalendarTimes();
+          this.formatTimeValuesInSchedulingGrid();
+        });
+      }
+      // }
       // }
     }
 
