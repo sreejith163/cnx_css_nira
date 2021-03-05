@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
-    public class ImportAgentScheduleRanges
+    public class ImportAgentScheduleRange
     {
         /// Gets or sets the date from.
         /// </summary>
