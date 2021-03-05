@@ -345,8 +345,10 @@ namespace Css.Api.Scheduling.Business
                     importAgentScheduleChart.DateTo = new DateTime(importAgentScheduleChart.DateTo.Year, importAgentScheduleChart.DateTo.Month, importAgentScheduleChart.DateTo.Day, 0, 0, 0);
 
                     var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => x.Status != SchedulingStatus.Rejected &&
-                                                                                   importAgentScheduleChart.DateFrom < x.DateTo && 
-                                                                                   importAgentScheduleChart.DateTo > x.DateFrom);
+                                                                                   ((importAgentScheduleChart.DateFrom < x.DateTo && 
+                                                                                    importAgentScheduleChart.DateTo > x.DateFrom) ||
+                                                                                   (importAgentScheduleChart.DateFrom == x.DateFrom &&
+                                                                                    importAgentScheduleChart.DateTo == x.DateTo)));
 
                     if (!hasConflictingSchedules)
                     {
@@ -417,8 +419,10 @@ namespace Css.Api.Scheduling.Business
                 if (employeeSchedule != null)
                 {
                     var hasConflictingSchedules = employeeSchedule.Ranges.Exists(x => x.Status != SchedulingStatus.Rejected &&
-                                                                                      agentScheduleDetails.DateFrom < x.DateTo &&
-                                                                                      agentScheduleDetails.DateTo > x.DateFrom);
+                                                                                      ((agentScheduleDetails.DateFrom < x.DateTo &&
+                                                                                       agentScheduleDetails.DateTo > x.DateFrom) ||
+                                                                                      (agentScheduleDetails.DateFrom == x.DateFrom &&
+                                                                                       agentScheduleDetails.DateTo == x.DateTo)));
 
                     if (!hasConflictingSchedules)
                     {
@@ -487,7 +491,8 @@ namespace Css.Api.Scheduling.Business
 
             var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => oldDateFrom != x.DateFrom && oldDateTo != x.DateTo &&
                                                                            x.Status != SchedulingStatus.Rejected && 
-                                                                           dateRangeDetails.NewDateFrom < x.DateTo && dateRangeDetails.NewDateTo > x.DateFrom);
+                                                                           ((dateRangeDetails.NewDateFrom < x.DateTo && dateRangeDetails.NewDateTo > x.DateFrom)) ||
+                                                                             dateRangeDetails.NewDateFrom == x.DateFrom && dateRangeDetails.NewDateTo == x.DateTo);
             if (hasConflictingSchedules)
             {
                 return new CSSResponse(HttpStatusCode.Conflict);

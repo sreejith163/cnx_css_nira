@@ -158,7 +158,8 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.ElemMatch(
                     i => i.Ranges, range => range.Status != SchedulingStatus.Rejected &&
-                                            dateRange.DateFrom < range.DateTo && dateRange.DateTo > range.DateFrom) &
+                                            ((dateRange.DateFrom < range.DateTo && dateRange.DateTo > range.DateFrom) ||
+                                            (dateRange.DateFrom == range.DateFrom && dateRange.DateTo == range.DateTo))) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             var count = await FindCountByIdAsync(query);
@@ -386,14 +387,15 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.ElemMatch(
                     i => i.Ranges, range => range.Status == SchedulingStatus.Pending_Schedule &&
-                                            range.DateFrom == dateRange.OldDateFrom && range.DateTo == dateRange.OldDateTo) &
+                                            range.DateFrom == oldDateFrom && range.DateTo == oldDateTo) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
+
             var update = Builders<AgentSchedule>.Update
-                .Set(x => x.Ranges[-1].DateFrom, dateRange.NewDateFrom)
-                .Set(x => x.Ranges[-1].DateTo, dateRange.NewDateTo)
                 .Set(x => x.Ranges[-1].ModifiedBy, dateRange.ModifiedBy)
-                .Set(x => x.Ranges[-1].ModifiedDate, DateTimeOffset.UtcNow);
+                .Set(x => x.Ranges[-1].ModifiedDate, DateTimeOffset.UtcNow)
+                .Set(x => x.Ranges[-1].DateFrom, newDateFrom)
+                .Set(x => x.Ranges[-1].DateTo, newDateTo);
 
             UpdateOneAsync(query, update);
         }
@@ -506,10 +508,10 @@ namespace Css.Api.Scheduling.Repository
                 agentScheduleQueryparameter.DateTo = new DateTime(agentScheduleQueryparameter.DateTo.Value.Year, agentScheduleQueryparameter.DateTo.Value.Month,
                                                                     agentScheduleQueryparameter.DateTo.Value.Day, 0, 0, 0);
 
-                agentSchedules = agentSchedules.Where(x => !x.Ranges.Any(y => agentScheduleQueryparameter.DateFrom == y.DateFrom &&
-                                                                              agentScheduleQueryparameter.DateTo == y.DateTo &&
-                                                                              agentScheduleQueryparameter.DateFrom < y.DateTo &&
-                                                                              agentScheduleQueryparameter.DateTo > y.DateFrom));
+                agentSchedules = agentSchedules.Where(x => !x.Ranges.Any(y => (agentScheduleQueryparameter.DateFrom == y.DateFrom &&
+                                                                              agentScheduleQueryparameter.DateTo == y.DateTo) ||
+                                                                              (agentScheduleQueryparameter.DateFrom < y.DateTo &&
+                                                                              agentScheduleQueryparameter.DateTo > y.DateFrom)));
             }
 
             return agentSchedules;
