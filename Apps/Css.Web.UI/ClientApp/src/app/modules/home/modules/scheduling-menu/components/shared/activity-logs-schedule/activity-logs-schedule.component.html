@@ -138,7 +138,7 @@
             <tbody>
               <tr *ngIf="activityLogsData?.length === 0" class="valid-record">
                 <td colspan="25">
-                  {{ 'No data to show' | translate }}</td>
+                  {{ 'No match records found' | translate }}</td>
               </tr>
               <tr class="jsgrid-row user-select-none"
                *ngFor="let el of activityLogsChart | slice: (currentPage-1) * pageSize : (currentPage) * pageSize; let i = index;">

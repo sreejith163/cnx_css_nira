@@ -49,7 +49,7 @@
               <ngx-spinner [name]="spinner"></ngx-spinner>
               <tr *ngIf="agents?.length === 0" class="valid-record">
                 <td colspan="12">
-                  {{ 'No data to show' | translate }}</td>
+                  {{ 'No match records found' | translate }}</td>
               </tr>
               <tr *ngFor="let x of agents">
                 <td>
