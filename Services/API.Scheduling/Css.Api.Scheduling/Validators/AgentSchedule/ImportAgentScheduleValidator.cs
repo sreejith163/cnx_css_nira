@@ -21,6 +21,7 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
             RuleForEach(x => x.ImportAgentScheduleCharts)
                 .ChildRules(x => x.RuleFor(x => x.EmployeeId).NotEmpty())
                 .ChildRules(x => x.RuleFor(x => x.Ranges).NotEmpty())
+                .ChildRules(x => x.RuleFor(x => x.Ranges).SetValidator(new ImportAgentScheduleRangeValidator<ImportAgentScheduleRange>()))
                 .ChildRules(x =>  x.RuleForEach(x => x.Ranges)
                                         .ChildRules(x => x.RuleFor(x => x.DateFrom).NotEmpty())
                                         .ChildRules(x => x.RuleFor(x => x.DateTo).NotEmpty())
