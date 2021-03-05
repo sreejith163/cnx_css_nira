@@ -20,12 +20,15 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
             RuleFor(x => x.ImportAgentScheduleCharts).NotNull();
             RuleForEach(x => x.ImportAgentScheduleCharts)
                 .ChildRules(x => x.RuleFor(x => x.EmployeeId).NotEmpty())
-                .ChildRules(x => x.RuleFor(x => x.DateFrom).NotEmpty())
-                .ChildRules(x => x.RuleFor(x => x.DateTo).NotEmpty())
-                .ChildRules(x => x.RuleFor(x => x.AgentScheduleCharts)
-                .SetValidator(new ScheduleChartUniqueDaysCollectionValidator()))
-                .ChildRules(x => x.RuleForEach(x => x.AgentScheduleCharts)
-                .SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>()));
+                .ChildRules(x => x.RuleFor(x => x.Ranges).NotEmpty())
+                .ChildRules(x =>  x.RuleForEach(x => x.Ranges)
+                                        .ChildRules(x => x.RuleFor(x => x.DateFrom).NotEmpty())
+                                        .ChildRules(x => x.RuleFor(x => x.DateTo).NotEmpty())
+                                        .ChildRules(x => x.RuleFor(x => x.AgentScheduleCharts)
+                                        .SetValidator(new ScheduleChartUniqueDaysCollectionValidator()))
+                                        .ChildRules(x => x.RuleForEach(x => x.AgentScheduleCharts)
+                                        .SetValidator(new AgentScheduleChartValidator<AgentScheduleChart>()))
+          );
         }
     }
 }

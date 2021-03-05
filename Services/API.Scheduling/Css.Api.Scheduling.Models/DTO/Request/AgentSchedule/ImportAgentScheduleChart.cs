@@ -14,6 +14,9 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// </summary>
         public List<ImportAgentScheduleRanges> Ranges { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportAgentScheduleChart"/> class.
+        /// </summary>
         public ImportAgentScheduleChart()
         {
             Ranges = new List<ImportAgentScheduleRanges>();

@@ -341,37 +341,40 @@ namespace Css.Api.Scheduling.Business
                 var agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
                 if (agentSchedule != null)
                 {
-                    importAgentScheduleChart.DateFrom = new DateTime(importAgentScheduleChart.DateFrom.Year, importAgentScheduleChart.DateFrom.Month, importAgentScheduleChart.DateFrom.Day, 0, 0, 0);
-                    importAgentScheduleChart.DateTo = new DateTime(importAgentScheduleChart.DateTo.Year, importAgentScheduleChart.DateTo.Month, importAgentScheduleChart.DateTo.Day, 0, 0, 0);
-
-                    var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => x.Status != SchedulingStatus.Rejected &&
-                                                                                   ((importAgentScheduleChart.DateFrom < x.DateTo && 
-                                                                                    importAgentScheduleChart.DateTo > x.DateFrom) ||
-                                                                                   (importAgentScheduleChart.DateFrom == x.DateFrom &&
-                                                                                    importAgentScheduleChart.DateTo == x.DateTo)));
-
-                    if (!hasConflictingSchedules)
+                    var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
+                    if (agentAdmin != null)
                     {
-                        var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
-                        if (agentAdmin != null)
+                        foreach (var range in importAgentScheduleChart.Ranges)
                         {
-                            var agentScheduleRange = new AgentScheduleRange
+                            range.DateFrom = new DateTime(range.DateFrom.Year, range.DateFrom.Month, range.DateFrom.Day, 0, 0, 0);
+                            range.DateTo = new DateTime(range.DateTo.Year, range.DateTo.Month, range.DateTo.Day, 0, 0, 0);
+
+                            var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => x.Status != SchedulingStatus.Rejected &&
+                                                                                           ((range.DateFrom < x.DateTo &&
+                                                                                            range.DateTo > x.DateFrom) ||
+                                                                                           (range.DateFrom == x.DateFrom &&
+                                                                                            range.DateTo == x.DateTo)));
+
+                            if (!hasConflictingSchedules)
                             {
-                                AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
-                                DateFrom = importAgentScheduleChart.DateFrom,
-                                DateTo = importAgentScheduleChart.DateTo,
-                                Status = SchedulingStatus.Pending_Schedule,
-                                ScheduleCharts = importAgentScheduleChart.AgentScheduleCharts,
-                                CreatedBy = modifiedUserDetails.ModifiedBy,
-                                CreatedDate = DateTimeOffset.UtcNow
-                            };
+                                var agentScheduleRange = new AgentScheduleRange
+                                {
+                                    AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
+                                    DateFrom = range.DateFrom,
+                                    DateTo = range.DateTo,
+                                    Status = SchedulingStatus.Pending_Schedule,
+                                    ScheduleCharts = range.AgentScheduleCharts,
+                                    CreatedBy = modifiedUserDetails.ModifiedBy,
+                                    CreatedDate = DateTimeOffset.UtcNow
+                                };
 
-                            _agentScheduleRepository.CopyAgentSchedules(employeeIdDetails, agentScheduleRange);
+                                _agentScheduleRepository.CopyAgentSchedules(employeeIdDetails, agentScheduleRange);
 
-                            var activityLog = GetActivityLogForSchedulingChart(agentScheduleRange, agentSchedule.EmployeeId,
-                                                                               agentScheduleDetails.ModifiedBy, agentScheduleDetails.ModifiedUser,
-                                                                               agentScheduleDetails.ActivityOrigin);
-                            activityLogs.Add(activityLog);
+                                var activityLog = GetActivityLogForSchedulingChart(agentScheduleRange, agentSchedule.EmployeeId,
+                                                                                   agentScheduleDetails.ModifiedBy, agentScheduleDetails.ModifiedUser,
+                                                                                   agentScheduleDetails.ActivityOrigin);
+                                activityLogs.Add(activityLog);
+                            }
                         }
                     }
                 }
@@ -689,10 +692,13 @@ namespace Css.Api.Scheduling.Business
                 var details = agentScheduleDetails as ImportAgentSchedule;
                 foreach (var importAgentScheduleChart in details.ImportAgentScheduleCharts)
                 {
-                    foreach (var agentScheduleChart in importAgentScheduleChart.AgentScheduleCharts)
+                    foreach (var range in importAgentScheduleChart.Ranges)
                     {
-                        var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
-                        codes.AddRange(scheduleCodes);
+                        foreach (var agentScheduleChart in range.AgentScheduleCharts)
+                        {
+                            var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                            codes.AddRange(scheduleCodes);
+                        }
                     }
                 }
             }
