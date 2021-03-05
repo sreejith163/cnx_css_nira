@@ -183,6 +183,8 @@ namespace Css.Api.Scheduling.Repository
                 return agentScheduleManagers;
             }
 
+            agentScheduleManagers = agentScheduleManagers.Where(x => x.EmployeeId != 0);
+
             if (agentScheduleManagerChartQueryparameter.EmployeeId.HasValue && agentScheduleManagerChartQueryparameter.EmployeeId != default(int))
             {
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.EmployeeId == agentScheduleManagerChartQueryparameter.EmployeeId);

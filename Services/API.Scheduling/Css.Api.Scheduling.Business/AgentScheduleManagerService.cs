@@ -169,6 +169,7 @@ namespace Css.Api.Scheduling.Business
                 {
                     var agentScheduleManager = new AgentScheduleManager
                     {
+                        EmployeeId = agentAdmin.Ssn,
                         AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
                         Date = agentScheduleManagerChart.Date,
                         Charts = scheduleManager.Charts,
