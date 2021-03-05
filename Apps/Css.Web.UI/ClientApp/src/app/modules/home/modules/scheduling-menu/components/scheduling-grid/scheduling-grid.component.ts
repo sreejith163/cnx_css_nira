@@ -227,6 +227,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       if (result.needRefresh) {
         this.getModalPopup(MessagePopUpComponent, 'sm');
         this.setComponentMessages('Success', 'The record has been updated!');
+        this.loadAgentSchedules();
       } else {
         this.getModalPopup(MessagePopUpComponent, 'sm');
         this.setComponentMessages('Success', 'No changes has been made!');
