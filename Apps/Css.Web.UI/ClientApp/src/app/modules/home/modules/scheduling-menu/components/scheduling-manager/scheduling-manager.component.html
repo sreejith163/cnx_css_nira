@@ -145,7 +145,7 @@
       <tbody>
         <tr *ngIf="managerCharts?.length === 0" class="valid-record">
           <td colspan="25">
-            {{ 'No data to show' | translate }}</td>
+            {{ 'No match records found' | translate }}</td>
         </tr>
         <tr class="jsgrid-row user-select-none" *ngFor="let el of managerCharts; let i = index"
           [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.id, i)">
