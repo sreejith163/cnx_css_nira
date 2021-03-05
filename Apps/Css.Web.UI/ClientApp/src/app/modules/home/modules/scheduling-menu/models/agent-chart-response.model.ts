@@ -5,7 +5,7 @@ export class AgentChartResponse {
     employeeId: number;
     firstName: string;
     lastName: string;
-    activeAgentShedulingGroupId: number;
+    agentSchedulingGroupId: number;
     date: Date;
     charts: ScheduleChart[];
 

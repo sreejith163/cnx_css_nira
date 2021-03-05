@@ -135,10 +135,10 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   private updateScheduleDateRange() {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const model = new UpdateScheduleDateRange();
-    model.oldDateFrom = new Date(this.startDate);
-    model.oldDateTo = new Date(this.endDate);
-    model.newDateFrom = new Date(this.dateFrom);
-    model.newDateTo = new Date(this.dateTo);
+    model.oldDateFrom = this.startDate;
+    model.oldDateTo = this.endDate;
+    model.newDateFrom = this.dateFrom;
+    model.newDateTo = this.dateTo;
     model.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     this.updateScheduleDateRangeSubscription = this.agentSchedulesService.updateAgentScheduleRange(this.agentScheduleId, model)
       .subscribe((response) => {

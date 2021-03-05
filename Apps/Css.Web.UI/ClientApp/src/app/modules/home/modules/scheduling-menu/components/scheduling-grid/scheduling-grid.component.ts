@@ -922,6 +922,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     updateModel.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
     updateModel.status = el?.ranges[el?.rangeIndex]?.status;
     updateModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
+    updateModel.activityOrigin = ActivityOrigin.CSS;
+    updateModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
 
     const scheduleId = this.totalSchedulingGridData.find(x => x.id === el?.id)?.id;
 
@@ -929,15 +931,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       updateAgentSchedule(scheduleId, updateModel)
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
-        if (this.selectedGrid) {
-          this.selectedGrid.dateFrom = updateModel?.dateFrom;
-          this.selectedGrid.dateTo = updateModel?.dateTo;
-          this.selectedGrid.status = updateModel?.status;
-        }
+        this.loadAgentSchedules();
         el.modifiedBy = updateModel.modifiedBy;
         el.modifiedDate = new Date();
       }, (error) => {
         this.spinnerService.hide(this.spinner);
+        this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
+        this.setComponentMessages('Error', error?.message);
+        this.loadAgentSchedules();
         console.log(error);
       });
 

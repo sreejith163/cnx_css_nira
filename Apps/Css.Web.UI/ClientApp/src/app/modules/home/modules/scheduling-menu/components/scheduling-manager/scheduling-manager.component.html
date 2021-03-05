@@ -161,9 +161,9 @@
             *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
             (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event,j,i+1)"
             [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-            <ng-container *ngIf="getIconFromSelectedAgent(el.id,openTime)?.length">
-              <span ngbTooltip="{{ getAgentIconDescription(el.id,openTime) }}">
-                <i class="font-style-normal">{{ getIconFromSelectedAgent(el.id,openTime) }}</i>
+            <ng-container *ngIf="getIconFromSelectedAgent(el.employeeId,openTime)?.length">
+              <span ngbTooltip="{{ getAgentIconDescription(el.employeeId,openTime) }}">
+                <i class="font-style-normal">{{ getIconFromSelectedAgent(el.employeeId,openTime) }}</i>
               </span>
             </ng-container>
           </td>

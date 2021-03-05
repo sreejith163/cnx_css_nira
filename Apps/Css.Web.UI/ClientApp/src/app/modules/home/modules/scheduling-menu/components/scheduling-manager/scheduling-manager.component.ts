@@ -225,18 +225,17 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     return this.selectedRow === index;
   }
 
-  setAgent(id: string, index: number) {
-    this.setIconFilters(id);
-    this.setAgentIconFilters(id);
+  setAgent(employeeId: number, index: number) {
+    this.setIconFilters(employeeId);
+    this.setAgentIconFilters(employeeId);
     this.selectedRow = index;
-    const employeeId = this.managerCharts[index]?.employeeId;
     if (employeeId) {
       this.loadAgentInfo(employeeId);
     }
   }
 
-  setIconFilters(id: string) {
-    const agent = this.schedulingMangerChart.find(x => x.id === id)?.charts[0];
+  setIconFilters(employeeId: number) {
+    const agent = this.schedulingMangerChart.find(x => x.employeeId === +employeeId)?.charts[0];
     if (agent) {
       const schedulingCode = this.schedulingCodes.find(x => x.id === agent?.schedulingCodeId);
       this.iconDescription = schedulingCode?.description;
@@ -248,13 +247,13 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     }
   }
 
-  setAgentIconFilters(id: string) {
+  setAgentIconFilters(employeeId: number) {
     const openTime = this.schedulingCodes?.find(x => x.description.trim().toLowerCase() === 'open time');
     const lunch = this.schedulingCodes?.find(x => x.description.trim().toLowerCase() === 'lunch');
-    const agentScheduleData = this.schedulingMangerChart.find(x => x.id === id);
+    const agentScheduleData = this.schedulingMangerChart.find(x => x.employeeId === +employeeId);
     if (agentScheduleData) {
       if (openTime) {
-        const openTimeIndex = this.schedulingMangerChart.find(x => x.id === id)?.charts
+        const openTimeIndex = this.schedulingMangerChart.find(x => x.employeeId === +employeeId)?.charts
           .findIndex(x => x.schedulingCodeId === openTime?.id);
         if (openTimeIndex > -1) {
           this.openTimeAgentIcon = new AgentIconFilter();
@@ -268,7 +267,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         }
       }
       if (lunch) {
-        const lunchIndex = this.schedulingMangerChart.find(x => x.id === id)?.charts
+        const lunchIndex = this.schedulingMangerChart.find(x => x.employeeId === +employeeId)?.charts
           .findIndex(x => x.schedulingCodeId === lunch?.id);
         if (lunchIndex > -1) {
           this.lunchAgentIcon = new AgentIconFilter();
@@ -377,8 +376,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     this.icon = event.item.element.nativeElement.id;
   }
 
-  getAgentIconDescription(scheduleId: string, openTime: string) {
-    const chart = this.managerCharts.find(x => x.id === scheduleId);
+  getAgentIconDescription(employeeId: number, openTime: string) {
+    const chart = this.managerCharts.find(x => x.employeeId === +employeeId);
 
     if (chart?.charts?.length > 0) {
       const weekTimeData = chart?.charts?.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x.startTime) &&
@@ -392,8 +391,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     return '';
   }
 
-  getIconFromSelectedAgent(scheduleId: string, openTime: string) {
-    const chart = this.managerCharts.find(x => x.id === scheduleId);
+  getIconFromSelectedAgent(employeeId: number, openTime: string) {
+    const chart = this.managerCharts.find(x => x.employeeId === +employeeId);
 
     if (chart?.charts?.length > 0) {
       const weekTimeData = chart?.charts?.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x.startTime) &&
@@ -582,7 +581,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     agentSchedulesQueryParams.pageSize = undefined;
     agentSchedulesQueryParams.searchKeyword = this.searchText ?? '';
     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
-    agentSchedulesQueryParams.fields = 'id,employeeId,firstName,lastName,charts';
+    agentSchedulesQueryParams.fields = undefined;
     agentSchedulesQueryParams.employeeId = undefined;
     agentSchedulesQueryParams.skipPageSize = true;
 
@@ -597,18 +596,18 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     this.getAgentSchedulesSubscription = this.agentScheduleMangerService.getAgentScheduleManagers(queryParams)
       .subscribe((response) => {
         this.managerCharts = response.body;
-        this.managerCharts.map(x => x?.charts.map(chart => {
-          chart.endTime = chart?.endTime.trim().toLowerCase();
-          chart.startTime = chart?.startTime.trim().toLowerCase();
+        this.managerCharts.map(x => x?.charts?.map(chart => {
+          chart.endTime = chart?.endTime?.trim().toLowerCase();
+          chart.startTime = chart?.startTime?.trim().toLowerCase();
         }));
         this.formatTime(false);
         this.schedulingMangerChart = JSON.parse(JSON.stringify(this.managerCharts));
-        const agentScheduleId = this.managerCharts[0]?.id;
-        const agentScheduleChart = this.managerCharts[0]?.charts[0];
+        const employeeId = this.managerCharts[0]?.employeeId;
+        const agentScheduleChart = this.managerCharts[0]?.charts?.length > 0 ? this.managerCharts[0].charts[0] : undefined;
         if (agentScheduleChart) {
-          this.setIconFilters(agentScheduleId);
+          this.setIconFilters(employeeId);
         }
-        this.setAgent(agentScheduleId, 0);
+        this.setAgent(employeeId, 0);
         this.spinnerService.hide(this.spinner);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
@@ -620,7 +619,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
 
   private formatTime(updateChart: boolean) {
     for (const item of this.managerCharts) {
-      if (!updateChart) {
+      if (!updateChart && item?.charts?.length > 0) {
         const index = item?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '00:00 am' ||
           x.endTime.trim().toLowerCase() === '12:00 am');
         if (index > -1) {
@@ -637,7 +636,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         if (item.charts.length === 0) {
           item.charts = [];
         }
-      } else {
+      } else if (updateChart && item.charts.length > 0) {
         const index = item?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
         if (index > -1) {
           item.charts[index].endTime = '12:00 am';
