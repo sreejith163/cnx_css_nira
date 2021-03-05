@@ -196,7 +196,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
           this.agents.splice(index, 1);
         }
         this.employeeAgentSchedulingGroupId === this.agentSchedulingGroupId ?
-        this.totalAgents = +headerPaginationValues.totalCount - 1 : this.totalAgents = +headerPaginationValues.totalCount;
+          this.totalAgents = +headerPaginationValues.totalCount - 1 : this.totalAgents = +headerPaginationValues.totalCount;
         this.showSelectedEmployees();
         this.spinnerService.hide(this.spinner);
       }, (error) => {
@@ -220,7 +220,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
           this.agents.splice(index, 1);
         }
         this.employeeAgentSchedulingGroupId === this.agentSchedulingGroupId ?
-        this.totalAgents = +headerPaginationValues.totalCount - 1 : this.totalAgents = +headerPaginationValues.totalCount;
+          this.totalAgents = +headerPaginationValues.totalCount - 1 : this.totalAgents = +headerPaginationValues.totalCount;
         this.showSelectedEmployees();
         this.spinnerService.hide(this.spinner);
       }, (error) => {
@@ -299,9 +299,9 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     copyData.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
     copyData.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     copyData.employeeIds = this.masterSelected ? [] : copiedAgents;
-  
+
     this.copyAgentScheduleManagerChartSubscription = this.agentScheduleManagerService
-    .copyAgentScheduleManagerChart(this.agentScheduleId, copyData)
+      .copyAgentScheduleManagerChart(this.employeeId, copyData)
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
         this.activeModal.close({ needRefresh: true });
@@ -309,10 +309,10 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
         this.spinnerService.hide(this.spinner);
         console.log(error);
       });
-  
+
     this.subscriptions.push(this.copyAgentScheduleManagerChartSubscription);
   }
-  
+
 
 }
 

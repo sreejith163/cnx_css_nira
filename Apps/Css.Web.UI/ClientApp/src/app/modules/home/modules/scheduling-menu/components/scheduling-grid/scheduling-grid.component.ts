@@ -163,14 +163,23 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   hasStatusDisabled(el: AgentSchedulesResponse) {
-    if (el?.ranges.length <= 1) {
-      if (el?.ranges.length === 1 && el?.ranges[el?.rangeIndex].scheduleCharts.length > 0) {
-        return false;
-      }
-      return true;
-    } else if (el.ranges.length === 1 && el.ranges[el.rangeIndex].status === SchedulingStatus['Pending Schedule']) {
+    if (el?.ranges.length === 0) {
       return true;
     }
+    if (el?.ranges.length === 1) {
+      if (el.ranges[el.rangeIndex].status === SchedulingStatus['Pending Schedule'] &&
+        el?.ranges[el?.rangeIndex].scheduleCharts.length === 0) {
+        return true;
+      } else if (el.ranges[el.rangeIndex].status === SchedulingStatus['Pending Schedule'] &&
+        el?.ranges[el?.rangeIndex].scheduleCharts.length > 0) {
+        return false;
+      } else if (el.ranges[el.rangeIndex].status === SchedulingStatus.Approved) {
+        return false;
+      }
+    }
+
+    return false;
+
   }
 
   getRangeIndex(el: AgentSchedulesResponse) {
@@ -180,11 +189,12 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   addDateRange(el: AgentSchedulesResponse) {
     this.getModalPopup(DateRangePopUpComponent, 'sm');
     this.modalRef.componentInstance.operation = ComponentOperation.Add;
-    this.modalRef.result.then((result) => {
+    this.modalRef.componentInstance.agentScheduleId = el.id;
+    this.modalRef.result.then((result: ScheduleDateRangeBase) => {
       if (result) {
         const range = new AgentScheduleRange();
-        range.dateFrom = result?.fromDate;
-        range.dateTo = result?.toDate;
+        range.dateFrom = result?.dateFrom;
+        range.dateTo = result?.dateTo;
         range.status = SchedulingStatus['Pending Schedule'];
         range.scheduleCharts = [];
         el.ranges.push(range);
@@ -259,10 +269,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (rangeIndex > -1) {
       el.rangeIndex = rangeIndex;
     }
-
-    const item = this.totalSchedulingGridData.find(x => x.id === el.id);
-    this.setSelectedGrid(item);
-
+    if (this.selectedGrid) {
+      const item = this.totalSchedulingGridData.find(x => x.id === el.id);
+      this.setSelectedGrid(item);
+    }
   }
 
   canShowActivityLog() {
@@ -858,6 +868,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         this.totalSchedulingGridData.map(x => {
           x.rangeIndex = 0;
         });
+        if (this.selectedGrid) {
+          this.setSelectedGrid(this.totalSchedulingGridData.find(x => x.id === this.selectedGrid.id));
+        }
         let headerPaginationValues = new HeaderPagination();
         headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
         this.totalSchedulingRecord = headerPaginationValues.totalCount;
@@ -962,6 +975,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           this.setComponentMessages('Success', 'The record has been updated!');
           this.modalRef.result.then(() => {
             this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
+            this.loadAgentSchedules();
             // this.loadAgentSchedule(agentScheduleId);
           });
         }, (error) => {

@@ -248,7 +248,7 @@
                     <div class="row padding-10">
                       <div class="col-md-12 padding-12 row">
                         <div class="col-s-2 m-b-5">
-                          <button [disabled]="!selectedGrid.dateFrom" class="btn btn-success" id="btn_copy_schedule"
+                          <button [disabled]="!selectedGrid.dateFrom || selectedGrid.agentScheduleCharts.length === 0" class="btn btn-success" id="btn_copy_schedule"
                             (click)="openCopySchedule(i)">
                             <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
                           </button>

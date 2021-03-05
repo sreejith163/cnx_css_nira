@@ -71,17 +71,17 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
-      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day + 1, 0, 0, 0, 0);
+      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
       this.dateFrom = newDate;
     } else if (this.fromDate && !this.toDate && date && !date.before(this.fromDate)) {
       this.toDate = date;
-      const newDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day + 1, 0, 0, 0, 0);
+      const newDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day, 0, 0, 0, 0);
       this.dateTo = newDate;
     } else {
       this.toDate = null;
       this.dateTo = null;
       this.fromDate = date;
-      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day + 1, 0, 0, 0, 0);
+      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
       this.dateFrom = newDate;
     }
   }
