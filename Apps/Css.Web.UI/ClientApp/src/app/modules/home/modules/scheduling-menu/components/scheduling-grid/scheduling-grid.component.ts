@@ -166,7 +166,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (el?.ranges.length === 0) {
       return true;
     }
-    if (el?.ranges.length === 1) {
+    if (el?.ranges.length > 0) {
       if (el.ranges[el.rangeIndex].status === SchedulingStatus['Pending Schedule'] &&
         el?.ranges[el?.rangeIndex].scheduleCharts.length === 0) {
         return true;
@@ -201,11 +201,12 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         el.rangeIndex = el.ranges.length - 1;
         el.modifiedBy = this.authService.getLoggedUserInfo().displayName;
         el.modifiedDate = new Date();
-        if (this.selectedGrid) {
-          this.selectedGrid.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
-          this.selectedGrid.dateTo = el?.ranges[el?.rangeIndex]?.dateFrom;
-          this.selectedGrid.status = el?.ranges[el?.rangeIndex]?.status;
-        }
+        this.onDateRangeChange(el.rangeIndex, el);
+        // if (this.selectedGrid) {
+        //   this.selectedGrid.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
+        //   this.selectedGrid.dateTo = el?.ranges[el?.rangeIndex]?.dateFrom;
+        //   this.selectedGrid.status = el?.ranges[el?.rangeIndex]?.status;
+        // }
         this.getModalPopup(MessagePopUpComponent, 'sm');
         this.setComponentMessages('Success', 'The record has been added!');
       } else {
@@ -263,8 +264,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDateRangeChange(e: any, el: AgentSchedulesResponse) {
-    const rangeIndex = +e.target.value;
+  onDateRangeChange(index: any, el: AgentSchedulesResponse) {
+    const rangeIndex = +index;
     // rangeIndex > -1 ?  el.rangeIndex = rangeIndex :  el.rangeIndex = undefined;
     if (rangeIndex > -1) {
       el.rangeIndex = rangeIndex;
