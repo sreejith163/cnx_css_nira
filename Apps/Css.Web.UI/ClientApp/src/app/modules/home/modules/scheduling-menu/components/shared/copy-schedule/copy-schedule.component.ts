@@ -156,7 +156,8 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     const agentSchedulesQueryParams = new AgentSchedulesQueryParams();
     agentSchedulesQueryParams.agentSchedulingGroupId = this.agentSchedulingGroupId;
     agentSchedulesQueryParams.excludeConflictSchedule = true;
-    agentSchedulesQueryParams.fromDate = this.getDateInStringFormat(this.fromDate);
+    agentSchedulesQueryParams.dateFrom = this.getDateInStringFormat(this.dateFrom);
+    agentSchedulesQueryParams.dateTo = this.getDateInStringFormat(this.dateTo);
     agentSchedulesQueryParams.pageNumber = this.currentPage;
     agentSchedulesQueryParams.pageSize = this.pageSize;
     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;

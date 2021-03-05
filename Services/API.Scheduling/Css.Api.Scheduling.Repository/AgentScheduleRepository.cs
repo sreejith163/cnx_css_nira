@@ -508,7 +508,7 @@ namespace Css.Api.Scheduling.Repository
                 agentScheduleQueryparameter.DateTo = new DateTime(agentScheduleQueryparameter.DateTo.Value.Year, agentScheduleQueryparameter.DateTo.Value.Month,
                                                                     agentScheduleQueryparameter.DateTo.Value.Day, 0, 0, 0);
 
-                agentSchedules = agentSchedules.Where(x => x.Ranges.Any(y => ((agentScheduleQueryparameter.DateFrom < y.DateTo &&
+                agentSchedules = agentSchedules.Where(x => !x.Ranges.Any(y => ((agentScheduleQueryparameter.DateFrom < y.DateTo &&
                                                                                agentScheduleQueryparameter.DateTo > y.DateFrom) ||
                                                                               (agentScheduleQueryparameter.DateFrom == y.DateFrom &&
                                                                                agentScheduleQueryparameter.DateTo == y.DateTo))));
