@@ -488,13 +488,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.modalRef.componentInstance.startDate = new Date(this.startDate);
   }
 
-  openCopySchedule(index: number) {
-    const agentScheduleId = this.totalSchedulingGridData[index]?.id;
-    const employeeId = this.totalSchedulingGridData[index]?.employeeId;
+  openCopySchedule(el: AgentSchedulesResponse) {
     this.getModalPopup(CopyScheduleComponent, 'lg');
-    this.modalRef.componentInstance.agentSchedulingGroupId = this.schedulingGridData?.agentSchedulingGroupId;
-    this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
-    this.modalRef.componentInstance.employeeId = employeeId;
+    this.modalRef.componentInstance.agentSchedulingGroupId = el?.ranges[el?.rangeIndex]?.agentSchedulingGroupId;
+    this.modalRef.componentInstance.agentScheduleId = el?.id;
+    this.modalRef.componentInstance.employeeId = el?.employeeId;
+    this.modalRef.componentInstance.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
+    this.modalRef.componentInstance.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
     this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.Scheduling;
     this.modalRef.componentInstance.fromDate = new Date(this.startDate);
 

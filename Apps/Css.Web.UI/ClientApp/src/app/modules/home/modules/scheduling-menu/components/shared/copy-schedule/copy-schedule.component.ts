@@ -52,6 +52,8 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   @Input() agentScheduleId: string;
   @Input() agentScheduleType: AgentScheduleType;
   @Input() fromDate: Date;
+  @Input() dateFrom: Date;
+  @Input() dateTo: Date;
 
   constructor(
     public translate: TranslateService,
@@ -277,6 +279,8 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     copyData.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
     copyData.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     copyData.employeeIds = this.masterSelected ? [] : copiedAgents;
+    copyData.dateFrom = this.dateFrom;
+    copyData.dateTo = this.dateTo;
 
     this.copyAgentScheduleChartSubscription = this.agentSchedulesService.copyAgentScheduleChart(this.agentScheduleId, copyData)
       .subscribe(() => {
