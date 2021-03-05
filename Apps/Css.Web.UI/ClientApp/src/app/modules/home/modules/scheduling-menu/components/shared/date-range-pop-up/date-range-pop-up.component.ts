@@ -164,7 +164,9 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
         this.activeModal.close({ needRefresh: true });
       }, (error) => {
         this.spinnerService.hide(this.spinner);
-        this.getModalPopup(ErrorWarningPopUpComponent, 'sm', error.error);
+        if (error.status === 409) {
+          this.getModalPopup(ErrorWarningPopUpComponent, 'sm', Constants.DateRangeConflictMessage);
+        }
         console.log(error);
       });
 
