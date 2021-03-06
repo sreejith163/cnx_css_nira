@@ -133,7 +133,7 @@
             <param name="agentScheduleManagerChartQueryparameter">The agent schedule manager chart queryparameter.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.UpdateAgentScheduleMangerChart(Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager.UpdateAgentScheduleManagerChart)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.UpdateAgentScheduleMangerChart(Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager.UpdateAgentScheduleManager)">
             <summary>
             Updates the agent schedule manger chart.
             </summary>
@@ -497,26 +497,26 @@
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator"/> class.
             </summary>
         </member>
-        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerValidator`1">
+        <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerChartValidator`1">
             <summary>
             custom validator for agent schedule manager
             </summary>
             <typeparam name="T"></typeparam>
             <seealso cref="T:FluentValidation.Validators.PropertyValidator" />
         </member>
-        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerValidator`1.#ctor">
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerChartValidator`1.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerValidator`1" /> class.
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerChartValidator`1" /> class.
             </summary>
         </member>
-        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerValidator`1.Validate(FluentValidation.Validators.PropertyValidatorContext)">
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerChartValidator`1.Validate(FluentValidation.Validators.PropertyValidatorContext)">
             <summary>
             </summary>
             <param name="context"></param>
             <returns></returns>
             <inheritdoc />
         </member>
-        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerValidator`1.IsValid(FluentValidation.Validators.PropertyValidatorContext)">
+        <member name="M:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerChartValidator`1.IsValid(FluentValidation.Validators.PropertyValidatorContext)">
             <summary>
             Returns true if ... is valid.
             </summary>
@@ -585,7 +585,7 @@
         </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.ImportAgentScheduleRangeValidator`1">
             <summary>
-            Custom validator for agent chart time range
+            Custom validator for import agent schedule range
             </summary>
             <typeparam name="T"></typeparam>
             <seealso cref="T:FluentValidation.Validators.PropertyValidator" />
@@ -671,14 +671,42 @@
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentSchedule.UpdateAgentScheduleValidator"/> class.
             </summary>
         </member>
-        <member name="T:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerChartValidator">
+        <member name="T:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerChartValidator`1">
+            <summary>
+            Custom validator for agent chart time range
+            </summary>
+            <typeparam name="T"></typeparam>
+            <seealso cref="T:FluentValidation.Validators.PropertyValidator" />
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerChartValidator`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerChartValidator`1" /> class.
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerChartValidator`1.Validate(FluentValidation.Validators.PropertyValidatorContext)">
+            <summary>
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+            <inheritdoc />
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerChartValidator`1.IsValid(FluentValidation.Validators.PropertyValidatorContext)">
+            <summary>
+            Returns true if ... is valid.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>
+              <c>true</c> if the specified context is valid; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerValidator">
             <summary>
             Validator for handling the validation of update agent schedule chart
             </summary>
         </member>
-        <member name="M:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerChartValidator.#ctor">
+        <member name="M:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerValidator.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerChartValidator"/> class.
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.AgentScheduleManager.UpdateAgentScheduleManagerValidator"/> class.
             </summary>
         </member>
     </members>

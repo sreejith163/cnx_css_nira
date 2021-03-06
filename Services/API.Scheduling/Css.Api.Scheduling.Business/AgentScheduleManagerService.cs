@@ -140,11 +140,11 @@ namespace Css.Api.Scheduling.Business
         /// <summary>
         /// Updates the agent schedule manger chart.
         /// </summary>
-        /// <param name="agentScheduleManagerChart">The agent schedule manager chart.</param>
+        /// <param name="agentScheduleDetails">The agent schedule manager details.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> UpdateAgentScheduleMangerChart(UpdateAgentScheduleManagerChart agentScheduleManagerChart)
+        public async Task<CSSResponse> UpdateAgentScheduleMangerChart(UpdateAgentScheduleManager agentScheduleDetails)
         {
-            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleManagerChart);
+            var hasValidCodes = await HasValidSchedulingCodes(agentScheduleDetails);
             if (!hasValidCodes)
             {
                 return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
@@ -152,43 +152,46 @@ namespace Css.Api.Scheduling.Business
 
             var activityLogs = new List<ActivityLog>();
 
-            agentScheduleManagerChart.Date = new DateTime(agentScheduleManagerChart.Date.Year, agentScheduleManagerChart.Date.Month,
-                                                          agentScheduleManagerChart.Date.Day, 0, 0, 0);
-
-            foreach (var scheduleManager in agentScheduleManagerChart.AgentScheduleManagers)
+            foreach (var scheduleManager in agentScheduleDetails.ScheduleManagers)
             {
                 var employeeIdDetails = new EmployeeIdDetails { Id = scheduleManager.EmployeeId };
-                var dateDetails = new DateDetails { Date = agentScheduleManagerChart.Date };
-                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleManagerChart.ModifiedBy };
 
-                if (agentScheduleManagerChart.IsImport)
+                foreach (var agentScheduleManagerChart in scheduleManager.AgentScheduleManagerCharts)
                 {
-                    var scheduleExists = await _agentScheduleManagerRepository.IsAgentScheduleManagerChartExists(employeeIdDetails, dateDetails);
-                    if (scheduleExists)
+                    var dateDetails = new DateDetails { Date = agentScheduleManagerChart.Date };
+                    var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
+
+                    agentScheduleManagerChart.Date = new DateTime(agentScheduleManagerChart.Date.Year, agentScheduleManagerChart.Date.Month,
+                                                                  agentScheduleManagerChart.Date.Day, 0, 0, 0);
+                    if (agentScheduleDetails.IsImport)
                     {
-                        continue;
+                        var scheduleExists = await _agentScheduleManagerRepository.IsAgentScheduleManagerChartExists(employeeIdDetails, dateDetails);
+                        if (scheduleExists)
+                        {
+                            continue;
+                        }
                     }
-                }
 
-                var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
-                if (agentAdmin != null)
-                {
-                    var agentScheduleManager = new AgentScheduleManager
+                    var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
+                    if (agentAdmin != null)
                     {
-                        EmployeeId = agentAdmin.Ssn,
-                        AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
-                        Date = agentScheduleManagerChart.Date,
-                        Charts = scheduleManager.Charts,
-                        CreatedBy = modifiedUserDetails.ModifiedBy,
-                        CreatedDate = DateTimeOffset.UtcNow
-                    };
+                        var agentScheduleManager = new AgentScheduleManager
+                        {
+                            EmployeeId = agentAdmin.Ssn,
+                            AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
+                            Date = agentScheduleManagerChart.Date,
+                            Charts = agentScheduleManagerChart.Charts,
+                            CreatedBy = modifiedUserDetails.ModifiedBy,
+                            CreatedDate = DateTimeOffset.UtcNow
+                        };
 
-                    _agentScheduleManagerRepository.UpdateAgentScheduleMangerChart(employeeIdDetails, agentScheduleManager);
+                        _agentScheduleManagerRepository.UpdateAgentScheduleMangerChart(employeeIdDetails, agentScheduleManager);
 
-                    var activityLog = GetActivityLogForSchedulingManager(agentScheduleManager, employeeIdDetails.Id,
-                                                                         agentScheduleManagerChart.ModifiedBy, agentScheduleManagerChart.ModifiedUser,
-                                                                         agentScheduleManagerChart.ActivityOrigin);
-                    activityLogs.Add(activityLog);
+                        var activityLog = GetActivityLogForSchedulingManager(agentScheduleManager, employeeIdDetails.Id,
+                                                                             agentScheduleDetails.ModifiedBy, agentScheduleDetails.ModifiedUser,
+                                                                             agentScheduleDetails.ActivityOrigin);
+                        activityLogs.Add(activityLog);
+                    }
                 }
             }
 
@@ -288,21 +291,22 @@ namespace Css.Api.Scheduling.Business
         }
 
         /// <summary>
-        /// Determines whether [has valid scheduling codes] [the specified agent schedule details].
+        /// Determines whether [has valid scheduling codes] [the specified manager].
         /// </summary>
-        /// <param name="managerChart">The manager chart.</param>
-        /// <returns>
-        ///   <c>true</c> if [has valid scheduling codes] [the specified agent schedule details]; otherwise, <c>false</c>.
-        /// </returns>
-        private async Task<bool> HasValidSchedulingCodes(UpdateAgentScheduleManagerChart managerChart)
+        /// <param name="manager">The manager.</param>
+        /// <returns></returns>
+        private async Task<bool> HasValidSchedulingCodes(UpdateAgentScheduleManager manager)
         {
             bool isValid = true;
             List<int> codes = new List<int>();
 
-            foreach (var agentScheduleManager in managerChart.AgentScheduleManagers)
+            foreach (var agentScheduleManager in manager.ScheduleManagers)
             {
-                var scheduleManagerCodes = agentScheduleManager.Charts.Select(x => x.SchedulingCodeId).ToList().ToList();
-                codes.AddRange(scheduleManagerCodes);
+                foreach (var agentScheduleManagerChart in agentScheduleManager.AgentScheduleManagerCharts)
+                {
+                    var scheduleManagerCodes = agentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList().ToList();
+                    codes.AddRange(scheduleManagerCodes);
+                }
             }
 
             codes = codes.Distinct().ToList();
