@@ -29,6 +29,7 @@ import { ImportAgentScheduleRanges } from '../../../models/import-agent-schedule
 import { ScheduleDateRangeBase } from '../../../models/schedule-date-range-base.model';
 import { DropListRef } from '@angular/cdk/drag-drop';
 import { AgentScheduleManagersQueryParams } from '../../../models/agent-schedule-mangers-query-params.model';
+import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manager-chart.model';
 
 @Component({
   selector: 'app-import-schedule',
@@ -154,18 +155,20 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           }
         }
       } else {
-        const chartData = item.charts;
-        chartData.map(x => {
-          if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
-            x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
-          }
-          if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
-            x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
-          }
-          if (x?.endTime === '11:60 pm') {
-            x.endTime = '12:00 am';
-          }
-        });
+        for (const el of item.agentScheduleManagerCharts) {
+          const chartData = el.charts;
+          chartData.map(x => {
+            if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
+              x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+            }
+            if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
+              x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+            }
+            if (x?.endTime === '11:60 pm') {
+              x.endTime = '12:00 am';
+            }
+          });
+        }
       }
     }
   }
@@ -265,26 +268,15 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private validateManagerInputRecord(importRecord: AgentShceduleMangerData[]) {
     if (importRecord.length > 0) {
       for (const item of importRecord) {
-        const employees = this.jsonData.filter(x => +x.EmployeeId === +item.employeeId);
-        if (!employees.every(x => x?.Date.trim() === employees[0]?.Date.trim())) {
-          return true;
-        }
-
-        const chartData = item.charts;
-        if (chartData?.length > 0) {
-          if (this.validateChart(chartData)) {
+        for (const chartData of item.agentScheduleManagerCharts) {
+          if (!chartData.date) {
             return true;
           }
-        }
-
-        const date = employees[0]?.Date;
-        const year = date?.split('/')[2];
-        const day = date?.split('/')[1]?.length === 1 ? '0' + date?.split('/')[1] : date?.split('/')[1];
-        const month = date?.split('/')[0]?.length === 1 ? '0' + date?.split('/')[0] : date?.split('/')[0];
-
-        const isValidDate = Date.parse(`${day}/${month}/${year}`);
-        if (isNaN(isValidDate)) {
-          return false;
+          if (chartData?.charts.length > 0) {
+            if (this.validateChart(chartData.charts)) {
+              return true;
+            }
+          }
         }
       }
     } else {
@@ -365,8 +357,8 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private updateManagerChart(scheduleResponse: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[], hasMismatch?: boolean) {
     const model = this.getImportAgentManagerChartModel(scheduleResponse, schedulingCodes);
-    if (!this.validateManagerInputRecord(model?.agentScheduleManagers)) {
-      this.formatTimeFormat(model?.agentScheduleManagers);
+    if (!this.validateManagerInputRecord(model?.scheduleManagers)) {
+      this.formatTimeFormat(model?.scheduleManagers);
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
       this.updateManagerChartSubscription = this.agentScheduleManagerService.updateScheduleManagerChart(model)
@@ -508,22 +500,36 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     chartModel.isImport = true;
-    chartModel.date = this.getFormattedDate(this.jsonData[0].Date);
-
     for (const employee of schedules) {
       const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);
-      const importData = new AgentShceduleMangerData();
-      const chartArray = new Array<ScheduleChart>();
-      importData.employeeId = employee.employeeId;
+      const dateArray = [];
       employeeDetails.forEach(ele => {
-        const data = schedulingCodes.find(x => x.description.trim().toLowerCase() === ele.ActivityCode.trim().toLowerCase());
-        if (data) {
-          const chart = new ScheduleChart(ele.StartTime, ele.EndTime, data.id);
-          chartArray.push(chart);
+        if (!dateArray.includes(ele.Date)) {
+          dateArray.push(ele.Date);
         }
       });
-      importData.charts = chartArray;
-      chartModel.agentScheduleManagers.push(importData);
+      const importData = new AgentShceduleMangerData();
+      importData.employeeId = employee.employeeId;
+      for (const ele of employeeDetails) {
+        for (const date of dateArray) {
+          if (ele.Date === date) {
+            const agentScheduleManagerChart = new AgentScheduleManagerChart();
+            const dateData = new Date(date);
+            agentScheduleManagerChart.date = this.getFormattedDate(dateData);
+            const data = schedulingCodes.find(x => x.description.trim().toLowerCase() === ele.ActivityCode.trim().toLowerCase());
+            if (data) {
+              const chart = new ScheduleChart(ele.StartTime, ele.EndTime, data.id);
+              agentScheduleManagerChart.charts.push(chart);
+            }
+            if (agentScheduleManagerChart.charts.length > 0) {
+              importData.agentScheduleManagerCharts.push(agentScheduleManagerChart);
+            }
+          }
+        }
+      }
+      if (importData.agentScheduleManagerCharts.length > 0) {
+        chartModel.scheduleManagers.push(importData);
+      }
     }
 
     return chartModel;
