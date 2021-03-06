@@ -25,6 +25,9 @@ import { ManagerExcelData } from '../../../models/manager-excel-data.model';
 import { ActivityOrigin } from '../../../enums/activity-origin.enum';
 import { AgentScheduleManagersService } from '../../../services/agent-schedule-managers.service';
 import { DatePipe } from '@angular/common';
+import { ImportAgentScheduleRanges } from '../../../models/import-agent-schedule-ranges.model';
+import { ScheduleDateRangeBase } from '../../../models/schedule-date-range-base.model';
+import { DropListRef } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-import-schedule',
@@ -133,18 +136,20 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private formatTimeFormat(importRecord: any[]) {
     for (const item of importRecord) {
       if (this.agentScheduleType === AgentScheduleType.Scheduling) {
-        for (const record of item.agentScheduleCharts) {
-          record.charts.map(x => {
-            if (x?.endTime?.trim()?.toLowerCase()?.slice(0, 2) === '00') {
-              x.endTime = '12' + x?.endTime?.trim()?.toLowerCase()?.slice(2, 8);
-            }
-            if (x?.startTime?.trim()?.toLowerCase()?.slice(0, 2) === '00') {
-              x.startTime = '12' + x?.startTime?.trim()?.toLowerCase()?.slice(2, 8);
-            }
-            if (x?.endTime === '11:60 pm') {
-              x.endTime = '12:00 am';
-            }
-          });
+        for (const record of item.ranges) {
+          for (const chartItem of record.agentScheduleCharts) {
+            chartItem.charts.map(x => {
+              if (x?.endTime?.trim()?.toLowerCase()?.slice(0, 2) === '00') {
+                x.endTime = '12' + x?.endTime?.trim()?.toLowerCase()?.slice(2, 8);
+              }
+              if (x?.startTime?.trim()?.toLowerCase()?.slice(0, 2) === '00') {
+                x.startTime = '12' + x?.startTime?.trim()?.toLowerCase()?.slice(2, 8);
+              }
+              if (x?.endTime === '11:60 pm') {
+                x.endTime = '12:00 am';
+              }
+            });
+          }
         }
       } else {
         const chartData = item.charts;
@@ -206,48 +211,77 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     };
   }
 
-  private validateInputRecord(importRecord: any[]) {
+  private validateInputRecord(importRecord: ImportScheduleData[]) {
     if (importRecord.length > 0) {
       for (const item of importRecord) {
         if (this.agentScheduleType === AgentScheduleType.Scheduling) {
-          if (!item.dateFrom || !item.dateTo) {
-            return true;
-          }
-          if (Date.parse(item?.dateFrom) === Date.parse(item?.dateTo)) {
-            return true;
-          } else {
-            if (Date.parse(item?.dateFrom) > Date.parse(item?.dateTo)) {
+          for (const x of item.ranges) {
+            const fromDate = this.getDateInStringFormat(x?.dateFrom);
+            const toDate = this.getDateInStringFormat(x?.dateTo);
+            if (!fromDate || !toDate) {
               return true;
             }
-          }
-          for (const x of item.agentScheduleCharts) {
-            if (x?.charts?.length > 0) {
-              if (this.validateChart(x.charts)) {
+            if (fromDate === toDate) {
+              return true;
+            } else {
+              if (Date.parse(fromDate) > Date.parse(toDate)) {
+                return true;
+              }
+            }
+            if (item.ranges.filter(y =>  Date.parse(this.getDateInStringFormat(y.dateFrom)) === Date.parse(fromDate) &&
+            Date.parse(this.getDateInStringFormat(y.dateTo)) === Date.parse(toDate)).length > 1) {
+              return true;
+            }
+            if (item.ranges.find(y =>  Date.parse(this.getDateInStringFormat(y.dateFrom)) > Date.parse(fromDate) &&
+            Date.parse(this.getDateInStringFormat(y.dateTo)) < Date.parse(toDate))) {
+              return true;
+            }
+            if (item.ranges.find(y =>  Date.parse(this.getDateInStringFormat(y.dateFrom)) <= Date.parse(fromDate) &&
+            Date.parse(this.getDateInStringFormat(y.dateTo)) < Date.parse(toDate) &&
+             Date.parse(this.getDateInStringFormat(y.dateTo)) >= Date.parse(fromDate))) {
+              return true;
+            }
+            if (item.ranges.find(y => Date.parse(this.getDateInStringFormat(y.dateFrom)) > Date.parse(fromDate) &&
+              Date.parse(this.getDateInStringFormat(y.dateTo)) >= Date.parse(toDate) &&
+              Date.parse(this.getDateInStringFormat(y.dateFrom)) <= Date.parse(toDate))) {
+              return true;
+            }
+            const chartItem = x.agentScheduleCharts[0];
+            if (chartItem?.charts?.length > 0) {
+              if (this.validateChart(chartItem.charts)) {
                 return true;
               }
             }
           }
-        } else if (this.agentScheduleType === AgentScheduleType.SchedulingManager) {
-          if (!this.jsonData.every(x => x?.Date.trim() === this.jsonData[0]?.Date.trim())) {
+        }
+      }
+    } else {
+      return true;
+    }
+  }
+
+  private validateManagerInputRecord(importRecord: AgentShceduleMangerData[]) {
+    if (importRecord.length > 0) {
+      for (const item of importRecord) {
+        if (!this.jsonData.every(x => x?.Date.trim() === this.jsonData[0]?.Date.trim())) {
+          return true;
+        }
+
+        const chartData = item.charts;
+        if (chartData?.length > 0) {
+          if (this.validateChart(chartData)) {
             return true;
           }
+        }
 
-          const chartData = item.charts;
-          if (chartData?.length > 0) {
-            if (this.validateChart(chartData)) {
-              return true;
-            }
-          }
+        const date = this.jsonData[0]?.Date;
+        const year = date?.split('/')[2];
+        const day = date?.split('/')[1]?.length === 1 ? '0' + date?.split('/')[1] : date?.split('/')[1];
+        const month = date?.split('/')[0]?.length === 1 ? '0' + date?.split('/')[0] : date?.split('/')[0];
 
-          const date = this.jsonData[0]?.Date;
-          const year = date?.split('/')[2];
-          const day = date?.split('/')[1]?.length === 1 ? '0' + date?.split('/')[1] : date?.split('/')[1];
-          const month = date?.split('/')[0]?.length === 1 ? '0' + date?.split('/')[0] : date?.split('/')[0];
-
-          const isValidDate = Date.parse(`${day}/${month}/${year}`);
-          if (isNaN(isValidDate)) {
-            return false;
-          }
+        const isValidDate = Date.parse(`${day}/${month}/${year}`);
+        if (isNaN(isValidDate)) {
+          return false;
         }
       }
     } else {
@@ -328,7 +362,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private updateManagerChart(scheduleResponse: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[], hasMismatch?: boolean) {
     const model = this.getImportAgentManagerChartModel(scheduleResponse, schedulingCodes);
-    if (!this.validateInputRecord(model?.agentScheduleManagers)) {
+    if (!this.validateManagerInputRecord(model?.agentScheduleManagers)) {
       this.formatTimeFormat(model?.agentScheduleManagers);
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
@@ -411,22 +445,43 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);
       const importData = new ImportScheduleData();
       const chartArray = new Array<ScheduleChart>();
+      const scheduleRangeList = new Array<ScheduleDateRangeBase>();
       importData.employeeId = employee.employeeId;
-      importData.dateFrom = this.getFormattedDate(employeeDetails[0].StartDate);
-      importData.dateTo = this.getFormattedDate(employeeDetails[0].EndDate);
-      employeeDetails.forEach(ele => {
-        const data = schedulingCodes.find(x => x.description.trim().toLowerCase() === ele.ActivityCode.trim().toLowerCase());
-        if (data) {
-          const chart = new ScheduleChart(ele.StartTime, ele.EndTime, data.id);
-          chartArray.push(chart);
+      const array = new Array<ImportAgentScheduleRanges>();
+      for (const item of employeeDetails) {
+        item.StartDate = new Date(item.StartDate);
+        item.EndDate = new Date(item.EndDate);
+        if (scheduleRangeList.filter(x => this.getDateInStringFormat(x.dateFrom) === this.getDateInStringFormat(item.StartDate) &&
+        this.getDateInStringFormat(x.dateTo) === this.getDateInStringFormat(item.EndDate)).length === 0) {
+          const range = new ScheduleDateRangeBase();
+          range.dateTo = new Date(item.EndDate);
+          range.dateFrom = new Date(item.StartDate);
+          scheduleRangeList.push(range);
         }
-      });
-      for (let i = 0; i < 7; i++) {
-        const chartData = new AgentScheduleChart();
-        chartData.day = i;
-        chartData.charts = chartArray;
-        importData.agentScheduleCharts.push(chartData);
       }
+
+      scheduleRangeList.forEach(ele => {
+        const arrayItem = new ImportAgentScheduleRanges();
+        arrayItem.dateTo = ele.dateTo;
+        arrayItem.dateFrom = ele.dateFrom;
+        employeeDetails.forEach(item => {
+          if (this.getDateInStringFormat(ele.dateFrom) === this.getDateInStringFormat(item.StartDate) &&
+            this.getDateInStringFormat(ele.dateTo) === this.getDateInStringFormat(item.EndDate)) {
+            const data = schedulingCodes.find(x => x.description.trim().toLowerCase() === item.ActivityCode.trim().toLowerCase());
+            if (data) {
+              const chart = new ScheduleChart(item.StartTime, item.EndTime, data.id);
+              chartArray.push(chart);
+            }
+          }
+        });
+        for (let i = 0; i < 7; i++) {
+          const chartData = new AgentScheduleChart();
+          chartData.day = i;
+          chartData.charts = chartArray;
+          arrayItem.agentScheduleCharts.push(chartData);
+        }
+        importData.ranges.push(arrayItem);
+      });
       chartModel.importAgentScheduleCharts.push(importData);
     }
 
