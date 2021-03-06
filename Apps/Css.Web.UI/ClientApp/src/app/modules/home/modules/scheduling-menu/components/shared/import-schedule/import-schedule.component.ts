@@ -28,6 +28,7 @@ import { DatePipe } from '@angular/common';
 import { ImportAgentScheduleRanges } from '../../../models/import-agent-schedule-ranges.model';
 import { ScheduleDateRangeBase } from '../../../models/schedule-date-range-base.model';
 import { DropListRef } from '@angular/cdk/drag-drop';
+import { AgentScheduleManagersQueryParams } from '../../../models/agent-schedule-mangers-query-params.model';
 
 @Component({
   selector: 'app-import-schedule',
@@ -52,6 +53,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   subscriptions: ISubscription[] = [];
 
   @Input() agentScheduleType: AgentScheduleType;
+  @Input() agentSchedulingGroupId: number;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -228,17 +230,17 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
                 return true;
               }
             }
-            if (item.ranges.filter(y =>  Date.parse(this.getDateInStringFormat(y.dateFrom)) === Date.parse(fromDate) &&
-            Date.parse(this.getDateInStringFormat(y.dateTo)) === Date.parse(toDate)).length > 1) {
+            if (item.ranges.filter(y => Date.parse(this.getDateInStringFormat(y.dateFrom)) === Date.parse(fromDate) &&
+              Date.parse(this.getDateInStringFormat(y.dateTo)) === Date.parse(toDate)).length > 1) {
               return true;
             }
-            if (item.ranges.find(y =>  Date.parse(this.getDateInStringFormat(y.dateFrom)) > Date.parse(fromDate) &&
-            Date.parse(this.getDateInStringFormat(y.dateTo)) < Date.parse(toDate))) {
+            if (item.ranges.find(y => Date.parse(this.getDateInStringFormat(y.dateFrom)) > Date.parse(fromDate) &&
+              Date.parse(this.getDateInStringFormat(y.dateTo)) < Date.parse(toDate))) {
               return true;
             }
-            if (item.ranges.find(y =>  Date.parse(this.getDateInStringFormat(y.dateFrom)) <= Date.parse(fromDate) &&
-            Date.parse(this.getDateInStringFormat(y.dateTo)) < Date.parse(toDate) &&
-             Date.parse(this.getDateInStringFormat(y.dateTo)) >= Date.parse(fromDate))) {
+            if (item.ranges.find(y => Date.parse(this.getDateInStringFormat(y.dateFrom)) <= Date.parse(fromDate) &&
+              Date.parse(this.getDateInStringFormat(y.dateTo)) < Date.parse(toDate) &&
+              Date.parse(this.getDateInStringFormat(y.dateTo)) >= Date.parse(fromDate))) {
               return true;
             }
             if (item.ranges.find(y => Date.parse(this.getDateInStringFormat(y.dateFrom)) > Date.parse(fromDate) &&
@@ -263,7 +265,8 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private validateManagerInputRecord(importRecord: AgentShceduleMangerData[]) {
     if (importRecord.length > 0) {
       for (const item of importRecord) {
-        if (!this.jsonData.every(x => x?.Date.trim() === this.jsonData[0]?.Date.trim())) {
+        const employees = this.jsonData.filter(x => +x.EmployeeId === +item.employeeId);
+        if (!employees.every(x => x?.Date.trim() === employees[0]?.Date.trim())) {
           return true;
         }
 
@@ -274,7 +277,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           }
         }
 
-        const date = this.jsonData[0]?.Date;
+        const date = employees[0]?.Date;
         const year = date?.split('/')[2];
         const day = date?.split('/')[1]?.length === 1 ? '0' + date?.split('/')[1] : date?.split('/')[1];
         const month = date?.split('/')[0]?.length === 1 ? '0' + date?.split('/')[0] : date?.split('/')[0];
@@ -386,6 +389,8 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   private loadAgentSchedules(employees: number[]) {
+    let agentSchedule;
+    let agentManagerSchedule;
     const activityCodes = Array<string>();
     this.jsonData.forEach(element => {
       if (activityCodes.findIndex(x => x.trim().toLowerCase() === element.ActivityCode.trim().toLowerCase()) === -1) {
@@ -393,10 +398,18 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       }
     });
 
-    const agentScheduleQueryParams = new AgentSchedulesQueryParams();
-    if (employees.length > 0) {
-      agentScheduleQueryParams.employeeIds = [];
-      agentScheduleQueryParams.employeeIds = employees;
+    if (this.agentScheduleType === AgentScheduleType.Scheduling) {
+      const agentScheduleQueryParams = new AgentSchedulesQueryParams();
+      if (employees.length > 0) {
+        agentScheduleQueryParams.employeeIds = [];
+        agentScheduleQueryParams.employeeIds = employees;
+        agentSchedule = this.agentSchedulesService.getAgentSchedules(agentScheduleQueryParams);
+      }
+    } else {
+      const agentScheduleManagerQueryParams = new AgentScheduleManagersQueryParams();
+      agentScheduleManagerQueryParams.agentSchedulingGroupId = this.agentSchedulingGroupId;
+      agentScheduleManagerQueryParams.fields = 'employeeId';
+      agentManagerSchedule = this.agentScheduleManagerService.getAgentScheduleManagers(agentScheduleManagerQueryParams);
     }
 
     const schedulingCodeQueryParams = new SchedulingCodeQueryParams();
@@ -404,35 +417,35 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     schedulingCodeQueryParams.fields = activityCodes?.length > 0 ? 'id, description' : undefined;
     schedulingCodeQueryParams.activityCodes = activityCodes?.length > 0 ? activityCodes : undefined;
 
-    const agentSchedule = this.agentSchedulesService.getAgentSchedules(agentScheduleQueryParams);
     const schedulingCodes = this.schedulingCodeService.getSchedulingCodes(schedulingCodeQueryParams);
 
     this.spinnerService.show(this.spinner, SpinnerOptions);
-    forkJoin([agentSchedule, schedulingCodes]).subscribe((data: any) => {
-      let scheduleRepsonse;
-      let schedulingCodesResponse;
+    forkJoin([this.agentScheduleType === AgentScheduleType.Scheduling ? agentSchedule : agentManagerSchedule, schedulingCodes])
+      .subscribe((data: any) => {
+        let scheduleRepsonse;
+        let schedulingCodesResponse;
 
-      if (data[0] && Object.entries(data[0]).length !== 0 && data[0].body) {
-        scheduleRepsonse = data[0].body as AgentSchedulesResponse;
-      }
-      if (data[1] && Object.entries(data[1]).length !== 0 && data[1].body) {
-        schedulingCodesResponse = data[1].body as SchedulingCode;
-      }
+        if (data[0] && Object.entries(data[0]).length !== 0 && data[0].body) {
+          scheduleRepsonse = data[0].body as AgentSchedulesResponse;
+        }
+        if (data[1] && Object.entries(data[1]).length !== 0 && data[1].body) {
+          schedulingCodesResponse = data[1].body as SchedulingCode;
+        }
 
-      this.spinnerService.hide(this.spinner);
-      if (scheduleRepsonse?.length > 0 && schedulingCodesResponse?.length > 0) {
-        const hasMismatch = activityCodes.length !== schedulingCodesResponse?.length;
-        this.agentScheduleType === AgentScheduleType.Scheduling ?
-          this.importAgentScheduleChart(scheduleRepsonse, schedulingCodesResponse, hasMismatch) :
-          this.updateManagerChart(scheduleRepsonse, schedulingCodesResponse, hasMismatch);
-      } else {
-        const errorMessage = `An error occurred upon importing the file. Please check the following<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time<br>Not recognized Employee ID`;
-        this.showErrorWarningPopUpMessage(errorMessage);
-      }
-    }, error => {
-      this.spinnerService.hide(this.spinner);
-      console.log(error);
-    });
+        this.spinnerService.hide(this.spinner);
+        if (scheduleRepsonse?.length > 0 && schedulingCodesResponse?.length > 0) {
+          const hasMismatch = activityCodes.length !== schedulingCodesResponse?.length;
+          this.agentScheduleType === AgentScheduleType.Scheduling ?
+            this.importAgentScheduleChart(scheduleRepsonse, schedulingCodesResponse, hasMismatch) :
+            this.updateManagerChart(scheduleRepsonse, schedulingCodesResponse, hasMismatch);
+        } else {
+          const errorMessage = `An error occurred upon importing the file. Please check the following<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time<br>Not recognized Employee ID`;
+          this.showErrorWarningPopUpMessage(errorMessage);
+        }
+      }, error => {
+        this.spinnerService.hide(this.spinner);
+        console.log(error);
+      });
   }
 
   private getImportAgentScheduleChartModel(schedules: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[]) {
@@ -452,7 +465,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         item.StartDate = new Date(item.StartDate);
         item.EndDate = new Date(item.EndDate);
         if (scheduleRangeList.filter(x => this.getDateInStringFormat(x.dateFrom) === this.getDateInStringFormat(item.StartDate) &&
-        this.getDateInStringFormat(x.dateTo) === this.getDateInStringFormat(item.EndDate)).length === 0) {
+          this.getDateInStringFormat(x.dateTo) === this.getDateInStringFormat(item.EndDate)).length === 0) {
           const range = new ScheduleDateRangeBase();
           range.dateTo = new Date(item.EndDate);
           range.dateFrom = new Date(item.StartDate);

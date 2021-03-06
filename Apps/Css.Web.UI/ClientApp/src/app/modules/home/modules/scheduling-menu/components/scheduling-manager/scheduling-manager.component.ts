@@ -176,6 +176,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   openImportSchedule() {
     this.getModalPopup(ImportScheduleComponent, 'lg');
     this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.SchedulingManager;
+    this.modalRef.componentInstance.agentSchedulingGroupId = this.agentSchedulingGroupId;
 
     this.modalRef.result.then((result) => {
       const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
