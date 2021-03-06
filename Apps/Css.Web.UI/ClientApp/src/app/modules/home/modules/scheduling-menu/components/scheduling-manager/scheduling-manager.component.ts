@@ -468,9 +468,11 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         if (JSON.stringify(item.charts) !== JSON.stringify(this.schedulingMangerChart.find(x => x.id === item.id).charts)) {
           const employeeData = new AgentShceduleMangerData();
           employeeData.employeeId = item?.employeeId;
-          managerChartModel.date = this.getFormattedDate(item?.date);
-          employeeData.charts = item?.charts;
-          managerChartModel.agentScheduleManagers.push(employeeData);
+          const agentScheduleManagerChart = new AgentScheduleManagerChart();
+          agentScheduleManagerChart.date = this.getFormattedDate(item?.date);
+          agentScheduleManagerChart.charts = item?.charts;
+          employeeData.agentScheduleManagerCharts.push(agentScheduleManagerChart);
+          managerChartModel.scheduleManagers.push(employeeData);
         }
       }
       managerChartModel.activityOrigin = ActivityOrigin.CSS;
