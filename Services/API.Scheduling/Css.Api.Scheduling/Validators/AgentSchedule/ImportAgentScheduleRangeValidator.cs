@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Css.Api.Scheduling.Validators.AgentSchedule
 {
     /// <summary>
-    /// Custom validator for agent chart time range
+    /// Custom validator for import agent schedule range
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="FluentValidation.Validators.PropertyValidator" />

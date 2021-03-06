@@ -50,7 +50,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
         [HttpPut("charts")]
-        public async Task<IActionResult> UpdateAgentScheduleMangerChart([FromBody] UpdateAgentScheduleManagerChart agentScheduleDetails)
+        public async Task<IActionResult> UpdateAgentScheduleMangerChart([FromBody] UpdateAgentScheduleManager agentScheduleDetails)
         {
             var result = await _agentScheduleManagerService.UpdateAgentScheduleMangerChart(agentScheduleDetails);
             return StatusCode((int)result.Code, result.Value);
