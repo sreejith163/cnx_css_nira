@@ -363,6 +363,59 @@
             <param name="timezoneId">The timezone identifier.</param>
             <returns></returns>
         </member>
+        <member name="T:Css.Api.Scheduling.Controllers.TimOffsController">
+            <summary>
+            Controller for handling the Time zones resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.TimOffsController._timeOffService">
+            <summary>
+            The time off service
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.TimOffsController.#ctor(Css.Api.Scheduling.Business.Interfaces.ITimeOffService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.TimeZonesController" /> class.
+            </summary>
+            <param name="timeOffService">The time off service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.TimOffsController.GetTimeOffs(Css.Api.Scheduling.Models.DTO.Request.TimeOff.TimeOffQueryparameter)">
+            <summary>
+            Gets the time offs.
+            </summary>
+            <param name="timeOffQueryparameter">The time off queryparameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.TimOffsController.GetTimeOff(System.String)">
+            <summary>
+            Gets the time off.
+            </summary>
+            <param name="timeOffId">The time off identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.TimOffsController.CreateTimeOff(Css.Api.Scheduling.Models.DTO.Request.TimeOff.CreateTimeOff)">
+            <summary>
+            Creates the time off.
+            </summary>
+            <param name="timeOffDetails">The time off details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.TimOffsController.UpdateTimeOff(System.String,Css.Api.Scheduling.Models.DTO.Request.TimeOff.UpdateTimeOff)">
+            <summary>
+            Updates the time off.
+            </summary>
+            <param name="timeOffId">The time off identifier.</param>
+            <param name="timeOffDetails">The time off details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.TimOffsController.DeleteTimeOff(System.String)">
+            <summary>
+            Deletes the time off.
+            </summary>
+            <param name="timeOffId">The time off identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Extensions.DBContextExtension">
             <summary>
             Extension for adding the DB Context
@@ -495,6 +548,26 @@
         <member name="M:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator">
+            <summary>
+            Validator for handling the validation of update AgentSchedulingGroup object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator">
+            <summary>
+            Validator for handling the validation of update AgentSchedulingGroup object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator"/> class.
             </summary>
         </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerChartValidator`1">
