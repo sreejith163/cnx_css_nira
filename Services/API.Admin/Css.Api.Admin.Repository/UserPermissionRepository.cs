@@ -46,7 +46,7 @@ namespace Css.Api.Admin.Repository
 
         public async Task<UserPermission> GetUserPermission(UserPermissionEmployeeIdDetails userPermissionEmployeeIdDetails)
         {
-            var userPermission = FindByCondition(x => x.EmployeeId == userPermissionEmployeeIdDetails.EmployeeId && x.IsDeleted == false)
+            var userPermission = FindByCondition(x => x.EmployeeId == userPermissionEmployeeIdDetails.EmployeeId.ToString() && x.IsDeleted == false)
                 .Include(x => x.Role)
                 .SingleOrDefault();
 

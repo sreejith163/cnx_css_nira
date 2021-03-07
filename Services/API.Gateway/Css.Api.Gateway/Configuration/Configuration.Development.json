@@ -6,7 +6,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.27",
+          "Host": "cnx-css-api-setup",
           "Port": 4204
         }
       ],
@@ -18,7 +18,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.27",
+          "Host": "cnx-css-api-setup",
           "Port": 4204
         }
       ],
@@ -31,7 +31,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.27",
+          "Host": "cnx-css-api-setup",
           "Port": 4204
         }
       ],
@@ -43,7 +43,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.27",
+          "Host": "cnx-css-api-setup",
           "Port": 4204
         }
       ],
@@ -56,7 +56,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.27",
+          "Host": "cnx-css-api-setup",
           "Port": 4204
         }
       ],
@@ -68,7 +68,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.27",
+          "Host": "cnx-css-api-setup",
           "Port": 4204
         }
       ],
@@ -81,7 +81,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.27",
+          "Host": "cnx-css-api-setup",
           "Port": 4204
         }
       ],
@@ -93,7 +93,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.27",
+          "Host": "cnx-css-api-setup",
           "Port": 4204
         }
       ],
@@ -106,7 +106,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.27",
+          "Host": "cnx-css-api-setup",
           "Port": 4204
         }
       ],
@@ -119,7 +119,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.27",
+          "Host": "cnx-css-api-setup",
           "Port": 4204
         }
       ],
@@ -131,7 +131,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.27",
+          "Host": "cnx-css-api-setup",
           "Port": 4204
         }
       ],
@@ -145,7 +145,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -157,7 +157,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -171,7 +171,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -185,7 +185,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -194,10 +194,10 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/roles/{roleId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -211,7 +211,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -223,7 +223,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -236,7 +236,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -248,7 +248,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -260,7 +260,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -273,7 +273,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -285,7 +285,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -297,7 +297,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -310,7 +310,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -322,7 +322,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -335,7 +335,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -347,7 +347,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -360,7 +360,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -372,7 +372,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -385,7 +385,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -398,7 +398,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.6",
+          "Host": "cnx-css-api-admin",
           "Port": 4203
         }
       ],
@@ -411,7 +411,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -424,7 +424,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -436,7 +436,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -448,7 +448,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -457,10 +457,10 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentadmins/move",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -473,7 +473,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -485,7 +485,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -493,11 +493,23 @@
       "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/charts",
-      "DownstreamScheme": "https",
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/exists",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/exists",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/charts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -505,15 +517,15 @@
       "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/import",
+      "DownstreamPathTemplate": "/api/v1/agentschedules/import",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/import",
+      "UpstreamPathTemplate": "/api/agentschedules/import",
       "UpstreamHttpMethod": [ "Put" ]
     },
     {
@@ -521,20 +533,81 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
       "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
     },
-     //********* Forecast Screen Routes *********************
-     {
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/range",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/range",
+      "UpstreamHttpMethod": [ "Put", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentEmployeeId}/myschedule",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentEmployeeId}/myschedule",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
+    },
+    //********* Agent Schedule Manager Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedulemanagers",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers/charts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedulemanagers/charts",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers/{employeeId}/copy",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedulemanagers/{employeeId}/copy",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    //********* Forecast Screen Routes *********************
+    {
       "DownstreamPathTemplate": "/api/v1/ForecastScreen",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -547,7 +620,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -559,7 +632,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -571,7 +644,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],
@@ -585,7 +658,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.13",
+          "Host": "cnx-css-api-reporting",
           "Port": 4206
         }
       ],
@@ -601,7 +674,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.87.221.14",
+          "Host": "cnx-css-api-scheduling",
           "Port": 4205
         }
       ],

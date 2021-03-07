@@ -13,6 +13,11 @@ namespace Css.Api.Setup.Models.DTO.Request.AgentSchedulingGroup
         /// <summary>Gets or sets the skill group identifier.</summary>
         public int SkillTagId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        public int? RefId { get; set; }
+
         /// <summary>Gets or sets the timezone identifier.</summary>
         /// <value>The timezone identifier.</value>
         public int TimezoneId { get; set; }

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 namespace Css.Api.Core.Models.Domain.NoSQL
 {
-    [BsonCollection("agent_schedule")]
-    public class AgentSchedule : BaseDocument
+    [BsonCollection("agent_schedule_manager")]
+    public class AgentScheduleManager : BaseDocument
     {
         /// <summary>
         /// Gets or sets the employee identifier.
@@ -14,24 +14,20 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public int EmployeeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the first name.
+        /// Gets or sets the agent scheduling group identifier.
         /// </summary>
-        public string FirstName { get; set; }
+        public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the last name.
+        /// Gets or sets the date.
         /// </summary>
-        public string LastName { get; set; }
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
+        public DateTime Date { get; set; }
 
         /// <summary>
-        /// Gets or sets the active scheduling group identifier.
+        /// Gets or sets the charts.
         /// </summary>
-        public int ActiveAgentSchedulingGroupId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ranges.
-        /// </summary>
-        public List<AgentScheduleRange> Ranges { get; set; }
+        public List<ScheduleChart> Charts { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
@@ -56,16 +52,11 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public DateTimeOffset? ModifiedDate { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is deleted.
+        /// Initializes a new instance of the <see cref="AgentScheduleManager"/> class.
         /// </summary>
-        public bool IsDeleted { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AgentSchedule"/> class.
-        /// </summary>
-        public AgentSchedule()
+        public AgentScheduleManager()
         {
-            Ranges = new List<AgentScheduleRange>();
+            Charts = new List<ScheduleChart>();
         }
     }
 }

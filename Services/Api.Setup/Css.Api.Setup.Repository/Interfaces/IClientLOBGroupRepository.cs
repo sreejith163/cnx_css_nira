@@ -49,6 +49,13 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// <returns></returns>
         Task<List<int>> GetClientLOBGroupsIdByClientIdAndGroupName(ClientIdDetails clientIdDetails, ClientLOBGroupNameDetails clientLOBGroupNameDetails);
 
+        /// <summary>
+        /// Gets the name of the client lob groups identifier by client identifier and group or refid.
+        /// </summary>
+        /// <param name="clientAttributes"></param>
+        /// <returns></returns>
+        Task<List<ClientLobGroup>> GetClientLOBGroupsIdByClientIdAndGroupNameOrRefId(ClientLOBGroupAttribute clientLOBGroupAttribute);
+
         /// <summary>Gets the name of all client lob groups identifier by client identifier and group.</summary>
         /// <param name="clientIdDetails">The client identifier details.</param>
         /// <param name="clientLOBGroupNameDetails">The client lob group name details.</param>

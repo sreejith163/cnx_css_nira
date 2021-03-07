@@ -39,7 +39,7 @@ namespace Css.Api.Admin.Extensions
             services.AddSingleton(Log.Logger);
             services.AddSingleton(HostingEnvironment);
             services.AddSingleton(configuration);
-
+            services.AddHttpClient();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddHttpContextAccessor();
 

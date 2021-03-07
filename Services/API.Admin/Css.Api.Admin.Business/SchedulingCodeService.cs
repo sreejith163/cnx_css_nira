@@ -90,13 +90,24 @@ namespace Css.Api.Admin.Business
         /// <returns></returns>
         public async Task<CSSResponse> CreateSchedulingCode(CreateSchedulingCode schedulingCodeDetails)
         {
-            var schedulingCodeNameDetails = new SchedulingCodeNameDetails { Name = schedulingCodeDetails.Description };
-            var schedulingIconIdDetails = new SchedulingIconIdDetails { SchedulingIconId = schedulingCodeDetails.IconId };
-
-            var schedulingCodes = await _repository.SchedulingCodes.GetSchedulingCodesByDescriptionAndIcon(schedulingCodeNameDetails, schedulingIconIdDetails);
-            if (schedulingCodes?.Count > 0)
+            var schedulingCodes = await _repository.SchedulingCodes.GetSchedulingCodesByDescriptionAndIconOrRefId(new SchedulingCodeAttributes
             {
-                return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' or Icon already exists.", HttpStatusCode.Conflict);
+                IconId = schedulingCodeDetails.IconId,
+                Description = schedulingCodeDetails.Description,
+                RefId = schedulingCodeDetails.RefId
+            });
+
+            if (schedulingCodes?.Count > 0 && schedulingCodes[0].RefId != null && schedulingCodes[0].RefId == schedulingCodeDetails.RefId)
+            {
+                return new CSSResponse($"SchedulingCode with id '{schedulingCodeDetails.RefId}' already exists.", HttpStatusCode.Conflict);
+            }
+            else if (schedulingCodes?.Count > 0 && schedulingCodes[0].Description == schedulingCodeDetails.Description)
+            {
+                return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' already exists.", HttpStatusCode.Conflict);
+            }
+            else if (schedulingCodes?.Count > 0 && schedulingCodes[0].IconId == schedulingCodeDetails.IconId)
+            {
+                return new CSSResponse($"SchedulingCode with icon '{schedulingCodes[0].Icon}' already exists.", HttpStatusCode.Conflict);
             }
 
             var schedulingCodeRequest = _mapper.Map<SchedulingCode>(schedulingCodeDetails);
@@ -134,13 +145,24 @@ namespace Css.Api.Admin.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var schedulingCodeNameDetails = new SchedulingCodeNameDetails { Name = schedulingCodeDetails.Description };
-            var schedulingIconIdDetails = new SchedulingIconIdDetails { SchedulingIconId = schedulingCodeDetails.IconId };
-
-            var schedulingCodes = await _repository.SchedulingCodes.GetSchedulingCodesByDescriptionAndIcon(schedulingCodeNameDetails, schedulingIconIdDetails);
-            if (schedulingCodes?.Count > 0 && schedulingCodes.IndexOf(schedulingCodeIdDetails.SchedulingCodeId) == -1)
+            var schedulingCodes = await _repository.SchedulingCodes.GetSchedulingCodesByDescriptionAndIconOrRefId(new SchedulingCodeAttributes
+            {
+                IconId = schedulingCodeDetails.IconId,
+                Description = schedulingCodeDetails.Description,
+                RefId = schedulingCodeDetails.RefId
+            });
+            var result = schedulingCodes.Find(x => x.Id != schedulingCodeIdDetails.SchedulingCodeId);
+            if (result != null && result.RefId != null && result.RefId == schedulingCodeDetails.RefId)
+            {
+                return new CSSResponse($"SchedulingCode with id '{schedulingCodeDetails.RefId}' already exists.", HttpStatusCode.Conflict);
+            }
+            else if (result != null && result.Description == schedulingCodeDetails.Description)
             {
                 return new CSSResponse($"SchedulingCode with description '{schedulingCodeDetails.Description}' already exists.", HttpStatusCode.Conflict);
+            }
+            else if (result != null && result.IconId == schedulingCodeDetails.IconId)
+            {
+                return new CSSResponse($"SchedulingCode with icon '{schedulingCodes[0].Icon}' already exists.", HttpStatusCode.Conflict);
             }
 
             SchedulingCode schedulingCodeDetailsPreUpdate = null;

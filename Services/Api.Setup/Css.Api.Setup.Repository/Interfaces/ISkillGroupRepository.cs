@@ -46,6 +46,12 @@ namespace Css.Api.Setup.Repository.Interfaces
         Task<List<int>> GetSkillGroupIdsByClientLobIdAndSkillGroupName(ClientLOBGroupIdDetails clientLOBGroupIdDetails,
                     SkillGroupNameDetails skillGroupNameDetails);
 
+        /// <summary>
+        /// Gets the name of the skill group ids by client lob identifier and skill group name or refid.
+        /// </summary>
+        /// <param name="skillGroupAttribute"></param>
+        /// <returns></returns>
+        Task<List<SkillGroup>> GetSkillGroupIdsByClientLobIdAndSkillGroupNameOrRefId(SkillGroupAttribute skillGroupAttribute);
 
         /// <summary>Gets the name of all skill group ids by client lob identifier and skill group.</summary>
         /// <param name="clientLOBGroupIdDetails">The client lob group identifier details.</param>

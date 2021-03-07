@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Css.Api.Core.Models.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace Css.Api.Core.Models.Domain.NoSQL
@@ -121,9 +122,9 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// </summary>
         public DateTimeOffset? ModifiedDate { get; set; }
 
-        /// <summary>Gets or sets the moved date.</summary>
-        /// <value>The moved date.</value>
-        public DateTimeOffset? MovedDate { get; set; }
-
+        /// <summary>
+        /// Gets or sets the origin.
+        /// </summary>
+        public ActivityOrigin Origin { get; set; }
     }
 }
