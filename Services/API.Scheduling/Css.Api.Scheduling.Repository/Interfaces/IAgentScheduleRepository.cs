@@ -1,5 +1,6 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
+using Css.Api.Core.Models.Enums;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
@@ -26,6 +27,39 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <returns></returns>
         Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails);
+
+        /// <summary>
+        /// Gets the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <param name="status">The status.</param>
+        /// <returns></returns>
+        Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange, SchedulingStatus status);
+
+        /// <summary>
+        /// Gets the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <returns></returns>
+        Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
+
+        /// <summary>
+        /// Gets the agent schedule range.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <returns></returns>
+        Task<AgentScheduleRange> GetAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
+
+        /// <summary>
+        /// Determines whether [is agent schedule range exist] [the specified agent schedule identifier details].
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <returns></returns>
+        Task<bool> IsAgentScheduleRangeExist(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
 
         /// <summary>
         /// Gets the agent schedule count.
@@ -86,32 +120,30 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// Updates the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        /// <param name="agentScheduleCharts">The agent schedule charts.</param>
+        /// <param name="agentScheduleRange">The agent schedule range.</param>
         /// <param name="modifiedUserDetails">The modified user details.</param>
-        void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, List<AgentScheduleChart> agentScheduleCharts,
-                                      ModifiedUserDetails modifiedUserDetails);
-
-        /// <summary>
-        /// Updates the agent schedule manger chart.
-        /// </summary>
-        /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <param name="agentScheduleManagerChart">The agent schedule manager chart.</param>
-        /// <param name="modifiedUserDetails">The modified user details.</param>
-        void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManagerChart agentScheduleManagerChart, ModifiedUserDetails modifiedUserDetails);
-
-        /// <summary>
-        /// Imports the agent schedule chart.
-        /// </summary>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        /// <param name="modifiedUserDetails">The modified user details.</param>
-        void ImportAgentScheduleChart(ImportAgentScheduleChart agentScheduleDetails, ModifiedUserDetails modifiedUserDetails);
+        void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleRange agentScheduleRange, ModifiedUserDetails modifiedUserDetails);
 
         /// <summary>
         /// Copies the agent schedules.
         /// </summary>
-        /// <param name="agentSchedule">The agent schedule.</param>
-        /// <param name="copyAgentScheduleRequest">The copy agent schedule request.</param>
-        void CopyAgentSchedules(AgentSchedule agentSchedule, CopyAgentSchedule copyAgentScheduleRequest);
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="agentScheduleRange">The agent schedule range.</param>
+        void CopyAgentSchedules(EmployeeIdDetails employeeIdDetails, AgentScheduleRange agentScheduleRange);
+
+        /// <summary>
+        /// Updates the agent schedule range.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        void UpdateAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleDateRange dateRange);
+
+        /// <summary>
+        /// Removes the agent schedule range.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        void DeleteAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
 
         /// <summary>
         /// Deletes the agent schedule.
