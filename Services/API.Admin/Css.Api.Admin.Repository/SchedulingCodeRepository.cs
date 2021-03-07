@@ -120,6 +120,20 @@ namespace Css.Api.Admin.Repository
             return await Task.FromResult(schedulingCodes);
         }
 
+        /// <summary>
+        /// Gets the scheduling codes by description or refid.
+        /// </summary>
+        /// <param name="schedulingCodeAttributes"></param>
+        /// <returns></returns>
+        public async Task<List<SchedulingCode>> GetSchedulingCodesByDescriptionAndIconOrRefId(SchedulingCodeAttributes schedulingCodeAttributes)
+        {
+            var schedulingCodes = FindByCondition(x => x.IsDeleted == false && (x.IconId == schedulingCodeAttributes.IconId ||
+            string.Equals(x.Description.Trim(), schedulingCodeAttributes.Description.Trim(), StringComparison.OrdinalIgnoreCase) || x.RefId == (schedulingCodeAttributes.RefId ?? 0)))
+                .ToList();
+
+            return await Task.FromResult(schedulingCodes);
+        }
+
         /// <summary>Gets all scheduling codes by description.</summary>
         /// <param name="schedulingCodeNameDetails">The scheduling code name details.</param>
         /// <returns>
