@@ -31,6 +31,7 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
 
   @Input() clientId: number;
   @Input() clientLobId: number;
+  @Input() heirarchy: boolean;
   @Output() clientLobSelected = new EventEmitter();
 
   constructor(
@@ -38,7 +39,12 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
   ) { }
 
   ngOnInit(): void {
+    if (!this.heirarchy) {
       this.subscribeToClientLobs();
+    } else {
+      this.clientLobItemsBuffer = [];
+      this.totalItems = 0;
+    }
       this.subscribeToSearching();
   }
 
