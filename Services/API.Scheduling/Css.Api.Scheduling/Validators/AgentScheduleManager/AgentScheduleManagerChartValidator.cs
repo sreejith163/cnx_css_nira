@@ -11,12 +11,12 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="FluentValidation.Validators.PropertyValidator" />
-    public class AgentScheduleManagerValidator<T> : PropertyValidator
+    public class AgentScheduleManagerChartValidator<T> : PropertyValidator
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentScheduleManagerValidator{T}" /> class.
+        /// Initializes a new instance of the <see cref="AgentScheduleManagerChartValidator{T}" /> class.
         /// </summary>
-        public AgentScheduleManagerValidator()
+        public AgentScheduleManagerChartValidator()
             : base("{PropertyName} must be provided.")
         {
         }
@@ -29,15 +29,9 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context)
         {
             var validationFailures = new List<ValidationFailure>();
-            var item = context.PropertyValue as AgentScheduleManagerChart;
+            var item = context.PropertyValue as List<ScheduleChart>;
 
-            if (item.Date == null)
-            {
-                validationFailures.Add(new ValidationFailure("Agent Scheduling Manager", "Date should not be empty"));
-                return validationFailures;
-            }
-
-            foreach (var chart in item.Charts)
+            foreach (var chart in item)
             {
                 if (chart.SchedulingCodeId == 0)
                 {

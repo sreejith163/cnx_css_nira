@@ -54,12 +54,14 @@ namespace Css.Api.Scheduling.Extensions
             services.AddTransient<IActivityLogService, ActivityLogService>();
             services.AddTransient<IAgentAdminService, AgentAdminService>();
             services.AddTransient<IAgentScheduleService, AgentScheduleService>();
+            services.AddTransient<IAgentScheduleManagerService, AgentScheduleManagerService>();
             services.AddTransient<IEntityHierarchyService, EntityHierarchyService>();
             services.AddTransient<ITimeOffService, TimeOffService>();
 
             services.AddTransient<IForecastScreenService, ForecastScreenService>();
             services.AddScoped<ITimezoneRepository, TimezoneRepository>();
             services.AddScoped<IAgentAdminRepository, AgentAdminRepository>();
+            services.AddScoped<IAgentScheduleManagerRepository, AgentScheduleManagerRepository>();
             services.AddScoped<IAgentScheduleRepository, AgentScheduleRepository>();
             services.AddScoped<ITimeOffRepository, TimeOffRepository>();
             services.AddScoped<IForecastScreenRepository, ForecastScreenRepository>();
