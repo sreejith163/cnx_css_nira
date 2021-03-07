@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Business
@@ -93,18 +92,19 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="agentAdminRepository">The agent admin repository.</param>
-        /// <param name="_agentScheduleRepository">The agent schedule repository.</param>
+        /// <param name="agentScheduleRepository">The agent schedule repository.</param>
         /// <param name="clientRepository">The client repository.</param>
         /// <param name="clientLobGroupRepository">The client lob group repository.</param>
         /// <param name="skillGroupRepository">The skill group repository.</param>
         /// <param name="skillTagRepository">The skill tag repository.</param>
         /// <param name="agentSchedulingGroupRepository">The agent scheduling group repository.</param>
+        /// <param name="activityLogRepository">The activity log repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
         public AgentAdminService(
             IHttpContextAccessor httpContextAccessor,
             IAgentAdminRepository agentAdminRepository,
-            IAgentScheduleRepository _agentScheduleRepository,
+            IAgentScheduleRepository agentScheduleRepository,
             IClientRepository clientRepository,
             IClientLobGroupRepository clientLobGroupRepository,
             ISkillGroupRepository skillGroupRepository,
@@ -116,7 +116,7 @@ namespace Css.Api.Scheduling.Business
         {
             _httpContextAccessor = httpContextAccessor;
             _agentAdminRepository = agentAdminRepository;
-            this._agentScheduleRepository = _agentScheduleRepository;
+            _agentScheduleRepository = agentScheduleRepository;
             _clientRepository = clientRepository;
             _clientLobGroupRepository = clientLobGroupRepository;
             _skillGroupRepository = skillGroupRepository;
@@ -213,7 +213,7 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> GetAgentAdminByEmployeeId(EmployeeIdDetails employeeIdDetails)
         {
-            var agentAdmin = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(employeeIdDetails);
+            var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
             if (agentAdmin == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -241,14 +241,14 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse($"Agent Admin with Employee ID '{agentAdminEmployeeIdDetails.Id}' and SSO '{agentAdminDetails.Sso}' already exists.", HttpStatusCode.Conflict);
             }
 
-            var agentAdminsBasedOnEmployeeId = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(agentAdminEmployeeIdDetails);
+            var agentAdminsBasedOnEmployeeId = await _agentAdminRepository.GetAgentAdminByEmployeeId(agentAdminEmployeeIdDetails);
 
             if (agentAdminsBasedOnEmployeeId != null)
             {
                 return new CSSResponse($"Agent Admin with Employee ID '{agentAdminEmployeeIdDetails.Id}' already exists.", HttpStatusCode.Conflict);
             }
 
-            var agentAdminsBasedonSSO = await _agentAdminRepository.GetAgentAdminIdsBySso(agentAdminSsoDetails);
+            var agentAdminsBasedonSSO = await _agentAdminRepository.GetAgentAdminBySso(agentAdminSsoDetails);
 
             if (agentAdminsBasedonSSO != null)
             {
@@ -275,7 +275,6 @@ namespace Css.Api.Scheduling.Business
 
             var agentScheduleRequest = _mapper.Map<AgentSchedule>(agentAdminRequest);
             _agentScheduleRepository.CreateAgentSchedule(agentScheduleRequest);
-
 
             // get the preUpdated details and compare it with the updated details to check changes
             var fieldDetails = addActivityLogFields(null, agentAdminRequest, "");
@@ -336,7 +335,7 @@ namespace Css.Api.Scheduling.Business
             var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentAdminDetails.SkillTagId };
             var employeeIdDetails = new EmployeeIdDetails { Id = agentAdmin.Ssn };
 
-            var agentAdminsBasedOnEmployeeId = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(agentAdminEmployeeIdDetails);
+            var agentAdminsBasedOnEmployeeId = await _agentAdminRepository.GetAgentAdminByEmployeeId(agentAdminEmployeeIdDetails);
 
             if (agentAdminsBasedOnEmployeeId != null &&
                 !string.Equals(agentAdminsBasedOnEmployeeId.Id.ToString(), agentAdminIdDetails.AgentAdminId))
@@ -344,7 +343,7 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse($"Agent Admin with Employee ID '{agentAdminEmployeeIdDetails.Id}' already exists.", HttpStatusCode.Conflict);
             }
 
-            var agentAdminsBasedonSSO = await _agentAdminRepository.GetAgentAdminIdsBySso(agentAdminSsoDetails);
+            var agentAdminsBasedonSSO = await _agentAdminRepository.GetAgentAdminBySso(agentAdminSsoDetails);
 
             if (agentAdminsBasedonSSO != null &&
                 !string.Equals(agentAdminsBasedonSSO.Id.ToString(), agentAdminIdDetails.AgentAdminId))
@@ -369,7 +368,6 @@ namespace Css.Api.Scheduling.Business
 
             _agentAdminRepository.UpdateAgentAdmin(agentAdminRequest);
 
-
             var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
             {
                 EmployeeId = agentAdminDetails.EmployeeId,
@@ -381,11 +379,8 @@ namespace Css.Api.Scheduling.Business
 
             _agentScheduleRepository.UpdateAgentSchedule(employeeIdDetails, updateAgentScheduleEmployeeDetails);
 
-
-            // get the preUpdated details and compare it with the updated details to check changes
             var fieldDetails = addActivityLogFields(preUpdateAgentAdmin, agentAdminRequest, preUpdateAgentAdminHireDate);
 
-            // create activity log based on the changed fields
             var activityLog = new ActivityLog() {
                 ActivityType = ActivityType.AgentAdmin,
                 FieldDetails = fieldDetails,
@@ -404,147 +399,158 @@ namespace Css.Api.Scheduling.Business
             return new CSSResponse(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Adds the activity log fields.
+        /// </summary>
+        /// <param name="preUpdateDetails">The pre update details.</param>
+        /// <param name="updatedDetails">The updated details.</param>
+        /// <param name="preUpdateAgentAdminHireDate">The pre update agent admin hire date.</param>
+        /// <returns></returns>
         private List<FieldDetail> addActivityLogFields(UpdateAgentAdmin preUpdateDetails, Agent updatedDetails, string preUpdateAgentAdminHireDate)
         {
             var fielDetails = new List<FieldDetail>();
-            var agentUpdatedHireDate = updatedDetails.AgentData.Find(x => x.Group.Description == "Hire Date").Group.Value;
+            var agentUpdatedHireDate = updatedDetails.AgentData.Find(x => x.Group.Description == "Hire Date")?.Group?.Value;
 
-            if (preUpdateDetails != null){
-                if (preUpdateAgentAdminHireDate != agentUpdatedHireDate)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "Hire Date",
-                        OldValue = preUpdateAgentAdminHireDate != null ? preUpdateAgentAdminHireDate.ToString() : "",
-                        NewValue = agentUpdatedHireDate.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.EmployeeId != updatedDetails.Ssn)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "EmployeeId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.EmployeeId.ToString() : "",
-                        NewValue = updatedDetails.Ssn.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.FirstName != updatedDetails.FirstName)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "FirstName",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.FirstName.ToString() : "",
-                        NewValue = updatedDetails.FirstName.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.LastName != updatedDetails.LastName)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "LastName",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.LastName.ToString() : "",
-                        NewValue = updatedDetails.LastName.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-
-                if (preUpdateDetails.ClientId != updatedDetails.ClientId)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "ClientId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.ClientId.ToString() : "",
-                        NewValue = updatedDetails.ClientId.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.ClientLobGroupId != updatedDetails.ClientLobGroupId)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "ClientLobGroupId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.ClientLobGroupId.ToString() : "",
-                        NewValue = updatedDetails.ClientLobGroupId.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.SkillGroupId != updatedDetails.SkillGroupId)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "SkillGroupId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.SkillGroupId.ToString() : "",
-                        NewValue = updatedDetails.SkillGroupId.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.SkillTagId != updatedDetails.SkillTagId)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "SkillTagId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.SkillTagId.ToString() : "",
-                        NewValue = updatedDetails.SkillTagId.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.Sso != updatedDetails.Sso)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "Sso",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.Sso.ToString() : "",
-                        NewValue = updatedDetails.Sso.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.SupervisorId != updatedDetails.SupervisorId)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "SupervisorId",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorId.ToString() : "",
-                        NewValue = updatedDetails.SupervisorId.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.SupervisorSso != updatedDetails.SupervisorSso)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "SupervisorSso",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorSso.ToString() : "",
-                        NewValue = updatedDetails.SupervisorSso.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-
-                if (preUpdateDetails.SupervisorName != updatedDetails.SupervisorName)
-                {
-                    var field = new FieldDetail()
-                    {
-                        Name = "SupervisorName",
-                        OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorName.ToString() : "",
-                        NewValue = updatedDetails.SupervisorName.ToString()
-                    };
-                    fielDetails.Add(field);
-                }
-            }else if(preUpdateDetails == null)
+            if (!string.IsNullOrWhiteSpace(agentUpdatedHireDate))
             {
-                var createFieldDetails = new List<FieldDetail>()
+                if (preUpdateDetails != null)
+                {
+                    if (preUpdateAgentAdminHireDate != agentUpdatedHireDate)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "Hire Date",
+                            OldValue = preUpdateAgentAdminHireDate != null ? preUpdateAgentAdminHireDate.ToString() : "",
+                            NewValue = agentUpdatedHireDate.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.EmployeeId != updatedDetails.Ssn)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "EmployeeId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.EmployeeId.ToString() : "",
+                            NewValue = updatedDetails.Ssn.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.FirstName != updatedDetails.FirstName)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "FirstName",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.FirstName.ToString() : "",
+                            NewValue = updatedDetails.FirstName.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.LastName != updatedDetails.LastName)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "LastName",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.LastName.ToString() : "",
+                            NewValue = updatedDetails.LastName.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+
+                    if (preUpdateDetails.ClientId != updatedDetails.ClientId)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "ClientId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.ClientId.ToString() : "",
+                            NewValue = updatedDetails.ClientId.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.ClientLobGroupId != updatedDetails.ClientLobGroupId)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "ClientLobGroupId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.ClientLobGroupId.ToString() : "",
+                            NewValue = updatedDetails.ClientLobGroupId.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.SkillGroupId != updatedDetails.SkillGroupId)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "SkillGroupId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.SkillGroupId.ToString() : "",
+                            NewValue = updatedDetails.SkillGroupId.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.SkillTagId != updatedDetails.SkillTagId)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "SkillTagId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.SkillTagId.ToString() : "",
+                            NewValue = updatedDetails.SkillTagId.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.Sso != updatedDetails.Sso)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "Sso",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.Sso.ToString() : "",
+                            NewValue = updatedDetails.Sso.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.SupervisorId != updatedDetails.SupervisorId)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "SupervisorId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorId.ToString() : "",
+                            NewValue = updatedDetails.SupervisorId.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.SupervisorSso != updatedDetails.SupervisorSso)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "SupervisorSso",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorSso.ToString() : "",
+                            NewValue = updatedDetails.SupervisorSso.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.SupervisorName != updatedDetails.SupervisorName)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "SupervisorName",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorName.ToString() : "",
+                            NewValue = updatedDetails.SupervisorName.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+                }
+                else if (preUpdateDetails == null)
+                {
+                    var createFieldDetails = new List<FieldDetail>()
                     {
                         new FieldDetail()
                         {
@@ -600,7 +606,7 @@ namespace Css.Api.Scheduling.Business
                             OldValue = "",
                             NewValue = updatedDetails.Sso.ToString()
                         },
-                
+
                         new FieldDetail()
                         {
                             Name = "SupervisorId",
@@ -622,11 +628,11 @@ namespace Css.Api.Scheduling.Business
 
                 };
 
-                fielDetails = createFieldDetails;
+                    fielDetails = createFieldDetails;
+                }
             }
 
             return fielDetails;
-
         }
 
         /// <summary>Moves the agent admins.</summary>
@@ -673,9 +679,21 @@ namespace Css.Api.Scheduling.Business
                 movingAgent.SkillTagId = destinationSchedulingGroup.SkillTagId;
                 movingAgent.ModifiedBy = moveAgentAdminsDetails.ModifiedBy;
                 movingAgent.ModifiedDate = DateTime.Now;
-                movingAgent.MovedDate = DateTime.Now;
+                // movingAgent.MovedDate = DateTime.Now;
+
+                var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
+                {
+                    EmployeeId = movingAgent.Ssn,
+                    FirstName = movingAgent.FirstName,
+                    LastName = movingAgent.LastName,
+                    AgentSchedulingGroupId = movingAgent.AgentSchedulingGroupId,
+                    ModifiedBy = movingAgent.ModifiedBy
+                };
+
+                var employeeIdDetails = new EmployeeIdDetails { Id = movingAgent.Ssn };
 
                 _agentAdminRepository.UpdateAgentAdmin(movingAgent);
+                _agentScheduleRepository.UpdateAgentSchedule(employeeIdDetails, updateAgentScheduleEmployeeDetails);
             }
 
             await _uow.Commit();
@@ -718,7 +736,7 @@ namespace Css.Api.Scheduling.Business
         {
             var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = agentActivityLogDetails.EmployeeId };
 
-            var agentAdmins = await _agentAdminRepository.GetAgentAdminIdsByEmployeeId(agentAdminEmployeeIdDetails);
+            var agentAdmins = await _agentAdminRepository.GetAgentAdminByEmployeeId(agentAdminEmployeeIdDetails);
 
             if (agentAdmins == null)
             {

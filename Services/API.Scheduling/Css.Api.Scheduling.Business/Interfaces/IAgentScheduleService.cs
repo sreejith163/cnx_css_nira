@@ -23,6 +23,13 @@ namespace Css.Api.Scheduling.Business.Interfaces
         Task<CSSResponse> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails);
 
         /// <summary>
+        /// Determines whether [is agent schedule range exist] [the specified agent schedule identifier details].
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <returns></returns>
+        Task<CSSResponse> IsAgentScheduleRangeExist(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
+        /// <summary>
         /// Gets the agent schedule charts.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
@@ -47,13 +54,6 @@ namespace Css.Api.Scheduling.Business.Interfaces
         Task<CSSResponse> UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails);
 
         /// <summary>
-        /// Updates the agent schedule manger chart.
-        /// </summary>
-        /// <param name="agentScheduleManagerChartDetails">The agent schedule manager chart details.</param>
-        /// <returns></returns>
-        Task<CSSResponse> UpdateAgentScheduleMangerChart(UpdateAgentScheduleManagerChart agentScheduleManagerChartDetails);
-
-        /// <summary>
         /// Imports the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
@@ -61,12 +61,28 @@ namespace Css.Api.Scheduling.Business.Interfaces
         Task<CSSResponse> ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails);
 
         /// <summary>
-        /// Copies the agent schedule.
+        /// Copies the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
-        Task<CSSResponse> CopyAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule agentScheduleDetails);
+        Task<CSSResponse> CopyAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule agentScheduleDetails);
+
+        /// <summary>
+        /// Updates the agent schedule range.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRangeDetails">The date range details.</param>
+        /// <returns></returns>
+        Task<CSSResponse> UpdateAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleDateRange dateRangeDetails);
+
+        /// <summary>
+        /// Deletes the agent schedule range.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <returns></returns>
+        Task<CSSResponse> DeleteAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
 
         /// <summary>Gets the agent my schedule.</summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
