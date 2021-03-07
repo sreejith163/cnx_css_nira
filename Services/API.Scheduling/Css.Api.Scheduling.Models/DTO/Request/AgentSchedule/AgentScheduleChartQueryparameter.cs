@@ -1,23 +1,17 @@
-﻿using Css.Api.Scheduling.Models.Enums;
-using System;
+﻿using System;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
     public class AgentScheduleChartQueryparameter
     {
         /// <summary>
-        /// Gets or sets the day.
-        /// </summary>
-        public int? Day { get; set; }
-
-        /// <summary>
         /// Gets or sets from date.
         /// </summary>
-        public DateTimeOffset? Date { get; set; }
+        public DateTime? FromDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of the agent schedule.
+        /// Converts to date.
         /// </summary>
-        public AgentScheduleType? AgentScheduleType { get; set; }
+        public DateTime? ToDate { get; set; }
     }
 }
