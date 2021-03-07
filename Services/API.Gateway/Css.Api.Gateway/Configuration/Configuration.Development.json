@@ -601,6 +601,31 @@
       "UpstreamPathTemplate": "/api/agentschedulemanagers/{employeeId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
     },
+    //********* Timeoffs Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/timeoffs",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/timeoffs",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/timeoffs/{timeOffId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/timeoffs/{timeOffId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
     //********* Forecast Screen Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/ForecastScreen",
