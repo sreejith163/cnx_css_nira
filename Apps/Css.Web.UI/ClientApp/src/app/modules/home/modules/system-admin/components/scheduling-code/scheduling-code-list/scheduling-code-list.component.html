@@ -56,9 +56,9 @@
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th>
+             <!-- <th>
                 {{ 'Time Off Code' | translate }}
-              </th>
+              </th>-->
               <th class="sortable-field" (click)="sort('description', sortBy)">
                 {{ 'Description' | translate }}
                 <i *ngIf="orderBy !== 'description'" class="fa fa-sort"></i>
@@ -86,7 +86,7 @@
             </ngx-spinner>
             <tr *ngIf="schedulingCodes?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No data to show' | translate }}</td>
+                {{ 'No match records found' | translate }}</td>
             </tr>
             <tr *ngFor="let el of schedulingCodes;let i = index;">
               <td *permission="{rolesPermitted: [1]}">
@@ -95,7 +95,7 @@
               </td>
               <!-- <td>{{ el.id }}</td> -->
               <td>{{ el.refId }}</td>
-              <td>{{getTimeOffCodeValue(el?.timeOffCode)}}</td>
+              <!--<td>{{getTimeOffCodeValue(el?.timeOffCode)}}</td>-->
               <td>
                 <span
                   ngbTooltip="{{ el.description }}">{{ el.description | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
@@ -132,7 +132,7 @@
         <div class="col-md-12 d-flex justify-content-end mt-3">
           <nav aria-label="Page navigation example">
             <ul class="pagination p-0 float-right">
-              <ngb-pagination class="p-r-5" [collectionSize]="totalSchedulingCodesRecord"
+              <ngb-pagination class="p-r-5" [collectionSize]="totalSchedulingCodesRecord" [rotate]="true" [maxSize]="10" 
                 (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
               </ngb-pagination>
               <select class="form-control" (change)="changePageSize($event.target.value)">

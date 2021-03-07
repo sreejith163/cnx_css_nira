@@ -124,6 +124,19 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(count);
         }
 
+        /// <summary>
+        /// Gets the agent scheduling groups count by skill or refid tag identifier.
+        /// </summary>
+        /// <param name="agentSchedulingGroupAttribute"></param>
+        /// <returns></returns>
+        public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupsCountBySkillTagIdOrRefId(AgentSchedulingGroupAttribute agentSchedulingGroupAttribute)
+        {
+            var agentSchedulingGroups = FindByCondition(x => (x.SkillTagId == agentSchedulingGroupAttribute.SkillTagId || string.Equals(x.Name.Trim(), agentSchedulingGroupAttribute.Name.Trim(),
+                      StringComparison.OrdinalIgnoreCase) || x.RefId == (agentSchedulingGroupAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
+
+            return await Task.FromResult(agentSchedulingGroups);
+        }
+
 
         /// <summary>Gets all agent scheduling groups count by skill tag identifier.</summary>
         /// <param name="skillTagIdDetails">The skill tag identifier details.</param>

@@ -1,0 +1,89 @@
+
+<div class="well">
+    <span class="text-bold" *ngIf="listPosition=='left';else rightListLabel">Scheduling Group</span>
+    <ng-template #rightListLabel><span class="text-bold">Scheduling Group Destination</span></ng-template>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <app-move-agents-scheduling-group-typeahead [listPosition]="listPositionTypeAhead"
+            (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
+            </app-move-agents-scheduling-group-typeahead>
+        </div>
+    </div>
+    <br/>
+    <div class="card text-sm">
+        <ngx-spinner [name]="spinner"></ngx-spinner>
+            <div class="card-header">
+                <h3 class="card-title text-xs"><span class="text-bold">{{'Number of agents' | translate }}: </span> <i>Loaded {{ (agentAdmins$ | async)?.length || '0' | number  }} of {{(totalAgentAdminsRecord$ | async) || '0' | number }}</i></h3>
+                <div class="row float-r" *ngIf="agentSchedulingGroupId > 0">
+                    <div class="col-md-8 padding-bottom-5">
+                        <input type="text" class="form-control mt-4 padding-right-35" [(ngModel)]="searchKeyword"
+                            placeholder="{{ 'Search' | translate }}" [maxLength]="20" />
+                        <span *ngIf="searchKeyword?.length > 0" class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="form-control mt-4" (click)="search()" id="btn_search"><i class="fa fa-search"
+                            aria-hidden="true"></i>
+                            {{ 'Search' | translate }}
+                        </button>
+                    </div>
+                </div>
+                <div class="card-tools">
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <ng-container *ngIf="(agentAdmins$ | async)?.length > 0;else noList">                            
+                <div class="card-body table-responsive p-0" style="height: 500px;" #agentListTableContainer (scroll)="onScrollingFinished()">
+                <table class="table-hover table table-head-fixed" #agentListTable>
+                    <thead>
+                    <tr>
+                        <th>{{'Employee ID' | translate }}</th>
+                        <th>{{'Name' | translate }}</th>
+                        <th>{{'Starting' | translate }}</th>
+                        <th>{{'Ending' | translate }}</th>   <!-- END DATE IS EMPTY FOR NOW, FOR ENHANCMENT PURPOSES -->
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let agentAdmin of agentAdmins$ | async">
+                            <ng-container *ngIf="listPosition=='left';else rightList">
+                                <tr class="agent-list-item pointer" [class.selected]="isSelected[agentAdmin.id]" (click)="toggleSelected(agentAdmin.id); isSelected[agentAdmin.id] = !isSelected[agentAdmin.id];" >
+                                    <td>{{agentAdmin.employeeId}}</td>
+                                    <td>
+                                        <span ngbTooltip="{{agentAdmin.firstName}} {{agentAdmin.lastName}}">
+                                            {{agentAdmin.firstName + ' ' + agentAdmin.lastName | truncate: { sliceStart: 0,
+                                                sliceEnd: 15, append: '...' }
+                                            }}
+                                        </span>
+                                    </td>
+                                    <td>{{(agentAdmin.modifiedDate ? agentAdmin.modifiedDate : agentAdmin.createdDate) | date}}</td>
+                                    <td></td>   <!-- END DATE IS EMPTY FOR NOW, FOR ENHANCMENT PURPOSES -->
+                                </tr>
+                            </ng-container>                        
+                            <ng-template #rightList>
+                                <tr class="agent-list-item pointer">
+                                    <td>{{agentAdmin.employeeId}}</td>
+                                    <td>
+                                        <span ngbTooltip="{{agentAdmin.firstName}} {{agentAdmin.lastName}}">
+                                            {{agentAdmin.firstName + ' ' + agentAdmin.lastName | truncate: { sliceStart: 0,
+                                                sliceEnd: 15, append: '...' }
+                                            }}
+                                        </span>
+                                    </td>
+                                    <td>{{(agentAdmin.modifiedDate ? agentAdmin.modifiedDate : agentAdmin.createdDate) | date}}</td>
+                                    <td></td>   <!-- END DATE IS EMPTY FOR NOW, FOR ENHANCMENT PURPOSES -->
+                                </tr>
+                            </ng-template>                        
+                        </ng-container>                   
+                    </tbody>
+                </table>
+                </div>
+                <div class="card-footer">
+                    <ng-container *ngIf="listPosition=='left'"><h3 class="card-title text-xs float-r"><span class="text-bold">Number of highlighted agents: </span><i>{{selectedAgentAdminIds.length || '0' | number }}</i></h3></ng-container> <!-- NO TRANSLATION -->
+                </div>
+                <!-- /.card-body -->
+            </ng-container>
+            <ng-template #noList>
+                <p class="text-center p-2 mt-2">{{'No data to show' | translate }}</p>
+            </ng-template>
+    </div>
+</div>

@@ -1,4 +1,5 @@
-﻿using Css.Api.Scheduling.Models.Enums;
+﻿using Css.Api.Core.Models.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
@@ -16,14 +17,19 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of the agent schedule.
-        /// </summary>
-        public AgentScheduleType AgentScheduleType { get; set; }
-
-        /// <summary>
         /// Gets or sets the activity origin.
         /// </summary>
         public ActivityOrigin ActivityOrigin { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date from.
+        /// </summary>
+        public DateTime DateFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date to.
+        /// </summary>
+        public DateTime DateTo { get; set; }
 
         /// <summary>
         /// Gets or sets the modified user.

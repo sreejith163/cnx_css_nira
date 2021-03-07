@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <app-scheduling-filter (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
+  <app-scheduling-filter [agentScheduleType]="0" (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
     (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)"></app-scheduling-filter>
 
   <div class="card card-primary card-outline card-outline-tabs">
@@ -49,7 +49,7 @@
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field width-18-p" (click)="sort('dateFrom', sortBy)">
+              <th class="sortable-field" (click)="sort('dateFrom', sortBy)">
                 {{ 'Date_range' | translate }}
                 <i *ngIf="orderBy !== 'dateFrom'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'dateFrom'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
@@ -97,7 +97,7 @@
             <ngx-spinner [name]="spinner"></ngx-spinner>
             <tr *ngIf="totalSchedulingGridData?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No data to show' | translate }}</td>
+                {{ 'No match records found' | translate }}</td>
             </tr>
             <ng-container *ngFor="let el of totalSchedulingGridData; let i = index">
               <tr class="table-row">
@@ -113,32 +113,29 @@
                         characterSplice, append: '...' } }}
                   </span>
                 </td>
-                <td>{{el.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="el.dateTo">-</span> {{ el.dateTo | date:
-                      'yyyy-MM-dd'}}
-                  <i class="fa fa-calendar float-right padding-5" aria-hidden="true"
-                    (click)="onClickDateIcon(i); datepicker.toggle()"></i>
-                  <input name="datepicker" class="hidden-datepicker" ngbDatepicker #datepicker="ngbDatepicker"
-                    [autoClose]="'outside'" (dateSelect)="onDateSelection($event, i)" [displayMonths]="2"
-                    [dayTemplate]="t" [container]="'body'" [placement]="'bottom'" outsideDays="hidden">
-                  <ng-template #t let-date let-focused="focused">
-                    <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                      [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                      (mouseleave)="hoveredDate = null">
-                      {{ date.day }}
-                    </span>
-                  </ng-template>
-                </td>
+                <td class="d-flex">
+                  <select class="form-control w-auto" (change)="onDateRangeChange($event?.target?.value, el)">
+                    <option *ngIf="el?.ranges.length == 0">{{ 'Please select a date range' | translate }}</option>
+                    <option [value]="i" [selected]="getRangeIndex(el) == i" *ngFor="let range of el.ranges; let i = index;">
+                      {{range.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="range.dateTo">-</span> {{ range.dateTo | date: 'yyyy-MM-dd'}}
+                    </option>
+                  </select>
+                  <span>
+                    <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2" (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
+                    <i class="fa fa-trash padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2" (click)="deleteDateRange(el)" [ngbTooltip]="'Delete'"></i>
+                    <i class="fa fa-calendar-plus-o float-right padding-5 m-t-5" aria-hidden="true" (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
+                  </span>
+                  </td>
                 <td>
-                  <select class="form-control" (change)="setSchedulingStatus($event.target.value, i)">
-                    <option [value]="status" [selected]="el.status === +status" *ngFor="let status of schedulingStatus">
+                  <select class="form-control" (change)="setSchedulingStatus($event.target.value, el)" [disabled]="hasStatusDisabled(el)">
+                    <option *ngIf="!el?.ranges[getRangeIndex(el)]?.status">{{ 'Please select a status' | translate }}</option>
+                    <option [value]="status" [selected]="el?.ranges[getRangeIndex(el)]?.status === +status" *ngFor="let status of schedulingStatus">
                       {{ scheduleStatus[status] }}
                     </option>
                   </select>
                 </td>
-                <!-- <td>{{el.createdBy}}</td>
-              <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td> -->
-                <td>{{el.modifiedBy}}</td>
-                <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
+                <td>{{el?.ranges[getRangeIndex(el)]?.modifiedBy}}</td>
+                <td>{{el?.ranges[getRangeIndex(el)]?.modifiedDate | date: 'yyyy-MM-dd'}}</td>
               </tr>
               <ng-container>
                 <tr class="row-details" *ngIf="selectedGrid?.employeeId === el?.employeeId"
@@ -251,8 +248,8 @@
                     <div class="row padding-10">
                       <div class="col-md-12 padding-12 row">
                         <div class="col-s-2 m-b-5">
-                          <button class="btn btn-success" id="btn_copy_schedule"
-                            (click)="openCopySchedule(i)">
+                          <button [disabled]="!selectedGrid.dateFrom || selectedGrid.agentScheduleCharts.length === 0" class="btn btn-success" id="btn_copy_schedule"
+                            (click)="openCopySchedule(el)">
                             <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
                           </button>
                         </div>
@@ -264,13 +261,13 @@
                         </div>
                         <div class="col-md-6 m-b-5"></div>
                         <div class="col-md-1  m-b-5">
-                          <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
+                          <button [disabled]="!selectedGrid.dateFrom || selectedGrid.status == 1" class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
                             id="btn_save">
                             <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
                           </button>
                         </div>
                         <div class="col-s-1  m-b-5">
-                          <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
+                          <button [disabled]="!selectedGrid.dateFrom || selectedGrid.status == 1" class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
                             id="btn_cancel">
                             <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
                           </button>
@@ -290,7 +287,7 @@
     <div class="col-md-12 d-flex justify-content-end mt-3">
       <nav aria-label="Page navigation example">
         <ul class="pagination p-0 float-right">
-          <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalSchedulingRecord"
+          <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalSchedulingRecord" [rotate]="true" [maxSize]="10" 
             (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
           </ngb-pagination>
           <select class="form-control" (change)="changePageSize($event.target.value)">

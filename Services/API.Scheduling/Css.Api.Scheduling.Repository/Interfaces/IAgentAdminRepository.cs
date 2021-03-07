@@ -1,6 +1,7 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using MongoDB.Bson;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,26 +27,26 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <returns></returns>
         Task<Agent> GetAgentAdmin(AgentAdminIdDetails agentAdminIdDetails);
 
-        /// <summary>Gets the agent admin ids by employee identifier.</summary>
+        /// <summary>Gets the agent admin by employee identifier.</summary>
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
         Task<Agent> GetAgentAdminIdsByEmployeeIdAndSso(EmployeeIdDetails agentAdminEmployeeIdDetails, AgentAdminSsoDetails agentAdminSsoDetails);
 
-        /// <summary>Gets the agent admin ids by sso.</summary>
+        /// <summary>Gets the agent admin by sso.</summary>
         /// <param name="agentAdminSsoDetails">The agent admin sso details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        Task<Agent> GetAgentAdminIdsBySso(AgentAdminSsoDetails agentAdminSsoDetails);
+        Task<Agent> GetAgentAdminBySso(AgentAdminSsoDetails agentAdminSsoDetails);
 
         /// <summary>
-        /// Gets the agent admin ids by employee identifier.
+        /// Gets the agent admin by employee identifier.
         /// </summary>
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
         /// <returns></returns>
-        Task<Agent> GetAgentAdminIdsByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails);
+        Task<Agent> GetAgentAdminByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails);
 
         /// <summary>
         /// Gets the agent admins by employee ids.
@@ -61,6 +62,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         ///   <br />
         /// </returns>
         Task<List<Agent>> GetAgentAdminsByIds(List<ObjectId> agentAdminIdsDetails, int sourceSchedulingGroupId);
+
+        /// <summary>
+        /// Gets the employee ids by agent scheduling group.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <returns></returns>
+        Task<List<int>> GetEmployeeIdsByAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
 
         /// <summary>Gets the agent admins count.</summary>
         /// <returns>

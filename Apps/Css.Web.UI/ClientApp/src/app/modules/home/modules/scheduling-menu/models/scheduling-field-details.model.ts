@@ -1,7 +1,7 @@
-import { AgentScheduleChart } from './agent-schedule-chart.model';
-import { AgentScheduleManagerChart } from './agent-schedule-manager-chart.model';
+import { ActivityLogManager } from './activity-log-manager.model';
+import { ActivityLogRange } from './activity-log-range.model';
 
 export class SchedulingFieldDetails {
-    agentScheduleCharts: AgentScheduleChart[];
-    agentScheduleManagerCharts: AgentScheduleManagerChart[];
+    activityLogRange: ActivityLogRange;
+    activityLogManager: ActivityLogManager;
 }

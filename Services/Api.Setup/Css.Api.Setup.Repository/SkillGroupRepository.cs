@@ -136,6 +136,20 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(count);
         }
 
+        /// <summary>
+        /// Gets the name of the skill group ids by client lob identifier and skill group name or refid.
+        /// </summary>
+        /// <param name="skillGroupAttribute"></param>
+        /// <returns></returns>
+        public async Task<List<SkillGroup>> GetSkillGroupIdsByClientLobIdAndSkillGroupNameOrRefId(SkillGroupAttribute skillGroupAttribute)
+        {
+            var skillGroups = FindByCondition
+                (x => x.ClientLobGroupId == skillGroupAttribute.ClientLobGroupId && (string.Equals(x.Name.Trim(), skillGroupAttribute.Name.Trim(),
+                      StringComparison.OrdinalIgnoreCase) || x.RefId == (skillGroupAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
+
+            return await Task.FromResult(skillGroups);
+        }
+
 
         /// <summary>Gets the name of all skill group ids by client lob identifier and skill group.</summary>
         /// <param name="clientLOBGroupIdDetails">The client lob group identifier details.</param>

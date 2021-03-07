@@ -1,12 +1,10 @@
-import { AgentScheduleChart } from './agent-schedule-chart.model';
+import { ImportAgentScheduleRanges } from './import-agent-schedule-ranges.model';
 
 export class ImportScheduleData {
     employeeId: number;
-    dateFrom: Date;
-    dateTo: Date;
-    agentScheduleCharts: AgentScheduleChart[];
+    ranges: ImportAgentScheduleRanges[];
 
     constructor() {
-        this.agentScheduleCharts = [];
+        this.ranges = [];
     }
 }

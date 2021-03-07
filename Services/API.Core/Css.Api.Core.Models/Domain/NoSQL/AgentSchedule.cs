@@ -1,7 +1,5 @@
-﻿using Css.Api.Core.Models.Enums;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -26,41 +24,14 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public string LastName { get; set; }
 
         /// <summary>
-        /// Gets or sets the date from.
+        /// Gets or sets the active scheduling group identifier.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        [BsonRepresentation(BsonType.String)]
-        public DateTimeOffset? DateFrom { get; set; }
+        public int ActiveAgentSchedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the date to.
+        /// Gets or sets the ranges.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        [BsonRepresentation(BsonType.String)]
-        public DateTimeOffset? DateTo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the status.
-        /// </summary>
-        public SchedulingStatus Status { get; set; }
-
-        /// <summary>
-        /// Gets or sets the agent scheduling group identifier.
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int AgentSchedulingGroupId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the charts.
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
-
-        /// <summary>
-        /// Gets or sets the agent schedule manager.
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleManagerChart> AgentScheduleManagerCharts { get; set; }
+        public List<AgentScheduleRange> Ranges { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
@@ -76,13 +47,11 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the modified by.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ModifiedBy { get; set; }
 
         /// <summary>
         /// Gets or sets the modified date.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         [BsonRepresentation(BsonType.String)]
         public DateTimeOffset? ModifiedDate { get; set; }
 
@@ -91,10 +60,12 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// </summary>
         public bool IsDeleted { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgentSchedule"/> class.
+        /// </summary>
         public AgentSchedule()
         {
-            AgentScheduleCharts = new List<AgentScheduleChart>();
-            AgentScheduleManagerCharts = new List<AgentScheduleManagerChart>();
+            Ranges = new List<AgentScheduleRange>();
         }
     }
 }

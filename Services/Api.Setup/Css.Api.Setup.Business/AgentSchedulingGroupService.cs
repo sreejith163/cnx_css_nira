@@ -103,10 +103,25 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Skill Tag with id '{skillTagIdDetails.SkillTagId}' not found", HttpStatusCode.NotFound);
             }
 
-            var isSchedulingGroupExistsForSkillTag = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupsCountBySkillTagId(skillTagIdDetails) > 0;
-            if (isSchedulingGroupExistsForSkillTag)
+            var agentSchedulingGroups = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupsCountBySkillTagIdOrRefId(new AgentSchedulingGroupAttribute 
+            { 
+                SkillTagId = agentSchedulingGroupDetails.SkillTagId,
+                Name = agentSchedulingGroupDetails.Name,
+                RefId = agentSchedulingGroupDetails.RefId
+            });
+
+
+            if (agentSchedulingGroups?.Count > 0 && agentSchedulingGroups[0].SkillTagId == agentSchedulingGroupDetails.SkillTagId)
             {
                 return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
+            }
+            else if (agentSchedulingGroups?.Count > 0 && agentSchedulingGroups[0].RefId != null && agentSchedulingGroups[0].RefId == agentSchedulingGroupDetails.RefId)
+            {
+                return new CSSResponse($"Agent Scheduling Group with id '{agentSchedulingGroupDetails.RefId}' already exists.", HttpStatusCode.Conflict);
+            }
+            else if (agentSchedulingGroups?.Count > 0 && agentSchedulingGroups[0].Name == agentSchedulingGroupDetails.Name)
+            {
+                return new CSSResponse($"Agent Scheduling Group with name '{agentSchedulingGroupDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
 
             var agentSchedulingGroupRequest = _mapper.Map<AgentSchedulingGroup>(agentSchedulingGroupDetails);
@@ -153,7 +168,6 @@ namespace Css.Api.Setup.Business
             }
 
             var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentSchedulingGroupDetails.SkillTagId };
-            var agentSchedulingGroupNameDetails = new AgentSchedulingGroupNameDetails { Name = agentSchedulingGroupDetails.Name };
 
             var skillTag = await _repository.SkillTags.GetSkillTag(skillTagIdDetails);
             if (skillTag == null)
@@ -161,23 +175,44 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Skill Tag with id '{skillTagIdDetails.SkillTagId}' not found", HttpStatusCode.NotFound);
             }
 
-            var agentSchedulingGroups = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupsBySkillTagId(skillTagIdDetails);
-            int matchingSchedulingGroupCount = agentSchedulingGroups.Count;
-            var isSchedulingGroupExistsForSkillTag = matchingSchedulingGroupCount > 0;
-            if (isSchedulingGroupExistsForSkillTag)
+            //var agentSchedulingGroups = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupsBySkillTagId(skillTagIdDetails);
+            //int matchingSchedulingGroupCount = agentSchedulingGroups.Count;
+            //var isSchedulingGroupExistsForSkillTag = matchingSchedulingGroupCount > 0;
+            //if (isSchedulingGroupExistsForSkillTag)
+            //{
+            //    if (!agentSchedulingGroupDetails.IsUpdateRevert 
+            //        && agentSchedulingGroups.FirstOrDefault().Id != agentSchedulingGroupIdDetails.AgentSchedulingGroupId)
+            //    {
+            //        return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
+            //    }
+            //    else
+            //    {
+            //        if (matchingSchedulingGroupCount > 1)
+            //        {
+            //            return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
+            //        }
+            //    }
+            //}
+
+            var agentSchedulingGroups = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupsCountBySkillTagIdOrRefId(new AgentSchedulingGroupAttribute
             {
-                if (!agentSchedulingGroupDetails.IsUpdateRevert 
-                    && agentSchedulingGroups.FirstOrDefault().Id != agentSchedulingGroupIdDetails.AgentSchedulingGroupId)
+                SkillTagId = agentSchedulingGroupDetails.SkillTagId,
+                Name = agentSchedulingGroupDetails.Name,
+                RefId = agentSchedulingGroupDetails.RefId
+            });
+
+            var result = agentSchedulingGroups.Find(x => x.Id != agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
+            if (result != null && result.SkillTagId == agentSchedulingGroupDetails.SkillTagId)
+            {
+                return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
+            }
+            else if (result != null && result.RefId != null && result.RefId == agentSchedulingGroupDetails.RefId)
                 {
-                    return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
-                }
-                else
+                return new CSSResponse($"Agent Scheduling Group with id '{agentSchedulingGroupDetails.RefId}' already exists.", HttpStatusCode.Conflict);
+            }
+            else if (result != null && result.Name == agentSchedulingGroupDetails.Name)
                 {
-                    if (matchingSchedulingGroupCount > 1)
-                    {
-                        return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
-                    }
-                }
+                return new CSSResponse($"Agent Scheduling Group with name '{agentSchedulingGroupDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
 
             AgentSchedulingGroup agentSchedulingGroupDetailsPreUpdate = null;

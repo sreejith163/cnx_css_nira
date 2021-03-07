@@ -33,6 +33,7 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
   @Input() clientLobGroupId: number;
   @Input() skillGroupId: number;
   @Input() skillTagId: number;
+  @Input() heirarchy: boolean;
   @Output() skillTagSelected = new EventEmitter();
 
   constructor(
@@ -40,7 +41,12 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
   ) { }
 
   ngOnInit(): void {
-    this.subscribeToSkillTags();
+    if (!this.heirarchy) {
+      this.subscribeToSkillTags();
+    } else {
+      this.skillTagItemsBuffer = [];
+      this.totalItems = 0;
+    }
     this.subscribeToSearching();
   }
 
@@ -140,7 +146,7 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
     queryParams.pageSize = this.skillTagItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
-    queryParams.skipPageSize = true;
+    queryParams.skipPageSize = false;
     queryParams.orderBy = undefined;
     queryParams.fields = 'id, name';
 

@@ -1,10 +1,6 @@
-import { AgentScheduleType } from '../enums/agent-schedule-type.enum';
+import { CopyChartBase } from './copy-chart-base.model';
 
-export class CopyAgentSchedulechart {
-    employeeIds: number[];
-    agentSchedulingGroupId: number;
-    agentScheduleType: AgentScheduleType;
-    activityOrigin: number;
-    modifiedUser: number;
-    modifiedBy: string;
+export class CopyAgentScheduleChart extends CopyChartBase {
+    dateFrom: Date;
+    dateTo: Date;
 }
