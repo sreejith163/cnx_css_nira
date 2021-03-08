@@ -197,12 +197,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
         this.agents = response.body;
         let headerPaginationValues = new HeaderPagination();
         headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
-        const index = this.agents.findIndex(x => x.employeeId === this.employeeId);
-        if (index > -1) {
-          this.agents.splice(index, 1);
-        }
-        this.employeeAgentSchedulingGroupId === this.agentSchedulingGroupId ?
-          this.totalAgents = +headerPaginationValues.totalCount - 1 : this.totalAgents = +headerPaginationValues.totalCount;
+        this.totalAgents = +headerPaginationValues.totalCount;
         this.showSelectedEmployees();
         this.spinnerService.hide(this.spinner);
       }, (error) => {
@@ -221,12 +216,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
         this.agents = response.body;
         let headerPaginationValues = new HeaderPagination();
         headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
-        const index = this.agents.findIndex(x => x.employeeId === this.employeeId);
-        if (index > -1) {
-          this.agents.splice(index, 1);
-        }
-        this.employeeAgentSchedulingGroupId === this.agentSchedulingGroupId ?
-          this.totalAgents = +headerPaginationValues.totalCount - 1 : this.totalAgents = +headerPaginationValues.totalCount;
+        this.totalAgents = +headerPaginationValues.totalCount;
         this.showSelectedEmployees();
         this.spinnerService.hide(this.spinner);
       }, (error) => {

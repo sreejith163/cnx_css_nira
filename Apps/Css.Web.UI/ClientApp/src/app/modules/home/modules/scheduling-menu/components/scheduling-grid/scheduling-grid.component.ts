@@ -191,6 +191,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   addDateRange(el: AgentSchedulesResponse) {
+    this.schedulingGridData = undefined;
     this.getModalPopup(DateRangePopUpComponent, 'sm');
     this.modalRef.componentInstance.operation = ComponentOperation.Add;
     this.modalRef.componentInstance.agentScheduleId = el.id;
@@ -200,6 +201,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         range.dateFrom = this.getFormattedDate(result?.dateFrom);
         range.dateTo = this.getFormattedDate(result?.dateTo);
         range.status = SchedulingStatus['Pending Schedule'];
+        range.agentSchedulingGroupId = el.activeAgentSchedulingGroupId;
         range.scheduleCharts = [];
         el.ranges.push(range);
         el.rangeIndex = el.ranges.length - 1;
@@ -290,32 +292,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   cancel() {
     this.selectedGrid = JSON.parse(JSON.stringify(this.schedulingGridData));
   }
-
-  onClickDateIcon(index: number) {
-    // const fromDate = this.totalSchedulingGridData[index]?.agentScheduleRange.dateFrom;
-    // const to = this.totalSchedulingGridData[index]?.agentScheduleRange.dateTo;
-    // this.fromDate = this.convertToNgbDate(fromDate) ?? this.today;
-    // this.toDate = this.convertToNgbDate(to) ?? this.today;
-  }
-
-  // onDateSelection(date: NgbDate, index: number) {
-  //   if (!this.fromDate && !this.toDate) {
-  //     this.fromDate = date;
-  //     const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
-  //     // this.totalSchedulingGridData[index].agentScheduleRange.dateFrom = newDate;
-  //   } else if (this.fromDate && !this.toDate && date && !date.before(this.fromDate)) {
-  //     this.toDate = date;
-  //     const newDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day, 0, 0, 0, 0);
-  //     // this.totalSchedulingGridData[index].agentScheduleRange.dateTo = newDate;
-  //   } else {
-  //     this.toDate = null;
-  //     // this.totalSchedulingGridData[index].agentScheduleRange.dateTo = null;
-  //     this.fromDate = date;
-  //     const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
-  //     // this.totalSchedulingGridData[index].agentScheduleRange.dateFrom = newDate;
-  //   }
-  //   this.updateAgentSchedule(index);
-  // }
 
   isHovered(date: NgbDate) {
     return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
@@ -600,7 +576,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.selectedGrid.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
     this.selectedGrid.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
     this.selectedGrid.status = el?.ranges[el?.rangeIndex]?.status;
-    this.selectedGrid.agentSchedulingGroupId = el?.agentSchedulingGroupId;
+    this.selectedGrid.activeAgentSchedulingGroupId = el?.activeAgentSchedulingGroupId;
     this.selectedGrid.agentScheduleCharts = el?.ranges[el?.rangeIndex]?.scheduleCharts;
 
     if (this.selectedGrid?.agentScheduleCharts?.length > 0) {
