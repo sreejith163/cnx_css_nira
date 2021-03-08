@@ -5,4 +5,6 @@ export class UpdateAgentSchedule {
     dateFrom: Date;
     dateTo: Date;
     modifiedBy: string;
+    modifiedUser: number;
+    activityOrigin: number;
 }

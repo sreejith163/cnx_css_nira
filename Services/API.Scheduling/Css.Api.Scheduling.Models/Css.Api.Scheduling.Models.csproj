@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <None Remove="Domain\AgentSchedule.cs~RF5b3f0c0.TMP" />
+    <None Remove="Profiles\AgentScheduleManager\AgentScheduleManagerProfile.cs~RF38ef60b1.TMP" />
   </ItemGroup>
 
   <ItemGroup>

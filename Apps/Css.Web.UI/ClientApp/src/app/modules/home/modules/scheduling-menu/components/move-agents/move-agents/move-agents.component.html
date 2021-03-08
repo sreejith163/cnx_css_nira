@@ -13,183 +13,29 @@
             </ol>
         </div>
     </div>
-
-
     
     <div class="container-fluid">
         <div class="row">
-            <div class="dual-list list-right col-md-6">
-                <div class="well">
-                    <span class="text-bold">Scheduling Group</span>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <app-agent-scheduling-group-typeahead 
-                            (agentSchedulingGroupSelected)="onSchedulingGroupChangeLeft($event)">
-                            </app-agent-scheduling-group-typeahead>
-                        </div>
-                    </div>
-                    <br/>
-                    <div class="card text-sm">
-                        <ngx-spinner [name]="spinnerLeft"></ngx-spinner>
-                            <div class="card-header">
-                              <h3 class="card-title text-xs">{{'Number of agents' | translate }}: {{totalAgentAdminsRecordLeft || '0' | number }}</h3>
-                              <br/>
-                              <h3 class="card-title text-xs">{{'Number of agents' | translate }}: {{selectedAgentAdminIds.length || '0' | number }}</h3>
-                              <div class="card-tools">
-                                <div class="input-group input-group-sm" style="width: 150px;">
-                                  <input type="text" class="form-control float-right" [(ngModel)]="searchKeywordLeft"
-                                  [maxLength]="maxLengthLeft"
-                                  placeholder="{{'Search' | translate }}" />
-                                  
-                                  <div class="input-group-append">
-                                    <button (click)="searchLeft()" class="btn btn-default"><i class="fa fa-search"></i></button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- /.card-header -->
-                            <ng-container *ngIf="agentAdminsLeftSide.length > 0;else noListLeftSide">                            
-                                <div class="card-body table-responsive p-0" style="height: 300px;">
-                                <table class="table-hover table table-head-fixed">
-                                    <thead>
-                                    <tr>
-                                        <th>{{'Employee ID' | translate }}</th>
-                                        <th>{{'Name' | translate }}</th>
-                                        <th>{{'Starting' | translate }}</th>
-                                        <th>{{'Ending' | translate }}</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let agentAdmin of agentAdminsLeftSide">
-                                            <tr class="agent-list-item pointer" [class.selected]="isSelected[agentAdmin.id]" (click)="toggleSelected(agentAdmin.id); isSelected[agentAdmin.id] = !isSelected[agentAdmin.id];" >
-                                                <td>{{agentAdmin.employeeId}}</td>
-                                                <td>
-                                                    <span ngbTooltip="{{agentAdmin.firstName}} {{agentAdmin.lastName}}">
-                                                        {{agentAdmin.firstName + agentAdmin.lastName | truncate: { sliceStart: 0,
-                                                            sliceEnd: 15, append: '...' }
-                                                        }}
-                                                    </span>
-                                                </td>
-                                                <td>{{agentAdmin.createdDate | date}}</td>
-                                                <td>{{agentAdmin.modifiedDate | date}}</td>    
-                                            </tr>
-                                        </ng-container>                   
-                                    </tbody>
-                                </table>
-                                </div>
-                                <div class="row p-2">
-                                    <div class="col-md-12 d-flex justify-content-end mt-3">
-                                        <nav aria-label="Page navigation example">
-                                            <ul class="pagination p-0 float-right">
-                                                <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecordLeft"
-                                                    (pageChange)="changePageLeft($event)" [pageSize]="pageSizeLeft" [(page)]="currentPageLeft"
-                                                    [boundaryLinks]="true"></ngb-pagination>
-                                                <select class="form-control" (change)="changePageSizeLeft($event.target.value)">
-                                                    <option [selected]="x.count === pageSizeLeft" [value]="x.count" *ngFor="let x of paginationSizeLeft">
-                                                        {{x.text | translate}}</option>
-                                                </select>
-                                            </ul>
-                                        </nav>
-                                    </div>
-                                </div>
-                                <!-- /.card-body -->
-                            </ng-container>
-                            <ng-template #noListLeftSide>
-                                <p class="text-center p-2 mt-2">{{'No data to show' | translate }}</p>
-                            </ng-template>
-                    </div>
-                </div>
-            </div>
-    
-    
-            <div class="dual-list list-left col-md-6">
-                <div class="well">
-                    <span class="text-bold">Scheduling Group Destination</span>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <app-agent-scheduling-group-typeahead 
-                            (agentSchedulingGroupSelected)="onSchedulingGroupChangeRight($event)">
-                            </app-agent-scheduling-group-typeahead>
-                        </div>
-                    </div>
-                    <br/>
-                    <div class="card text-sm">
-                        <ngx-spinner [name]="spinnerRight"></ngx-spinner>
-                            <div class="card-header">
-                              <h3 class="card-title text-xs">{{'Number of agents' | translate }}: {{totalAgentAdminsRecordRight || '0' | number }}</h3>
-              
-                              <div class="card-tools">
-                                <div class="input-group input-group-sm" style="width: 150px;">
-                                  <input type="text" class="form-control float-right" [(ngModel)]="searchKeywordRight"
-                                  [maxLength]="maxLengthRight"
-                                  placeholder="{{'Search' | translate }}" />
-                                  
-                                  <div class="input-group-append">
-                                    <button (click)="searchRight()" class="btn btn-default"><i class="fa fa-search"></i></button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- /.card-header -->
-                            <ng-container *ngIf="agentAdminsRightSide.length > 0;else noListRightSide">                            
-                                <div class="card-body table-responsive p-0" style="height: 300px;">
-                                <table class="table-hover table table-head-fixed">
-                                    <thead>
-                                    <tr>
-                                        <th>{{'Employee ID' | translate }}</th>
-                                        <th>{{'Name' | translate }}</th>
-                                        <th>{{'Starting' | translate }}</th>
-                                        <th>{{'Ending' | translate }}</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let agentAdmin of agentAdminsRightSide">
-                                            <tr class="agent-list-item">
-                                                <td>{{agentAdmin.employeeId}}</td>
-                                                <td>
-                                                    <span ngbTooltip="{{agentAdmin.firstName}} {{agentAdmin.lastName}}">
-                                                        {{agentAdmin.firstName + agentAdmin.lastName | truncate: { sliceStart: 0,
-                                                            sliceEnd: 15, append: '...' }
-                                                        }}
-                                                    </span>
-                                                </td>
-                                                <td>{{agentAdmin.createdDate | date}}</td>
-                                                <td>{{agentAdmin.modifiedDate | date}}</td>    
-                                            </tr>
-                                        </ng-container>                   
-                                    </tbody>
-                                </table>
-                                </div>
-                                <div class="row p-2">
-                                    <div class="col-md-12 d-flex justify-content-end mt-3">
-                                        <nav aria-label="Page navigation example">
-                                            <ul class="pagination p-0 float-right">
-                                                <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecordRight"
-                                                    (pageChange)="changePageRight($event)" [pageSize]="pageSizeRight" [(page)]="currentPageRight"
-                                                    [boundaryLinks]="true"></ngb-pagination>
-                                                <select class="form-control" (change)="changePageSizeRight($event.target.value)">
-                                                    <option [selected]="x.count === pageSizeRight" [value]="x.count" *ngFor="let x of paginationSizeRight">
-                                                        {{x.text | translate}}</option>
-                                                </select>
-                                            </ul>
-                                        </nav>
-                                    </div>
-                                </div>
-                                <!-- /.card-body -->
-                            </ng-container>
-                            <ng-template #noListRightSide>
-                                <p class="text-center p-2 mt-2">{{'No data to show' | translate }}</p>
-                            </ng-template>
-                    </div>              
-                </div>
-    
-                <button *ngIf="selectedAgentAdminIds.length > 0 && agentSchedulingGroupIdRight > 0" (click)="confirmDeleteUserPermission()" class="btn btn-primary m-l-6 float-right mb-5">
-                <i class="fa fa-arrow-right padding-5"></i>{{'Move' | translate }}
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <button *ngIf="(selectedAgentAdminIds$ | async)?.length > 0 && (selectedAgentSchedulingGroupIdRight$ | async) > 0" (click)="confirmMoveAgents()" class="btn btn-primary m-l-6 mb-2">
+                    <i class="fa fa-arrow-right padding-5"></i>{{'Move' | translate }}
                 </button>
-                <br/>
             </div>
         </div>
-    
+        <div class="row">
+            <div class="dual-list list-left col-md-6">
+                <!-- <ngx-spinner [name]="agentListSpinnerLeft"></ngx-spinner> -->
+               <app-move-agents-list [spinner]="agentListSpinnerLeft" [listPosition]="leftList"></app-move-agents-list> 
+            </div>
+            <div class="dual-list list-right col-md-6">
+                <!-- <ngx-spinner [name]="agentListSpinnerRight"></ngx-spinner> -->
+                <app-move-agents-list [spinner]="agentListSpinnerRight" [listPosition]="rightList"></app-move-agents-list> 
+             </div>
+        </div>
     </div>
+
+    <br>
+    <br>
 
 </div>

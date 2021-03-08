@@ -85,6 +85,12 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces
         void DeleteOneAsync(Expression<Func<TDocument, bool>> filterExpression);
 
         /// <summary>
+        /// Deletes the one asynchronous.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        void DeleteOneAsync(FilterDefinition<TDocument> filter);
+
+        /// <summary>
         /// Deletes the by identifier asynchronous.
         /// </summary>
         /// <param name="id">The identifier.</param>

@@ -99,14 +99,19 @@ namespace Css.Api.Setup.Business
         /// </returns>
         public async Task<CSSResponse> CreateClientLOBGroup(CreateClientLOBGroup clientLOBGroupDetails)
         {
-            var clientLOBGroups = await _repository.ClientLOBGroups.GetClientLOBGroupsIdByClientIdAndGroupName(
-                new ClientIdDetails { ClientId = clientLOBGroupDetails.ClientId }, new ClientLOBGroupNameDetails { Name = clientLOBGroupDetails.Name });
-            if (clientLOBGroups?.Count > 0)
+            var clientLOBGroups = await _repository.ClientLOBGroups.GetClientLOBGroupsIdByClientIdAndGroupNameOrRefId(
+                new ClientLOBGroupAttribute { ClientId = clientLOBGroupDetails.ClientId, Name = clientLOBGroupDetails.Name, RefId = clientLOBGroupDetails.RefId});
+
+            if (clientLOBGroups?.Count > 0 && clientLOBGroups[0].RefId != null && clientLOBGroups[0].RefId == clientLOBGroupDetails.RefId)
+            {
+                return new CSSResponse($"Client LOB Group with id '{clientLOBGroupDetails.RefId}' already exists.", HttpStatusCode.Conflict);
+            }
+            else if (clientLOBGroups?.Count > 0 && clientLOBGroups[0].Name == clientLOBGroupDetails.Name)
             {
                 return new CSSResponse($"Client LOB Group with name '{clientLOBGroupDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
 
-            var clientLOBGroupRequest = _mapper.Map<ClientLobGroup>(clientLOBGroupDetails);
+                var clientLOBGroupRequest = _mapper.Map<ClientLobGroup>(clientLOBGroupDetails);
             _repository.ClientLOBGroups.CreateClientLOBGroup(clientLOBGroupRequest);
 
             await _repository.SaveAsync();
@@ -138,9 +143,14 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var clientLOBGroups = await _repository.ClientLOBGroups.GetClientLOBGroupsIdByClientIdAndGroupName(
-               new ClientIdDetails { ClientId = clientLOBGroupDetails.ClientId }, new ClientLOBGroupNameDetails { Name = clientLOBGroupDetails.Name });
-            if (clientLOBGroups?.Count > 0 && clientLOBGroups.IndexOf(clientLOBGroupIdDetails.ClientLOBGroupId) == -1)
+            var clientLOBGroups = await _repository.ClientLOBGroups.GetClientLOBGroupsIdByClientIdAndGroupNameOrRefId(
+                new ClientLOBGroupAttribute { ClientId = clientLOBGroupDetails.ClientId, Name = clientLOBGroupDetails.Name, RefId = clientLOBGroupDetails.RefId });
+            var result = clientLOBGroups.Find(x => x.Id != clientLOBGroupIdDetails.ClientLOBGroupId);
+            if (result != null && result.RefId != null && result.RefId == clientLOBGroupDetails.RefId)
+            {
+                return new CSSResponse($"Client LOB Group with id '{clientLOBGroupDetails.RefId}' already exists.", HttpStatusCode.Conflict);
+            }
+            else if (result != null && result.Name == clientLOBGroup.Name)
             {
                 return new CSSResponse($"Client LOB Group with name '{clientLOBGroupDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }

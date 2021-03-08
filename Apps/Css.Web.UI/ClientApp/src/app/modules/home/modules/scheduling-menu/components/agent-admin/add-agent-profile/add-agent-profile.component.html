@@ -96,7 +96,7 @@
             </div>
             <div class="col-md-8">
 
-              <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId"
+              <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId" [heirarchy]='true'
                 (clientLobSelected)="setClientLobGroup($event)"></app-client-lob-group-typeahead>
               <div *ngIf="!clientLobGroupId && formSubmitted" class="valid-error">
                 {{ 'Client LOB Group is required' | translate }}
@@ -112,7 +112,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)" [clientId]="clientId"
+              <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)" [clientId]="clientId" [heirarchy]='true'
                 [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId"></app-skill-group-typeahead>
               <div *ngIf="!skillGroupId && formSubmitted" class="valid-error">
                 {{ 'Skill Group is required' | translate }}
@@ -129,7 +129,7 @@
             </div>
             <div class="col-md-8">
 
-              <app-skill-tag-typeahead (skillTagSelected)="setSkillTag($event)" [clientId]="clientId"
+              <app-skill-tag-typeahead (skillTagSelected)="setSkillTag($event)" [clientId]="clientId" [heirarchy]='true'
                 [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId" [skillTagId]="skillTagId">
               </app-skill-tag-typeahead>
               <div *ngIf="!skillTagId && formSubmitted" class="valid-error">

@@ -37,6 +37,13 @@ namespace Css.Api.Admin.Repository.Interfaces
         /// <returns></returns>
         Task<List<int>> GetSchedulingCodesByDescriptionAndIcon(SchedulingCodeNameDetails schedulingCodeNameDetails, SchedulingIconIdDetails schedulingIconIdDetails);
 
+        /// <summary>
+        /// Gets the scheduling codes by description or refid.
+        /// </summary>
+        /// <param name="schedulingCodeAttributes"></param>
+        /// <returns></returns>
+        Task<List<SchedulingCode>> GetSchedulingCodesByDescriptionAndIconOrRefId(SchedulingCodeAttributes schedulingCodeAttributes);
+
         /// <summary>Gets all scheduling codes by description.</summary>
         /// <param name="schedulingCodeNameDetails">The scheduling code name details.</param>
         /// <returns>

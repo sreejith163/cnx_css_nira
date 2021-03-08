@@ -1,21 +1,19 @@
-﻿using Css.Api.Core.Models.Domain.NoSQL;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 
 namespace Css.Api.Scheduling.Models.Domain
 {
     public class SchedulingFieldDetails
     {
         /// <summary>
-        /// Gets or sets the charts.
+        /// Gets or sets the activity log range.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
+        public ActivityLogScheduleRange ActivityLogRange { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent schedule manager.
+        /// Gets or sets the activity log manager.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleManagerChart> AgentScheduleManagerCharts { get; set; }
+        public ActivityLogScheduleManager ActivityLogManager { get; set; }
     }
 }

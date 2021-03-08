@@ -4,6 +4,8 @@ import * as XLSX from 'xlsx';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
+const CSV_TYPE ='text/csv;charset=utf-8';
+const CSV_EXTENSION = '.csv';
 
 @Injectable()
 export class ExcelService {
@@ -15,6 +17,12 @@ export class ExcelService {
     const myworkbook: XLSX.WorkBook = { Sheets: { data: myworksheet }, SheetNames: ['data'] };
     const excelBuffer: any = XLSX.write(myworkbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, excelFileName);
+  }
+
+  public exportAsExcelCSVFile(json: any[], excelFileName: string): void {
+    const myworksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
+    const csvOutput: string = XLSX.utils.sheet_to_csv(myworksheet);
+    this.saveAsExcelCSVFile(csvOutput, excelFileName); 
   }
 
   public importFromFile(bstr: string) {
@@ -37,4 +45,12 @@ export class ExcelService {
     });
     FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
   }
+  
+  private saveAsExcelCSVFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: CSV_TYPE
+    });
+    FileSaver.saveAs(data, fileName + CSV_EXTENSION);
+  }
+  
 }
