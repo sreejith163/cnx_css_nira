@@ -160,15 +160,20 @@ namespace Css.Api.Scheduling.Business
                                         {
                                             entityHierarchyDTO.AgentSchedulingGroups = new List<AgentSchedulingGroupDTO>();
                                         }
+
                                         var agentSchedulingGroupDTO = _mapper.Map<AgentSchedulingGroupDTO>(agentSchedulingGroup);
-                                        agentSchedulingGroupDTO.ClientName = clientDetails.Name;
-                                        agentSchedulingGroupDTO.ClientLOBName = clientLobGroup.Name;
-                                        agentSchedulingGroupDTO.SkillGroupName = skillGroup.Name;
-                                        agentSchedulingGroupDTO.SkillTagName = skillTag.Name;
                                         agentSchedulingGroupDTO.ClientId = clientDetails.ClientId;
+                                        agentSchedulingGroupDTO.ClientRefId = clientDetails.RefId;
+                                        agentSchedulingGroupDTO.ClientName = clientDetails.Name;
                                         agentSchedulingGroupDTO.ClientLOBId = clientLobGroup.ClientLobGroupId;
+                                        agentSchedulingGroupDTO.ClientLOBRefId = clientLobGroup.RefId;
+                                        agentSchedulingGroupDTO.ClientLOBName = clientLobGroup.Name;
                                         agentSchedulingGroupDTO.SkillGroupId = skillGroup.SkillGroupId;
+                                        agentSchedulingGroupDTO.SkillGroupRefId = skillGroup.RefId;
+                                        agentSchedulingGroupDTO.SkillGroupName = skillGroup.Name;
                                         agentSchedulingGroupDTO.SkillTagId = skillTag.SkillTagId;
+                                        agentSchedulingGroupDTO.SkillTagRefId = skillTag.RefId;
+                                        agentSchedulingGroupDTO.SkillTagName = skillTag.Name;
 
 
                                         entityHierarchyDTO.AgentSchedulingGroups.Add(agentSchedulingGroupDTO);

@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpBaseService } from 'src/app/core/services/http-base.service';
 import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
@@ -13,7 +12,6 @@ import { EmployeeRole } from '../models/employee-role.model';
 import { Employee } from '../models/employee.model';
 import { PermissionDetails } from '../models/permission-details.model';
 import { Permission } from '../models/permission.model';
-import { UserRole } from '../models/user-role.model';
 
 @Injectable()
 export class PermissionsService extends HttpBaseService {

@@ -17,7 +17,7 @@ import { ErrorPopUpComponent } from './shared/popups/error-pop-up/error-pop-up.c
 export class CallbackComponent implements OnInit {
 
   modalRef: NgbModalRef;
-  spinner = "spinner";
+  spinner = 'spinner';
 
   constructor(
     private router: Router,
@@ -29,7 +29,6 @@ export class CallbackComponent implements OnInit {
     private spinnerService: NgxSpinnerService,
   ) { }
 
-  
   private getModalPopup(component: any, size: string) {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
     this.modalRef = this.modalService.open(component, options);
@@ -48,7 +47,7 @@ export class CallbackComponent implements OnInit {
               this.permissionsService.storePermission(employee.userRoleId);
 
               // redirect to home if permission exists
-              this.router.navigate(['home']);                
+              this.router.navigate(['home']);
               this.spinnerService.hide(this.spinner);
 
             }, error => {
@@ -58,7 +57,7 @@ export class CallbackComponent implements OnInit {
 
               this.getModalPopup(ErrorPopUpComponent, 'sm');
               this.modalRef.componentInstance.headingMessage = 'Invalid Credentials';
-              this.modalRef.componentInstance.contentMessage = "You don't have the permissions needed to access this.";
+              this.modalRef.componentInstance.contentMessage = 'You don\'t have the permissions needed to access this.';
 
             });
       }else{

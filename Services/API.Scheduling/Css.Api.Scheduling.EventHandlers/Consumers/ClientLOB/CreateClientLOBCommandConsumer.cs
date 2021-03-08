@@ -43,7 +43,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
         {
             try
             {
-                Css.Api.Scheduling.Models.Domain.ClientLobGroup clientLob = await _clientLOBGroupRepository.GetClientLobGroup(new ClientLobGroupIdDetails
+                Models.Domain.ClientLobGroup clientLob = await _clientLOBGroupRepository.GetClientLobGroup(new ClientLobGroupIdDetails
                 {
                     ClientLobGroupId = context.Message.Id
                 });
@@ -59,6 +59,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
                         {
                             ClientLobGroupId = context.Message.Id,
                             Name = context.Message.Name,
+                            RefId = context.Message.RefId,
                             ClientId = context.Message.ClientId,
                             IsDeleted = false
                         }
@@ -83,11 +84,12 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
         {
             await _busUtility.PublishEvent<IClientLOBCreateFailed>(MassTransitConstants.ClientLOBCreateFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                Name = context.Message.Name,
-                ClientId = context.Message.ClientId,
-                TimezoneId = context.Message.TimezoneId,
-                ModifiedDate = context.Message.ModifiedDate
+                context.Message.Id,
+                context.Message.Name,
+                context.Message.RefId,
+                context.Message.ClientId,
+                context.Message.TimezoneId,
+                context.Message.ModifiedDate
             });
         }
     }

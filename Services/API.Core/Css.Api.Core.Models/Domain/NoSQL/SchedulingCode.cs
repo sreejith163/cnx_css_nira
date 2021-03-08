@@ -14,6 +14,11 @@
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
+        public int? RefId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether [time off code].
         /// </summary>
         public bool TimeOffCode { get; set; }

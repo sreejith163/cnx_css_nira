@@ -45,7 +45,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillTag
         {
             try
             {
-                Css.Api.Scheduling.Models.Domain.SkillTag skillTag = await _skillTagRepository.GetSkillTag(new SkillTagIdDetails
+                Models.Domain.SkillTag skillTag = await _skillTagRepository.GetSkillTag(new SkillTagIdDetails
                 {
                     SkillTagId = context.Message.Id
                 });
@@ -61,6 +61,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillTag
                 skillTag.ClientLobGroupId = context.Message.ClientLobGroupIdNewValue;
                 skillTag.SkillGroupId = context.Message.SkillGroupIdNewValue;
                 skillTag.Name = context.Message.NameNewValue;
+                skillTag.RefId = context.Message.RefIdNewValue;
                 skillTag.IsDeleted = context.Message.IsDeletedNewValue;
 
                 _skillTagRepository.UpdateSkillTag(skillTag);
@@ -84,15 +85,16 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillTag
         {
             await _busUtility.PublishEvent<ISkillTagUpdateFailed>(MassTransitConstants.SkillTagUpdateFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                NameOldValue = context.Message.NameOldValue,
-                ClientIdOldValue = context.Message.ClientIdOldValue,
-                ClientLobGroupIdOldvalue = context.Message.ClientLobGroupIdOldvalue,
-                SkillGroupIdOldValue = context.Message.SkillGroupIdOldValue,
-                OperationHourOldValue = context.Message.OperationHourOldValue,
-                ModifiedByOldValue = context.Message.ModifiedByOldValue,
-                ModifiedDateOldValue = context.Message.ModifiedDateOldValue,
-                IsDeletedOldValue = context.Message.IsDeletedOldValue
+                context.Message.Id,
+                context.Message.NameOldValue,
+                context.Message.RefIdOldValue,
+                context.Message.ClientIdOldValue,
+                context.Message.ClientLobGroupIdOldvalue,
+                context.Message.SkillGroupIdOldValue,
+                context.Message.OperationHourOldValue,
+                context.Message.ModifiedByOldValue,
+                context.Message.ModifiedDateOldValue,
+                context.Message.IsDeletedOldValue
             });
         }
     }

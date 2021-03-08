@@ -18,6 +18,11 @@ namespace Css.Api.Scheduling.Models.DTO.Response.EntityHierarchy
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
+        public int? RefId { get; set; }
+
         /// <summary>Gets or sets the skill groups.</summary>
         /// <value>The skill groups.</value>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

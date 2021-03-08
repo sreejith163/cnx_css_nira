@@ -57,6 +57,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillGroup
                         {
                             SkillGroupId = context.Message.Id,
                             Name = context.Message.Name,
+                            RefId = context.Message.RefId,
                             ClientId = context.Message.ClientId,
                             ClientLobGroupId = context.Message.ClientLobGroupId,
                             IsDeleted = false
@@ -82,14 +83,15 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillGroup
         {
             await _busUtility.PublishEvent<ISkillGroupCreateFailed>(MassTransitConstants.SkillGroupCreateFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                Name = context.Message.Name,
-                ClientId = context.Message.ClientId,
-                ClientLobGroupId = context.Message.ClientLobGroupId,
-                TimezoneId = context.Message.TimezoneId,
-                FirstDayOfWeek = context.Message.FirstDayOfWeek,
-                OperationHour = context.Message.OperationHour,
-                ModifiedDate = context.Message.ModifiedDate
+                context.Message.Id,
+                context.Message.Name,
+                context.Message.RefId,
+                context.Message.ClientId,
+                context.Message.ClientLobGroupId,
+                context.Message.TimezoneId,
+                context.Message.FirstDayOfWeek,
+                context.Message.OperationHour,
+                context.Message.ModifiedDate
             });
         }
     }

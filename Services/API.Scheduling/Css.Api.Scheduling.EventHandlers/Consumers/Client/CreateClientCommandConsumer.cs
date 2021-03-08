@@ -59,6 +59,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.Client
                         {
                             ClientId = context.Message.Id,
                             Name = context.Message.Name,
+                            RefId = context.Message.RefId,
                             IsDeleted = false
                         }
                     );
@@ -82,9 +83,10 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.Client
         {
             await _busUtility.PublishEvent<IClientCreateFailed>(MassTransitConstants.ClientCreateFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                Name = context.Message.Name,
-                ModifiedDate = context.Message.ModifiedDate
+                context.Message.Id,
+                context.Message.Name,
+                context.Message.RefId,
+                context.Message.ModifiedDate
             });
         }
     }

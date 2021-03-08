@@ -12,6 +12,11 @@ namespace Css.Api.Core.EventBus.Commands.SkillGroup
         /// <value>The name.</value>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
+        public int? RefId { get; set; }
+
         /// <summary>Gets or sets the client identifier.</summary>
         /// <value>The client identifier.</value>
         public int ClientId { get; set; }

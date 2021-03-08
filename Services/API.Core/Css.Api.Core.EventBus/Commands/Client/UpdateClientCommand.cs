@@ -16,6 +16,11 @@ namespace Css.Api.Core.EventBus.Commands.Client
         /// <value>The name old value.</value>
         public string NameOldValue { get; set; }
 
+        /// <summary>
+        /// Gets or sets the reference identifier old value.
+        /// </summary>
+        public int? RefIdOldValue { get; set; }
+
         /// <summary>Gets or sets the modified by old value.</summary>
         /// <value>The modified by old value.</value>
         public string ModifiedByOldValue { get; set; }
@@ -28,6 +33,11 @@ namespace Css.Api.Core.EventBus.Commands.Client
         /// <summary>Gets or sets the name new value.</summary>
         /// <value>The name new value.</value>
         public string NameNewValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference identifier new value.
+        /// </summary>
+        public int? RefIdNewValue { get; set; }
 
         /// <summary>Gets or sets a value indicating whether this instance is deleted new value.</summary>
         /// <value>

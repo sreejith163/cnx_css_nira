@@ -58,6 +58,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
                         {
                             SchedulingCodeId = context.Message.Id,
                             Name = context.Message.Name,
+                            RefId = context.Message.RefId,
                             TimeOffCode = context.Message.TimeOffCode,
                             IsDeleted = false
                         }
@@ -84,6 +85,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
             {
                 context.Message.Id,
                 context.Message.Name,
+                context.Message.RefId,
                 context.Message.PriorityNumber,
                 context.Message.TimeOffCode,
                 context.Message.IconId,
