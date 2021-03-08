@@ -116,7 +116,7 @@
             <ngx-spinner [name]="spinner"></ngx-spinner>
             <tr *ngIf="agentAdmins?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No match records found' | translate }}</td>
+                {{ 'No data to show' | translate }}</td>
             </tr>
             <ng-container *ngFor="let el of agentAdmins; let i = index">
               <tr class="pointer" (dblclick)="editAgentAdmin(el.id)">
@@ -180,7 +180,7 @@
         <div class="col-md-12 d-flex justify-content-end mt-3">
             <nav aria-label="Page navigation example">
                 <ul class="pagination p-0 float-right">
-                    <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecord" [rotate]="true" [maxSize]="10" 
+                    <ngb-pagination class="p-r-5" [collectionSize]="totalAgentAdminsRecord"
                         (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage"
                         [boundaryLinks]="true"></ngb-pagination>
                     <select class="form-control" (change)="changePageSize($event.target.value)">

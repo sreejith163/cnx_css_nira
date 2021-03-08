@@ -3,7 +3,6 @@ using Css.Api.Scheduling.Models.DTO.Response.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
 using System;
-using Css.Api.Core.Models.Domain;
 
 namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
 {

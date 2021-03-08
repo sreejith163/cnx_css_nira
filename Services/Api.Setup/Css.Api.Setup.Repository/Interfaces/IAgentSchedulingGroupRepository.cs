@@ -37,12 +37,6 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// <returns></returns>
         Task<int> GetAgentSchedulingGroupsCountBySkillTagId(SkillTagIdDetails skillTagIdDetails);
 
-        /// <summary>
-        /// Gets the agent scheduling groups count by skill or refid tag identifier.
-        /// </summary>
-        /// <param name="agentSchedulingGroupAttribute"></param>
-        /// <returns></returns>
-        Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupsCountBySkillTagIdOrRefId(AgentSchedulingGroupAttribute agentSchedulingGroupAttribute);
 
         /// <summary>Gets all agent scheduling groups count by skill tag identifier.</summary>
         /// <param name="skillTagIdDetails">The skill tag identifier details.</param>

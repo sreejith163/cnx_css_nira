@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { Constants } from 'src/app/shared/util/constants.util';
-import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
 
 @Component({
   selector: 'app-scheduling-filter',
@@ -16,7 +15,6 @@ export class SchedulingFilterComponent implements OnInit {
   agentSchedulingGroupId: number;
   maxLength = Constants.DefaultTextMaxLength;
 
-  @Input() agentScheduleType: AgentScheduleType;
   @Output() agentSchedulingGroupSelected = new EventEmitter();
   @Output() startDateSelected = new EventEmitter();
   @Output() keywordToSearch = new EventEmitter();

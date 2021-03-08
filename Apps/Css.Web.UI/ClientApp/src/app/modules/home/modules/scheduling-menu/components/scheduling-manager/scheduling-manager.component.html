@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <app-scheduling-filter [agentScheduleType]="1" (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
+  <app-scheduling-filter (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
     (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)"></app-scheduling-filter>
 
   <div class="card card-primary card-outline card-outline-tabs">
@@ -23,9 +23,9 @@
         <li *permission="{rolesPermitted: [1,2,3]}" class="pull-right marign-l-auto margin-5">
           <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
             (click)="exportToExcel()">
-          <!--<img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}"
+          <img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}"
            class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
-            (click)="openImportSchedule()">-->
+            (click)="openImportSchedule()">
         </li>
       </ul>
     </div>
@@ -143,12 +143,12 @@
         <ngx-spinner [name]="spinner"></ngx-spinner>
       </thead>
       <tbody>
-        <tr *ngIf="managerCharts?.length === 0" class="valid-record">
+        <tr *ngIf="totalSchedulingGridData?.length === 0" class="valid-record">
           <td colspan="25">
-            {{ 'No match records found' | translate }}</td>
+            {{ 'No data to show' | translate }}</td>
         </tr>
-        <tr class="jsgrid-row user-select-none" *ngFor="let el of managerCharts; let i = index"
-          [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.employeeId, i)">
+        <tr class="jsgrid-row user-select-none" *ngFor="let el of totalSchedulingGridData; let i = index"
+          [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.id, i)">
           <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
           <td class="jsgrid-cell-empName">
             <span ngbTooltip="{{ el.lastName + ' ' + el.firstName }}">
@@ -157,13 +157,13 @@
             </span>
           </td>
           <td id="grid_manager_col_{{i+1}}_{{j}}" class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
-            attr.employeeId="{{el.employeeId}}" attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
+            attr.scheduleId="{{el.id}}" attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
             *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
             (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event,j,i+1)"
             [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-            <ng-container *ngIf="getIconFromSelectedAgent(el.employeeId,openTime)?.length">
-              <span ngbTooltip="{{ getAgentIconDescription(el.employeeId,openTime) }}">
-                <i class="font-style-normal">{{ getIconFromSelectedAgent(el.employeeId,openTime) }}</i>
+            <ng-container *ngIf="getIconFromSelectedAgent(el.id,openTime)?.length">
+              <span ngbTooltip="{{ getAgentIconDescription(el.id,openTime) }}">
+                <i class="font-style-normal">{{ getIconFromSelectedAgent(el.id,openTime) }}</i>
               </span>
             </ng-container>
           </td>
@@ -175,21 +175,17 @@
 <div class="row padding-10">
   <div class="col-md-12 padding-12 row">
     <div class="col-s-2 m-b-5">
-      <!--<button class="btn btn-success" id="btn_copy_schedule"
+      <button class="btn btn-success" id="btn_copy_schedule"
       [disabled]="!agentSchedulingGroupId" (click)="openCopySchedule(selectedRow)">
         <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
-      </button>-->
+      </button>
+    </div>
+    <div class="col-md-2 m-b-3">
       <button class="btn btn-primary btn-activity" id="btn_activity_logs" *ngIf="canShowActivityLog()"
       [disabled]="!agentSchedulingGroupId" (click)="openActivityLogs(selectedRow)">
         {{ 'Activity Logs' | translate }}
       </button>
     </div>
-    <!--<div class="col-md-2 m-b-3">
-      <button class="btn btn-primary btn-activity" id="btn_activity_logs" *ngIf="canShowActivityLog()"
-      [disabled]="!agentSchedulingGroupId" (click)="openActivityLogs(selectedRow)">
-        {{ 'Activity Logs' | translate }}
-      </button>
-    </div>-->
     <div class="col-md-6 m-b-5"></div>
     <div class="col-md-1  m-b-5">
       <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save()"
@@ -206,7 +202,7 @@
   </div>
 </div>
 
-<ng-container *ngIf="managerCharts?.length">
+<ng-container *ngIf="totalSchedulingGridData?.length">
   <!-- Agent Info -->
   <div class="row">
     <div class="col-12 col-md-12">
@@ -273,17 +269,17 @@
         </thead>
         <tbody>
           <tr class="table-row">
-            <td>Accommodated</td>
+            <td>Accomodated</td>
             <td>{{agentInfo?.supervisorName}}</td>
             <td>{{agentInfo?.supervisorId}}</td>
             <td>{{getAgentHireDate()}}</td>
             <td>2020-12-14</td>
             <td></td>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>DotCom</td>
+            <td>Band 1</td>
+            <td>38</td>
+            <td>FT</td>
             <td></td>
           </tr>
         </tbody>

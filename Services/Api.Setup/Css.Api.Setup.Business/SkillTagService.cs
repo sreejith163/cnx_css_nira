@@ -99,6 +99,7 @@ namespace Css.Api.Setup.Business
         public async Task<CSSResponse> CreateSkillTag(CreateSkillTag skillTagDetails)
         {
             var skillGroupIdDetails = new SkillGroupIdDetails { SkillGroupId = skillTagDetails.SkillGroupId };
+            var skillTagNameDetails = new SkillTagNameDetails { Name = skillTagDetails.Name };
 
             var skillGroup = await _repository.SkillGroups.GetSkillGroup(skillGroupIdDetails);
             if (skillGroup == null)
@@ -106,20 +107,11 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Skill Group with id '{skillGroupIdDetails.SkillGroupId}' not found", HttpStatusCode.NotFound);
             }
 
-            var skillTags = await _repository.SkillTags.GetSkillTagIdBySkillGroupIdAndGroupNameOrRefId(new SkillTagAttribute 
-            { 
-                SkillGroupId = skillTagDetails.SkillGroupId,
-                Name = skillTagDetails.Name,
-                RefId = skillTagDetails.RefId
-            });
+            var skillTags = await _repository.SkillTags.GetSkillTagIdBySkillGroupIdAndGroupName(skillGroupIdDetails, skillTagNameDetails);
 
-            if (skillTags?.Count > 0 && skillTags[0].RefId != null && skillTags[0].RefId == skillTagDetails.RefId)
+            if (skillTags?.Count > 0)
             {
-                return new CSSResponse($"Skill Tag with id '{skillTagDetails.RefId}' already exists.", HttpStatusCode.Conflict);
-            }
-            else if (skillTags?.Count > 0 && skillTags[0].Name == skillTagDetails.Name)
-            {
-                return new CSSResponse($"Skill Tag with name '{skillTagDetails.Name}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Skill Tag with name '{skillTagNameDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
 
             var skillTagRequest = _mapper.Map<SkillTag>(skillTagDetails);
@@ -169,20 +161,10 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Skill Group with id '{skillGroupIdDetails.SkillGroupId}' not found", HttpStatusCode.NotFound);
             }
 
-            var skillTags = await _repository.SkillTags.GetSkillTagIdBySkillGroupIdAndGroupNameOrRefId(new SkillTagAttribute
+            var skillTags = await _repository.SkillTags.GetSkillTagIdBySkillGroupIdAndGroupName(skillGroupIdDetails, skillTagNameDetails);
+            if (skillTags?.Count > 0 && skillTags.IndexOf(skillTagIdDetails.SkillTagId) == -1)
             {
-                SkillGroupId = skillTagDetails.SkillGroupId,
-                Name = skillTagDetails.Name,
-                RefId = skillTagDetails.RefId
-            });
-            var result = skillTags.Find(x => x.Id != skillTagIdDetails.SkillTagId);
-            if (result != null && result.RefId != null && result.RefId == skillTagDetails.RefId)
-            {
-                return new CSSResponse($"Skill Tag with id '{skillTagDetails.RefId}' already exists.", HttpStatusCode.Conflict);
-            }
-            else if (result != null && result.Name == skillTagDetails.Name)
-            {
-                return new CSSResponse($"Skill Tag with name '{skillTagDetails.Name}' already exists.", HttpStatusCode.Conflict);
+                return new CSSResponse($"Skill tag with name '{skillTagDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
 
             SkillTag skillTagDetailsPreUpdate = null;

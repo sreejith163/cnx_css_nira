@@ -25,31 +25,31 @@ namespace Css.Api.Reporting.Business.Services
         public List<ScheduleClock> GenerateClocks(DateTime reportDate, List<AgentSchedule> schedules, List<SchedulingCode> codes)
         {
             List<ScheduleClock> clocks = new List<ScheduleClock>();
-            //int dayOfWeek = (int)reportDate.DayOfWeek;
-            //var agentsChartForDay = schedules
-            //                    .Where(x => x.AgentScheduleCharts.Any(y => y.Day == dayOfWeek))
-            //                    .Select(y => new
-            //                    {
-            //                        Id = y.EmployeeId,
-            //                        Charts = y.AgentScheduleCharts.FirstOrDefault(z => z.Day == dayOfWeek).Charts
-            //                    }).ToList();
+            int dayOfWeek = (int)reportDate.DayOfWeek;
+            var agentsChartForDay = schedules
+                                .Where(x => x.AgentScheduleCharts.Any(y => y.Day == dayOfWeek))
+                                .Select(y => new
+                                {
+                                    Id = y.EmployeeId,
+                                    Charts = y.AgentScheduleCharts.FirstOrDefault(z => z.Day == dayOfWeek).Charts
+                                }).ToList();
 
-            //agentsChartForDay.ForEach(x =>
-            //{
-            //    clocks.AddRange(
-            //        (from c in x.Charts
-            //            join sc in codes on c.SchedulingCodeId equals sc.SchedulingCodeId
-            //            select new ScheduleClock
-            //            {
-            //                Date = reportDate.Date,
-            //                ActivityId = c.SchedulingCodeId,
-            //                EmployeeId = x.Id,
-            //                ActivityName = sc.Name,
-            //                FromTime = c.StartTime,
-            //                ToTime = c.EndTime
-            //            }).ToList()
-            //    );
-            //});
+            agentsChartForDay.ForEach(x =>
+            {
+                clocks.AddRange(
+                    (from c in x.Charts
+                        join sc in codes on c.SchedulingCodeId equals sc.SchedulingCodeId
+                        select new ScheduleClock
+                        {
+                            Date = reportDate.Date,
+                            ActivityId = c.SchedulingCodeId,
+                            EmployeeId = x.Id,
+                            ActivityName = sc.Name,
+                            FromTime = c.StartTime,
+                            ToTime = c.EndTime
+                        }).ToList()
+                );
+            });
 
             return clocks;
         }

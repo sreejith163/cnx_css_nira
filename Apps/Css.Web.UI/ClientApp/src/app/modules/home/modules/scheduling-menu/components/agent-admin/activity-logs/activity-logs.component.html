@@ -157,8 +157,8 @@
                               <div class="col-md-12 d-flex justify-content-end mt-3">
                                   <nav aria-label="Page navigation example">
                                       <ul class="pagination p-0 float-">
-                                          <ngb-pagination class="p-r-5" [collectionSize]="totalRecord" [rotate]="true" [maxSize]="10" 
-                                              (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" 
+                                          <ngb-pagination class="p-r-5" [collectionSize]="totalRecord"
+                                              (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage"
                                               [boundaryLinks]="true"></ngb-pagination>
                                               &nbsp;
                                           <select class="form-control" (change)="changePageSize($event.target.value)">
@@ -172,7 +172,7 @@
                           <!-- /.card-body -->
                       </ng-container>
                       <ng-template #noData>
-                          <p class="text-center p-2 mt-2">{{ 'No match records found' | translate }}</p>
+                          <p class="text-center p-2 mt-2">No data to show</p>
                       </ng-template>
               </div>              
           </div>

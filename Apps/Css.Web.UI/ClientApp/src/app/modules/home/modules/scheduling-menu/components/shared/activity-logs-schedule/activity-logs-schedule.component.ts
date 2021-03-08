@@ -348,32 +348,21 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
           chart.agentScheduleChart.charts = icon?.charts;
           this.activityLogsChart.push(chart);
         });
-        this.sortChartData(icon?.charts);
-        chart.agentScheduleChart = new AgentScheduleChart();
-        chart.day = icon?.day;
-        chart.agentScheduleChart.charts = icon?.charts;
-      });
-      this.activityLogsChart.push(chart);
-
     }
     this.setAgentFilters();
   }
 
   private setManagerChartData() {
-    this.activityLogsData.forEach((item, index) => {
-      const chart = new ActivityLogsChart();
-      chart.id = index;
-      chart.employeeId = item?.employeeId;
-      chart.executedUser = item?.executedUser;
-      chart.executedBy = item?.executedBy;
-      chart.activityStatus = item?.activityStatus;
-      chart.activityOrigin = item?.activityOrigin;
-      chart.timeStamp = item?.timeStamp;
-      if (!item?.schedulingFieldDetails?.activityLogManager?.charts ||
-        item?.schedulingFieldDetails?.activityLogManager?.charts?.length === 0) {
-        item.schedulingFieldDetails.activityLogManager.charts = [];
-      } else {
-        item?.schedulingFieldDetails?.activityLogManager?.charts.map(x => {
+      this.activityLogsData.forEach((item, index) => {
+        const chart = new ActivityLogsChart();
+        chart.id = index;
+        chart.employeeId = item?.employeeId;
+        chart.executedUser = item?.executedUser;
+        chart.executedBy = item?.executedBy;
+        chart.activityStatus = item?.activityStatus;
+        chart.activityOrigin = item?.activityOrigin;
+        chart.timeStamp = item?.timeStamp;
+        item?.schedulingFieldDetails?.agentScheduleManagerCharts[0]?.charts.map(x => {
           x.endTime = x?.endTime.trim().toLowerCase();
           x.startTime = x?.startTime.trim().toLowerCase();
           if (x.endTime.trim().toLowerCase() === '00:00 am' || x.endTime.trim().toLowerCase() === '12:00 am') {

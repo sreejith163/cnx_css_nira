@@ -93,6 +93,7 @@ namespace Css.Api.Setup.Business
         public async Task<CSSResponse> CreateSkillGroup(CreateSkillGroup skillGroupDetails)
         {
             var clientLOBGroupIdDetails = new ClientLOBGroupIdDetails { ClientLOBGroupId = skillGroupDetails.ClientLobGroupId };
+            var skillGroupNameDetails = new SkillGroupNameDetails { Name = skillGroupDetails.Name };
 
             var clientLobGroup = await _repository.ClientLOBGroups.GetClientLOBGroup(clientLOBGroupIdDetails);
             if (clientLobGroup == null)
@@ -100,18 +101,8 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Client LOB Group with id '{skillGroupDetails.ClientLobGroupId}' not found", HttpStatusCode.NotFound);
             }
 
-            var skillGroups = await _repository.SkillGroups.GetSkillGroupIdsByClientLobIdAndSkillGroupNameOrRefId(new SkillGroupAttribute 
-            { 
-                ClientLobGroupId = skillGroupDetails.ClientLobGroupId,
-                Name = skillGroupDetails.Name,
-                RefId = skillGroupDetails.RefId
-            });
-
-            if (skillGroups?.Count > 0 && skillGroups[0].RefId != null && skillGroups[0].RefId == skillGroupDetails.RefId)
-            {
-                return new CSSResponse($"Skill Group with id '{skillGroupDetails.RefId}' already exists.", HttpStatusCode.Conflict);
-            }
-            else if (skillGroups?.Count > 0 && skillGroups[0].Name == skillGroupDetails.Name)
+            var skillGroups = await _repository.SkillGroups.GetSkillGroupIdsByClientLobIdAndSkillGroupName(clientLOBGroupIdDetails, skillGroupNameDetails);
+            if (skillGroups?.Count > 0)
             {
                 return new CSSResponse($"Skill Group with name '{skillGroupDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
@@ -156,24 +147,16 @@ namespace Css.Api.Setup.Business
             }
 
             var clientLOBGroupIdDetails = new ClientLOBGroupIdDetails { ClientLOBGroupId = skillGroupDetails.ClientLobGroupId };
+            var skillGroupNameDetails = new SkillGroupNameDetails { Name = skillGroupDetails.Name };
+
             var clientLobGroup = await _repository.ClientLOBGroups.GetClientLOBGroup(clientLOBGroupIdDetails);
             if (clientLobGroup == null)
             {
                 return new CSSResponse($"Client LOB Group with id '{skillGroupDetails.ClientLobGroupId}' not found", HttpStatusCode.NotFound);
             }
 
-            var skillGroups = await _repository.SkillGroups.GetSkillGroupIdsByClientLobIdAndSkillGroupNameOrRefId(new SkillGroupAttribute
-            {
-                ClientLobGroupId = skillGroupDetails.ClientLobGroupId,
-                Name = skillGroupDetails.Name,
-                RefId = skillGroupDetails.RefId
-            });
-            var result = skillGroups.Find(x => x.Id != skillGroupIdDetails.SkillGroupId);
-            if (result != null && result.RefId != null && result.RefId == skillGroupDetails.RefId)
-            {
-                return new CSSResponse($"Skill Group with id '{skillGroupDetails.RefId}' already exists.", HttpStatusCode.Conflict);
-            }
-            else if (result != null && result.Name == skillGroupDetails.Name)
+            var skillGroups = await _repository.SkillGroups.GetSkillGroupIdsByClientLobIdAndSkillGroupName(clientLOBGroupIdDetails, skillGroupNameDetails);
+            if (skillGroups?.Count > 0 && skillGroups.IndexOf(skillGroupIdDetails.SkillGroupId) == -1)
             {
                 return new CSSResponse($"Skill Group with name '{skillGroupDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }

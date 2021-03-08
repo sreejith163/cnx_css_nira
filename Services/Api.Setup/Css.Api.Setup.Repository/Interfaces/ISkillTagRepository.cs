@@ -54,13 +54,6 @@ namespace Css.Api.Setup.Repository.Interfaces
         Task<List<int>> GetAllSkillTagIdBySkillGroupIdAndGroupName(SkillGroupIdDetails skillGroupIdDetails, SkillTagNameDetails skillTagNameDetails);
 
         /// <summary>
-        /// Gets the name or refid of the skill tag identifier by skill group identifier and group.
-        /// </summary>
-        /// <param name="skillTagAttribute"></param>
-        /// <returns></returns>
-        Task<List<SkillTag>> GetSkillTagIdBySkillGroupIdAndGroupNameOrRefId(SkillTagAttribute skillTagAttribute);
-
-        /// <summary>
         /// Creates the skill tag.
         /// </summary>
         /// <param name="skillTagRequest">The skill tag request.</param>

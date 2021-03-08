@@ -31,7 +31,6 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
   @Input() clientId: number;
   @Input() clientLobGroupId: number;
   @Input() skillGroupId: number;
-  @Input() heirarchy: boolean;
   @Output() skillGroupSelected = new EventEmitter();
 
   constructor(
@@ -39,12 +38,7 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
   ) { }
 
   ngOnInit(): void {
-    if (!this.heirarchy) {
-      this.subscribeToSkillGroups();
-    } else {
-      this.skillGroupItemsBuffer = [];
-      this.totalItems = 0;
-    }
+    this.subscribeToSkillGroups();
     this.subscribeToSearching();
   }
 
@@ -143,7 +137,7 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
     queryParams.pageSize = this.skillGroupItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
-    queryParams.skipPageSize = false;
+    queryParams.skipPageSize = true;
     queryParams.orderBy = undefined;
     queryParams.fields = 'id, name';
 

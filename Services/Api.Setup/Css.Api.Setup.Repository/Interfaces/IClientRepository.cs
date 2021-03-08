@@ -22,13 +22,6 @@ namespace Css.Api.Setup.Repository.Interfaces
         /// <returns></returns>
         Task<List<int>> GetClientsByName(ClientNameDetails clientNameDetails);
 
-        /// <summary>
-        /// Gets the name of the client by name or refid.
-        /// </summary>
-        /// <param name="clientAttributes"></param>
-        /// <returns></returns>
-        Task<List<Client>> GetClientsByNameOrRefId(ClientAttributes clientAttributes);
-
         /// <summary>Gets the name of all clients by.</summary>
         /// <param name="clientNameDetails">The client name details.</param>
         /// <returns>

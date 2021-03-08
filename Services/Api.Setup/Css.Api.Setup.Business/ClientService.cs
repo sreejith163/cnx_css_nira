@@ -89,13 +89,9 @@ namespace Css.Api.Setup.Business
         /// <returns></returns>
         public async Task<CSSResponse> CreateClient(CreateClient clientDetails)
         {
-            var client = await _repository.Clients.GetClientsByNameOrRefId(new ClientAttributes { Name = clientDetails.Name, RefId = clientDetails.RefId });
+            var clients = await _repository.Clients.GetClientsByName(new ClientNameDetails { Name = clientDetails.Name });
 
-            if (client?.Count > 0 && client[0].RefId != null && client[0].RefId == clientDetails.RefId)
-            {
-                return new CSSResponse($"Client with id '{clientDetails.RefId}' already exists.", HttpStatusCode.Conflict);
-            }
-            else if (client?.Count > 0 && client[0].Name == clientDetails.Name) 
+            if (clients?.Count > 0) 
             {
                 return new CSSResponse($"Client with name '{clientDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }
@@ -130,13 +126,8 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var clients = await _repository.Clients.GetClientsByNameOrRefId(new ClientAttributes { Name = clientDetails.Name, RefId = clientDetails.RefId });
-            var result = clients.Find(x => x.Id != clientIdDetails.ClientId);
-            if (result != null && result.RefId != null && result.RefId == clientDetails.RefId)
-            {
-                return new CSSResponse($"Client with id '{clientDetails.RefId}' already exists.", HttpStatusCode.Conflict);
-            }
-            else if (result != null && result.Name == clientDetails.Name)
+            var clients = await _repository.Clients.GetClientsByName(new ClientNameDetails { Name = clientDetails.Name });
+            if (clients?.Count > 0 && clients.IndexOf(clientIdDetails.ClientId) == -1)
             {
                 return new CSSResponse($"Client with name '{clientDetails.Name}' already exists.", HttpStatusCode.Conflict);
             }

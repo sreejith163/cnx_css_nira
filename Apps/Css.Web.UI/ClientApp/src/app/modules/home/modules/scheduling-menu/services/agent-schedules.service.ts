@@ -8,13 +8,11 @@ import { AgentSchedulesQueryParams } from '../models/agent-schedules-query-param
 import { UpdateAgentSchedule } from '../models/update-agent-schedule.model';
 import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
 import { UpdateAgentschedulechart } from '../models/update-agent-schedule-chart.model';
-import { CopyAgentScheduleChart } from '../models/copy-agent-schedule-chart.model';
+import { CopyAgentSchedulechart } from '../models/copy-agent-schedule-chart.model';
+import { AgentChartResponse } from '../models/agent-chart-response.model';
 import { ImportShceduleChart } from '../models/import-schedule-chart.model';
 import { UpdateAgentScheduleMangersChart } from '../models/update-agent-schedule-managers-chart.model';
-import { AgentScheduleChartResponse } from '../models/agent-schedule-chart-response.model';
-import { ScheduleDateRangeBase } from '../models/schedule-date-range-base.model';
-import { UpdateScheduleDateRange } from '../models/update-schedule-date-range.model';
-import { DateRangeQueryParms } from '../models/date-range-query-params.model';
+import { ScheduleChartQueryParams } from '../models/schedule-chart-query-params.model';
 
 @Injectable()
 export class AgentSchedulesService extends HttpBaseService {
@@ -44,21 +42,13 @@ export class AgentSchedulesService extends HttpBaseService {
     .pipe(catchError(this.handleError));
   }
 
-  getAgentScheduleRange(agentScheduleId: string, model: DateRangeQueryParms) {
-    const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/exists`;
-
-    return this.http.get<AgentSchedulesResponse>(url,{
-      params: this.convertToHttpParam(model),
-      observe: 'response'
-    })
-    .pipe(catchError(this.handleError));
-  }
-
-  getCharts(agentScheduleId: string) {
+  getCharts(agentScheduleId: string, queryParams: ScheduleChartQueryParams) {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/charts`;
 
-    return this.http.get<AgentScheduleChartResponse>(url)
-    .pipe(catchError(this.handleError));
+    return this.http.get<AgentChartResponse>(url,
+      {
+        params: this.convertToHttpParam(queryParams),
+      }).pipe(catchError(this.handleError));
   }
 
   updateAgentSchedule(agentScheduleId: string, updateAgent: UpdateAgentSchedule) {
@@ -89,27 +79,10 @@ export class AgentSchedulesService extends HttpBaseService {
     .pipe(catchError(this.handleError));
   }
 
-  copyAgentScheduleChart(agentScheduleId: string, copyAgentScheduleChart: CopyAgentScheduleChart) {
+  copyAgentScheduleChart(agentScheduleId: string, copyAgentScheduleChart: CopyAgentSchedulechart) {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/copy`;
 
     return this.http.put<ApiResponseModel>(url, copyAgentScheduleChart)
-    .pipe(catchError(this.handleError));
-  }
-
-  updateAgentScheduleRange(agentScheduleId: string, updateModel: UpdateScheduleDateRange) {
-    const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/range`;
-
-    return this.http.put<ApiResponseModel>(url, updateModel)
-    .pipe(catchError(this.handleError));
-  }
-
-  deleteAgentScheduleRange(agentScheduleId: string, queryparams: DateRangeQueryParms) {
-    const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/range`;
-
-    return this.http.delete<ApiResponseModel>(url, {
-        params: this.convertToHttpParam(queryparams),
-        observe: 'response'
-      })
     .pipe(catchError(this.handleError));
   }
 }

@@ -134,19 +134,6 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(count);
         }
 
-        /// <summary>
-        /// Gets the name of the client lob groups identifier by client identifier and group or refid.
-        /// </summary>
-        /// <param name="clientAttributes"></param>
-        /// <returns></returns>
-        public async Task<List<ClientLobGroup>> GetClientLOBGroupsIdByClientIdAndGroupNameOrRefId(ClientLOBGroupAttribute clientLOBGroupAttribute)
-        {
-            var clientLOBGroups = FindByCondition(x => x.ClientId == clientLOBGroupAttribute.ClientId && (string.Equals(x.Name.Trim(), clientLOBGroupAttribute.Name.Trim(),
-                      StringComparison.OrdinalIgnoreCase) || x.RefId == (clientLOBGroupAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
-
-            return await Task.FromResult(clientLOBGroups);
-        }
-
         /// <summary>Gets the name of all client lob groups identifier by client identifier and group.</summary>
         /// <param name="clientIdDetails">The client identifier details.</param>
         /// <param name="clientLOBGroupNameDetails">The client lob group name details.</param>

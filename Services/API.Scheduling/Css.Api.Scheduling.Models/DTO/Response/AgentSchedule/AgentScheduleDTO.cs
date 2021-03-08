@@ -1,9 +1,8 @@
-﻿using Css.Api.Core.Models.Domain.NoSQL;
+﻿using Css.Api.Core.Models.Enums;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
 {
@@ -38,13 +37,25 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentSchedule
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ActiveAgentSchedulingGroupId { get; set; }
+        public int? AgentSchedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the ranges.
+        /// Gets or sets the date from.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleRange> Ranges { get; set; }
+        public DateTimeOffset? DateFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date to.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DateTimeOffset? DateTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public SchedulingStatus? Status { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.

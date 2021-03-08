@@ -49,7 +49,7 @@
               <ngx-spinner [name]="spinner"></ngx-spinner>
               <tr *ngIf="agents?.length === 0" class="valid-record">
                 <td colspan="12">
-                  {{ 'No match records found' | translate }}</td>
+                  {{ 'No data to show' | translate }}</td>
               </tr>
               <tr *ngFor="let x of agents">
                 <td>
@@ -75,7 +75,7 @@
       <div class="col-md-12 d-flex justify-content-end mt-3">
         <nav aria-label="Page navigation example" class="m-r-20">
           <ul class="pagination p-0 float-right">
-            <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalAgents" (pageChange)="changePage($event)" [rotate]="true" [maxSize]="10" 
+            <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalAgents" (pageChange)="changePage($event)"
               [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
             </ngb-pagination>
             <select class="form-control" (change)="changePageSize($event.target.value)">

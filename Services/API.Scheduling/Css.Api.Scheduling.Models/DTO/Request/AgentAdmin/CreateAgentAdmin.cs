@@ -1,4 +1,4 @@
-﻿using Css.Api.Core.Models.Enums;
+﻿using Css.Api.Scheduling.Models.Enums;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
 {

@@ -136,20 +136,6 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(count);
         }
 
-        /// <summary>
-        /// Gets the name or refid of the skill tag identifier by skill group identifier and group.
-        /// </summary>
-        /// <param name="skillTagAttribute"></param>
-        /// <returns></returns>
-        public async Task<List<SkillTag>> GetSkillTagIdBySkillGroupIdAndGroupNameOrRefId(SkillTagAttribute skillTagAttribute)
-        {
-            var skillTags = FindByCondition
-            (x => x.SkillGroupId == skillTagAttribute.SkillGroupId && (string.Equals(x.Name.Trim(), skillTagAttribute.Name.Trim(),
-                      StringComparison.OrdinalIgnoreCase) || x.RefId == (skillTagAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
-
-            return await Task.FromResult(skillTags);
-        }
-
         /// <summary>Gets the name of all skill tag identifier by skill group identifier and group.</summary>
         /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
         /// <param name="skillTagNameDetails">The skill tag name details.</param>

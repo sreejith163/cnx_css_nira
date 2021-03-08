@@ -138,15 +138,6 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         }
 
         /// <summary>
-        /// Deletes the one asynchronous.
-        /// </summary>
-        /// <param name="filter">The filter.</param>
-        public virtual void DeleteOneAsync(FilterDefinition<TDocument> filter)
-        {
-            Context.AddCommand(() => Collection.DeleteOneAsync(filter));
-        }
-
-        /// <summary>
         /// Deletes the by identifier asynchronous.
         /// </summary>
         /// <param name="id">The identifier.</param>

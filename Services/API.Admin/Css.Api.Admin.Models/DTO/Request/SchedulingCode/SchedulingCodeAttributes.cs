@@ -10,11 +10,6 @@ namespace Css.Api.Admin.Models.DTO.Request.SchedulingCode
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        public int? RefId { get; set; }
-
-        /// <summary>
         /// Gets or sets the priority.
         /// </summary>
         public int PriorityNumber { get; set; }

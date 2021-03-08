@@ -1,9 +1,8 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
 using Css.Api.Scheduling.Models.Enums;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-/// <summary>
-/// 
-/// </summary>
 namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
 {
     public class ActivityLogQueryParameter : QueryStringParameters
@@ -27,9 +26,6 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
         /// <summary>
         /// Gets or sets the executed user.
         /// </summary>
-        /// <value>
-        /// The executed user.
-        /// </value>
         public int? ExecutedUser { get; set; }
 
         /// <summary>
@@ -37,19 +33,10 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
         /// </summary>
         public string ExecutedBy { get; set; }
 
-        /// <summary>
-        /// Gets or sets the field.
-        /// </summary>
         public string Field { get; set; }
 
-        /// <summary>
-        /// Creates new value.
-        /// </summary>
         public string NewValue { get; set; }
 
-        /// <summary>
-        /// Gets or sets the old value.
-        /// </summary>
         public string OldValue { get; set; }
 
         /// <summary>

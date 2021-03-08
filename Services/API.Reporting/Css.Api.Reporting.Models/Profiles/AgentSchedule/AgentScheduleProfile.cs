@@ -20,9 +20,8 @@ namespace Css.Api.Reporting.Models.Profiles.AgentSchedule
                 .ForMember(x => x.ModifiedBy, opt => opt.Ignore())
                 .ForMember(x => x.ModifiedDate, opt => opt.Ignore())
                 .ForMember(x => x.IsDeleted, opt => opt.MapFrom(o => false))
-                //.ForMember(x => x.AgentSchedulingGroupId, opt => opt.MapFrom(o => o.AgentSchedulingGroupId))
-                //.ForMember(x => x.Status, opt => opt.MapFrom(o => SchedulingStatus.Pending_Schedule))
-                ;
+                .ForMember(x => x.AgentSchedulingGroupId, opt => opt.MapFrom(o => o.AgentSchedulingGroupId))
+                .ForMember(x => x.Status, opt => opt.MapFrom(o => SchedulingStatus.Pending_Schedule));
         }
     }
 }

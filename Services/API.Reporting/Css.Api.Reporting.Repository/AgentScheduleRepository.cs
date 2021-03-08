@@ -31,11 +31,10 @@ namespace Css.Api.Reporting.Repository
         /// <returns>The list of instances of AgentSchedule</returns>
         public async Task<List<AgentSchedule>> GetSchedules(DateTime reportDate)
         {
-            var query = Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) // &
-                //Builders<AgentSchedule>.Filter.Lte(i => i.DateFrom, reportDate) &
-                //Builders<AgentSchedule>.Filter.Gte(i => i.DateTo, reportDate) &
-                //Builders<AgentSchedule>.Filter.Where(i => i.AgentScheduleCharts.Any(x => x.Day == (int)reportDate.DayOfWeek))
-                ;
+            var query = Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) &
+                Builders<AgentSchedule>.Filter.Lte(i => i.DateFrom, reportDate) &
+                Builders<AgentSchedule>.Filter.Gte(i => i.DateTo, reportDate) &
+                Builders<AgentSchedule>.Filter.Where(i => i.AgentScheduleCharts.Any(x => x.Day == (int) reportDate.DayOfWeek));
 
             var schedules = FilterBy(query);
 
@@ -69,20 +68,20 @@ namespace Css.Api.Reporting.Repository
 
                 var update = Builders<AgentSchedule>.Update.SetOnInsert(x => x.EmployeeId, agentScheduleDetails.EmployeeId)
                     .SetOnInsert(x => x.IsDeleted, agentScheduleDetails.IsDeleted)
-                    //.SetOnInsert(x => x.DateFrom, agentScheduleDetails.DateFrom)
-                    //.SetOnInsert(x => x.DateTo, agentScheduleDetails.DateTo)
-                    //.SetOnInsert(x => x.Status, agentScheduleDetails.Status)
+                    .SetOnInsert(x => x.DateFrom, agentScheduleDetails.DateFrom)
+                    .SetOnInsert(x => x.DateTo, agentScheduleDetails.DateTo)
+                    .SetOnInsert(x => x.Status, agentScheduleDetails.Status)
                     .SetOnInsert(x => x.CreatedBy, agentScheduleDetails.CreatedBy)
                     .SetOnInsert(x => x.CreatedDate, agentScheduleDetails.CreatedDate)
-                    //.SetOnInsert(x => x.AgentScheduleCharts, agentScheduleDetails.AgentScheduleCharts)
-                    //.SetOnInsert(x => x.AgentScheduleManagerCharts, agentScheduleDetails.AgentScheduleManagerCharts)
+                    .SetOnInsert(x => x.AgentScheduleCharts, agentScheduleDetails.AgentScheduleCharts)
+                    .SetOnInsert(x => x.AgentScheduleManagerCharts, agentScheduleDetails.AgentScheduleManagerCharts)
                     .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
                     .Set(x => x.ModifiedDate, agentScheduleDetails.ModifiedDate);
 
-                //if (agentScheduleDetails.AgentSchedulingGroupId > 0)
-                //{
-                //    update = update.Set(x => x.AgentSchedulingGroupId, agentScheduleDetails.AgentSchedulingGroupId);
-                //}
+                if (agentScheduleDetails.AgentSchedulingGroupId > 0)
+                {
+                    update = update.Set(x => x.AgentSchedulingGroupId, agentScheduleDetails.AgentSchedulingGroupId);
+                }
 
                 UpdateOneAsync(query, update, new UpdateOptions
                 {

@@ -106,19 +106,6 @@ namespace Css.Api.Setup.Repository
             return await Task.FromResult(clients);
         }
 
-        /// <summary>
-        /// Gets the name of the client by name or refid.
-        /// </summary>
-        /// <param name="clientAttributes"></param>
-        /// <returns></returns>
-        public async Task<List<Client>> GetClientsByNameOrRefId(ClientAttributes clientAttributes)
-        {
-            var clients = FindByCondition(x => (string.Equals(x.Name.Trim(), clientAttributes.Name.Trim(), StringComparison.OrdinalIgnoreCase) || x.RefId == (clientAttributes.RefId ?? 0)) && x.IsDeleted == false)
-                .ToList();
-
-            return await Task.FromResult(clients);
-        }
-
         /// <summary>Gets the name of all clients by.</summary>
         /// <param name="clientNameDetails">The client name details.</param>
         /// <returns>

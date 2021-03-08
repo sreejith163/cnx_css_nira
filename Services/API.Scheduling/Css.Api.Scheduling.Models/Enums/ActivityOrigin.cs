@@ -1,4 +1,4 @@
-﻿namespace Css.Api.Core.Models.Enums
+﻿namespace Css.Api.Scheduling.Models.Enums
 {
     public enum ActivityOrigin
     {

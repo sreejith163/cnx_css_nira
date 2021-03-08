@@ -1,6 +1,9 @@
-﻿using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
+﻿using Css.Api.Core.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
+using Css.Api.Core.Models.Enums;
 using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
 using System;
+using System.Linq;
 
 namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
 {
@@ -11,9 +14,7 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
         {
             CreateMap<NoSQL.Agent, NoSQL.AgentSchedule>()
                 .ForMember(x => x.EmployeeId, opt => opt.MapFrom(o => o.Ssn))
-                .ForMember(x => x.FirstName, opt => opt.MapFrom(o => o.FirstName.Trim()))
-                .ForMember(x => x.LastName, opt => opt.MapFrom(o => o.LastName.Trim()))
-                .ForMember(x => x.ActiveAgentSchedulingGroupId, opt => opt.MapFrom(o => o.AgentSchedulingGroupId))
+                .ForMember(x => x.Status, opt => opt.MapFrom(o => SchedulingStatus.Approved))
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTimeOffset.UtcNow))
                 .ReverseMap();
 
@@ -26,10 +27,12 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
             CreateMap<NoSQL.AgentSchedule, AgentScheduleChartDetailsDTO>()
                 .ReverseMap();
 
-            CreateMap<NoSQL.AgentScheduleRange, AgentScheduleRangeDTO>()
+            CreateMap<NoSQL.AgentSchedule, AgentScheduleManagerChartDetailsDTO>()
+                .ForMember(x => x.AgentScheduleChart, opt => opt.MapFrom(o => o.AgentScheduleCharts.ToList().FirstOrDefault()))
                 .ReverseMap();
 
-            
+            CreateMap<PagedList<Entity>, AgentScheduleDTO>()
+                .ReverseMap();
         }
     }
 }

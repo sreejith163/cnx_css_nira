@@ -56,19 +56,6 @@ namespace Css.Api.Scheduling.Controllers
         }
 
         /// <summary>
-        /// Determines whether [is agent schedule range exist] [the specified agent schedule identifier].
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        /// <param name="dateRangeDetails">The date range details.</param>
-        /// <returns></returns>
-        [HttpGet("{agentScheduleId}/exists")]
-        public async Task<IActionResult> IsAgentScheduleRangeExist(string agentScheduleId, [FromQuery] DateRange dateRangeDetails)
-        {
-            var result = await _agentScheduleService.IsAgentScheduleRangeExist(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
-            return StatusCode((int)result.Code, result.Value);
-        }
-
-        /// <summary>
         /// Gets the agent schedule.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
@@ -108,6 +95,18 @@ namespace Css.Api.Scheduling.Controllers
         }
 
         /// <summary>
+        /// Updates the agent schedule manager chart.
+        /// </summary>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        [HttpPut("managercharts")]
+        public async Task<IActionResult> UpdateAgentScheduleManagerChart([FromBody] UpdateAgentScheduleManagerChart agentScheduleDetails)
+        {
+            var result = await _agentScheduleService.UpdateAgentScheduleMangerChart(agentScheduleDetails);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>
         /// Updates the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
@@ -120,41 +119,15 @@ namespace Css.Api.Scheduling.Controllers
         }
 
         /// <summary>
-        /// Copies the agent schedule chart.
+        /// Copies the agent schedule.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
         [HttpPut("{agentScheduleId}/copy")]
-        public async Task<IActionResult> CopyAgentScheduleChart(string agentScheduleId, [FromBody] CopyAgentSchedule agentScheduleDetails)
+        public async Task<IActionResult> CopyAgentSchedule(string agentScheduleId, [FromBody] CopyAgentSchedule agentScheduleDetails)
         {
-            var result = await _agentScheduleService.CopyAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
-            return StatusCode((int)result.Code, result.Value);
-        }
-
-        /// <summary>
-        /// Updates the agent schedule range.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        /// <param name="dateRangeDetails">The date range details.</param>
-        /// <returns></returns>
-        [HttpPut("{agentScheduleId}/range")]
-        public async Task<IActionResult> UpdateAgentScheduleRange(string agentScheduleId, [FromBody] UpdateAgentScheduleDateRange dateRangeDetails)
-        {
-            var result = await _agentScheduleService.UpdateAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
-            return StatusCode((int)result.Code, result.Value);
-        }
-
-        /// <summary>
-        /// Deletes the agent schedule range.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        /// <param name="dateRangeDetails">The date range details.</param>
-        /// <returns></returns>
-        [HttpDelete("{agentScheduleId}/range")]
-        public async Task<IActionResult> DeleteAgentScheduleRange(string agentScheduleId, [FromQuery] DateRange dateRangeDetails)
-        {
-            var result = await _agentScheduleService.DeleteAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
+            var result = await _agentScheduleService.CopyAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
             return StatusCode((int)result.Code, result.Value);
         }
 

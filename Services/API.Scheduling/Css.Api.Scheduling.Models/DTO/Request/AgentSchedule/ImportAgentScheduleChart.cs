@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Css.Api.Core.Models.Domain.NoSQL;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
+using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
@@ -9,17 +13,20 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// </summary>
         public int EmployeeId { get; set; }
 
+        /// Gets or sets the date from.
+        /// </summary>
+        [BsonRepresentation(BsonType.String)]
+        public DateTimeOffset? DateFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date to.
+        /// </summary>
+        [BsonRepresentation(BsonType.String)]
+        public DateTimeOffset? DateTo { get; set; }
+
         /// <summary>
         /// Gets or sets the charts.
         /// </summary>
-        public List<ImportAgentScheduleRange> Ranges { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ImportAgentScheduleChart"/> class.
-        /// </summary>
-        public ImportAgentScheduleChart()
-        {
-            Ranges = new List<ImportAgentScheduleRange>();
-        }
+        public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
     }
 }
