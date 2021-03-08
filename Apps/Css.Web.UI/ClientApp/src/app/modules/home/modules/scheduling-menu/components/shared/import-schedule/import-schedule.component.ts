@@ -452,10 +452,14 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       const chartArray = new Array<ScheduleChart>();
       const scheduleRangeList = new Array<ScheduleDateRangeBase>();
       importData.employeeId = employee.employeeId;
-      const array = new Array<ImportAgentScheduleRanges>();
+
       for (const item of employeeDetails) {
-        item.StartDate = new Date(item.StartDate);
-        item.EndDate = new Date(item.EndDate);
+        const startDate = new Date(item.StartDate);
+        const endDate = new Date(item.EndDate);
+
+        item.StartDate = this.getFormattedDate(startDate);
+        item.EndDate = this.getFormattedDate(endDate);
+
         if (scheduleRangeList.filter(x => this.getDateInStringFormat(x.dateFrom) === this.getDateInStringFormat(item.StartDate) &&
           this.getDateInStringFormat(x.dateTo) === this.getDateInStringFormat(item.EndDate)).length === 0) {
           const range = new ScheduleDateRangeBase();
