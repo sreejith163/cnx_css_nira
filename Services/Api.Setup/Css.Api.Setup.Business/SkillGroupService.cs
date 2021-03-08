@@ -127,14 +127,15 @@ namespace Css.Api.Setup.Business
             await _bus.SendCommand<CreateSkillGroupCommand>(MassTransitConstants.SkillGroupCreateCommandRouteKey,
                new
                {
-                   Id = skillGroupRequest.Id,
-                   Name = skillGroupRequest.Name,
-                   ClientId = skillGroupRequest.ClientId,
-                   ClientLobGroupId = skillGroupRequest.ClientLobGroupId,
-                   TimezoneId = skillGroupRequest.TimezoneId,
-                   FirstDayOfWeek = skillGroupRequest.FirstDayOfWeek,
+                   skillGroupRequest.Id,
+                   skillGroupRequest.Name,
+                   skillGroupRequest.RefId,
+                   skillGroupRequest.ClientId,
+                   skillGroupRequest.ClientLobGroupId,
+                   skillGroupRequest.TimezoneId,
+                   skillGroupRequest.FirstDayOfWeek,
                    OperationHour = JsonConvert.SerializeObject(skillGroupDetails.OperationHour),
-                   ModifiedDate = skillGroupRequest.ModifiedDate
+                   skillGroupRequest.ModifiedDate
                });
 
 
@@ -222,18 +223,19 @@ namespace Css.Api.Setup.Business
                     MassTransitConstants.SkillGroupUpdateCommandRouteKey,
                     new
                     {
-                        Id = skillGroupRequest.Id,
+                        skillGroupRequest.Id,
                         NameOldValue = skillGroupDetailsPreUpdate.Name,
+                        RefIdOldValue = skillGroupDetailsPreUpdate.RefId,
                         ClientIdOldValue = skillGroupDetailsPreUpdate.ClientId,
                         ClientLobGroupIdOldvalue = skillGroupDetailsPreUpdate.ClientLobGroupId,
                         TimezoneIdOldValue = skillGroupDetailsPreUpdate.TimezoneId,
                         FirstDayOfWeekOldValue = skillGroupDetailsPreUpdate.FirstDayOfWeek,
-                        OperationHourOldValue =
-                            JsonConvert.SerializeObject(skillGroupPreRequest.OperationHour),
+                        OperationHourOldValue = JsonConvert.SerializeObject(skillGroupPreRequest.OperationHour),
                         ModifiedByOldValue = skillGroupDetailsPreUpdate.ModifiedBy,
                         ModifiedDateOldValue = skillGroupDetailsPreUpdate.ModifiedDate,
                         IsDeletedOldValue = skillGroupDetailsPreUpdate.IsDeleted,
                         NameNewValue = skillGroupRequest.Name,
+                        RefIdNewValue = skillGroupRequest.RefId,
                         ClientIdNewValue = skillGroupRequest.ClientId,
                         ClientLobGroupIdNewValue = skillGroupRequest.ClientLobGroupId,
                         IsDeletedNewValue = skillGroupRequest.IsDeleted
@@ -243,6 +245,14 @@ namespace Css.Api.Setup.Business
             return new CSSResponse(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Reverts the skill group.
+        /// </summary>
+        /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
+        /// <param name="skillGroupDetails">The skill group details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
         public async Task<CSSResponse> RevertSkillGroup(SkillGroupIdDetails skillGroupIdDetails, UpdateSkillGroup skillGroupDetails)
         {
             var skillGroup = await _repository.SkillGroups.GetAllSkillGroup(skillGroupIdDetails);
@@ -304,6 +314,7 @@ namespace Css.Api.Setup.Business
             skillGroupDetailsPreUpdate = new SkillGroup
             {
                 Name = skillGroup.Name,
+                RefId = skillGroup.RefId,
                 ClientId = skillGroup.ClientId,
                 ClientLobGroupId = skillGroup.ClientLobGroupId,
                 FirstDayOfWeek = skillGroup.FirstDayOfWeek,
@@ -327,12 +338,13 @@ namespace Css.Api.Setup.Business
                MassTransitConstants.SkillGroupDeleteCommandRouteKey,
                new
                {
-                   Id = skillGroup.Id,
-                   Name = skillGroupDetailsPreUpdate.Name,
-                   ClientId = skillGroupDetailsPreUpdate.ClientId,
-                   ClientLobGroupId = skillGroupDetailsPreUpdate.ClientLobGroupId,
-                   TimezoneId = skillGroupDetailsPreUpdate.TimezoneId,
-                   FirstDayOfWeek = skillGroupDetailsPreUpdate.FirstDayOfWeek,
+                   skillGroup.Id,
+                   skillGroupDetailsPreUpdate.Name,
+                   skillGroupDetailsPreUpdate.RefId,
+                   skillGroupDetailsPreUpdate.ClientId,
+                   skillGroupDetailsPreUpdate.ClientLobGroupId,
+                   skillGroupDetailsPreUpdate.TimezoneId,
+                   skillGroupDetailsPreUpdate.FirstDayOfWeek,
                    OperationHour = JsonConvert.SerializeObject(skillGroupPreRequest.OperationHour),
                    ModifiedByOldValue = skillGroupDetailsPreUpdate.ModifiedBy,
                    IsDeletedOldValue = skillGroupDetailsPreUpdate.IsDeleted,

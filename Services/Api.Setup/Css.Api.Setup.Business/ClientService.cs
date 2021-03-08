@@ -106,10 +106,11 @@ namespace Css.Api.Setup.Business
             await _repository.SaveAsync();
 
             await _bus.SendCommand<CreateClientCommand>(MassTransitConstants.ClientCreateCommandRouteKey, 
-                new { 
-                    Id = clientRequest.Id, 
-                    Name = clientRequest.Name,
-                    ModifiedDate = clientRequest.ModifiedDate
+                new {
+                    clientRequest.Id, 
+                    clientRequest.Name,
+                    clientRequest.RefId,
+                    clientRequest.ModifiedDate
                 });
 
             return new CSSResponse(new ClientIdDetails { ClientId = clientRequest.Id }, HttpStatusCode.Created);
@@ -165,19 +166,20 @@ namespace Css.Api.Setup.Business
                     MassTransitConstants.ClientUpdateCommandRouteKey,
                     new
                     {
-                       clientRequest.Id,
+                        clientRequest.Id,
                         NameOldValue = clientDetailsPreUpdate.Name,
+                        RefIdOldValue = clientDetailsPreUpdate.RefId,
                         ModifiedByOldValue = clientDetailsPreUpdate.ModifiedBy,
                         IsDeletedOldValue = clientDetailsPreUpdate.IsDeleted,
                         ModifiedDateOldValue = clientDetailsPreUpdate.ModifiedDate,
                         NameNewValue = clientRequest.Name,
+                        RefIdNewValue = clientRequest.RefId,
                         IsDeletedNewValue = clientRequest.IsDeleted
                     });
             }
 
             return new CSSResponse(HttpStatusCode.NoContent);
         }
-
 
         /// <summary>Reverts the client.</summary>
         /// <param name="clientIdDetails">The client identifier details.</param>
@@ -231,6 +233,7 @@ namespace Css.Api.Setup.Business
             var clientDetailsPreUpdate = new Client
             {
                 Name = client.Name,
+                RefId = client.RefId,
                 ModifiedBy = client.ModifiedBy,
                 IsDeleted = client.IsDeleted,
                 ModifiedDate = client.ModifiedDate
@@ -245,9 +248,10 @@ namespace Css.Api.Setup.Business
                 MassTransitConstants.ClientDeleteCommandRouteKey,
                 new
                 {
-                   client.Id,
-                   client.Name,
-                   ModifiedByOldValue = clientDetailsPreUpdate.ModifiedBy,
+                    client.Id,
+                    client.Name,
+                    client.RefId,
+                    ModifiedByOldValue = clientDetailsPreUpdate.ModifiedBy,
                     IsDeletedOldValue = clientDetailsPreUpdate.IsDeleted,
                     ModifiedDateOldValue = clientDetailsPreUpdate.ModifiedDate,
                     IsDeletedNewValue = client.IsDeleted

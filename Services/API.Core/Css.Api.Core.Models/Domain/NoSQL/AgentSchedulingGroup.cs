@@ -40,8 +40,9 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// </summary>
         public string Name { get; set; }
 
-        /// <summary>Gets or sets the reference identifier.</summary>
-        /// <value>The reference identifier.</value>
+        /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
         public int? RefId { get; set; }
 
         /// <summary>

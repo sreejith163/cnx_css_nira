@@ -15,6 +15,11 @@ namespace Css.Api.Core.EventBus.Commands.SchedulingCode
         /// <value>The name old value.</value>
         public string NameOldValue { get; set; }
 
+        /// <summary>
+        /// Gets or sets the reference identifier old value.
+        /// </summary>
+        public int? RefIdOldValue { get; set; }
+
         /// <summary>Gets or sets the priority number old value.</summary>
         /// <value>The priority number old value.</value>
         public int PriorityNumberOldValue { get; set; }
@@ -48,6 +53,11 @@ namespace Css.Api.Core.EventBus.Commands.SchedulingCode
         /// <summary>Gets or sets the name new value.</summary>
         /// <value>The name new value.</value>
         public string NameNewValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference identifier new value.
+        /// </summary>
+        public int? RefIdNewValue { get; set; }
 
         /// <summary>Gets or sets the priority number new value.</summary>
         /// <value>The priority number new value.</value>

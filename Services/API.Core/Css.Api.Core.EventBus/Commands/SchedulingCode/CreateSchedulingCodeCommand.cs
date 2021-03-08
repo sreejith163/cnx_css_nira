@@ -12,6 +12,11 @@ namespace Css.Api.Core.EventBus.Commands.SchedulingCode
         /// <value>The name.</value>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
+        public int? RefId { get; set; }
+
         /// <summary>Gets or sets the priority number.</summary>
         /// <value>The priority number.</value>
         public int PriorityNumber { get; set; }

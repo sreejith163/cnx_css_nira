@@ -653,32 +653,10 @@
       "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}",
       "UpstreamHttpMethod": [ "Put" ]
     },
-    //********* Timeoffs Routes *********************
-    {
-      "DownstreamPathTemplate": "/api/v1/timeoffs",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 44393
-        }
-      ],
-      "UpstreamPathTemplate": "/api/timeoffs",
-      "UpstreamHttpMethod": [ "Get", "Post" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/timeoffs/{timeOffId}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 44393
-        }
-      ],
-      "UpstreamPathTemplate": "/api/timeoffs/{timeOffId}",
-      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
-    },
+
+
     //********* Activity Routes *********************
+
     {
       "DownstreamPathTemplate": "/api/v1/activity",
       "DownstreamScheme": "https",

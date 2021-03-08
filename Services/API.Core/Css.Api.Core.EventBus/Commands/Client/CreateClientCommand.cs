@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Css.Api.Core.EventBus.Commands.Client
 {
@@ -16,6 +14,11 @@ namespace Css.Api.Core.EventBus.Commands.Client
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
+        public int? RefId { get; set; }
 
         /// <summary>Gets or sets the modified date.</summary>
         /// <value>The modified date.</value>

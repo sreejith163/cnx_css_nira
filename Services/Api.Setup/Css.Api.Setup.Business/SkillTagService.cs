@@ -106,8 +106,8 @@ namespace Css.Api.Setup.Business
                 return new CSSResponse($"Skill Group with id '{skillGroupIdDetails.SkillGroupId}' not found", HttpStatusCode.NotFound);
             }
 
-            var skillTags = await _repository.SkillTags.GetSkillTagIdBySkillGroupIdAndGroupNameOrRefId(new SkillTagAttribute 
-            { 
+            var skillTags = await _repository.SkillTags.GetSkillTagIdBySkillGroupIdAndGroupNameOrRefId(new SkillTagAttribute
+            {
                 SkillGroupId = skillTagDetails.SkillGroupId,
                 Name = skillTagDetails.Name,
                 RefId = skillTagDetails.RefId
@@ -134,13 +134,14 @@ namespace Css.Api.Setup.Business
             await _bus.SendCommand<CreateSkillTagCommand>(MassTransitConstants.SkillTagCreateCommandRouteKey,
                new
                {
-                   Id = skillTagRequest.Id,
-                   Name = skillTagRequest.Name,
-                   ClientId = skillTagRequest.ClientId,
-                   ClientLobGroupId = skillTagRequest.ClientLobGroupId,
-                   SkillGroupId = skillTagRequest.SkillGroupId,
+                   skillTagRequest.Id,
+                   skillTagRequest.Name,
+                   skillTagRequest.RefId,
+                   skillTagRequest.ClientId,
+                   skillTagRequest.ClientLobGroupId,
+                   skillTagRequest.SkillGroupId,
                    OperationHour = JsonConvert.SerializeObject(skillTagDetails.OperationHour),
-                   ModifiedDate = skillTagRequest.ModifiedDate
+                   skillTagRequest.ModifiedDate
                });
 
             return new CSSResponse(new SkillTagIdDetails { SkillTagId = skillTagRequest.Id }, HttpStatusCode.Created);
@@ -229,17 +230,18 @@ namespace Css.Api.Setup.Business
                     MassTransitConstants.SkillTagUpdateCommandRouteKey,
                     new
                     {
-                        Id = skillTagRequest.Id,
+                        skillTagRequest.Id,
                         NameOldValue = skillTagDetailsPreUpdate.Name,
+                        RefIdOldValue = skillTagDetailsPreUpdate.RefId,
                         ClientIdOldValue = skillTagDetailsPreUpdate.ClientId,
                         ClientLobGroupIdOldvalue = skillTagDetailsPreUpdate.ClientLobGroupId,
                         SkillGroupIdOldValue = skillTagDetailsPreUpdate.SkillGroupId,
-                        OperationHourOldValue =
-                            JsonConvert.SerializeObject(skillTagPreRequest.OperationHour),
+                        OperationHourOldValue = JsonConvert.SerializeObject(skillTagPreRequest.OperationHour),
                         ModifiedByOldValue = skillTagDetailsPreUpdate.ModifiedBy,
                         ModifiedDateOldValue = skillTagDetailsPreUpdate.ModifiedDate,
                         IsDeletedOldValue = skillTagDetailsPreUpdate.IsDeleted,
                         NameNewValue = skillTagRequest.Name,
+                        RefIdNewValue = skillTagRequest.RefId,
                         ClientIdNewValue = skillTagRequest.ClientId,
                         ClientLobGroupIdNewValue = skillTagRequest.ClientLobGroupId,
                         SkillGroupIdNewValue = skillTagRequest.SkillGroupId,
@@ -250,6 +252,14 @@ namespace Css.Api.Setup.Business
             return new CSSResponse(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Reverts the skill tag.
+        /// </summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
+        /// <param name="skillTagDetails">The skill tag details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
         public async Task<CSSResponse> RevertSkillTag(SkillTagIdDetails skillTagIdDetails, UpdateSkillTag skillTagDetails)
         {
             var skillTag = await _repository.SkillTags.GetAllSkillTag(skillTagIdDetails);
@@ -315,6 +325,7 @@ namespace Css.Api.Setup.Business
             skillTagDetailsPreUpdate = new SkillTag
             {
                 Name = skillTag.Name,
+                RefId = skillTag.RefId,
                 ClientId = skillTag.ClientId,
                 ClientLobGroupId = skillTag.ClientLobGroupId,
                 SkillGroupId = skillTag.SkillGroupId,
@@ -337,11 +348,12 @@ namespace Css.Api.Setup.Business
                MassTransitConstants.SkillTagDeleteCommandRouteKey,
                new
                {
-                   Id = skillTag.Id,
-                   Name = skillTagDetailsPreUpdate.Name,
-                   ClientId = skillTagDetailsPreUpdate.ClientId,
-                   ClientLobGroupId = skillTagDetailsPreUpdate.ClientLobGroupId,
-                   SkillGroupId = skillTagDetailsPreUpdate.SkillGroupId,
+                   skillTag.Id,
+                   skillTagDetailsPreUpdate.Name,
+                   skillTagDetailsPreUpdate.RefId,
+                   skillTagDetailsPreUpdate.ClientId,
+                   skillTagDetailsPreUpdate.ClientLobGroupId,
+                   skillTagDetailsPreUpdate.SkillGroupId,
                    OperationHour = JsonConvert.SerializeObject(skillTagPreRequest.OperationHour),
                    ModifiedByOldValue = skillTagDetailsPreUpdate.ModifiedBy,
                    IsDeletedOldValue = skillTagDetailsPreUpdate.IsDeleted,

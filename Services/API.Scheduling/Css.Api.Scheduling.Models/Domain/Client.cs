@@ -16,6 +16,11 @@ namespace Css.Api.Scheduling.Models.Domain
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
+        public int? RefId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this instance is deleted.
         /// </summary>
         public bool IsDeleted { get; set; }

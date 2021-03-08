@@ -121,6 +121,7 @@ namespace Css.Api.Admin.Business
                {
                    schedulingCodeRequest.Id,
                    Name = schedulingCodeRequest.Description,
+                   schedulingCodeRequest.RefId,
                    schedulingCodeRequest.PriorityNumber,
                    schedulingCodeRequest.TimeOffCode,
                    schedulingCodeRequest.IconId,
@@ -207,6 +208,7 @@ namespace Css.Api.Admin.Business
                     {
                         schedulingCodeRequest.Id,
                         NameOldValue = schedulingCodeDetailsPreUpdate.Description,
+                        RefIdOldValue = schedulingCodeDetailsPreUpdate.RefId,
                         PriorityNumberOldValue = schedulingCodeDetailsPreUpdate.PriorityNumber,
                         TimeOffCodeOldValue = schedulingCodeDetailsPreUpdate.TimeOffCode,
                         IconIdOldValue = schedulingCodeDetailsPreUpdate.IconId,
@@ -215,6 +217,7 @@ namespace Css.Api.Admin.Business
                         ModifiedDateOldValue = schedulingCodeDetailsPreUpdate.ModifiedDate,
                         IsDeletedOldValue = schedulingCodeDetailsPreUpdate.IsDeleted,
                         NameNewValue = schedulingCodeRequest.Description,
+                        RefIdNewValue = schedulingCodeRequest.RefId,
                         IsDeletedNewValue = schedulingCodeRequest.IsDeleted
                     });
             }
@@ -222,7 +225,14 @@ namespace Css.Api.Admin.Business
             return new CSSResponse(HttpStatusCode.NoContent);
         }
 
-
+        /// <summary>
+        /// Reverts the scheduling code.
+        /// </summary>
+        /// <param name="schedulingCodeIdDetails">The scheduling code identifier details.</param>
+        /// <param name="schedulingCodeDetails">The scheduling code details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
         public async Task<CSSResponse> RevertSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails, UpdateSchedulingCode schedulingCodeDetails)
         {
             var schedulingCode = await _repository.SchedulingCodes.GetAllSchedulingCode(schedulingCodeIdDetails);
@@ -266,11 +276,10 @@ namespace Css.Api.Admin.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            SchedulingCode schedulingCodeDetailsPreUpdate = null;
-
-            schedulingCodeDetailsPreUpdate = new SchedulingCode
+            SchedulingCode schedulingCodeDetailsPreUpdate = new SchedulingCode
             {
                 Description = schedulingCode.Description,
+                RefId = schedulingCode.RefId,
                 PriorityNumber = schedulingCode.PriorityNumber,
                 TimeOffCode = schedulingCode.TimeOffCode,
                 IconId = schedulingCode.IconId,
@@ -294,6 +303,7 @@ namespace Css.Api.Admin.Business
                {
                    schedulingCode.Id,
                    Name = schedulingCodeDetailsPreUpdate.Description,
+                   schedulingCodeDetailsPreUpdate.RefId,
                    schedulingCodeDetailsPreUpdate.PriorityNumber,
                    schedulingCodeDetailsPreUpdate.TimeOffCode,
                    schedulingCodeDetailsPreUpdate.IconId,

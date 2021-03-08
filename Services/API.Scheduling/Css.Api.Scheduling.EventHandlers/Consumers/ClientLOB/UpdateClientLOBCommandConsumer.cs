@@ -45,7 +45,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
         {
             try
             {
-                Css.Api.Scheduling.Models.Domain.ClientLobGroup clientLOB = await _clientLOBRepository.GetClientLobGroup(new ClientLobGroupIdDetails
+                Models.Domain.ClientLobGroup clientLOB = await _clientLOBRepository.GetClientLobGroup(new ClientLobGroupIdDetails
                 {
                     ClientLobGroupId = context.Message.Id
                 });
@@ -59,6 +59,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
                 clientLOB.ClientLobGroupId = context.Message.Id;
                 clientLOB.ClientId = context.Message.ClientIdNewValue;
                 clientLOB.Name = context.Message.NameNewValue;
+                clientLOB.RefId = context.Message.RefIdNewValue;
                 clientLOB.IsDeleted = context.Message.IsDeletedNewValue;
 
                 _clientLOBRepository.UpdateClientLobGroup(clientLOB);
@@ -82,13 +83,14 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
         {
             await _busUtility.PublishEvent<IClientLOBUpdateFailed>(MassTransitConstants.ClientLOBUpdateFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                NameOldValue = context.Message.NameOldValue,
-                ClientIdOldValue = context.Message.ClientIdOldValue,
-                TimezoneIdOldValue = context.Message.TimezoneIdOldValue,
-                FirstDayOfWeekOldValue = context.Message.FirstDayOfWeekOldValue,
-                ModifiedByOldValue = context.Message.ModifiedByOldValue,
-                ModifiedDateOldValue = context.Message.ModifiedDateOldValue
+                context.Message.Id,
+                context.Message.NameOldValue,
+                context.Message.RefIdOldValue,
+                context.Message.ClientIdOldValue,
+                context.Message.TimezoneIdOldValue,
+                context.Message.FirstDayOfWeekOldValue,
+                context.Message.ModifiedByOldValue,
+                context.Message.ModifiedDateOldValue
             });
         }
     }

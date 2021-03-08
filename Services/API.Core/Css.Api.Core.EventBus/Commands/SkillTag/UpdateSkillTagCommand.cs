@@ -15,6 +15,11 @@ namespace Css.Api.Core.EventBus.Commands.SkillTag
         /// <value>The name old value.</value>
         public string NameOldValue { get; set; }
 
+        /// <summary>
+        /// Gets or sets the reference identifier old value.
+        /// </summary>
+        public int? RefIdOldValue { get; set; }
+
         /// <summary>Gets or sets the client identifier oldvalue.</summary>
         /// <value>The client identifier oldvalue.</value>
         public int ClientIdOldValue { get; set; }
@@ -47,6 +52,11 @@ namespace Css.Api.Core.EventBus.Commands.SkillTag
         /// <summary>Gets or sets the name new value.</summary>
         /// <value>The name new value.</value>
         public string NameNewValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference identifier new value.
+        /// </summary>
+        public int? RefIdNewValue { get; set; }
 
         /// <summary>Gets or sets the client identifier new value.</summary>
         /// <value>The client identifier new value.</value>

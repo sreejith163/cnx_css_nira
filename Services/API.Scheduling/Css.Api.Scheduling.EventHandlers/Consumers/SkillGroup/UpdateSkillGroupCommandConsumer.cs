@@ -45,7 +45,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillGroup
         {
             try
             {
-                Css.Api.Scheduling.Models.Domain.SkillGroup skillGroup = await _skillGroupRepository.GetSkillGroup(new SkillGroupIdDetails
+                Models.Domain.SkillGroup skillGroup = await _skillGroupRepository.GetSkillGroup(new SkillGroupIdDetails
                 {
                     SkillGroupId = context.Message.Id
                 });
@@ -60,6 +60,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillGroup
                 skillGroup.ClientId = context.Message.ClientIdNewValue;
                 skillGroup.ClientLobGroupId = context.Message.ClientLobGroupIdNewValue;
                 skillGroup.Name = context.Message.NameNewValue;
+                skillGroup.RefId = context.Message.RefIdNewValue;
                 skillGroup.IsDeleted = context.Message.IsDeletedNewValue;
 
                 _skillGroupRepository.UpdateSkillGroup(skillGroup);
@@ -83,16 +84,17 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillGroup
         {
             await _busUtility.PublishEvent<ISkillGroupUpdateFailed>(MassTransitConstants.SkillGroupUpdateFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                NameOldValue = context.Message.NameOldValue,
-                ClientIdOldValue = context.Message.ClientIdOldValue,
-                ClientLobGroupIdOldvalue = context.Message.ClientLobGroupIdOldvalue,
-                TimezoneIdOldValue = context.Message.TimezoneIdOldValue,
-                FirstDayOfWeekOldValue = context.Message.FirstDayOfWeekOldValue,
-                OperationHourOldValue = context.Message.OperationHourOldValue,
-                ModifiedByOldValue = context.Message.ModifiedByOldValue,
-                ModifiedDateOldValue = context.Message.ModifiedDateOldValue,
-                IsDeletedOldValue = context.Message.IsDeletedOldValue
+                context.Message.Id,
+                context.Message.NameOldValue,
+                context.Message.RefIdOldValue,
+                context.Message.ClientIdOldValue,
+                context.Message.ClientLobGroupIdOldvalue,
+                context.Message.TimezoneIdOldValue,
+                context.Message.FirstDayOfWeekOldValue,
+                context.Message.OperationHourOldValue,
+                context.Message.ModifiedByOldValue,
+                context.Message.ModifiedDateOldValue,
+                context.Message.IsDeletedOldValue
             });
         }
     }

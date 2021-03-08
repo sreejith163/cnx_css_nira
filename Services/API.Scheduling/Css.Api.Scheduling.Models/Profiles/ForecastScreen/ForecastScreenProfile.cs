@@ -21,19 +21,17 @@ namespace Css.Api.Scheduling.Models.Profiles.ForecastScreen
             // .ReverseMap();
 
             CreateMap<Domain.ForecastScreen, ForecastScreenDTO>()
-                 .ForMember(x => x.SkillGroupId, opt => opt.MapFrom(o => o.SkillGroupId))
-                 .ReverseMap();
+            .ForMember(x => x.SkillGroupId, opt => opt.MapFrom(o => o.SkillGroupId))
+            .ReverseMap();
 
             CreateMap<Domain.ForecastData, ForecastDataAtrribute>()
-        .ReverseMap();
+            .ReverseMap();
 
             CreateMap<Domain.ForecastScreen, CreateForecastData>()
             .ReverseMap();
 
-
             CreateMap<UpdateForecastData, Domain.ForecastScreen>()
-             
-              .ReverseMap();
+            .ReverseMap();
 
         }
 

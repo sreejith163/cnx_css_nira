@@ -87,19 +87,19 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
         {
             await _busUtility.PublishEvent<IAgentSchedulingGroupUpdateFailed>(MassTransitConstants.AgentSchedulingGroupUpdateFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                NameOldValue = context.Message.NameOldValue,
-                RefIdOldValue = context.Message.RefIdOldValue,
-                ClientIdOldValue = context.Message.ClientIdOldValue,
-                ClientLobGroupIdOldvalue = context.Message.ClientLobGroupIdOldvalue,
-                SkillGroupIdOldValue = context.Message.SkillGroupIdOldValue,
-                SkillTagIdOldValue = context.Message.SkillTagIdOldValue,
-                TimezoneIdOldValue = context.Message.TimezoneIdOldValue,
-                FirstDayOfWeekOldValue = context.Message.FirstDayOfWeekOldValue,
-                OperationHourOldValue = context.Message.OperationHourOldValue,
-                ModifiedByOldValue = context.Message.ModifiedByOldValue,
-                ModifiedDateOldValue = context.Message.ModifiedDateOldValue,
-                IsDeletedOldValue = context.Message.IsDeletedOldValue
+                context.Message.Id,
+                context.Message.NameOldValue,
+                context.Message.RefIdOldValue,
+                context.Message.ClientIdOldValue,
+                context.Message.ClientLobGroupIdOldvalue,
+                context.Message.SkillGroupIdOldValue,
+                context.Message.SkillTagIdOldValue,
+                context.Message.TimezoneIdOldValue,
+                context.Message.FirstDayOfWeekOldValue,
+                context.Message.OperationHourOldValue,
+                context.Message.ModifiedByOldValue,
+                context.Message.ModifiedDateOldValue,
+                context.Message.IsDeletedOldValue
             });
         }
     }

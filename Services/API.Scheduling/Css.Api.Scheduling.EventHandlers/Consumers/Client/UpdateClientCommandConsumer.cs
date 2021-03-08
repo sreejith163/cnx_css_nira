@@ -45,7 +45,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.Client
         {
             try
             {
-                Css.Api.Scheduling.Models.Domain.Client client = await _clientRepository.GetClient(new ClientIdDetails
+                Models.Domain.Client client = await _clientRepository.GetClient(new ClientIdDetails
                 {
                     ClientId = context.Message.Id
                 });
@@ -58,6 +58,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.Client
 
                 client.ClientId = context.Message.Id;
                 client.Name = context.Message.NameNewValue;
+                client.RefId = context.Message.RefIdNewValue;
                 client.IsDeleted = context.Message.IsDeletedNewValue;
 
                 _clientRepository.UpdateClient(client);
@@ -81,11 +82,12 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.Client
         {
             await _busUtility.PublishEvent<IClientUpdateFailed>(MassTransitConstants.ClientUpdateFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                NameOldValue = context.Message.NameOldValue,
-                ModifiedByOldValue = context.Message.ModifiedByOldValue,
-                IsDeletedOldValue = context.Message.IsDeletedOldValue,
-                ModifiedDateOldValue = context.Message.ModifiedDateOldValue
+                context.Message.Id,
+                context.Message.NameOldValue,
+                context.Message.RefIdOldValue,
+                context.Message.ModifiedByOldValue,
+                context.Message.IsDeletedOldValue,
+                context.Message.ModifiedDateOldValue
             });
         }
     }

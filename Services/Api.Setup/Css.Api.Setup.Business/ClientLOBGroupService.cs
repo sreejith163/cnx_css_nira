@@ -119,11 +119,12 @@ namespace Css.Api.Setup.Business
             await _bus.SendCommand<CreateClientLOBCommand>(MassTransitConstants.ClientLOBCreateCommandRouteKey,
                 new
                 {
-                    Id = clientLOBGroupRequest.Id,
-                    Name = clientLOBGroupRequest.Name,
-                    ClientId = clientLOBGroupRequest.ClientId,
-                    TimezoneId = clientLOBGroupRequest.TimezoneId,
-                    ModifiedDate = clientLOBGroupRequest.ModifiedDate
+                    clientLOBGroupRequest.Id,
+                    clientLOBGroupRequest.Name,
+                    clientLOBGroupRequest.RefId,
+                    clientLOBGroupRequest.ClientId,
+                    clientLOBGroupRequest.TimezoneId,
+                    clientLOBGroupRequest.ModifiedDate
                 });
 
             return new CSSResponse(new ClientLOBGroupIdDetails { ClientLOBGroupId = clientLOBGroupRequest.Id }, HttpStatusCode.Created);
@@ -186,8 +187,9 @@ namespace Css.Api.Setup.Business
                     MassTransitConstants.ClientLOBUpdateCommandRouteKey,
                     new
                     {
-                        Id = clientLOBGroupRequest.Id,
+                        clientLOBGroupRequest.Id,
                         NameOldValue = clientLOBDetailsPreUpdate.Name,
+                        RefIdOldValue = clientLOBDetailsPreUpdate.RefId,
                         ClientIdOldValue = clientLOBDetailsPreUpdate.ClientId,
                         TimezoneIdOldValue = clientLOBDetailsPreUpdate.TimezoneId,
                         FirstDayOfWeekOldValue = clientLOBDetailsPreUpdate.FirstDayOfWeek,
@@ -195,6 +197,7 @@ namespace Css.Api.Setup.Business
                         ModifiedDateOldValue = clientLOBDetailsPreUpdate.ModifiedDate,
                         IsDeletedOldValue = clientLOBDetailsPreUpdate.IsDeleted,
                         NameNewValue = clientLOBGroupRequest.Name,
+                        RefIdNewValue = clientLOBGroupRequest.RefId,
                         ClientIdNewValue = clientLOBGroupRequest.ClientId,
                         IsDeletedNewValue = clientLOBGroupRequest.IsDeleted
                     });
@@ -203,6 +206,14 @@ namespace Css.Api.Setup.Business
             return new CSSResponse(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Reverts the client lob group.
+        /// </summary>
+        /// <param name="clientLOBGroupIdDetails">The client lob group identifier details.</param>
+        /// <param name="clientLOBGroupDetails">The client lob group details.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
         public async Task<CSSResponse> RevertClientLOBGroup(ClientLOBGroupIdDetails clientLOBGroupIdDetails, UpdateClientLOBGroup clientLOBGroupDetails)
         {
             var clientLOBGroup = await _repository.ClientLOBGroups.GetAllClientLOBGroup(clientLOBGroupIdDetails);
@@ -228,7 +239,6 @@ namespace Css.Api.Setup.Business
             return new CSSResponse(HttpStatusCode.NoContent);
         }
 
-
         /// <summary>Deletes the client lob group.</summary>
         /// <param name="clientLOBGroupIdDetails">The client lob group identifier details.</param>
         /// <returns>
@@ -251,6 +261,7 @@ namespace Css.Api.Setup.Business
             var clientLOBDetailsPreUpdate = new ClientLobGroup
             {
                 Name = clientLOBGroup.Name,
+                RefId = clientLOBGroup.RefId,
                 ClientId = clientLOBGroup.ClientId,
                 FirstDayOfWeek = clientLOBGroup.FirstDayOfWeek,
                 TimezoneId = clientLOBGroup.TimezoneId,
@@ -268,11 +279,12 @@ namespace Css.Api.Setup.Business
                 MassTransitConstants.ClientLOBDeleteCommandRouteKey,
                 new
                 {
-                    Id = clientLOBGroup.Id,
-                    Name = clientLOBDetailsPreUpdate.Name,
-                    ClientId = clientLOBDetailsPreUpdate.ClientId,
-                    TimezoneId = clientLOBDetailsPreUpdate.TimezoneId,
-                    FirstDayOfWeek = clientLOBDetailsPreUpdate.FirstDayOfWeek,
+                    clientLOBGroup.Id,
+                    clientLOBDetailsPreUpdate.Name,
+                    clientLOBDetailsPreUpdate.RefId,
+                    clientLOBDetailsPreUpdate.ClientId,
+                    clientLOBDetailsPreUpdate.TimezoneId,
+                    clientLOBDetailsPreUpdate.FirstDayOfWeek,
                     ModifiedByOldValue = clientLOBDetailsPreUpdate.ModifiedBy,
                     IsDeletedOldValue = clientLOBDetailsPreUpdate.IsDeleted,
                     ModifiedDateOldValue = clientLOBDetailsPreUpdate.ModifiedDate,

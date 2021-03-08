@@ -113,7 +113,7 @@ namespace Css.Api.Scheduling.Business
                 if (mappedAgentScheduleManager == null)
                 {
                     var scheduleManagerExists = await _agentScheduleManagerRepository.HasAgentScheduleManagerChartByEmployeeId(new EmployeeIdDetails { Id = agent.EmployeeId });
-                    if (!scheduleManagerExists)
+                    if (!scheduleManagerExists || !agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
                     {
                         var agentScheduleManager = new AgentScheduleManagerChartDetailsDTO
                         {
@@ -130,6 +130,11 @@ namespace Css.Api.Scheduling.Business
                     mappedAgentScheduleManager.FirstName = agent?.FirstName;
                     mappedAgentScheduleManager.LastName = agent?.LastName;
                 }
+            }
+
+            if (agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
+            {
+                mappedAgentScheduleManagers = mappedAgentScheduleManagers.Where(x => x.FirstName != null && x.LastName != null).ToList();
             }
 
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agents));

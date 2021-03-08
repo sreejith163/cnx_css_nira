@@ -51,19 +51,15 @@ namespace Css.Api.Scheduling.Controllers
 
 
         /// <summary>
-        /// Gets the Forecast Screen by skill group id
+        /// Gets the Forecast Screen by forecastIdDetails
         /// </summary>
-        /// <param name="skillGroupId">The forecast screen query parameter</param>
-        /// <param name="date">The forecast screen query parameter</param>
+        /// <param name="skillGroupId"></param>
+        /// <param name="date"></param>
         /// <returns></returns>
-        [HttpGet("{skillGroupId}")]
+        [HttpGet("{skillGroupId}/date/{date}")]
         public async Task<IActionResult> GetForecastScreenBySkillGroupId(int skillGroupId, string date)
         {
-            var result = await _forecastScreenService.GetForecastScreenBySkillGroupId(
-                new CreateForecastData { SkillGroupId = Convert.ToInt32(skillGroupId), Date = date.ToString() }
-
-
-                );
+            var result = await _forecastScreenService.GetForecastScreenBySkillGroupId(new ForecastIdDetails { SkillGroupId = skillGroupId, Date = date.ToString() });
             return StatusCode((int)result.Code, result.Value);
         }
 
@@ -93,19 +89,19 @@ namespace Css.Api.Scheduling.Controllers
             var result = await _forecastScreenService.UpdateForecastData(forecastDetails, forecastId);
             return StatusCode((int)result.Code, result.Value);
         }
-        ///// <summary>
-        ///// import forecast data
-        ///// </summary>
+        /// <summary>
+        /// import forecast data
+        /// </summary>
 
-        ///// <param name="importForecast">Forecast ID</param>
-        ///// <returns></returns>
+        /// <param name="importForecastDetails"></param>
+        /// <returns></returns>
 
-        //[HttpPut("import")]
-        //public async Task<IActionResult> ImportForecast([FromBody] ImportForecast importForecast)
-        //{
-        //    var result = await _forecastScreenService.ImportForecast(importForecast);
-        //    return StatusCode((int)result.Code, result.Value);
-        //}
+        [HttpPut("import")]
+        public async Task<IActionResult> ImportForecast([FromBody] ImportForecastDetails importForecastDetails)
+        {
+            var result = await _forecastScreenService.ImportForecastData(importForecastDetails);
+            return StatusCode((int)result.Code, result.Value);
+        }
 
     }
 }

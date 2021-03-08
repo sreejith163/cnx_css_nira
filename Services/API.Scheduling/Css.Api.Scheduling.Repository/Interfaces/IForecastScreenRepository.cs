@@ -13,19 +13,20 @@ namespace Css.Api.Scheduling.Repository.Interfaces
     {
         Task<PagedList<Entity>> GetForecastScreens(ForeCastScreenQueryParameter forecastScreenQueryparameter);
 
-        Task<ForecastScreen> GetForecastData(CreateForecastData createForecastData);
+        Task<ForecastScreen> GetForecastData(ForecastIdDetails forecastIdDetails);
 
         Task<ForecastScreen> GetForecastDataID(long forecastID);
-        Task<ForecastScreen> GetForecastScreenBySkillGroupId(CreateForecastData createForecastData);
+        Task<ForecastScreen> GetForecastScreenBySkillGroupId(ForecastIdDetails forecastIdDetails);
 
 
         //void ImportAgentScheduleChart(ImportForecast importForecast);
 
         void CreateForecastData(ForecastScreen forecastDataRequest);
 
+        void CreateMultipleForecastData(List<ForecastScreen> forecastDataRequest);
 
         /// <summary>
-        /// Updates the agent admin.
+        /// Updates the ForecastData.
         /// </summary>
         /// <param name="agentAdminRequest">The agent admin request.</param>
         void UpdateForecastData(ForecastScreen forecastDataRequest);
