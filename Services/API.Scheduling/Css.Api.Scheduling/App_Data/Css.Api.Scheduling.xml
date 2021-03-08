@@ -291,10 +291,10 @@
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.GetForecastScreenBySkillGroupId(System.Int32,System.String)">
             <summary>
-            Gets the Forecast Screen by skill group id
+            Gets the Forecast Screen by forecastIdDetails
             </summary>
-            <param name="skillGroupId">The forecast screen query parameter</param>
-            <param name="date">The forecast screen query parameter</param>
+            <param name="skillGroupId"></param>
+            <param name="date"></param>
             <returns></returns>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.CreateForecastData(Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.CreateForecastData)">
@@ -310,6 +310,13 @@
             </summary>
             <param name="forecastDetails">The client details.</param>
             <param name="forecastId">Forecast ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.ImportForecast(Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.ImportForecastDetails)">
+            <summary>
+            import forecast data
+            </summary>
+            <param name="importForecastDetails"></param>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Scheduling.Controllers.TimeZonesController">

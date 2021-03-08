@@ -23,9 +23,9 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <returns></returns>
-        Task<CSSResponse> GetForecastScreenBySkillGroupId(CreateForecastData createForecastData);
+        Task<CSSResponse> GetForecastScreenBySkillGroupId(ForecastIdDetails forecastIdDetails);
 
-        Task<CSSResponse> GetForecastData(CreateForecastData createForecastData);
+        Task<CSSResponse> GetForecastData(ForecastIdDetails forecastIdDetails);
         
         /// <summary>
         /// Create Forecast screen data.
@@ -34,6 +34,15 @@ namespace Css.Api.Scheduling.Business.Interfaces
 
         /// <returns></returns>
         Task<CSSResponse> CreateForecastData(CreateForecastData forecastDataDetails);
+
+
+        /// <summary>
+        /// Imports the Forecast Data
+        /// </summary>
+
+        /// <param name="importForecastDetails">forecast import details</param>
+        /// <returns></returns>
+        Task<CSSResponse> ImportForecastData(ImportForecastDetails importForecastDetails);
 
         /// <summary>
         /// Updates the Forecast Data

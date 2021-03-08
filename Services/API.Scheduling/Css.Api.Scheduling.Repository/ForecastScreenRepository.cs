@@ -51,10 +51,10 @@ namespace Css.Api.Scheduling.Repository
         }
 
 
-        public async Task<ForecastScreen> GetForecastData(CreateForecastData createForecastData)
+        public async Task<ForecastScreen> GetForecastData(ForecastIdDetails forecastIdDetails)
         {
-            var query = Builders<ForecastScreen>.Filter.Eq(i => i.SkillGroupId, createForecastData.SkillGroupId)
-                & Builders<ForecastScreen>.Filter.Eq(i => i.SkillGroupId, createForecastData.SkillGroupId);
+            var query = Builders<ForecastScreen>.Filter.Eq(i => i.SkillGroupId, forecastIdDetails.SkillGroupId)
+                & Builders<ForecastScreen>.Filter.Eq(i => i.SkillGroupId, forecastIdDetails.SkillGroupId);
 
             return await FindByIdAsync(query);
         }
@@ -66,10 +66,10 @@ namespace Css.Api.Scheduling.Repository
             return await FindByIdAsync(query);
         }
 
-        public async Task<ForecastScreen> GetForecastScreenBySkillGroupId(CreateForecastData createForecastData)
+        public async Task<ForecastScreen> GetForecastScreenBySkillGroupId(ForecastIdDetails forecastIdDetails)
         {
-            var query = Builders<ForecastScreen>.Filter.Eq(i => i.SkillGroupId, createForecastData.SkillGroupId)
-                & Builders<ForecastScreen>.Filter.Eq(i => i.Date, createForecastData.Date);
+            var query = Builders<ForecastScreen>.Filter.Eq(i => i.SkillGroupId, forecastIdDetails.SkillGroupId)
+                & Builders<ForecastScreen>.Filter.Eq(i => i.Date, forecastIdDetails.Date);
 
             return await FindByIdAsync(query);
         }
@@ -96,7 +96,12 @@ namespace Css.Api.Scheduling.Repository
             InsertOneAsync(forecastDataRequest);
         }
 
-     
+
+        public void CreateMultipleForecastData(List<ForecastScreen> forecastDataRequest)
+        {
+            InsertManyAsync(forecastDataRequest);
+        }
+
         public void UpdateForecastData(ForecastScreen updateForecastData)
         {
 
@@ -104,8 +109,6 @@ namespace Css.Api.Scheduling.Repository
             ReplaceOneAsync(updateForecastData);
           
         }
-
-        
 
     }
 

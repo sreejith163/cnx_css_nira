@@ -4,10 +4,8 @@ using System.Text;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.ForecastScreen
 {
-    public class ImportForecast
+    public class ImportForecastErrors
     {
-      
-      
-        public List<ForecastDataAtrribute> ForecastData { get; set; }
+        public List<string> Messages;
     }
 }

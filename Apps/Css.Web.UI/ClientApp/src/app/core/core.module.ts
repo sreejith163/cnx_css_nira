@@ -14,8 +14,9 @@ import { UnAuthorizedInterceptorProviders } from './interceptors/unauthorized.in
 import { HttpBaseService } from './services/http-base.service';
 import { PermissionsService } from '../modules/home/modules/system-admin/services/permissions.service';
 import { PermissionsGuard } from './guards/permissions.guard';
+import { NgxCsvParserModule } from 'ngx-csv-parser';
 
-const modules = [BrowserModule, BrowserAnimationsModule, CommonModule, HttpClientModule];
+const modules = [BrowserModule, BrowserAnimationsModule, CommonModule, HttpClientModule,  NgxCsvParserModule];
 
 const providers = [PermissionsService, PermissionsGuard, AuthGuard, AuthService, CookieService, HttpBaseService,
                    TokenInterceptorProviders, UnAuthorizedInterceptorProviders];

@@ -1,4 +1,6 @@
-export class Forecast {
+
+export class ForecastScreenDataDetails {
+        date: string;
         time: string;
         forecastedContact: number;
         aht: number;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AgentAdminDetails } from '../../../models/agent-admin-details.model';
 import { AgentAdminResponse } from '../../../models/agent-admin-response.model';
 import { AgentAdminService } from '../../../services/agent-admin.service';
@@ -24,7 +24,7 @@ import { MoveAgentsService } from '../../../services/move-agents.service';
   templateUrl: './move-agents.component.html',
   styleUrls: ['./move-agents.component.scss']
 })
-export class MoveAgentsComponent implements OnInit {
+export class MoveAgentsComponent implements OnInit, OnDestroy {
 
   agentListSpinnerLeft = "agentListSpinnerLeft";
   agentListSpinnerRight = "agentListSpinnerRight";
@@ -65,8 +65,8 @@ export class MoveAgentsComponent implements OnInit {
   searchKeywordLeft: string;
   searchKeywordRight: string;
 
-  agentSchedulingGroupIdLeft?: number;
-  agentSchedulingGroupIdRight?: number;
+  // agentSchedulingGroupIdLeft?: number;
+  // agentSchedulingGroupIdRight?: number;
   agentAdmin: AgentAdminResponse;
   agentAdminsLeftSide: AgentAdminDetails[] = [];
   agentAdminsRightSide: AgentAdminDetails[] = [];
@@ -99,6 +99,13 @@ export class MoveAgentsComponent implements OnInit {
     this.subscribeToTranslations();
     this.selectedAgentAdminIds$ = this.moveAgentService.selectedAgentAdminIds$;
     this.selectedAgentSchedulingGroupIdRight$ = this.moveAgentService.agentSchedulingGroupIdRightSubject$;
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.moveAgentService.unloadAgentAdminsRight();
+    this.moveAgentService.unloadAgentAdminsLeft();
   }
 
   toggleSelected(agentAdminId){

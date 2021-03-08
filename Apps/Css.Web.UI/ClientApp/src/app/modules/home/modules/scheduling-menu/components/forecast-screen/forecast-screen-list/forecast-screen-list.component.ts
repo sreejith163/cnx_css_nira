@@ -1,16 +1,13 @@
-import { Component, Input, EventEmitter, OnChanges, OnDestroy, OnInit, Output, Injectable, ElementRef, ViewChild } from '@angular/core';
-import { SortingType } from '../../../enums/sorting-type.enum';
+import { Component, OnChanges, OnDestroy, OnInit, Output, Injectable, ElementRef, ViewChild } from '@angular/core';
 
 import { Subject, SubscriptionLike as ISubscription } from 'rxjs';
-import { fromPromise } from 'rxjs/internal-compatibility';
-import { FormArray, FormBuilder, FormControl, FormGroup, NumberValueAccessor, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ForecastScreenService } from '../../../services/forecast-screen.service';
 import { Forecast } from '../../../models/forecast.model';
 import { ForecastDataModel } from '../../../models/forecast-data.model';
 import { SkillGroupDetails } from '../../../../setup-menu/models/skill-group-details.model';
 import { NgbCalendar, NgbDate, NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
-import { catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
@@ -24,15 +21,13 @@ import { SkillTagDetails } from '../../../../setup-menu/models/skill-tag-details
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
-import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
+
 import { SkillGroupQueryParameters } from '../../../../setup-menu/models/skill-group-query-parameters.model';
-import { ImportScheduleComponent } from '../../shared/import-schedule/import-schedule.component';
 
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { stringify } from '@angular/compiler/src/util';
-import { element } from 'protractor';
+
 import { HttpClient } from '@angular/common/http';
-import { UpdateAgentAdmin } from '../../../models/update-agent-admin.model';
+
 import { UpdateForecastData } from '../../../models/update-forecast-data.model';
 import { getLocaleDateTimeFormat } from '@angular/common';
 import * as xlsx from 'xlsx';
@@ -40,7 +35,11 @@ import { ActivatedRoute } from '@angular/router';
 import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import * as Papa from 'papaparse';
+import { ForecastExcelData } from '../../../models/forecast-excel.model';
+import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 
+import { ForecastScreenDataDetails } from '../../../models/forecast-data-details';
+import { ForecastDataResponse } from '../../../models/import-forecast-response';
 
 /**
  * This Service handles how the date is represented in scripts i.e. ngModel.
@@ -137,6 +136,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   orderBy = 'createdDate';
   sortBy = 'desc';
   spinner = 'skillTags';
+  importSpinner = "spinner";
   forecastID: number;
   clientId: number;
   clientLobGroupId: number;
@@ -188,7 +188,17 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   LoggedUser;
   getTranslationSubscription: ISubscription;
   uploadFile: string;
-  importForecastData: string;
+  importForecastData: any;
+
+  jsonData: any[] = [];
+  forecastColumns = ['date', 'time', 'forecastedContact', 'aht', 'forecastedReq', 'scheduledOpen'];
+  csvTableHeader: string[];
+  csvData: any;
+
+  importForecastDataModel: ForecastExcelData; 
+
+  allImportForecastData: any = [];
+  importForecastDataArray: any = [];
   fileUploaded: File;
   constructor(
     private formBuilder: FormBuilder,
@@ -206,7 +216,8 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     private dateAdapter: NgbDateAdapter<string>,
     private http: HttpClient,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private ngxCsvParser: NgxCsvParser
   ) {
     this.LoggedUser = this.authService.getLoggedUserInfo();
   }
@@ -338,33 +349,33 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
    
   }
 
-  onFileChange(ev) {
-    let workBook = null;
-    let jsonData = null;
-    const reader = new FileReader();
-    this.fileUploaded = ev.target.files[0];
-    this.uploadFile = this.fileUploaded?.name;
+  // onFileChange(ev) {
+  //   let workBook = null;
+  //   let jsonData = null;
+  //   const reader = new FileReader();
+  //   this.fileUploaded = ev.target.files[0];
+  //   this.uploadFile = this.fileUploaded?.name;
 
 
-    const file = ev.target.files[0];
-    reader.onload = (event) => {
-      const data = reader.result;
-      workBook = xlsx.read(data, { type: 'binary' });
-      jsonData = workBook.SheetNames.reduce((initial, name) => {
-        const sheet = workBook.Sheets[name];
-        initial[name] = xlsx.utils.sheet_to_json(sheet);
+  //   const file = ev.target.files[0];
+  //   reader.onload = (event) => {
+  //     const data = reader.result;
+  //     workBook = xlsx.read(data, { type: 'binary' });
+  //     jsonData = workBook.SheetNames.reduce((initial, name) => {
+  //       const sheet = workBook.Sheets[name];
+  //       initial[name] = xlsx.utils.sheet_to_json(sheet);
 
-        return initial;
-      }, {});
-
-
-      this.importForecastData = jsonData;
+  //       return initial;
+  //     }, {});
 
 
+  //     this.importForecastData = jsonData;
 
-    }
-    reader.readAsBinaryString(file);
-  }
+
+
+  //   }
+  //   reader.readAsBinaryString(file);
+  // }
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
@@ -525,12 +536,6 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     this.subscriptions.push(this.getSkillGroupsSubscription);
   }
 
-
-
-
-
-
-
   private setPaginationValues(response: any) {
     const paging = JSON.parse(response.headers.get('x-pagination'));
     if (paging) {
@@ -558,7 +563,6 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     const queryParams = this.getQueryParams(searchKeyword);
     return this.skillGroupService.getSkillGroups(queryParams);
   }
-
 
   private getForecastDefaultValue() {
     this.http.get('/assets/time-table.json')
@@ -623,6 +627,13 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     this.setComponentMessages('Success', contentMessage);
   }
 
+  private showImportFinished(contentMessage: string, errors: string[], needRefresh = true) {
+    this.getModalPopup(MessagePopUpComponent, 'md');
+    this.modalRef.componentInstance.headingMessage = 'Import Finished';
+    this.modalRef.componentInstance.contentMessage = contentMessage;
+    this.modalRef.componentInstance.importErrors = errors;
+  }
+
   private showErrorWarningPopUpMessage(contentMessage: string) {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
@@ -634,26 +645,76 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   }
 
 
-  onChangeFile(files: File[]) {
-   
-    if (files[0]) {
+  validateDateImport(file){
 
-      Papa.parse(files[0], {
-        header: true,
-        skipEmptyLines: true,
-        // step: function(row) {
-        //   console.log("Row:", row.data);
-        // },
-        complete: (result, file) => {
-         
-          this.importForecastData = result.data;
+    this.importForecastDataModel = new ForecastExcelData();
 
+    this.importForecastDataModel.skillGroupId = this.skillGroupBinder?.id;
+    this.importForecastDataModel.forecastScreenDataDetails = [];
 
-          this.uploadFile = files[0].name;
+    this.spinnerService.show(this.importSpinner, SpinnerOptions);
+      // Parse the file you want to select for the operation along with the configuration
+      this.ngxCsvParser.parse(file, { header: false, delimiter: ',' })
+      .pipe().subscribe((result: Array<any>) => {
+        const csvTableData = [...result.slice(1, result.length)];
+        // check the csv first if contents are valid
+        this.csvTableHeader = result[0];
+
+        // convert the headers to proper headers
+        this.csvTableHeader = Object.assign(this.csvTableHeader, this.forecastColumns);
+        for (const ele of csvTableData) {
+          const csvJson = new ForecastScreenDataDetails();
+          if (ele.length > 0) {
+            for (let i = 0; i < ele.length; i++) {
+              csvJson[this.csvTableHeader[i]] = ele[i];
+            }
+          }
+          if (csvJson.date) {
+            this.importForecastDataModel.forecastScreenDataDetails.push(csvJson);
+          }
         }
-      });
-    }
+
+          this.spinnerService.hide(this.importSpinner);
+          this.uploadFile = file.name;
+
+      }, (error: NgxCSVParserError) => {
+
+          this.spinnerService.hide(this.importSpinner);
+          this.modalService.dismissAll();
+          this.showErrorWarningPopUpMessage('Invalid File Format. Please upload a CSV file only.');
+          this.handleClear();
+  
+        console.log('Error', error);
+      });                
   }
+
+  onChangeFile(files: File[]) {
+
+    if(files[0]){
+      this.validateDateImport(files[0])
+    }
+
+  }
+
+
+  importForeCastData(){
+    this.spinnerService.show(this.importSpinner, SpinnerOptions);
+      this.forecastService.importForecastData(this.importForecastDataModel).subscribe((res:ForecastDataResponse)=>{
+        this.spinnerService.hide(this.importSpinner);
+        this.modalService.dismissAll();
+        this.showImportFinished(res.importStatus, res.errors);
+        this.handleClear();
+        
+      }, err =>{
+        this.spinnerService.hide(this.importSpinner);
+        this.modalService.dismissAll();
+        this.showErrorWarningPopUpMessage('Invalid File contents.');
+        this.handleClear();
+
+      });
+  }
+
+
   changeKeyObjects = (arr, replaceKeys) => {
     return arr.map(item => {
       const newItem = {};
@@ -663,6 +724,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       return newItem;
     });
   };
+
   deleteColnameRecursive(obj) {
     delete obj.scheduledOpen;
     if (obj.children) {
@@ -670,6 +732,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
         this.deleteColnameRecursive(obj.children[i]);
     }
   }
+
   importForecast() {
     // const groupByKey = (list, key, {omitKey=false}) => list.reduce((hash, {[key]:value, ...rest}) => ({...hash, [value]:( hash[value] || [] ).concat(omitKey ? {...rest} : {[key]:value, ...rest})} ), {})
     // var datatoImport = groupByKey(this.importForecastData['data'], 'Date', {omitKey:true});
@@ -680,9 +743,8 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       "Forecasted Contact": "forecastedContact",
       "AHT": "Aht",
       "Forecasted Req": "forecastedReq"
-
-
     };
+
     //console.log(this.importForecastData);
     const newArrays = this.changeKeyObjects(this.importForecastData, replaceKeys);
  
@@ -726,6 +788,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
         }
       );
+
     } else {
       // var forecastObjArrays: Forecast[];
 
@@ -742,8 +805,6 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       "Forecasted Contact": "forecastedContact",
       "AHT": "Aht",
       "Forecasted Req": "forecastedReq"
-
-
     };
     const newArrays = this.changeKeyObjects(this.importForecastData, replaceKeys);
     let updateForecastData: UpdateForecastData;
@@ -777,8 +838,6 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   handleClear() {
     this.uploadFile = '';
   }
-
-
 
 
   addForecastData() {

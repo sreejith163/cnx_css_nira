@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { ForecastDataModel } from '../models/forecast-data.model';
 import { UpdateAgentAdmin } from '../models/update-agent-admin.model';
 import { UpdateForecastData } from '../models/update-forecast-data.model';
+import { ForecastExcelData } from '../models/forecast-excel.model';
 
 
 @Injectable({
@@ -43,11 +44,19 @@ export class ForecastScreenService extends HttpBaseService {
   }
 
   getForecastDataById(skillGroupId: number, Date: string) {
-    const url = `${this.baseURL}/forecastscreen/${skillGroupId}?date=${Date}`;
+    const url = `${this.baseURL}/forecastscreen/${skillGroupId}/date/${Date}`;
 
     return this.http.get<ForecastDataModel>(url)
       .pipe(catchError(this.handleError));
   }
+
+  importForecastData(importForecastDataModel: ForecastExcelData){
+    const url = `${this.baseURL}/forecastscreen/import`;
+
+    return this.http.put<ApiResponseModel>(url, importForecastDataModel)
+      .pipe(catchError(this.handleError));
+  }
+
 
 
 }
