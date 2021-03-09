@@ -13,8 +13,13 @@
     </div>
   </div>
 
-  <app-scheduling-filter [agentScheduleType]="1" (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
-    (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)"></app-scheduling-filter>
+  <div class="row m-b-10 align-items-end">
+    <div class="col-md-3 d-flex flex-column">
+      <app-move-agents-scheduling-group-typeahead [listPosition]="listPositionTypeAhead"
+      (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
+      </app-move-agents-scheduling-group-typeahead>
+    </div>
+  </div>
 
   <div class="card card-primary card-outline card-outline-tabs">
     <div class="card-header p-0 border-bottom-0">

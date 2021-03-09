@@ -680,6 +680,19 @@
       ],
       "UpstreamPathTemplate": "/api/activitylogs",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* Reporting Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/weatherforecast",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-reporting",
+          "Port": 4206
+        }
+      ],
+      "UpstreamPathTemplate": "/api/weatherforecast",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {

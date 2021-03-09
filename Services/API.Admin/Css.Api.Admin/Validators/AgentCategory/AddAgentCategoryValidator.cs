@@ -15,8 +15,6 @@ namespace Css.Api.Admin.Validators.AgentCategory
         {
             RuleFor(x => x.Name).NotEmpty();
             RuleFor(x => x.DataTypeId).NotEmpty();
-            RuleFor(x => x.DataTypeMinValue).NotEmpty();
-            RuleFor(x => x.DataTypeMaxValue).NotEmpty();
             RuleFor(x => x.CreatedBy).NotEmpty();
         }
     }

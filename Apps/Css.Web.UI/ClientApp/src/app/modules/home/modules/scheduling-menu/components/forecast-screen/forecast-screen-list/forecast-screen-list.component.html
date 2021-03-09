@@ -20,7 +20,7 @@
             <ng-select [items]="skillGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id"
                 placeholder="{{'All' | translate}}" [typeahead]="typeAheadInput$" (scroll)="onSkillGroupScroll($event)"
                 (scrollToEnd)="onSkillGroupScrollToEnd()" (change)="onSkillGroupChange($event);change($event)"
-                (clear)="clearSkillGroupValues()" [(ngModel)]="skillgroupID">
+                (clear)="clearSkillGroupValues()">
                 <ng-template ng-header-tmp>
                     <small class="form-text text-muted">{{'Loaded' | translate }} {{skillGroupItemsBuffer.length}}
                         {{'of' | translate}}
@@ -36,16 +36,19 @@
         <div class="col-md-3 d-flex flex-column">
 
             <div class="input-group">
-                <input class="form-control" placeholder="{{today}}" name="d2" #c2="ngModel" [(ngModel)]="model2"
-                    ngbDatepicker #d2="ngbDatepicker">
+                <input class="form-control" placeholder="{{'Select Forecast Date' | translate}}" name="dp" ngbDatepicker
+                [readonly]="true" [(ngModel)]="dateModel"
+                [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
+                <!-- <input class="form-control" name="d2" #c2="ngModel" [(ngModel)]="dateModel"
+                    ngbDatepicker #d2="ngbDatepicker" > -->
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
+                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
                 </div>
             </div>
         </div>
         <div class="col-md-2 col-sm-6">
 
-            <button (click)="loadSkillGroup()" class="form-control" id="btn_search"><i class="fa fa-search"
+            <button (click)="searchForecast()" class="form-control" id="btn_search"><i class="fa fa-search"
                     aria-hidden="true"></i>
                 {{ 'Search' | translate }}
             </button>
@@ -56,11 +59,11 @@
 <div class="container-fluid">
     <div class="row my-2 align-items-center">
         <div class="col-lg-6">
-            <div class="badge badge-primary" *ngIf="skillGroupBinder?.name != null">
-                {{skillGroupBinder?.name}}
+            <div class="badge badge-primary" *ngIf="skillGroupObj?.name != null">
+                {{skillGroupObj?.name}}
             </div>
 
-            <input type="hidden" [value]="skillGroupBinder?.id">
+            <input type="hidden" [value]="skillGroupObj?.id">
         </div>
         <div *ngIf="enableImportButton == true" [ngClass]="{'d-block': enableImportButton}"
             class="d-none col-lg-6 pull-right marign-l-auto">
@@ -68,7 +71,7 @@
                
                 <button (click)="hideBtn()" *ngIf="enableCancelButton == true"
                 [ngClass]="{'d-block': enableCancelButton}" class="btn btn-default d-none  mr-2">Cancel</button>
-                    <button [ngbTooltip]="'Import csv'" (click)="openVerticallyCentered(content)" class="btn btn-primary d  mr-2"><i class="fa fa-upload"></i></button>
+                    <button [ngbTooltip]="'Import csv'" (click)="openImportModal(content)" class="btn btn-primary d  mr-2"><i class="fa fa-upload"></i></button>
                     <button [ngbTooltip]="'Export csv'" (click)="download()" class="btn btn-primary d  mr-2"><i class="fa fa-download"></i></button>
                 
                 <button (click)="addForecastData()" *ngIf="enableSaveButton == true"
@@ -108,7 +111,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <ng-container *ngIf="skillGroupBinder?.id == null;else enableField">
+                                <ng-container *ngIf="skillGroupObj?.id == null;else enableField">
                                     <tr *ngFor="let item of dataJson; let i = index">
                                         <ng-container>
 

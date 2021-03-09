@@ -684,6 +684,19 @@
       ],
       "UpstreamPathTemplate": "/api/activitylogs",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* Reporting Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/weatherforecast",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44301
+        }
+      ],
+      "UpstreamPathTemplate": "/api/weatherforecast",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {

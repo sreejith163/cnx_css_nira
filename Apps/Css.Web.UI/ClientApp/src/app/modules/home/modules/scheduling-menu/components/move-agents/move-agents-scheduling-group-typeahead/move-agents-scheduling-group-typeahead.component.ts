@@ -21,6 +21,7 @@ export class MoveAgentsSchedulingGroupTypeaheadComponent implements OnInit, OnDe
   totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
 
   agentSchedulingGroupItemsBuffer: AgentSchedulingGroupBase[] = [];
@@ -105,7 +106,7 @@ export class MoveAgentsSchedulingGroupTypeaheadComponent implements OnInit, OnDe
 
   private subscribeToAgentSchedulingGroups(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getAgentSchedulingGroupSubscription = this.getAgentSchedulingGroups().subscribe(
+    this.getAgentSchedulingGroupSubscription = this.getAgentSchedulingGroups(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -158,6 +159,11 @@ export class MoveAgentsSchedulingGroupTypeaheadComponent implements OnInit, OnDe
 
   private getAgentSchedulingGroups(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.agentSchedulingGroupService.getAgentSchedulingGroups(queryParams);
   }
 }

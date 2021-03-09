@@ -30,6 +30,8 @@ import { ScheduleDateRangeBase } from '../../../models/schedule-date-range-base.
 import { DropListRef } from '@angular/cdk/drag-drop';
 import { AgentScheduleManagersQueryParams } from '../../../models/agent-schedule-mangers-query-params.model';
 import { AgentScheduleManagerChart } from '../../../models/agent-schedule-manager-chart.model';
+import { stringify } from '@angular/compiler/src/util';
+import { trimTrailingNulls } from '@angular/compiler/src/render3/view/util';
 
 @Component({
   selector: 'app-import-schedule',
@@ -208,6 +210,10 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           }
         }
         this.jsonData.map(x => {
+          x.StartDate = x?.StartTime.trim();
+          x.EndDate = x?.EndDate.trim();
+          x.StartDate = x?.StartDate.slice(0, 4) +"/"+ x?.StartDate.slice(4, 6) +"/"+ x?.StartDate.slice(6, 8);
+          x.EndDate = x?.EndDate.slice(0, 4) +"/"+ x?.EndDate.slice(4, 6) +"/"+ x?.EndDate.slice(6, 8);
           x.StartTime = x?.StartTime.trim().toLowerCase();
           x.EndTime = x?.EndTime.trim().toLowerCase();
           x.ActivityCode = x?.ActivityCode.trim().toLowerCase();

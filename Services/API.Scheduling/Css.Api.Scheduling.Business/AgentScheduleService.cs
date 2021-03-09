@@ -527,79 +527,7 @@ namespace Css.Api.Scheduling.Business
             await _uow.Commit();
 
             return new CSSResponse(HttpStatusCode.NoContent);
-        }
-
-        /// <summary>Gets the agent my schedule.</summary>
-        /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<CSSResponse> GetAgentMySchedule(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter)
-        {
-            AgentMyScheduleDetailsDTO agentMyScheduleDetailsDTO;
-
-            var agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
-            if (agentSchedule == null)
-            {
-                return new CSSResponse(HttpStatusCode.NotFound);
-            }
-
-            //if (agentSchedule.DateFrom == null || agentSchedule.DateTo == null
-            //    || agentSchedule.AgentScheduleCharts == null)
-            //{
-            //    return new CSSResponse(HttpStatusCode.NotFound);
-            //}
-
-            agentMyScheduleDetailsDTO = new AgentMyScheduleDetailsDTO();
-            agentMyScheduleDetailsDTO.Id = agentSchedule.Id.ToString();
-            agentMyScheduleDetailsDTO.AgentMySchedules = new List<AgentMyScheduleDay>();
-
-            //AgentMyScheduleDay schedule;
-
-            //foreach (DateTime date in EachDay(myScheduleQueryParameter.StartDate, myScheduleQueryParameter.EndDate))
-            //{
-            //    if (date.Date >= agentSchedule.DateFrom.Value.Date
-            //        && date.Date.AddDays(1) <= agentSchedule.DateTo.Value.Date.AddDays(1))
-            //    {
-            //        bool isChartAvailableForDay =
-            //            agentSchedule.AgentScheduleCharts.Any(chart => chart.Day == (int)date.DayOfWeek);
-            //        if (isChartAvailableForDay)
-            //        {
-            //            var chartsOfDay = agentSchedule.AgentScheduleCharts
-            //                .Where(chart => chart.Day == (int)date.DayOfWeek)
-            //                .Select(chart => chart.Charts)
-            //                .FirstOrDefault();
-
-            //            var firstStartTime = chartsOfDay.Min(chart => DateTime.
-            //            ParseExact(chart.StartTime, "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
-            //            var lastEndTime = chartsOfDay.Max(chart => DateTime.
-            //            ParseExact(chart.EndTime, "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
-
-            //            schedule = new AgentMyScheduleDay
-            //            {
-            //                Day = (int)date.DayOfWeek,
-            //                Date = date,
-            //                Charts = chartsOfDay,
-            //                FirstStartTime = firstStartTime,
-            //                LastEndTime = lastEndTime
-            //            };
-            //        }
-            //        else
-            //        {
-            //            schedule = CreateMyScheduleDayWithNoChart(date);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        schedule = CreateMyScheduleDayWithNoChart(date);
-
-            //    }
-            //    agentMyScheduleDetailsDTO.AgentMySchedules.Add(schedule);
-            //}
-
-            return new CSSResponse(agentMyScheduleDetailsDTO, HttpStatusCode.OK);
-        }
+        }       
 
         /// <summary>
         /// Gets the activity log for scheduling chart.
@@ -650,21 +578,7 @@ namespace Css.Api.Scheduling.Business
                 SchedulingFieldDetails = new SchedulingFieldDetails() { ActivityLogManager = _mapper.Map<ActivityLogScheduleManager>(agentScheduleManagerChart) }
             };
         }
-
-        /// <summary>
-        /// Eaches the day.
-        /// </summary>
-        /// <param name="from">From.</param>
-        /// <param name="to">To.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        private IEnumerable<DateTime> EachDay(DateTime from, DateTime to)
-        {
-            for (var day = from.Date; day.Date <= to.Date; day = day.AddDays(1))
-                yield return day;
-        }
-
+        
         /// <summary>
         /// Determines whether [has valid scheduling codes] [the specified agent schedule details].
         /// </summary>
@@ -715,20 +629,6 @@ namespace Css.Api.Scheduling.Business
             }
 
             return isValid;
-        }
-
-        /// <summary>Creates my schedule day with no chart.</summary>
-        /// <param name="date">The date.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        private AgentMyScheduleDay CreateMyScheduleDayWithNoChart(DateTime date)
-        {
-            return new AgentMyScheduleDay
-            {
-                Day = (int)date.DayOfWeek,
-                Date = date
-            };
         }
     }
 }

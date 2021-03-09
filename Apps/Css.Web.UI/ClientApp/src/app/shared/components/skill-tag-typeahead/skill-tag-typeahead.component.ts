@@ -19,6 +19,7 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
   totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
 
   skillTagItemsBuffer: SkillTagBase[] = [];
@@ -101,7 +102,7 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
 
   private subscribeToSkillTags(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getSkillTagsSubscription = this.getSkillTags().subscribe(
+    this.getSkillTagsSubscription = this.getSkillTags(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -155,6 +156,11 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
 
   private getSkillTags(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.skillTagService.getSkillTags(queryParams);
   }
 

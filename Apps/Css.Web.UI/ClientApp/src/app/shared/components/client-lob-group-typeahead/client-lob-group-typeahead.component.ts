@@ -20,6 +20,7 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
   totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
 
   clientLobItemsBuffer: ClientLobGroupBase[] = [];
@@ -99,7 +100,7 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
 
   private subscribeToClientLobs(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getClientLobNamesSubscription = this.getClientLobs().subscribe(
+    this.getClientLobNamesSubscription = this.getClientLobs(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -151,6 +152,11 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
 
   private getClientLobs(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.clientLobService.getClientLOBGroups(queryParams);
   }
 }

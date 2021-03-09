@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 
@@ -130,6 +130,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   getTranslationSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
+
+  @Input() listPosition: string;
+  listPositionTypeAhead: string;
+
   constructor(
     private calendar: NgbCalendar,
     private modalService: NgbModal,
@@ -149,6 +153,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.listPositionTypeAhead = this.listPosition;
     this.schedulingStatus = Object.keys(SchedulingStatus).filter(key => isNaN(SchedulingStatus[key]));
     this.openTimes = this.getOpenTimes();
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
@@ -564,7 +569,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       ('0' + String(today.getDate())) : String(today.getDate());
 
     const date = year + month + day;
-    this.excelService.exportAsExcelFile(SchedulingExcelExportData, this.exportFileName + date);
+    this.excelService.exportAsExcelCSVFile(SchedulingExcelExportData, this.exportFileName + date);
   }
 
   private setSelectedGrid(el: AgentSchedulesResponse) {
@@ -829,6 +834,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     agentSchedulesQueryParams.pageNumber = this.currentPage;
     agentSchedulesQueryParams.pageSize = this.pageSize;
     agentSchedulesQueryParams.searchKeyword = this.searchText ?? '';
+    agentSchedulesQueryParams.skipPageSize = false;
     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentSchedulesQueryParams.fields = fields ?? undefined;
     agentSchedulesQueryParams.employeeIds = undefined;

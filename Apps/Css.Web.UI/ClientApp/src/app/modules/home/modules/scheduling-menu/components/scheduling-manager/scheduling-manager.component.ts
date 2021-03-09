@@ -1,5 +1,5 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -106,6 +106,9 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   getAgentInfoSubscription: ISubscription;
   getAgentSchedulesSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
+  
+  @Input() listPosition: string;
+  listPositionTypeAhead: string;
 
   constructor(
     private agentScheduleMangerService: AgentScheduleManagersService,
@@ -125,6 +128,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.listPositionTypeAhead = this.listPosition;
     this.openTimes = this.getOpenTimes();
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
     this.sortingType = Object.keys(SortingType).filter(key => isNaN(SortingType[key]));
@@ -196,7 +200,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
       ('0' + String(today.getDate())) : String(today.getDate());
 
     const date = year + month + day;
-    this.excelService.exportAsExcelFile(SchedulingMangerExcelExportData, this.exportFileName + date);
+    this.excelService.exportAsExcelCSVFile(SchedulingMangerExcelExportData, this.exportFileName + date);
   }
 
   previous() {

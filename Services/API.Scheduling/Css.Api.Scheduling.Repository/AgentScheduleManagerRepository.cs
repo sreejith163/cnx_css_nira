@@ -15,6 +15,7 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using System.Collections.Generic;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
+using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -103,17 +104,23 @@ namespace Css.Api.Scheduling.Repository
             return count > 0;
         }
 
-        /// <summary>
-        /// Gets the agent schedule manager chart by employee identifier.
-        /// </summary>
+        /// <summary>Gets the agent schedule manager chart by employee identifier.</summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <returns></returns>
-        public async Task<AgentScheduleManager> GetAgentScheduleManagerChartByEmployeeId(EmployeeIdDetails employeeIdDetails)
+        /// <param name="myScheduleQueryParameter"></param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<List<AgentScheduleManager>> GetAgentScheduleManagerChartByEmployeeId(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter)
         {
             var query =
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.AgentSchedulingGroupId, myScheduleQueryParameter.AgentSchedulingGroupId) &
+                Builders<AgentScheduleManager>.Filter.Gte(i => i.Date, myScheduleQueryParameter.StartDate) &
+                Builders<AgentScheduleManager>.Filter.Lte(i => i.Date, myScheduleQueryParameter.EndDate);
 
-            return await FindByIdAsync(query);
+            var agentAdmins = FilterBy(query);
+
+            return await Task.FromResult(agentAdmins.ToList());
         }
 
         /// <summary>

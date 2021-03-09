@@ -19,6 +19,7 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
   characterSplice = 25;
   totalItems = 0;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
   totalPages: number;
 
@@ -82,7 +83,7 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
 
   private subscribeToClients(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getClientNamesSubscription = this.getClients().subscribe(
+    this.getClientNamesSubscription = this.getClients(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -133,6 +134,11 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
 
   private getClients(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.clientService.getClients(queryParams);
   }
 }

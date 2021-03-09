@@ -157,18 +157,5 @@ namespace Css.Api.Scheduling.Controllers
             var result = await _agentScheduleService.DeleteAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
             return StatusCode((int)result.Code, result.Value);
         }
-
-        /// <summary>Gets the agent my schedule.</summary>
-        /// <param name="agentEmployeeId">The agent employee identifier.</param>
-        /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        [HttpGet("{agentEmployeeId}/myschedule")]
-        public async Task<IActionResult> GetAgentMySchedule(int agentEmployeeId, [FromQuery] MyScheduleQueryParameter myScheduleQueryParameter)
-        {
-            var result = await _agentScheduleService.GetAgentMySchedule(new EmployeeIdDetails { Id = agentEmployeeId }, myScheduleQueryParameter);
-            return StatusCode((int)result.Code, result.Value);
-        }
     }
 }

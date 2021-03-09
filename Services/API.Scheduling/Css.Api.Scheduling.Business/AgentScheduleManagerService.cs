@@ -10,14 +10,17 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
+using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
+using Css.Api.Scheduling.Models.DTO.Response.MySchedule;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -270,6 +273,69 @@ namespace Css.Api.Scheduling.Business
             return new CSSResponse(HttpStatusCode.NoContent);
         }
 
+        /// <summary>Gets the agent my schedule.</summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<CSSResponse> GetAgentMySchedule(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter)
+        {
+            AgentMyScheduleDetailsDTO agentMyScheduleDetailsDTO;
+
+            List<AgentScheduleManager> agentSchedules = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails, myScheduleQueryParameter);
+            if (agentSchedules == null || agentSchedules.Count < 1)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            agentMyScheduleDetailsDTO = new AgentMyScheduleDetailsDTO();
+            agentMyScheduleDetailsDTO.AgentMySchedules = new List<AgentMyScheduleDay>();
+
+            AgentMyScheduleDay schedule;
+
+            foreach (DateTime date in EachDay(myScheduleQueryParameter.StartDate, myScheduleQueryParameter.EndDate))
+            {
+                AgentScheduleManager agentSchedule = agentSchedules.Where(s => s.Date == date).FirstOrDefault();
+                if (agentSchedule != null)
+                {
+
+                    bool isChartAvailableForDay =
+                        agentSchedule.Charts.Any();
+                    if (isChartAvailableForDay)
+                    {
+                        var chartsOfDay = agentSchedule.Charts;
+
+                        var firstStartTime = chartsOfDay.Min(chart => DateTime.
+                        ParseExact(chart.StartTime, "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
+                        var lastEndTime = chartsOfDay.Max(chart => DateTime.
+                        ParseExact(chart.EndTime, "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
+
+                        schedule = new AgentMyScheduleDay
+                        {
+                            Day = (int)agentSchedule.Date.DayOfWeek,
+                            Date = agentSchedule.Date,
+                            Charts = chartsOfDay,
+                            FirstStartTime = firstStartTime,
+                            LastEndTime = lastEndTime
+                        };
+                    }
+                    else
+                    {
+                        schedule = CreateMyScheduleDayWithNoChart(date);
+                    }
+                }
+                else
+                {
+                    schedule = CreateMyScheduleDayWithNoChart(date);
+
+                }
+                agentMyScheduleDetailsDTO.AgentMySchedules.Add(schedule);
+            }
+
+            return new CSSResponse(agentMyScheduleDetailsDTO, HttpStatusCode.OK);
+        }
+
         /// <summary>
         /// Gets the activity log for scheduling manager.
         /// </summary>
@@ -339,6 +405,34 @@ namespace Css.Api.Scheduling.Business
             agentAdminQueryParameter.Fields = "EmployeeId, FirstName, LastName";
 
             return await _agentAdminRepository.GetAgentAdmins(agentAdminQueryParameter);
+        }
+
+        /// <summary>
+        /// Eaches the day.
+        /// </summary>
+        /// <param name="from">From.</param>
+        /// <param name="to">To.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        private IEnumerable<DateTime> EachDay(DateTime from, DateTime to)
+        {
+            for (var day = from.Date; day.Date <= to.Date; day = day.AddDays(1))
+                yield return day;
+        }
+
+        /// <summary>Creates my schedule day with no chart.</summary>
+        /// <param name="date">The date.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        private AgentMyScheduleDay CreateMyScheduleDayWithNoChart(DateTime date)
+        {
+            return new AgentMyScheduleDay
+            {
+                Day = (int)date.DayOfWeek,
+                Date = date
+            };
         }
     }
 }

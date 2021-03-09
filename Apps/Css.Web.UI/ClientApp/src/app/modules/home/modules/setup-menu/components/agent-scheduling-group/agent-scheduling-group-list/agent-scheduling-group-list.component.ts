@@ -61,7 +61,8 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   skillGroupId: number;
   skillTagId: number;
   totalAgentSchedulingGroupsRecord: number;
-  searchKeyword: string;
+  searchKeyword: '';
+  dropdownSearchKeyWord = '';
   weekDay = WeekDay;
 
   modalRef: NgbModalRef;
@@ -104,7 +105,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   }
 
   clearSearchText() {
-    this.searchKeyword = undefined;
+    this.searchKeyword = '';
     this.loadAgentSchedulingGroups();
   }
 
@@ -251,7 +252,7 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
     agentSchedulingGroupQueryParams.skillTagId = this.skillTagId;
     agentSchedulingGroupQueryParams.pageNumber = this.currentPage;
     agentSchedulingGroupQueryParams.pageSize = this.pageSize;
-    agentSchedulingGroupQueryParams.searchKeyword = this.searchKeyword ?? '';
+    agentSchedulingGroupQueryParams.searchKeyword = this.searchKeyword ?? this.searchKeyword;
     agentSchedulingGroupQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentSchedulingGroupQueryParams.fields = '';
 

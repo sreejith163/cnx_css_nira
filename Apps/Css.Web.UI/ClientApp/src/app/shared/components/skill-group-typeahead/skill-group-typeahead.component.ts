@@ -19,6 +19,7 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
   totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
 
   skillGroupItemsBuffer: SkillGroupDetails[] = [];
@@ -99,7 +100,7 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
 
   private subscribeToSkillGroups(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getSkillGroupsSubscription = this.getSkillGroups().subscribe(
+    this.getSkillGroupsSubscription = this.getSkillGroups(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -152,6 +153,11 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
 
   private getSkillGroups(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.skillGroupService.getSkillGroups(queryParams);
   }
 

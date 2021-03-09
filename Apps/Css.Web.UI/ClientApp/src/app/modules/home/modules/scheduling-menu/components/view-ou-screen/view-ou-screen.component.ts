@@ -26,6 +26,7 @@ import { Forecast } from '../../models/forecast.model';
 import { ForecastScreenService } from '../../services/forecast-screen.service';
 import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 
 /**
@@ -104,6 +105,7 @@ export class ViewOuScreenComponent implements OnInit {
   totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
   skillGroupItemsBuffer: SkillGroupDetails[] = [];
   typeAheadInput$ = new Subject<string>();
@@ -199,6 +201,7 @@ export class ViewOuScreenComponent implements OnInit {
     this.model2 = this.today;
     this.getForecastDefaultValue();
     this.subscribeToSkillGroups();
+    this.subscribeToSearching();
     this.preLoadTranslations();
     this.loadTranslations();
     this.subscribeToTranslations();
@@ -490,7 +493,7 @@ export class ViewOuScreenComponent implements OnInit {
 
   private subscribeToSkillGroups(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getSkillGroupsSubscription = this.getSkillGroups().subscribe(
+    this.getSkillGroupsSubscription = this.getSkillGroups(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -500,6 +503,23 @@ export class ViewOuScreenComponent implements OnInit {
       }, err => this.loading = false);
 
     this.subscriptions.push(this.getSkillGroupsSubscription);
+  }
+
+  private subscribeToSearching() {
+    this.typeAheadValueSubscription = this.typeAheadInput$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(term => this.getSkillGroups(term))
+    ).subscribe(response => {
+      if (response.body) {
+        this.setPaginationValues(response);
+        this.skillGroupItemsBuffer = response.body;
+      }
+    }, (error) => {
+      console.log(error);
+    });
+
+    this.subscriptions.push(this.typeAheadValueSubscription);
   }
 
 
@@ -533,6 +553,11 @@ export class ViewOuScreenComponent implements OnInit {
 
   private getSkillGroups(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.skillGroupService.getSkillGroups(queryParams);
   }
 
