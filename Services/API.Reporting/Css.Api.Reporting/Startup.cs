@@ -2,6 +2,7 @@ using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Core.Utilities.Filters;
 using Css.Api.Reporting.Business.Extensions;
 using Css.Api.Reporting.Extensions;
+using Css.Api.Reporting.Models.DTO.Auth;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -9,6 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Css.Api.Reporting
 {
@@ -55,7 +58,35 @@ namespace Css.Api.Reporting
                 .AddSwaggerConfiguration(Configuration)
                 .AddServicesScope(HostingEnvironment, Configuration)
                 .AddDBContextConfiguration(Configuration)
-                .AddControllers();
+                .AddControllers();           
+
+            var authSettings = services.BuildServiceProvider().GetRequiredService<IOptions<AuthSettings>>().Value;
+
+            string schemeName = "Bearer";
+            string authorityUrl = authSettings.AuthorityUrl;
+            bool isValidateAudience = false;
+            string apiScope = "api_reporting";
+            string policyName = "ApiScope";
+
+            services.AddAuthentication(schemeName)
+            .AddJwtBearer(schemeName, options =>
+            {
+                options.Authority = authorityUrl;
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = isValidateAudience
+                };
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(policyName, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", apiScope);
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,7 +125,7 @@ namespace Css.Api.Reporting
             app.UseReportingFramework();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -2,6 +2,7 @@
 using Css.Api.Core.DataAccess.Repository.NoSQL;
 using Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces;
 using Css.Api.Reporting.Business.Extensions;
+using Css.Api.Reporting.Models.DTO.Auth;
 using Css.Api.Reporting.Models.DTO.Mappers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +41,7 @@ namespace Css.Api.Reporting.Extensions
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.Configure<MapperSettings>(configuration.GetSection("Mappers"));
+            services.Configure<AuthSettings>(configuration.GetSection("Auth"));
 
             services.AddReportingFramework();
 
