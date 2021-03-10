@@ -159,7 +159,7 @@ namespace Css.Api.Scheduling.Business
             if (agentScheduleChartQueryparameter.FromDate.HasValue && agentScheduleChartQueryparameter.FromDate != default(DateTime))
             {
                 var date = agentScheduleChartQueryparameter.FromDate.Value;
-                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
 
                 agentSchedule.Ranges = agentSchedule.Ranges.Where(x => x.DateFrom == dateTimeWithZeroTimeSpan).ToList();
             }
@@ -167,7 +167,7 @@ namespace Css.Api.Scheduling.Business
             if (agentScheduleChartQueryparameter.ToDate.HasValue && agentScheduleChartQueryparameter.ToDate != default(DateTime))
             {
                 var date = agentScheduleChartQueryparameter.ToDate.Value;
-                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
 
                 agentSchedule.Ranges = agentSchedule.Ranges.Where(x => x.DateTo == dateTimeWithZeroTimeSpan).ToList();
             }
@@ -239,8 +239,10 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
             }
 
-            agentScheduleDetails.DateFrom = new DateTime(agentScheduleDetails.DateFrom.Year, agentScheduleDetails.DateFrom.Month, agentScheduleDetails.DateFrom.Day, 0, 0, 0);
-            agentScheduleDetails.DateTo = new DateTime(agentScheduleDetails.DateTo.Year, agentScheduleDetails.DateTo.Month, agentScheduleDetails.DateTo.Day, 0, 0, 0);
+            agentScheduleDetails.DateFrom = new DateTime(agentScheduleDetails.DateFrom.Year, agentScheduleDetails.DateFrom.Month, agentScheduleDetails.DateFrom.Day, 
+                                                         0, 0, 0, DateTimeKind.Utc);
+            agentScheduleDetails.DateTo = new DateTime(agentScheduleDetails.DateTo.Year, agentScheduleDetails.DateTo.Month, agentScheduleDetails.DateTo.Day, 
+                                                       0, 0, 0, DateTimeKind.Utc);
 
             var employeeIdDetails = new EmployeeIdDetails { Id = agentSchedule.EmployeeId };
             var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
@@ -334,8 +336,8 @@ namespace Css.Api.Scheduling.Business
                     {
                         foreach (var range in importAgentScheduleChart.Ranges)
                         {
-                            range.DateFrom = new DateTime(range.DateFrom.Year, range.DateFrom.Month, range.DateFrom.Day, 0, 0, 0);
-                            range.DateTo = new DateTime(range.DateTo.Year, range.DateTo.Month, range.DateTo.Day, 0, 0, 0);
+                            range.DateFrom = new DateTime(range.DateFrom.Year, range.DateFrom.Month, range.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+                            range.DateTo = new DateTime(range.DateTo.Year, range.DateTo.Month, range.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
 
                             var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => x.Status != SchedulingStatus.Rejected &&
                                                                                            ((range.DateFrom < x.DateTo &&
@@ -396,8 +398,10 @@ namespace Css.Api.Scheduling.Business
                 agentScheduleDetails.EmployeeIds = agentScheduleDetails.EmployeeIds.FindAll(x => x != agentSchedule.EmployeeId);
             }
 
-            agentScheduleDetails.DateFrom = new DateTime(agentScheduleDetails.DateFrom.Year, agentScheduleDetails.DateFrom.Month, agentScheduleDetails.DateFrom.Day, 0, 0, 0);
-            agentScheduleDetails.DateTo = new DateTime(agentScheduleDetails.DateTo.Year, agentScheduleDetails.DateTo.Month, agentScheduleDetails.DateTo.Day, 0, 0, 0);
+            agentScheduleDetails.DateFrom = new DateTime(agentScheduleDetails.DateFrom.Year, agentScheduleDetails.DateFrom.Month, 
+                                                         agentScheduleDetails.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+            agentScheduleDetails.DateTo = new DateTime(agentScheduleDetails.DateTo.Year, agentScheduleDetails.DateTo.Month, 
+                                                       agentScheduleDetails.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
 
             var activityLogs = new List<ActivityLog>();
 
@@ -475,10 +479,14 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var newDateFrom = new DateTime(dateRangeDetails.NewDateFrom.Year, dateRangeDetails.NewDateFrom.Month, dateRangeDetails.NewDateFrom.Day, 0, 0, 0);
-            var newDateTo = new DateTime(dateRangeDetails.NewDateTo.Year, dateRangeDetails.NewDateTo.Month, dateRangeDetails.NewDateTo.Day, 0, 0, 0);
-            var oldDateFrom = new DateTime(dateRangeDetails.OldDateFrom.Year, dateRangeDetails.OldDateFrom.Month, dateRangeDetails.OldDateFrom.Day, 0, 0, 0);
-            var oldDateTo = new DateTime(dateRangeDetails.OldDateTo.Year, dateRangeDetails.OldDateTo.Month, dateRangeDetails.OldDateTo.Day, 0, 0, 0);
+            var newDateFrom = new DateTime(dateRangeDetails.NewDateFrom.Year, dateRangeDetails.NewDateFrom.Month, dateRangeDetails.NewDateFrom.Day, 
+                                           0, 0, 0, DateTimeKind.Utc);
+            var newDateTo = new DateTime(dateRangeDetails.NewDateTo.Year, dateRangeDetails.NewDateTo.Month, dateRangeDetails.NewDateTo.Day, 
+                                         0, 0, 0, DateTimeKind.Utc);
+            var oldDateFrom = new DateTime(dateRangeDetails.OldDateFrom.Year, dateRangeDetails.OldDateFrom.Month, dateRangeDetails.OldDateFrom.Day, 
+                                           0, 0, 0, DateTimeKind.Utc);
+            var oldDateTo = new DateTime(dateRangeDetails.OldDateTo.Year, dateRangeDetails.OldDateTo.Month, dateRangeDetails.OldDateTo.Day, 
+                                         0, 0, 0, DateTimeKind.Utc);
 
             var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => oldDateFrom != x.DateFrom && oldDateTo != x.DateTo &&
                                                                            x.Status != SchedulingStatus.Rejected && 

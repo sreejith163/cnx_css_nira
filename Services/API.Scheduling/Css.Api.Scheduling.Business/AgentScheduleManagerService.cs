@@ -316,7 +316,7 @@ namespace Css.Api.Scheduling.Business
                     var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
 
                     agentScheduleManagerChart.Date = new DateTime(agentScheduleManagerChart.Date.Year, agentScheduleManagerChart.Date.Month,
-                                                                  agentScheduleManagerChart.Date.Day, 0, 0, 0);
+                                                                  agentScheduleManagerChart.Date.Day, 0, 0, 0, DateTimeKind.Utc);
                     if (agentScheduleDetails.IsImport)
                     {
                         var scheduleExists = await _agentScheduleManagerRepository.IsAgentScheduleManagerChartExists(employeeIdDetails, dateDetails);
@@ -380,7 +380,8 @@ namespace Css.Api.Scheduling.Business
 
             var activityLogs = new List<ActivityLog>();
 
-            agentScheduleDetails.Date = new DateTime(agentScheduleDetails.Date.Year, agentScheduleDetails.Date.Month, agentScheduleDetails.Date.Day, 0, 0, 0);
+            agentScheduleDetails.Date = new DateTime(agentScheduleDetails.Date.Year, agentScheduleDetails.Date.Month, agentScheduleDetails.Date.Day, 
+                                                     0, 0, 0, DateTimeKind.Utc);
 
             foreach (var employeeId in agentScheduleDetails.EmployeeIds)
             {

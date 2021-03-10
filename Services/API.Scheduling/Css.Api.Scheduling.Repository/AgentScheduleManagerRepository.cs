@@ -75,7 +75,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<AgentScheduleManager> GetAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, DateDetails dateDetails)
         {
-            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0);
+            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0, DateTimeKind.Utc);
 
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
@@ -94,7 +94,7 @@ namespace Css.Api.Scheduling.Repository
         /// </returns>
         public async Task<bool> IsAgentScheduleManagerChartExists(EmployeeIdDetails employeeIdDetails, DateDetails dateDetails)
         {
-            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0);
+            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0, DateTimeKind.Utc);
 
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
@@ -161,7 +161,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<List<AgentScheduleManager>> GetAgentScheduleByAgentSchedulingGroupId(List<int> agentSchedulingGroupIdDetailsList, DateTimeOffset date)
         {
-            var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             var query = Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, dateTimeWithZeroTimeSpan) &
                      Builders<AgentScheduleManager>.Filter.In(i => i.AgentSchedulingGroupId, agentSchedulingGroupIdDetailsList);
 
@@ -178,7 +178,7 @@ namespace Css.Api.Scheduling.Repository
         public void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManager agentScheduleManager)
         {
             agentScheduleManager.Date = new DateTime(agentScheduleManager.Date.Year, agentScheduleManager.Date.Month,
-                                                     agentScheduleManager.Date.Day, 0, 0, 0);
+                                                     agentScheduleManager.Date.Day, 0, 0, 0, DateTimeKind.Utc);
 
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
@@ -238,7 +238,7 @@ namespace Css.Api.Scheduling.Repository
                 !agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
-                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.Date == dateTimeWithZeroTimeSpan);
             }
 
@@ -246,7 +246,7 @@ namespace Css.Api.Scheduling.Repository
                 agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
-                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.Date != dateTimeWithZeroTimeSpan);
             }
 

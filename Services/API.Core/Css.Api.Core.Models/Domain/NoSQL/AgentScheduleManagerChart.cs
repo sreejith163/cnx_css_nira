@@ -9,13 +9,13 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the start time
         /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Utc)]
         public DateTime StartDateTime { get; set; }
 
         /// <summary>
         /// Gets or sets the end time.
         /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Utc)]
         public DateTime EndDateTime { get; set; }
 
         /// <summary>

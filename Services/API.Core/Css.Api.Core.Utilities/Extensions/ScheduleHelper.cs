@@ -145,8 +145,9 @@ namespace Css.Api.Core.Utilities.Extensions
                 {
                     var startDateTime = string.Join(" ", clock.Date.ToString("yyyy-MM-dd"), clock.FromTime);
                     var endDateTime = string.Join(" ", clock.Date.ToString("yyyy-MM-dd"), clock.ToTime);
+                    List<string> zeroTimes = new List<string>() { "00:00", "00:00:00" };
 
-                    if (clock.ToTime == "00:00:00" || TimeSpan.ParseExact(clock.ToTime, "g", CultureInfo.InvariantCulture) < TimeSpan.ParseExact(clock.FromTime, "g", CultureInfo.InvariantCulture))
+                    if (zeroTimes.Contains(clock.ToTime.Trim()) || TimeSpan.ParseExact(clock.ToTime, "g", CultureInfo.InvariantCulture) < TimeSpan.ParseExact(clock.FromTime, "g", CultureInfo.InvariantCulture))
                     {
                         startDateTime = string.Join(" ", clock.Date.AddDays(-1).ToString("yyyy-MM-dd"), clock.FromTime);
                     }
