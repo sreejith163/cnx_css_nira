@@ -277,6 +277,7 @@ namespace Css.Api.Core.Utilities.Extensions
             clocks.RemoveAll(x => true);
             clocks.AddRange(reconciliedClocks);
         }
+
         #endregion
     }
 }
