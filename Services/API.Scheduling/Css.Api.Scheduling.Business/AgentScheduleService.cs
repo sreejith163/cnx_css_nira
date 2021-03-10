@@ -15,6 +15,7 @@ using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -207,7 +208,7 @@ namespace Css.Api.Scheduling.Business
                             EmployeeId = agentSchedule.EmployeeId,
                             AgentSchedulingGroupId = agentScheduleRange.AgentSchedulingGroupId,
                             Date = date,
-                            // Charts = agentScheduleRange.ScheduleCharts.FirstOrDefault(x => x.Day == (int)dayOfWeek).Charts,
+                            Charts = GetCharts(agentScheduleRange.ScheduleCharts.FirstOrDefault(x => x.Day == (int)dayOfWeek).Charts),
                             CreatedBy = agentScheduleDetails.ModifiedBy,
                             CreatedDate = DateTimeOffset.UtcNow,
                         };
@@ -525,6 +526,29 @@ namespace Css.Api.Scheduling.Business
             await _uow.Commit();
 
             return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Gets the charts.
+        /// </summary>
+        /// <param name="charts">The charts.</param>
+        /// <returns></returns>
+        private List<AgentScheduleManagerChart> GetCharts(List<ScheduleChart> charts)
+        {
+            List<AgentScheduleManagerChart> managerCharts = new List<AgentScheduleManagerChart>();
+            foreach (var chart in charts)
+            {
+                AgentScheduleManagerChart managerChart = new AgentScheduleManagerChart 
+                { 
+                    StartTime = DateTime.Parse(chart.StartTime),
+                    EndTime = DateTime.Parse(chart.EndTime),
+                    SchedulingCodeId = chart.SchedulingCodeId
+                };
+
+                managerCharts.Add(managerChart);
+            }
+
+            return managerCharts;
         }
 
         /// <summary>
