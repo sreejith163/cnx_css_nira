@@ -167,7 +167,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   hasStatusDisabled(el: AgentSchedulesResponse) {
-    if (el?.ranges.length === 0) {
+    if (el?.ranges.length === 0 || el.ranges[el.rangeIndex].status === SchedulingStatus.Approved) {
       return true;
     }
     if (el?.ranges.length > 0) {
@@ -268,14 +268,15 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   getSelectedRange(el: AgentSchedulesResponse) {
-    const formattedDateFrom = this.getFormattedDateString(el.ranges[el.rangeIndex].dateFrom);
-    const formattedDateTo = this.getFormattedDateString(el.ranges[el.rangeIndex].dateTo);
-
-    if (el.rangeIndex > -1) {
-      return `${formattedDateFrom} - ${formattedDateTo}`;
-    } else {
-      return 'Please select a date range';
+    let selectedRange = 'Please select a date range';
+    if (el.ranges.length) {
+      const formattedDateFrom = this.getFormattedDateString(el.ranges[el.rangeIndex].dateFrom);
+      const formattedDateTo = this.getFormattedDateString(el.ranges[el.rangeIndex].dateTo); if (el.rangeIndex > -1) {
+        selectedRange = `${formattedDateFrom} - ${formattedDateTo}`;
+      }
     }
+
+    return selectedRange;
   }
 
   onDateRangeChange(index: any, el: AgentSchedulesResponse) {
