@@ -167,10 +167,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   hasStatusDisabled(el: AgentSchedulesResponse) {
-    if (el?.ranges.length === 0 || el.ranges[el.rangeIndex].status === SchedulingStatus.Approved) {
+    if (el?.ranges.length === 0) {
       return true;
     }
-    if (el?.ranges.length > 0) {
+    if (el?.ranges.length > 0 && el.ranges[el.rangeIndex]) {
       if (el.ranges[el.rangeIndex].status === SchedulingStatus['Pending Schedule'] &&
         el?.ranges[el?.rangeIndex].scheduleCharts.length === 0) {
         return true;
@@ -183,7 +183,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
 
     return false;
-
   }
 
   getRangeIndex(el: AgentSchedulesResponse) {
@@ -269,7 +268,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   getSelectedRange(el: AgentSchedulesResponse) {
     let selectedRange = 'Please select a date range';
-    if (el.ranges.length) {
+    if (el.ranges.length && el.ranges[el.rangeIndex]) {
       const formattedDateFrom = this.getFormattedDateString(el.ranges[el.rangeIndex].dateFrom);
       const formattedDateTo = this.getFormattedDateString(el.ranges[el.rangeIndex].dateTo); if (el.rangeIndex > -1) {
         selectedRange = `${formattedDateFrom} - ${formattedDateTo}`;
@@ -848,15 +847,17 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     return agentSchedulesQueryParams;
   }
 
-  private loadAgentSchedules(fields?: string) {
-    const queryParams = this.getQueryParams(fields);
+  private loadAgentSchedules(preserveIndex?: boolean) {
+    const queryParams = this.getQueryParams();
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
     this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
       .subscribe((response) => {
+        const existedGridData = preserveIndex ? [...this.totalSchedulingGridData] : [];
         this.totalSchedulingGridData = response.body;
         this.totalSchedulingGridData.map(x => {
-          x.rangeIndex = 0;
+          const data = existedGridData.find(y => y.id === x.id);
+          x.rangeIndex = data ? data.rangeIndex : 0;
         });
         if (this.selectedGrid) {
           this.setSelectedGrid(this.totalSchedulingGridData.find(x => x.id === this.selectedGrid.id));
@@ -873,35 +874,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(this.getAgentSchedulesSubscription);
   }
-
-  // private loadAgentSchedule(agentScheduleId: string) {
-  //   this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
-
-  //   this.getAgentScheduleSubscription = this.agentSchedulesService.getCharts(agentScheduleId)
-  //     .subscribe((response) => {
-  //       if (response) {
-  //         this.selectedGrid = response;
-  //         if (this.selectedGrid.agentScheduleCharts.length > 0) {
-  //           this.selectedGrid.agentScheduleCharts.forEach(el => {
-  //             this.formatEndTime(el.charts, false);
-  //           });
-  //         }
-  //         this.selectedGrid?.agentScheduleCharts.map(x => x?.charts.map(y => {
-  //           y.startTime = y?.startTime?.trim().toLowerCase();
-  //           y.endTime = y?.endTime?.trim().toLowerCase();
-  //         }));
-  //         this.sortSelectedGridCalendarTimes();
-  //         this.formatTimeValuesInSchedulingGrid();
-  //         this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
-  //       }
-  //       this.spinnerService.hide(this.scheduleSpinner);
-  //     }, (error) => {
-  //       this.spinnerService.hide(this.scheduleSpinner);
-  //       console.log(error);
-  //     });
-
-  //   this.subscriptions.push(this.getAgentScheduleSubscription);
-  // }
 
   private updateAgentSchedule(el: AgentSchedulesResponse) {
     this.spinnerService.show(this.spinner, SpinnerOptions);
@@ -967,8 +939,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           this.setComponentMessages('Success', 'The record has been updated!');
           this.modalRef.result.then(() => {
             this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
-            this.loadAgentSchedules();
-            // this.loadAgentSchedule(agentScheduleId);
+            this.loadAgentSchedules(true);
           });
         }, (error) => {
           this.spinnerService.hide(this.spinner);
