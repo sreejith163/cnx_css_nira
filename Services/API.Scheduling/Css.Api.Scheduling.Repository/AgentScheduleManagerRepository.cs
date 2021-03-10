@@ -208,6 +208,23 @@ namespace Css.Api.Scheduling.Repository
             }
         }
 
+        /// <summary>Updates the agent schedule manager.</summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="updateAgentScheduleManagerEmployeeDetails">The update agent schedule manager employee details.</param>
+        public void UpdateAgentScheduleManager(EmployeeIdDetails employeeIdDetails, UpdateAgentScheduleManagerEmployeeDetails updateAgentScheduleManagerEmployeeDetails)
+        {
+            var query =
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
+
+            var update = Builders<AgentScheduleManager>.Update
+                .Set(x => x.EmployeeId, updateAgentScheduleManagerEmployeeDetails.EmployeeId)
+                .Set(x => x.AgentSchedulingGroupId, updateAgentScheduleManagerEmployeeDetails.AgentSchedulingGroupId)
+                .Set(x => x.ModifiedBy, updateAgentScheduleManagerEmployeeDetails.ModifiedBy)
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
+            
+            UpdateManyAsync(query, update);
+        }
+
         /// <summary>
         /// Filters the agent schedules.
         /// </summary>

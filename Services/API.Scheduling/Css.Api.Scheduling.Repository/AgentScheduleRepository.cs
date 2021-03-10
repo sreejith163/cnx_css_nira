@@ -296,7 +296,6 @@ namespace Css.Api.Scheduling.Repository
                 .Set(x => x.FirstName, updateAgentScheduleEmployeeDetails.FirstName)
                 .Set(x => x.LastName, updateAgentScheduleEmployeeDetails.LastName)
                 .Set(x => x.ActiveAgentSchedulingGroupId, updateAgentScheduleEmployeeDetails.AgentSchedulingGroupId)
-                .Set(x => x.Ranges[-1].AgentSchedulingGroupId, updateAgentScheduleEmployeeDetails.AgentSchedulingGroupId)
                 .Set(x => x.ModifiedBy, updateAgentScheduleEmployeeDetails.ModifiedBy)
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 
