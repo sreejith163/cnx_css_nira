@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 
@@ -17,7 +17,6 @@ import { SchedulingExcelExportData } from '../../constants/scheduling-excel-expo
 import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
 import { ActivatedRoute } from '@angular/router';
 import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
-import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { TranslateService } from '@ngx-translate/core';
 import { AgentScheduleGridResponse } from '../../models/agent-schedule-grid-response.model';
 import { SchedulingStatus } from '../../enums/scheduling-status.enum';
@@ -130,10 +129,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   getTranslationSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
-
-  @Input() listPosition: string;
-  listPositionTypeAhead: string;
-
   constructor(
     private calendar: NgbCalendar,
     private modalService: NgbModal,
@@ -153,7 +148,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.listPositionTypeAhead = this.listPosition;
     this.schedulingStatus = Object.keys(SchedulingStatus).filter(key => isNaN(SchedulingStatus[key]));
     this.openTimes = this.getOpenTimes();
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));

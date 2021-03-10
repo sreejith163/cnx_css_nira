@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SchedulingMenuRoutingModule } from './scheduling-menu-routing.module';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { AgentAdminListComponent } from './components/agent-admin/agent-admin-list/agent-admin-list.component';
 import { AddAgentProfileComponent } from './components/agent-admin/add-agent-profile/add-agent-profile.component';
@@ -34,7 +35,7 @@ import { ContenteditableValueAccessor } from 'src/app/shared/directives/contente
 import { HorizontalScrollPipe } from './pipes/horizontal-scroll.pipe';
 import { BypassHtmlPipe } from 'src/app/shared/directives/bypassHtml.pipe';
 
-const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule];
+const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule, BsDropdownModule.forRoot()];
 const components =
   [AgentAdminListComponent,
     AddAgentProfileComponent,

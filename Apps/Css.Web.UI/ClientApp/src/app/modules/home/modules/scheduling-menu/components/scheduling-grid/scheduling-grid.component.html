@@ -13,14 +13,10 @@
     </div>
   </div>
 
-  <div class="row m-b-10 align-items-end">
-    <div class="col-md-3 d-flex flex-column">
-      <app-move-agents-scheduling-group-typeahead [listPosition]="listPositionTypeAhead"
-      (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
-      </app-move-agents-scheduling-group-typeahead>
-    </div>
-  </div>
-  
+  <app-scheduling-filter [agentScheduleType]="0" (startDateSelected)="onSelectStartDate($event)"
+    (keywordToSearch)="search($event)" (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
+  </app-scheduling-filter>
+
   <div class="card card-primary card-outline card-outline-tabs">
     <div class="card-header p-0 border-bottom-0">
       <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
@@ -115,7 +111,7 @@
                 <td>
                   <span ngbTooltip="{{ el.lastName + ' ' + el.firstName }}">
                     {{el.lastName + ' ' + el.firstName | truncate: { sliceStart: 0, sliceEnd:
-                        characterSplice, append: '...' } }}
+                    characterSplice, append: '...' } }}
                   </span>
                 </td>
                 <td class="d-flex">
@@ -247,7 +243,7 @@
                                       <ng-container *ngIf="getIconFromSelectedGrid(week, openTime)?.length">
                                         <span ngbTooltip="{{ getIconDescription(week, openTime) }}">
                                           <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime)
-                                                }}</i>
+                                            }}</i>
                                         </span>
                                       </ng-container>
                                     </td>
