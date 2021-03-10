@@ -178,11 +178,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         el?.ranges[el?.rangeIndex].scheduleCharts.length > 0) {
         return false;
       } else if (el.ranges[el.rangeIndex].status === SchedulingStatus.Approved) {
-        return false;
+        return true;
       }
     }
 
-    return false;
+    return true;
   }
 
   getRangeIndex(el: AgentSchedulesResponse) {
@@ -891,7 +891,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       updateAgentSchedule(scheduleId, updateModel)
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
-        this.loadAgentSchedules();
+        this.loadAgentSchedules(true);
         el.modifiedBy = updateModel.modifiedBy;
         el.modifiedDate = new Date();
       }, (error) => {
