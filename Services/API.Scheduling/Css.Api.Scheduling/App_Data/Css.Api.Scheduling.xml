@@ -133,21 +133,6 @@
             <param name="agentScheduleManagerChartQueryparameter">The agent schedule manager chart queryparameter.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.UpdateAgentScheduleMangerChart(Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager.UpdateAgentScheduleManager)">
-            <summary>
-            Updates the agent schedule manger chart.
-            </summary>
-            <param name="agentScheduleDetails">The agent schedule details.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.CopyAgentScheduleManagerChart(System.Int32,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.CopyAgentScheduleManager)">
-            <summary>
-            Copies the agent schedule.
-            </summary>
-            <param name="employeeId">The employee identifier.</param>
-            <param name="agentScheduleDetails">The agent schedule details.</param>
-            <returns></returns>
-        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.GetAgentMySchedule(System.Int32,Css.Api.Scheduling.Models.DTO.Request.MySchedule.MyScheduleQueryParameter)">
             <summary>Gets the agent my schedule.</summary>
             <param name="agentEmployeeId">The agent employee identifier.</param>
@@ -162,6 +147,21 @@
             </summary>
             <param name="skillGroupId">The agent schedule identifier.</param>
             <param name="date"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.UpdateAgentScheduleMangerChart(Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager.UpdateAgentScheduleManager)">
+            <summary>
+            Updates the agent schedule manger chart.
+            </summary>
+            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.CopyAgentScheduleManagerChart(System.Int32,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.CopyAgentScheduleManager)">
+            <summary>
+            Copies the agent schedule.
+            </summary>
+            <param name="employeeId">The employee identifier.</param>
+            <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Scheduling.Controllers.AgentSchedulesController">

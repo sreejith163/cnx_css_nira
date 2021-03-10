@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Css.Api.Core.Models.Domain.NoSQL
 {
@@ -9,12 +7,12 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the start time
         /// </summary>
-        public DateTime StartDateTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         /// <summary>
         /// Gets or sets the end time.
         /// </summary>
-        public DateTime EndDateTime { get; set; }
+        public DateTime EndTime { get; set; }
 
         /// <summary>
         /// Gets or sets the scheduling code identifier.

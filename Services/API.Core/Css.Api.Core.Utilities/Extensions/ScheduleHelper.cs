@@ -154,8 +154,8 @@ namespace Css.Api.Core.Utilities.Extensions
                     var chart = new AgentScheduleManagerChart()
                     {
                         SchedulingCodeId = clock.ActivityId,
-                        StartDateTime = DateTime.Parse(startDateTime),
-                        EndDateTime = DateTime.Parse(endDateTime)
+                        StartTime = DateTime.Parse(startDateTime),
+                        EndTime = DateTime.Parse(endDateTime)
                     };
                 });
             });

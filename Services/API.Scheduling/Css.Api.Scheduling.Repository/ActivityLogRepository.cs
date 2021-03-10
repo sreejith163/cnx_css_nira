@@ -128,22 +128,22 @@ namespace Css.Api.Scheduling.Repository
                 activityLogs = activityLogs.Where(o => o.ActivityType == activityLogQueryParameter.ActivityType);
             }
 
-            if (activityLogQueryParameter.NewValue != null)
+            if (!string.IsNullOrWhiteSpace(activityLogQueryParameter.NewValue))
             {
                 activityLogs = activityLogs.Where(o => o.FieldDetails.Find(x => x.NewValue == activityLogQueryParameter.NewValue).NewValue == activityLogQueryParameter.NewValue);
             }
 
-            if (activityLogQueryParameter.OldValue != null)
+            if (!string.IsNullOrWhiteSpace(activityLogQueryParameter.OldValue))
             {
                 activityLogs = activityLogs.Where(o => o.FieldDetails.Find(x => x.OldValue == activityLogQueryParameter.OldValue).OldValue == activityLogQueryParameter.OldValue);
             }
 
-            if (activityLogQueryParameter.Field != null)
+            if (!string.IsNullOrWhiteSpace(activityLogQueryParameter.Field))
             {
                 activityLogs = activityLogs.Where(o => o.FieldDetails.Find(x => x.Name == activityLogQueryParameter.Field).Name == activityLogQueryParameter.Field);
             }
 
-            if (activityLogQueryParameter.Id != null)
+            if (!string.IsNullOrWhiteSpace(activityLogQueryParameter.Id))
             {
                 activityLogs = activityLogs.Where(o => o.Id == new ObjectId(activityLogQueryParameter.Id));
             }

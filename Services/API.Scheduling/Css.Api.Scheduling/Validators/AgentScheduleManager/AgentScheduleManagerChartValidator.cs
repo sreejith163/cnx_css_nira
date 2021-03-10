@@ -29,7 +29,7 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
         public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context)
         {
             var validationFailures = new List<ValidationFailure>();
-            var item = context.PropertyValue as List<ScheduleManagerChart>;
+            var item = context.PropertyValue as List<AgentScheduleManagerChart>;
 
             foreach (var chart in item)
             {

@@ -62,19 +62,18 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<List<int>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
 
         /// <summary>
-        /// Updates the agent schedule manger chart.
-        /// </summary>
-        /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <param name="agentScheduleManager">The agent schedule manager.</param>
-        void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManager agentScheduleManager);
-
-
-        /// <summary>
         /// Gets the scheduled open identifier by skillgroup id.
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent schedule identifier details.</param>
         /// <returns></returns>
         Task<List<AgentScheduleManager>> GetAgentScheduleByAgentSchedulingGroupId(List<int> agentSchedulingGroupIdDetailsList, DateTimeOffset date);
+
+        /// <summary>
+        /// Updates the agent schedule manger chart.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="agentScheduleManager">The agent schedule manager.</param>
+        void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManager agentScheduleManager);
     }
 }
 
