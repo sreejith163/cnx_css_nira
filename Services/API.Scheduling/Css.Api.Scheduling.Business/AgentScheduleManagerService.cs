@@ -48,6 +48,11 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IAgentScheduleManagerRepository _agentScheduleManagerRepository;
 
+
+        /// <summary>
+        /// The agent schedule group repository
+        /// </summary>
+        private readonly IAgentSchedulingGroupRepository _agentSchedulingGroupRepository;
         /// <summary>
         /// The agent admin repository
         /// </summary>
@@ -84,6 +89,7 @@ namespace Css.Api.Scheduling.Business
             IAgentScheduleManagerRepository agentScheduleManagerRepository,
             IAgentAdminRepository agentAdminRepository,
             ISchedulingCodeRepository schedulingCodeRepository,
+            IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
             IMapper mapper,
             IUnitOfWork uow)
         {
@@ -92,6 +98,7 @@ namespace Css.Api.Scheduling.Business
             _agentScheduleManagerRepository = agentScheduleManagerRepository;
             _agentAdminRepository = agentAdminRepository;
             _schedulingCodeRepository = schedulingCodeRepository;
+            _agentSchedulingGroupRepository = agentSchedulingGroupRepository;
             _mapper = mapper;
             _uow = uow;
         }
@@ -434,5 +441,129 @@ namespace Css.Api.Scheduling.Business
                 Date = date
             };
         }
+
+    
+        public async Task<CSSResponse> GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date)
+        {
+            
+            var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBySkillGroupId(skillGroupId);
+
+            var agentSchedulingGroupId = new List<int>();
+            foreach (var id in agentSchedulingGroup)
+            {
+                agentSchedulingGroupId.Add(id.AgentSchedulingGroupId);
+            }
+
+            //var agentIds = _mapper.Map<List<int>>(agentSchedulingGroup.ToArray());
+            
+            
+            if (agentSchedulingGroupId == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            //foreach (var ids in agentIds)
+            //{
+            //    skillGroupId = ids.AgentSchedulingGroupId;
+
+            //}
+            var dateTimeWithZeroTimeSpan = new DateTimeOffset(date.Date, TimeSpan.Zero);
+            var agentSchedule = await _agentScheduleManagerRepository.GetAgentScheduleByAgentSchedulingGroupId(agentSchedulingGroupId,  dateTimeWithZeroTimeSpan);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+
+
+            int[] numbers = { 3, 15, 16, 17, 20, 21, 22, 173, 174, 175, 176, 177 };
+            foreach (var item1 in agentSchedule)
+            {
+                item1.Charts = item1.Charts.Where(p => numbers.Contains(p.SchedulingCodeId)).ToList();
+            }
+
+        
+
+            int minutes = 30;
+            var interval = new TimeSpan(0, minutes, 0);
+
+
+           
+
+            var schedOpen = agentSchedule.SelectMany(x => x.Charts).ToList();
+
+           agentSchedule.RemoveAll(x => x.Charts.Count() == 0);
+
+
+
+            var myTimeList = new List<ScheduleOpen>();
+            var timeList = new List<TimeSpan>();
+
+
+            //var msg = new List<object>();
+                foreach (var chart in schedOpen)
+                {
+
+             
+                TimeSpan start = DateTime.Parse(chart.StartTime).TimeOfDay;
+                TimeSpan end = DateTime.Parse(chart.EndTime).TimeOfDay;
+           
+            
+                var diffSpan = end - start;
+                    var diffMinutes = diffSpan.TotalMinutes > 0 ? diffSpan.TotalMinutes : diffSpan.TotalMinutes + (60 * 24);
+                    for (int i = 0; i < diffMinutes + minutes; i += minutes)
+                    {
+
+                        var scheduleOpen = new ScheduleOpen { time = start};
+                        myTimeList.Add(scheduleOpen);
+                        timeList.Add(start);
+                        start = start.Add(interval);
+
+                    }
+                }
+
+
+            //var map1 = _mapper.Map<List<AgentScheduleOpenDTO>>(schedOpen);
+           
+            var groupedTime = myTimeList
+                .GroupBy(x => x.time)
+                .Select(
+                    group => new {
+                        time = RoundToNearestMinutes(group.Key,30),
+                    
+                        scheduleOpen = group.Count()
+                    }
+                );
+
+            if (groupedTime.Count() == 0)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+        
+          
+
+            return new CSSResponse(groupedTime, HttpStatusCode.OK);
+        }
+
+        TimeSpan RoundToNearestMinutes(TimeSpan input, int minutes)
+        {
+            var totalMinutes = (int)(input + new TimeSpan(0, minutes / 2, 0)).TotalMinutes;
+
+            return new TimeSpan(0, totalMinutes - totalMinutes % minutes, 0);
+        }
+        //DateTime RoundToNearestMinutes(DateTime dt, TimeSpan d)
+        //{
+        //    return new DateTime((dt.Ticks + d.Ticks - 1) / d.Ticks * d.Ticks, dt.Kind);
+        //}
+
     }
+
+
+}
+
+public class ScheduleOpen
+{
+    public TimeSpan time { get; set; }
+    public int scheduleOpen { get; set; } = 1;
+
 }

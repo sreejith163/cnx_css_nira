@@ -2,6 +2,7 @@
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -57,5 +58,11 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="agentSchedulingGroupRequest">The agent scheduling group request.</param>
         void UpdateAgentSchedulingGroup(AgentSchedulingGroup agentSchedulingGroupRequest);
+
+        /// <summary>
+        /// Get Agent scheduling group id by skill group id
+        /// </summary>
+        /// <param name="skillGroupId">The agent scheduling group request.</param>
+        Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupBySkillGroupId(int skillGroupId);
     }
 }

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, Injectable, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injectable, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbCalendar, NgbDate, NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
@@ -26,78 +26,28 @@ import { Forecast } from '../../models/forecast.model';
 import { ForecastScreenService } from '../../services/forecast-screen.service';
 import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { ScheduledOpenResponse } from '../../models/scheduled-open-response.model';
+import * as moment from 'moment';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
-
-/**
- * This Service handles how the date is represented in scripts i.e. ngModel.
- */
-@Injectable()
-export class CustomAdapter extends NgbDateAdapter<string> {
-
-  readonly DELIMITER = '-';
-
-  fromModel(value: string | null): NgbDateStruct | null {
-    if (value) {
-      const date = value.split(this.DELIMITER);
-      return {
-        year: parseInt(date[0], 10),
-        month: parseInt(date[1], 10),
-        day: parseInt(date[2], 10),
-        
-      };
-    }
-    return null;
-  }
-
-  toModel(date: NgbDateStruct | null): string | null {
-    return date ? date.year + this.DELIMITER + date.month + this.DELIMITER + date.day : null;
-  }
-}
-
-@Injectable()
-export class CustomDateParserFormatter extends NgbDateParserFormatter {
-
-  readonly DELIMITER = '-';
-
-  parse(value: string): NgbDateStruct | null {
-    if (value) {
-      const date = value.split(this.DELIMITER);
-      return {
-        year: parseInt(date[0], 10),
-        month: parseInt(date[1], 10),
-        day: parseInt(date[2], 10),
-      
-      };
-    }
-    return null;
-  }
-
-  format(date: NgbDateStruct | null): string {
-    return date ? date.year + this.DELIMITER + date.month + this.DELIMITER + date.day : '';
-  }
-}
 
 
 @Component({
   selector: 'app-view-ou-screen',
   templateUrl: './view-ou-screen.component.html',
   styleUrls: ['./view-ou-screen.component.scss'],
-  providers: [
-    { provide: NgbDateAdapter, useClass: CustomAdapter },
-    { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter }
-  ]
+  
 })
 export class ViewOuScreenComponent implements OnInit {
 
   @ViewChild('epltable', { static: false }) epltable: ElementRef;
   @ViewChild("epltable") divView: ElementRef;
+  @Output() dateSelect = new EventEmitter<NgbDateStruct>();
   isEnabled: boolean[] = [];
   model2: string;
   skillgroupID: number;
   forecastModelBinder: Forecast[];
   forecastBinder: ForecastDataModel;
-  DateModel: NgbDateStruct;
   pageNumber = 1;
   skillGroupItemsBufferSize = 10;
   numberOfItemsFromEndBeforeFetchingMore = 10;
@@ -110,6 +60,7 @@ export class ViewOuScreenComponent implements OnInit {
   skillGroupItemsBuffer: SkillGroupDetails[] = [];
   typeAheadInput$ = new Subject<string>();
   typeAheadValueSubscription: ISubscription;
+  scheduledOpenResponse: ScheduledOpenResponse[] = [];
   getSkillGroupsSubscription: ISubscription;
   getSkillGroupForecast: ISubscription;
   subscriptions: ISubscription[] = [];
@@ -122,6 +73,9 @@ export class ViewOuScreenComponent implements OnInit {
   orderBy = 'createdDate';
   sortBy = 'desc';
   spinner = 'skillTags';
+  dateModel: any;
+  today = this.calendar.getToday();
+
   forecastID: number;
   clientId: number;
   clientLobGroupId: number;
@@ -154,6 +108,7 @@ export class ViewOuScreenComponent implements OnInit {
   forecastFormArray = new FormArray([]);
   sumForecastContact: string;
   sumAHT: string;
+  sumOU: string;
   sumForecastedReq: string;
   sumScheduledOpen: string;
   forecastSpinner = 'forecastSpinner';
@@ -166,11 +121,12 @@ export class ViewOuScreenComponent implements OnInit {
   avgAHT: number;
   avgForecastedReq: number;
   avgScheduledOpen: number;
-
+avgOU: number;
   avgForecastContactValue: string;
   avgAHTValue: string;
   avgForecastedReqValue: string;
   avgScheduledOpenValue: string;
+  avgOUValue: string;
   constructor(
     private formBuilder: FormBuilder,
     private forecastService: ForecastScreenService,
@@ -198,7 +154,7 @@ export class ViewOuScreenComponent implements OnInit {
     return forecastDataCalc.reduce((acc, product) => acc + product.aht, 0)
   }
   ngOnInit() {
-    this.model2 = this.today;
+    this.setStartDateAsToday();
     this.getForecastDefaultValue();
     this.subscribeToSkillGroups();
     this.subscribeToSearching();
@@ -207,6 +163,11 @@ export class ViewOuScreenComponent implements OnInit {
     this.subscribeToTranslations();
 
 
+  }
+  setStartDateAsToday() {
+    this.dateModel = this.today;
+
+    // const currentDate = this.setCurrentDate();
   }
 
 
@@ -240,7 +201,7 @@ export class ViewOuScreenComponent implements OnInit {
       forecastedContact: this.formBuilder.control({ value: datum.forecastedContact, disabled: true }),
       aht: this.formBuilder.control({ value: datum.aht, disabled: true }),
       forecastedReq: this.formBuilder.control({ value: datum.forecastedReq, disabled: true}),
-      scheduledOpen: this.formBuilder.control({ value: '0.00', disabled: true })
+      scheduledOpen: this.formBuilder.control({ value: 0, disabled: true })
     });
   }
   get formData() { return <FormArray>this.forecastForm.get('forecastFormArrays'); }
@@ -267,9 +228,9 @@ export class ViewOuScreenComponent implements OnInit {
       this.totalItems = 0;
     }
   }
-  get today() {
-    return this.dateAdapter.toModel(this.ngbCalendar.getToday());
-  }
+  // get today() {
+  //   return this.dateAdapter.toModel(this.ngbCalendar.getToday());
+  // }
   onSkillGroupScrollToEnd() {
     this.fetchMoreSkillGroups();
   }
@@ -306,12 +267,21 @@ export class ViewOuScreenComponent implements OnInit {
       this.sumForecastedReq = response.reduce((a, b) => +a + +b.forecastedReq, 0);
       this.sumScheduledOpen = response.reduce((a, b) => +a + +b.scheduledOpen, 0);
 
-      this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2)
-      this.sumAHT = parseFloat(this.sumAHT).toFixed(2)
-      this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2)
-      this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2)
-
-      this.spinnerService.hide(this.spinner);
+      this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2);
+      this.sumAHT = parseFloat(this.sumAHT).toFixed(2);
+      this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
+      this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+      this.sumOU = '0.00';
+      this.avgAHT = 0;
+      this.avgForecastedReq = 0;
+      this.avgScheduledOpen =  0;
+      this.avgOU = 0;
+    // parse to string first
+    this.avgAHTValue = parseFloat('0.00').toFixed(2);
+    this.avgForecastContactValue = parseFloat('0.00').toFixed(2);
+    this.avgForecastedReqValue = parseFloat('0.00').toFixed(2);
+    this.avgScheduledOpenValue = parseFloat('0.00').toFixed(2);
+    this.avgOUValue = parseFloat(this.avgOU.toString()).toFixed(2);
     }, (error) => {
       this.spinnerService.hide(this.spinner);
       console.log(error);
@@ -337,11 +307,120 @@ export class ViewOuScreenComponent implements OnInit {
     //   this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2)
     // });
   }
+
+  private getScheduledOpen() {
+
+    var date = this.convertNgbDateToString(this.dateModel);
+   
+  
+    this.forecastService.getScheduleOpen(this.skillGroupBinder?.id,this.getDateInStringFormat(date)).subscribe(response => {
+        this.scheduledOpenResponse = response;
+      console.log(this.scheduledOpenResponse);
+         },
+           error => {
+     
+             console.log(error);
+     
+           }
+         );
+     
+     
+    
+  }
+  private getDateInStringFormat(startDate: any): string {
+    if (!startDate) {
+      return undefined;
+    }
+    const date = new Date(startDate);
+    return date.toDateString();
+  }
+  getScheduledOpenCount1(time: string) {
+  
+  
+    var convertedTime = moment(time, 'hh:mm A').format('HH:mm:ss')
+  
+    var chart =  this.scheduledOpenResponse.find(x => x.time === convertedTime.toString());
+    // console.log(chart);
+  
+      if (chart) {    
+        var obj = {};
+  
+        for ( var i=0, len= this.scheduledOpenResponse.length; i < len; i++ ) 
+           
+        obj[this.scheduledOpenResponse[i]['time']] = this.scheduledOpenResponse[i];
+        
+        this.scheduledOpenResponse = new Array();
+        for ( var key in obj )
+        this.scheduledOpenResponse.push(obj[key]);
+  
+      
+        var parse_string = chart?.scheduleOpen;
+        var sched_open_sum = this.scheduledOpenResponse.reduce((a, b) => +a + +b.scheduleOpen, 0);
+        this.sumScheduledOpen = sched_open_sum.toString();
+      
+  
+        
+        return parse_string;
+        
+      }
+  
+      return 0;
+  }
+  getScheduledOpenCount(time: string) {
+  
+  
+    var convertedTime = moment(time, 'hh:mm A').format('HH:mm:ss')
+  
+    var chart =  this.scheduledOpenResponse.find(x => x.time === convertedTime.toString());
+    // console.log(chart);
+  
+      if (chart) {    
+        var obj = {};
+  
+        for ( var i=0, len= this.scheduledOpenResponse.length; i < len; i++ ) 
+           
+        obj[this.scheduledOpenResponse[i]['time']] = this.scheduledOpenResponse[i];
+        
+        this.scheduledOpenResponse = new Array();
+        for ( var key in obj )
+        this.scheduledOpenResponse.push(obj[key]);
+  
+      
+        var parse_string = chart?.scheduleOpen.toString();
+        var sched_open_sum = this.scheduledOpenResponse.reduce((a, b) => +a + +b.scheduleOpen, 0);
+        this.sumScheduledOpen = sched_open_sum.toString();
+      
+     
+       
+        var OU = parseFloat(this.sumScheduledOpen) - parseFloat(this.sumForecastedReq); 
+        
+        
+        this.sumOU = parseFloat(OU.toString()).toFixed(2);
+       
+        this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+  
+  
+        var sched_open_length = this.scheduledOpenResponse.length;
+        
+        this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / parseFloat(sched_open_length.toString());
+  
+      
+     this.avgOU = parseFloat(this.sumOU) / parseFloat(sched_open_length.toString());
+      
+        this.avgOUValue = parseFloat(this.avgOU.toString()).toFixed(2);
+        this.avgScheduledOpenValue = parseFloat(this.avgScheduledOpen.toString()).toFixed(2);
+        
+        return parseFloat(parse_string).toFixed(2);
+        
+      }
+  
+      return '0.00';
+  }
   loadForecast() {
     const queryParams = this.getQueryParams();
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
-    this.getSkillGroupForecast = this.forecastService.getForecastDataById(this.skillGroupBinder?.id, this.model2)
+    this.getSkillGroupForecast = this.forecastService.getForecastDataById(this.skillGroupBinder?.id, this.convertNgbDateToString(this.dateModel))
       .subscribe((response: any[]) => {
         if (response) {
           this.dataJson = response['forecastData'];
@@ -379,9 +458,9 @@ export class ViewOuScreenComponent implements OnInit {
   loadSkillGroup() {
     this.forecastFormArray.reset();
     // var dateParse = `${this.DateModel.month}-${this.DateModel.day}-${this.DateModel.year}`
-
+    this.getScheduledOpen();
     this.spinnerService.show(this.forecastSpinner, SpinnerOptions);
-    this.getSkillGroupForecast = this.forecastService.getForecastDataById(this.skillGroupBinder?.id, this.model2).subscribe((data) => {
+    this.getSkillGroupForecast = this.forecastService.getForecastDataById(this.skillGroupBinder?.id, this.convertNgbDateToString(this.dateModel)).subscribe((data) => {
       this.spinnerService.hide(this.forecastSpinner);
       this.forecastID = data.forecastId;
       this.forecastForm = this.formBuilder.group({
@@ -433,8 +512,7 @@ export class ViewOuScreenComponent implements OnInit {
     this.avgForecastContactValue = this.avgForecastContact.toString();
     this.avgAHTValue = this.avgAHT.toString();
     this.avgForecastedReqValue = this.avgForecastedReq.toString();
-    this.avgScheduledOpenValue = '0.00';
-    
+
     
     this.avgAHTValue = parseFloat(this.avgAHTValue).toFixed(2);
     this.avgForecastContactValue = parseFloat(this.avgForecastContactValue).toFixed(2);
@@ -478,6 +556,12 @@ export class ViewOuScreenComponent implements OnInit {
   }
 
 
+  convertNgbDateToString(date) {
+    const day = date.day < 10 ? '0' + date.day : date.day;
+    const month = date.month < 10 ? '0' + date.month : date.month;
+
+    return date.year + '-' + month + '-' + day;
+  }
   clearSkillGroupValues() {
     this.searchKeyWord = '';
     this.pageNumber = 1;

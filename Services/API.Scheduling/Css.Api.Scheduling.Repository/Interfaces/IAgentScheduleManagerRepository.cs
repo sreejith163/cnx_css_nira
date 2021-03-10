@@ -4,6 +4,7 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AgentScheduleManager = Css.Api.Core.Models.Domain.NoSQL.AgentScheduleManager;
@@ -66,6 +67,14 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="agentScheduleManager">The agent schedule manager.</param>
         void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManager agentScheduleManager);
+
+
+        /// <summary>
+        /// Gets the scheduled open identifier by skillgroup id.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent schedule identifier details.</param>
+        /// <returns></returns>
+        Task<List<AgentScheduleManager>> GetAgentScheduleByAgentSchedulingGroupId(List<int> agentSchedulingGroupIdDetailsList, DateTimeOffset date);
     }
 }
 

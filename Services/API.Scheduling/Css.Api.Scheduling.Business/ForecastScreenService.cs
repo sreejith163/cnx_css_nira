@@ -86,9 +86,9 @@ namespace Css.Api.Scheduling.Business
         public async Task<CSSResponse> CreateForecastData(CreateForecastData forecastData)
         {
 
-            long forecastIdDetails = forecastData.ForecastId;
-            
-            var forecastIDConflict = await _forecastScreenRepository.GetForecastDataID(forecastIdDetails);
+            int skillGroupId = forecastData.SkillGroupId;
+            string forecastDate = forecastData.Date;
+            var forecastIDConflict = await _forecastScreenRepository.GetForecastDataID(skillGroupId,forecastDate);
 
 
             if (forecastIDConflict != null)
@@ -104,9 +104,9 @@ namespace Css.Api.Scheduling.Business
 
 
 
-        public async Task<CSSResponse> UpdateForecastData(UpdateForecastData updateForecastDetails, long forecastID)
+        public async Task<CSSResponse> UpdateForecastData(UpdateForecastData updateForecastDetails, int skillGroupId, string forecastDate)
         {
-            var forecast = await _forecastScreenRepository.GetForecastDataID(forecastID);
+            var forecast = await _forecastScreenRepository.GetForecastDataID(skillGroupId,forecastDate);
             if (forecast == null)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -116,14 +116,11 @@ namespace Css.Api.Scheduling.Business
 
            
 
-            if (forecast.ForecastId != forecastID)
+            if (forecast.SkillGroupId != skillGroupId)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
          
-
-
-
             var forecastRequest = _mapper.Map(updateForecastDetails, forecast);
             _forecastScreenRepository.UpdateForecastData(forecastRequest);
 

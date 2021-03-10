@@ -36,7 +36,7 @@
         <div class="col-md-3 d-flex flex-column">
 
             <div class="input-group">
-                <input class="form-control" placeholder="{{'Select Forecast Date' | translate}}" name="dp" ngbDatepicker
+                <input (dateSelect)="loadSkillGroup()" class="form-control" placeholder="{{'Select Forecast Date' | translate}}" name="dp" ngbDatepicker
                 [readonly]="true" [(ngModel)]="dateModel"
                 [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
                 <!-- <input class="form-control" name="d2" #c2="ngModel" [(ngModel)]="dateModel"
@@ -143,7 +143,7 @@
                                             <ng-container [formGroupName]="i">
 
                                                 <td>
-                                                    <!-- {{dataJson[i].Time}}  -->
+                                                  
                                                     <label for="">{{dataJson[i].time}}</label>
                                                     <input formControlName="time" type="hidden">
                                                 </td>
@@ -152,36 +152,41 @@
                                                     class="contenteditable" contenteditable
                                                     formControlName="forecastedContact">
 
-                                                    <!-- <input [class.enabled]="!isEnabled['forecastedContact' + i]"
-                                                        (click)="isEnabled['forecastedContact' + i] = !isEnabled['forecastedContact' + i];"
-                                                        [readonly]="isEnabled['forecastedContact' + i]" numberOnly
-                                                        (change)="showBtn()" formControlName="forecastedContact"
-                                                        type="text" class=""> -->
+                                             
 
                                                 </td>
                                                 <td (dblclick)="showBtn()" numberOnly class="contenteditable"
                                                     contenteditable formControlName="aht">
 
-                                                    <!-- <input [class.enabled]="!isEnabled[i + x]"
-                                                        (click)="isEnabled[i + x] = !isEnabled[i + x];"
-                                                        [readonly]="isEnabled[i + x]" numberOnly (change)="showBtn()"
-                                                        formControlName="aht" type="text" class=""> -->
+                                                
                                                 </td>
-                                                <td (dblclick)="showBtn()" numberOnly class="contenteditable"
+                                              
+                                              
+                                                <!-- <td  (dblclick)="showBtn()" numberOnly class="contenteditable"
                                                     contenteditable formControlName="forecastedReq">
 
 
-                                                    <!-- <input [class.enabled]="!isEnabled[i + x]"
-                                                        (click)="isEnabled[i + x] = !isEnabled[i + x];"
-                                                        [readonly]="isEnabled[i + x]" numberOnly (change)="showBtn()"
-                                                        formControlName="forecastedReq" type="text" class=""> -->
-                                                </td>
+                                                  
+                                                </td> -->
+                                     
+                                                
+                                                <td [ngClass]="{'d-none': dateValidator === true}" (dblclick)="showBtn()" numberOnly class="contenteditable"
+                                                contenteditable formControlName="forecastedReq">
+
+
+                                              
+                                            </td>
+                                
+                                            <td [ngClass]="{'d-none': dateValidator === false}">
+                                                <input [readonly]="true" [class.enabled]="!isEnabled[i + 1]"
+                                                (dblclick)="showErrorDate()" numberOnly
+                                                (change)="showBtn()" formControlName="forecastedReq" type="text"
+                                                class="">
+                                            </td>
+                                          
                                                 <td>
 
-                                                    <input [readonly]="true" [class.enabled]="!isEnabled[i + 1]"
-                                                        (click)="isEnabled[i + 1] = !isEnabled[i + 1];" numberOnly
-                                                        (change)="showBtn()" formControlName="scheduledOpen" type="text"
-                                                        class="">
+                                                   {{ getScheduledOpenCount(dataJson[i].time) }}
                                                 </td>
                                             </ng-container>
                                         </tr>
@@ -278,7 +283,7 @@
             <div class="row">
                 <div class="col-md-8"></div>
                 <div class="col-md-4">
-                    <button class="btn btn-primary float-r" data-dismiss="modal" (click)="importForeCastData()">
+                    <button [disabled]="importBtn == false" class="btn btn-primary float-r" data-dismiss="modal" (click)="importForeCastData()">
                         {{ 'Import' | translate }}
                     </button>
                 </div>

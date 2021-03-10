@@ -11,6 +11,7 @@ import { ForecastDataModel } from '../models/forecast-data.model';
 import { UpdateAgentAdmin } from '../models/update-agent-admin.model';
 import { UpdateForecastData } from '../models/update-forecast-data.model';
 import { ForecastExcelData } from '../models/forecast-excel.model';
+import { ScheduledOpenResponse } from '../models/scheduled-open-response.model';
 
 
 @Injectable({
@@ -32,8 +33,8 @@ export class ForecastScreenService extends HttpBaseService {
     return this.http.post<ApiResponseModel>(url, foreCast)
       .pipe(catchError(this.handleError));
   }
-  updateForecast(skillgroupID: number, updateForecast: UpdateForecastData) {
-    const url = `${this.baseURL}/forecastscreen/${skillgroupID}`;
+  updateForecast(skillgroupID: number,Date: string, updateForecast: UpdateForecastData) {
+    const url = `${this.baseURL}/forecastscreen/${skillgroupID}/date/${Date}`;
 
     return this.http.put<ApiResponseModel>(url, updateForecast)
       .pipe(catchError(this.handleError));
@@ -56,7 +57,8 @@ export class ForecastScreenService extends HttpBaseService {
     return this.http.put<ApiResponseModel>(url, importForecastDataModel)
       .pipe(catchError(this.handleError));
   }
-
-
-
+  getScheduleOpen(skillGroupId: number, date: string) {
+    const url = `${this.baseURL}/AgentScheduleManagers/${skillGroupId}/scheduledopen?date=${date}`;
+    return this.http.get<ScheduledOpenResponse>(url).pipe(catchError(this.handleError));
+  }
 }

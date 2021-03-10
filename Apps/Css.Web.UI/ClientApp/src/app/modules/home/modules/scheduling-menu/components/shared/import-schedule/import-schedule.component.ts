@@ -210,8 +210,8 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           }
         }
         this.jsonData.map(x => {
-          x.StartDate = x?.StartTime.trim();
-          x.EndDate = x?.EndDate.trim();
+          //x.StartDate = x?.Startdate.trim();
+          //x.EndDate = x?.EndDate.trim();
           x.StartDate = x?.StartDate.slice(0, 4) +"/"+ x?.StartDate.slice(4, 6) +"/"+ x?.StartDate.slice(6, 8);
           x.EndDate = x?.EndDate.slice(0, 4) +"/"+ x?.EndDate.slice(4, 6) +"/"+ x?.EndDate.slice(6, 8);
           x.StartTime = x?.StartTime.trim().toLowerCase();

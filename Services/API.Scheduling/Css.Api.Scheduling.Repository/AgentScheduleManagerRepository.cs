@@ -236,6 +236,23 @@ namespace Css.Api.Scheduling.Repository
 
             return agentScheduleManagers;
         }
+        /// <summary>
+        /// Filters the agent scheduled open.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent schedule manager</param
+        /// <returns></returns>
+        public async Task<List<AgentScheduleManager>> GetAgentScheduleByAgentSchedulingGroupId(List<int> agentSchedulingGroupIdDetailsList, DateTimeOffset date)
+        {
+            var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            var query = Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, dateTimeWithZeroTimeSpan) &
+                     Builders<AgentScheduleManager>.Filter.In(i => i.AgentSchedulingGroupId, agentSchedulingGroupIdDetailsList);
+
+            var x = FilterBy(query);
+
+            return await Task.FromResult(x.ToList());
+        }
+
+      
     }
 }
 

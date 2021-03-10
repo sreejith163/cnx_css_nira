@@ -402,6 +402,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   }
 
   getIconFromSelectedAgent(employeeId: number, openTime: string) {
+
+    
     const chart = this.managerCharts.find(x => x.employeeId === +employeeId);
 
     if (chart?.charts?.length > 0) {
@@ -607,6 +609,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     this.getAgentSchedulesSubscription = this.agentScheduleMangerService.getAgentScheduleManagers(queryParams)
       .subscribe((response) => {
         this.managerCharts = response.body;
+        
         this.managerCharts.map(x => {
           if (!x.charts || x.charts.length === 0) {
             x.charts = [];
@@ -619,6 +622,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         });
         this.formatTime(false);
         this.schedulingMangerChart = JSON.parse(JSON.stringify(this.managerCharts));
+
+        console.log(this.schedulingMangerChart);
         const employeeId = this.managerCharts[0]?.employeeId;
         const agentScheduleChart = this.managerCharts[0]?.charts?.length > 0 ? this.managerCharts[0].charts[0] : undefined;
         if (agentScheduleChart) {

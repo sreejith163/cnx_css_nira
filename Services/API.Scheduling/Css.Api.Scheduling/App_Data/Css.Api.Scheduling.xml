@@ -156,6 +156,14 @@
               <br />
             </returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.GetAgentScheduledOpen(System.Int32,System.DateTimeOffset)">
+            <summary>
+            Gets the scheduled open
+            </summary>
+            <param name="skillGroupId">The agent schedule identifier.</param>
+            <param name="date"></param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.AgentSchedulesController">
             <summary>
             Controller for handling the agent schedules resource
@@ -304,12 +312,13 @@
             <param name="forecastData">forecastData query parameter.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.UpdateForecastData(System.Int64,Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.UpdateForecastData)">
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.UpdateForecastData(System.Int32,System.String,Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.UpdateForecastData)">
             <summary>
             Updates the agent admin.
             </summary>
             <param name="forecastDetails">The client details.</param>
-            <param name="forecastId">Forecast ID</param>
+            <param name="skillGroupId">skill grou id</param>
+               /// <param name="date">Forecast ID</param>
             <returns></returns>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.ImportForecast(Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.ImportForecastDetails)">

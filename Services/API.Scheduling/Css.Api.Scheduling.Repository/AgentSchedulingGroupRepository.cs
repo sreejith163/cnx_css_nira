@@ -7,6 +7,7 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -157,5 +158,23 @@ namespace Css.Api.Scheduling.Repository
 
             return agentSchedulingGroups;
         }
+
+
+
+        /// <summary>
+        /// Filters the agent scheduling group id by skill group id
+        /// </summary>
+        /// <param name="skillGroupId">The agent scheduling groups id by skill group id</param>
+        /// <returns></returns>
+        public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupBySkillGroupId(int skillGroupId)
+        {
+            var query = Builders<AgentSchedulingGroup>.Filter.Eq(i => i.SkillGroupId, skillGroupId) &
+               Builders<AgentSchedulingGroup>.Filter.Eq(i => i.IsDeleted, false);
+
+            var result = FilterBy(query);
+            return await Task.FromResult(result.ToList());
+        }
+
+       
     }
 }

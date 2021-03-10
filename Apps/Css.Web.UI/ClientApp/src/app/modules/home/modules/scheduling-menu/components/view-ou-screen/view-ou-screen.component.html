@@ -1,14 +1,14 @@
 <div class="container-fluid ">
     <div class="row">
         <div class="col-12 col-md-12">
-            <h2 id="page_title" class="mt-2">{{'O/U Screen' | translate}}</h2>
+            <h2 id="page_title" class="mt-2">{{'View O/U Screen' | translate}}</h2>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-left">
                 <li class="breadcrumb-item"><a>{{'Scheduling Menu' | translate}}</a></li>
-                <li class="breadcrumb-item active"><b>{{'O/U Screen' | translate}}</b> </li>
+                <li class="breadcrumb-item active"><b>{{'View O/U Screen' | translate}}</b> </li>
             </ol>
         </div>
     </div>
@@ -34,10 +34,12 @@
         </div>
         <div class="col-md-3 d-flex flex-column">
             <div class="input-group">
-                <input class="form-control" placeholder="{{today}}" name="d2" #c2="ngModel" [(ngModel)]="model2"
-                    ngbDatepicker #d2="ngbDatepicker">
+                <input (dateSelect)="loadSkillGroup()" class="form-control" placeholder="{{'Select Forecast Date' | translate}}" name="dp" ngbDatepicker
+                [readonly]="true" [(ngModel)]="dateModel"
+                [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
+               
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
+                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
                 </div>
             </div>
         </div>
@@ -105,10 +107,10 @@
                                                     {{el.forecastedReq}}
                                                 </td>
                                                 <td>  
-                                                     0.00
+                                                    {{ getScheduledOpenCount(el.time) }}
                                                 </td>
                                                 <td [ngClass]="{'negative-uo' : (el.scheduledOpen - el.forecastedReq) < 0}">
-                                                    {{el.scheduledOpen - el.forecastedReq}}
+                                                    {{ getScheduledOpenCount1(el.time) - el.forecastedReq }}
                                                 </td>
                                          
                                         </tr>
@@ -146,10 +148,10 @@
                                         <hr>
                                         <span>{{ avgScheduledOpenValue }}</span>
                                     </td>
-                                    <td> <span><strong>0.00</strong></span>
+                                    <td> <span ><strong>{{ sumOU }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span>0.00</span>
+                                        <span>{{ avgOUValue }}</span>
                                     </td>
                                 </tr>
 
