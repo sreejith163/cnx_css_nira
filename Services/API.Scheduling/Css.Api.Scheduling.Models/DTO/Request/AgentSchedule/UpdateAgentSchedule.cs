@@ -15,13 +15,13 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the date from.
         /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Utc)]
+        [BsonDateTimeOptions(Representation = BsonType.Document, Kind = DateTimeKind.Utc)]
         public DateTime DateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the date to.
         /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Utc)]
+        [BsonDateTimeOptions(Representation = BsonType.Document, Kind = DateTimeKind.Utc)]
         public DateTime DateTo { get; set; }
 
         /// <summary>
