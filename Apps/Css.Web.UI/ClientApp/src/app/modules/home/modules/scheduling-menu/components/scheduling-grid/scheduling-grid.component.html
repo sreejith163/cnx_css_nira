@@ -124,21 +124,21 @@
                       aria-labelledby="button-custom-html">
                       <li *ngFor="let range of el.ranges; let i = index;" role="menuitem">
                         <a class="custom-dropdown dropdown-item cursor-pointer" (click)="onDateRangeChange(i, el)">
-                          <span>{{range.dateFrom | date: 'yyyy-MM-dd'}}</span>
-                          <span *ngIf="range.dateTo">-</span>
-                          <span>{{ range.dateTo | date: 'yyyy-MM-dd'}}</span>
-                          <span class="padding-left-10">
-                            <ng-container [ngSwitch]="range.status">
-                              <ng-container *ngSwitchCase="1">
-                                <span class="badge badge-pill badge-success">Approved</span>
-                              </ng-container>
-                              <ng-container *ngSwitchCase="2">
-                                <span class="badge badge-pill badge-warning">Pending</span>
-                              </ng-container>
-                              <ng-container *ngSwitchCase="status.Rejected">
-                                <span class="badge badge-pill badge-danger">Rejected</span>
-                              </ng-container>
+                          <ng-container [ngSwitch]="range.status">
+                            <ng-container *ngSwitchCase="1">
+                              <span class="badge badge-pill badge-success">Approved</span>
                             </ng-container>
+                            <ng-container *ngSwitchCase="2">
+                              <span class="badge badge-pill badge-warning">Pending</span>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="status.Rejected">
+                              <span class="badge badge-pill badge-danger">Rejected</span>
+                            </ng-container>
+                          </ng-container>
+                          <span class="padding-left-15">
+                            <span>{{range.dateFrom | date: 'yyyy-MM-dd'}}</span>
+                            <span *ngIf="range.dateTo">-</span>
+                            <span>{{ range.dateTo | date: 'yyyy-MM-dd'}}</span>
                           </span>
                         </a>
                       </li>
@@ -292,13 +292,13 @@
                         </div>
                         <div class="col-md-6 m-b-5"></div>
                         <div class="col-md-1  m-b-5">
-                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 1"
+                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 1 || selectedGrid?.status == 3"
                             class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)" id="btn_save">
                             <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
                           </button>
                         </div>
                         <div class="col-s-1  m-b-5">
-                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 1"
+                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 1 || selectedGrid?.status == 3"
                             class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
                             id="btn_cancel">
                             <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
