@@ -83,7 +83,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   rangeIndex: number;
   status = SchedulingStatus;
 
-  selectedRange = 'Please select a date range';
   selectedIconId: string;
   icon: string;
   spinner = 'scheduling-tab';
@@ -268,16 +267,21 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
 
+  getSelectedRange(el: AgentSchedulesResponse) {
+    const formattedDateFrom = this.getFormattedDateString(el.ranges[el.rangeIndex].dateFrom);
+    const formattedDateTo = this.getFormattedDateString(el.ranges[el.rangeIndex].dateTo);
+
+    if (el.rangeIndex > -1) {
+      return `${formattedDateFrom} - ${formattedDateTo}`;
+    } else {
+      return 'Please select a date range';
+    }
+  }
+
   onDateRangeChange(index: any, el: AgentSchedulesResponse) {
     const rangeIndex = +index;
     if (rangeIndex > -1) {
       el.rangeIndex = rangeIndex;
-      const fomrattedDateFrom =  this.getFormattedDateString(el.ranges[rangeIndex].dateFrom);
-      const fomrattedDateTo =  this.getFormattedDateString(el.ranges[rangeIndex].dateTo);
-
-      this.selectedRange = `${fomrattedDateFrom} - ${fomrattedDateTo}`;
-    } else {
-      this.selectedRange = 'Please select a date range';
     }
     if (this.selectedGrid) {
       const item = this.totalSchedulingGridData.find(x => x.id === el.id);

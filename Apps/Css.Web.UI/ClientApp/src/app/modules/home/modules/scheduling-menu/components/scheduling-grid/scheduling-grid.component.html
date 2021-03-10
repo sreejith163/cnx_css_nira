@@ -116,14 +116,14 @@
                 </td>
                 <td class="d-flex">
                   <div class="btn-group" dropdown [placement]="'top'" container="body">
-                    <button id="button-custom-html" dropdownToggle type="button" class="btn btn-defaulty dropdown-toggle"
-                      aria-controls="dropdown-custom-html">
-                      {{ selectedRange }} <span class="caret"></span>
+                    <button id="button-custom-html" dropdownToggle type="button"
+                      class="btn btn-defaulty dropdown-toggle" aria-controls="dropdown-custom-html">
+                      {{ getSelectedRange(el) }} <span class="caret"></span>
                     </button>
                     <ul id="dropdown-custom-html" *dropdownMenu class="dropdown-menu" role="menu"
                       aria-labelledby="button-custom-html">
                       <li *ngFor="let range of el.ranges; let i = index;" role="menuitem">
-                        <a class="dropdown-item cursor-pointer" (click)="onDateRangeChange(i, el)">                          
+                        <a class="dropdown-item cursor-pointer" (click)="onDateRangeChange(i, el)">
                           <span>{{range.dateFrom | date: 'yyyy-MM-dd'}}</span>
                           <span *ngIf="range.dateTo">-</span>
                           <span>{{ range.dateTo | date: 'yyyy-MM-dd'}}</span>
@@ -142,16 +142,16 @@
                           </span>
                         </a>
                       </li>
-                    </ul>                    
-                  <span>
-                    <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2"
-                      (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
-                    <i class="fa fa-trash padding-5 pointer m-t-5"
-                      *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2 && el?.ranges[getRangeIndex(el)]?.scheduleCharts?.length > 0"
-                      (click)="deleteDateRange(el)" [ngbTooltip]="'Delete'"></i>
-                    <i class="fa fa-calendar-plus-o float-right padding-5 m-t-5" aria-hidden="true"
-                      (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
-                  </span>
+                    </ul>
+                    <span>
+                      <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2"
+                        (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
+                      <i class="fa fa-trash padding-5 pointer m-t-5"
+                        *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2 && el?.ranges[getRangeIndex(el)]?.scheduleCharts?.length > 0"
+                        (click)="deleteDateRange(el)" [ngbTooltip]="'Delete'"></i>
+                      <i class="fa fa-calendar-plus-o float-right padding-5 m-t-5" aria-hidden="true"
+                        (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
+                    </span>
                   </div>
                 </td>
                 <td>

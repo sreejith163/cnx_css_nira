@@ -605,7 +605,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     this.getAgentSchedulesSubscription = this.agentScheduleMangerService.getAgentScheduleManagers(queryParams)
       .subscribe((response) => {
         this.managerCharts = response.body;
-        
         this.managerCharts.map(x => {
           if (!x.charts || x.charts.length === 0) {
             x.charts = [];
