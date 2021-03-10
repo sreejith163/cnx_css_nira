@@ -196,8 +196,8 @@ namespace Css.Api.Scheduling.Business
 
             foreach (var chart in schedOpen)
             {
-                TimeSpan start = chart.StartTime.TimeOfDay;
-                TimeSpan end = chart.EndTime.TimeOfDay;
+                TimeSpan start = chart.StartDateTime.TimeOfDay;
+                TimeSpan end = chart.EndDateTime.TimeOfDay;
 
                 var diffSpan = end - start;
                 var diffMinutes = diffSpan.TotalMinutes > 0 ? diffSpan.TotalMinutes : diffSpan.TotalMinutes + (60 * 24);

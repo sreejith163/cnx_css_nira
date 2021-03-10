@@ -151,13 +151,15 @@ namespace Css.Api.Core.Utilities.Extensions
                         startDateTime = string.Join(" ", clock.Date.AddDays(-1).ToString("yyyy-MM-dd"), clock.FromTime);
                     }
 
-                    var chart = new AgentScheduleManagerChart()
+                    agentScheduleManager.Charts.Add(new AgentScheduleManagerChart()
                     {
                         SchedulingCodeId = clock.ActivityId,
-                        StartTime = DateTime.Parse(startDateTime),
-                        EndTime = DateTime.Parse(endDateTime)
-                    };
+                        StartDateTime = DateTime.Parse(startDateTime),
+                        EndDateTime = DateTime.Parse(endDateTime)
+                    });
+
                 });
+                managerCharts.Add(agentScheduleManager);
             });
 
             return managerCharts;
@@ -250,7 +252,7 @@ namespace Css.Api.Core.Utilities.Extensions
                         for (int i = 1; i < empDateClocks.Count; i++)
                         {
                             var clock = empDateClocks[i];
-                            if (currClock.ActivityId != clock.ActivityId)
+                            if (currClock.ActivityId != clock.ActivityId || (currClock.ActivityId == clock.ActivityId && currClock.ToTime != currClock.FromTime))
                             {
                                 reconciliedClocks.Add(currClock);
                                 currClock = clock;

@@ -38,7 +38,7 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
                     validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "SchedulingCodeId should not be empty"));
                     return validationFailures;
                 }
-                else if (chart.StartTime >= chart.EndTime)
+                else if (chart.StartDateTime >= chart.EndDateTime)
                 {
                     validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time cannot be greater than end time"));
                     return validationFailures;

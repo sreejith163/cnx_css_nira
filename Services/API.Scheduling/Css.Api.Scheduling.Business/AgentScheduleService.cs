@@ -4,6 +4,7 @@ using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Core.Models.Enums;
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
@@ -193,33 +194,21 @@ namespace Css.Api.Scheduling.Business
             _agentScheduleRepository.UpdateAgentSchedule(agentScheduleIdDetails, agentScheduleDetails);
 
             if (agentScheduleDetails.Status == SchedulingStatus.Approved)
-            {               
+            {
                 var activityLogs = new List<ActivityLog>();
                 var employeeIdDetails = new EmployeeIdDetails { Id = agentSchedule.EmployeeId };
                 var agentScheduleRange = await _agentScheduleRepository.GetAgentScheduleRange(agentScheduleIdDetails, dateRange);
 
-                for (var date = agentScheduleDetails.DateFrom; date <= agentScheduleDetails.DateTo; date = date.AddDays(1))
+                var scheduleManagerCharts = ScheduleHelper.GenerateAgentScheduleManagers(agentSchedule.EmployeeId, agentScheduleRange, agentScheduleDetails.ModifiedBy);
+
+                foreach (var scheduleManagerChart in scheduleManagerCharts)
                 {
-                    var dayOfWeek = date.Date.DayOfWeek;
-                    if (agentScheduleRange.ScheduleCharts.Exists(x => x.Day == (int)dayOfWeek))
-                    {
-                        AgentScheduleManager scheduleManagerChart = new AgentScheduleManager()
-                        {
-                            EmployeeId = agentSchedule.EmployeeId,
-                            AgentSchedulingGroupId = agentScheduleRange.AgentSchedulingGroupId,
-                            Date = date,
-                            Charts = GetCharts(agentScheduleRange.ScheduleCharts.FirstOrDefault(x => x.Day == (int)dayOfWeek).Charts),
-                            CreatedBy = agentScheduleDetails.ModifiedBy,
-                            CreatedDate = DateTimeOffset.UtcNow,
-                        };
+                    _agentScheduleManagerRepository.UpdateAgentScheduleMangerChart(employeeIdDetails, scheduleManagerChart);
 
-                        _agentScheduleManagerRepository.UpdateAgentScheduleMangerChart(employeeIdDetails, scheduleManagerChart);
-
-                        var activityLog = GetActivityLogForSchedulingManager(scheduleManagerChart, agentSchedule.EmployeeId,
-                                                                             agentScheduleDetails.ModifiedBy, agentScheduleDetails.ModifiedUser,
-                                                                             agentScheduleDetails.ActivityOrigin);
-                        activityLogs.Add(activityLog);
-                    }
+                    var activityLog = GetActivityLogForSchedulingManager(scheduleManagerChart, agentSchedule.EmployeeId,
+                                                                         agentScheduleDetails.ModifiedBy, agentScheduleDetails.ModifiedUser,
+                                                                         agentScheduleDetails.ActivityOrigin);
+                    activityLogs.Add(activityLog);
                 }
 
                 _activityLogRepository.CreateActivityLogs(activityLogs);
@@ -526,29 +515,6 @@ namespace Css.Api.Scheduling.Business
             await _uow.Commit();
 
             return new CSSResponse(HttpStatusCode.NoContent);
-        }
-
-        /// <summary>
-        /// Gets the charts.
-        /// </summary>
-        /// <param name="charts">The charts.</param>
-        /// <returns></returns>
-        private List<AgentScheduleManagerChart> GetCharts(List<ScheduleChart> charts)
-        {
-            List<AgentScheduleManagerChart> managerCharts = new List<AgentScheduleManagerChart>();
-            foreach (var chart in charts)
-            {
-                AgentScheduleManagerChart managerChart = new AgentScheduleManagerChart 
-                { 
-                    StartTime = DateTime.Parse(chart.StartTime),
-                    EndTime = DateTime.Parse(chart.EndTime),
-                    SchedulingCodeId = chart.SchedulingCodeId
-                };
-
-                managerCharts.Add(managerChart);
-            }
-
-            return managerCharts;
         }
 
         /// <summary>
