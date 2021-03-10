@@ -22,14 +22,14 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the charts.
         /// </summary>
-        public List<ScheduleChart> Charts { get; set; }
+        public List<AgentScheduleManagerChart> Charts { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentScheduleManager"/> class.
         /// </summary>
         public ActivityLogScheduleManager()
         {
-            Charts = new List<ScheduleChart>();
+            Charts = new List<AgentScheduleManagerChart>();
         }
     }
 }

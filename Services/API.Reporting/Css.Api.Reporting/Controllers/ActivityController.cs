@@ -1,7 +1,9 @@
-﻿using Css.Api.Reporting.Business.Interfaces;
+﻿using Css.Api.Core.Models.Domain.NoSQL;
+using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Models.DTO.Response;
 using Css.Api.Reporting.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;

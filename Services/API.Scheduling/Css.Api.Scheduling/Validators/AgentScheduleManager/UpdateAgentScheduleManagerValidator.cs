@@ -26,7 +26,7 @@ namespace Css.Api.Scheduling.Validators.AgentScheduleManager
                 .ChildRules(x => x.RuleForEach(x => x.AgentScheduleManagerCharts)
                                         .ChildRules(x => x.RuleFor(x => x.Date).NotEmpty())
                                         .ChildRules(x => x.RuleFor(x => x.Charts)
-                                        .SetValidator(new AgentScheduleManagerChartValidator<List<ScheduleChart>>()))
+                                        .SetValidator(new AgentScheduleManagerChartValidator<List<ScheduleManagerChart>>()))
                 );
         }
     }

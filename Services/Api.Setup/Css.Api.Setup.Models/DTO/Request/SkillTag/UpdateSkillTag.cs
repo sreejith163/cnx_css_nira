@@ -25,10 +25,5 @@ namespace Css.Api.Setup.Models.DTO.Request.SkillTag
         /// <value>
         ///   <c>true</c> if this instance is deleted; otherwise, <c>false</c>.</value>
         public bool IsDeleted { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ref Id.
-        /// </summary>
-        public int? RefId { get; set; }
     }
 }

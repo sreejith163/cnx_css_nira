@@ -142,10 +142,7 @@ namespace Css.Api.Scheduling.Business
                 }
             }
 
-            if (agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
-            {
-                mappedAgentScheduleManagers = mappedAgentScheduleManagers.Where(x => x.FirstName != null && x.LastName != null).ToList();
-            }
+            mappedAgentScheduleManagers = mappedAgentScheduleManagers.Where(x => x.FirstName != null && x.LastName != null).ToList();
 
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agents));
 
@@ -288,57 +285,55 @@ namespace Css.Api.Scheduling.Business
         /// </returns>
         public async Task<CSSResponse> GetAgentMySchedule(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter)
         {
-            AgentMyScheduleDetailsDTO agentMyScheduleDetailsDTO;
-
             List<AgentScheduleManager> agentSchedules = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails, myScheduleQueryParameter);
             if (agentSchedules == null || agentSchedules.Count < 1)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            agentMyScheduleDetailsDTO = new AgentMyScheduleDetailsDTO();
+            AgentMyScheduleDetailsDTO agentMyScheduleDetailsDTO = new AgentMyScheduleDetailsDTO();
             agentMyScheduleDetailsDTO.AgentMySchedules = new List<AgentMyScheduleDay>();
 
-            AgentMyScheduleDay schedule;
+            //AgentMyScheduleDay schedule;
 
-            foreach (DateTime date in EachDay(myScheduleQueryParameter.StartDate, myScheduleQueryParameter.EndDate))
-            {
-                AgentScheduleManager agentSchedule = agentSchedules.Where(s => s.Date == date).FirstOrDefault();
-                if (agentSchedule != null)
-                {
+            //foreach (DateTime date in EachDay(myScheduleQueryParameter.StartDate, myScheduleQueryParameter.EndDate))
+            //{
+            //    AgentScheduleManager agentSchedule = agentSchedules.Where(s => s.Date == date).FirstOrDefault();
+            //    if (agentSchedule != null)
+            //    {
 
-                    bool isChartAvailableForDay =
-                        agentSchedule.Charts.Any();
-                    if (isChartAvailableForDay)
-                    {
-                        var chartsOfDay = agentSchedule.Charts;
+            //        bool isChartAvailableForDay =
+            //            agentSchedule.Charts.Any();
+            //        if (isChartAvailableForDay)
+            //        {
+            //            //var chartsofday = agentschedule.charts;
 
-                        var firstStartTime = chartsOfDay.Min(chart => DateTime.
-                        ParseExact(chart.StartTime, "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
-                        var lastEndTime = chartsOfDay.Max(chart => DateTime.
-                        ParseExact(chart.EndTime, "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
+            //            //var firststarttime = chartsofday.min(chart => datetime.
+            //            //parseexact(chart.starttime, "hh:mm tt", cultureinfo.invariantculture)).tostring("hh:mm tt");
+            //            //var lastendtime = chartsofday.max(chart => datetime.
+            //            //parseexact(chart.endtime, "hh:mm tt", cultureinfo.invariantculture)).tostring("hh:mm tt");
 
-                        schedule = new AgentMyScheduleDay
-                        {
-                            Day = (int)agentSchedule.Date.DayOfWeek,
-                            Date = agentSchedule.Date,
-                            Charts = chartsOfDay,
-                            FirstStartTime = firstStartTime,
-                            LastEndTime = lastEndTime
-                        };
-                    }
-                    else
-                    {
-                        schedule = CreateMyScheduleDayWithNoChart(date);
-                    }
-                }
-                else
-                {
-                    schedule = CreateMyScheduleDayWithNoChart(date);
+            //            //schedule = new agentmyscheduleday
+            //            //{
+            //            //    day = (int)agentschedule.date.dayofweek,
+            //            //    date = agentschedule.date,
+            //            //    charts = chartsofday,
+            //            //    firststarttime = firststarttime,
+            //            //    lastendtime = lastendtime
+            //            //};
+            //        }
+            //        else
+            //        {
+            //            schedule = CreateMyScheduleDayWithNoChart(date);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        schedule = CreateMyScheduleDayWithNoChart(date);
 
-                }
-                agentMyScheduleDetailsDTO.AgentMySchedules.Add(schedule);
-            }
+            //    }
+            //    agentMyScheduleDetailsDTO.AgentMySchedules.Add(schedule);
+            //}
 
             return new CSSResponse(agentMyScheduleDetailsDTO, HttpStatusCode.OK);
         }

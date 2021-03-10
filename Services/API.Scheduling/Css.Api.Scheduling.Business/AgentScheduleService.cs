@@ -207,7 +207,7 @@ namespace Css.Api.Scheduling.Business
                             EmployeeId = agentSchedule.EmployeeId,
                             AgentSchedulingGroupId = agentScheduleRange.AgentSchedulingGroupId,
                             Date = date,
-                            Charts = agentScheduleRange.ScheduleCharts.FirstOrDefault(x => x.Day == (int)dayOfWeek).Charts,
+                            // Charts = agentScheduleRange.ScheduleCharts.FirstOrDefault(x => x.Day == (int)dayOfWeek).Charts,
                             CreatedBy = agentScheduleDetails.ModifiedBy,
                             CreatedDate = DateTimeOffset.UtcNow,
                         };
@@ -525,7 +525,7 @@ namespace Css.Api.Scheduling.Business
             await _uow.Commit();
 
             return new CSSResponse(HttpStatusCode.NoContent);
-        }       
+        }
 
         /// <summary>
         /// Gets the activity log for scheduling chart.
@@ -576,7 +576,7 @@ namespace Css.Api.Scheduling.Business
                 SchedulingFieldDetails = new SchedulingFieldDetails() { ActivityLogManager = _mapper.Map<ActivityLogScheduleManager>(agentScheduleManagerChart) }
             };
         }
-        
+
         /// <summary>
         /// Determines whether [has valid scheduling codes] [the specified agent schedule details].
         /// </summary>
