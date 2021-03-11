@@ -7,9 +7,11 @@ using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Response.ActivityLog;
+using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -146,6 +148,28 @@ namespace Css.Api.Scheduling.Repository
             if (!string.IsNullOrWhiteSpace(activityLogQueryParameter.Id))
             {
                 activityLogs = activityLogs.Where(o => o.Id == new ObjectId(activityLogQueryParameter.Id));
+            }
+
+            if (activityLogQueryParameter.Date.HasValue && activityLogQueryParameter.Date != default(DateTime) &&
+                activityLogQueryParameter.ActivityType != null && activityLogQueryParameter.ActivityType == ActivityType.SchedulingmanagerGrid)
+            {
+                var date = activityLogQueryParameter.Date.Value;
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+
+                activityLogs = activityLogs.Where(x => x.SchedulingFieldDetails.ActivityLogManager.Date == dateTimeWithZeroTimeSpan);
+            }
+
+            if (activityLogQueryParameter.DateFrom.HasValue && activityLogQueryParameter.DateFrom != default(DateTime) &&
+                activityLogQueryParameter.DateTo.HasValue && activityLogQueryParameter.DateTo != default(DateTime) &&
+                activityLogQueryParameter.ActivityType != null && activityLogQueryParameter.ActivityType == ActivityType.SchedulingGrid)
+            {
+                var dateFrom = activityLogQueryParameter.DateFrom.Value;
+                var dateTo = activityLogQueryParameter.DateTo.Value;
+                var dateTimeFromWithZeroTimeSpan = new DateTime(dateFrom.Year, dateFrom.Month, dateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+                var dateTimeToWithZeroTimeSpan = new DateTime(dateTo.Year, dateTo.Month, dateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+
+                activityLogs = activityLogs.Where(x => x.SchedulingFieldDetails.ActivityLogRange.DateFrom == dateTimeFromWithZeroTimeSpan &&
+                                                       x.SchedulingFieldDetails.ActivityLogRange.DateTo == dateTimeToWithZeroTimeSpan);
             }
 
             return activityLogs;
