@@ -503,7 +503,6 @@ namespace Css.Api.Scheduling.Business
             var employeeIdDetails = new EmployeeIdDetails { Id = agentSchedule.EmployeeId };
             var activityLogRange = new UpdateActivityLogRange
             {
-                ActivityType = ActivityType.SchedulingGrid,
                 DateFrom = oldDateFrom,
                 DateTo = oldDateTo,
                 NewDateFrom = newDateFrom,
