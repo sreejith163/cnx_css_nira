@@ -48,7 +48,9 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IAgentScheduleRepository _agentScheduleRepository;
 
-        /// <summary>The agent schedule manager repository</summary>
+        /// <summary>
+        /// The agent schedule manager repository
+        /// </summary>
         private readonly IAgentScheduleManagerRepository _agentScheduleManagerRepository;
 
         /// <summary>
@@ -320,7 +322,7 @@ namespace Css.Api.Scheduling.Business
             }
 
             // get preupdated details
-            var preUpdateAgentAdminHireDate = agentAdmin.AgentData.Find(x => x.Group.Description == "Hire Date").Group.Value.ToString();
+            var preUpdateAgentAdminHireDate = agentAdmin.AgentData.Find(x => x.Group.Description == "Hire Date")?.Group?.Value?.ToString();
             var preUpdateAgentAdmin = new UpdateAgentAdmin()
             {
                 EmployeeId = agentAdmin.Ssn,
@@ -340,6 +342,7 @@ namespace Css.Api.Scheduling.Business
             var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
             var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentAdminDetails.SkillTagId };
             var employeeIdDetails = new EmployeeIdDetails { Id = agentAdmin.Ssn };
+            var newEmployeeIdDetails = new EmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
 
             var agentAdminsBasedOnEmployeeId = await _agentAdminRepository.GetAgentAdminByEmployeeId(agentAdminEmployeeIdDetails);
 
@@ -394,6 +397,10 @@ namespace Css.Api.Scheduling.Business
 
             _agentScheduleManagerRepository.UpdateAgentScheduleManager(employeeIdDetails, updateAgentScheduleManagerEmployeeDetails);
 
+            if (employeeIdDetails.Id != newEmployeeIdDetails.Id)
+            {
+                _activityLogRepository.UpdateActivityLogsEmployeeId(employeeIdDetails, newEmployeeIdDetails);
+            }
 
             var fieldDetails = addActivityLogFields(preUpdateAgentAdmin, agentAdminRequest, preUpdateAgentAdminHireDate);
 

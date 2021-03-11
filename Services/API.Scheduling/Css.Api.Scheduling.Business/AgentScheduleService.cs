@@ -7,6 +7,7 @@ using Css.Api.Core.Models.Enums;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
@@ -479,17 +480,17 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
-            var newDateFrom = new DateTime(dateRangeDetails.NewDateFrom.Year, dateRangeDetails.NewDateFrom.Month, dateRangeDetails.NewDateFrom.Day, 
+            var newDateFrom = new DateTime(dateRangeDetails.NewDateFrom.Year, dateRangeDetails.NewDateFrom.Month, dateRangeDetails.NewDateFrom.Day,
                                            0, 0, 0, DateTimeKind.Utc);
-            var newDateTo = new DateTime(dateRangeDetails.NewDateTo.Year, dateRangeDetails.NewDateTo.Month, dateRangeDetails.NewDateTo.Day, 
+            var newDateTo = new DateTime(dateRangeDetails.NewDateTo.Year, dateRangeDetails.NewDateTo.Month, dateRangeDetails.NewDateTo.Day,
                                          0, 0, 0, DateTimeKind.Utc);
-            var oldDateFrom = new DateTime(dateRangeDetails.OldDateFrom.Year, dateRangeDetails.OldDateFrom.Month, dateRangeDetails.OldDateFrom.Day, 
+            var oldDateFrom = new DateTime(dateRangeDetails.OldDateFrom.Year, dateRangeDetails.OldDateFrom.Month, dateRangeDetails.OldDateFrom.Day,
                                            0, 0, 0, DateTimeKind.Utc);
-            var oldDateTo = new DateTime(dateRangeDetails.OldDateTo.Year, dateRangeDetails.OldDateTo.Month, dateRangeDetails.OldDateTo.Day, 
+            var oldDateTo = new DateTime(dateRangeDetails.OldDateTo.Year, dateRangeDetails.OldDateTo.Month, dateRangeDetails.OldDateTo.Day,
                                          0, 0, 0, DateTimeKind.Utc);
 
             var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => oldDateFrom != x.DateFrom && oldDateTo != x.DateTo &&
-                                                                           x.Status != SchedulingStatus.Rejected && 
+                                                                           x.Status != SchedulingStatus.Rejected &&
                                                                            ((dateRangeDetails.NewDateFrom < x.DateTo && dateRangeDetails.NewDateTo > x.DateFrom)) ||
                                                                              dateRangeDetails.NewDateFrom == x.DateFrom && dateRangeDetails.NewDateTo == x.DateTo);
             if (hasConflictingSchedules)
@@ -498,6 +499,18 @@ namespace Css.Api.Scheduling.Business
             }
 
             _agentScheduleRepository.UpdateAgentScheduleRange(agentScheduleIdDetails, dateRangeDetails);
+
+            var employeeIdDetails = new EmployeeIdDetails { Id = agentSchedule.EmployeeId };
+            var activityLogRange = new UpdateActivityLogRange
+            {
+                ActivityType = ActivityType.SchedulingGrid,
+                DateFrom = oldDateFrom,
+                DateTo = oldDateTo,
+                NewDateFrom = newDateFrom,
+                NewDateTo = newDateTo
+            };
+
+            _activityLogRepository.UpdateActivityLogsSchedulingRange(employeeIdDetails, activityLogRange);
 
             await _uow.Commit();
 

@@ -6,6 +6,7 @@ using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
+using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.ActivityLog;
 using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
@@ -90,6 +91,53 @@ namespace Css.Api.Scheduling.Repository
             {
                 InsertManyAsync(activityLogRequest);
             }
+        }
+
+        /// <summary>
+        /// Updates the activity logs employee identifier.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="newEmployeeIdDetails">The new employee identifier details.</param>
+        public void UpdateActivityLogsEmployeeId(EmployeeIdDetails employeeIdDetails, EmployeeIdDetails newEmployeeIdDetails)
+        {
+            var query =
+                Builders<ActivityLog>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                (Builders<ActivityLog>.Filter.Eq(i => i.ActivityType, ActivityType.SchedulingGrid) |
+                Builders<ActivityLog>.Filter.Eq(i => i.ActivityType, ActivityType.SchedulingmanagerGrid));
+
+            var update = Builders<ActivityLog>.Update
+                .Set(x => x.EmployeeId, newEmployeeIdDetails.Id);
+
+            UpdateManyAsync(query, update);
+        }
+
+        /// <summary>
+        /// Updates the activity logs scheduling range.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="activityLogRange">The activity log range.</param>
+        public void UpdateActivityLogsSchedulingRange(EmployeeIdDetails employeeIdDetails, UpdateActivityLogRange activityLogRange)
+        {
+            activityLogRange.DateFrom = new DateTime(activityLogRange.DateFrom.Year, activityLogRange.DateFrom.Month,
+                                                     activityLogRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+            activityLogRange.DateTo = new DateTime(activityLogRange.DateTo.Year, activityLogRange.DateTo.Month,
+                                                   activityLogRange.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+            activityLogRange.NewDateFrom = new DateTime(activityLogRange.NewDateFrom.Year, activityLogRange.NewDateFrom.Month,
+                                                        activityLogRange.NewDateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+            activityLogRange.NewDateTo = new DateTime(activityLogRange.NewDateTo.Year, activityLogRange.NewDateTo.Month,
+                                                      activityLogRange.NewDateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+
+            var query =
+                Builders<ActivityLog>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                Builders<ActivityLog>.Filter.Eq(i => i.ActivityType, activityLogRange.ActivityType) &
+                Builders<ActivityLog>.Filter.Eq(i => i.SchedulingFieldDetails.ActivityLogRange.DateFrom, activityLogRange.DateFrom) &
+                Builders<ActivityLog>.Filter.Eq(i => i.SchedulingFieldDetails.ActivityLogRange.DateTo, activityLogRange.DateTo);
+
+            var update = Builders<ActivityLog>.Update
+                .Set(x => x.SchedulingFieldDetails.ActivityLogRange.DateFrom, activityLogRange.NewDateFrom)
+                .Set(x => x.SchedulingFieldDetails.ActivityLogRange.DateTo, activityLogRange.NewDateTo);
+
+            UpdateManyAsync(query, update);
         }
 
         /// <summary>Filters the activity logs.</summary>
