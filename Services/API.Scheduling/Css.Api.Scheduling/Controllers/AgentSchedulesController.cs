@@ -1,7 +1,5 @@
 ﻿using Css.Api.Scheduling.Business.Interfaces;
-using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
-using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -155,19 +153,6 @@ namespace Css.Api.Scheduling.Controllers
         public async Task<IActionResult> DeleteAgentScheduleRange(string agentScheduleId, [FromQuery] DateRange dateRangeDetails)
         {
             var result = await _agentScheduleService.DeleteAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
-            return StatusCode((int)result.Code, result.Value);
-        }
-
-        /// <summary>Gets the agent my schedule.</summary>
-        /// <param name="agentEmployeeId">The agent employee identifier.</param>
-        /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        [HttpGet("{agentEmployeeId}/myschedule")]
-        public async Task<IActionResult> GetAgentMySchedule(int agentEmployeeId, [FromQuery] MyScheduleQueryParameter myScheduleQueryParameter)
-        {
-            var result = await _agentScheduleService.GetAgentMySchedule(new EmployeeIdDetails { Id = agentEmployeeId }, myScheduleQueryParameter);
             return StatusCode((int)result.Code, result.Value);
         }
     }

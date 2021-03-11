@@ -12,7 +12,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ForecastScreen
     {
 
 
-        public long ForecastId { get; set; }
+
         public int SkillGroupId { get; set; }
 
         

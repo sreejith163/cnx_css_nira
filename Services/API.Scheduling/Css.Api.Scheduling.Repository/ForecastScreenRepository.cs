@@ -58,9 +58,10 @@ namespace Css.Api.Scheduling.Repository
 
             return await FindByIdAsync(query);
         }
-        public async Task<ForecastScreen> GetForecastDataID(long forecastID)
+        public async Task<ForecastScreen> GetForecastDataID(int skillGroupId,string forecastDate)
         {
-            var query = Builders<ForecastScreen>.Filter.Eq(i => i.ForecastId, forecastID);
+            var query = Builders<ForecastScreen>.Filter.Eq(i => i.SkillGroupId,skillGroupId) &
+                Builders<ForecastScreen>.Filter.Eq(i => i.Date, forecastDate);
           
 
             return await FindByIdAsync(query);

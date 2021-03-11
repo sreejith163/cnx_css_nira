@@ -1,7 +1,5 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
-using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
-using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Business.Interfaces
@@ -29,6 +27,7 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <param name="dateRange">The date range.</param>
         /// <returns></returns>
         Task<CSSResponse> IsAgentScheduleRangeExist(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
+
         /// <summary>
         /// Gets the agent schedule charts.
         /// </summary>
@@ -83,13 +82,5 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <param name="dateRange">The date range.</param>
         /// <returns></returns>
         Task<CSSResponse> DeleteAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
-
-        /// <summary>Gets the agent my schedule.</summary>
-        /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        Task<CSSResponse> GetAgentMySchedule(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter);
     }
 }

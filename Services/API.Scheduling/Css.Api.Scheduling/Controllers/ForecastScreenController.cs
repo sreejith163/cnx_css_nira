@@ -79,14 +79,15 @@ namespace Css.Api.Scheduling.Controllers
         /// </summary>
 
         /// <param name="forecastDetails">The client details.</param>
-        /// <param name="forecastId">Forecast ID</param>
+        /// <param name="skillGroupId">skill grou id</param>
+        ///    /// <param name="date">Forecast ID</param>
         /// <returns></returns>
-        [HttpPut("{forecastId}")]
+        [HttpPut("{skillGroupId}/date/{date}")]
 
-        public async Task<IActionResult> UpdateForecastData(long forecastId, [FromBody] UpdateForecastData forecastDetails)
+        public async Task<IActionResult> UpdateForecastData(int skillGroupId, string date, [FromBody] UpdateForecastData forecastDetails)
         { 
            
-            var result = await _forecastScreenService.UpdateForecastData(forecastDetails, forecastId);
+            var result = await _forecastScreenService.UpdateForecastData(forecastDetails, skillGroupId,date);
             return StatusCode((int)result.Code, result.Value);
         }
         /// <summary>

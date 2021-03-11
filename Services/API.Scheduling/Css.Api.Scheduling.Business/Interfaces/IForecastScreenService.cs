@@ -50,7 +50,7 @@ namespace Css.Api.Scheduling.Business.Interfaces
 
         /// <param name="createForecastData">the skill group id </param>
         /// <returns></returns>
-        Task<CSSResponse> UpdateForecastData(UpdateForecastData updateForecastData, long forecastID);
+        Task<CSSResponse> UpdateForecastData(UpdateForecastData updateForecastData, int skillGroupId, string forecastDate);
 
         /// <summary>
         /// Updates the agent schedule chart.

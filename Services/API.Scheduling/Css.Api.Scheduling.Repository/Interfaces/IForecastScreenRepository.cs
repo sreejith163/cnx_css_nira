@@ -15,7 +15,7 @@ namespace Css.Api.Scheduling.Repository.Interfaces
 
         Task<ForecastScreen> GetForecastData(ForecastIdDetails forecastIdDetails);
 
-        Task<ForecastScreen> GetForecastDataID(long forecastID);
+        Task<ForecastScreen> GetForecastDataID(int skillGroupId, string forecastDate);
         Task<ForecastScreen> GetForecastScreenBySkillGroupId(ForecastIdDetails forecastIdDetails);
 
 

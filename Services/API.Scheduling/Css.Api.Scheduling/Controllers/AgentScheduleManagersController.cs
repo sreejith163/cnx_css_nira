@@ -2,6 +2,7 @@
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
+using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -41,6 +42,33 @@ namespace Css.Api.Scheduling.Controllers
         public async Task<IActionResult> GetAgentScheduleManagerCharts([FromQuery] AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
         {
             var result = await _agentScheduleManagerService.GetAgentScheduleManagerCharts(agentScheduleManagerChartQueryparameter);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>Gets the agent my schedule.</summary>
+        /// <param name="agentEmployeeId">The agent employee identifier.</param>
+        /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        [HttpGet("{agentEmployeeId}/myschedule")]
+        public async Task<IActionResult> GetAgentMySchedule(int agentEmployeeId, [FromQuery] MyScheduleQueryParameter myScheduleQueryParameter)
+        {
+            var result = await _agentScheduleManagerService.GetAgentMySchedule(new EmployeeIdDetails { Id = agentEmployeeId }, myScheduleQueryParameter);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+
+        /// <summary>
+        /// Gets the scheduled open
+        /// </summary>
+        /// <param name="skillGroupId">The agent schedule identifier.</param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        [HttpGet("{skillGroupId}/scheduledopen")]
+        public async Task<IActionResult> GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date)
+        {
+            var result = await _agentScheduleManagerService.GetAgentScheduledOpen(skillGroupId, date);
             return StatusCode((int)result.Code, result.Value);
         }
 

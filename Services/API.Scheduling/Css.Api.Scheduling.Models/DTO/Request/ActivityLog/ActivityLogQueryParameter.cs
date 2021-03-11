@@ -1,9 +1,6 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
 using Css.Api.Scheduling.Models.Enums;
 
-/// <summary>
-/// 
-/// </summary>
 namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
 {
     public class ActivityLogQueryParameter : QueryStringParameters
@@ -27,9 +24,6 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
         /// <summary>
         /// Gets or sets the executed user.
         /// </summary>
-        /// <value>
-        /// The executed user.
-        /// </value>
         public int? ExecutedUser { get; set; }
 
         /// <summary>

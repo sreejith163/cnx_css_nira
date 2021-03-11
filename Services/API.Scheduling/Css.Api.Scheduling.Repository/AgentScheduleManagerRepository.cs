@@ -15,6 +15,7 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using System.Collections.Generic;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
+using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -74,7 +75,7 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<AgentScheduleManager> GetAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, DateDetails dateDetails)
         {
-            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0);
+            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0, DateTimeKind.Utc);
 
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
@@ -93,7 +94,7 @@ namespace Css.Api.Scheduling.Repository
         /// </returns>
         public async Task<bool> IsAgentScheduleManagerChartExists(EmployeeIdDetails employeeIdDetails, DateDetails dateDetails)
         {
-            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0);
+            dateDetails.Date = new DateTime(dateDetails.Date.Year, dateDetails.Date.Month, dateDetails.Date.Day, 0, 0, 0, DateTimeKind.Utc);
 
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
@@ -103,17 +104,23 @@ namespace Css.Api.Scheduling.Repository
             return count > 0;
         }
 
-        /// <summary>
-        /// Gets the agent schedule manager chart by employee identifier.
-        /// </summary>
+        /// <summary>Gets the agent schedule manager chart by employee identifier.</summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <returns></returns>
-        public async Task<AgentScheduleManager> GetAgentScheduleManagerChartByEmployeeId(EmployeeIdDetails employeeIdDetails)
+        /// <param name="myScheduleQueryParameter"></param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<List<AgentScheduleManager>> GetAgentScheduleManagerChartByEmployeeId(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter)
         {
             var query =
-                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.AgentSchedulingGroupId, myScheduleQueryParameter.AgentSchedulingGroupId) &
+                Builders<AgentScheduleManager>.Filter.Gte(i => i.Date, myScheduleQueryParameter.StartDate) &
+                Builders<AgentScheduleManager>.Filter.Lte(i => i.Date, myScheduleQueryParameter.EndDate);
 
-            return await FindByIdAsync(query);
+            var agentAdmins = FilterBy(query);
+
+            return await Task.FromResult(agentAdmins.ToList());
         }
 
         /// <summary>
@@ -148,6 +155,22 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
+        /// Filters the agent scheduled open.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent schedule manager</param
+        /// <returns></returns>
+        public async Task<List<AgentScheduleManager>> GetAgentScheduleByAgentSchedulingGroupId(List<int> agentSchedulingGroupIdDetailsList, DateTimeOffset date)
+        {
+            var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+            var query = Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, dateTimeWithZeroTimeSpan) &
+                     Builders<AgentScheduleManager>.Filter.In(i => i.AgentSchedulingGroupId, agentSchedulingGroupIdDetailsList);
+
+            var x = FilterBy(query);
+
+            return await Task.FromResult(x.ToList());
+        }
+
+        /// <summary>
         /// Updates the agent schedule manger chart.
         /// </summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
@@ -155,7 +178,7 @@ namespace Css.Api.Scheduling.Repository
         public void UpdateAgentScheduleMangerChart(EmployeeIdDetails employeeIdDetails, AgentScheduleManager agentScheduleManager)
         {
             agentScheduleManager.Date = new DateTime(agentScheduleManager.Date.Year, agentScheduleManager.Date.Month,
-                                                     agentScheduleManager.Date.Day, 0, 0, 0);
+                                                     agentScheduleManager.Date.Day, 0, 0, 0, DateTimeKind.Utc);
 
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
@@ -183,6 +206,23 @@ namespace Css.Api.Scheduling.Repository
             {
                 InsertOneAsync(agentScheduleManager);
             }
+        }
+
+        /// <summary>Updates the agent schedule manager.</summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="updateAgentScheduleManagerEmployeeDetails">The update agent schedule manager employee details.</param>
+        public void UpdateAgentScheduleManager(EmployeeIdDetails employeeIdDetails, UpdateAgentScheduleManagerEmployeeDetails updateAgentScheduleManagerEmployeeDetails)
+        {
+            var query =
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
+
+            var update = Builders<AgentScheduleManager>.Update
+                .Set(x => x.EmployeeId, updateAgentScheduleManagerEmployeeDetails.EmployeeId)
+                .Set(x => x.AgentSchedulingGroupId, updateAgentScheduleManagerEmployeeDetails.AgentSchedulingGroupId)
+                .Set(x => x.ModifiedBy, updateAgentScheduleManagerEmployeeDetails.ModifiedBy)
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
+            
+            UpdateManyAsync(query, update);
         }
 
         /// <summary>
@@ -215,7 +255,7 @@ namespace Css.Api.Scheduling.Repository
                 !agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
-                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.Date == dateTimeWithZeroTimeSpan);
             }
 
@@ -223,7 +263,7 @@ namespace Css.Api.Scheduling.Repository
                 agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
-                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.Date != dateTimeWithZeroTimeSpan);
             }
 

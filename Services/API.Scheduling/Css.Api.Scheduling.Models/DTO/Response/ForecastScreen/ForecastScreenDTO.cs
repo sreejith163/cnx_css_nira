@@ -14,7 +14,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.ForecastScreen
     {
 
       
-        public long ForecastId { get;  set; }
+ 
 
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

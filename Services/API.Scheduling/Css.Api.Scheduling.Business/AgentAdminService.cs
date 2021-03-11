@@ -8,6 +8,7 @@ using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
@@ -46,6 +47,9 @@ namespace Css.Api.Scheduling.Business
         /// The agent schedule repository
         /// </summary>
         private readonly IAgentScheduleRepository _agentScheduleRepository;
+
+        /// <summary>The agent schedule manager repository</summary>
+        private readonly IAgentScheduleManagerRepository _agentScheduleManagerRepository;
 
         /// <summary>
         /// The client name repository
@@ -105,6 +109,7 @@ namespace Css.Api.Scheduling.Business
             IHttpContextAccessor httpContextAccessor,
             IAgentAdminRepository agentAdminRepository,
             IAgentScheduleRepository agentScheduleRepository,
+            IAgentScheduleManagerRepository agentScheduleManagerRepository,
             IClientRepository clientRepository,
             IClientLobGroupRepository clientLobGroupRepository,
             ISkillGroupRepository skillGroupRepository,
@@ -117,6 +122,7 @@ namespace Css.Api.Scheduling.Business
             _httpContextAccessor = httpContextAccessor;
             _agentAdminRepository = agentAdminRepository;
             _agentScheduleRepository = agentScheduleRepository;
+            _agentScheduleManagerRepository = agentScheduleManagerRepository;
             _clientRepository = clientRepository;
             _clientLobGroupRepository = clientLobGroupRepository;
             _skillGroupRepository = skillGroupRepository;
@@ -378,6 +384,16 @@ namespace Css.Api.Scheduling.Business
             };
 
             _agentScheduleRepository.UpdateAgentSchedule(employeeIdDetails, updateAgentScheduleEmployeeDetails);
+
+            var updateAgentScheduleManagerEmployeeDetails = new UpdateAgentScheduleManagerEmployeeDetails
+            {
+                EmployeeId = agentAdminDetails.EmployeeId,
+                AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId,
+                ModifiedBy = agentAdminDetails.ModifiedBy
+            };
+
+            _agentScheduleManagerRepository.UpdateAgentScheduleManager(employeeIdDetails, updateAgentScheduleManagerEmployeeDetails);
+
 
             var fieldDetails = addActivityLogFields(preUpdateAgentAdmin, agentAdminRequest, preUpdateAgentAdminHireDate);
 
@@ -690,10 +706,18 @@ namespace Css.Api.Scheduling.Business
                     ModifiedBy = movingAgent.ModifiedBy
                 };
 
+                var updateAgentScheduleManagerEmployeeDetails = new UpdateAgentScheduleManagerEmployeeDetails
+                {
+                    EmployeeId = movingAgent.Ssn,
+                    AgentSchedulingGroupId = movingAgent.AgentSchedulingGroupId,
+                    ModifiedBy = movingAgent.ModifiedBy
+                };
+
                 var employeeIdDetails = new EmployeeIdDetails { Id = movingAgent.Ssn };
 
                 _agentAdminRepository.UpdateAgentAdmin(movingAgent);
                 _agentScheduleRepository.UpdateAgentSchedule(employeeIdDetails, updateAgentScheduleEmployeeDetails);
+                _agentScheduleManagerRepository.UpdateAgentScheduleManager(employeeIdDetails, updateAgentScheduleManagerEmployeeDetails);
             }
 
             await _uow.Commit();

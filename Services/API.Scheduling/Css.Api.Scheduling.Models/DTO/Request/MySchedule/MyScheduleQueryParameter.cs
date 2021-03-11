@@ -11,5 +11,9 @@ namespace Css.Api.Scheduling.Models.DTO.Request.MySchedule
         /// <summary>Gets or sets the end date.</summary>
         /// <value>The end date.</value>
         public DateTime EndDate { get; set; }
+
+        /// <summary>Gets or sets the agent scheduling group identifier.</summary>
+        /// <value>The agent scheduling group identifier.</value>
+        public int AgentSchedulingGroupId { get; set; }
     }
 }
