@@ -194,7 +194,7 @@ namespace Css.Api.Scheduling.Business
 
             _agentScheduleRepository.UpdateAgentSchedule(agentScheduleIdDetails, agentScheduleDetails);
 
-            if (agentScheduleDetails.Status == SchedulingStatus.Approved)
+            if (agentScheduleDetails.Status == SchedulingStatus.Released)
             {
                 var activityLogs = new List<ActivityLog>();
                 var employeeIdDetails = new EmployeeIdDetails { Id = agentSchedule.EmployeeId };
@@ -340,11 +340,8 @@ namespace Css.Api.Scheduling.Business
                             range.DateFrom = new DateTime(range.DateFrom.Year, range.DateFrom.Month, range.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
                             range.DateTo = new DateTime(range.DateTo.Year, range.DateTo.Month, range.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
 
-                            var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => x.Status != SchedulingStatus.Rejected &&
-                                                                                           ((range.DateFrom < x.DateTo &&
-                                                                                            range.DateTo > x.DateFrom) ||
-                                                                                           (range.DateFrom == x.DateFrom &&
-                                                                                            range.DateTo == x.DateTo)));
+                            var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => ((range.DateFrom < x.DateTo && range.DateTo > x.DateFrom) ||
+                                                                                           (range.DateFrom == x.DateFrom && range.DateTo == x.DateTo)));
 
                             if (!hasConflictingSchedules)
                             {
@@ -414,17 +411,13 @@ namespace Css.Api.Scheduling.Business
                 var employeeSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
                 if (employeeSchedule != null)
                 {
-                    var hasConflictingSchedules = employeeSchedule.Ranges.Exists(x => x.Status != SchedulingStatus.Rejected &&
-                                                                                      ((agentScheduleDetails.DateFrom < x.DateTo &&
-                                                                                       agentScheduleDetails.DateTo > x.DateFrom) ||
-                                                                                      (agentScheduleDetails.DateFrom == x.DateFrom &&
-                                                                                       agentScheduleDetails.DateTo == x.DateTo)));
+                    var hasConflictingSchedules = employeeSchedule.Ranges.Exists(x => ((agentScheduleDetails.DateFrom < x.DateTo && agentScheduleDetails.DateTo > x.DateFrom) ||
+                                                                                      (agentScheduleDetails.DateFrom == x.DateFrom && agentScheduleDetails.DateTo == x.DateTo)));
 
                     if (!hasConflictingSchedules)
                     {
                         var copiedAgentScheduleRange = agentSchedule.Ranges
-                            .FirstOrDefault(x => x.Status != SchedulingStatus.Rejected &&
-                                                 x.DateFrom == agentScheduleDetails.DateFrom &&
+                            .FirstOrDefault(x => x.DateFrom == agentScheduleDetails.DateFrom &&
                                                  x.DateTo == agentScheduleDetails.DateTo);
 
                         if (copiedAgentScheduleRange != null && copiedAgentScheduleRange.ScheduleCharts.Any())
@@ -490,7 +483,6 @@ namespace Css.Api.Scheduling.Business
                                          0, 0, 0, DateTimeKind.Utc);
 
             var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => oldDateFrom != x.DateFrom && oldDateTo != x.DateTo &&
-                                                                           x.Status != SchedulingStatus.Rejected &&
                                                                            ((dateRangeDetails.NewDateFrom < x.DateTo && dateRangeDetails.NewDateTo > x.DateFrom)) ||
                                                                              dateRangeDetails.NewDateFrom == x.DateFrom && dateRangeDetails.NewDateTo == x.DateTo);
             if (hasConflictingSchedules)
