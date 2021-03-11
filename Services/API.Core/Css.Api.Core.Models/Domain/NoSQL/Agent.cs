@@ -62,11 +62,13 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the sen date.
         /// </summary>
+        [BsonRepresentation(BsonType.String)]
         public DateTime? SenDate { get; set; }
 
         /// <summary>
         /// Gets or sets the sen ext.
         /// </summary>
+        [BsonRepresentation(BsonType.String)]
         public DateTime? SenExt { get; set; }
 
         /// <summary>
