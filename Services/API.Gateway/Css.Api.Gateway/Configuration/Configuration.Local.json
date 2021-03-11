@@ -613,6 +613,31 @@
       "UpstreamPathTemplate": "/api/agentSchedulemanagers/{skillGroupId}/scheduledopen",
       "UpstreamHttpMethod": [ "get" ]
     },
+    //********* Timeoffs Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/timeoffs",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.scheduling",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/timeoffs",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/timeoffs/{timeOffId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.scheduling",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/timeoffs/{timeOffId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
     //********* Forecast Screen Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/ForecastScreen",
