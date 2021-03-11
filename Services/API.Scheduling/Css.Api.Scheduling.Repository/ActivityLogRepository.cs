@@ -129,7 +129,7 @@ namespace Css.Api.Scheduling.Repository
 
             var query =
                 Builders<ActivityLog>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
-                Builders<ActivityLog>.Filter.Eq(i => i.ActivityType, activityLogRange.ActivityType) &
+                Builders<ActivityLog>.Filter.Eq(i => i.ActivityType, ActivityType.SchedulingGrid) &
                 Builders<ActivityLog>.Filter.Eq(i => i.SchedulingFieldDetails.ActivityLogRange.DateFrom, activityLogRange.DateFrom) &
                 Builders<ActivityLog>.Filter.Eq(i => i.SchedulingFieldDetails.ActivityLogRange.DateTo, activityLogRange.DateTo);
 
