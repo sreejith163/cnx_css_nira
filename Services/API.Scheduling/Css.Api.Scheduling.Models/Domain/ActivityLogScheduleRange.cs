@@ -10,11 +10,6 @@ namespace Css.Api.Scheduling.Models.Domain
     public class ActivityLogScheduleRange
     {
         /// <summary>
-        /// Gets or sets the agent scheduling group identifier.
-        /// </summary>
-        public int AgentSchedulingGroupId { get; set; }
-
-        /// <summary>
         /// Gets or sets the date from.
         /// </summary>
         [BsonRepresentation(BsonType.String)]
