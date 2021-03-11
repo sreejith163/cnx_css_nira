@@ -1,44 +1,60 @@
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
+using System;
 
 namespace Css.Api.Auth
 {
-    /// <summary>
-    /// Program starts here
-    /// </summary>
     public class Program
     {
-        /// <summary>
-        /// Defines the entry point of the application.
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+                .MinimumLevel.Override("System", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                // uncomment to write to Azure diagnostics stream
+                //.WriteTo.File(
+                //    @"D:\home\LogFiles\Application\identityserver.txt",
+                //    fileSizeLimitBytes: 1_000_000,
+                //    rollOnFileSizeLimit: true,
+                //    shared: true,
+                //    flushToDiskInterval: TimeSpan.FromSeconds(1))
+                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Code)
+                .CreateLogger();
+
+            try
+            {
+                Log.Information("Starting host...");
+                CreateHostBuilder(args).Build().Run();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly.");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
-        /// <summary>
-        /// Creates the host builder.
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>()
-                    .ConfigureAppConfiguration((context, builder) =>
-                    {
-                        var env = context.HostingEnvironment;
-
-                        builder.AddJsonFile("appsettings.json",
-                                     optional: true, reloadOnChange: true)
-                               .AddJsonFile($"appsettings.{env.EnvironmentName}.json",
-                                     optional: true, reloadOnChange: true)
-                               .AddEnvironmentVariables();
-                    }).UseSerilog();
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }

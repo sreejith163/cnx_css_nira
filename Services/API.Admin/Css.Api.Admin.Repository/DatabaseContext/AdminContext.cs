@@ -175,13 +175,11 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.DataTypeMaxValue)
-                    .IsRequired()
                     .HasColumnName("data_type_max_value")
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.DataTypeMinValue)
-                    .IsRequired()
                     .HasColumnName("data_type_min_value")
                     .HasMaxLength(255)
                     .IsUnicode(false);

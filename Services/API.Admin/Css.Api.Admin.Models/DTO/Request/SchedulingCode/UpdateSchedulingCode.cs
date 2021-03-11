@@ -4,12 +4,6 @@ namespace Css.Api.Admin.Models.DTO.Request.SchedulingCode
 {
     public class UpdateSchedulingCode : SchedulingCodeAttributes
     {
-
-        /// <summary>
-        /// Gets or sets the ref Id.
-        /// </summary>
-        public int? RefId { get; set; }
-
         /// <summary>
         /// Gets or sets the modified by.
         /// </summary>

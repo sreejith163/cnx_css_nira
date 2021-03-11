@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
-namespace Css.Api.Auth.Controllers
+namespace Css.Api.Reporting.Controllers
 {
+    [Route("api/v1/[controller]")]
     [ApiController]
-    [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -16,14 +17,12 @@ namespace Css.Api.Auth.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController()
         {
-            _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet] 
+        [Authorize]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
@@ -35,5 +34,16 @@ namespace Css.Api.Auth.Controllers
             })
             .ToArray();
         }
+    }
+
+    public class WeatherForecast
+    {
+        public DateTime Date { get; set; }
+
+        public int TemperatureC { get; set; }
+
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+
+        public string Summary { get; set; }
     }
 }

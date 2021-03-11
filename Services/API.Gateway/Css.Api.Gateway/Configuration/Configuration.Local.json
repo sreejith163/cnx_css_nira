@@ -601,6 +601,18 @@
       "UpstreamPathTemplate": "/api/agentschedulemanagers/{employeeId}/copy",
       "UpstreamHttpMethod": [ "Put" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentSchedulemanagers/{skillGroupId}/scheduledopen",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.scheduling",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentSchedulemanagers/{skillGroupId}/scheduledopen",
+      "UpstreamHttpMethod": [ "get" ]
+    },
     //********* Forecast Screen Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/ForecastScreen",
@@ -628,7 +640,7 @@
       "UpstreamHttpMethod": [ "Post" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}",
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}/date/{date}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -636,8 +648,20 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}",
+      "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}/date/{date}",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/import",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "css.api.scheduling",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastScreen/import",
+      "UpstreamHttpMethod": [ "Put" ]
     },
     //********* Import Routes *********************
     {
