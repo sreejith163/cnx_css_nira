@@ -218,8 +218,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   editDateRange(el: AgentSchedulesResponse) {
     this.getModalPopup(DateRangePopUpComponent, 'sm');
-    this.modalRef.componentInstance.dateFrom = el.ranges[el.rangeIndex].dateFrom;
-    this.modalRef.componentInstance.dateTo = el.ranges[el.rangeIndex].dateTo;
+    this.modalRef.componentInstance.dateFrom = this.getFormattedDate(el.ranges[el.rangeIndex].dateFrom);
+    this.modalRef.componentInstance.dateTo = this.getFormattedDate(el.ranges[el.rangeIndex].dateTo);
     this.modalRef.componentInstance.agentScheduleId = el.id;
     this.modalRef.componentInstance.operation = ComponentOperation.Edit;
 
@@ -479,7 +479,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  save(gridChart: AgentScheduleGridResponse) {
+  save(gridChart: AgentSchedulesResponse) {
+    if (gridChart?.ranges[gridChart.rangeIndex]?.scheduleCharts?.filter(x => x.charts.length > 0).length === 0 &&
+      gridChart.rangeIndex > 0) {
+      gridChart.rangeIndex = gridChart.rangeIndex - 1;
+    }
     this.updateAgentScheduleChart(gridChart.id);
   }
 

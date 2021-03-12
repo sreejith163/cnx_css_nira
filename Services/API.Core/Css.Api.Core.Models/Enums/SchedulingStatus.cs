@@ -8,8 +8,8 @@
         Pending_Schedule = 1,
 
         /// <summary>
-        /// The released/
+        /// The released
         /// </summary>
-        Released = 2,
+        Released = 2
     }
 }

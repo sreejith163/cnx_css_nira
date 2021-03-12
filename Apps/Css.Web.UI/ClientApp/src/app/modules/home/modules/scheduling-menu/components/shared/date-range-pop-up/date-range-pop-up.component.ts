@@ -184,7 +184,7 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   private convertToNgbDate(date: Date) {
     if (date) {
       date = new Date(date);
-      const newDate: NgbDate = new NgbDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate() + 1);
+      const newDate: NgbDate = new NgbDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
       return newDate ?? undefined;
     }
   }
