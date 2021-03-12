@@ -23,9 +23,9 @@
         <li *permission="{rolesPermitted: [1,2,3]}" class="pull-right marign-l-auto margin-5">
           <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
             (click)="exportToExcel()">
-          <img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}"
+          <!-- <img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}"
            class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
-            (click)="openImportSchedule()">
+            (click)="openImportSchedule()"> -->
         </li>
       </ul>
     </div>
@@ -175,11 +175,11 @@
 <div class="row padding-10">
   <div class="col-md-12 padding-12 row">
     <div class="col-s-2 m-b-5">
-      <button class="btn btn-success" id="btn_copy_schedule"
+      <!-- <button class="btn btn-success" id="btn_copy_schedule"
       [disabled]="!agentSchedulingGroupId" (click)="openCopySchedule(selectedRow)">
         <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
       </button>
-    </div>
+    </div> -->
     <div class="col-md-2 m-b-3">
       <button class="btn btn-primary btn-activity" id="btn_activity_logs" *ngIf="canShowActivityLog()"
       [disabled]="!agentSchedulingGroupId" (click)="openActivityLogs(selectedRow)">
