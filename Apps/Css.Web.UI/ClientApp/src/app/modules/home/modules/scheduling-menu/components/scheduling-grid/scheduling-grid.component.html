@@ -126,10 +126,10 @@
                         <a class="custom-dropdown dropdown-item cursor-pointer" (click)="onDateRangeChange(i, el)">
                           <ng-container [ngSwitch]="range.status">
                             <ng-container *ngSwitchCase="1">
-                              <span class="badge badge-pill badge-success">Released</span>
+                              <span class="badge badge-pill badge-warning">Pending</span>
                             </ng-container>
                             <ng-container *ngSwitchCase="2">
-                              <span class="badge badge-pill badge-warning">Pending</span>
+                              <span class="badge badge-pill badge-success">Released</span>
                             </ng-container>
                           </ng-container>
                           <span class="padding-left-15">
