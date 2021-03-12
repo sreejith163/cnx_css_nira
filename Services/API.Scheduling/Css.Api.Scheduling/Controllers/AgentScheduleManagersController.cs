@@ -45,6 +45,33 @@ namespace Css.Api.Scheduling.Controllers
             return StatusCode((int)result.Code, result.Value);
         }
 
+        /// <summary>Gets the agent my schedule.</summary>
+        /// <param name="agentEmployeeId">The agent employee identifier.</param>
+        /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        [HttpGet("{agentEmployeeId}/myschedule")]
+        public async Task<IActionResult> GetAgentMySchedule(int agentEmployeeId, [FromQuery] MyScheduleQueryParameter myScheduleQueryParameter)
+        {
+            var result = await _agentScheduleManagerService.GetAgentMySchedule(new EmployeeIdDetails { Id = agentEmployeeId }, myScheduleQueryParameter);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+
+        /// <summary>
+        /// Gets the scheduled open
+        /// </summary>
+        /// <param name="skillGroupId">The agent schedule identifier.</param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        [HttpGet("{skillGroupId}/scheduledopen")]
+        public async Task<IActionResult> GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date)
+        {
+            var result = await _agentScheduleManagerService.GetAgentScheduledOpen(skillGroupId, date);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
         /// <summary>
         /// Updates the agent schedule manger chart.
         /// </summary>
@@ -67,35 +94,6 @@ namespace Css.Api.Scheduling.Controllers
         public async Task<IActionResult> CopyAgentScheduleManagerChart(int employeeId, [FromBody] CopyAgentScheduleManager agentScheduleDetails)
         {
             var result = await _agentScheduleManagerService.CopyAgentScheduleManagerChart(new EmployeeIdDetails { Id = employeeId }, agentScheduleDetails);
-            return StatusCode((int)result.Code, result.Value);
-        }
-
-        /// <summary>Gets the agent my schedule.</summary>
-        /// <param name="agentEmployeeId">The agent employee identifier.</param>
-        /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        [HttpGet("{agentEmployeeId}/myschedule")]
-        public async Task<IActionResult> GetAgentMySchedule(int agentEmployeeId, [FromQuery] MyScheduleQueryParameter myScheduleQueryParameter)
-        {
-            var result = await _agentScheduleManagerService.GetAgentMySchedule(new EmployeeIdDetails { Id = agentEmployeeId }, myScheduleQueryParameter);
-            return StatusCode((int)result.Code, result.Value);
-        }
-
-
-        /// <summary>
-        /// Gets the scheduled open
-        /// </summary>
-        /// <param name="skillGroupId">The agent schedule identifier.</param>
-        /// <param name="date"></param>
-        /// <returns></returns>
-
-
-        [HttpGet("{skillGroupId}/scheduledopen")]
-        public async Task<IActionResult> GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date)
-        {
-            var result = await _agentScheduleManagerService.GetAgentScheduledOpen(skillGroupId, date);
             return StatusCode((int)result.Code, result.Value);
         }
     }
