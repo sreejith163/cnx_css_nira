@@ -481,8 +481,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   save(gridChart: AgentSchedulesResponse) {
     if (gridChart?.ranges[gridChart.rangeIndex]?.scheduleCharts?.filter(x => x.charts.length > 0).length === 0 &&
-     gridChart.rangeIndex > 0) {
-     gridChart.rangeIndex = gridChart.rangeIndex - 1;
+      gridChart.rangeIndex > 0) {
+      gridChart.rangeIndex = gridChart.rangeIndex - 1;
     }
     this.updateAgentScheduleChart(gridChart.id);
   }
