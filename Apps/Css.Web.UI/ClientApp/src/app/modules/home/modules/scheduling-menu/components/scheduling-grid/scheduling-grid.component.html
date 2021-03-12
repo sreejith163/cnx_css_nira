@@ -152,7 +152,7 @@
                   </div>
                 </td>
                 <td>
-                  <select class="form-control" (change)="setSchedulingStatus($event.target.value, el)"
+                  <select class="form-control" (change)="setSchedulingStatus($event, el)"
                     [disabled]="hasStatusDisabled(el)">
                     <option *ngIf="!el?.ranges[getRangeIndex(el)]?.status">{{ 'Please select a status' | translate }}
                     </option>

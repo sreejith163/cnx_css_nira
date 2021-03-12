@@ -448,7 +448,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  setSchedulingStatus(status: string, el: AgentSchedulesResponse) {
+  setSchedulingStatus(event: any, el: AgentSchedulesResponse) {
     this.getModalPopup(ConfirmationPopUpComponent, 'sm');
     this.modalRef.componentInstance.deleteRecordIndex = el.id;
     this.modalRef.componentInstance.headingMessage = 'Are you sure ?';
@@ -456,10 +456,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.modalRef.componentInstance.confirmSchedulingStatus = true;
     this.modalRef.result.then((result) => {
       if (result && result === el.id) {
-        el.ranges[el?.rangeIndex].status = +status;
+        el.ranges[el?.rangeIndex].status = +event.target.value;
         this.updateAgentSchedule(el);
       } else {
-        
+        event.target.selectedIndex = 0;
       }
     });
   }
