@@ -156,7 +156,7 @@
                     [disabled]="hasStatusDisabled(el)">
                     <option *ngIf="!el?.ranges[getRangeIndex(el)]?.status">{{ 'Please select a status' | translate }}
                     </option>
-                    <option [value]="status" [selected]="el?.ranges[getRangeIndex(el)]?.status === +status"
+                    <option [value]="status" [selected]="getSchedulingStatus(el, status) === +status"
                       *ngFor="let status of schedulingStatus">
                       {{ scheduleStatus[status] }}
                     </option>
