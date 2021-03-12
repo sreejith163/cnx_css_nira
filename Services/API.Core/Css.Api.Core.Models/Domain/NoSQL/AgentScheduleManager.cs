@@ -21,13 +21,13 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the date.
         /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.Document, Kind = DateTimeKind.Utc)]
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
         public DateTime Date { get; set; }
 
         /// <summary>
         /// Gets or sets the charts.
         /// </summary>
-        public List<AgentScheduleManagerChart> Charts { get; set; }
+        public List<ScheduleChart> Charts { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
@@ -56,7 +56,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// </summary>
         public AgentScheduleManager()
         {
-            Charts = new List<AgentScheduleManagerChart>();
+            Charts = new List<ScheduleChart>();
         }
     }
 }
