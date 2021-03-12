@@ -465,7 +465,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   getSchedulingStatus(el: AgentSchedulesResponse, status: SchedulingStatus) {
-    console.log('s', status);
     return +el?.ranges[el?.rangeIndex]?.status;
   }
 
