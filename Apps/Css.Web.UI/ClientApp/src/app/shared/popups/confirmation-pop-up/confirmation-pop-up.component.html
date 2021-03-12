@@ -18,7 +18,7 @@
                 <div class="col-md-12">    
                     <p class="confirm-button center">    
                         <a class="mr-2">    
-                            <button class="btn btn-primary" (click)="confirmDelete()">{{ 'Yes, delete it!' | translate }}</button>    
+                            <button class="btn btn-primary" (click)="confirmDelete()">{{ confirmSchedulingStatus ? statusLabel : deleteLabel | translate }}</button>    
                         </a>  
                         <a class="mr-2">    
                             <button class="btn btn-danger" (click)="activeModal.close('Close click')">{{'Cancel' | translate}}</button>    

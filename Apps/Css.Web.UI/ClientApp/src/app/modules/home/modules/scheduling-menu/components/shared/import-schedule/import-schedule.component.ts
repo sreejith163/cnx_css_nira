@@ -210,10 +210,10 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           }
         }
         this.jsonData.map(x => {
-          //x.StartDate = x?.Startdate.trim();
-          //x.EndDate = x?.EndDate.trim();
-          x.StartDate = x?.StartDate.slice(0, 4) +"/"+ x?.StartDate.slice(4, 6) +"/"+ x?.StartDate.slice(6, 8);
-          x.EndDate = x?.EndDate.slice(0, 4) +"/"+ x?.EndDate.slice(4, 6) +"/"+ x?.EndDate.slice(6, 8);
+          // x.StartDate = x?.Startdate.trim();
+          // x.EndDate = x?.EndDate.trim();
+          x.StartDate = x?.StartDate.slice(0, 4) + '/' + x?.StartDate.slice(4, 6) + '/' + x?.StartDate.slice(6, 8);
+          x.EndDate = x?.EndDate.slice(0, 4) + '/' + x?.EndDate.slice(4, 6) + '/' + x?.EndDate.slice(6, 8);
           x.StartTime = x?.StartTime.trim().toLowerCase();
           x.EndTime = x?.EndTime.trim().toLowerCase();
           x.ActivityCode = x?.ActivityCode.trim().toLowerCase();
@@ -455,7 +455,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     for (const employee of schedules) {
       const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);
       const importData = new ImportScheduleData();
-      const chartArray = new Array<ScheduleChart>();
       const scheduleRangeList = new Array<ScheduleDateRangeBase>();
       importData.employeeId = employee.employeeId;
 
@@ -476,6 +475,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       }
 
       scheduleRangeList.forEach(ele => {
+        const chartArray = new Array<ScheduleChart>();
         const arrayItem = new ImportAgentScheduleRanges();
         arrayItem.dateTo = ele.dateTo;
         arrayItem.dateFrom = ele.dateFrom;

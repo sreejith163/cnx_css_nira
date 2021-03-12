@@ -448,9 +448,25 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  setSchedulingStatus(status: string, el: AgentSchedulesResponse) {
-    el.ranges[el?.rangeIndex].status = Number(status);
-    this.updateAgentSchedule(el);
+  setSchedulingStatus(event: any, el: AgentSchedulesResponse) {
+    this.getModalPopup(ConfirmationPopUpComponent, 'sm');
+    this.modalRef.componentInstance.deleteRecordIndex = el.id;
+    this.modalRef.componentInstance.headingMessage = 'Are you sure ?';
+    this.modalRef.componentInstance.contentMessage = 'You can no longer revert the action to Pending status';
+    this.modalRef.componentInstance.confirmSchedulingStatus = true;
+    this.modalRef.result.then((result) => {
+      if (result && result === el.id) {
+        el.ranges[el?.rangeIndex].status = +event.target.value;
+        this.updateAgentSchedule(el);
+      } else {
+        event.target.selectedIndex = 0;
+      }
+    });
+  }
+
+  getSchedulingStatus(el: AgentSchedulesResponse, status: SchedulingStatus) {
+    console.log('s', status);
+    return +el?.ranges[el?.rangeIndex]?.status;
   }
 
   sort(columnName: string, sortBy: string) {
