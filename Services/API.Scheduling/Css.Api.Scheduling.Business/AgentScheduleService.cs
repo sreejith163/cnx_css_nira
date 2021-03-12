@@ -349,9 +349,11 @@ namespace Css.Api.Scheduling.Business
                             range.DateFrom = new DateTime(range.DateFrom.Year, range.DateFrom.Month, range.DateFrom.Day, 0, 0, 0);
                             range.DateTo = new DateTime(range.DateTo.Year, range.DateTo.Month, range.DateTo.Day, 0, 0, 0);
 
-                            var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => x.Status == SchedulingStatus.Released &&
-                                                                                           ((range.DateFrom < x.DateTo && range.DateTo > x.DateFrom) ||
-                                                                                           (range.DateFrom == x.DateFrom && range.DateTo == x.DateTo)));
+                            var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => x.Status != SchedulingStatus.Rejected &&
+                                                                                           ((range.DateFrom < x.DateTo &&
+                                                                                            range.DateTo > x.DateFrom) ||
+                                                                                           (range.DateFrom == x.DateFrom &&
+                                                                                            range.DateTo == x.DateTo)));
 
                             if (!hasConflictingSchedules)
                             {
@@ -419,9 +421,11 @@ namespace Css.Api.Scheduling.Business
                 var employeeSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
                 if (employeeSchedule != null)
                 {
-                    var hasConflictingSchedules = employeeSchedule.Ranges.Exists(x => x.Status == SchedulingStatus.Released &&
-                                                                  ((agentScheduleDetails.DateFrom < x.DateTo && agentScheduleDetails.DateTo > x.DateFrom) ||
-                                                                  (agentScheduleDetails.DateFrom == x.DateFrom && agentScheduleDetails.DateTo == x.DateTo)));
+                    var hasConflictingSchedules = employeeSchedule.Ranges.Exists(x => x.Status != SchedulingStatus.Rejected &&
+                                                                                      ((agentScheduleDetails.DateFrom < x.DateTo &&
+                                                                                       agentScheduleDetails.DateTo > x.DateFrom) ||
+                                                                                      (agentScheduleDetails.DateFrom == x.DateFrom &&
+                                                                                       agentScheduleDetails.DateTo == x.DateTo)));
 
                     if (!hasConflictingSchedules)
                     {
@@ -513,7 +517,7 @@ namespace Css.Api.Scheduling.Business
         public async Task<CSSResponse> DeleteAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange)
         {
             var agentScheduleRange = await _agentScheduleRepository.GetAgentScheduleRange(agentScheduleIdDetails, dateRange);
-            if (agentScheduleRange == null || agentScheduleRange.Status == SchedulingStatus.Released)
+            if (agentScheduleRange == null || agentScheduleRange.Status != SchedulingStatus.Pending_Schedule)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
