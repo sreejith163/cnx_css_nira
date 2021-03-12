@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { NgbActiveModal, NgbCalendar, NgbDate, NgbDateParserFormatter, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepickerConfig, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { ComponentOperation } from '../../../../../../../shared/enums/component-operation.enum';
 import { AgentSchedulesService } from '../../../services/agent-schedules.service';
@@ -184,7 +184,8 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   private convertToNgbDate(date: Date) {
     if (date) {
       date = new Date(date);
-      const newDate: NgbDate = new NgbDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
+      const newDate: NgbDate = new NgbDate(date.getUTCFullYear(),
+       date.getUTCMonth() + 1, this.operation === ComponentOperation.Add ? date.getUTCDate() + 1 : date.getUTCDate());
       return newDate ?? undefined;
     }
   }
