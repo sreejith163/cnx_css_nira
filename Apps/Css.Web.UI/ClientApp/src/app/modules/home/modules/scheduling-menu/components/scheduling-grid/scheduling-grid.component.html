@@ -126,13 +126,10 @@
                         <a class="custom-dropdown dropdown-item cursor-pointer" (click)="onDateRangeChange(i, el)">
                           <ng-container [ngSwitch]="range.status">
                             <ng-container *ngSwitchCase="1">
-                              <span class="badge badge-pill badge-success">Approved</span>
+                              <span class="badge badge-pill badge-success">Released</span>
                             </ng-container>
                             <ng-container *ngSwitchCase="2">
                               <span class="badge badge-pill badge-warning">Pending</span>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="status.Rejected">
-                              <span class="badge badge-pill badge-danger">Rejected</span>
                             </ng-container>
                           </ng-container>
                           <span class="padding-left-15">
@@ -144,10 +141,10 @@
                       </li>
                     </ul>
                     <span>
-                      <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2"
+                      <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1"
                         (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
                       <i class="fa fa-trash padding-5 pointer m-t-5"
-                        *ngIf="el?.ranges[getRangeIndex(el)]?.status === 2 && el?.ranges[getRangeIndex(el)]?.scheduleCharts?.length > 0"
+                        *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1 && el?.ranges[getRangeIndex(el)]?.scheduleCharts?.length > 0"
                         (click)="deleteDateRange(el)" [ngbTooltip]="'Delete'"></i>
                       <i class="fa fa-calendar-plus-o float-right padding-5 m-t-5" aria-hidden="true"
                         (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
@@ -292,13 +289,13 @@
                         </div>
                         <div class="col-md-6 m-b-5"></div>
                         <div class="col-md-1  m-b-5">
-                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 1 || selectedGrid?.status == 3"
+                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 2"
                             class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)" id="btn_save">
                             <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
                           </button>
                         </div>
                         <div class="col-s-1  m-b-5">
-                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 1 || selectedGrid?.status == 3"
+                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 2"
                             class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
                             id="btn_cancel">
                             <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
