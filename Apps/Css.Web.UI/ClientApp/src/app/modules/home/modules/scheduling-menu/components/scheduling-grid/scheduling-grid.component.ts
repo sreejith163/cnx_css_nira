@@ -177,7 +177,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       } else if (el.ranges[el.rangeIndex].status === SchedulingStatus['Pending Schedule'] &&
         el?.ranges[el?.rangeIndex].scheduleCharts.length > 0) {
         return false;
-      } else if (el.ranges[el.rangeIndex].status === SchedulingStatus.Approved) {
+      } else if (el.ranges[el.rangeIndex].status === SchedulingStatus.Released) {
         return true;
       }
     }

@@ -116,32 +116,15 @@ namespace Css.Api.Scheduling.Business
 
             var mappedAgentScheduleManagers = JsonConvert.DeserializeObject<List<AgentScheduleManagerChartDetailsDTO>>(JsonConvert.SerializeObject(agentScheduleManagers));
 
-            foreach (var agent in mappedAgents)
+            foreach (var mappedAgentScheduleManager in mappedAgentScheduleManagers)
             {
-                var mappedAgentScheduleManager = mappedAgentScheduleManagers.FirstOrDefault(x => x.EmployeeId == agent.EmployeeId);
-                if (mappedAgentScheduleManager == null)
-                {
-                    var scheduleManagerExists = await _agentScheduleManagerRepository.HasAgentScheduleManagerChartByEmployeeId(new EmployeeIdDetails { Id = agent.EmployeeId });
-                    if (!scheduleManagerExists || !agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
-                    {
-                        var agentScheduleManager = new AgentScheduleManagerChartDetailsDTO
-                        {
-                            EmployeeId = agent.EmployeeId,
-                            FirstName = agent.FirstName,
-                            LastName = agent.LastName,
-                            AgentSchedulingGroupId = agent.AgentSchedulingGroupId,
-                        };
-                        mappedAgentScheduleManagers.Add(agentScheduleManager);
-                    }
-                }
-                else
+                var agent = mappedAgents.FirstOrDefault(x => x.EmployeeId == mappedAgentScheduleManager.EmployeeId);
+                if (agent != null)
                 {
                     mappedAgentScheduleManager.FirstName = agent?.FirstName;
                     mappedAgentScheduleManager.LastName = agent?.LastName;
                 }
             }
-
-            mappedAgentScheduleManagers = mappedAgentScheduleManagers.Where(x => x.FirstName != null && x.LastName != null).ToList();
 
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agents));
 
