@@ -16,14 +16,14 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager
         /// Gets or sets the charts.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<AgentScheduleManagerChart> Charts { get; set; }
+        public List<ScheduleChart> Charts { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Core.Models.Domain.NoSQL.AgentScheduleManager"/> class.
         /// </summary>
         public AgentScheduleManagerChartDTO()
         {
-            Charts = new List<AgentScheduleManagerChart>();
+            Charts = new List<ScheduleChart>();
         }
     }
 }

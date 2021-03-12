@@ -17,6 +17,21 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <returns></returns>
         Task<CSSResponse> GetAgentScheduleManagerCharts(AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter);
 
+        /// <summary>
+        /// Updates the agent schedule manger chart.
+        /// </summary>
+        /// <param name="agentScheduleDetails">The agent schedule manager details.</param>
+        /// <returns></returns>
+        Task<CSSResponse> UpdateAgentScheduleMangerChart(UpdateAgentScheduleManager agentScheduleDetails);
+
+        /// <summary>
+        /// Copies the agent schedule manager chart.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        Task<CSSResponse> CopyAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, CopyAgentScheduleManager agentScheduleDetails);
+
         /// <summary>Gets the agent my schedule.</summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
@@ -33,19 +48,6 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// </returns>
         Task<CSSResponse> GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date);
 
-        /// <summary>
-        /// Updates the agent schedule manger chart.
-        /// </summary>
-        /// <param name="agentScheduleDetails">The agent schedule manager details.</param>
-        /// <returns></returns>
-        Task<CSSResponse> UpdateAgentScheduleMangerChart(UpdateAgentScheduleManager agentScheduleDetails);
 
-        /// <summary>
-        /// Copies the agent schedule manager chart.
-        /// </summary>
-        /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        /// <returns></returns>
-        Task<CSSResponse> CopyAgentScheduleManagerChart(EmployeeIdDetails employeeIdDetails, CopyAgentScheduleManager agentScheduleDetails);
     }
 }

@@ -10,13 +10,13 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
     {
         /// Gets or sets the date from.
         /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.Document, Kind = DateTimeKind.Utc)]
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
         public DateTime DateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the date to.
         /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.Document, Kind = DateTimeKind.Utc)]
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
         public DateTime DateTo { get; set; }
 
         /// <summary>

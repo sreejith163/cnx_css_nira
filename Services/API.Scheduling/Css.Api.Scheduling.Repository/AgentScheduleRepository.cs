@@ -90,8 +90,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange, SchedulingStatus status)
         {
-            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
-            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0);
+            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0);
 
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
@@ -110,8 +110,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<AgentSchedule> GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange)
         {
-            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
-            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0);
+            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0);
 
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
@@ -130,8 +130,8 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<AgentScheduleRange> GetAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange)
         {
-            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
-            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0);
+            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0);
 
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
@@ -151,13 +151,14 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<bool> IsAgentScheduleRangeExist(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange)
         {
-            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
-            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0);
+            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0);
 
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.ElemMatch(
-                    i => i.Ranges, range => ((dateRange.DateFrom < range.DateTo && dateRange.DateTo > range.DateFrom) ||
+                    i => i.Ranges, range => range.Status != SchedulingStatus.Rejected &&
+                                            ((dateRange.DateFrom < range.DateTo && dateRange.DateTo > range.DateFrom) ||
                                             (dateRange.DateFrom == range.DateFrom && dateRange.DateTo == range.DateTo))) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
@@ -254,10 +255,8 @@ namespace Css.Api.Scheduling.Repository
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         public void UpdateAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule agentScheduleDetails)
         {
-            agentScheduleDetails.DateFrom = new DateTime(agentScheduleDetails.DateFrom.Year, agentScheduleDetails.DateFrom.Month, 
-                                                         agentScheduleDetails.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
-            agentScheduleDetails.DateTo = new DateTime(agentScheduleDetails.DateTo.Year, agentScheduleDetails.DateTo.Month, 
-                                                       agentScheduleDetails.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+            agentScheduleDetails.DateFrom = new DateTime(agentScheduleDetails.DateFrom.Year, agentScheduleDetails.DateFrom.Month, agentScheduleDetails.DateFrom.Day, 0, 0, 0);
+            agentScheduleDetails.DateTo = new DateTime(agentScheduleDetails.DateTo.Year, agentScheduleDetails.DateTo.Month, agentScheduleDetails.DateTo.Day, 0, 0, 0);
 
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
@@ -309,10 +308,8 @@ namespace Css.Api.Scheduling.Repository
         /// <param name="modifiedUserDetails">The modified user details.</param>
         public void UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleRange agentScheduleRange, ModifiedUserDetails modifiedUserDetails)
         {
-            agentScheduleRange.DateFrom = new DateTime(agentScheduleRange.DateFrom.Year, agentScheduleRange.DateFrom.Month, 
-                                                       agentScheduleRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
-            agentScheduleRange.DateTo = new DateTime(agentScheduleRange.DateTo.Year, agentScheduleRange.DateTo.Month, 
-                                                     agentScheduleRange.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+            agentScheduleRange.DateFrom = new DateTime(agentScheduleRange.DateFrom.Year, agentScheduleRange.DateFrom.Month, agentScheduleRange.DateFrom.Day, 0, 0, 0);
+            agentScheduleRange.DateTo = new DateTime(agentScheduleRange.DateTo.Year, agentScheduleRange.DateTo.Month, agentScheduleRange.DateTo.Day, 0, 0, 0);
 
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
@@ -380,10 +377,10 @@ namespace Css.Api.Scheduling.Repository
         /// <param name="dateRange">The date range.</param>
         public void UpdateAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleDateRange dateRange)
         {
-            var newDateFrom = new DateTime(dateRange.NewDateFrom.Year, dateRange.NewDateFrom.Month, dateRange.NewDateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
-            var newDateTo = new DateTime(dateRange.NewDateTo.Year, dateRange.NewDateTo.Month, dateRange.NewDateTo.Day, 0, 0, 0, DateTimeKind.Utc);
-            var oldDateFrom = new DateTime(dateRange.OldDateFrom.Year, dateRange.OldDateFrom.Month, dateRange.OldDateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
-            var oldDateTo = new DateTime(dateRange.OldDateTo.Year, dateRange.OldDateTo.Month, dateRange.OldDateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+            var newDateFrom = new DateTime(dateRange.NewDateFrom.Year, dateRange.NewDateFrom.Month, dateRange.NewDateFrom.Day, 0, 0, 0);
+            var newDateTo = new DateTime(dateRange.NewDateTo.Year, dateRange.NewDateTo.Month, dateRange.NewDateTo.Day, 0, 0, 0);
+            var oldDateFrom = new DateTime(dateRange.OldDateFrom.Year, dateRange.OldDateFrom.Month, dateRange.OldDateFrom.Day, 0, 0, 0);
+            var oldDateTo = new DateTime(dateRange.OldDateTo.Year, dateRange.OldDateTo.Month, dateRange.OldDateTo.Day, 0, 0, 0);
 
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
@@ -413,8 +410,8 @@ namespace Css.Api.Scheduling.Repository
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
-            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
-            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0);
+            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0);
 
             var update = Builders<AgentSchedule>.Update
                 .PullFilter(x => x.Ranges, builder => builder.Status == SchedulingStatus.Pending_Schedule &&
@@ -456,7 +453,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(agentScheduleQueryparameter.SearchKeyword))
             {
-                SchedulingStatus scheduleStatus = SchedulingStatus.Released;
+                SchedulingStatus scheduleStatus = SchedulingStatus.Approved;
                 int.TryParse(agentScheduleQueryparameter.SearchKeyword.Trim(), out int employeeId);
                 var status = Enum.GetNames(typeof(SchedulingStatus)).FirstOrDefault(e => e.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.ToLower()));
 
@@ -493,9 +490,9 @@ namespace Css.Api.Scheduling.Repository
                 !agentScheduleQueryparameter.ExcludeConflictSchedule)
             {
                 agentScheduleQueryparameter.DateFrom = new DateTime(agentScheduleQueryparameter.DateFrom.Value.Year, agentScheduleQueryparameter.DateFrom.Value.Month,
-                                                                    agentScheduleQueryparameter.DateFrom.Value.Day, 0, 0, 0, DateTimeKind.Utc);
+                                                                    agentScheduleQueryparameter.DateFrom.Value.Day, 0, 0, 0);
                 agentScheduleQueryparameter.DateTo = new DateTime(agentScheduleQueryparameter.DateTo.Value.Year, agentScheduleQueryparameter.DateTo.Value.Month,
-                                                                    agentScheduleQueryparameter.DateTo.Value.Day, 0, 0, 0, DateTimeKind.Utc);
+                                                                    agentScheduleQueryparameter.DateTo.Value.Day, 0, 0, 0);
 
                 agentSchedules = agentSchedules.Where(x => x.Ranges.Any(y => agentScheduleQueryparameter.DateFrom == y.DateFrom &&
                                                                              agentScheduleQueryparameter.DateTo == y.DateTo));
@@ -506,9 +503,9 @@ namespace Css.Api.Scheduling.Repository
                 agentScheduleQueryparameter.ExcludeConflictSchedule)
             {
                 agentScheduleQueryparameter.DateFrom = new DateTime(agentScheduleQueryparameter.DateFrom.Value.Year, agentScheduleQueryparameter.DateFrom.Value.Month,
-                                                                    agentScheduleQueryparameter.DateFrom.Value.Day, 0, 0, 0, DateTimeKind.Utc);
+                                                                    agentScheduleQueryparameter.DateFrom.Value.Day, 0, 0, 0);
                 agentScheduleQueryparameter.DateTo = new DateTime(agentScheduleQueryparameter.DateTo.Value.Year, agentScheduleQueryparameter.DateTo.Value.Month,
-                                                                    agentScheduleQueryparameter.DateTo.Value.Day, 0, 0, 0, DateTimeKind.Utc);
+                                                                    agentScheduleQueryparameter.DateTo.Value.Day, 0, 0, 0);
 
                 agentSchedules = agentSchedules.Where(x => !x.Ranges.Any(y => ((agentScheduleQueryparameter.DateFrom < y.DateTo &&
                                                                                agentScheduleQueryparameter.DateTo > y.DateFrom) ||

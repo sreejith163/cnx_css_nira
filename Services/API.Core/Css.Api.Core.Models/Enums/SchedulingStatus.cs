@@ -3,13 +3,18 @@
     public enum SchedulingStatus
     {
         /// <summary>
-        /// The pending schedule
+        /// The approved/
         /// </summary>
-        Pending_Schedule = 1,
+        Approved = 1,
 
         /// <summary>
-        /// The released/
+        /// The pending schedule
         /// </summary>
-        Released = 2,
+        Pending_Schedule = 2,
+
+        /// <summary>
+        /// The rejected
+        /// </summary>
+        Rejected = 3
     }
 }

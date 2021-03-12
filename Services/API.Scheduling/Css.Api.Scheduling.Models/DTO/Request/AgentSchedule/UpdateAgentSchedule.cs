@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.Enums;
+using Css.Api.Scheduling.Models.Enums;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -15,13 +16,13 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the date from.
         /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.Document, Kind = DateTimeKind.Utc)]
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
         public DateTime DateFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the date to.
         /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.Document, Kind = DateTimeKind.Utc)]
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
         public DateTime DateTo { get; set; }
 
         /// <summary>
