@@ -66,7 +66,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
   ) { }
   public onChangeProvision(event){
     this.estartProvisions = event.checked;
-    console.log(event);
+  
     
 }
   ngOnInit(): void {

@@ -13,7 +13,7 @@ import { SkillGroupService } from 'src/app/modules/home/modules/setup-menu/servi
 export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChanges {
 
   pageNumber = 1;
-  skillGroupItemsBufferSize = 10;
+  skillGroupItemsBufferSize = 100;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;

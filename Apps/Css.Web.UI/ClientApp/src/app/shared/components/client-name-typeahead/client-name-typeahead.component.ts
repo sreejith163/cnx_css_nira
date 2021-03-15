@@ -14,7 +14,7 @@ import { ClientService } from 'src/app/modules/home/modules/setup-menu/services/
 export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
 
   pageNumber = 1;
-  clientItemsBufferSize = 10;
+  clientItemsBufferSize = 100;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;
