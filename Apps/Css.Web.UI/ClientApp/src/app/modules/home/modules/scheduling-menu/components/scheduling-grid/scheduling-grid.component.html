@@ -283,7 +283,7 @@
                         </div>
                         <div class="col-md-2 m-b-3">
                           <button [disabled]="!selectedGrid?.dateFrom" class="btn btn-primary btn-activity"
-                            id="btn_activity_logs" *ngIf="canShowActivityLog()" (click)="openActivityLogs(i)">
+                            id="btn_activity_logs" *ngIf="canShowActivityLog()" (click)="openActivityLogs(el)">
                             {{ 'Activity Logs' | translate }}
                           </button>
                         </div>

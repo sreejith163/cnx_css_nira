@@ -64,7 +64,9 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
   @Input() activityType: ActivityType;
   @Input() employeeId: number;
   @Input() employeeName: string;
-  @Input() startDate: Date;
+  @Input() startDate: string;
+  @Input() dateFrom: Date;
+  @Input() dateTo: Date;
 
   constructor(
     public translate: TranslateService,
@@ -259,6 +261,9 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
     queryParams.fields = undefined;
     queryParams.employeeId = this.employeeId;
     queryParams.skipPageSize = true;
+    queryParams.dateFrom = this.activityType === ActivityType.SchedulingGrid ? this.getDateInStringFormat(this.dateFrom) : undefined;
+    queryParams.dateto = this.activityType === ActivityType.SchedulingGrid ? this.getDateInStringFormat(this.dateTo) : undefined;
+    queryParams.date = this.activityType === ActivityType.SchedulingManagerGrid ? this.startDate : undefined;
 
     return queryParams;
   }
@@ -321,16 +326,16 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
   private setScheduleChart() {
     let id = 0;
     for (const item of this.activityLogsData) {
-      id = id + 1;
-      const chart = new ActivityLogsChart();
-      chart.id = id;
-      chart.employeeId = item?.employeeId;
-      chart.executedUser = item?.executedUser;
-      chart.executedBy = item?.executedBy;
-      chart.activityStatus = item?.activityStatus;
-      chart.activityOrigin = item?.activityOrigin;
-      chart.timeStamp = item?.timeStamp;
       item?.schedulingFieldDetails?.activityLogRange?.scheduleCharts?.forEach((icon) => {
+        id = id + 1;
+        const chart = new ActivityLogsChart();
+        chart.id = id;
+        chart.employeeId = item?.employeeId;
+        chart.executedUser = item?.executedUser;
+        chart.executedBy = item?.executedBy;
+        chart.activityStatus = item?.activityStatus;
+        chart.activityOrigin = item?.activityOrigin;
+        chart.timeStamp = item?.timeStamp;
         icon?.charts?.map(x => {
           x.endTime = x?.endTime?.trim().toLowerCase();
           x.startTime = x?.startTime?.trim().toLowerCase();
@@ -348,10 +353,10 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
         chart.agentScheduleChart = new AgentScheduleChart();
         chart.day = icon?.day;
         chart.agentScheduleChart.charts = icon?.charts;
+        this.activityLogsChart.push(chart);
       });
-      this.activityLogsChart.push(chart);
-
     }
+
     this.setAgentFilters();
   }
 
