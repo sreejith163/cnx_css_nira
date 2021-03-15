@@ -166,6 +166,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
 
+  hasSchedulingIconsDisabled(el: AgentSchedulesResponse) {
+    if (el?.ranges[el?.rangeIndex]?.status === SchedulingStatus.Released) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   hasStatusDisabled(el: AgentSchedulesResponse) {
     if (el?.ranges.length === 0) {
       return true;
