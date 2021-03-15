@@ -20,7 +20,7 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the time stamp.
         /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.Document, Kind = DateTimeKind.Utc)]
+        [BsonRepresentation(BsonType.String)]
         public DateTimeOffset TimeStamp { get; set; }
 
         /// <summary>
