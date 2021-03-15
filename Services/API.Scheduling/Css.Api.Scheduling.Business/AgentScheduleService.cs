@@ -272,7 +272,17 @@ namespace Css.Api.Scheduling.Business
 
                 _agentScheduleRepository.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleRange, modifiedUserDetails);
 
-                var activityLog = GetActivityLogForSchedulingChart(agentScheduleRange, agentSchedule.EmployeeId, agentScheduleDetails.ModifiedBy,
+                var scheduleRange = new AgentScheduleRange {
+                    AgentSchedulingGroupId = agentScheduleRange.AgentSchedulingGroupId,
+                    DateFrom = agentScheduleRange.DateFrom,
+                    DateTo = agentScheduleRange.DateTo,
+                    Status = SchedulingStatus.Pending_Schedule,
+                    ScheduleCharts = agentScheduleDetails.AgentScheduleCharts,
+                    CreatedBy = agentScheduleDetails.ModifiedBy,
+                    CreatedDate = DateTimeOffset.UtcNow
+                };
+
+                var activityLog = GetActivityLogForSchedulingChart(scheduleRange, agentSchedule.EmployeeId, agentScheduleDetails.ModifiedBy,
                                                                    agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
                 _activityLogRepository.CreateActivityLog(activityLog);
             }
