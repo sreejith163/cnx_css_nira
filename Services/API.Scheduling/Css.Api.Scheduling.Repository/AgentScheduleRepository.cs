@@ -157,8 +157,7 @@ namespace Css.Api.Scheduling.Repository
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.ElemMatch(
-                    i => i.Ranges, range => range.Status != SchedulingStatus.Rejected &&
-                                            ((dateRange.DateFrom < range.DateTo && dateRange.DateTo > range.DateFrom) ||
+                    i => i.Ranges, range => ((dateRange.DateFrom < range.DateTo && dateRange.DateTo > range.DateFrom) ||
                                             (dateRange.DateFrom == range.DateFrom && dateRange.DateTo == range.DateTo))) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
@@ -457,7 +456,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(agentScheduleQueryparameter.SearchKeyword))
             {
-                SchedulingStatus scheduleStatus = SchedulingStatus.Approved;
+                SchedulingStatus scheduleStatus = SchedulingStatus.Released;
                 int.TryParse(agentScheduleQueryparameter.SearchKeyword.Trim(), out int employeeId);
                 var status = Enum.GetNames(typeof(SchedulingStatus)).FirstOrDefault(e => e.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.ToLower()));
 
