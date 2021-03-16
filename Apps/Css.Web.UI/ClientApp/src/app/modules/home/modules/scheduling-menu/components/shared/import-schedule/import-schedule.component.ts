@@ -82,7 +82,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   import() {
-    if (this.uploadFile) {
+    if (!this.uploadFile) {
       this.fileFormatValidation = true;
       return;
     }
@@ -131,6 +131,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   browse(files: any) {
+    this.fileFormatValidation = false;
     this.jsonData = [];
     this.fileUploaded = files[0];
     this.uploadFile = this.fileUploaded?.name;
@@ -235,9 +236,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
             if (!fromDate || !toDate) {
               return true;
             }
-            if (fromDate === toDate) {
-              return true;
-            } else {
+            if (fromDate !== toDate) {
               if (Date.parse(fromDate) > Date.parse(toDate)) {
                 return true;
               }
