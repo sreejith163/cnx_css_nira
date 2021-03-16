@@ -99,6 +99,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   isMouseDown: boolean;
   isDelete: boolean;
   refreshSchedulingTab: boolean;
+  hasNewRangeSaved: boolean;
   LoggedUser;
 
   selectedGrid: AgentScheduleGridResponse;
@@ -198,24 +199,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   addDateRange(el: AgentSchedulesResponse) {
+    this.hasNewRangeSaved = true;
     this.schedulingGridData = undefined;
     this.getModalPopup(DateRangePopUpComponent, 'sm');
     this.modalRef.componentInstance.operation = ComponentOperation.Add;
     this.modalRef.componentInstance.agentScheduleId = el.id;
     this.modalRef.result.then((result: ScheduleDateRangeBase) => {
       if (result) {
-        const range = new AgentScheduleRange();
-        range.dateFrom = this.getFormattedDate(result?.dateFrom);
-        range.dateTo = this.getFormattedDate(result?.dateTo);
-        range.status = SchedulingStatus['Pending Schedule'];
-        range.agentSchedulingGroupId = el.activeAgentSchedulingGroupId;
-        range.scheduleCharts = [];
-        el.ranges.push(range);
-        el.rangeIndex = el.ranges.length - 1;
-        el.modifiedBy = this.authService.getLoggedUserInfo().displayName;
-        el.modifiedDate = new Date();
-        this.onDateRangeChange(el.rangeIndex, el);
-        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setNewDateRangeInMemory(el, result);
         this.setComponentMessages('Success', 'The record has been added!');
       } else {
         this.getModalPopup(MessagePopUpComponent, 'sm');
@@ -230,12 +221,16 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.modalRef.componentInstance.dateTo = this.getFormattedDate(el.ranges[el.rangeIndex].dateTo);
     this.modalRef.componentInstance.agentScheduleId = el.id;
     this.modalRef.componentInstance.operation = ComponentOperation.Edit;
+    this.modalRef.componentInstance.hasNewRangeSaved = this.hasNewRangeSaved;
 
     this.modalRef.result.then((result) => {
       if (result.needRefresh) {
         this.getModalPopup(MessagePopUpComponent, 'sm');
         this.setComponentMessages('Success', 'The record has been updated!');
         this.loadAgentSchedules();
+      } else if (result?.dateFrom && this.hasNewRangeSaved) {
+        this.setNewDateRangeInMemory(el, result);
+        this.setComponentMessages('Success', 'The record has been updated!');
       } else {
         this.getModalPopup(MessagePopUpComponent, 'sm');
         this.setComponentMessages('Success', 'No changes has been made!');
@@ -252,24 +247,31 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then((result) => {
       if (result && result === el.id) {
-        const model = new DateRangeQueryParms();
-        model.dateFrom = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateFrom);
-        model.dateTo = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateTo);
-        this.deleteScheduleDateRangeSubscription = this.agentSchedulesService.deleteAgentScheduleRange(el.id, model)
-          .subscribe((response) => {
-            this.spinnerService.hide(this.spinner);
-            this.getModalPopup(MessagePopUpComponent, 'sm');
-            this.setComponentMessages('Success', 'The record has been deleted!');
-            this.loadAgentSchedules();
-          }, (error) => {
-            this.spinnerService.hide(this.spinner);
-            this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
-            this.setComponentMessages('Error', error.message);
-            this.modalRef.componentInstance.messageType = ContentType.String;
-            console.log(error);
-          });
+        if (this.hasNewRangeSaved) {
+          el.ranges.splice(el.rangeIndex, 1);
+          el.rangeIndex = el.rangeIndex - 1;
+          this.getModalPopup(MessagePopUpComponent, 'sm');
+          this.setComponentMessages('Success', 'The record has been deleted!');
+        } else {
+          const model = new DateRangeQueryParms();
+          model.dateFrom = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateFrom);
+          model.dateTo = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateTo);
+          this.deleteScheduleDateRangeSubscription = this.agentSchedulesService.deleteAgentScheduleRange(el.id, model)
+            .subscribe((response) => {
+              this.spinnerService.hide(this.spinner);
+              this.getModalPopup(MessagePopUpComponent, 'sm');
+              this.setComponentMessages('Success', 'The record has been deleted!');
+              this.loadAgentSchedules();
+            }, (error) => {
+              this.spinnerService.hide(this.spinner);
+              this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
+              this.setComponentMessages('Error', error.message);
+              this.modalRef.componentInstance.messageType = ContentType.String;
+              console.log(error);
+            });
 
-        this.subscriptions.push(this.deleteScheduleDateRangeSubscription);
+          this.subscriptions.push(this.deleteScheduleDateRangeSubscription);
+        }
       }
     });
   }
@@ -608,6 +610,21 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
     const date = year + month + day;
     this.excelService.exportAsExcelCSVFile(SchedulingExcelExportData, this.exportFileName + date);
+  }
+
+  private setNewDateRangeInMemory(el: AgentSchedulesResponse, result: ScheduleDateRangeBase) {
+    const range = new AgentScheduleRange();
+    range.dateFrom = this.getFormattedDate(result?.dateFrom);
+    range.dateTo = this.getFormattedDate(result?.dateTo);
+    range.status = SchedulingStatus['Pending Schedule'];
+    range.agentSchedulingGroupId = el.activeAgentSchedulingGroupId;
+    range.scheduleCharts = [];
+    el.ranges.push(range);
+    el.rangeIndex = el.ranges.length - 1;
+    el.modifiedBy = this.authService.getLoggedUserInfo().displayName;
+    el.modifiedDate = new Date();
+    this.onDateRangeChange(el.rangeIndex, el);
+    this.getModalPopup(MessagePopUpComponent, 'sm');
   }
 
   private setSelectedGrid(el: AgentSchedulesResponse) {
@@ -967,6 +984,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       this.updateAgentScheduleChartSubscription = this.agentSchedulesService
         .updateAgentScheduleChart(agentScheduleId, chartModel)
         .subscribe(() => {
+          this.hasNewRangeSaved = false;
           this.spinnerService.hide(this.spinner);
           this.getModalPopup(MessagePopUpComponent, 'sm');
           this.setComponentMessages('Success', 'The record has been updated!');
