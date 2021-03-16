@@ -14,7 +14,7 @@ import { ClientLobGroupService } from 'src/app/modules/home/modules/setup-menu/s
 export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnChanges {
 
   pageNumber = 1;
-  clientLobItemsBufferSize = 10;
+  clientLobItemsBufferSize = 100;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;

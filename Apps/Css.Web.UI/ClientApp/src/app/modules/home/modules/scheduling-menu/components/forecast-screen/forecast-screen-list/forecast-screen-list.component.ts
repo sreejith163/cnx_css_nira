@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, Output, Injectable, ElementRef, ViewChild, EventEmitter } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, Output, Injectable, ElementRef, ViewChild, EventEmitter, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 
 import { Subject, SubscriptionLike as ISubscription } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -165,9 +165,11 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     private http: HttpClient,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private ngxCsvParser: NgxCsvParser
+    private ngxCsvParser: NgxCsvParser,
+    private cd: ChangeDetectorRef
   ) {
     this.LoggedUser = this.authService.getLoggedUserInfo();
+
   }
 
   calculate(forecastDataCalc: Forecast[]): number {
@@ -182,9 +184,37 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     this.preLoadTranslations();
     this.loadTranslations();
     this.subscribeToTranslations();
+    this.cd.detectChanges();
 
   }
-  
+
+  getScheduledOpenCount(time: string) {
+    var convertedTime = moment(time, 'hh:mm A').format('HH:mm:ss')
+    var chart =  this.scheduledOpenResponse.find(x => x.time === convertedTime.toString());
+    // console.log(chart);
+      if (chart) {    
+        var obj = {};
+        for ( var i=0, len= this.scheduledOpenResponse.length; i < len; i++ ) 
+        obj[this.scheduledOpenResponse[i]['time']] = this.scheduledOpenResponse[i];
+        this.scheduledOpenResponse = new Array();
+        for ( var key in obj )
+        this.scheduledOpenResponse.push(obj[key]);
+        var parse_string = chart?.scheduleOpen.toString();
+        var sched_open_sum = this.scheduledOpenResponse.reduce((a, b) => +a + +b.scheduleOpen,0);
+        this.sumScheduledOpen = sched_open_sum.toString();
+        this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+        
+        var sched_open_length = this.scheduledOpenResponse.length;
+        this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / parseFloat(sched_open_length.toString());
+       this.avgScheduledOpenValue = parseFloat(this.avgScheduledOpen.toString()).toFixed(2);     
+        return parseFloat(parse_string).toFixed(2);
+       
+      }
+      
+      return '0.00';
+  }
+
+
 //   exportAsXLSX(): void {
 
 //     const replaceKeys = {
@@ -347,12 +377,14 @@ _keyUp(event) {
     this.showErrorWarningPopUpMessage('You cannot edit records from previous dates. Please select current date or future dates.');
   }
   loadSkillGroup() {
-    this.getScheduledOpen();
+ 
+
     this.prevDate();
     this.forecastFormArray.reset();
     // var dateParse = `${this.convertNgbDateToString(this.dateModel).month}-${this.convertNgbDateToString(this.dateModel).day}-${this.convertNgbDateToString(this.dateModel).year}`
 
     this.spinnerService.show(this.forecastSpinner, SpinnerOptions);
+    this.getScheduledOpen();
     this.getSkillGroupForecast = this.forecastService.getForecastDataById(this.skillGroupObj?.id, this.convertNgbDateToString(this.dateModel)).subscribe((data) => {
       this.spinnerService.hide(this.forecastSpinner);
       this.forecastID = data.forecastId;
@@ -378,7 +410,7 @@ _keyUp(event) {
       this.sumForecastContact = data.forecastData.reduce((a, b) => +a + +b.forecastedContact, 0);
       this.sumAHT = data.forecastData.reduce((a, b) => +a + +b.aht, 0);
       this.sumForecastedReq = data.forecastData.reduce((a, b) => +a + +b.forecastedReq, 0);
-      this.sumScheduledOpen = data.forecastData.reduce((a, b) => +a + +b.scheduledOpen, 0);
+      // this.sumScheduledOpen = data.forecastData.reduce((a, b) => +a + +b.scheduledOpen, 0);
 
 
       let nonZeroforecastedContact = data.forecastData.map(item => item.forecastedContact).filter(item => (isFinite(item) && item !== '0.00'));
@@ -390,7 +422,7 @@ _keyUp(event) {
       this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2);
       this.sumAHT = parseFloat(this.sumAHT).toFixed(2);
       this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
-      this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+      // this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
 
 
       //avg
@@ -411,9 +443,9 @@ _keyUp(event) {
       this.avgForecastContactValue = parseFloat(this.avgForecastContactValue).toFixed(2);
       this.avgForecastedReqValue = parseFloat(this.avgForecastedReqValue).toFixed(2);
     
-
+   
     }, (error) => {
-
+     
       this.spinnerService.hide(this.forecastSpinner);
       if (error.status === 404) {
         this.getForecastDefaultValue();
@@ -708,70 +740,18 @@ hideBtn  () {
   }
 
 private getScheduledOpen() {
-
   var date = this.convertNgbDateToString(this.dateModel);
- 
-
   this.forecastService.getScheduleOpen(this.skillGroupObj?.id,this.getDateInStringFormat(date)).subscribe(response => {
       this.scheduledOpenResponse = response;
-  
+      console.log(this.scheduledOpenResponse);
        },
          error => {
-   
-           console.log(error.status);
-   
+           this.scheduledOpenResponse  = []; 
          }
        );
-   
-   
-  
 }
 
-getScheduledOpenCount(time: string) {
 
-
-  var convertedTime = moment(time, 'hh:mm A').format('HH:mm:ss')
-
-  var chart =  this.scheduledOpenResponse.find(x => x.time === convertedTime.toString());
-  // console.log(chart);
-
-    if (chart) {    
-      var obj = {};
-
-      for ( var i=0, len= this.scheduledOpenResponse.length; i < len; i++ ) 
-         
-      obj[this.scheduledOpenResponse[i]['time']] = this.scheduledOpenResponse[i];
-      
-      this.scheduledOpenResponse = new Array();
-      for ( var key in obj )
-      this.scheduledOpenResponse.push(obj[key]);
-
-    
-      var parse_string = chart?.scheduleOpen.toString();
-      var sched_open_sum = this.scheduledOpenResponse.reduce((a, b) => +a + +b.scheduleOpen, 0);
-      this.sumScheduledOpen = sched_open_sum.toString();
-      
-
-      this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
-
-
-      var sched_open_length = this.scheduledOpenResponse.length;
-      
-      this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / parseFloat(sched_open_length.toString());
-
-
-   
-
-
-
-      this.avgScheduledOpenValue = parseFloat(this.avgScheduledOpen.toString()).toFixed(2);
-      
-      return parseFloat(parse_string).toFixed(2);
-      
-    }
-
-    return '0.00';
-}
   // updateImport() {
   //   const replaceKeys = {
   //     "Time": "Time",

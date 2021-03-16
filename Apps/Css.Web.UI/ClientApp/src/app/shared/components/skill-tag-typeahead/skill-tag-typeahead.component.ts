@@ -13,7 +13,7 @@ import { SkillTagService } from 'src/app/modules/home/modules/setup-menu/service
 export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges {
 
   pageNumber = 1;
-  skillTagItemsBufferSize = 10;
+  skillTagItemsBufferSize = 100;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;

@@ -318,7 +318,7 @@ avgOU: number;
       console.log(this.scheduledOpenResponse);
          },
            error => {
-     
+            this.scheduledOpenResponse = [];
              console.log(error);
      
            }

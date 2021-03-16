@@ -618,7 +618,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         this.formatTime(false);
         this.schedulingMangerChart = JSON.parse(JSON.stringify(this.managerCharts));
 
-        console.log(this.schedulingMangerChart);
+        // console.log(this.schedulingMangerChart);
         const employeeId = this.managerCharts[0]?.employeeId;
         const agentScheduleChart = this.managerCharts[0]?.charts?.length > 0 ? this.managerCharts[0].charts[0] : undefined;
         if (agentScheduleChart) {

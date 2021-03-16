@@ -13,7 +13,7 @@ import { AgentSchedulingGroupService } from '../../services/agent-scheduling-gro
 export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy, OnChanges {
 
   pageNumber = 1;
-  agentSchedulingGroupItemsBufferSize = 10;
+  agentSchedulingGroupItemsBufferSize = 100;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;
