@@ -213,7 +213,7 @@
                                   [ngClass]="{'icon-active': icon === code.icon.value}"
                                   (click)="onIconClick($event); t.close()" (mousedown)="t.close()"
                                   [ngClass]="{ 'icon-active': (selectedIconId == code.icon.value)}"
-                                  [ngClass]="{ 'disable-pointer': hasSchedulingIconsDisabled(el)}" cdkDrag>
+                                  [cdkDragDisabled]="el?.ranges[getRangeIndex(el)]?.status == 2" cdkDrag>
                                   <span ngbTooltip="{{ code.description }}" #t="ngbTooltip">
                                     {{ unifiedToNative(code.icon.value) }}</span></i>
                               </ng-container>

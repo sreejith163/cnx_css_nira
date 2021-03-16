@@ -388,6 +388,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   onMouseUp(event) {
+    if (this.selectedGrid?.status === SchedulingStatus.Released) {
+      return;
+    }
     this.isMouseDown = false;
     if (this.isDelete) {
       this.saveGridItems();
@@ -398,6 +401,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   onMouseDown(event) {
+    if (this.selectedGrid?.status === SchedulingStatus.Released) {
+      return;
+    }
     let days;
     this.isMouseDown = true;
     const time = event.currentTarget.attributes.time.nodeValue;
