@@ -82,8 +82,12 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
   import() {
+    if (this.uploadFile) {
+      this.fileFormatValidation = true;
+      return;
+    }
     this.fileSubmitted = true;
-    if (this.uploadFile && this.jsonData.length > 0) {
+    if (this.jsonData.length > 0) {
       this.jsonData.map(ele => {
         if (ele.StartTime.split(':')[0].length === 1) {
           ele.StartTime = '0' + ele.StartTime.split(':')[0] + ':' + ele.StartTime.split(':')[1];
@@ -128,7 +132,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   browse(files: any) {
     this.jsonData = [];
-    const exportFileName = 'Attendance_scheduling';
     this.fileUploaded = files[0];
     this.uploadFile = this.fileUploaded?.name;
     if (this.uploadFile.split('.')[1].toLowerCase() === 'csv'.toLowerCase()) {
