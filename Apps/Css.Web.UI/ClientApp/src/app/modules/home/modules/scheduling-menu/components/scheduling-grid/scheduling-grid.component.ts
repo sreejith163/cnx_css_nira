@@ -1003,8 +1003,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private formatEndTime(charts: ScheduleChart[], updateChart: boolean) {
-    // for (const weekData of scheduleResponse?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts) {
-    //   if (weekData.charts.length > 0) {
     if (!updateChart) {
       const responseIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '12:00 am');
       if (responseIndex > -1) {
@@ -1020,9 +1018,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
             x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
-          this.sortSelectedGridCalendarTimes();
-          this.formatTimeValuesInSchedulingGrid();
         });
+        this.sortSelectedGridCalendarTimes();
+        this.formatTimeValuesInSchedulingGrid();
       }
     } else {
       const requestIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
@@ -1039,12 +1037,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
             x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
-          this.sortSelectedGridCalendarTimes();
-          this.formatTimeValuesInSchedulingGrid();
         });
+        this.sortSelectedGridCalendarTimes();
+        this.formatTimeValuesInSchedulingGrid();
       }
-      // }
-      // }
     }
 
   }
