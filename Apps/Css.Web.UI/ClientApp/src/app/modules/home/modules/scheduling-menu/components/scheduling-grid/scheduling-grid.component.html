@@ -144,7 +144,7 @@
                       <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1"
                         (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
                       <i class="fa fa-trash padding-5 pointer m-t-5"
-                        *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1 && el?.ranges[getRangeIndex(el)]?.scheduleCharts?.length > 0"
+                        *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1"
                         (click)="deleteDateRange(el)" [ngbTooltip]="'Delete'"></i>
                       <i class="fa fa-calendar-plus-o float-right padding-5 m-t-5" aria-hidden="true"
                         (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
