@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { NgbActiveModal, NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepickerConfig, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbCalendar, NgbDate, NgbDateParserFormatter, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { ComponentOperation } from '../../../../../../../shared/enums/component-operation.enum';
 import { AgentSchedulesService } from '../../../services/agent-schedules.service';
@@ -79,21 +79,12 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   }
 
   onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
-      this.dateFrom = newDate;
-    } else if (this.fromDate && !this.toDate && date && !date.before(this.fromDate)) {
-      this.toDate = date;
-      const newDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day, 0, 0, 0, 0);
-      this.dateTo = newDate;
-    } else {
-      this.toDate = null;
-      this.dateTo = null;
-      this.fromDate = date;
-      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
-      this.dateFrom = newDate;
-    }
+    const x = this.calendar.getWeekday(date);
+    const preCount = x === 7 ? 0 : x;
+    this.fromDate = this.calendar.getPrev(date, 'd', preCount);
+    this.toDate = this.calendar.getNext(this.fromDate, 'd', 6);
+    this.dateFrom = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
+    this.dateTo = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day, 0, 0, 0, 0);
   }
 
   isHovered(date: NgbDate) {
@@ -114,7 +105,7 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    if (!this.dateFrom || !this.dateTo) {
+    if (!this.dateFrom) {
       this.getModalPopup(ErrorWarningPopUpComponent, 'sm', Constants.DateRangeRequiredMessage);
     } else {
       if (this.startDate !== this.dateFrom || this.endDate !== this.dateTo) {
