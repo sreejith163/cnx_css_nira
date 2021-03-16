@@ -502,12 +502,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.updateAgentScheduleChart(gridChart.id);
   }
 
-  openActivityLogs(index: number) {
+  openActivityLogs(el: AgentSchedulesResponse) {
     this.getModalPopup(ActivityLogsScheduleComponent, 'xl');
     this.modalRef.componentInstance.activityType = ActivityType.SchedulingGrid;
-    this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
+    this.modalRef.componentInstance.employeeId = el.employeeId;
     this.modalRef.componentInstance.employeeName = this.selectedGrid.lastName + ', ' + this.selectedGrid.firstName;
     this.modalRef.componentInstance.startDate = new Date(this.startDate);
+    this.modalRef.componentInstance.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
+    this.modalRef.componentInstance.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
   }
 
   openCopySchedule(el: AgentSchedulesResponse) {

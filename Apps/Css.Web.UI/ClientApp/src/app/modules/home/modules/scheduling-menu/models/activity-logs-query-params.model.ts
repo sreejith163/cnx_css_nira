@@ -5,4 +5,7 @@ export class ActivityLogsQueryParams extends QueryStringParameters {
     activityType: ActivityType;
     skipPageSize: boolean;
     employeeId: number;
+    dateFrom: string;
+    dateto: string;
+    date: string;
 }
