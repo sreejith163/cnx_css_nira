@@ -1,9 +1,9 @@
-import { ScheduleChart } from "./schedule-chart.model"
+import { ManagerScheduleChart } from './manager-schedule-chart.model';
 
 export class ActivityLogManager {
     agentSchedulingGroupId: number;
     date: Date;
-    charts: ScheduleChart[];
+    charts: ManagerScheduleChart[];
 
     constructor() {
         this.charts = [];

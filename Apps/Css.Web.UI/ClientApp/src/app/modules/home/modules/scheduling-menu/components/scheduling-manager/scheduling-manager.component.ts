@@ -503,12 +503,12 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   }
 
   private formatFilterTimeFormat(timeData: string) {
-    if (timeData?.trim().toLowerCase().slice(0, 2) === '00') {
-      timeData = '12' + timeData?.trim().toLowerCase().slice(2, 8);
-    }
-    if (timeData.trim().toLowerCase() === '11:60 pm') {
-      timeData = '12:00 am';
-    }
+    // if (timeData?.trim().toLowerCase().slice(0, 2) === '00') {
+    //   timeData = '12' + timeData?.trim().toLowerCase().slice(2, 8);
+    // }
+    // if (timeData.trim().toLowerCase() === '11:60 pm') {
+    //   timeData = '12:00 am';
+    // }
 
     return timeData;
   }
@@ -635,43 +635,43 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   }
 
   private formatTime(updateChart: boolean) {
-    for (const item of this.managerCharts) {
-      if (!updateChart && item?.charts?.length > 0) {
-        const index = item?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '00:00 am' ||
-          x.endTime.trim().toLowerCase() === '12:00 am');
-        if (index > -1) {
-          item.charts[index].endTime = '11:60 pm';
-        }
-        item?.charts.map(x => {
-          if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
-            x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
-          }
-          if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
-            x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
-          }
-        });
-        if (item.charts.length === 0) {
-          item.charts = [];
-        }
-      } else if (updateChart && item.charts.length > 0) {
-        const index = item?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
-        if (index > -1) {
-          item.charts[index].endTime = '12:00 am';
-        }
-        item?.charts.map(x => {
-          if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
-            x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
-          }
-          if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
-            x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
-          }
-        });
-        const nullValueIndex = item?.charts?.findIndex(x => x.schedulingCodeId === null);
-        if (nullValueIndex > -1) {
-          item.charts.splice(nullValueIndex, 1);
-        }
-      }
-    }
+    // for (const item of this.managerCharts) {
+    //   if (!updateChart && item?.charts?.length > 0) {
+    //     const index = item?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '00:00 am' ||
+    //       x.endTime.trim().toLowerCase() === '12:00 am');
+    //     if (index > -1) {
+    //       item.charts[index].endTime = '11:60 pm';
+    //     }
+    //     item?.charts.map(x => {
+    //       if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
+    //         x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+    //       }
+    //       if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
+    //         x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+    //       }
+    //     });
+    //     if (item.charts.length === 0) {
+    //       item.charts = [];
+    //     }
+    //   } else if (updateChart && item.charts.length > 0) {
+    //     const index = item?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
+    //     if (index > -1) {
+    //       item.charts[index].endTime = '12:00 am';
+    //     }
+    //     item?.charts.map(x => {
+    //       if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
+    //         x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
+    //       }
+    //       if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
+    //         x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
+    //       }
+    //     });
+    //     const nullValueIndex = item?.charts?.findIndex(x => x.schedulingCodeId === null);
+    //     if (nullValueIndex > -1) {
+    //       item.charts.splice(nullValueIndex, 1);
+    //     }
+    //   }
+    // }
   }
 
   private removeHighlightedCells() {

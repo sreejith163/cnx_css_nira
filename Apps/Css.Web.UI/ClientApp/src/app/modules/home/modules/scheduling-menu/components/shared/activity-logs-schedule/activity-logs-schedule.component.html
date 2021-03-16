@@ -80,6 +80,16 @@
         <div class="col-md-12 col-sm-12 scrollable-table">
           <table class="jsgrid-table table" id="schedulingActivityTable">
             <thead>
+              <tr *ngIf="activityType == 7">
+                <th colspan="5" class="text-center">
+                </th>
+                <th colspan="48" class="text-left">
+                  {{startDate | date:'yyyy-MM-dd'}}
+                </th>
+                <th colspan="48" class="text-left">
+                  {{tommorrowDate | date:'yyyy-MM-dd'}}
+                </th>
+              </tr>
               <tr class="jsgrid-header-row">
                 <th *ngIf="hasColumnHidden('Employee Id')" class="sortable-field" (click)="sort('executedUser', sortBy)">
                   {{ 'Employee_id' | translate }}
@@ -119,7 +129,9 @@
                     [class.fa-sort-up]="sortBy === 'asc'">
                   </i>
                 </th>
+                
                 <ng-container *ngFor="let data of openTimes;">
+                 
                   <ng-container *ngIf="isMainMinute(data); else subMinutes">
                     <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
                       class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
@@ -133,6 +145,24 @@
                     </th>
                   </ng-template>
                 </ng-container>
+                <ng-container *ngIf="activityType === 7">
+                <ng-container *ngFor="let data of openTimes;">
+                
+                  <ng-container *ngIf="isMainMinute(data); else subMinutes">
+                    <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                      class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                      {{ data.split(':')[0] === '00' ? '12' : data.split(':')[0] }}
+                    </th>
+                  </ng-container>
+                  <ng-template #subMinutes>
+                    <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                      class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                      <sup>{{ data.split(':')[1].split(' ')[0] }}</sup>
+                    </th>
+                  </ng-template>
+               
+                </ng-container>
+              </ng-container>
               </tr>
             </thead>
             <tbody>
@@ -176,12 +206,34 @@
                   attr.scheduleId="{{el.id}}" attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
                   *ngFor="let openTime of openTimes;let j = index"
                   [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-                  <ng-container *ngIf="getIconFromSelectedAgent(el.id,openTime)?.length">
+                  <ng-container *ngIf="getIconFromSelectedAgent(el.id,openTime)?.length && activityType === 6">
                     <span ngbTooltip="{{ getAgentIconDescription(el.id,openTime) }}">
                       <i class="font-style-normal">{{ getIconFromSelectedAgent(el.id,openTime) }}</i>
                     </span>
                   </ng-container>
+                  <ng-container *ngIf="getIconFromManagerAgent(el.id,openTime,startDate)?.length && activityType === 7">
+                    <span ngbTooltip="{{ getAgentManagerIconDescription(el.id,openTime,startDate) }}">
+                      <i class="font-style-normal">{{ getIconFromManagerAgent(el.id,openTime,startDate) }}</i>
+                    </span>
+                  </ng-container>
                 </td>
+                <ng-container *ngIf="activityType === 7">
+                  <td id="grid_col_{{i+1}}_{{j}}" class="jsgrid-cell" attr.time="{{ openTime.split(' ')[0] }}"
+                  attr.scheduleId="{{el.id}}" attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}"
+                  *ngFor="let openTime of openTimes;let j = index"
+                  [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
+                  <ng-container *ngIf="getIconFromSelectedAgent(el.id,openTime)?.length && activityType === 6">
+                    <span ngbTooltip="{{ getAgentIconDescription(el.id,openTime) }}">
+                      <i class="font-style-normal">{{ getIconFromSelectedAgent(el.id,openTime) }}</i>
+                    </span>
+                  </ng-container>
+                  <ng-container *ngIf="getIconFromManagerAgent(el.id,openTime,tommorrowDate)?.length && activityType === 7">
+                    <span ngbTooltip="{{ getAgentManagerIconDescription(el.id,openTime,tommorrowDate) }}">
+                      <i class="font-style-normal">{{ getIconFromManagerAgent(el.id,openTime,tommorrowDate) }}</i>
+                    </span>
+                  </ng-container>
+                </td>
+              </ng-container>
               </tr>
             </tbody>
           </table>
