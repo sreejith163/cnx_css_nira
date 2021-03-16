@@ -166,6 +166,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
 
+  hasSchedulingIconsDisabled(el: AgentSchedulesResponse) {
+    if (el?.ranges[el?.rangeIndex]?.status === SchedulingStatus.Released) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   hasStatusDisabled(el: AgentSchedulesResponse) {
     if (el?.ranges.length === 0) {
       return true;
@@ -380,6 +388,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   onMouseUp(event) {
+    if (this.selectedGrid?.status === SchedulingStatus.Released) {
+      return;
+    }
     this.isMouseDown = false;
     if (this.isDelete) {
       this.saveGridItems();
@@ -390,6 +401,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   onMouseDown(event) {
+    if (this.selectedGrid?.status === SchedulingStatus.Released) {
+      return;
+    }
     let days;
     this.isMouseDown = true;
     const time = event.currentTarget.attributes.time.nodeValue;
@@ -993,8 +1007,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private formatEndTime(charts: ScheduleChart[], updateChart: boolean) {
-    // for (const weekData of scheduleResponse?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts) {
-    //   if (weekData.charts.length > 0) {
     if (!updateChart) {
       const responseIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '12:00 am');
       if (responseIndex > -1) {
@@ -1010,9 +1022,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
             x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
-          this.sortSelectedGridCalendarTimes();
-          this.formatTimeValuesInSchedulingGrid();
         });
+        this.sortSelectedGridCalendarTimes();
+        this.formatTimeValuesInSchedulingGrid();
       }
     } else {
       const requestIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
@@ -1029,12 +1041,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
             x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
-          this.sortSelectedGridCalendarTimes();
-          this.formatTimeValuesInSchedulingGrid();
         });
+        this.sortSelectedGridCalendarTimes();
+        this.formatTimeValuesInSchedulingGrid();
       }
-      // }
-      // }
     }
 
   }

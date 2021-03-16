@@ -115,8 +115,6 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   save() {
     if (!this.dateFrom || !this.dateTo) {
       this.getModalPopup(ErrorWarningPopUpComponent, 'sm', Constants.DateRangeRequiredMessage);
-    } else if (this.getDateInStringFormat(this.dateFrom) === this.getDateInStringFormat(this.dateTo)) {
-      this.getModalPopup(ErrorWarningPopUpComponent, 'sm', Constants.DateRangeValidationMessage);
     } else {
       if (this.startDate !== this.dateFrom || this.endDate !== this.dateTo) {
         if (this.operation === ComponentOperation.Edit) {

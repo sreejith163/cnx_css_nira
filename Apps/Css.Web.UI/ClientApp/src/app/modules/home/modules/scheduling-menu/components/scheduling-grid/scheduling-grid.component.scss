@@ -368,3 +368,7 @@ a {
 .custom-dropdown:hover {
   background-color: #e4e6eb;
 }
+
+.disable-pointer {
+  pointer-events: none;
+}
