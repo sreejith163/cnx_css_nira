@@ -119,13 +119,13 @@ namespace Css.Api.Scheduling.Repository
         public void UpdateActivityLogsSchedulingRange(EmployeeIdDetails employeeIdDetails, UpdateActivityLogRange activityLogRange)
         {
             activityLogRange.DateFrom = new DateTime(activityLogRange.DateFrom.Year, activityLogRange.DateFrom.Month,
-                                                     activityLogRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+                                                     activityLogRange.DateFrom.Day, 0, 0, 0);
             activityLogRange.DateTo = new DateTime(activityLogRange.DateTo.Year, activityLogRange.DateTo.Month,
-                                                   activityLogRange.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+                                                   activityLogRange.DateTo.Day, 0, 0, 0);
             activityLogRange.NewDateFrom = new DateTime(activityLogRange.NewDateFrom.Year, activityLogRange.NewDateFrom.Month,
-                                                        activityLogRange.NewDateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+                                                        activityLogRange.NewDateFrom.Day, 0, 0, 0);
             activityLogRange.NewDateTo = new DateTime(activityLogRange.NewDateTo.Year, activityLogRange.NewDateTo.Month,
-                                                      activityLogRange.NewDateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+                                                      activityLogRange.NewDateTo.Day, 0, 0, 0);
 
             var query =
                 Builders<ActivityLog>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
@@ -202,7 +202,7 @@ namespace Css.Api.Scheduling.Repository
                 activityLogQueryParameter.ActivityType != null && activityLogQueryParameter.ActivityType == ActivityType.SchedulingmanagerGrid)
             {
                 var date = activityLogQueryParameter.Date.Value;
-                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
 
                 activityLogs = activityLogs.Where(x => x.SchedulingFieldDetails.ActivityLogManager.Date == dateTimeWithZeroTimeSpan);
             }
@@ -213,8 +213,8 @@ namespace Css.Api.Scheduling.Repository
             {
                 var dateFrom = activityLogQueryParameter.DateFrom.Value;
                 var dateTo = activityLogQueryParameter.DateTo.Value;
-                var dateTimeFromWithZeroTimeSpan = new DateTime(dateFrom.Year, dateFrom.Month, dateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
-                var dateTimeToWithZeroTimeSpan = new DateTime(dateTo.Year, dateTo.Month, dateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+                var dateTimeFromWithZeroTimeSpan = new DateTime(dateFrom.Year, dateFrom.Month, dateFrom.Day, 0, 0, 0);
+                var dateTimeToWithZeroTimeSpan = new DateTime(dateTo.Year, dateTo.Month, dateTo.Day, 0, 0, 0);
 
                 activityLogs = activityLogs.Where(x => x.SchedulingFieldDetails.ActivityLogRange.DateFrom == dateTimeFromWithZeroTimeSpan &&
                                                        x.SchedulingFieldDetails.ActivityLogRange.DateTo == dateTimeToWithZeroTimeSpan);
