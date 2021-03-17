@@ -26,6 +26,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.ActivityLog
         /// <summary>
         /// Gets or sets the time stamp.
         /// </summary>
+        [BsonRepresentation(BsonType.String)]
         public DateTimeOffset TimeStamp { get; set; }
 
         /// <summary>

@@ -1,7 +1,5 @@
 ﻿using Css.Api.Scheduling.Business.Interfaces;
-using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
-using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

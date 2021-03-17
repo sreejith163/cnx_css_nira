@@ -1,9 +1,7 @@
 ﻿using Css.Api.Core.Models.DTO.Request;
 using Css.Api.Scheduling.Models.Enums;
+using System;
 
-/// <summary>
-/// 
-/// </summary>
 namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
 {
     public class ActivityLogQueryParameter : QueryStringParameters
@@ -27,9 +25,6 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
         /// <summary>
         /// Gets or sets the executed user.
         /// </summary>
-        /// <value>
-        /// The executed user.
-        /// </value>
         public int? ExecutedUser { get; set; }
 
         /// <summary>
@@ -56,5 +51,20 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
         /// Gets or sets the type of the activity.
         /// </summary>
         public ActivityType? ActivityType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date.
+        /// </summary>
+        public DateTime? Date { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date from.
+        /// </summary>
+        public DateTime? DateFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date to.
+        /// </summary>
+        public DateTime? DateTo { get; set; }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Enums;
 using Css.Api.Scheduling.Models.Enums;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 
@@ -18,6 +20,7 @@ namespace Css.Api.Scheduling.Models.Domain
         /// <summary>
         /// Gets or sets the time stamp.
         /// </summary>
+        [BsonRepresentation(BsonType.String)]
         public DateTimeOffset TimeStamp { get; set; }
 
         /// <summary>

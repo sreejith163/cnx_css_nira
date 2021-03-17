@@ -1,5 +1,4 @@
 ﻿using Css.Api.Core.Models.Enums;
-using Css.Api.Scheduling.Models.Enums;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
