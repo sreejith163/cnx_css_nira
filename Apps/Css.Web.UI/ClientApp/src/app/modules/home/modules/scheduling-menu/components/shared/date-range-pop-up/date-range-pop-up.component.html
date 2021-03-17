@@ -18,10 +18,8 @@
           </h6>
         </div>
         <div class="modal-body">
-          <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
-            outsideDays="hidden" [startDate]="fromDate!">
-          </ngb-datepicker>
-
+          <ngb-datepicker #dp [startDate]="fromDate!" (dateSelect)="onDateSelection($event)"
+            [dayTemplate]="t" firstDayOfWeek='0'></ngb-datepicker>
           <ng-template #t let-date let-focused="focused">
             <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
               [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
@@ -31,7 +29,8 @@
           </ng-template>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary"(click)="save()">{{getTitle() | translate}} {{'Date Range' | translate}}</button>
+          <button type="button" class="btn btn-primary" (click)="save()">{{getTitle() | translate}}
+            {{'Date Range' | translate}}</button>
         </div>
       </div>
     </div>

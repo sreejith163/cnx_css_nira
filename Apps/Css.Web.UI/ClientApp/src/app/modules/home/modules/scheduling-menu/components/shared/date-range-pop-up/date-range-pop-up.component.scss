@@ -29,9 +29,14 @@
 
 .modal-date-picker {
   margin: 0;
-  width: fit-content;
+  // width: fit-content;
 }
 
 .close {
   outline: none;
+}
+
+.modal-body {
+  padding-left: 30px !important;
+  padding-right: 30px !important;
 }
