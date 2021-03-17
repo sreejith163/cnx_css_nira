@@ -510,6 +510,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.modalRef.componentInstance.startDate = new Date(this.startDate);
     this.modalRef.componentInstance.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
     this.modalRef.componentInstance.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
+    this.modalRef.componentInstance.schedulingCodes = this.schedulingCodes;
   }
 
   openCopySchedule(el: AgentSchedulesResponse) {

@@ -54,10 +54,8 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
   hiddenColumnList: Array<string> = [];
   openTimes: Array<any>;
   activityLogsData: ActivityLogsResponse[] = [];
-  schedulingCodes: SchedulingCode[] = [];
   activityLogsChart: ActivityLogsChart[] = [];
 
-  getSchedulingCodesSubscription: ISubscription;
   getActivityLogsSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
 
@@ -67,13 +65,13 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
   @Input() startDate: Date;
   @Input() dateFrom: Date;
   @Input() dateTo: Date;
+  @Input() schedulingCodes: SchedulingCode[] = [];
 
   constructor(
     public translate: TranslateService,
     public activeModal: NgbActiveModal,
     private spinnerService: NgxSpinnerService,
     private activityLogService: ActivityLogsService,
-    private schedulingCodeService: SchedulingCodeService,
     private excelService: ExcelService,
   ) { }
 
@@ -84,7 +82,7 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
       this.columnList = ['Employee Id', 'Time Stamp', 'Executed By', 'Origin', 'Status'];
     }
     this.openTimes = this.getOpenTimes();
-    this.loadSchedulingCodes();
+    this.loadActivityLogs();
   }
 
   ngOnDestroy() {
@@ -408,27 +406,6 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
         }
       });
     }
-  }
-
-  private loadSchedulingCodes() {
-    const queryParams = new SchedulingCodeQueryParams();
-    queryParams.skipPageSize = true;
-    queryParams.fields = 'id, description, icon';
-    this.spinnerService.show(this.spinner, SpinnerOptions);
-
-    this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)
-      .subscribe((response) => {
-        if (response.body) {
-          this.schedulingCodes = response.body;
-        }
-        this.spinnerService.hide(this.spinner);
-        this.loadActivityLogs();
-      }, (error) => {
-        this.spinnerService.hide(this.spinner);
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.getSchedulingCodesSubscription);
   }
 
   private convertToDateFormat(time: string) {
