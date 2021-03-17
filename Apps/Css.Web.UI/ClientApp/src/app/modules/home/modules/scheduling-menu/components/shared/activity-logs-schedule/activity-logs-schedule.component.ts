@@ -85,7 +85,6 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
     }
     this.openTimes = this.getOpenTimes();
     this.loadSchedulingCodes();
-    this.loadActivityLogs();
   }
 
   ngOnDestroy() {
@@ -423,6 +422,7 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
           this.schedulingCodes = response.body;
         }
         this.spinnerService.hide(this.spinner);
+        this.loadActivityLogs();
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         console.log(error);
