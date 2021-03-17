@@ -252,8 +252,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           el.rangeIndex = el.rangeIndex - 1;
           this.getModalPopup(MessagePopUpComponent, 'sm');
           this.setComponentMessages('Success', 'The record has been deleted!');
-        }
-        else {
+        } else {
           const model = new DateRangeQueryParms();
           model.dateFrom = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateFrom);
           model.dateTo = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateTo);

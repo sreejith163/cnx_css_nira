@@ -4188,6 +4188,6 @@ export class Constants {
 
   public static readonly DateRangeConflictMessage = `You cannot change schedule that overlaps to the existing schedules. Please select a new date range.`;
   public static readonly DateRangeValidationMessage = 'From date and to date cannot be same';
-  public static readonly DateRangeRequiredMessage = 'Please select from date and to date';
+  public static readonly DateRangeRequiredMessage = 'Please select a date';
 
 }

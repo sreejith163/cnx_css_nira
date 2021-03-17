@@ -64,7 +64,7 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
   @Input() activityType: ActivityType;
   @Input() employeeId: number;
   @Input() employeeName: string;
-  @Input() startDate: string;
+  @Input() startDate: Date;
   @Input() dateFrom: Date;
   @Input() dateTo: Date;
 
@@ -263,7 +263,7 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
     queryParams.skipPageSize = true;
     queryParams.dateFrom = this.activityType === ActivityType.SchedulingGrid ? this.getDateInStringFormat(this.dateFrom) : undefined;
     queryParams.dateto = this.activityType === ActivityType.SchedulingGrid ? this.getDateInStringFormat(this.dateTo) : undefined;
-    queryParams.date = this.activityType === ActivityType.SchedulingManagerGrid ? this.startDate : undefined;
+    queryParams.date = this.activityType === ActivityType.SchedulingManagerGrid ? this.getDateInStringFormat(this.startDate) : undefined;
 
     return queryParams;
   }
@@ -461,6 +461,7 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
         ap[Math.floor(hh / 12)];
       tt = tt + x;
     }
+
     return times;
   }
 

@@ -135,9 +135,6 @@
                               <td>
                                 <select class="form-control" (change)="onOptionTypeChange(i)"
                                   formControlName="operationHourOpenTypeId">
-                                  <option value="">
-                                    {{ 'Select' | translate }}
-                                  </option>
                                   <option *ngFor="let x of openTypes" [value]="x.id">{{x.open}}</option>
                                 </select>
                                 <span
