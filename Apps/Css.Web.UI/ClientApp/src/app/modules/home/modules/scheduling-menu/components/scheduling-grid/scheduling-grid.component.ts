@@ -952,17 +952,15 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     return agentSchedulesQueryParams;
   }
 
-  private loadAgentSchedules(preserveIndex?: boolean) {
+  private loadAgentSchedules() {
     const queryParams = this.getQueryParams();
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
     this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
       .subscribe((response) => {
-        const existedGridData = preserveIndex ? [...this.totalSchedulingGridData] : [];
         this.totalSchedulingGridData = response.body;
         this.totalSchedulingGridData.map(x => {
-          const data = existedGridData.find(y => y.id === x.id);
-          x.rangeIndex = data ? data.rangeIndex : 0;
+          x.rangeIndex = 0;
         });
         if (this.selectedGrid) {
           this.setSelectedGrid(this.totalSchedulingGridData.find(x => x.id === this.selectedGrid.id));
