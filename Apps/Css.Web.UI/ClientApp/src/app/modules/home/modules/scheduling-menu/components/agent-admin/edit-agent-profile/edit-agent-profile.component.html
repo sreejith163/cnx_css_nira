@@ -203,8 +203,8 @@
                 </div>
                 <div class="col-md-8">
                   <div class="input-group">
-                    <input class="form-control" placeholder="{{ 'Select_hire_date' | translate }}" name="dp"
-                      [readonly]="true" [ngClass]="{'valid-border-error': hasFormControlValidationError('hireDate')}"
+                    <input [maxLength]="10" class="form-control" placeholder="{{ 'Select_hire_date' | translate }}" name="dp"
+                       [ngClass]="{'valid-border-error': hasFormControlValidationError('hireDate')}"
                       formControlName="hireDate" ngbDatepicker [footerTemplate]="footerTemplate"
                       [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
                     <div class="input-group-append">
@@ -221,6 +221,9 @@
                   </div>
                   <div *ngIf="hasFormControlValidationError('hireDate')" class="valid-error">
                     {{ 'Hire Date is required' | translate }}
+                  </div>
+                  <div *ngIf="formSubmitted && !validateHireDateFormat() && !hasFormControlValidationError('hireDate')" class="valid-error">
+                    {{ 'Please enter a valid Hire Date in yyyy-mm-dd format' | translate }}
                   </div>
                 </div>
               </div>
