@@ -254,7 +254,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       if (result && result === el.id) {
         if (this.hasNewDateRangeSelected) {
           el.ranges.splice(el.rangeIndex, 1);
-          el.rangeIndex = el.rangeIndex - 1;
+          el.rangeIndex = el.rangeIndex > 0 ? el.rangeIndex - 1 : 0;
           this.getModalPopup(MessagePopUpComponent, 'sm');
           this.setComponentMessages('Success', 'The record has been deleted!');
         } else {
