@@ -603,7 +603,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentSchedulemanagers/{skillGroupId}/scheduledopen",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "cnx-css-api-scheduling",
