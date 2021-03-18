@@ -3,8 +3,6 @@ using Css.Api.Admin.Business;
 using Css.Api.Admin.Business.Interfaces;
 using Css.Api.Admin.Repository;
 using Css.Api.Admin.Repository.Interfaces;
-using Css.Api.Scheduling.Repository;
-using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
