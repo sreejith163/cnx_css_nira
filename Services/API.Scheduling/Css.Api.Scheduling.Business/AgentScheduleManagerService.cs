@@ -11,6 +11,7 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
+using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Response.MySchedule;
@@ -442,8 +443,8 @@ namespace Css.Api.Scheduling.Business
     
         public async Task<CSSResponse> GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date)
         {
-            
-            var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBySkillGroupId(skillGroupId);
+            var skillGroupIdDetails = new SkillGroupIdDetails {SkillGroupId = skillGroupId };
+            var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBySkillGroupId(skillGroupIdDetails);
 
             var agentSchedulingGroupId = new List<int>();
             foreach (var id in agentSchedulingGroup)

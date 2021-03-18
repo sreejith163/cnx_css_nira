@@ -149,7 +149,7 @@ namespace Css.Api.Scheduling.Business
                                 foreach (var skillTag in skillTagsOfSkillGroup)
                                 {
                                     var agentSchedulingGroupsOfSkillTag =
-                                        await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsOfSkillTag(new SkillTagIdDetails
+                                        await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBySkillTag(new SkillTagIdDetails
                                         {
                                             SkillTagId = skillTag.SkillTagId
                                         });

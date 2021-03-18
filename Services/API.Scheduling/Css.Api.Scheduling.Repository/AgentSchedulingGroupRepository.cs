@@ -4,6 +4,7 @@ using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
+using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
 using Css.Api.Scheduling.Repository.Interfaces;
 using MongoDB.Driver;
@@ -50,17 +51,6 @@ namespace Css.Api.Scheduling.Repository
                 .ToPagedList(shapedAgentSchedulingGroups, filteredAgentSchedulingGroups.Count(), agentSchedulingGroupQueryparameter.PageNumber, agentSchedulingGroupQueryparameter.PageSize);
         }
 
-        /// <summary>Gets the agent scheduling groups of skill tag.</summary>
-        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<IQueryable<AgentSchedulingGroup>> GetAgentSchedulingGroupsOfSkillTag(SkillTagIdDetails skillTagIdDetails)
-        {
-            var agentSchedulingGroups = FilterBy(x => x.IsDeleted == false && x.SkillTagId == skillTagIdDetails.SkillTagId);
-            return await Task.FromResult(agentSchedulingGroups);
-        }
-
         /// <summary>
         /// Gets the agent scheduling group.
         /// </summary>
@@ -75,29 +65,28 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
-        /// Gets the agent scheduling groups count.
+        /// Gets the agent scheduling group by skill tag.
         /// </summary>
+        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
         /// <returns></returns>
-        public async Task<int> GetAgentSchedulingGroupsCount()
+        public async Task<IQueryable<AgentSchedulingGroup>> GetAgentSchedulingGroupBySkillTag(SkillTagIdDetails skillTagIdDetails)
         {
-            var count = FilterBy(x => true)
-                .Count();
-
-            return await Task.FromResult(count);
+            var agentSchedulingGroups = FilterBy(x => x.IsDeleted == false && x.SkillTagId == skillTagIdDetails.SkillTagId);
+            return await Task.FromResult(agentSchedulingGroups);
         }
 
-        /// <summary>Gets the agent scheduling group basedon skill tag.</summary>
-        /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<AgentSchedulingGroup> GetAgentSchedulingGroupBasedonSkillTag(SkillTagIdDetails skillTagIdDetails)
+        /// <summary>
+        /// Gets the agent scheduling group by skill group identifier.
+        /// </summary>
+        /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
+        /// <returns></returns>
+        public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupBySkillGroupId(SkillGroupIdDetails skillGroupIdDetails)
         {
-            var query =
-               Builders<AgentSchedulingGroup>.Filter.Eq(i => i.IsDeleted, false) &
-               Builders<AgentSchedulingGroup>.Filter.Eq(i => i.SkillTagId, skillTagIdDetails.SkillTagId);
+            var query = Builders<AgentSchedulingGroup>.Filter.Eq(i => i.SkillGroupId, skillGroupIdDetails.SkillGroupId) &
+               Builders<AgentSchedulingGroup>.Filter.Eq(i => i.IsDeleted, false);
 
-            return await FindByIdAsync(query);
+            var result = FilterBy(query);
+            return await Task.FromResult(result.ToList());
         }
 
         /// <summary>
@@ -158,23 +147,5 @@ namespace Css.Api.Scheduling.Repository
 
             return agentSchedulingGroups;
         }
-
-
-
-        /// <summary>
-        /// Filters the agent scheduling group id by skill group id
-        /// </summary>
-        /// <param name="skillGroupId">The agent scheduling groups id by skill group id</param>
-        /// <returns></returns>
-        public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupBySkillGroupId(int skillGroupId)
-        {
-            var query = Builders<AgentSchedulingGroup>.Filter.Eq(i => i.SkillGroupId, skillGroupId) &
-               Builders<AgentSchedulingGroup>.Filter.Eq(i => i.IsDeleted, false);
-
-            var result = FilterBy(query);
-            return await Task.FromResult(result.ToList());
-        }
-
-       
     }
 }
