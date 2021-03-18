@@ -33,7 +33,7 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   endDate: any;
 
   @Input() agentScheduleId: string;
-  @Input() hasNewRangeSaved: boolean;
+  @Input() isEditNewDateRange: boolean;
   @Input() dateFrom: Date;
   @Input() dateTo: Date;
   @Input() operation: ComponentOperation;
@@ -107,7 +107,7 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
     } else {
       if (this.startDate !== this.dateFrom || this.endDate !== this.dateTo) {
         if (this.operation === ComponentOperation.Edit) {
-          if (this.hasNewRangeSaved) {
+          if (this.isEditNewDateRange) {
             this.addScheduleDateRange();
           } else {
             this.updateScheduleDateRange();
@@ -156,7 +156,10 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
     this.updateScheduleDateRangeSubscription = this.agentSchedulesService.updateAgentScheduleRange(this.agentScheduleId, model)
       .subscribe((response) => {
         this.spinnerService.hide(this.spinner);
-        this.activeModal.close({ needRefresh: true });
+        const rangeModel = new ScheduleDateRangeBase();
+        rangeModel.dateFrom = this.getFormattedDate(this.dateFrom);
+        rangeModel.dateTo = this.getFormattedDate(this.dateTo);
+        this.activeModal.close(rangeModel);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         if (error.status === 409) {
