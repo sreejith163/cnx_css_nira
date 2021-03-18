@@ -161,6 +161,11 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
+            var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(new AgentSchedulingGroupIdDetails
+            {
+                AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId
+            });
+
             var skillTag = await _skillTagRepository.GetSkillTag(new SkillTagIdDetails
             {
                 SkillTagId = agentAdmin.SkillTagId
@@ -202,6 +207,7 @@ namespace Css.Api.Scheduling.Business
             }
 
             var mappedAgentAdmin = _mapper.Map<AgentAdminDetailsDTO>(agentAdmin);
+            mappedAgentAdmin.AgentSchedulingGroupName = agentSchedulingGroup.Name;
             mappedAgentAdmin.SkillTagId = skillTag.SkillTagId;
             mappedAgentAdmin.SkillTagName = skillTag.Name;
             mappedAgentAdmin.SkillGroupId = skillGroup.SkillGroupId;

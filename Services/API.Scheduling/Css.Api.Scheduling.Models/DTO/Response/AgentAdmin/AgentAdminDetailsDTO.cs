@@ -5,6 +5,11 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
     public class AgentAdminDetailsDTO : AgentAdminDTO
     {
         /// <summary>
+        /// Gets or sets the agent scheduling group name.
+        /// </summary>
+        public string AgentSchedulingGroupName { get; set; }
+
+        /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
         public int ClientId { get; set; }
