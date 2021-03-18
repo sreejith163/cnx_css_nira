@@ -33,6 +33,17 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
 
             foreach (var scheduleRange in scheduleRanges)
             {
+                if (scheduleRange.DateFrom.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    validationFailures.Add(new ValidationFailure("Agent Scheduling Range", "Schedule datefrom should always start from sunday"));
+                    return validationFailures;
+                }
+                if (scheduleRange.DateTo.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    validationFailures.Add(new ValidationFailure("Agent Scheduling Range", "Schedule dateto should always end with saturday"));
+                    return validationFailures;
+                }
+
                 if (scheduleRanges.Exists(x => scheduleRange.DateFrom != x.DateFrom && scheduleRange.DateTo != x.DateTo &&
                                                scheduleRange.DateFrom < x.DateTo && scheduleRange.DateTo > x.DateFrom))
                 {

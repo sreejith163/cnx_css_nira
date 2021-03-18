@@ -435,6 +435,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     this.modalRef.componentInstance.employeeId = this.managerCharts[index]?.employeeId;
     this.modalRef.componentInstance.employeeName = this.agentInfo?.lastName + ', ' + this.agentInfo?.firstName;
     this.modalRef.componentInstance.startDate = new Date(this.startDate);
+    this.modalRef.componentInstance.schedulingCodes = this.schedulingCodes;
   }
 
   openCopySchedule(index: number) {

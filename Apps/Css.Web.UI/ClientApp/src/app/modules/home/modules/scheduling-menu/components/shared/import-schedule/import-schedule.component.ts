@@ -86,6 +86,14 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       this.fileFormatValidation = true;
       return;
     }
+    if (this.validateImportDatafields()) {
+      return;
+    }
+    if (this.agentScheduleType === AgentScheduleType.Scheduling) {
+      if (this.checkDateRange()) {
+        return;
+      }
+    }
     this.fileSubmitted = true;
     if (this.jsonData.length > 0) {
       this.jsonData.map(ele => {
@@ -106,20 +114,18 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         }
       });
       if (!this.fileFormatValidation && !this.validateHeading()) {
-        const employees = new Array<number>();
-        this.jsonData.forEach(data => {
-          if (employees.filter(x => x === +data.EmployeeId).length === 0) {
-            employees.push(+data.EmployeeId);
-          }
-        });
-        this.loadAgentSchedules(employees);
+          const employees = new Array<number>();
+          this.jsonData.forEach(data => {
+            if (employees.filter(x => x === +data.EmployeeId).length === 0) {
+              employees.push(+data.EmployeeId);
+            }
+          });
+          this.loadAgentSchedules(employees);
       } else {
-        const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time<br>Not recognized Employee ID`;
-        this.showErrorWarningPopUpMessage(errorMessage);
+        this.showErrormessage();
       }
     } else {
-      const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time<br>Not recognized Employee ID`;
-      this.showErrorWarningPopUpMessage(errorMessage);
+      this.showErrormessage();
     }
   }
 
@@ -140,6 +146,32 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     } else {
       this.fileFormatValidation = true;
     }
+  }
+
+  private validateImportDatafields() {
+    for (const item of this.jsonData) {
+      if (!item.StartTime || !item.EndTime || !item.ActivityCode || !item.EmployeeId) {
+        this.showErrormessage();
+        return true;
+      } else {
+        if (this.agentScheduleType === AgentScheduleType.Scheduling) {
+          if (!item.StartDate || !item.EndDate) {
+            this.showErrormessage();
+            return true;
+          }
+        } else {
+          if (!item.Date) {
+            this.showErrormessage();
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  private showErrormessage() {
+    const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time<br>Not recognized Employee ID`;
+    this.showErrorWarningPopUpMessage(errorMessage);
   }
 
   private formatTimeFormat(importRecord: any[]) {
@@ -226,6 +258,18 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     };
   }
 
+  private checkDateRange() {
+    for (const item of this.jsonData) {
+      const startDay = new Date(item?.StartDate)?.getDay();
+      const endDay = new Date(item?.EndDate)?.getDay();
+      if (+startDay !== 0 || +endDay !== 6) {
+        const errorMessage = `You can only select from Sunday to Saturday date range.<br> Please try again.`;
+        this.showErrorWarningPopUpMessage(errorMessage);
+        return true;
+      }
+    }
+  }
+
   private validateInputRecord(importRecord: ImportScheduleData[]) {
     if (importRecord.length > 0) {
       for (const item of importRecord) {
@@ -236,10 +280,10 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
             if (!fromDate || !toDate) {
               return true;
             }
-            if (fromDate !== toDate) {
-              if (Date.parse(fromDate) > Date.parse(toDate)) {
-                return true;
-              }
+            if (fromDate === toDate) {
+              return true;
+            } else if (Date.parse(fromDate) > Date.parse(toDate)) {
+              return true;
             }
             if (item.ranges.filter(y => Date.parse(this.getDateInStringFormat(y.dateFrom)) === Date.parse(fromDate) &&
               Date.parse(this.getDateInStringFormat(y.dateTo)) === Date.parse(toDate)).length > 1) {
@@ -358,8 +402,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       this.subscriptions.push(this.importAgentScheduleChartSubscription);
 
     } else {
-      const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time<br>Not recognized Employee ID`;
-      this.showErrorWarningPopUpMessage(errorMessage);
+      this.showErrormessage();
     }
   }
 
@@ -381,8 +424,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       this.subscriptions.push(this.updateManagerChartSubscription);
 
     } else {
-      const errorMessage = `“An error occurred upon importing the file. Please check the following”<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time<br>Not recognized Employee ID`;
-      this.showErrorWarningPopUpMessage(errorMessage);
+      this.showErrormessage();
     }
 
 
@@ -455,10 +497,11 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
 
     for (const employee of schedules) {
-      const employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);
+      let employeeDetails = this.jsonData.filter(x => +x.EmployeeId === +employee.employeeId);
       const importData = new ImportScheduleData();
       const scheduleRangeList = new Array<ScheduleDateRangeBase>();
       importData.employeeId = employee.employeeId;
+      employeeDetails = this.formatDateRange(employeeDetails);
 
       for (const item of employeeDetails) {
         const startDate = new Date(item.StartDate);
@@ -470,8 +513,8 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         if (scheduleRangeList.filter(x => this.getDateInStringFormat(x.dateFrom) === this.getDateInStringFormat(item.StartDate) &&
           this.getDateInStringFormat(x.dateTo) === this.getDateInStringFormat(item.EndDate)).length === 0) {
           const range = new ScheduleDateRangeBase();
-          range.dateTo = new Date(item.EndDate);
-          range.dateFrom = new Date(item.StartDate);
+          range.dateTo = item.EndDate;
+          range.dateFrom = item.StartDate;
           scheduleRangeList.push(range);
         }
       }
@@ -504,6 +547,45 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
     return chartModel;
 
+  }
+
+  private formatDateRange(employeeDetails: ExcelData[]) {
+    const formattedDateRangeArray = Array<ExcelData>();
+    for (const item of employeeDetails) {
+      const startTime = new Date(item?.StartDate).getTime();
+      const endTime = new Date(item?.EndDate).getTime();
+      const diff = (endTime - startTime) / (1000 * 60 * 60 * 24);
+      if (diff > 7) {
+        const count = (diff + 1) / 7;
+        for (let i = 0; i < count; i++) {
+          const startDate = i === 0 ? item.StartDate :
+            this.getAdjacentDate(new Date(formattedDateRangeArray[formattedDateRangeArray.length - 1].EndDate), 1);
+          const endDate = this.getAdjacentDate(new Date(startDate), 6);
+          const data = new ExcelData();
+          data.ActivityCode = item.ActivityCode;
+          data.EmployeeId = item.EmployeeId;
+          data.EndTime = item.EndTime;
+          data.StartTime = item.StartTime;
+          data.StartDate = startDate;
+          data.EndDate = endDate;
+          formattedDateRangeArray.push(data);
+        }
+
+      } else {
+        formattedDateRangeArray.push(item);
+      }
+    }
+
+    return formattedDateRangeArray;
+
+  }
+
+  private getAdjacentDate(date: Date, count: number) {
+    const endDate = date;
+    const nextDate = new Date(endDate);
+    nextDate.setDate(endDate.getDate() + count);
+    const adjacentDate  = this.datepipe.transform(nextDate, 'yyyy/MM/dd');
+    return adjacentDate;
   }
 
   private getImportAgentManagerChartModel(schedules: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[]) {

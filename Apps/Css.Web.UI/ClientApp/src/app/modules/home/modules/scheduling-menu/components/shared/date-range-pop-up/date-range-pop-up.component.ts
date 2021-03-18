@@ -25,7 +25,7 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
 
   hoveredDate: NgbDate | null = null;
   toDate: NgbDate | null = null;
-  fromDate = this.calendar.getToday();
+  fromDate: NgbDate | null = null;
   today = this.calendar.getToday();
   spinner = 'date-range';
   modalRef: NgbModalRef;
@@ -57,10 +57,7 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.startDate = this.dateFrom;
     this.endDate = this.dateTo;
-    if (this.operation === ComponentOperation.Add) {
-      this.dateFrom = new Date(this.today.year, this.today.month - 1, this.today.day, 0, 0, 0, 0);
-    }
-    if (this.dateFrom || this.dateTo) {
+    if (this.dateFrom || this.dateTo && this.operation === ComponentOperation.Edit) {
       this.fromDate = this.convertToNgbDate(this.dateFrom) ?? this.today;
       this.toDate = this.convertToNgbDate(this.dateTo) ?? this.today;
     }
