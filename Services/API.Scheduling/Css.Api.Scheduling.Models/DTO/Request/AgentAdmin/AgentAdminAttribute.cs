@@ -25,35 +25,23 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
         public string Sso { get; set; }
 
         /// <summary>
-        /// Gets or sets the client identifier.
+        /// Gets or sets the agent scheduling group identifier.
         /// </summary>
-        public int ClientId { get; set; }
+        public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the client lob group identifier.
+        /// Gets or sets the supervisor identifier.
         /// </summary>
-        public int ClientLobGroupId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the skill group identifier.
-        /// </summary>
-        public int SkillGroupId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the skill tag identifier.
-        /// </summary>
-        public int SkillTagId { get; set; }
-
-        /// <summary>Gets or sets the supervisor identifier.</summary>
-        /// <value>The supervisor identifier.</value>
         public string SupervisorId { get; set; }
 
-        /// <summary>Gets or sets the name of the supervisor.</summary>
-        /// <value>The name of the supervisor.</value>
+        /// <summary>
+        /// Gets or sets the name of the supervisor.
+        /// </summary>
         public string SupervisorName { get; set; }
 
-        /// <summary>Gets or sets the supervisor sso.</summary>
-        /// <value>The supervisor sso.</value>
+        /// <summary>
+        /// Gets or sets the supervisor sso.
+        /// </summary>
         public string SupervisorSso { get; set; }
 
         /// <summary>

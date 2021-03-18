@@ -8,4 +8,6 @@ export class AgentAdminResponse extends AgentAdminBase {
     skillGroupId: number;
     skillGroupName: string;
     skillTagName: string;
+    agentSchedulingGroupId: number;
+    agentSchedulingGroupName: string;
 }

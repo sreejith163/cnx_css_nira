@@ -107,9 +107,19 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     return ComponentOperation[this.operation];
   }
 
+  validateHireDateFormat() {
+    const hireDate = this.agentProfileForm.controls.hireDate.value;
+    if (!this.calendar.isValid(hireDate) || String(hireDate.year).length !== 4) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   saveAgentAdminDetails() {
     this.formSubmitted = true;
-    if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId && this.skillTagId) {
+    if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId &&
+       this.skillTagId && this.validateHireDateFormat()) {
       this.saveAgentProfileDetailsOnModel();
       this.operation === ComponentOperation.Edit ? this.updateAgentAdminProfileDetails() : this.addAgentAdminProfileDetails();
     }
