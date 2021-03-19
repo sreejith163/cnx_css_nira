@@ -37,6 +37,7 @@ namespace Css.Api.Setup.EventHandlers.Consumers.ClientLOB
 
             UpdateClientLOBGroup updateClientLOB = new UpdateClientLOBGroup
             {
+                RefId = context.Message.RefId,
                 Name = context.Message.Name,
                 ClientId = context.Message.ClientId,
                 TimezoneId = context.Message.TimezoneId,

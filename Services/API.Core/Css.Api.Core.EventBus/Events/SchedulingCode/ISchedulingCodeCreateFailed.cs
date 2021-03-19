@@ -11,6 +11,11 @@ namespace Css.Api.Core.EventBus.Events.SchedulingCode
         /// <value>The identifier.</value>
         public int Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
+        public int? RefId { get; set; }
+
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>
         public string Name { get; set; }
@@ -35,7 +40,6 @@ namespace Css.Api.Core.EventBus.Events.SchedulingCode
         /// <summary>Gets or sets the modified date.</summary>
         /// <value>The modified date.</value>
         public DateTimeOffset? ModifiedDate { get; set; }
-
     }
 }
 

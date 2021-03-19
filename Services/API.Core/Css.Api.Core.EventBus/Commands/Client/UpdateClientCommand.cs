@@ -7,7 +7,6 @@ namespace Css.Api.Core.EventBus.Commands.Client
     /// </summary>
     public class UpdateClientCommand
     {
-
         /// <summary>Gets or sets the identifier.</summary>
         /// <value>The identifier.</value>
         public int Id { get; set; }
@@ -47,6 +46,5 @@ namespace Css.Api.Core.EventBus.Commands.Client
         /// <summary>Gets or sets the modified date old value.</summary>
         /// <value>The modified date old value.</value>
         public DateTimeOffset? ModifiedDateOldValue { get; set; }
-
     }
 }

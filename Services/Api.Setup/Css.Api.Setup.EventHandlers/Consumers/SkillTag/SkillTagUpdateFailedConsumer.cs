@@ -34,6 +34,7 @@ namespace Css.Api.Setup.EventHandlers.Consumers.SkillTag
 
             UpdateSkillTag updateSkillTag = new UpdateSkillTag
             {
+                RefId = context.Message.RefIdOldValue,
                 Name = context.Message.NameOldValue,
                 SkillGroupId = context.Message.SkillGroupIdOldValue,
                 OperationHour =

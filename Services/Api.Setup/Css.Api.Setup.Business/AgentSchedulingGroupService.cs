@@ -33,7 +33,7 @@ namespace Css.Api.Setup.Business
         /// <summary>
         /// The HTTP context accessor
         /// </summary>
-        private IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>
         /// The mapper
@@ -137,17 +137,17 @@ namespace Css.Api.Setup.Business
             await _bus.SendCommand<CreateAgentSchedulingGroupCommand>(MassTransitConstants.AgentSchedulingGroupCreateCommandRouteKey,
               new
               {
-                  Id = agentSchedulingGroupRequest.Id,
-                  Name = agentSchedulingGroupRequest.Name,
-                  RefId = agentSchedulingGroupRequest.RefId,
-                  ClientId = agentSchedulingGroupRequest.ClientId,
-                  ClientLobGroupId = agentSchedulingGroupRequest.ClientLobGroupId,
-                  SkillGroupId = agentSchedulingGroupRequest.SkillGroupId,
-                  SkillTagId = agentSchedulingGroupRequest.SkillTagId,
-                  TimezoneId = agentSchedulingGroupRequest.TimezoneId,
-                  FirstDayOfWeek = agentSchedulingGroupRequest.FirstDayOfWeek,
+                  agentSchedulingGroupRequest.Id,
+                  agentSchedulingGroupRequest.Name,
+                  agentSchedulingGroupRequest.RefId,
+                  agentSchedulingGroupRequest.ClientId,
+                  agentSchedulingGroupRequest.ClientLobGroupId,
+                  agentSchedulingGroupRequest.SkillGroupId,
+                  agentSchedulingGroupRequest.SkillTagId,
+                  agentSchedulingGroupRequest.TimezoneId,
+                  agentSchedulingGroupRequest.FirstDayOfWeek,
                   OperationHour = JsonConvert.SerializeObject(agentSchedulingGroupDetails.OperationHour),
-                  ModifiedDate = agentSchedulingGroupRequest.ModifiedDate
+                  agentSchedulingGroupRequest.ModifiedDate
               });
 
             return new CSSResponse(new AgentSchedulingGroupIdDetails { AgentSchedulingGroupId = agentSchedulingGroupRequest.Id }, HttpStatusCode.Created);
@@ -174,25 +174,6 @@ namespace Css.Api.Setup.Business
             {
                 return new CSSResponse($"Skill Tag with id '{skillTagIdDetails.SkillTagId}' not found", HttpStatusCode.NotFound);
             }
-
-            //var agentSchedulingGroups = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupsBySkillTagId(skillTagIdDetails);
-            //int matchingSchedulingGroupCount = agentSchedulingGroups.Count;
-            //var isSchedulingGroupExistsForSkillTag = matchingSchedulingGroupCount > 0;
-            //if (isSchedulingGroupExistsForSkillTag)
-            //{
-            //    if (!agentSchedulingGroupDetails.IsUpdateRevert 
-            //        && agentSchedulingGroups.FirstOrDefault().Id != agentSchedulingGroupIdDetails.AgentSchedulingGroupId)
-            //    {
-            //        return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
-            //    }
-            //    else
-            //    {
-            //        if (matchingSchedulingGroupCount > 1)
-            //        {
-            //            return new CSSResponse($"This entry has existing record from other Scheduling Group. Please try again.", HttpStatusCode.Conflict);
-            //        }
-            //    }
-            //}
 
             var agentSchedulingGroups = await _repository.AgentSchedulingGroups.GetAgentSchedulingGroupsCountBySkillTagIdOrRefId(new AgentSchedulingGroupAttribute
             {
@@ -263,7 +244,7 @@ namespace Css.Api.Setup.Business
                     MassTransitConstants.AgentSchedulingGroupUpdateCommandRouteKey,
                     new
                     {
-                        Id = agentSchedulingGroupRequest.Id,
+                        agentSchedulingGroupRequest.Id,
                         NameOldValue = agentSchedulingGroupDetailsPreUpdate.Name,
                         RefIdOldValue = agentSchedulingGroupDetailsPreUpdate.RefId,
                         ClientIdOldValue = agentSchedulingGroupDetailsPreUpdate.ClientId,
@@ -299,7 +280,6 @@ namespace Css.Api.Setup.Business
             }
 
             var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentSchedulingGroupDetails.SkillTagId };
-            var agentSchedulingGroupNameDetails = new AgentSchedulingGroupNameDetails { Name = agentSchedulingGroupDetails.Name };
 
             var skillTag = await _repository.SkillTags.GetSkillTag(skillTagIdDetails);
             if (skillTag == null)
@@ -317,9 +297,7 @@ namespace Css.Api.Setup.Business
 
             var agentSchedulingGroupRequest = _mapper.Map(agentSchedulingGroupDetails, agentSchedulingGroup);
 
-
             agentSchedulingGroupRequest.ModifiedDate = agentSchedulingGroupDetails.ModifiedDate;
-
 
             agentSchedulingGroupRequest.ClientId = skillTag.ClientId;
             agentSchedulingGroupRequest.ClientLobGroupId = skillTag.ClientLobGroupId;
@@ -375,15 +353,15 @@ namespace Css.Api.Setup.Business
                MassTransitConstants.AgentSchedulingGroupDeleteCommandRouteKey,
                new
                {
-                   Id = agentSchedulingGroup.Id,
-                   Name = agentSchedulingGroupDetailsPreUpdate.Name,
-                   RefId = agentSchedulingGroupDetailsPreUpdate.RefId,
-                   ClientId = agentSchedulingGroupDetailsPreUpdate.ClientId,
-                   ClientLobGroupId = agentSchedulingGroupDetailsPreUpdate.ClientLobGroupId,
-                   SkillGroupId = agentSchedulingGroupDetailsPreUpdate.SkillGroupId,
-                   SkillTagId = agentSchedulingGroupDetailsPreUpdate.SkillTagId,
-                   TimezoneId = agentSchedulingGroupDetailsPreUpdate.TimezoneId,
-                   FirstDayOfWeek = agentSchedulingGroupDetailsPreUpdate.FirstDayOfWeek,
+                   agentSchedulingGroup.Id,
+                   agentSchedulingGroupDetailsPreUpdate.Name,
+                   agentSchedulingGroupDetailsPreUpdate.RefId,
+                   agentSchedulingGroupDetailsPreUpdate.ClientId,
+                   agentSchedulingGroupDetailsPreUpdate.ClientLobGroupId,
+                   agentSchedulingGroupDetailsPreUpdate.SkillGroupId,
+                   agentSchedulingGroupDetailsPreUpdate.SkillTagId,
+                   agentSchedulingGroupDetailsPreUpdate.TimezoneId,
+                   agentSchedulingGroupDetailsPreUpdate.FirstDayOfWeek,
                    OperationHour = JsonConvert.SerializeObject(agentSchedulingGroupPreRequest.OperationHour),
                    ModifiedByOldValue = agentSchedulingGroupDetailsPreUpdate.ModifiedBy,
                    IsDeletedOldValue = agentSchedulingGroupDetailsPreUpdate.IsDeleted,

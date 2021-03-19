@@ -166,6 +166,11 @@ namespace Css.Api.Scheduling.Business
                 AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId
             });
 
+            if (agentSchedulingGroup == null)
+            {
+                return new CSSResponse("Agent Scheduling Group not found", HttpStatusCode.NotFound);
+            }
+
             var skillTag = await _skillTagRepository.GetSkillTag(new SkillTagIdDetails
             {
                 SkillTagId = agentAdmin.SkillTagId
@@ -173,7 +178,7 @@ namespace Css.Api.Scheduling.Business
 
             if (skillTag == null)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                return new CSSResponse("Skill Tag not found", HttpStatusCode.NotFound);
             }
 
             var skillGroup = await _skillGroupRepository.GetSkillGroup(new SkillGroupIdDetails
@@ -183,7 +188,7 @@ namespace Css.Api.Scheduling.Business
 
             if (skillGroup == null)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                return new CSSResponse("Skill Group not found", HttpStatusCode.NotFound);
             }
 
             var clientLobGroup = await _clientLobGroupRepository.GetClientLobGroup(new ClientLobGroupIdDetails
@@ -193,7 +198,7 @@ namespace Css.Api.Scheduling.Business
 
             if (clientLobGroup == null)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                return new CSSResponse("Client Lob Group not found", HttpStatusCode.NotFound);
             }
 
             var clientName = await _clientRepository.GetClient(new ClientIdDetails
@@ -203,7 +208,7 @@ namespace Css.Api.Scheduling.Business
 
             if (clientName == null)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                return new CSSResponse("Client Name not found", HttpStatusCode.NotFound);
             }
 
             var mappedAgentAdmin = _mapper.Map<AgentAdminDetailsDTO>(agentAdmin);

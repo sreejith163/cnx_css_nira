@@ -14,7 +14,6 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
 {
     public class DeleteAgentSchedulingGroupCommandConsumer : IConsumer<DeleteAgentSchedulingGroupCommand>
     {
-
         /// <summary>The bus utility</summary>
         private readonly IBusService _busUtility;
 
@@ -25,7 +24,6 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
         /// The uow
         /// </summary>
         private readonly IUnitOfWork _uow;
-
 
         /// <summary>Initializes a new instance of the <see cref="DeleteAgentSchedulingGroupCommandConsumer" /> class.</summary>
         /// <param name="busUtility">The bus utility.</param>

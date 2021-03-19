@@ -9,7 +9,6 @@ using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-
 namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillTag
 {
     public class DeleteSkillTagCommandConsumer : IConsumer<DeleteSkillTagCommand>
@@ -65,7 +64,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillTag
 
                 await _busUtility.PublishEvent<ISkillTagDeleteSuccess>(MassTransitConstants.SkillTagDeleteSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)
@@ -80,15 +79,16 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillTag
         {
             await _busUtility.PublishEvent<ISkillTagDeleteFailed>(MassTransitConstants.SkillTagDeleteFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                Name = context.Message.Name,
-                ClientId = context.Message.ClientId,
-                ClientLobGroupId = context.Message.ClientLobGroupId,
-                SkillGroupId = context.Message.SkillGroupId,
-                OperationHour = context.Message.OperationHour,
-                ModifiedByOldValue = context.Message.ModifiedByOldValue,
-                ModifiedDateOldValue = context.Message.ModifiedDateOldValue,
-                IsDeletedOldValue = context.Message.IsDeletedOldValue
+                context.Message.Id,
+                context.Message.RefId,
+                context.Message.Name,
+                context.Message.ClientId,
+                context.Message.ClientLobGroupId,
+                context.Message.SkillGroupId,
+                context.Message.OperationHour,
+                context.Message.ModifiedByOldValue,
+                context.Message.ModifiedDateOldValue,
+                context.Message.IsDeletedOldValue
             });
         }
     }

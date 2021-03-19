@@ -72,7 +72,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
 
                 await _busUtility.PublishEvent<IAgentSchedulingGroupCreateSuccess>(MassTransitConstants.AgentSchedulingGroupCreateSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)

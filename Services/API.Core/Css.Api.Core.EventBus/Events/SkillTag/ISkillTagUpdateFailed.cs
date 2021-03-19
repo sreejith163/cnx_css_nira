@@ -8,6 +8,11 @@ namespace Css.Api.Core.EventBus.Events.SkillTag
         /// <value>The identifier.</value>
         public int Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the reference identifier old value.
+        /// </summary>
+        public int? RefIdOldValue { get; set; }
+
         /// <summary>Gets or sets the name old value.</summary>
         /// <value>The name old value.</value>
         public string NameOldValue { get; set; }

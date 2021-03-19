@@ -8,6 +8,11 @@ namespace Css.Api.Core.EventBus.Commands.SchedulingCode
         /// <value>The identifier.</value>
         public int Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
+        public int? RefId { get; set; }
+
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>
         public string Name { get; set; }
@@ -46,7 +51,6 @@ namespace Css.Api.Core.EventBus.Commands.SchedulingCode
         /// <value>
         ///   <c>true</c> if this instance is deleted new value; otherwise, <c>false</c>.</value>
         public bool IsDeletedNewValue { get; set; }
-
     }
 }
 

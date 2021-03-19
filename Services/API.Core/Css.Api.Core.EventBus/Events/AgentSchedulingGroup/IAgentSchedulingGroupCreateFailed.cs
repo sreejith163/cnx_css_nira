@@ -15,8 +15,9 @@ namespace Css.Api.Core.EventBus.Events.AgentSchedulingGroup
         /// <value>The name.</value>
         public string Name { get; set; }
 
-        /// <summary>Gets or sets the reference identifier.</summary>
-        /// <value>The reference identifier.</value>
+        /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
         public int? RefId { get; set; }
 
         /// <summary>Gets or sets the client identifier.</summary>
@@ -50,7 +51,6 @@ namespace Css.Api.Core.EventBus.Events.AgentSchedulingGroup
         /// <summary>Gets or sets the modified date.</summary>
         /// <value>The modified date.</value>
         public DateTimeOffset? ModifiedDate { get; set; }
-
     }
 }
 

@@ -69,7 +69,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillTag
 
                 await _busUtility.PublishEvent<ISkillTagCreateSuccess>(MassTransitConstants.SkillTagCreateSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)

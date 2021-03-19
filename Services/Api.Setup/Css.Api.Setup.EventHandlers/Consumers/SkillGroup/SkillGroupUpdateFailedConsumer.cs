@@ -34,6 +34,7 @@ namespace Css.Api.Setup.EventHandlers.Consumers.SkillGroup
 
             UpdateSkillGroup updateSkillGroup = new UpdateSkillGroup
             {
+                RefId = context.Message.RefIdOldValue,
                 Name = context.Message.NameOldValue,
                 ClientLobGroupId = context.Message.ClientLobGroupIdOldvalue,
                 TimezoneId = context.Message.TimezoneIdOldValue,
