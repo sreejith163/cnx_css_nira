@@ -5,6 +5,7 @@ export class AgentAdminBase {
     employeeId: number;
     sso: string;
     skillTagId: number;
+    agentSchedulingGroupId: number;
     clientId: number;
     clientLobGroupId: number;
     skillGroupId: number;

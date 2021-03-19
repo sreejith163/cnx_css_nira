@@ -34,6 +34,7 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
   @Input() skillGroupId: number;
   @Input() skillTagId: number;
   @Input() agentSchedulingGroupId: number;
+  @Input() hierarchy: boolean;
   @Output() agentSchedulingGroupSelected = new EventEmitter();
 
   constructor(
@@ -41,7 +42,12 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
   ) { }
 
   ngOnInit(): void {
-    this.subscribeToAgentSchedulingGroups();
+    if (!this.hierarchy) {
+      this.subscribeToAgentSchedulingGroups();
+    } else {
+      this.agentSchedulingGroupItemsBuffer = [];
+      this.totalItems = 0;
+    }
     this.subscribeToSearching();
   }
 
@@ -54,7 +60,7 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
   }
 
   ngOnChanges() {
-    if (this.agentSchedulingGroupId) {
+    if (this.skillTagId || this.agentSchedulingGroupId) {
       this.pageNumber = 1;
       this.subscribeToAgentSchedulingGroups();
     } else {
