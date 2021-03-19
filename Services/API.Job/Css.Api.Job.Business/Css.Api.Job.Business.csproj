@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Css.Api.Job.Models\Css.Api.Job.Models.csproj" />
+    <ProjectReference Include="..\Css.Api.Job.Repository\Css.Api.Job.Repository.csproj" />
   </ItemGroup>
 
 </Project>

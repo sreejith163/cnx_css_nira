@@ -10,6 +10,16 @@
         /// <summary>
         /// The udw
         /// </summary>
-        UDW
+        UDW,
+
+        /// <summary>
+        /// The EStart System
+        /// </summary>
+        EStart,
+
+        /// <summary>
+        /// The CNX1 System
+        /// </summary>
+        CNX1
     }
 }

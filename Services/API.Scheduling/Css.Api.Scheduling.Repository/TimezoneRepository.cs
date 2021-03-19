@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using System;
+using Css.Api.Core.Models.Domain.NoSQL;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -28,7 +29,7 @@ namespace Css.Api.Scheduling.Repository
         /// <param name="timezoneQueryParameters">The timezone query parameters.</param>
         public async Task<PagedList<Entity>> GetTimeZones(TimezoneQueryParameters timezoneQueryParameters)
         {
-            var timeZones = FilterBy(x => x.IsDeleted == false);
+            var timeZones = FilterBy(x => true);
 
             var filteredTimeZones = FilterTimezones(timeZones, timezoneQueryParameters.SearchKeyword);
 

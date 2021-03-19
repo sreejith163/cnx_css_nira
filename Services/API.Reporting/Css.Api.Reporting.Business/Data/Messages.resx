@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AgentNotFound" xml:space="preserve">
+    <value>Invalid Agent id - couldn't find the agent details in our system</value>
+  </data>
   <data name="EmptyFTPDirectory" xml:space="preserve">
     <value>Couldn't find any files to read in the requested directory</value>
+  </data>
+  <data name="ExportFailed" xml:space="preserve">
+    <value>Failed to generate the export file for the requested date(s)</value>
+  </data>
+  <data name="ExportNoData" xml:space="preserve">
+    <value>No schedules available for the requested date(s)</value>
   </data>
   <data name="InvalidDataSource" xml:space="preserve">
     <value>Invalid data source specified for key - '{0}'</value>
@@ -126,13 +135,43 @@
   <data name="InvalidDataTarget" xml:space="preserve">
     <value>Invalid data target specified for key - '{0}'</value>
   </data>
+  <data name="InvalidDateTimeFormat" xml:space="preserve">
+    <value>Invalid DateTime - '{0}'  format supported 'yyyy-MM-dd HH:mm'</value>
+  </data>
+  <data name="InvalidDateTimeSchedule" xml:space="preserve">
+    <value>The schedules do not fall within -1 to +1 days of the schedule date</value>
+  </data>
+  <data name="InvalidEndDateTime" xml:space="preserve">
+    <value>Invalid end date '{0}' specified for schedule starting at '{1}'</value>
+  </data>
+  <data name="InvalidQueryParamsCNX1" xml:space="preserve">
+    <value>Invalid request parameters. Kindly specify atleast one agent id and a valid combination of start &amp; end dates</value>
+  </data>
+  <data name="InvalidScheduleDate" xml:space="preserve">
+    <value>Invalid schedule date, format supported - 'yyyy-MM-dd'</value>
+  </data>
+  <data name="InvalidSchedulingCode" xml:space="preserve">
+    <value>Invalid activity code - '{0}'</value>
+  </data>
   <data name="InvalidSource" xml:space="preserve">
     <value>Invalid source specified for key - '{0}'</value>
   </data>
   <data name="InvalidTarget" xml:space="preserve">
     <value>Invalid target specified for key - '{0}'</value>
   </data>
+  <data name="InvalidTimezone" xml:space="preserve">
+    <value>Invalid timezone, format supported - '[+/-]UTC{hh:mm}' for e.g. UTC+0600, UTC-1230</value>
+  </data>
   <data name="MappingNotFound" xml:space="preserve">
     <value>Mapping not found for key - '{0}'</value>
+  </data>
+  <data name="NoSchedulesToUpdate" xml:space="preserve">
+    <value>No schedules to update</value>
+  </data>
+  <data name="OverlappingSchedules" xml:space="preserve">
+    <value>Overlapping schedules exists for the schedule on '{0}'</value>
+  </data>
+  <data name="RouteNotFound" xml:space="preserve">
+    <value>Unable to map the route - '{0}'</value>
   </data>
 </root>

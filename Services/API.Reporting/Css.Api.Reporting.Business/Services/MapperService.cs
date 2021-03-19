@@ -1,7 +1,12 @@
-﻿using Css.Api.Reporting.Business.Interfaces;
+﻿using Css.Api.Reporting.Business.Data;
+using Css.Api.Reporting.Business.Exceptions;
+using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Models.DTO.Processing;
 using Css.Api.Reporting.Models.DTO.Request;
+using Css.Api.Reporting.Models.DTO.Request.CNX1;
+using Css.Api.Reporting.Models.DTO.Request.EStart;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,6 +87,46 @@ namespace Css.Api.Reporting.Business.Services
             }
 
             _ftp.Set(options);
+        }
+
+        /// <summary>
+        /// A generic method to return the filter params for the current POST/PUT request
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>The instance of T</returns>
+        public T GetFilterParams<T>()
+            where T : class
+        {
+            T dto;
+            if (typeof(T).Equals(typeof(EStartFilter)))
+            {
+                dto = JsonConvert.DeserializeObject<T>(_context.RequestBody);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            return dto;
+        }
+
+        /// <summary>
+        /// A generic method to return the query params for the current GET request
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>The instance of T</returns>
+        public T GetQueryParams<T>()
+            where T : class
+        {
+            T dto;
+            if (typeof(T).Equals(typeof(CNX1Filter)))
+            {
+                dto = JsonConvert.DeserializeObject<T>(_context.RequestQueryParams);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            return dto;
         }
         #endregion
     }

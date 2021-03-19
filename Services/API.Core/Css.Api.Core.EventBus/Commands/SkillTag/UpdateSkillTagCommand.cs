@@ -74,7 +74,6 @@ namespace Css.Api.Core.EventBus.Commands.SkillTag
         /// <value>
         ///   <c>true</c> if this instance is deleted new value; otherwise, <c>false</c>.</value>
         public bool IsDeletedNewValue { get; set; }
-
     }
 }
 

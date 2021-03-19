@@ -161,6 +161,16 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse(HttpStatusCode.NotFound);
             }
 
+            var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(new AgentSchedulingGroupIdDetails
+            {
+                AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId
+            });
+
+            if (agentSchedulingGroup == null)
+            {
+                return new CSSResponse("Agent Scheduling Group not found", HttpStatusCode.NotFound);
+            }
+
             var skillTag = await _skillTagRepository.GetSkillTag(new SkillTagIdDetails
             {
                 SkillTagId = agentAdmin.SkillTagId
@@ -168,7 +178,7 @@ namespace Css.Api.Scheduling.Business
 
             if (skillTag == null)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                return new CSSResponse("Skill Tag not found", HttpStatusCode.NotFound);
             }
 
             var skillGroup = await _skillGroupRepository.GetSkillGroup(new SkillGroupIdDetails
@@ -178,7 +188,7 @@ namespace Css.Api.Scheduling.Business
 
             if (skillGroup == null)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                return new CSSResponse("Skill Group not found", HttpStatusCode.NotFound);
             }
 
             var clientLobGroup = await _clientLobGroupRepository.GetClientLobGroup(new ClientLobGroupIdDetails
@@ -188,7 +198,7 @@ namespace Css.Api.Scheduling.Business
 
             if (clientLobGroup == null)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                return new CSSResponse("Client Lob Group not found", HttpStatusCode.NotFound);
             }
 
             var clientName = await _clientRepository.GetClient(new ClientIdDetails
@@ -198,10 +208,11 @@ namespace Css.Api.Scheduling.Business
 
             if (clientName == null)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                return new CSSResponse("Client Name not found", HttpStatusCode.NotFound);
             }
 
             var mappedAgentAdmin = _mapper.Map<AgentAdminDetailsDTO>(agentAdmin);
+            mappedAgentAdmin.AgentSchedulingGroupName = agentSchedulingGroup.Name;
             mappedAgentAdmin.SkillTagId = skillTag.SkillTagId;
             mappedAgentAdmin.SkillTagName = skillTag.Name;
             mappedAgentAdmin.SkillGroupId = skillGroup.SkillGroupId;
@@ -240,7 +251,7 @@ namespace Css.Api.Scheduling.Business
         {
             var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
             var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
-            var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentAdminDetails.SkillTagId };
+            var agentSchedulingGroupIdDetails = new AgentSchedulingGroupIdDetails { AgentSchedulingGroupId = agentAdminDetails.AgentSchedulingGroupId };
 
             var agentAdminIdsByEmployeeIdAndSso = await _agentAdminRepository.GetAgentAdminIdsByEmployeeIdAndSso(agentAdminEmployeeIdDetails, agentAdminSsoDetails);
 
@@ -268,16 +279,19 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse($"Please enter a unique email address for SSO and Team Lead SSO.", HttpStatusCode.Conflict);
             }
 
-            var agentSchedulingGroupBasedonSkillTag = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBasedonSkillTag(skillTagIdDetails);
+            var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(agentSchedulingGroupIdDetails);
 
-            if (agentSchedulingGroupBasedonSkillTag == null)
+            if (agentSchedulingGroup == null)
             {
                 return new CSSResponse($"No Scheduling Group match to this record. Please create before you proceed.", HttpStatusCode.NotFound);
             }
 
             var agentAdminRequest = _mapper.Map<Agent>(agentAdminDetails);
 
-            agentAdminRequest.AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId;
+            agentAdminRequest.ClientId = agentSchedulingGroup.ClientId;
+            agentAdminRequest.ClientLobGroupId = agentSchedulingGroup.ClientLobGroupId;
+            agentAdminRequest.SkillGroupId = agentSchedulingGroup.SkillGroupId;
+            agentAdminRequest.SkillTagId = agentSchedulingGroup.SkillTagId;
 
             _agentAdminRepository.CreateAgentAdmin(agentAdminRequest);
 
@@ -323,7 +337,7 @@ namespace Css.Api.Scheduling.Business
 
             // get preupdated details
             var preUpdateAgentAdminHireDate = agentAdmin.AgentData.Find(x => x.Group.Description == "Hire Date")?.Group?.Value?.ToString();
-            var preUpdateAgentAdmin = new UpdateAgentAdmin()
+            var preUpdateAgentAdmin = new PreUpdateAgentAdmin()
             {
                 EmployeeId = agentAdmin.Ssn,
                 FirstName = agentAdmin.FirstName,
@@ -332,6 +346,7 @@ namespace Css.Api.Scheduling.Business
                 ClientLobGroupId = agentAdmin.ClientLobGroupId,
                 SkillGroupId = agentAdmin.SkillGroupId,
                 SkillTagId = agentAdmin.SkillTagId,
+                AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
                 Sso = agentAdmin.Sso,
                 SupervisorId = agentAdmin.SupervisorId,
                 SupervisorSso = agentAdmin.SupervisorSso,
@@ -340,7 +355,7 @@ namespace Css.Api.Scheduling.Business
 
             var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
             var agentAdminSsoDetails = new AgentAdminSsoDetails { Sso = agentAdminDetails.Sso };
-            var skillTagIdDetails = new SkillTagIdDetails { SkillTagId = agentAdminDetails.SkillTagId };
+            var agentSchedulingGroupIdDetails = new AgentSchedulingGroupIdDetails { AgentSchedulingGroupId = agentAdminDetails.AgentSchedulingGroupId };
             var employeeIdDetails = new EmployeeIdDetails { Id = agentAdmin.Ssn };
             var newEmployeeIdDetails = new EmployeeIdDetails { Id = agentAdminDetails.EmployeeId };
 
@@ -365,15 +380,18 @@ namespace Css.Api.Scheduling.Business
                 return new CSSResponse($"Please enter a unique email address for SSO and Team Lead SSO.", HttpStatusCode.Conflict);
             }
 
-            var agentSchedulingGroupBasedonSkillTag = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBasedonSkillTag(skillTagIdDetails);
+            var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(agentSchedulingGroupIdDetails);
 
-            if (agentSchedulingGroupBasedonSkillTag == null)
+            if (agentSchedulingGroup == null)
             {
                 return new CSSResponse($"No Scheduling Group match to this record. Please create before you proceed.", HttpStatusCode.NotFound);
             }
 
             var agentAdminRequest = _mapper.Map(agentAdminDetails, agentAdmin);
-            agentAdminRequest.AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId;
+            agentAdminRequest.ClientId = agentSchedulingGroup.ClientId;
+            agentAdminRequest.ClientLobGroupId = agentSchedulingGroup.ClientLobGroupId;
+            agentAdminRequest.SkillGroupId = agentSchedulingGroup.SkillGroupId;
+            agentAdminRequest.SkillTagId = agentSchedulingGroup.SkillTagId;
 
             _agentAdminRepository.UpdateAgentAdmin(agentAdminRequest);
 
@@ -382,7 +400,7 @@ namespace Css.Api.Scheduling.Business
                 EmployeeId = agentAdminDetails.EmployeeId,
                 FirstName = agentAdminDetails.FirstName,
                 LastName = agentAdminDetails.LastName,
-                AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId,
+                AgentSchedulingGroupId = agentSchedulingGroup.AgentSchedulingGroupId,
                 ModifiedBy = agentAdminDetails.ModifiedBy
             };
 
@@ -391,7 +409,7 @@ namespace Css.Api.Scheduling.Business
             var updateAgentScheduleManagerEmployeeDetails = new UpdateAgentScheduleManagerEmployeeDetails
             {
                 EmployeeId = agentAdminDetails.EmployeeId,
-                AgentSchedulingGroupId = agentSchedulingGroupBasedonSkillTag.AgentSchedulingGroupId,
+                AgentSchedulingGroupId = agentSchedulingGroup.AgentSchedulingGroupId,
                 ModifiedBy = agentAdminDetails.ModifiedBy
             };
 
@@ -429,7 +447,7 @@ namespace Css.Api.Scheduling.Business
         /// <param name="updatedDetails">The updated details.</param>
         /// <param name="preUpdateAgentAdminHireDate">The pre update agent admin hire date.</param>
         /// <returns></returns>
-        private List<FieldDetail> addActivityLogFields(UpdateAgentAdmin preUpdateDetails, Agent updatedDetails, string preUpdateAgentAdminHireDate)
+        private List<FieldDetail> addActivityLogFields(PreUpdateAgentAdmin preUpdateDetails, Agent updatedDetails, string preUpdateAgentAdminHireDate)
         {
             var fielDetails = new List<FieldDetail>();
             var agentUpdatedHireDate = updatedDetails.AgentData.Find(x => x.Group.Description == "Hire Date")?.Group?.Value;
@@ -523,6 +541,17 @@ namespace Css.Api.Scheduling.Business
                             Name = "SkillTagId",
                             OldValue = preUpdateDetails != null ? preUpdateDetails.SkillTagId.ToString() : "",
                             NewValue = updatedDetails.SkillTagId.ToString()
+                        };
+                        fielDetails.Add(field);
+                    }
+
+                    if (preUpdateDetails.AgentSchedulingGroupId != updatedDetails.AgentSchedulingGroupId)
+                    {
+                        var field = new FieldDetail()
+                        {
+                            Name = "AgentSchedulingGroupId",
+                            OldValue = preUpdateDetails != null ? preUpdateDetails.AgentSchedulingGroupId.ToString() : "",
+                            NewValue = updatedDetails.AgentSchedulingGroupId.ToString()
                         };
                         fielDetails.Add(field);
                     }
@@ -625,6 +654,12 @@ namespace Css.Api.Scheduling.Business
                         },
                         new FieldDetail()
                         {
+                            Name = "AgentSchedulingGroupId",
+                            OldValue = "",
+                            NewValue = updatedDetails.AgentSchedulingGroupId.ToString()
+                        },
+                        new FieldDetail()
+                        {
                             Name = "Sso",
                             OldValue = "",
                             NewValue = updatedDetails.Sso.ToString()
@@ -702,7 +737,6 @@ namespace Css.Api.Scheduling.Business
                 movingAgent.SkillTagId = destinationSchedulingGroup.SkillTagId;
                 movingAgent.ModifiedBy = moveAgentAdminsDetails.ModifiedBy;
                 movingAgent.ModifiedDate = DateTime.Now;
-                // movingAgent.MovedDate = DateTime.Now;
 
                 var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
                 {

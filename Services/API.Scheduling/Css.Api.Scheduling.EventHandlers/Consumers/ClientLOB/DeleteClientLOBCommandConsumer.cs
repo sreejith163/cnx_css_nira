@@ -9,12 +9,10 @@ using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-
 namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
 {
     public class DeleteClientLOBCommandConsumer : IConsumer<DeleteClientLOBCommand>
     {
-
         /// <summary>The bus utility</summary>
         private readonly IBusService _busUtility;
 
@@ -25,7 +23,6 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
         /// The uow
         /// </summary>
         private readonly IUnitOfWork _uow;
-
 
         /// <summary>Initializes a new instance of the <see cref="DeleteClientLOBCommandConsumer" /> class.</summary>
         /// <param name="busUtility">The bus utility.</param>
@@ -65,7 +62,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
 
                 await _busUtility.PublishEvent<IClientLOBDeleteSuccess>(MassTransitConstants.ClientLOBDeleteSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)
@@ -80,14 +77,15 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
         {
             await _busUtility.PublishEvent<IClientLOBDeleteFailed>(MassTransitConstants.ClientLOBDeleteFailedRouteKey, new
             {
-                Id = context.Message.Id,
-                Name = context.Message.Name,
-                ClientId = context.Message.ClientId,
-                TimezoneId = context.Message.TimezoneId,
-                FirstDayOfWeek = context.Message.FirstDayOfWeek,
-                ModifiedByOldValue = context.Message.ModifiedByOldValue,
-                IsDeletedOldValue = context.Message.IsDeletedOldValue,
-                ModifiedDateOldValue = context.Message.ModifiedDateOldValue
+                context.Message.Id,
+                context.Message.RefId,
+                context.Message.Name,
+                context.Message.ClientId,
+                context.Message.TimezoneId,
+                context.Message.FirstDayOfWeek,
+                context.Message.ModifiedByOldValue,
+                context.Message.IsDeletedOldValue,
+                context.Message.ModifiedDateOldValue
             });
         }
     }

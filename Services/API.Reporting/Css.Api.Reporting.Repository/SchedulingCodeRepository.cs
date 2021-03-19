@@ -32,5 +32,16 @@ namespace Css.Api.Reporting.Repository
             var schedulingCodes = FilterBy(x => !x.IsDeleted);
             return await Task.FromResult(schedulingCodes.ToList());
         }
+
+        /// <summary>
+        /// The method to fetch all matching active scheduling codes based on input names
+        /// </summary>
+        /// <param name="names">The names of scheduling codes</param>
+        /// <returns>The list of instances of SchedulingCode</returns>
+        public async Task<List<SchedulingCode>> GetSchedulingCodesByNames(List<string> names)
+        {
+            var schedulingCodes = FilterBy(x => !x.IsDeleted && names.Contains(x.Name));
+            return await Task.FromResult(schedulingCodes.ToList());
+        }
     }
 }

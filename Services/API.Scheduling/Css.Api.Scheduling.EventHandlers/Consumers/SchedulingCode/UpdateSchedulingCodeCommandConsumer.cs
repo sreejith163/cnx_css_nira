@@ -14,7 +14,6 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
 {
     public class UpdateSchedulingCodeCommandConsumer : IConsumer<UpdateSchedulingCodeCommand>
     {
-
         /// <summary>The bus utility</summary>
         private readonly IBusService _busUtility;
 
@@ -25,7 +24,6 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
         /// The uow
         /// </summary>
         private readonly IUnitOfWork _uow;
-
 
         /// <summary>Initializes a new instance of the <see cref="UpdateSchedulingCodeCommandConsumer" /> class.</summary>
         /// <param name="busUtility">The bus utility.</param>
@@ -68,7 +66,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
 
                 await _busUtility.PublishEvent<ISchedulingCodeUpdateSuccess>(MassTransitConstants.SchedulingCodeUpdateSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)

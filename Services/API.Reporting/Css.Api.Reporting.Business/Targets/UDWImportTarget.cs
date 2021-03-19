@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Css.Api.Core.DataAccess.Repository.UnitOfWork.Interfaces;
 using Css.Api.Core.Models.Domain.NoSQL;
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Business.Services;
 using Css.Api.Reporting.Models.DTO.Processing;
@@ -11,6 +12,7 @@ using Css.Api.Reporting.Repository;
 using Css.Api.Reporting.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +22,7 @@ namespace Css.Api.Reporting.Business.Targets
     /// <summary>
     /// The UDW import target service
     /// </summary>
-    public class UDWImportTarget : ITarget
+    public class UDWImportTarget : FTPImportService, ITarget
     {
         #region Private Properties
 
@@ -40,19 +42,30 @@ namespace Css.Api.Reporting.Business.Targets
         private readonly IAgentScheduleRepository _agentScheduleRepository;
 
         /// <summary>
+        /// The agent schedule manager repository
+        /// </summary>
+        private readonly IAgentScheduleManagerRepository _agentScheduleManagerRepository;
+
+        /// <summary>
         /// The agent scheduling group repository
         /// </summary>
         private readonly IAgentSchedulingGroupRepository _agentSchedulingGroupRepository;
+
+        /// <summary>
+        /// The agent scheduling group history repository
+        /// </summary>
+        private readonly IAgentSchedulingGroupHistoryRepository _agentSchedulingGroupHistoryRepository;
+
+        /// <summary>
+        /// The timezone repository
+        /// </summary>
+        private readonly ITimezoneRepository _timezoneRepository;
 
         /// <summary>
         /// The transation support of mongo
         /// </summary>
         private readonly IUnitOfWork _uow;
 
-        /// <summary>
-        /// The FTP service
-        /// </summary>
-        private readonly IFTPService _ftp;
         #endregion
 
         #region Public Properties
@@ -71,17 +84,23 @@ namespace Css.Api.Reporting.Business.Targets
         /// <param name="mapper"></param>
         /// <param name="agentRepository"></param>
         /// <param name="agentSchedulingGroupRepository"></param>
+        /// <param name="agentSchedulingGroupHistoryRepository"></param>
         /// <param name="agentScheduleRepository"></param>
+        /// <param name="agentScheduleManagerRepository"></param>
         /// <param name="uow"></param>
         /// <param name="ftp"></param>
-        public UDWImportTarget(IMapper mapper, IAgentRepository agentRepository, IAgentSchedulingGroupRepository agentSchedulingGroupRepository, IAgentScheduleRepository agentScheduleRepository, IUnitOfWork uow, IFTPService ftp)
+        public UDWImportTarget(IMapper mapper, IAgentRepository agentRepository, IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
+            IAgentSchedulingGroupHistoryRepository agentSchedulingGroupHistoryRepository, IAgentScheduleRepository agentScheduleRepository, 
+            IAgentScheduleManagerRepository agentScheduleManagerRepository, ITimezoneRepository timezoneRepository, IUnitOfWork uow, IFTPService ftp) : base(ftp)
         {
             _mapper = mapper;
             _agentRepository = agentRepository;
             _agentScheduleRepository = agentScheduleRepository;
+            _agentScheduleManagerRepository = agentScheduleManagerRepository;
             _agentSchedulingGroupRepository = agentSchedulingGroupRepository;
+            _agentSchedulingGroupHistoryRepository = agentSchedulingGroupHistoryRepository;
+            _timezoneRepository = timezoneRepository;
             _uow = uow;
-            _ftp = ftp;
         }
         #endregion
 
@@ -91,60 +110,22 @@ namespace Css.Api.Reporting.Business.Targets
         /// The method to push data to the destination
         /// </summary>
         /// <param name="feeds">List of instances of DataFeed (sources)</param>
-        /// <returns>An instance of ActivityResponse</returns>
-        public async Task<ActivityResponse> Push(List<DataFeed> feeds)
-        {
-            ActivityResponse response = new ActivityResponse();   
+        /// <returns>An instance of StrategyResponse</returns>
+        public async Task<StrategyResponse> Push(List<DataFeed> feeds)
+        {  
             foreach (DataFeed feed in feeds)
             {
-                ActivityDataResponse resp = await Import(feed.Content);
-                feed.Metadata = resp.Metadata;
-
-                ActivityData activity = new ActivityData();
-                activity.Bytes = feed.Content.Length;
-                activity.Source = feed.Feeder;
-
-                if (resp.Status == (int) ProcessStatus.Success)
-                {
-                    await _ftp.MoveToProcessedFolder(feed);
-                }
-                else if (resp.Status == (int)ProcessStatus.Partial)
-                {
-                    await _ftp.MoveToUnprocessedFolder(feed);
-                    activity.Metadata = feed.Metadata;
-                }
-                else
-                {
-                    await _ftp.MoveToFailedFolder(feed);
-                }
-
-                switch (resp.Status)
-                {
-                    case (int)ProcessStatus.Success:
-                        response.Completed.Add(activity);
-                        break;
-                    case (int)ProcessStatus.Failed:
-                        response.Failed.Add(activity);
-                        break;
-                    case (int)ProcessStatus.Partial:
-                        response.Partial.Add(activity);
-                        break;
-                    default:
-                        break;
-                }
+                await Process(feed);
             }
-            return response;
+            return ImportFeedback;
         }
-        #endregion
-
-        #region Private Methods
 
         /// <summary>
         /// The business logic to process the import is written here
         /// </summary>
         /// <param name="data">The input byte[] to be processed</param>
         /// <returns>An instance of ActivityDataResponse</returns>
-        private async Task<ActivityDataResponse> Import(byte[] data)
+        public override async Task<ActivityDataResponse> Import(byte[] data)
         {
             try
             {
@@ -153,14 +134,24 @@ namespace Css.Api.Reporting.Business.Targets
                 var agents = _mapper.Map<List<Agent>>(root.NewAgents)
                     .Union(_mapper.Map<List<Agent>>(root.ChangedAgents))
                     .ToList();
-                
+
                 var metadata = await CheckImport(root, agents);
+                
                 if(agents.Any())
                 {
                     _agentRepository.Upsert(agents);
+                    
+                    var agentSchedulingGroupHistories = _mapper.Map<List<AgentSchedulingGroupHistory>>(agents).ToList();
+                    var agentSchedulingGroups = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsByIds(agentSchedulingGroupHistories.Select(x => x.AgentSchedulingGroupId).ToList());
+                    var timezones = await _timezoneRepository.GetTimezones(agentSchedulingGroups.Select(x => x.TimezoneId).ToList());
+
                     var agentSchedules = _mapper.Map<List<AgentSchedule>>(agents).ToList();
-                    await CheckExistingSchedules(agentSchedules);
+                    await CheckExistingSchedules(agentSchedules, agentSchedulingGroups, timezones);
                     _agentScheduleRepository.InsertAgentSchedules(agentSchedules);
+
+                    ReconcileStartDates(agentSchedulingGroupHistories, agentSchedulingGroups, timezones);
+                    _agentSchedulingGroupHistoryRepository.UpdateAgentSchedulingGroupHistory(agentSchedulingGroupHistories);
+
                     await _uow.Commit();
                 }
 
@@ -187,6 +178,9 @@ namespace Css.Api.Reporting.Business.Targets
                 };
             }
         }
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// The method to check any mismatches in the source and destination data
@@ -196,7 +190,8 @@ namespace Css.Api.Reporting.Business.Targets
         /// <returns>Returns an empty string if it matches, else the serialized array of all the partially imported sources data.</returns>
         private async Task<string> CheckImport(UDWAgentList source, List<Agent> dest)
         {
-            await AssignAgentCategories(dest);
+            var existingAgents = await _agentRepository.GetAgents(dest.Select(x => x.Ssn).ToList());
+            AssignAgentCategories(existingAgents, dest);
             
             var metadata = string.Empty;
             
@@ -206,31 +201,45 @@ namespace Css.Api.Reporting.Business.Targets
             var newAgents = source.NewAgents.Where(x => x.SSN == 0)
                             .Union(
                                 (from ag in source.NewAgents.Where(x => x.SSN != 0)
-                                 join up in dest on ag.SSN equals up.Ssn
-                                 where (ag.SenDate != null && up.SenDate == null)
-                                 || (ag.MU == null)
-                                 || (ag.SenExt != null && up.SenExt == null)
-                                 select ag)
-                             ).ToList();
+                                    join up in dest on ag.SSN equals up.Ssn
+                                    where (ag.SenDate != null && up.SenDate == null)
+                                    || (ag.MU == null) 
+                                    || (ag.SenExt != null && up.SenExt == null)
+                                    select ag)
+                            )// remove below code when MU change or move agent scenario is handled in UDW import
+                            //.Union(
+                            //    (from ag in source.NewAgents
+                            //    join eag in existingAgents on ag.SSN equals eag.Ssn
+                            //    where !(ag.MUString.Equals(eag.Mu))
+                            //    select ag)
+                            //)
+                            .ToList();
             
             var invalidSchedulingGroupNewAgents = source.NewAgents.Where(x => !refIds.Contains(x.MU)).ToList();
-            newAgents = newAgents.Union(invalidSchedulingGroupNewAgents).ToList();
+            newAgents = newAgents.Union(invalidSchedulingGroupNewAgents).Distinct().ToList();
 
             var changeAgents = source.ChangedAgents.Where(x => x.SSN == 0)
-                               .Union(
+                                .Union(
                                     (from ag in source.ChangedAgents.Where(x => x.SSN != 0)
                                     join up in dest on ag.SSN equals up.Ssn
                                     where (ag.SenDate != null && up.SenDate == null)
                                     || (ag.SenExt != null && up.SenExt == null)
                                     select ag)
-                               ).ToList();
+                                )// remove below code when MU change or move agent scenario is handled in UDW import
+                                //.Union(
+                                //    (from ag in source.ChangedAgents
+                                //    join eag in existingAgents on ag.SSN equals eag.Ssn
+                                //    where ag.MU != null && !(ag.MUString.Equals(eag.Mu))
+                                //    select ag)
+                                //)
+                                .ToList();
             
             var invalidSchedulingGroupChangeAgents = source.ChangedAgents.Where(x => x.MU.HasValue && !refIds.Contains(x.MU)).ToList();
-            changeAgents = changeAgents.Union(invalidSchedulingGroupChangeAgents).ToList();
+            changeAgents = changeAgents.Union(invalidSchedulingGroupChangeAgents).Distinct().ToList();
 
             var ignoreAgents = newAgents.Select(x => x.SSN).Union(changeAgents.Select(x => x.SSN)).ToList();
             dest.RemoveAll(x => ignoreAgents.Contains(x.Ssn));
-
+            
             dest.ForEach(x =>
             {
                 var schedulingGroup = schedulingGroups.FirstOrDefault(y => y.RefId.ToString() == x.Mu);
@@ -271,10 +280,8 @@ namespace Css.Api.Reporting.Business.Targets
         /// </summary>
         /// <param name="dest"></param>
         /// <returns></returns>
-        private async Task AssignAgentCategories(List<Agent> dest)
+        private void AssignAgentCategories(List<Agent> existingAgents, List<Agent> dest)
         {
-            var existingAgents = await _agentRepository.GetAgents(dest.Select(x => x.Ssn).ToList());
-
             var agentCategories = (from a in existingAgents
                                    join d in dest on a.Ssn equals d.Ssn
                                    let cData = a.AgentData != null && d.AgentData != null ? (from ad in a.AgentData
@@ -315,19 +322,88 @@ namespace Css.Api.Reporting.Business.Targets
         /// A method to check if there are existing schedules for agents
         /// </summary>
         /// <param name="agentSchedules"></param>
+        /// <param name="agentSchedulingGroups"></param>
+        /// <param name="timezones"></param>
         /// <returns></returns>
-        private async Task CheckExistingSchedules(List<AgentSchedule> agentSchedules)
+        private async Task CheckExistingSchedules(List<AgentSchedule> agentSchedules, List<AgentSchedulingGroup> agentSchedulingGroups, List<Timezone> timezones)
         {
-            var existingSchedules = await _agentScheduleRepository.GetSchedules(agentSchedules.Select(x => x.EmployeeId).ToList());
+            List<AgentSchedule> existingSchedules = await _agentScheduleRepository.GetSchedules(agentSchedules.Select(x => x.EmployeeId).ToList());
             agentSchedules.ForEach(x =>
             {
                 var exSch = existingSchedules.FirstOrDefault(y => y.EmployeeId == x.EmployeeId);
-                //if (exSch != null && exSch.AgentSchedulingGroupId != x.AgentSchedulingGroupId)
-                //{
-                //    x.ModifiedBy = "UDW Import";
-                //    x.ModifiedDate = DateTime.UtcNow;
-                //}
+                if (exSch != null) 
+                {
+                    var date = DateTime.UtcNow;
+                    if (exSch.FirstName != x.FirstName || exSch.LastName != x.LastName)
+                    {
+                        x.ModifiedBy = "UDW Import";
+                        x.ModifiedDate = date;
+                    }
+                    else
+                    {
+                        x.ModifiedBy = null;
+                        x.ModifiedDate = null;
+                    }
+
+                    if (x.ActiveAgentSchedulingGroupId != 0 && exSch.ActiveAgentSchedulingGroupId != x.ActiveAgentSchedulingGroupId)
+                    {
+                        var timezoneId = agentSchedulingGroups.First(y => y.AgentSchedulingGroupId == x.ActiveAgentSchedulingGroupId).TimezoneId;
+                        var offset = timezones.First(y => y.TimezoneId == timezoneId).UtcOffset;
+                        var changeDate = date.Add(offset).Date;
+                        var moveDate = new DateTime(changeDate.Year, changeDate.Month, changeDate.Day, 0, 0, 0, DateTimeKind.Utc);
+                        x.Ranges = ScheduleHelper.GenerateAgentScheduleRanges(moveDate, x.ActiveAgentSchedulingGroupId, exSch.Ranges);
+                        x.ModifiedBy = "UDW Import";
+                        x.ModifiedDate = date;
+                        
+                        _agentScheduleManagerRepository.UpdateAgentSchedulingGroupForManagerCharts(new UpdatedAgentSchedulingGroupDetails
+                                                                                                    {
+                                                                                                        CurrentAgentSchedulingGroupId = x.ActiveAgentSchedulingGroupId,
+                                                                                                        EmployeeId = x.EmployeeId,
+                                                                                                        StartDate = moveDate
+                                                                                                    });
+                    }
+                    else
+                    {
+                        x.Ranges = exSch.Ranges;
+                    }
+                } 
+                else
+                {
+                    x.ModifiedBy = null;
+                    x.ModifiedDate = null;
+                }
             });
+        }
+
+        /// <summary>
+        /// The helper method to reconcile the start date based on corresponding ASG timezones
+        /// </summary>
+        /// <param name="agentSchedulingGroupHistories"></param>
+        /// <param name="agentSchedulingGroups"></param>
+        /// <param name="timezones"></param>
+        private void ReconcileStartDates(List<AgentSchedulingGroupHistory> agentSchedulingGroupHistories, List<AgentSchedulingGroup> agentSchedulingGroups, List<Timezone> timezones)
+        {
+            List<int> removeIds = new List<int>();
+            
+            agentSchedulingGroupHistories.ForEach(agentSchedulingGroupHistory =>
+            {
+                var agentSchedulingGroup = agentSchedulingGroups.FirstOrDefault(x => x.AgentSchedulingGroupId == agentSchedulingGroupHistory.AgentSchedulingGroupId);
+                if(agentSchedulingGroup != null)
+                {
+                    var timezone = timezones.First(x => x.TimezoneId == agentSchedulingGroup.TimezoneId);
+                    var changeDate = agentSchedulingGroupHistory.StartDate.Add(timezone.UtcOffset).Date;
+                    agentSchedulingGroupHistory.StartDate = new DateTime(changeDate.Year, changeDate.Month, changeDate.Day, 0, 0, 0, DateTimeKind.Utc);
+                }
+                else
+                {
+                    removeIds.Add(agentSchedulingGroupHistory.AgentSchedulingGroupId);
+                }
+            });
+
+            if (removeIds.Any())
+            {
+                agentSchedulingGroupHistories.RemoveAll(x => removeIds.Contains(x.AgentSchedulingGroupId));
+            }
         }
         #endregion
     }

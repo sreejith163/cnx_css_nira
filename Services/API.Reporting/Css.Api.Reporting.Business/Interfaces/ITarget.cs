@@ -22,6 +22,6 @@ namespace Css.Api.Reporting.Business.Interfaces
         /// </summary>
         /// <param name="feeds">List of instances of DataFeed (sources)</param>
         /// <returns>An instance of ActivityResponse</returns>
-        Task<ActivityResponse> Push(List<DataFeed> feeds);
+        Task<StrategyResponse> Push(List<DataFeed> feeds);
     }
 }

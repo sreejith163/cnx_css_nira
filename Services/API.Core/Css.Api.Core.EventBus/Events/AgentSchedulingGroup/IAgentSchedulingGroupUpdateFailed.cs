@@ -36,6 +36,10 @@ namespace Css.Api.Core.EventBus.Events.AgentSchedulingGroup
         /// <value>The timezone identifier oldvalue.</value>
         public int TimezoneIdOldValue { get; set; }
 
+        /// <summary>Gets or sets the old estart provisioning flag.</summary>
+        /// <value>The old estart provisioning flag.</value>
+        public bool EstartProvisionOldValue { get; set; }
+
         /// <summary>Gets or sets the first day of week oldvalue.</summary>
         /// <value>The first day of week oldvalue.</value>
         public int FirstDayOfWeekOldValue { get; set; }

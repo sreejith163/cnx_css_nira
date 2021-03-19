@@ -65,6 +65,8 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
                 agentSchedulingGroup.Name = context.Message.NameNewValue;
                 agentSchedulingGroup.RefId = context.Message.RefIdNewValue;
                 agentSchedulingGroup.IsDeleted = context.Message.IsDeletedNewValue;
+                agentSchedulingGroup.TimezoneId = context.Message.TimezoneIdNewValue;
+                agentSchedulingGroup.EstartProvision = context.Message.EstartProvisionNewValue;
 
                 _agentSchedulingGroupRepository.UpdateAgentSchedulingGroup(agentSchedulingGroup);
 
@@ -72,7 +74,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
 
                 await _busUtility.PublishEvent<IAgentSchedulingGroupUpdateSuccess>(MassTransitConstants.AgentSchedulingGroupUpdateSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)
@@ -95,6 +97,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
                 context.Message.SkillGroupIdOldValue,
                 context.Message.SkillTagIdOldValue,
                 context.Message.TimezoneIdOldValue,
+                context.Message.EstartProvisionOldValue,
                 context.Message.FirstDayOfWeekOldValue,
                 context.Message.OperationHourOldValue,
                 context.Message.ModifiedByOldValue,

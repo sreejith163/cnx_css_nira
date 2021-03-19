@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Css.Api.Reporting.Models.DTO.Request.Common;
+using Css.Api.Reporting.Models.DTO.Processing;
 
 namespace Css.Api.Reporting.Repository
 {
@@ -27,15 +29,17 @@ namespace Css.Api.Reporting.Repository
         /// <summary>
         /// The method to fetch schedules for all agent for a date
         /// </summary>
-        /// <param name="reportDate">The requested date for which schedule is to be picked</param>
+        /// <param name="filter">The filter condition based on which schedules are to be retrieved</param>
         /// <returns>The list of instances of AgentSchedule</returns>
-        public async Task<List<AgentSchedule>> GetSchedules(DateTime reportDate)
+        public async Task<List<AgentSchedule>> GetSchedules(ScheduleFilter filter)
         {
-            var query = Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) // &
-                //Builders<AgentSchedule>.Filter.Lte(i => i.DateFrom, reportDate) &
-                //Builders<AgentSchedule>.Filter.Gte(i => i.DateTo, reportDate) &
-                //Builders<AgentSchedule>.Filter.Where(i => i.AgentScheduleCharts.Any(x => x.Day == (int)reportDate.DayOfWeek))
-                ;
+            var query = Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) &
+                Builders<AgentSchedule>.Filter.In(i => i.ActiveAgentSchedulingGroupId, filter.AgentSchedulingGroupIds) &
+                (
+                    Builders<AgentSchedule>.Filter.Where(i => i.Ranges.Any(x => x.DateFrom <= filter.StartDate && filter.StartDate <= x.DateTo)) |
+                    Builders<AgentSchedule>.Filter.Where(i => i.Ranges.Any(x => x.DateFrom <= filter.EndDate && filter.EndDate <= x.DateTo)) |
+                    Builders<AgentSchedule>.Filter.Where(i => i.Ranges.Any(x => x.DateFrom > filter.StartDate && filter.EndDate > x.DateTo))
+                );
 
             var schedules = FilterBy(query);
 
@@ -45,12 +49,12 @@ namespace Css.Api.Reporting.Repository
         /// <summary>
         /// The method to fetch schedules for input employees
         /// </summary>
-        /// <param name="employeeIds"></param>
+        /// <param name="agentIds"></param>
         /// <returns></returns>
-        public async Task<List<AgentSchedule>> GetSchedules(List<int> employeeIds)
+        public async Task<List<AgentSchedule>> GetSchedules(List<int> agentIds)
         {
             var query = Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) &
-                Builders<AgentSchedule>.Filter.Where(i => employeeIds.Contains(i.EmployeeId));
+                Builders<AgentSchedule>.Filter.Where(i => agentIds.Contains(i.EmployeeId));
 
             var schedules = FilterBy(query);
 
@@ -69,20 +73,26 @@ namespace Css.Api.Reporting.Repository
 
                 var update = Builders<AgentSchedule>.Update.SetOnInsert(x => x.EmployeeId, agentScheduleDetails.EmployeeId)
                     .SetOnInsert(x => x.IsDeleted, agentScheduleDetails.IsDeleted)
-                    //.SetOnInsert(x => x.DateFrom, agentScheduleDetails.DateFrom)
-                    //.SetOnInsert(x => x.DateTo, agentScheduleDetails.DateTo)
-                    //.SetOnInsert(x => x.Status, agentScheduleDetails.Status)
                     .SetOnInsert(x => x.CreatedBy, agentScheduleDetails.CreatedBy)
                     .SetOnInsert(x => x.CreatedDate, agentScheduleDetails.CreatedDate)
-                    //.SetOnInsert(x => x.AgentScheduleCharts, agentScheduleDetails.AgentScheduleCharts)
-                    //.SetOnInsert(x => x.AgentScheduleManagerCharts, agentScheduleDetails.AgentScheduleManagerCharts)
+                    .Set(x => x.Ranges, agentScheduleDetails.Ranges)
                     .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
                     .Set(x => x.ModifiedDate, agentScheduleDetails.ModifiedDate);
 
-                //if (agentScheduleDetails.AgentSchedulingGroupId > 0)
-                //{
-                //    update = update.Set(x => x.AgentSchedulingGroupId, agentScheduleDetails.AgentSchedulingGroupId);
-                //}
+                if(!string.IsNullOrWhiteSpace(agentScheduleDetails.FirstName))
+                {
+                    update = update.Set(x => x.FirstName, agentScheduleDetails.FirstName);
+                }
+
+                if(!string.IsNullOrWhiteSpace(agentScheduleDetails.LastName))
+                {
+                    update = update.Set(x => x.LastName, agentScheduleDetails.LastName);
+                }
+
+                if(agentScheduleDetails.ActiveAgentSchedulingGroupId > 0)
+                {
+                    update = update.Set(x => x.ActiveAgentSchedulingGroupId, agentScheduleDetails.ActiveAgentSchedulingGroupId);
+                }
 
                 UpdateOneAsync(query, update, new UpdateOptions
                 {
@@ -90,5 +100,6 @@ namespace Css.Api.Reporting.Repository
                 });
             });
         }
+
     }
 }

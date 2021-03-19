@@ -44,6 +44,7 @@ namespace Css.Api.Setup.EventHandlers.Consumers.AgentSchedulingGroup
                 RefId = context.Message.RefId,
                 SkillTagId = context.Message.SkillTagId,
                 TimezoneId = context.Message.TimezoneId,
+                EstartProvision = context.Message.EstartProvision,
                 ModifiedDate = context.Message.ModifiedDate,
                 FirstDayOfWeek = context.Message.FirstDayOfWeek,
                 OperationHour =

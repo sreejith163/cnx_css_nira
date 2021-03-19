@@ -27,9 +27,9 @@ namespace Css.Api.Job.Business.CronJobs
         private readonly ILogger<UDWImportJob> _logger;
 
         /// <summary>
-        /// The service provider
+        /// The Http helper service
         /// </summary>
-        private readonly IHttpClientFactory _httpClient;
+        private readonly IHttpService _httpService;
 
         /// <summary>
         /// The cron job configurations
@@ -44,13 +44,13 @@ namespace Css.Api.Job.Business.CronJobs
         /// </summary>
         /// <param name="config">The schedule configurations</param>
         /// <param name="logger">The logger</param>
-        /// <param name="httpClient">The http client factory</param>
+        /// <param name="httpService">The http helper service</param>
         /// <param name="jobs">The jobs configuration</param>
-        public UDWImportJob(IScheduleConfig<UDWImportJob> config, ILogger<UDWImportJob> logger, IHttpClientFactory httpClient, IOptions<Jobs> jobs)
+        public UDWImportJob(IScheduleConfig<UDWImportJob> config, ILogger<UDWImportJob> logger, IHttpService httpService, IOptions<Jobs> jobs)
             : base(config.CronExpression, config.TimeZoneInfo)
         {
             _logger = logger;
-            _httpClient = httpClient;
+            _httpService = httpService;
             _job = jobs.Value.Cron.First(x => x.Key.Equals("UDWImport"));
         }
         #endregion
@@ -75,29 +75,25 @@ namespace Css.Api.Job.Business.CronJobs
         /// <returns></returns>
         public override async Task Process(CancellationToken cancellationToken)
         {
-            var client = _httpClient.CreateClient();
+            string startTime = $"{DateTime.UtcNow:hh:mm:ss}";
             try
-            { 
-                var reqMessage = CreateHttpRequestMessage();
-                var responseMessage = await client.SendAsync(reqMessage);
+            {
+                var reqMessage = _httpService.CreateHttpRequestMessage(_job);
+                var responseMessage = await _httpService.SendAsync(reqMessage);
                 var response = await responseMessage.Content.ReadAsStringAsync();
 
                 if (responseMessage.IsSuccessStatusCode)
                 {
-                    _logger.LogInformation($"UDWCronJob run at {DateTime.Now:hh:mm:ss} completed. Response details:\n{response}");
+                    _logger.LogInformation($"UDWCronJob run at {startTime} completed. Response details:\n{response}");
                 }
                 else
                 {
-                    _logger.LogError($"UDWCronJob run at {DateTime.Now:hh:mm:ss} failed. Response details:\n{response}");
+                    _logger.LogError($"UDWCronJob run at {startTime} failed. Response details:\n{response}");
                 }
             }
             catch(Exception ex)
             {
-                _logger.LogError($"An exception occured in the UDWCronJob run at {DateTime.Now:hh:mm:ss}. Expection details:\n{ex.Message}\n{ex.StackTrace}");
-            }
-            finally
-            {
-                client.Dispose();
+                _logger.LogError($"An exception occured in the UDWCronJob run at {startTime}. Expection details:\n{ex.Message}\n{ex.StackTrace}");
             }
         }
 
@@ -110,35 +106,6 @@ namespace Css.Api.Job.Business.CronJobs
         {
             _logger.LogInformation("UDWCronJob is stopping.");
             await base.StopAsync(cancellationToken);
-        }
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Method to create the HTTPRequestMessage using the job attributes
-        /// </summary>
-        /// <returns></returns>
-        private HttpRequestMessage CreateHttpRequestMessage()
-        {
-            var reqMessage = new HttpRequestMessage();
-            reqMessage.RequestUri = new Uri(_job.Url);
-            
-            if(_job.Headers != null)
-            {
-                foreach (KeyValuePair<string, string> keyValuePair in _job.Headers)
-                {
-                    reqMessage.Headers.Add(keyValuePair.Key, keyValuePair.Value);
-                }
-            }
-            reqMessage.Method = new HttpMethod(_job.Method);
-            
-            if(!string.IsNullOrWhiteSpace(_job.Content))
-            {
-                reqMessage.Content = new StringContent(_job.Content);
-            }
-
-            return reqMessage;
         }
         #endregion
     }

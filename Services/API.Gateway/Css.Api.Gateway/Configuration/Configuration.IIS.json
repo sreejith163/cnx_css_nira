@@ -695,6 +695,36 @@
         "TimeoutValue": 300000
       }
     },
+    {
+      "DownstreamPathTemplate": "/api/v1/activity/{source}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44301
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reporting/getagentschedules/{source}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "QoSOptions": {
+        "TimeoutValue": 300000
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/activity/{source}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44301
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reporting/replaceagentschedule/{source}",
+      "UpstreamHttpMethod": [ "Put" ],
+      "QoSOptions": {
+        "TimeoutValue": 300000
+      }
+    },
     //********* Scheduling service Activity Log Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/activitylogs",

@@ -42,6 +42,7 @@ namespace Css.Api.Setup.EventHandlers.Consumers.AgentSchedulingGroup
                 ModifiedDate = context.Message.ModifiedDateOldValue,
                 SkillTagId = context.Message.SkillTagId,
                 TimezoneId = context.Message.TimezoneId,
+                EstartProvision = context.Message.EstartProvision,
                 FirstDayOfWeek = context.Message.FirstDayOfWeek,
                 OperationHour =
                     JsonConvert.DeserializeObject<List<OperationHourAttribute>>(context.Message.OperationHour),

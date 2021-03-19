@@ -165,6 +165,36 @@ namespace Css.Api.Core.Utilities.Extensions
 
             return managerCharts;
         }
+
+        /// <summary>
+        /// A helper method to check if the input chart overlaps any existing schedules chart
+        /// </summary>
+        /// <param name="managerChart"></param>
+        /// <param name="agentScheduleManagers"></param>
+        /// <returns></returns>
+        public static bool CheckIfOverlapSchedulesExists(AgentScheduleManagerChart managerChart, List<AgentScheduleManager> agentScheduleManagers)
+        {
+            var dates = Enumerable.Range(0, 1 + (int) managerChart.EndDateTime.Subtract(managerChart.StartDateTime).TotalMinutes / 5 )
+                            .Select(offset => managerChart.StartDateTime.Add(new TimeSpan(0,offset * 5,0)))
+                            .ToArray();
+
+            foreach(var agentManager in agentScheduleManagers)
+            {
+                foreach(var agentManagerChart in agentManager.Charts)
+                {
+                    var mgrDates = Enumerable.Range(0, 1 + (int) agentManagerChart.EndDateTime.Subtract(agentManagerChart.StartDateTime).TotalMinutes / 5)
+                            .Select(offset => agentManagerChart.StartDateTime.Add(new TimeSpan(0, offset * 5, 0)))
+                            .ToArray();
+                    if(mgrDates.Any(x => dates.Contains(x)))
+                    {
+                        return true;
+                        
+                    }
+                }
+            }
+
+            return false;
+        }
         #endregion
 
         #region Private Methods

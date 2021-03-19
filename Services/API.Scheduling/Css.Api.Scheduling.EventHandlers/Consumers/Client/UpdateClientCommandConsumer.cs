@@ -9,12 +9,10 @@ using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-
 namespace Css.Api.Scheduling.EventHandlers.Consumers.Client
 {
     public class UpdateClientCommandConsumer : IConsumer<UpdateClientCommand>
     {
-
         /// <summary>The bus utility</summary>
         private readonly IBusService _busUtility;
 
@@ -25,7 +23,6 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.Client
         /// The uow
         /// </summary>
         private readonly IUnitOfWork _uow;
-
 
         /// <summary>Initializes a new instance of the <see cref="UpdateClientCommandConsumer" /> class.</summary>
         /// <param name="busUtility">The bus utility.</param>

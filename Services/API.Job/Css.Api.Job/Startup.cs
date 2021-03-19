@@ -55,6 +55,7 @@ namespace Css.Api.Job
                 .AddHealthCheck()
                 .AddSwaggerConfiguration(Configuration)
                 .AddJobs(Configuration)
+                .AddDBContextConfiguration(Configuration)
                 .AddControllers();
         }
 

@@ -32,5 +32,43 @@ namespace Css.Api.Reporting.Repository
             var agents = FilterBy(x => !x.IsDeleted);
             return await Task.FromResult(agents.ToList());
         }
+
+        /// <summary>
+        /// Method to fetch agent scheduling groups by input identifiers
+        /// </summary>
+        /// <param name="agentSchedulingGroupIds">The agent scheduling group identifiers</param>
+        /// <returns>A list of instances of AgentSchedulingGroup in the input identifiers</returns>
+        public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupsByIds(List<int> agentSchedulingGroupIds, bool? estartProvisioning = null)
+        {
+            IQueryable<AgentSchedulingGroup> agentSchedulingGroups;
+            if (estartProvisioning.HasValue)
+            {
+                agentSchedulingGroups = FilterBy(x => agentSchedulingGroupIds.Contains(x.AgentSchedulingGroupId) && x.EstartProvision == estartProvisioning.Value);
+            }
+            else
+            {
+                agentSchedulingGroups = FilterBy(x => agentSchedulingGroupIds.Contains(x.AgentSchedulingGroupId));
+            }
+            return await Task.FromResult(agentSchedulingGroups.ToList());
+        }
+
+        /// <summary>
+        /// Method to fetch agent scheduling groups in input timezones
+        /// </summary>
+        /// <param name="timezoneIds">The timezone identifiers</param>
+        /// <returns>A list of instances of AgentSchedulingGroup in the input timezones</returns>
+        public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroups(List<int> timezoneIds, bool? estartProvisioning = null)
+        {
+            IQueryable<AgentSchedulingGroup> agentSchedulingGroups;
+            if (estartProvisioning.HasValue)
+            {
+                agentSchedulingGroups = FilterBy(x => timezoneIds.Contains(x.TimezoneId) && x.EstartProvision == estartProvisioning.Value);
+            }
+            else
+            {
+                agentSchedulingGroups = FilterBy(x => timezoneIds.Contains(x.TimezoneId));
+            }
+            return await Task.FromResult(agentSchedulingGroups.ToList());
+        }
     }
 }

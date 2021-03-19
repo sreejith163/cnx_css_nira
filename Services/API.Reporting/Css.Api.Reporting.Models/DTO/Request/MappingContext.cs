@@ -13,5 +13,7 @@ namespace Css.Api.Reporting.Models.DTO.Request
         public string Target { get; set; }
         public string TargetType { get; set; }
         public Dictionary<string, string> TargetOptions { get; set; }
+        public string RequestBody { get; set; }
+        public string RequestQueryParams { get; set; }
     }
 }

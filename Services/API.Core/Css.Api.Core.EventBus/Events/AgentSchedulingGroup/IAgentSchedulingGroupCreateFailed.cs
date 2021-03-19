@@ -15,8 +15,9 @@ namespace Css.Api.Core.EventBus.Events.AgentSchedulingGroup
         /// <value>The name.</value>
         public string Name { get; set; }
 
-        /// <summary>Gets or sets the reference identifier.</summary>
-        /// <value>The reference identifier.</value>
+        /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
         public int? RefId { get; set; }
 
         /// <summary>Gets or sets the client identifier.</summary>
@@ -39,6 +40,10 @@ namespace Css.Api.Core.EventBus.Events.AgentSchedulingGroup
         /// <value>The timezone identifier.</value>
         public int TimezoneId { get; set; }
 
+        /// <summary>Gets or sets the estart provisioning flag.</summary>
+        /// <value>The estart provisioning flag.</value>
+        public bool EstartProvision { get; set; }
+
         /// <summary>Gets or sets the first day of week.</summary>
         /// <value>The first day of week.</value>
         public int FirstDayOfWeek { get; set; }
@@ -50,7 +55,6 @@ namespace Css.Api.Core.EventBus.Events.AgentSchedulingGroup
         /// <summary>Gets or sets the modified date.</summary>
         /// <value>The modified date.</value>
         public DateTimeOffset? ModifiedDate { get; set; }
-
     }
 }
 

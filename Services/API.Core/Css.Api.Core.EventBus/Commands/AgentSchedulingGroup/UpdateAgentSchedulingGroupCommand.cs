@@ -39,6 +39,10 @@ namespace Css.Api.Core.EventBus.Commands.AgentSchedulingGroup
         /// <value>The timezone identifier oldvalue.</value>
         public int TimezoneIdOldValue { get; set; }
 
+        /// <summary>Gets or sets the old estart provisioning flag.</summary>
+        /// <value>The old estart provisioning flag.</value>
+        public bool EstartProvisionOldValue { get; set; }
+
         /// <summary>Gets or sets the first day of week oldvalue.</summary>
         /// <value>The first day of week oldvalue.</value>
         public int FirstDayOfWeekOldValue { get; set; }
@@ -93,5 +97,8 @@ namespace Css.Api.Core.EventBus.Commands.AgentSchedulingGroup
         ///   <c>true</c> if this instance is deleted new value; otherwise, <c>false</c>.</value>
         public bool IsDeletedNewValue { get; set; }
 
+        /// <summary>Gets or sets the new estart provisioning flag.</summary>
+        /// <value>The new estart provisioning flag.</value>
+        public bool EstartProvisionNewValue { get; set; }
     }
 }

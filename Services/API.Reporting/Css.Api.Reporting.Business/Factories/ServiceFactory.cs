@@ -3,11 +3,13 @@ using Css.Api.Reporting.Business.Data;
 using Css.Api.Reporting.Business.Exceptions;
 using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Models.DTO.Mappers;
+using Css.Api.Reporting.Models.DTO.Processing;
 using Css.Api.Reporting.Models.DTO.Request;
 using Css.Api.Reporting.Models.DTO.Response;
 using Css.Api.Reporting.Models.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,6 +102,25 @@ namespace Css.Api.Reporting.Business.Factories
             {
                 _mapper.InitializeFTP<ITarget>();
             }
+        }
+
+        /// <summary>
+        /// The method to initialize the fetch request feeds
+        /// </summary>
+        /// <returns>The list of instances of DataFeed</returns>
+        public List<DataFeed> GetRequestFeeds()
+        {
+            List<DataFeed> feeds = new List<DataFeed>();
+            var requestBody = JsonConvert.DeserializeObject<AgentActivityScheduleUpdate>(_context.RequestBody);
+            requestBody.AgentSchedule.ForEach(x =>
+            {
+                feeds.Add(new DataFeed()
+                {
+                    Content = Encoding.Default.GetBytes(JsonConvert.SerializeObject(x)),
+                    Feeder = "API"
+                });
+            });
+            return feeds;
         }
         #endregion
     }

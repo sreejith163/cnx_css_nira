@@ -1,5 +1,7 @@
 ﻿using Css.Api.Job.Business.Interfaces;
 using Css.Api.Job.Business.Services;
+using Css.Api.Job.Repository;
+using Css.Api.Job.Repository.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -35,6 +37,46 @@ namespace Css.Api.Job.Business.Extensions
 
             services.AddSingleton<IScheduleConfig<T>>(config);
             services.AddHostedService<T>();
+            return services;
+        }
+
+        /// <summary>
+        /// An extension method to add the framework services for the jobs
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddJobFramework(this IServiceCollection services)
+        {
+            services
+                .AddHelperServices()
+                .AddRepositories();
+
+            return services;
+        }
+
+        /// <summary>
+        /// An extension method to all the repositories
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        private static IServiceCollection AddRepositories(this IServiceCollection services)
+        {
+            services.AddScoped<ITimezoneRepository, TimezoneRepository>();
+
+            return services;
+        }
+
+        /// <summary>
+        /// An extension method to all the helper services
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        private static IServiceCollection AddHelperServices(this IServiceCollection services)
+        {
+            services.AddScoped<ITimeService, TimeService>();
+            services.AddScoped<IHttpService, HttpService>();
+            services.AddScoped<IEStartService, EStartService>();
+
             return services;
         }
     }

@@ -1,5 +1,5 @@
 ﻿using Css.Api.Core.Models.Domain;
-using Css.Api.Scheduling.Models.Domain;
+using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.Timezone;
 using System.Threading.Tasks;
 

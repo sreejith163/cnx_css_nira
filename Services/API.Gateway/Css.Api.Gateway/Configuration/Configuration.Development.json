@@ -603,7 +603,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/agentSchedulemanagers/{skillGroupId}/scheduledopen",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "cnx-css-api-scheduling",
@@ -687,6 +687,36 @@
       ],
       "UpstreamPathTemplate": "/api/activity",
       "UpstreamHttpMethod": [ "Post" ],
+      "QoSOptions": {
+        "TimeoutValue": 300000
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/activity/{source}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-reporting",
+          "Port": 4206
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reporting/getagentschedules/{source}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "QoSOptions": {
+        "TimeoutValue": 300000
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/activity/{source}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-reporting",
+          "Port": 4206
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reporting/replaceagentschedule/{source}",
+      "UpstreamHttpMethod": [ "Put" ],
       "QoSOptions": {
         "TimeoutValue": 300000
       }

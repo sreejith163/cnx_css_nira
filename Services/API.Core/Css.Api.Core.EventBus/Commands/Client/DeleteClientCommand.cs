@@ -2,12 +2,16 @@
 
 namespace Css.Api.Core.EventBus.Commands.Client
 {
-
     public class DeleteClientCommand
     {
         /// <summary>Gets or sets the identifier.</summary>
         /// <value>The identifier.</value>
         public int Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
+        public int? RefId { get; set; }
 
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>
@@ -30,7 +34,6 @@ namespace Css.Api.Core.EventBus.Commands.Client
         /// <value>
         ///   <c>true</c> if this instance is deleted new value; otherwise, <c>false</c>.</value>
         public bool IsDeletedNewValue { get; set; }
-
     }
 }
 

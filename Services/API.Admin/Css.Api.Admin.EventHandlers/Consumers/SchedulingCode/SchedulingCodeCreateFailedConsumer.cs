@@ -39,6 +39,7 @@ namespace Css.Api.Admin.EventHandlers.Consumers.SchedulingCode
 
             UpdateSchedulingCode updateSchedulingCode = new UpdateSchedulingCode
             {
+                RefId = context.Message.RefId,
                 Description = context.Message.Name,
                 PriorityNumber = context.Message.PriorityNumber,
                 TimeOffCode = context.Message.TimeOffCode,

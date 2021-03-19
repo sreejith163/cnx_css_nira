@@ -21,11 +21,13 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the start date.
         /// </summary>
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
         public DateTime StartDate { get; set; }
 
         /// <summary>
         /// Gets or sets the end date.
         /// </summary>
+        [BsonDateTimeOptions(Representation = BsonType.String, Kind = DateTimeKind.Unspecified)]
         public DateTime? EndDate { get; set; }
 
         /// <summary>

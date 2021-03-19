@@ -13,8 +13,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
 {
     public class CreateClientLOBCommandConsumer : IConsumer<CreateClientLOBCommand>
     {
-
-        /// <summary>The bus utility</summary>
+                /// <summary>The bus utility</summary>
         private readonly IBusService _busUtility;
 
         /// <summary>The client lob group repository</summary>
@@ -24,7 +23,6 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
         /// The uow
         /// </summary>
         private readonly IUnitOfWork _uow;
-
 
         /// <summary>Initializes a new instance of the <see cref="CreateClientLOBCommandConsumer" /> class.</summary>
         /// <param name="busUtility">The bus utility.</param>

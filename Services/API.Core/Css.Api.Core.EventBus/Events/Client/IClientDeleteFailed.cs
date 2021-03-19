@@ -12,6 +12,11 @@ namespace Css.Api.Core.EventBus.Events.Client
         /// <value>The name.</value>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the reference identifier.
+        /// </summary>
+        public int? RefId { get; set; }
+
         /// <summary>Gets or sets the modified by old value.</summary>
         /// <value>The modified by old value.</value>
         public string ModifiedByOldValue { get; set; }

@@ -1,6 +1,7 @@
 ﻿using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Models.DTO.Processing;
+using Css.Api.Reporting.Models.DTO.Request.EStart;
 using Css.Api.Reporting.Models.Enums;
 using Css.Api.Reporting.Repository.Interfaces;
 using Newtonsoft.Json;
@@ -20,19 +21,14 @@ namespace Css.Api.Reporting.Business.Sources
         #region Private Properties
 
         /// <summary>
-        /// The agent schedule repository
-        /// </summary>
-        private readonly IAgentScheduleRepository _agentScheduleRepository;
-
-        /// <summary>
-        /// The scheduling code repository
-        /// </summary>
-        private readonly ISchedulingCodeRepository _schedulingCodeRepository;
-
-        /// <summary>
         /// The schedule clock helper service
         /// </summary>
-        private readonly IScheduleClockService _scheduleClockService;
+        private readonly IScheduleService _scheduleClockService;
+
+        /// <summary>
+        /// The mapper service
+        /// </summary>
+        private readonly IMapperService _mapperService;
         #endregion
 
         #region Public Properties
@@ -48,14 +44,12 @@ namespace Css.Api.Reporting.Business.Sources
         /// <summary>
         /// Constructor to initialize properties
         /// </summary>
-        /// <param name="agentScheduleRepository"></param>
-        /// <param name="schedulingCodeRepository"></param>
         /// <param name="scheduleClockService"></param>
-        public EStartExportSource(IAgentScheduleRepository agentScheduleRepository, ISchedulingCodeRepository schedulingCodeRepository, IScheduleClockService scheduleClockService)
+        /// <param name="mapperService"></param>
+        public EStartExportSource(IScheduleService scheduleClockService, IMapperService mapperService)
         {
-            _agentScheduleRepository = agentScheduleRepository;
-            _schedulingCodeRepository = schedulingCodeRepository;
             _scheduleClockService = scheduleClockService;
+            _mapperService = mapperService;
         }
         #endregion
 
@@ -67,15 +61,14 @@ namespace Css.Api.Reporting.Business.Sources
         /// <returns>A list of instances of DataFeed</returns>
         public async Task<List<DataFeed>> Pull()
         {
-            var reportDate = DateTime.UtcNow;
-            var agentSchedules = await _agentScheduleRepository.GetSchedules(reportDate);
-            var codes = await _schedulingCodeRepository.GetSchedulingCodes();
-            var clockData = _scheduleClockService.GenerateClocks(reportDate, agentSchedules, codes);
+            var filter = _mapperService.GetFilterParams<EStartFilter>();
+            filter.EstartProvision = true;
+            var clockData = await _scheduleClockService.GetCalendarCharts(filter);
 
             return new List<DataFeed>() {
                 new DataFeed()
                 {
-                    Feeder = DataOptions.Mongo.GetDescription(),
+                    Feeder = string.Join("-","CSS",DataOptions.Mongo.GetDescription()),
                     Content = Encoding.Default.GetBytes(JsonConvert.SerializeObject(clockData))
                 }
             };
