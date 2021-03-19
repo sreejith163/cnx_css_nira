@@ -58,6 +58,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
   clientLobGroupId: number;
   skillGroupId: number;
   skillTagId: number;
+  agentSchedulingGroupId: number;
 
   getAgentAdminSubscription: ISubscription;
   addAgentAdminSubscription: ISubscription;
@@ -119,7 +120,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
   saveAgentAdminDetails() {
     this.formSubmitted = true;
     if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId &&
-       this.skillTagId && this.validateHireDateFormat()) {
+       this.skillTagId && this.agentSchedulingGroupId && this.validateHireDateFormat()) {
       this.saveAgentProfileDetailsOnModel();
       this.operation === ComponentOperation.Edit ? this.updateAgentAdminProfileDetails() : this.addAgentAdminProfileDetails();
     }
@@ -149,21 +150,29 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     this.clientLobGroupId = undefined;
     this.skillGroupId = undefined;
     this.skillTagId = undefined;
+    this.agentSchedulingGroupId = undefined;
   }
 
   setClientLobGroup(clientLobGroupId: number) {
     this.clientLobGroupId = clientLobGroupId;
     this.skillGroupId = undefined;
     this.skillTagId = undefined;
+    this.agentSchedulingGroupId = undefined;
   }
 
   setSkillGroup(skillGroupId: number) {
     this.skillGroupId = skillGroupId;
     this.skillTagId = undefined;
+    this.agentSchedulingGroupId = undefined;
   }
 
   setSkillTag(skillTagId: number) {
     this.skillTagId = skillTagId;
+    this.agentSchedulingGroupId = undefined;
+  }
+
+  setAgentSchedulingGroupId(agentSchedulinggroupId: number) {
+    this.agentSchedulingGroupId = agentSchedulinggroupId;
   }
 
   private saveAgentProfileDetailsOnModel() {
@@ -174,6 +183,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     this.agentProfileModel.clientId = this.clientId;
     this.agentProfileModel.clientLobGroupId = this.clientLobGroupId;
     this.agentProfileModel.skillTagId = this.skillTagId;
+    this.agentProfileModel.agentSchedulingGroupId = this.agentSchedulingGroupId;
     this.agentProfileModel.agentData = [];
     const newGroup = new AgentAdminAgentGroup();
     newGroup.description = 'Hire Date';
@@ -241,7 +251,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     if (this.agentProfileModel.employeeId !== this.agentAdminDetails.employeeId ||
       this.agentProfileModel.sso !== this.agentAdminDetails.sso ||
       this.agentProfileModel.skillTagId !== this.agentAdminDetails.skillTagId ||
-
+      this.agentProfileModel.agentSchedulingGroupId !== this.agentAdminDetails.agentSchedulingGroupId ||
       this.agentProfileModel.firstName !== this.agentAdminDetails.firstName ||
       this.agentProfileModel.lastName !== this.agentAdminDetails.lastName ||
       this.agentProfileModel.supervisorId !== this.agentAdminDetails.supervisorId ||
@@ -277,6 +287,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     this.clientLobGroupId = this.agentAdminDetails.clientLobGroupId;
     this.skillGroupId = this.agentAdminDetails.skillGroupId;
     this.skillTagId = this.agentAdminDetails.skillTagId;
+    this.agentSchedulingGroupId = this.agentAdminDetails.agentSchedulingGroupId;
     this.agentProfileForm.patchValue({
       employeeId: this.agentAdminDetails.employeeId,
       sso: this.agentAdminDetails.sso,
@@ -304,13 +315,13 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     this.agentProfileForm = this.formBuilder.group({
       employeeId: new FormControl('', Validators.compose([Validators.required, Validators.max(9999999999)])),
       sso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
-      firstName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace,  Validators.maxLength(Constants.DefaultTextMaxLength)])),
-      lastName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace,  Validators.maxLength(Constants.DefaultTextMaxLength)])),
+      firstName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(Constants.DefaultTextMaxLength)])),
+      lastName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(Constants.DefaultTextMaxLength)])),
       hireDate: new FormControl('', Validators.required),
       supervisorId: new FormControl('', Validators.compose([Validators.required, Validators.max(9999999999)])),
-      supervisorName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace,  Validators.maxLength(Constants.DefaultTextMaxLength)])),
+      supervisorName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(Constants.DefaultTextMaxLength)])),
       supervisorSso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
-    },{ validators: [CustomValidators.sameSSO('sso', 'supervisorSso'), CustomValidators.sameEmployeeId('employeeId', 'supervisorId')]});
+    }, { validators: [CustomValidators.sameSSO('sso', 'supervisorSso'), CustomValidators.sameEmployeeId('employeeId', 'supervisorId')] });
   }
 
   showActivityLogs(){

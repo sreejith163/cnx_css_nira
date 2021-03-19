@@ -49,7 +49,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId" [heirarchy]='true'
+              <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId" [hierarchy]='true'
                 (clientLobSelected)="setClientLobGroup($event)"></app-client-lob-group-typeahead>
               <div *ngIf="!clientLobGroupId && formSubmitted" class="valid-error">
                 {{ 'LOB Group Name is required' | translate }}
@@ -66,7 +66,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)" [clientId]="clientId" [heirarchy]='true'
+              <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)" [clientId]="clientId" [hierarchy]='true'
                 [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId"></app-skill-group-typeahead>
               <div *ngIf="!skillGroupId && formSubmitted" class="valid-error">
                 {{ 'Skill Group Name is required' | translate }}

@@ -58,6 +58,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
   clientLobGroupId: number;
   skillGroupId: number;
   skillTagId: number;
+  agentSchedulingGroupId: number;
 
   getAgentAdminSubscription: ISubscription;
   editAgentAdminSubscription: ISubscription;
@@ -119,7 +120,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
   saveAgentAdminDetails() {
     this.formSubmitted = true;
     if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId &&
-       this.skillTagId && this.validateHireDateFormat()) {
+       this.skillTagId && this.agentSchedulingGroupId && this.validateHireDateFormat()) {
       this.saveAgentProfileDetailsOnModel();
       this.updateAgentAdminProfileDetails();
     }
@@ -149,21 +150,29 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     this.clientLobGroupId = undefined;
     this.skillGroupId = undefined;
     this.skillTagId = undefined;
+    this.agentSchedulingGroupId = undefined;
   }
 
   setClientLobGroup(clientLobGroupId: number) {
     this.clientLobGroupId = clientLobGroupId;
     this.skillGroupId = undefined;
     this.skillTagId = undefined;
+    this.agentSchedulingGroupId = undefined;
   }
 
   setSkillGroup(skillGroupId: number) {
     this.skillGroupId = skillGroupId;
     this.skillTagId = undefined;
+    this.agentSchedulingGroupId = undefined;
   }
 
   setSkillTag(skillTagId: number) {
     this.skillTagId = skillTagId;
+    this.agentSchedulingGroupId = undefined;
+  }
+
+  setAgentSchedulingGroupId(agentSchedulinggroupId: number) {
+    this.agentSchedulingGroupId = agentSchedulinggroupId;
   }
 
   private saveAgentProfileDetailsOnModel() {
@@ -174,6 +183,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     this.agentProfileModel.clientId = this.clientId;
     this.agentProfileModel.clientLobGroupId = this.clientLobGroupId;
     this.agentProfileModel.skillTagId = this.skillTagId;
+    this.agentProfileModel.agentSchedulingGroupId = this.agentSchedulingGroupId;
     this.agentProfileModel.agentData = [];
 
     const newGroup = new AgentAdminAgentGroup();
@@ -230,6 +240,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     if (this.agentProfileModel.employeeId !== this.agentAdminDetails.employeeId ||
       this.agentProfileModel.sso !== this.agentAdminDetails.sso ||
       this.agentProfileModel.skillTagId !== this.agentAdminDetails.skillTagId ||
+      this.agentProfileModel.agentSchedulingGroupId !== this.agentAdminDetails.agentSchedulingGroupId ||
       this.agentProfileModel.pto !== this.agentAdminDetails.pto ||
       this.agentProfileModel.firstName !== this.agentAdminDetails.firstName ||
       this.agentProfileModel.lastName !== this.agentAdminDetails.lastName ||
@@ -267,6 +278,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     this.clientLobGroupId = this.agentAdminDetails.clientLobGroupId;
     this.skillGroupId = this.agentAdminDetails.skillGroupId;
     this.skillTagId = this.agentAdminDetails.skillTagId;
+    this.agentSchedulingGroupId = this.agentAdminDetails.agentSchedulingGroupId;
     const tempPTO = this.agentAdminDetails.pto != null ? this.agentAdminDetails.pto : '';
 
     this.agentProfileForm.patchValue({
