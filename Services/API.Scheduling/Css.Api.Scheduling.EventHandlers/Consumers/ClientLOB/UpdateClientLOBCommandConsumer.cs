@@ -9,12 +9,10 @@ using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-
 namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
 {
     public class UpdateClientLOBCommandConsumer : IConsumer<UpdateClientLOBCommand>
     {
-
         /// <summary>The bus utility</summary>
         private readonly IBusService _busUtility;
 
@@ -25,7 +23,6 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
         /// The uow
         /// </summary>
         private readonly IUnitOfWork _uow;
-
 
         /// <summary>Initializes a new instance of the <see cref="UpdateClientLOBCommandConsumer" /> class.</summary>
         /// <param name="busUtility">The bus utility.</param>
@@ -68,7 +65,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB
 
                 await _busUtility.PublishEvent<IClientLOBUpdateSuccess>(MassTransitConstants.ClientLOBUpdateSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)

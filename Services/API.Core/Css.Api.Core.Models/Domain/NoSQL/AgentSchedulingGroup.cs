@@ -26,14 +26,19 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public int SkillTagId { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the agents scheduling group identifier.
         /// </summary>
         public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the timezone identifier.
         /// </summary>
         public int TimezoneId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the estart provisioning flag
+        /// </summary>
+        public bool EstartProvision { get; set; }
 
         /// <summary>
         /// Gets or sets the name.

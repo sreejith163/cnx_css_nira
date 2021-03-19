@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using Css.Api.Core.Models.Enums;
 
 namespace Css.Api.Reporting.Models.Profiles.Agent
 {
@@ -25,6 +26,7 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                 .ForMember(x => x.ModifiedBy, opt => opt.Ignore())
                 .ForMember(x => x.ModifiedDate, opt => opt.Ignore())
                 .ForMember(x => x.Mu, opt => opt.MapFrom(o => o.MU))
+                .ForMember(x => x.Origin, opt => opt.MapFrom(o => ActivityOrigin.UDW))
                 .ForMember(x => x.IsDeleted, opt => opt.MapFrom(o => false))
                 .ForMember(x => x.SenDate, opt =>
                 {
@@ -59,6 +61,7 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                 .ForMember(x => x.ModifiedBy, opt => opt.Ignore())
                 .ForMember(x => x.ModifiedDate, opt => opt.Ignore())
                 .ForMember(x => x.Mu, opt => opt.MapFrom(o => o.MU))
+                .ForMember(x => x.Origin, opt => opt.MapFrom(o => ActivityOrigin.UDW))
                 .ForMember(x => x.IsDeleted, opt => opt.MapFrom(o => false))
                 .ForMember(x => x.SenDate, opt =>
                 {

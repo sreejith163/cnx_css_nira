@@ -328,57 +328,6 @@
             <param name="importForecastDetails"></param>
             <returns></returns>
         </member>
-        <member name="T:Css.Api.Scheduling.Controllers.TimeZonesController">
-            <summary>
-            Controller for handling the Time zones resource
-            </summary>
-            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
-        </member>
-        <member name="F:Css.Api.Scheduling.Controllers.TimeZonesController._timezoneService">
-            <summary>The timezone service</summary>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.#ctor(Css.Api.Scheduling.Business.Interfaces.ITimezoneService)">
-            <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.TimeZonesController" /> class.</summary>
-            <param name="timezoneService">The timezone service.</param>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.GetTimeZones(Css.Api.Scheduling.Models.DTO.Request.Timezone.TimezoneQueryParameters)">
-            <summary>
-            Gets the time zones.
-            </summary>
-            <param name="timezoneQueryParameters">The timezone query parameters.</param>
-            <returns>
-              <br />
-            </returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.GetTimeZone(System.Int32)">
-            <summary>
-            Gets the time zone.
-            </summary>
-            <param name="timezoneId">The timezone identifier.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.CreateTimeZone(Css.Api.Scheduling.Models.DTO.Request.Timezone.CreateTimezone)">
-            <summary>
-            Creates the time zone.
-            </summary>
-            <param name="clientDetails">The client details.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.UpdateTimeZone(System.Int32,Css.Api.Scheduling.Models.DTO.Request.Timezone.UpdateTimezone)">
-            <summary>
-            Updates the time zone.
-            </summary>
-            <param name="timezoneId">The timezone identifier.</param>
-            <param name="clientDetails">The client details.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeZonesController.DeleteTimeZone(System.Int32)">
-            <summary>
-            Deletes the time zone.
-            </summary>
-            <param name="timezoneId">The timezone identifier.</param>
-            <returns></returns>
-        </member>
         <member name="T:Css.Api.Scheduling.Extensions.DBContextExtension">
             <summary>
             Extension for adding the DB Context

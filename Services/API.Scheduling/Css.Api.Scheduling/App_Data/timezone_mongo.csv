@@ -1,0 +1,559 @@
+TimezoneId,Name,UtcOffset
+107,+00:00(Etc/GMT),0:00:00
+108,+00:00(Etc/GMT+O),0:00:00
+109,+00:00(Etc/GMT-O),0:00:00
+110,+00:00(Etc/GMTO),0:00:00
+111,+00:00 (Etc/Greernmich),0:00:00
+112,+00:00(GMT),0:00:00
+113,+00:00(GMT+O),0:00:00
+114,+00:00(GMT-O),0:00:00
+115,+00:00(GMTO),0:00:00
+116,+00:00(Greenwich),0:00:00
+117,+01:00 (Etc/GMT-1),1:00:00
+118,+02:00(Etc/GMT-2),2:00:00
+119,+03:00(Etc/GMT-3),3:00:00
+120,+04:00 (Etc/GMT-4),4:00:00
+121,+05:00(Etc/GMT-5),5:00:00
+122,+06:00(Etc/GMT-6),6:00:00
+123,+07:00(Etc/GMT-7),7:00:00
+124,+08:00(Etc/GMT-8),8:00:00
+125,+09:00(Etc/GMT-9),9:00:00
+126,+10:00 (Etc/GMT-10),10:00:00
+127,+11:00 (Etc/GMT-11),11:00:00
+128,+12:00 (Etc/GMT- 1,12:00:00
+129,+13:00 (Etc/GMT- 13),13:00:00
+130,+14:00 (Etc/GMT-14),14:00:00
+131,-01:00 (Etc/GMT+1),-1:00:00
+132,-02:00 (Etc/GMT+2),-2:00:00
+133,-03:00 (Etc/GMT+3),-3:00:00
+134,-04:00 (Etc/GMT+4),-4:00:00
+135,-05:00 (Etc/GMT+5),-5:00:00
+136,-06:00 (Etc/GMT+6),-6:00:00
+137,-07:00 (Etc/GMT+7),-7:00:00
+138,-08:00 (Etc/GMT+8),-8:00:00
+139,-09:00 (Etc/GMT+9),-9:00:00
+140,-10:00 (Etc/GMT+10),-10:00:00
+141,-11:00 (Etc/GMT+11),-11:00:00
+142,-12:00 (Etc/GMT+12),-12:00:00
+143,Afghanistan Time (Asia/Kabul),4:30:00
+144,Alaska Standard Time (America/Metlakatla),-9:00:00
+145,Alaska Standard Time (America/Sitka),-9:00:00
+146,Alaska Time (America/Anchorage),-9:00:00
+147,Alaska Time (America/Juneau),-9:00:00
+148,Alaska Time (America/Nome),-9:00:00
+149,Alaska Time (America/Ykutat),-9:00:00
+150,Alaska Time (US/Alaska),-9:00:00
+151,Alma-Ata Time (Asia/Almaty),6:00:00
+152,Amazon Time (America/Boa_Vista),-4:00:00
+153,Amazon Time (America/Campo_Grande),-4:00:00
+154,Amazon Time (America/Cuiaba),-4:00:00
+155,Amazon Time (America/Eirunepe),-5:00:00
+156,Amazon Time (America/Manaus),-4:00:00
+157,Amazon Time (America/Porto_Acre),-5:00:00
+158,Amazon Time (America/Porto_VeIho),-4:00:00
+159,Amazon Time (America/Rio_Branco),-5:00:00
+160,Amazon Time (Brazil/Acre),-5:00:00
+161,Amazon Time (Brazil/West),-4:00:00
+162,Anadyr Time (Asia/Anadyr),12:00:00
+163,Antarctica/Macquarie,11:00:00
+164,Aqtau Time (Asia/Aqtau),4:00:00
+165,Aqtobe Time (Asia/Aqtobe),5:00:00
+166,Arabia Time (Asia/Aden),3:00:00
+167,Arabia Time (Asia/Baghdad),3:00:00
+168,Arabia Time (Asia/Bahrain),3:00:00
+169,Arabia Time (Asia/Kuwait),3:00:00
+170,Arabia Time (Asia/Qatar),3:00:00
+171,Arabia Time (Asia/Riyadh),3:00:00
+172,Argentine Time (America/Argentina/Buenos_Aires),-3:00:00
+173,Argentine Time (America/Argentina/Catamarca),-3:00:00
+174,Argentine Time (America/Argentina/ComodRivadavia),-3:00:00
+175,Argentine Time (America/Argentina/Cordoba),-3:00:00
+176,Argentine Time (America/Argentina/Jujuy),-3:00:00
+177,Argentine Time (America/Argentina/La_Rioja),-3:00:00
+178,Argentine Time (America/Argentina/Mendoza),-3:00:00
+179,Argentine Time (America/Argentina/Rio_Gallegos),-3:00:00
+180,Argentine Time (America/Argentina/Salta),-3:00:00
+181,Argentine Time (America/Argentina/San_Juan),-3:00:00
+182,Argentine Time (America/Argentina/Tucuman),-3:00:00
+183,Argentine Time (America/Argentina/Ushuaia),-3:00:00
+184,Argentine Time (America/Buenos_Aires),-3:00:00
+185,Argentine Time (America/Catamarca),-3:00:00
+186,Argentine Time (America/Cordoba),-3:00:00
+187,Argentine Time (America/Jujuy),-3:00:00
+188,Argentine Time (America/Mendoza),-3:00:00
+189,Argentine Time (America/Rosario),-3:00:00
+190,Armenia Time (Asia/Yerevan),4:00:00
+191,Atlantic Time (America/Anguilla),-4:00:00
+192,Atlantic Time (America/Antigua),-4:00:00
+193,Atlantic Time (America/Aruba),-4:00:00
+194,Atlantic Time (America/Barbados),-4:00:00
+195,Atlantic Time (America/Blanc-Sablon),-4:00:00
+196,Atlantic Time (America/Curacao),-4:00:00
+197,Atlantic Time (America/Dominica),-4:00:00
+198,Atlantic Time (America/Glace_Bay),-4:00:00
+199,Atlantic Time (America/Goose_Bay),-4:00:00
+200,Atlantic Time (America/Grenada),-4:00:00
+201,Atlantic Time (America/Guadeloupe),-4:00:00
+202,Atlantic Time (America/Halifax),-4:00:00
+203,Atlantic Time (America/Marigot),-4:00:00
+204,Atlantic Time (America/Martinique),-4:00:00
+205,Atlantic Time (America/Moncton),-4:00:00
+206,Atlantic Time (America/Montserrat),-4:00:00
+207,Atlantic Time (America/Port_of_Spain),-4:00:00
+208,Atlantic Time (America/Puerto_Rico),-4:00:00
+209,Atlantic Time (America/Santo_Domingo),-4:00:00
+210,Atlantic Time (America/St_Barthelemy),-4:00:00
+211,Atlantic Time (America/St_Kitts),-4:00:00
+212,Atlantic Time (America/St_Lucia),-4:00:00
+213,Atlantic Time (America/St_Thomas),-4:00:00
+214,Atlantic Time (America/St_Vincent),-4:00:00
+215,Atlantic Time (America/Thule),-4:00:00
+216,Atlantic Time (America/Tortola),-4:00:00
+217,Atlantic Time (America/Virgin),-4:00:00
+218,Atlantic Time (Atlantic/Bermuda),-4:00:00
+219,Atlantic Time (Canada/Atlantic),-4:00:00
+220,Azerbaijan Time (Asia/Baku),4:00:00
+221,Azores Time (Atlantic/Azores),-1:00:00
+222,Bangladesh Time (Asia/Dacca),6:00:00
+223,Bangladesh Time (Asia/Dhaka),6:00:00
+224,Bhutan Time (Asia/Thimbu),6:00:00
+225,Bhutan Time (Asia/Thimphu),6:00:00
+226,Bolivia Time (America/La_Paz),-4:00:00
+227,Brasilia Time (America/Araguaina),-3:00:00
+228,Brasilia Time (America/Bahia),-3:00:00
+229,Brasilia Time (America/Belem),-3:00:00
+230,Brasilia Time (America/Fortaleza),-3:00:00
+231,Brasilia Time (America/Maceio),-3:00:00
+232,Brasilia Time (America/Recife),-3:00:00
+233,Brasilia Time (America/Sao_Paulo),-3:00:00
+234,Brasilia Time (Brazil/East),-3:00:00
+235,British Time (Europe/Belfast),0:00:00
+236,British Time (Europe/Guernsey),0:00:00
+237,British Time (Europe/Isle_of_Man),0:00:00
+238,British Time (Europe/Jersey),0:00:00
+239,British Time (Europe/London),0:00:00
+240,British Time (GB),0:00:00
+241,British Time (GB-Eire),0:00:00
+242,Brunei Time (Asia/Brunei),8:00:00
+243,Cape Verde Time (Atlantic/Cape_Verde),-1:00:00
+244,Central African Time (Africa/Blantyre),2:00:00
+245,Central African Time (Africa/Bujumbura),2:00:00
+246,Central African Time (Africa/Gaborone),2:00:00
+247,Central African Time (Africa/Harare),2:00:00
+248,Central African Time (Africa/Kigali),2:00:00
+249,Central African Time (Africa/Lubumbashi),2:00:00
+250,Central African Time (Africa/Lusaka),2:00:00
+251,Central African Time (Africa/Maputo),1:00:00
+252,Central European Time (Africa/Algiers),1:00:00
+253,Central European Time (Africa/Ceuta),1:00:00
+254,Central European Time (Africa/Tunis),1:00:00
+255,Central European Time (Arctic/Longyearbyen),1:00:00
+256,Central European Time (Atlantic/Jan_Mayen),1:00:00
+257,Central European Time (CET),1:00:00
+258,Central European Time (Europe/Amsterdam),1:00:00
+259,Central European Time (Europe/Andorra),1:00:00
+260,Central European Time (Europe/Belgrade),1:00:00
+261,Central European Time (Europe/Berlin),1:00:00
+262,Central European Time (Europe/Bratislava),1:00:00
+263,Central European Time (Europe/Brussels),1:00:00
+264,Central European Time (Europe/Budapest),1:00:00
+265,Central European Time (Europe/Copenhagen),1:00:00
+266,Central European Time (Europe/Gibraltar),1:00:00
+267,Central European Time (Europe/Ljubljana),1:00:00
+268,Central European Time (Europe/Luxembourg),1:00:00
+269,Central European Time (Europe/Madrid),1:00:00
+270,Central European Time (Europe/Malta),1:00:00
+271,Central European Time (Europe/Monaco),1:00:00
+272,Central European Time (Europe/Oslo),1:00:00
+273,Central European Time (Europe/Paris),1:00:00
+274,Central European Time (Europe/Podgorica),1:00:00
+275,Central European Time (Europe/Prague),1:00:00
+276,Central European Time (Europe/Rome),1:00:00
+277,Central European Time (Europe/San_Marino),1:00:00
+278,Central European Time (Europe/Sarajevo),1:00:00
+279,Central European Time (Europe/Skopje),1:00:00
+280,Central European Time (Europe/Stockholm),1:00:00
+281,Central European Time (Europe/Tlrane),1:00:00
+282,Central European Time (Europe/Vaduz),1:00:00
+283,Central European Time (Europe/Vatican),1:00:00
+284,Central European Time (Europe/Vienna),1:00:00
+285,Central European Time (Europe/Warsaw),1:00:00
+286,Central European Time (Europe/Zagreb),1:00:00
+287,Central European Time (EuropeZurich),1:00:00
+288,Central European Time (Poland),1:00:00
+289,Central Indonesia Time (Asia/Makassar),8:00:00
+290,Central Indonesia Time (Asia/Ujung_Pandang),8:00:00
+291,Central Standard Time (America/Bahia_Banderas),-6:00:00
+292,Central Standard Time (America/Matamoros),-6:00:00
+293,Central Standard Time (America/North_Dakota/Beulah),-6:00:00
+294,Central Time (America/Belize),-6:00:00
+295,Central Time (America/Cancun),-5:00:00
+296,Central Time (America/Chicago),-6:00:00
+297,Central Time (America/Costa_Rica),-6:00:00
+298,Central Time (America/EI_Salvador),-6:00:00
+299,Central Time (America/Guatemala),-6:00:00
+300,Central Time (America/Indiana/Knox),-6:00:00
+301,Central Time (America/Indiana/Tell_City),-6:00:00
+302,Central Time (America/Knox_IN),-6:00:00
+303,Central Time (America/Managua),-6:00:00
+304,Central Time (America/Menominee),-6:00:00
+305,Central Time (America/Merida),-6:00:00
+306,Central Time (America/Mexico_City),-6:00:00
+307,Central Time (America/Monterrey),-6:00:00
+308,Central Time (America/North_Dakota/Center),-6:00:00
+309,Central Time (America/North_Dakota/New_Salem),-6:00:00
+310,Central Time (America/Rainy_River),-6:00:00
+311,Central Time (America/Rankin_Inlet),-6:00:00
+312,Central Time (America/Regina),-6:00:00
+313,Central Time (America/Resolute),-6:00:00
+314,Central Time (America/Swift_Current),-6:00:00
+315,Central Time (America/Tegucigalpa),-6:00:00
+316,Central Time (America/Winnipeg),-6:00:00
+317,Central Time (Canada/Central),-6:00:00
+318,Central Time (Canada/Saskatchewan),-6:00:00
+319,Central Time (CST6CDT),-6:00:00
+320,Central Time (Mexico/General),-6:00:00
+321,Central Time (Northern Territory) (Australia/Danmin),9:30:00
+322,Central Time (Northern Territory) (Australia/North),9:30:00
+323,Central Time (South Australia) (Australia/Adelaide),9:30:00
+324,Central Time (South Australia) (Australia/South),9:30:00
+325,Central Time (South Australia/New South Wales) (Australia/Broken_Hill),9:30:00
+326,Central Time (South Australia/New South Wales) (Australia/Yancowinna),9:30:00
+327,Central Time (US/Central),-6:00:00
+328,Central Time (US/Indiana-Starke),-6:00:00
+329,Central Western Time (Australia) (Australia/Eucla),8:45:00
+330,Chamorro Time (Pacific/Guam),10:00:00
+331,Chamorro Time (Pacific/Saipan),10:00:00
+332,Chatham Time (NZ-CHAT),12:45:00
+333,Chatham Time (Pacific/Chatham),12:45:00
+334,Chile Time (America/Santiago),-4:00:00
+335,Chile Time (Antarctica/Palmer),-4:00:00
+336,Chile Time (Chile/ContinentaI),-4:00:00
+337,China Time (Asia/Chongqing),8:00:00
+338,China Time (Asia/Chungking),8:00:00
+339,China Time (Asia/Harbin),8:00:00
+340,China Time (Asia/Kashgar),6:00:00
+341,China Time (Asia/Macao),8:00:00
+342,China Time (Asia/Macau),8:00:00
+343,China Time (Asia/Shanghai),8:00:00
+344,China Time (Asia/Taipei),8:00:00
+345,China Time (Asia/Urumqi),6:00:00
+346,China Time (PRC),8:00:00
+347,China Time (ROC),8:00:00
+348,Choibalsan Time (Asia/Choibalsan),8:00:00
+349,Christmas Island Time (Indian/Christmas),7:00:00
+350,Cocos Islands Time (Indian/Cocos),6:30:00
+351,Colombia Time (America/Bogota),-5:00:00
+352,Cook Is. Time (Pacific/Rarotonga),-10:00:00
+353,Coordinated Universal Time (UTC),0:00:00
+354,Cuba Time (America/Havana),-5:00:00
+355,Cuba Time (Cuba),-5:00:00
+356,Davis Time (Antarctica/Davis),7:00:00
+357,Dumont-d'Urville Time (Antarctica/DumontDUrville),10:00:00
+358,East Indonesia Time (Asia/Jayapura),9:00:00
+359,Easter Is. Time (Chile/EasterIsland),-6:00:00
+360,Easter Is. Time (Pacific/Easter),-6:00:00
+361,Eastern African Time (Africa/Addis_Ababa),3:00:00
+362,Eastern African Time (Africa/Asmara),3:00:00
+363,Eastern African Time (Africa/Asmera),3:00:00
+364,Eastern African Time (Africa/Dar_es_Salaam),3:00:00
+365,Eastern African Time (Africa/Djibouti),3:00:00
+366,Eastern African Time (Africa/Kampala),3:00:00
+367,Eastern African Time (Africa/Khartoum),2:00:00
+368,Eastern African Time (Africa/Mogadishu),3:00:00
+369,Eastern African Time (Africa/Nairobi),3:00:00
+370,Eastern African Time (Indian/Antananarivo),3:00:00
+371,Eastern African Time (Indian/Comoro),3:00:00
+372,Eastern African Time (Indian/Mayotte),3:00:00
+373,Eastern European Time (Africa/Cairo),2:00:00
+374,Eastern European Time (Africa/Tripoli),2:00:00
+375,Eastern European Time (Asia/Amman),2:00:00
+376,Eastern European Time (Asia/Beirut),2:00:00
+377,Eastern European Time (Asia/Damascus),2:00:00
+378,Eastern European Time (Asia/Gaza),2:00:00
+379,Eastern European Time (Asia/lstanbul),3:00:00
+380,Eastern European Time (Asia/Nicosia),2:00:00
+381,Eastern European Time (EET),2:00:00
+382,Eastern European Time (Egypt),2:00:00
+383,Eastern European Time (Europe/Athens),2:00:00
+384,Eastern European Time (Europe/Bucharest),2:00:00
+385,Eastern European Time (Europe/Chisinau),2:00:00
+386,Eastern European Time (Europe/HeLsinki),2:00:00
+387,Eastern European Time (Europe/lstanbul),3:00:00
+388,Eastern European Time (Europe/Kaliningrad),2:00:00
+389,Eastern European Time (Europe/Kiev),2:00:00
+390,Eastern European Time (Europe/Mariehamn),2:00:00
+391,Eastern European Time (Europe/Minsk),3:00:00
+392,Eastern European Time (Europe/Nicosia),2:00:00
+393,Eastern European Time (Europe/Riga),2:00:00
+394,Eastern European Time (Europe/Simferopol),3:00:00
+395,Eastern European Time (Europe/Sofia),2:00:00
+396,Eastern European Time (Europe/Tallinn),2:00:00
+397,Eastern European Time (Europe/Tiraspol),2:00:00
+398,Eastern European Time (Europe/Uzhgorod),2:00:00
+399,Eastern European Time (Europe/Vilnius),2:00:00
+400,Eastern European Time (Europe/Zaporozhye),2:00:00
+401,Eastern European Time (Libya),2:00:00
+402,Eastern European Time (Turkey),3:00:00
+403,Eastern Greenland Time (America/Scoresbysund),-1:00:00
+404,Eastern Time (America/Atikokan),-5:00:00
+405,Eastern Time (America/Cayman),-5:00:00
+406,Eastern Time (America/Coral_Harbour),-5:00:00
+407,Eastern Time (America/Detroit),-5:00:00
+408,Eastern Time (America/Fort_Wayne),-5:00:00
+409,Eastern Time (America/Grand_Turk),-5:00:00
+410,Eastern Time (America/lndiana/lndianapolis),-5:00:00
+411,Eastern Time (America/Indiana/Marengo),-5:00:00
+412,Eastern Time (America/Indiana/Petersburg),-5:00:00
+413,Eastern Time (America/lndiana/Vevay),-5:00:00
+414,Eastern Time (America/lndiana/Vincennes),-5:00:00
+415,Eastern Time (America/Indiana/Winamac),-5:00:00
+416,Eastern Time (America/lndianapolis),-5:00:00
+417,Eastern Time (America/lqaluit),-5:00:00
+418,Eastern Time (America/Jamaica),-5:00:00
+419,Eastern Time (America/Kentucky/Louisville),-5:00:00
+420,Eastern Time (America/Kentucky/Monticello),-5:00:00
+421,Eastern Time (America/Louisville),-5:00:00
+422,Eastern Time (America/Montreal),-5:00:00
+423,Eastern Time (America/Nassau),-5:00:00
+424,Eastern Time (America/New_York),-5:00:00
+425,Eastern Time (America/Nipigon),-5:00:00
+426,Eastern Time (America/Panama),-5:00:00
+427,Eastern Time (America/Pangnirtung),-5:00:00
+428,Eastern Time (America/Port-au-Prince),-5:00:00
+429,Eastern Time (America/Thunder_Bay),-5:00:00
+430,Eastern Time (America/Tnoronto),-5:00:00
+431,Eastern Time (Canada/Eastern),-5:00:00
+432,Eastern Time (EST),-5:00:00
+433,Eastern Time (EST5EDT),-5:00:00
+434,Eastern Time (Jamaica),-5:00:00
+435,Eastern Time (New South Wales) (Australia/ACT),10:00:00
+436,Eastern Time (New South Wales) (Australia/Canberra),10:00:00
+437,Eastern Time (New South Wales) (Australia/Currie),10:00:00
+438,Eastern Time (New South Wales) (Australia/NSW),10:00:00
+439,Eastern Time (New South Wales) (Australia/Sydney),10:00:00
+440,Eastern Time (Queensland) (Australia/Brisbane),10:00:00
+441,Eastern Time (Queensland) (Australia/Lindeman),10:00:00
+442,Eastern Time (Queensland) (Australia/Queensland),10:00:00
+443,Eastern Time Tasmania) (Australia/Hobart),10:00:00
+444,Eastern Time Tasmania) (Australia/Tasmania),10:00:00
+445,Eastern Time (US/East-Indiana),-5:00:00
+446,Eastern Time (US/Eastern),-5:00:00
+447,Eastern Time (US/Michigan),-5:00:00
+448,Eastern Time (Victoria) (Australia/Melbourne),10:00:00
+449,Eastern Time (Victoria) (Australia/Victoria),10:00:00
+450,Ecuador Time (America/Guayaquil),-5:00:00
+451,Falkland Is. Time (Atlantic/Stanley),-3:00:00
+452,Fernando de Noronha Time (America/Noronha),-2:00:00
+453,Fernando de Noronha Time (Brazil/DeNoronha),-2:00:00
+454,Fiji Time (Pacific/Fiji),12:00:00
+455,French Guiana Time (America/Cayenne),-3:00:00
+456,French Southern & Antarctic Lands Time (Indian/Kerguelen),5:00:00
+457,Galapagos Time (Pacific/Galapagos),-6:00:00
+458,Gambier Time (Pacific/Gambier),-9:00:00
+459,Georgia Time (Asia/Tbilisi),4:00:00
+460,Ghana Mean Time (Africa/Accra),0:00:00
+461,Gilbert Is. Time (Pacific/Tarawa),12:00:00
+462,Greenwich Mean Time (Africa/Abidjan),0:00:00
+463,Greenwich Mean Time (Africa/Bamako),0:00:00
+464,Greenwich Mean Time (Africa/Banjul),0:00:00
+465,Greenwich Mean Time (Africa/Bissau),0:00:00
+466,Greenwich Mean Time (Africa/Conakry),0:00:00
+467,Greenwich Mean Time (Africa/Dakar),0:00:00
+468,Greenwich Mean Time (Africa/Freetown),0:00:00
+469,Greenwich Mean Time (Africa/Lome),0:00:00
+470,Greenwich Mean Time (Africa/Monrovia),0:00:00
+471,Greenwich Mean Time (Africa/Nouakchott),0:00:00
+472,Greenwich Mean Time (Africa/Ouagadougou),0:00:00
+473,Greenwich Mean Time (Africa/Sao_Tome),1:00:00
+474,Greenwich Mean Time (Africa/Timbuktu),0:00:00
+475,Greenwich Mean Time (America/Danmarkshavn),0:00:00
+476,Greenwich Mean Time (Atlantic/Reykjavik),0:00:00
+477,Greenwich Mean Time (Atlantic/St_Helena),0:00:00
+478,Greenwich Mean Time (Iceland),0:00:00
+479,Gulf Time (Asia/Dubai),4:00:00
+480,Gulf Time (Asia/Muscat),4:00:00
+481,Guyana Time (America/Guyana),-4:00:00
+482,Hawaii Time (HST),-10:00:00
+483,Hawaii Time (Pacific/Honolulu),-10:00:00
+484,Hawaii Time (Pacific/Johnston),-10:00:00
+485,Hawaii Time (US/Hawaii),-10:00:00
+486,Hawaii-Aleutian Time (America/Adak,-10:00:00
+487,Hawaii-Aleutian Time (America/Atka),-10:00:00
+488,Hauuaii-AIeutian Time (US/Aleutian),-10:00:00
+489,Hong Kong Time (Asia/Hong_Kong),8:00:00
+490,Hong Kong Time (Hongkong),8:00:00
+491,Hovd Time (Asia/Hovd),7:00:00
+492,India Time (Asia/Calcutta),5:30:00
+493,India Time (Asia/Colombo),5:30:00
+494,India Time (Asia/Kolkata),5:30:00
+495,Indian Ocean Territory Time (Indian/Chagos),6:00:00
+496,Indochina Time (Asia/Bangkok),7:00:00
+497,Indochina Time (Asia/Ho_Chi_Minh),7:00:00
+498,Indochina Time (Asia/Phnom_Penh),7:00:00
+499,Indochina Time (Asia/Saigon),7:00:00
+500,Indochina Time (Asia/Vientiane),7:00:00
+501,Iran Time (Asia/Tehran),3:30:00
+502,Iran Time (Iran),3:30:00
+503,Irish Time (Eire),1:00:00
+504,Irish Time (Europe/Dublin),1:00:00
+505,Irkutsk Time (Asia/lrkutsk),8:00:00
+506,Israel Time (Asia/Jerusalem),2:00:00
+507,Israel Time (Asia/Tel_Aviv),2:00:00
+508,Israel Time (Israel),2:00:00
+509,Japan Time (Asia/Tokyo),9:00:00
+510,Japan Time (Japan),9:00:00
+511,Kirgizstan Time (Asia/Bishkek),5:00:00
+512,Korea Time (Asia/Pyongyang),9:00:00
+513,Korea Time (Asia/Seoul),9:00:00
+514,Korea Time (ROK),9:00:00
+515,Kosrae Time (Pacific/Kosrae),11:00:00
+516,Krasnoyarsk Time (Asia/Krasnoyarsk),7:00:00
+517,Line Is. Time (Pacific/Kiritimati),14:00:00
+518,Lord Howe Time (Australia/LHI),10:30:00
+519,Lord Howe Time (Australia/Lord_Howe),10:30:00
+520,Magadan Time (Asia/Magadan),11:00:00
+521,Malaysia Time (Asia/Kuala_Lumpur),8:00:00
+522,Malaysia Time (Asia/Kuching),8:00:00
+523,Maldives Time (Indian/Maldives),5:00:00
+524,Marquesas Time (Pacific/Marquesas),-9:00:00
+525,Marshall Islands Time (Kuuajalein),12:00:00
+526,Marshall Islands Time (Pacific/Kwajalein),12:00:00
+527,Marshall Islands Time (Pacific/Majuro),12:00:00
+528,Mauritius Time (Indian/Mauritius),4:00:00
+529,Mauuson Time (Antarctica/Mawson),5:00:00
+530,Middle Europe Time (MET),1:00:00
+531,Moscow Time (Europe/Moscow),3:00:00
+532,Moscow Time (W-SU),3:00:00
+533,Mountain Standard Time (America/Ojinaga),-7:00:00
+534,Mountain Time (America/Boise),-7:00:00
+535,Mountain Time (America/Cambridge_Bay),-7:00:00
+536,Mountain Time (America/Chihuahua),-7:00:00
+537,Mountain Time (America/Dauuson_Creek),-7:00:00
+538,Mountain Time (America/Denver),-7:00:00
+539,Mountain Time (America/Edmonton),-7:00:00
+540,Mountain Time (America/HermosiIIo),-7:00:00
+541,Mountain Time (America/lnuvik),-7:00:00
+542,Mountain Time (America/MazatIan),-7:00:00
+543,Mountain Time (America/Phoenix),-7:00:00
+544,Mountain Time (America/Shiprock),-7:00:00
+545,Mountain Time (America/Yellowknife),-7:00:00
+546,Mountain Time (Canada/Mountain),-7:00:00
+547,Mountain Time (Mexico/BajaSur),-7:00:00
+548,Mountain Time (MST),-7:00:00
+549,Mountain Time (MST7MDT),-7:00:00
+550,Mountain Time (Navajo),-7:00:00
+551,Mountain Time (US/Arizona),-7:00:00
+552,Mountain Time (US/Mountain),-7:00:00
+553,Myanmar Time (Asia/Rangoon),6:30:00
+554,Nauru Time (Pacific/Nauru),12:00:00
+555,Nepal Time (Asia/Kathmandu),5:45:00
+556,Nepal Time (Asia/Katmandu),5:45:00
+557,New Caledonia Time (Pacific/Noumea),11:00:00
+558,New ZeaIand Time (Antarctica/McMurdo),12:00:00
+559,New ZeaIand Time (Antarctica/South_Pole),12:00:00
+560,New ZeaIand Time (NZ),12:00:00
+561,New ZeaIand Time (Pacific/Auckland),12:00:00
+562,New foundland Time (America/St_Johns),-3:00:00
+563,New foundland Time (Canada/Newfoundland),-3:00:00
+564,Niue Time (Pacific/Niue),-11:00:00
+565,Norfolk Time (Pacific/Noffolk),11:00:00
+566,Novosibirsk Time (Asia/Novosibirsk),7:00:00
+567,Omsk Time (Asia/Omsk),6:00:00
+568,Oral Time (Asia/Oral),4:00:00
+569,Pacific Standard Time (America/Santa_Isabel),-8:00:00
+570,Pacific Time (America/Dawson),-8:00:00
+571,Pacific Time (America/Ensenada),-8:00:00
+572,Pacific Time (America/Los_Angeles),-8:00:00
+573,Pacific Time (America/Tijuana),-8:00:00
+574,Pacific Time (America/Vancouver),-8:00:00
+575,Pacific Time (America/Whitehorse),-8:00:00
+576,Pacific Time (Canada/Pacific),-8:00:00
+577,Pacific Time (Canada/Yukon),-8:00:00
+578,Pacific Time (Mexico/BajaNorte),-8:00:00
+579,Pacific Time (PST8PDT),-8:00:00
+580,Pacific Time (US/Pacific),-8:00:00
+581,Pacific Time (US/Pacific-New),-8:00:00
+582,Pacific/Chuuk,10:00:00
+583,Pacific/Pohnpei,11:00:00
+584,Pakistan Time (Asia/Karachi),5:00:00
+585,Palau Time (Pacific/Palau),9:00:00
+586,Papua New Guinea Time (Pacific/Port_Moresby),10:00:00
+587,Paraguay Time (America/Asuncion),-4:00:00
+588,Peru Time (America/Lima),-5:00:00
+589,Petropavlovsk-Kamchatski Time (Asia/Kamchatka),12:00:00
+590,Philippines Time (Asia/ManiIa),8:00:00
+591,Phoenix Is. Time (Pacific/Enderbury),13:00:00
+592,Pierre & Miquelon Time (America/MiqueIon),-3:00:00
+593,Pitcairn Time (Pacific/Pitcairn),-8:00:00
+594,Ponape Time (Pacific/Ponape),11:00:00
+595,Qyzylorda Time (Asia/Qyzylorda),5:00:00
+596,Reunion Time (Indian/Reunion),4:00:00
+597,Sakhalin Time (Asia/Sakhalin),11:00:00
+598,Samara Time (Europe/Samara),4:00:00
+599,Samoa Time (Pacific/Midway),-11:00:00
+600,Samoa Time (Pacific/Pago_Pago),-11:00:00
+601,Samoa Time (Pacific/Samoa),-11:00:00
+602,Samoa Time (US/Samoa),-11:00:00
+603,Seychelles Time (Indian/Mahe),4:00:00
+604,Singapore Time (Asia/Singapore),8:00:00
+605,Singapore Time (Singapore),8:00:00
+606,Solomon Is. Time (Pacific/Guadalcanal),11:00:00
+607,South Africa Time (Africa/Johannesburg),2:00:00
+608,South Africa Time (Africa/Maseru),2:00:00
+609,South Africa Time (Africa/Mbabane),2:00:00
+610,South Georgia Time (Atlantic/South_Georgia),-2:00:00
+611,Suriname Time (America/Paramaribo),-3:00:00
+612,Syowa Time (Antarctica/Syowa),3:00:00
+613,Tahiti Time (Pacific/Tahiti),-10:00:00
+614,Tajikistan Time (Asia/Dushanbe),5:00:00
+615,Timor-Leste Time (Asia/Dili),9:00:00
+616,Tokelau Time (Pacific/Fakaofo),13:00:00
+617,Tonga Time (Pacific/Tongatapu),13:00:00
+618,Truk Time (Pacific/Truk),10:00:00
+619,Truk Time (Pacific/Yap),10:00:00
+620,Turkmenistan Time (Asia/Ashgabat),5:00:00
+621,Turkmenistan Time (Asia/Ashkhabad),5:00:00
+622,Tuvalu Time (Pacific/Funafuti),12:00:00
+623,Ulaanbaatar Time (Asia/Ulaanbaatar),8:00:00
+624,Ulaanbaatar Time (Asia/Ulan_Bator),8:00:00
+625,Uruguay Time (America/Montevideo),-3:00:00
+626,Uzbekistan Time (Asia/Samarkand),5:00:00
+627,Uzbekistan Time (Asia/Tashkent),5:00:00
+628,Vanuatu Time (Pacific/Efate),11:00:00
+629,Venezuela Time (America/Caracas),-4:00:00
+630,Vladivostok Time (Asia/Vladivostok),10:00:00
+631,Volgograd Time (Europe/Volgograd),3:00:00
+632,Wake Time (Pacific/Wake),12:00:00
+633,Wallis & Futuna Time (Pacific/Wallis),12:00:00
+634,West Indonesia Time (Asia/Jakarta),7:00:00
+635,West Indonesia Time (Asia/Pontianak),7:00:00
+636,West Samoa Time (Pacific/Apia),13:00:00
+637,Western African Time (Africa/Bangui),1:00:00
+638,Western African Time (Africa/Branaville),1:00:00
+639,Western African Time (Africa/Douala),1:00:00
+640,Western African Time (Africa/Kinshasa),1:00:00
+641,Western African Time (Africa/Lagos),1:00:00
+642,Western African Time (Africa/Libreville),1:00:00
+643,Western African Time (Africa/Luanda),1:00:00
+644,Western African Time (Africa/Malabo),1:00:00
+645,Western African Time (Africa/Ndjamena),1:00:00
+646,Western African Time (Africa/Niamey),1:00:00
+647,Western African Time (Africa/Porto-Novo),1:00:00
+648,Western African Time (Africa/Windhoek),2:00:00
+649,Western Argentine Time (America/Argentina/San_Luis),-3:00:00
+650,Western European Time (Africa/Casablanca),0:00:00
+651,Western European Time (Africa/EI_Aaiun),0:00:00
+652,Western European Time (Atlantic/Canary),0:00:00
+653,Western European Time (Atlantic/Faeroe),0:00:00
+654,Western European Time (Atlantic/Faroe),0:00:00
+655,Western European Time (Atlantic/Madeira),0:00:00
+656,Western European Time (Europe/Lisbon),0:00:00
+657,Western European Time (Portugal),0:00:00
+658,Western European Time (WET),0:00:00
+659,Western Greenland Time (America/Godthab),-3:00:00
+660,Western Time (Australia) (Antarctica/Casey),8:00:00
+661,Western Time (Australia) (Australia/Perth),8:00:00
+662,Western Time (Australia) (Australia/West),8:00:00
+663,Yakutsk Time (Asia/Yakutsk),9:00:00
+664,Yekaterinburg Time (Asia/Yekaterinburg),5:00:00

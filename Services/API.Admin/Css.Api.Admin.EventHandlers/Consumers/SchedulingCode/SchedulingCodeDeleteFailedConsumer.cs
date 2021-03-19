@@ -34,6 +34,7 @@ namespace Css.Api.Admin.EventHandlers.Consumers.SchedulingCode
 
             UpdateSchedulingCode updateSchedulingCode = new UpdateSchedulingCode
             {
+                RefId = context.Message.RefId,
                 Description = context.Message.Name,
                 ModifiedBy = context.Message.ModifiedByOldValue,
                 IsDeleted = context.Message.IsDeletedOldValue,

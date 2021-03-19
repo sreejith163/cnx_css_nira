@@ -1,12 +1,13 @@
 ﻿using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Reporting.Models.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Css.Api.Reporting.Models.DTO.Response
 {
-    public class ActivityResponse
+    public class ActivityResponse : StrategyResponse
     {
         /// <summary>
         /// The total number of source processed

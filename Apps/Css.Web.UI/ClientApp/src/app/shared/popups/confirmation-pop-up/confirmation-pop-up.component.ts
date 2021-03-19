@@ -11,7 +11,7 @@ export class ConfirmationPopUpComponent implements OnInit {
 
   deleteLabel = 'Yes, delete it!';
   statusLabel = 'Yes, change it!';
-  
+
   @Input() headingMessage = '';
   @Input() contentMessage = '';
   @Input() deleteRecordIndex: any;

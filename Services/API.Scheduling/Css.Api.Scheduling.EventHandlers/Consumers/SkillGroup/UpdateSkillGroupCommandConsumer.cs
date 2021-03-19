@@ -9,12 +9,10 @@ using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-
 namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillGroup
 {
     public class UpdateSkillGroupCommandConsumer : IConsumer<UpdateSkillGroupCommand>
     {
-
         /// <summary>The bus utility</summary>
         private readonly IBusService _busUtility;
 
@@ -25,7 +23,6 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillGroup
         /// The uow
         /// </summary>
         private readonly IUnitOfWork _uow;
-
 
         /// <summary>Initializes a new instance of the <see cref="UpdateSkillGroupCommandConsumer" /> class.</summary>
         /// <param name="busUtility">The bus utility.</param>
@@ -69,7 +66,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillGroup
 
                 await _busUtility.PublishEvent<ISkillGroupUpdateSuccess>(MassTransitConstants.SkillGroupUpdateSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)

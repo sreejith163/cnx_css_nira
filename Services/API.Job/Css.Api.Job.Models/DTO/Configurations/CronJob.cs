@@ -14,5 +14,6 @@ namespace Css.Api.Job.Models.DTO.Configurations
         public Dictionary<string,string> Headers { get; set; }
         public string CronExpression { get; set; }
         public string TimeZone { get; set; }
+        public string Filters { get; set; }
     }
 }

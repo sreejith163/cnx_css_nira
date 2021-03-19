@@ -14,7 +14,6 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
 {
     public class DeleteSchedulingCodeCommandConsumer : IConsumer<DeleteSchedulingCodeCommand>
     {
-
         /// <summary>The bus utility</summary>
         private readonly IBusService _busUtility;
 
@@ -25,7 +24,6 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
         /// The uow
         /// </summary>
         private readonly IUnitOfWork _uow;
-
 
         /// <summary>Initializes a new instance of the <see cref="DeleteSchedulingCodeCommandConsumer" /> class.</summary>
         /// <param name="busUtility">The bus utility.</param>
@@ -81,6 +79,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode
             await _busUtility.PublishEvent<ISchedulingCodeDeleteFailed>(MassTransitConstants.SchedulingCodeDeleteFailedRouteKey, new
             {
                 context.Message.Id,
+                context.Message.RefId,
                 context.Message.Name,
                 context.Message.PriorityNumber,
                 context.Message.TimeOffCode,

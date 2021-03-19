@@ -16,5 +16,7 @@ namespace Css.Api.Reporting.Repository.Interfaces
         /// </summary>
         /// <returns>The list of instances of SchedulingCode</returns>
         Task<List<SchedulingCode>> GetSchedulingCodes();
+
+        Task<List<SchedulingCode>> GetSchedulingCodesByNames(List<string> names);
     }
 }

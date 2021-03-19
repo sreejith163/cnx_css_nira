@@ -1,6 +1,5 @@
-﻿using Css.Api.Core.Models.Enums;
-using Css.Api.Scheduling.Models.Domain;
-using Css.Api.Scheduling.Models.Enums;
+﻿using Css.Api.Core.Models.Domain.NoSQL;
+using Css.Api.Core.Models.Enums;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;

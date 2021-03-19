@@ -31,6 +31,7 @@ namespace Css.Api.Setup.EventHandlers.Consumers.Client
 
             UpdateClient updateClient = new UpdateClient
             {
+                RefId = context.Message.RefIdOldValue,
                 Name = context.Message.NameOldValue,
                 ModifiedBy = context.Message.ModifiedByOldValue,
                 IsDeleted = context.Message.IsDeletedOldValue,

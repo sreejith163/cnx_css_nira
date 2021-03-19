@@ -1,6 +1,5 @@
 ﻿using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
-using Css.Api.Scheduling.Models.Domain;
 
 namespace Css.Api.Scheduling.Models.Profiles.ActivityLog
 {
@@ -9,10 +8,10 @@ namespace Css.Api.Scheduling.Models.Profiles.ActivityLog
         /// <summary>Initializes a new instance of the <see cref="AgentLogProfile" /> class.</summary>
         public AgentLogProfile()
         {
-            CreateMap<NoSQL.AgentScheduleRange, ActivityLogScheduleRange>()
+            CreateMap<NoSQL.AgentScheduleRange, NoSQL.ActivityLogScheduleRange>()
                 .ReverseMap();
 
-            CreateMap<NoSQL.AgentScheduleManager, ActivityLogScheduleManager>()
+            CreateMap<NoSQL.AgentScheduleManager, NoSQL.ActivityLogScheduleManager>()
                 .ReverseMap();
         }
     }

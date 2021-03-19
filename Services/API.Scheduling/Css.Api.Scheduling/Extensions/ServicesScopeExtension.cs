@@ -50,7 +50,6 @@ namespace Css.Api.Scheduling.Extensions
                 serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddTransient<ITimezoneService, TimezoneService>();
             services.AddTransient<IActivityLogService, ActivityLogService>();
             services.AddTransient<IAgentAdminService, AgentAdminService>();
             services.AddTransient<IAgentScheduleService, AgentScheduleService>();

@@ -21,5 +21,21 @@ namespace Css.Api.Reporting.Business.Interfaces
         /// <typeparam name="T">ISource/ITarget</typeparam>
         void InitializeFTP<T>()
             where T : class;
+
+        /// <summary>
+        /// A generic method to return the filter params for the current request
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>The instance of T</returns>
+        T GetFilterParams<T>()
+            where T : class;
+
+        /// <summary>
+        /// A generic method to return the query params for the current GET request
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        T GetQueryParams<T>()
+            where T : class;
     }
 }

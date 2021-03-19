@@ -4,6 +4,41 @@
         <name>Css.Api.Job</name>
     </assembly>
     <members>
+        <member name="T:Css.Api.Job.Controllers.JobsController">
+            <summary>
+            The jobs controller
+            </summary>
+        </member>
+        <member name="F:Css.Api.Job.Controllers.JobsController._jobs">
+            <summary>
+            The jobs
+            </summary>
+        </member>
+        <member name="M:Css.Api.Job.Controllers.JobsController.#ctor(Microsoft.Extensions.Options.IOptions{Css.Api.Job.Models.DTO.Configurations.Jobs})">
+            <summary>
+            Constructor to initialize properties
+            </summary>
+            <param name="jobs"></param>
+        </member>
+        <member name="M:Css.Api.Job.Controllers.JobsController.Get">
+            <summary>
+            The HTTP GET endpoint
+            </summary>
+            <returns>All the existing job configured in the system</returns>
+        </member>
+        <member name="T:Css.Api.Job.Extensions.DBContextExtension">
+            <summary>
+            Extension for adding the DB Context
+            </summary>
+        </member>
+        <member name="M:Css.Api.Job.Extensions.DBContextExtension.AddDBContextConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Adds the database context configuration.
+            </summary>
+            <param name="services">The services.</param>
+            <param name="configuration">The configuration.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Job.Extensions.ScheduledJobsExtension">
             <summary>
             An extension class to add scheduled jobs within the project

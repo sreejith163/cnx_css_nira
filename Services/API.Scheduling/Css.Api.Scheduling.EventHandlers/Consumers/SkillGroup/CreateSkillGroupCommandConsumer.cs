@@ -68,7 +68,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.SkillGroup
 
                 await _busUtility.PublishEvent<ISkillGroupCreateSuccess>(MassTransitConstants.SkillGroupCreateSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)

@@ -64,6 +64,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
                             SkillGroupId = context.Message.SkillGroupId,
                             SkillTagId = context.Message.SkillTagId,
                             TimezoneId = context.Message.TimezoneId,
+                            EstartProvision = context.Message.EstartProvision,
                             IsDeleted = false
                         }
                     );
@@ -72,7 +73,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
 
                 await _busUtility.PublishEvent<IAgentSchedulingGroupCreateSuccess>(MassTransitConstants.AgentSchedulingGroupCreateSuccessRouteKey, new
                 {
-                    Id = context.Message.Id
+                    context.Message.Id
                 });
             }
             catch (Exception ex)
@@ -95,6 +96,7 @@ namespace Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup
                 context.Message.SkillGroupId,
                 context.Message.SkillTagId,
                 context.Message.TimezoneId,
+                context.Message.EstartProvision,
                 context.Message.FirstDayOfWeek,
                 context.Message.OperationHour,
                 context.Message.ModifiedDate

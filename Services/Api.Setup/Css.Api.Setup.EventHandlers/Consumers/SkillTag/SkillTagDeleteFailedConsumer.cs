@@ -35,6 +35,7 @@ namespace Css.Api.Setup.EventHandlers.Consumers.SkillTag
 
             UpdateSkillTag updateSkillTag = new UpdateSkillTag
             {
+                RefId = context.Message.RefId,
                 Name = context.Message.Name,
                 ModifiedBy = context.Message.ModifiedByOldValue,
                 IsDeleted = context.Message.IsDeletedOldValue,

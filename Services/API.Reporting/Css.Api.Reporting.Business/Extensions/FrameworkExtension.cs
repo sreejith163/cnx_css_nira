@@ -67,7 +67,7 @@ namespace Css.Api.Reporting.Business.Extensions
         {
             services.AddScoped<IMapperService, MapperService>();
             services.AddScoped<IFTPService, FTPService>();
-            services.AddScoped<IScheduleClockService, ScheduleClockService>();
+            services.AddScoped<IScheduleService, ScheduleService>();
             services.AddMongoConfiguration();
             return services;
         }
@@ -126,6 +126,10 @@ namespace Css.Api.Reporting.Business.Extensions
             services.AddScoped<ITarget, UDWImportTarget>();
             services.AddScoped<ISource, EStartExportSource>();
             services.AddScoped<ITarget, EStartExportTarget>();
+            services.AddScoped<ISource, EStartImportSource>();
+            services.AddScoped<ITarget, EStartImportTarget>();
+            services.AddScoped<ISource, CNX1ExportSource>();
+            services.AddScoped<ITarget, CNX1ImportTarget>();
             return services;
         }
 
@@ -138,8 +142,12 @@ namespace Css.Api.Reporting.Business.Extensions
         {
             services.AddScoped<IAgentRepository, AgentRepository>();
             services.AddScoped<IAgentSchedulingGroupRepository, AgentSchedulingGroupRepository>();
+            services.AddScoped<IAgentSchedulingGroupHistoryRepository, AgentSchedulingGroupHistoryRepository>();
             services.AddScoped<IAgentScheduleRepository, AgentScheduleRepository>();
+            services.AddScoped<IAgentScheduleManagerRepository, AgentScheduleManagerRepository>();
             services.AddScoped<ISchedulingCodeRepository, SchedulingCodeRepository>();
+            services.AddScoped<ITimezoneRepository, TimezoneRepository>();
+            services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
             return services;
         }
     }

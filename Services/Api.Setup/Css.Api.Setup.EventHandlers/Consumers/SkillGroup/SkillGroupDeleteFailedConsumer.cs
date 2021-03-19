@@ -35,6 +35,7 @@ namespace Css.Api.Setup.EventHandlers.Consumers.SkillGroup
 
             UpdateSkillGroup updateSkillGroup = new UpdateSkillGroup
             {
+                RefId = context.Message.RefId,
                 Name = context.Message.Name,
                 ModifiedBy = context.Message.ModifiedByOldValue,
                 IsDeleted = context.Message.IsDeletedOldValue,

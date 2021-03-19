@@ -93,6 +93,14 @@ namespace Css.Api.Reporting.Business.Services
 				using (SftpClient sftp = CreateClient())
 				{
 					sftp.Connect();
+                    try
+                    {
+						sftp.DeleteFile(string.Join('/', outbox, filename));
+					}
+					catch
+                    {
+
+                    }
 					sftp.WriteAllText(string.Join('/', outbox, filename), contents);
 					sftp.Disconnect();
 					sftp.Dispose();
@@ -203,9 +211,10 @@ namespace Css.Api.Reporting.Business.Services
 		/// <returns>{{sourcePathWithoutext}}_pending.txt'</returns>
 		private string GetPartialFileDestinationPath(string sourcePath)
 		{
-			int index = sourcePath.LastIndexOf(".xml");
+			int index = sourcePath.LastIndexOf(".");
+			string extension = sourcePath.Substring(index);
 			string file = sourcePath.Substring(0, index);
-			return file + "_pending.xml";
+			return file + "_pending" + extension;
 		}
 
 		/// <summary>

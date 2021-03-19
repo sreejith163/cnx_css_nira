@@ -11,6 +11,41 @@
         },
         "Content": "",
         "TimeZone": "UTC"
+      },
+      {
+        "Key": "EStartImport",
+        "CronExpression": "0 */4 * * *",
+        "Url": "http://cnx-css-api-gateway:4201/api/activity",
+        "Method": "POST",
+        "Headers": {
+          "activity": "EStart-Import"
+        },
+        "Content": "",
+        "TimeZone": "UTC"
+      },
+      {
+        "Key": "EStartExport",
+        "CronExpression": "*/15 * * * *",
+        "Url": "http://cnx-css-api-gateway:4201/api/activity",
+        "Method": "POST",
+        "Headers": {
+          "activity": "EStart-Export"
+        },
+        "Content": "",
+        "TimeZone": "UTC",
+        "Filters": "[{\"timeOfDay\": \"22:15:00\", \"daysOfData\": 14, \"include\": [291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324,325,326,327,328,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,420,421,422,423,424,425,426,427,428,429,430,431,432,433,434,435,436,437,438,439,440,441,442,443,444,445,446,447,448,449,533,534,535,536,537,538,539,540,541,542,543,544,545,546,547,548,549,550,551,552,569,570,571,572,573,574,575,576,577,578,579,580,581]},{\"timeOfDay\": \"22:15:00\", \"daysOfData\": 3 }, {\"timeOfDay\": \"19:45:00\", \"daysOfData\": 0 }]"
+      },
+      {
+        "Key": "EStartExportIntraDay",
+        "CronExpression": "*/5 * * * *",
+        "Url": "http://cnx-css-api-gateway:4201/api/activity",
+        "Method": "POST",
+        "Headers": {
+          "activity": "EStart-Export"
+        },
+        "Content": "",
+        "TimeZone": "UTC",
+        "Filters": "[{\"relativeStartDay\": -1, \"relativeEndDay\": 1, \"include\": [], \"exclude\": [], \"pickRecentlyUpdatedInDays\": 3 }]"
       }
     ]
   }

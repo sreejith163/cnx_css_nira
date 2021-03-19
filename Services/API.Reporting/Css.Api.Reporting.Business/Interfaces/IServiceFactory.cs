@@ -1,4 +1,5 @@
-﻿using Css.Api.Reporting.Models.DTO.Response;
+﻿using Css.Api.Reporting.Models.DTO.Processing;
+using Css.Api.Reporting.Models.DTO.Response;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,5 +23,11 @@ namespace Css.Api.Reporting.Business.Interfaces
         /// The method to initialize the data options
         /// </summary>
         void Initialize();
+
+        /// <summary>
+        /// The method to initialize the fetch request feeds
+        /// </summary>
+        /// <returns>The list of instances of DataFeed</returns>
+        List<DataFeed> GetRequestFeeds();
     }
 }

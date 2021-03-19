@@ -3,12 +3,17 @@ using Css.Api.Reporting.Business.Exceptions;
 using Css.Api.Reporting.Models.DTO.Mappers;
 using Css.Api.Reporting.Models.DTO.Request;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Css.Api.Reporting.Business.Middlewares
@@ -52,47 +57,204 @@ namespace Css.Api.Reporting.Business.Middlewares
         /// </summary>
         /// <param name="httpContext"></param>
         /// <returns></returns>
-        public Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext httpContext)
         {
-            if(!httpContext.Request.Path.Equals("/api/v1/activity"))
+            try
             {
-                return _next(httpContext);
-            }
+                if (!httpContext.Request.Path.Value.Contains("/api/v1/activity"))
+                {
+                    await _next(httpContext);
+                    return;
+                }
 
-            if(httpContext.Items.ContainsKey("Mappers"))
+                switch (httpContext.Request.Method.ToUpper())
+                {
+                    case "POST":
+                        await MapToActivity(httpContext);
+                        break;
+                    case "GET":
+                        await MapToCollector(httpContext);
+                        break;
+                    case "PUT":
+                        await MapToAssigner(httpContext);
+                        break;
+                    default:
+                        break;
+                }
+
+                await _next(httpContext);
+
+            }
+            catch(Exception ex)
+            {
+                var result = new JsonResult(new { Message = ex.Message });
+                httpContext.Response.StatusCode = (int) HttpStatusCode.UnprocessableEntity;
+                httpContext.Response.ContentType = "application/json";           
+                await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(result.Value));
+            }
+        }
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Helper method to map the activity POST request
+        /// </summary>
+        /// <param name="httpContext"></param>
+        private async Task MapToActivity(HttpContext httpContext)
+        {
+            if (httpContext.Items.ContainsKey("Mappers"))
             {
                 httpContext.Items.Remove("Mappers");
             }
-            
+
             var headers = httpContext.Request.Headers;
-            
-            if(!headers.ContainsKey("activity"))
+
+            if (!headers.ContainsKey("activity"))
             {
                 throw new InvalidOperationException();
             }
 
             string key = headers["activity"];
 
+            var settings = GetActivity(key);
+            var sourceDataOption = GetSourceDataOption(key, settings);
+            var targetDataOption = GetTargetDataOption(key, settings);
+            var content = await GetRequestContent(httpContext);
+            
+            AddMappingContext(httpContext, new MappingContext()
+            {
+                Key = key,
+                Source = settings.Source,
+                SourceType = sourceDataOption.Type,
+                SourceOptions = sourceDataOption.Options,
+                Target = settings.Target,
+                TargetType = targetDataOption.Type,
+                TargetOptions = targetDataOption.Options,
+                RequestBody = content
+            });
+        }
+
+        /// <summary>
+        /// Helper method to map the activity GET request
+        /// </summary>
+        /// <param name="httpContext"></param>
+        private async Task MapToCollector(HttpContext httpContext)
+        {
+            var routeParam = GetRouteParam(httpContext);
+
+            var key = string.Join("-", routeParam, "Export");
+
+            var settings = GetActivity(key);
+            var sourceDataOption = GetSourceDataOption(key, settings);
+            var queryParams = await GetRequestHeaders(httpContext);
+
+            AddMappingContext(httpContext, new MappingContext()
+            {
+                Key = key,
+                Source = settings.Source,
+                SourceType = sourceDataOption.Type,
+                SourceOptions = sourceDataOption.Options,
+                RequestQueryParams = queryParams
+            });
+        }
+
+        /// <summary>
+        /// Helper method to map the activity PUT request
+        /// </summary>
+        /// <param name="httpContext"></param>
+        private async Task MapToAssigner(HttpContext httpContext)
+        {
+            var routeParam = GetRouteParam(httpContext);
+
+            var key = string.Join("-", routeParam, "Import");
+
+            var settings = GetActivity(key);
+            var targetDataOption = GetTargetDataOption(key, settings);
+            var content = await GetRequestContent(httpContext);
+
+            AddMappingContext(httpContext, new MappingContext()
+            {
+                Key = key,
+                Target = settings.Target,
+                TargetType = targetDataOption.Type,
+                TargetOptions = targetDataOption.Options,
+                RequestBody = content
+            });
+        }
+
+        /// <summary>
+        /// Helper method to fetch route param from the route
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <returns></returns>
+        private string GetRouteParam(HttpContext httpContext)
+        {
+            var pattern = new Regex(@"\/api\/v1\/activity\/(?'key'\w*)");
+            var match = pattern.Match(httpContext.Request.Path);
+
+            if (!match.Success)
+            {
+                throw new MappingException(string.Format(Messages.RouteNotFound, httpContext.Request.Path));
+            }
+
+            var keyGroup = match.Groups.Values.FirstOrDefault(x => x.Name.Equals("key"));
+            if (keyGroup == null)
+            {
+                throw new MappingException(string.Format(Messages.RouteNotFound, httpContext.Request.Path));
+            }
+
+            return keyGroup.Value.ToUpper();
+        }
+
+        /// <summary>
+        /// A helper method get the activity from the config using the key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns>An instance of Activity</returns>
+        private Activity GetActivity(string key)
+        {
             var settings = _mapper.Activities.FirstOrDefault(x => x.Key.Equals(key));
-            if(settings == null)
+            if (settings == null)
             {
                 throw new MappingException(string.Format(Messages.MappingNotFound, key));
             }
 
-            if(string.IsNullOrWhiteSpace(settings.Source))
+            return settings;
+        }
+
+        /// <summary>
+        /// A helper method to fetch the source and its data option details
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="settings"></param>
+        /// <returns>An instance of DataOption</returns>
+        private DataOption GetSourceDataOption(string key, Activity settings)
+        {
+            if (string.IsNullOrWhiteSpace(settings.Source))
             {
                 throw new MappingException(string.Format(Messages.InvalidSource, key));
-            }
-
-            if(string.IsNullOrWhiteSpace(settings.Target))
-            {
-                throw new MappingException(string.Format(Messages.InvalidTarget, key));
             }
 
             var sourceDataOption = _mapper.DataOptions.FirstOrDefault(x => x.Key.Equals(settings.SourceDataOption));
             if (sourceDataOption == null)
             {
                 throw new MappingException(string.Format(Messages.InvalidDataSource, key));
+            }
+            return sourceDataOption;
+        }
+
+        /// <summary>
+        /// A helper method to fetch the target and its data option details
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="settings"></param>
+        /// <returns>An instance of DataOption</returns>
+        private DataOption GetTargetDataOption(string key, Activity settings)
+        {
+            if (string.IsNullOrWhiteSpace(settings.Target))
+            {
+                throw new MappingException(string.Format(Messages.InvalidTarget, key));
             }
 
             var targetDataOption = _mapper.DataOptions.FirstOrDefault(x => x.Key.Equals(settings.TargetDataOption));
@@ -101,17 +263,81 @@ namespace Css.Api.Reporting.Business.Middlewares
                 throw new MappingException(string.Format(Messages.InvalidDataTarget, key));
             }
 
-            httpContext.Items.Add("Mappers", new MappingContext()
+            return targetDataOption;
+        }
+
+        /// <summary>
+        /// A helper method to fetch the request body content
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <returns>The content string</returns>
+        private async Task<string> GetRequestContent(HttpContext httpContext)
+        {
+            return await new StreamReader(httpContext.Request.Body).ReadToEndAsync();
+        }
+
+        /// <summary>
+        /// A helper method to parse headers of the request
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <returns></returns>
+        private async Task<string> GetRequestHeaders(HttpContext httpContext)
+        {
+            var query_dict = new Dictionary<string, object>();
+            var headers = httpContext.Request.Headers;
+            var agentIds = headers["AgentIds"];
+            if (agentIds.Count > 0)
             {
-                Key = key,
-                Source = settings.Source,
-                SourceType = sourceDataOption.Type,
-                SourceOptions = sourceDataOption.Options,
-                Target = settings.Target,
-                TargetType = targetDataOption.Type,
-                TargetOptions = targetDataOption.Options
-            });    
-            return _next(httpContext);
+                var values = agentIds.ToString().Split(",");
+                var list_dict_value = new List<string>();
+                foreach (var value in values)
+                {
+                    list_dict_value.Add(value);
+                }
+                query_dict.Add("agentIds", list_dict_value);
+            }
+            query_dict.Add("startDate", headers["startDate"].ToString());
+            query_dict.Add("endDate", headers["endDate"].ToString());
+
+            return await Task.FromResult(JsonConvert.SerializeObject(query_dict));
+        }
+
+        /// <summary>
+        /// A helper to parse and return all query params in the request
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <returns>The jsonified string of all the query params</returns>
+        private async Task<string> GetRequestQueryParams(HttpContext httpContext)
+        {
+            var query_dict = new Dictionary<string, object>();
+            var query = httpContext.Request.Query;
+            foreach(var key in query.Keys)
+            {
+                var values = query[key];
+                object dict_value = values.ToString();
+                if (values.Count > 1)
+                {
+                    var list_dict_value = new List<string>();
+                    foreach(var value in values)
+                    {
+                        list_dict_value.Add(value);
+                    }
+                    dict_value = list_dict_value;
+                }
+                query_dict.Add(key, dict_value);
+            }
+            
+            return await Task.FromResult(JsonConvert.SerializeObject(query_dict));
+        }
+
+        /// <summary>
+        /// A helper method to add MappingContext
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <param name="context"></param>
+        private void AddMappingContext(HttpContext httpContext, MappingContext context)
+        {
+            httpContext.Items.Add("Mappers", context);
         }
         #endregion
     }

@@ -1,5 +1,8 @@
-﻿using Css.Api.Reporting.Business.Interfaces;
+﻿using Css.Api.Core.Models.DTO.Common;
+using Css.Api.Reporting.Business.Data;
+using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Models.DTO.Processing;
+using Css.Api.Reporting.Models.DTO.Request.EStart;
 using Css.Api.Reporting.Models.DTO.Response;
 using Newtonsoft.Json;
 using System;
@@ -25,7 +28,12 @@ namespace Css.Api.Reporting.Business.Targets
         /// <summary>
         /// The clock helper service
         /// </summary>
-        private readonly IScheduleClockService _scheduleClockService;
+        private readonly IScheduleService _scheduleClockService;
+
+        /// <summary>
+        /// The mapper service
+        /// </summary>
+        private readonly IMapperService _mapperService;
         #endregion
 
         #region Public Properties
@@ -43,10 +51,11 @@ namespace Css.Api.Reporting.Business.Targets
         /// </summary>
         /// <param name="ftp"></param>
         /// <param name="scheduleClockService"></param>
-        public EStartExportTarget(IFTPService ftp, IScheduleClockService scheduleClockService)
+        public EStartExportTarget(IFTPService ftp, IScheduleService scheduleClockService, IMapperService mapperService)
         {
             _ftp = ftp;
             _scheduleClockService = scheduleClockService;
+            _mapperService = mapperService;
         }
         #endregion
 
@@ -56,36 +65,65 @@ namespace Css.Api.Reporting.Business.Targets
         /// The method to push data to the target
         /// </summary>
         /// <param name="feeds"></param>
-        /// <returns>An instance of ActivityResponse</returns>
-        public async Task<ActivityResponse> Push(List<DataFeed> feeds)
+        /// <returns>An instance of StrategyResponse</returns>
+        public async Task<StrategyResponse> Push(List<DataFeed> feeds)
         {
             DataFeed feed = feeds.First();
-            var clockString = Encoding.Default.GetString(feed.Content);
-            List<ScheduleClock> clocks = JsonConvert.DeserializeObject<List<ScheduleClock>>(clockString);
+            var chartsString = Encoding.Default.GetString(feed.Content);
+            List<CalendarChart> charts = JsonConvert.DeserializeObject<List<CalendarChart>>(chartsString);
             
-            ActivityResponse response = new ActivityResponse();
-            
-            if(!clocks.Any())
+            if(!charts.Any())
             {
-                response.Failed.Add(new ActivityData()
+                return new ActivityResponse()
                 {
-                    Bytes = 0,
-                    Source = feed.Feeder
-                });
-                return response;
+                    Failed = new List<ActivityData>()
+                    {
+                        new ActivityData()
+                        {
+                            Bytes = 0,
+                            DataSet = feed.Feeder,
+                            Metadata = Messages.ExportNoData
+                        }
+                    }
+                };
             }
-            
-            var exportText = _scheduleClockService.GenerateClocksText(clocks);
-            var status = await Task.FromResult(_ftp.Write("test.ftp", exportText));
-            
-            if (status)
+
+            return await Export(charts);
+        }
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// The method that implements the export logic
+        /// </summary>
+        /// <param name="charts"></param>
+        /// <returns></returns>
+        private async Task<ActivityResponse> Export(List<CalendarChart> charts)
+        {
+            ActivityResponse response = new ActivityResponse();
+            EStartFilter requestFilter = _mapperService.GetFilterParams<EStartFilter>();
+            var timezones = charts.Select(x => x.TimezoneOffset).Distinct().ToList();
+
+            timezones.ForEach(async timezone =>
             {
-                response.Failed.Add(new ActivityData() { Bytes = feed.Content.Length, Source = feed.Feeder });
-                return response;
-            }
+                var timezoneClocks = charts.Where(x => x.TimezoneOffset.Equals(timezone)).ToList();
+                string fileName = string.Join("_", "CSS", timezone, 
+                                    requestFilter.StartDate.ToString("yyyyMMdd"), requestFilter.EndDate.ToString("yyyyMMdd")) 
+                                + ".ftp";
+                var exportText = _scheduleClockService.GenerateExportText(timezoneClocks);
+                var status = await Task.FromResult(_ftp.Write(fileName, exportText));
+                if(status)
+                {
+                    response.Completed.Add(new ActivityData() { Bytes = exportText.Length, DataSet = fileName });
+                }
+                else
+                {
+                    response.Failed.Add(new ActivityData() { Bytes = exportText.Length, DataSet = fileName, Metadata = Messages.ExportFailed });
+                }
+            });
             
-            response.Completed.Add(new ActivityData() { Bytes = feed.Content.Length, Source = feed.Feeder });
-            return response;
+            return await Task.FromResult(response);
         }
         #endregion
     }

@@ -47,10 +47,10 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentAdmin
             CreateMap<NoSQL.AgentPto, AgentPtoAttribute>()
               .ReverseMap();
 
-            CreateMap<Domain.ActivityLog, CreateAgentActivityLog>()
+            CreateMap<NoSQL.ActivityLog, CreateAgentActivityLog>()
              .ReverseMap();
 
-            CreateMap<Domain.ActivityLog, ActivityLogDTO>()
+            CreateMap<NoSQL.ActivityLog, ActivityLogDTO>()
             .ReverseMap();
         }
     }

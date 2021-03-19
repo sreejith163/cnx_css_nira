@@ -48,6 +48,7 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IAgentScheduleManagerRepository _agentScheduleManagerRepository;
 
+
         /// <summary>
         /// The agent schedule group repository
         /// </summary>

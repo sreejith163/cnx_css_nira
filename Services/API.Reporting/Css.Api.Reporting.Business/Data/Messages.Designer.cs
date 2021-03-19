@@ -61,11 +61,38 @@ namespace Css.Api.Reporting.Business.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Agent id - couldn&apos;t find the agent details in our system.
+        /// </summary>
+        internal static string AgentNotFound {
+            get {
+                return ResourceManager.GetString("AgentNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t find any files to read in the requested directory.
         /// </summary>
         internal static string EmptyFTPDirectory {
             get {
                 return ResourceManager.GetString("EmptyFTPDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to generate the export file for the requested date(s).
+        /// </summary>
+        internal static string ExportFailed {
+            get {
+                return ResourceManager.GetString("ExportFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No schedules available for the requested date(s).
+        /// </summary>
+        internal static string ExportNoData {
+            get {
+                return ResourceManager.GetString("ExportNoData", resourceCulture);
             }
         }
         
@@ -88,6 +115,60 @@ namespace Css.Api.Reporting.Business.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid DateTime - &apos;{0}&apos;  format supported &apos;yyyy-MM-dd HH:mm&apos;.
+        /// </summary>
+        internal static string InvalidDateTimeFormat {
+            get {
+                return ResourceManager.GetString("InvalidDateTimeFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The schedules do not fall within -1 to +1 days of the schedule date.
+        /// </summary>
+        internal static string InvalidDateTimeSchedule {
+            get {
+                return ResourceManager.GetString("InvalidDateTimeSchedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid end date &apos;{0}&apos; specified for schedule starting at &apos;{1}&apos;.
+        /// </summary>
+        internal static string InvalidEndDateTime {
+            get {
+                return ResourceManager.GetString("InvalidEndDateTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid request parameters. Kindly specify atleast one agent id and a valid combination of start &amp; end dates.
+        /// </summary>
+        internal static string InvalidQueryParamsCNX1 {
+            get {
+                return ResourceManager.GetString("InvalidQueryParamsCNX1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid schedule date, format supported - &apos;yyyy-MM-dd&apos;.
+        /// </summary>
+        internal static string InvalidScheduleDate {
+            get {
+                return ResourceManager.GetString("InvalidScheduleDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid activity code - &apos;{0}&apos;.
+        /// </summary>
+        internal static string InvalidSchedulingCode {
+            get {
+                return ResourceManager.GetString("InvalidSchedulingCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid source specified for key - &apos;{0}&apos;.
         /// </summary>
         internal static string InvalidSource {
@@ -106,11 +187,47 @@ namespace Css.Api.Reporting.Business.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid timezone, format supported - &apos;[+/-]UTC{hh:mm}&apos; for e.g. UTC+0600, UTC-1230.
+        /// </summary>
+        internal static string InvalidTimezone {
+            get {
+                return ResourceManager.GetString("InvalidTimezone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mapping not found for key - &apos;{0}&apos;.
         /// </summary>
         internal static string MappingNotFound {
             get {
                 return ResourceManager.GetString("MappingNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No schedules to update.
+        /// </summary>
+        internal static string NoSchedulesToUpdate {
+            get {
+                return ResourceManager.GetString("NoSchedulesToUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overlapping schedules exists for the schedule on &apos;{0}&apos;.
+        /// </summary>
+        internal static string OverlappingSchedules {
+            get {
+                return ResourceManager.GetString("OverlappingSchedules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to map the route - &apos;{0}&apos;.
+        /// </summary>
+        internal static string RouteNotFound {
+            get {
+                return ResourceManager.GetString("RouteNotFound", resourceCulture);
             }
         }
     }

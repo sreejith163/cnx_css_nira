@@ -10,6 +10,6 @@ namespace Css.Api.Reporting.Models.Enums
         [Description("FTP")]
         FTP = 1,
         [Description("MongoDB")]
-        Mongo = 2,
+        Mongo = 2
     }
 }

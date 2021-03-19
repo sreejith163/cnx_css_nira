@@ -528,18 +528,19 @@ namespace Css.Api.Setup.Repository.DatabaseContext
                 entity.Property(e => e.DisplayName)
                     .IsRequired()
                     .HasColumnName("display_name")
-                    .HasMaxLength(100)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name")
-                    .HasMaxLength(50)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Offset)
-                    .HasColumnName("offset")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.UtcOffset)
+                    .IsRequired()
+                    .HasColumnName("utc_offset")
+                    .HasColumnType("TIME");
             });
 
             OnModelCreatingPartial(modelBuilder);

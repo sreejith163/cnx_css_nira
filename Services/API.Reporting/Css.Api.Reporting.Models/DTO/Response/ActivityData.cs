@@ -7,12 +7,12 @@ namespace Css.Api.Reporting.Models.DTO.Response
     public class ActivityData
     {
         /// <summary>
-        /// The source of the import
+        /// The dataset of the activity
         /// </summary>
-        public string Source { get; set; }
+        public string DataSet { get; set; }
 
         /// <summary>
-        /// The size of the import
+        /// The size of the dataset
         /// </summary>
         public int Bytes { get; set; }
 
