@@ -107,7 +107,7 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
 
   save() {
     this.formSubmitted = true;
-    if (this.agentCategoryForm.valid) {
+    if (this.agentCategoryForm.valid && this.numericRangeValidation()) {
       this.saveAgentCategoryDetailsOnModel();
       this.operation === ComponentOperation.Edit ? this.updateAgentcategoryDetails() : this.addAgentCategoryDetails();
     }
@@ -155,13 +155,25 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
     }
   }
 
+  numericRangeValidation() {
+    if (+this.agentCategoryForm.get('dataType').value === 3 &&
+      this.rangeForm.controls.minRange.value && this.rangeForm.controls.maxRange.value) {
+      if (+this.rangeForm.controls.minRange.value >= +this.rangeForm.controls.maxRange.value) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   addAlphaNumericControl(range?) {
     if (this.agentCategoryForm.get('dateRange')) {
       this.agentCategoryForm.removeControl('dateRange');
     }
     this.rangeForm.reset();
     this.agentCategoryForm.addControl('range', this.rangeForm);
-    if (+this.agentCategoryForm.get('dataType').value === 3) {
+    if (+this.agentCategoryForm.get('dataType').value === 3 &&
+     this.rangeForm.controls.minRange.value && this.rangeForm.controls.maxRange.value) {
       this.agentCategoryForm.get('range').setValidators([
         CustomValidators.rangeValidator('minRange', 'maxRange')
       ]);
@@ -342,8 +354,8 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
     // );
 
     this.rangeForm = this.formBuilder.group({
-      minRange: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(40)])),
-      maxRange: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(40)])),
+      minRange: new FormControl('', Validators.maxLength(40)),
+      maxRange: new FormControl('', Validators.maxLength(40)),
     });
   }
 }

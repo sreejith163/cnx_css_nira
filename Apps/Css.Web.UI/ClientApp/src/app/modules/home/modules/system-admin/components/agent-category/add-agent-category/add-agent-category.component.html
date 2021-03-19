@@ -54,17 +54,13 @@
             <div class="row">
               <div class="col-md-4">
                 <label> {{ 'Minimum' | translate }}
-                  <span class="required">*</span>
                 </label>
               </div>
               <div class="col-md-8">
                 <input type="text" class="form-control" (paste)="canPasteValue()"
                   [ngClass]="{'valid-border-error': rangeRequiredError('range', 'minRange')}" formControlName="minRange"
                   maxlength="40" (keypress)="checkValidity($event)" />
-                <div *ngIf="rangeRequiredError('range', 'minRange')" class="valid-error">
-                  {{ 'Minimum is required' | translate }}
-                </div>
-                <div *ngIf="formSubmitted && agentCategoryForm.get('range')?.errors?.rangeError" class="valid-error">
+                <div *ngIf="formSubmitted && !numericRangeValidation()" class="valid-error">
                   {{ 'Minimum value should be lesser than Maximum value' | translate }}
                 </div>
               </div>
@@ -74,17 +70,13 @@
             <div class="row">
               <div class="col-md-4">
                 <label> {{ 'Maximum' | translate }}
-                  <span class="required">*</span>
                 </label>
               </div>
               <div class="col-md-8">
                 <input type="text" class="form-control" (paste)="canPasteValue()"
                   [ngClass]="{'valid-border-error': rangeRequiredError('range', 'maxRange')}" formControlName="maxRange"
                   maxlength="40" (keypress)="checkValidity($event)" />
-                <div *ngIf="rangeRequiredError('range', 'maxRange')" class="valid-error">
-                  {{ 'Maximum is required' | translate }}
-                </div>
-                <div *ngIf="formSubmitted && agentCategoryForm.get('range')?.errors?.rangeError" class="valid-error">
+                <div *ngIf="formSubmitted && !numericRangeValidation()" class="valid-error">
                   {{ 'Maximum value should be greater than Minimum value' | translate }}
                 </div>
               </div>
