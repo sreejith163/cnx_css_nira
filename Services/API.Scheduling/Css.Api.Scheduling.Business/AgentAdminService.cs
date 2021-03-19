@@ -287,7 +287,6 @@ namespace Css.Api.Scheduling.Business
             agentAdminRequest.ClientLobGroupId = agentSchedulingGroup.ClientLobGroupId;
             agentAdminRequest.SkillGroupId = agentSchedulingGroup.SkillGroupId;
             agentAdminRequest.SkillTagId = agentSchedulingGroup.SkillTagId;
-            agentAdminRequest.AgentSchedulingGroupId = agentSchedulingGroup.AgentSchedulingGroupId;
 
             _agentAdminRepository.CreateAgentAdmin(agentAdminRequest);
 
@@ -384,7 +383,10 @@ namespace Css.Api.Scheduling.Business
             }
 
             var agentAdminRequest = _mapper.Map(agentAdminDetails, agentAdmin);
-            agentAdminRequest.AgentSchedulingGroupId = agentSchedulingGroup.AgentSchedulingGroupId;
+            agentAdminRequest.ClientId = agentSchedulingGroup.ClientId;
+            agentAdminRequest.ClientLobGroupId = agentSchedulingGroup.ClientLobGroupId;
+            agentAdminRequest.SkillGroupId = agentSchedulingGroup.SkillGroupId;
+            agentAdminRequest.SkillTagId = agentSchedulingGroup.SkillTagId;
 
             _agentAdminRepository.UpdateAgentAdmin(agentAdminRequest);
 
