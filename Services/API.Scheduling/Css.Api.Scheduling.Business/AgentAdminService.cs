@@ -3,8 +3,9 @@ using Css.Api.Core.DataAccess.Repository.UnitOfWork.Interfaces;
 using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Models.DTO.Response;
+using Css.Api.Core.Models.Enums;
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Business.Interfaces;
-using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
@@ -14,8 +15,8 @@ using Css.Api.Scheduling.Models.DTO.Request.Client;
 using Css.Api.Scheduling.Models.DTO.Request.ClientLobGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Models.DTO.Request.SkillTag;
+using Css.Api.Scheduling.Models.DTO.Request.Timezone;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
-using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -78,10 +79,16 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IAgentSchedulingGroupRepository _agentSchedulingGroupRepository;
 
+        /// <summary>The timezone repository</summary>
+        private readonly ITimezoneRepository _timezoneRepository;
+
         /// <summary>
         /// The activity log repository
         /// </summary>
         private readonly IActivityLogRepository _activityLogRepository;
+
+        /// <summary>The agent scheduling group history repository</summary>
+        private readonly IAgentSchedulingGroupHistoryRepository _agentSchedulingGroupHistoryRepository;
 
         /// <summary>
         /// The mapper
@@ -93,17 +100,18 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IUnitOfWork _uow;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AgentAdminService" /> class.
-        /// </summary>
+
+        /// <summary>Initializes a new instance of the <see cref="AgentAdminService" /> class.</summary>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="agentAdminRepository">The agent admin repository.</param>
         /// <param name="agentScheduleRepository">The agent schedule repository.</param>
+        /// <param name="agentScheduleManagerRepository">The agent schedule manager repository.</param>
         /// <param name="clientRepository">The client repository.</param>
         /// <param name="clientLobGroupRepository">The client lob group repository.</param>
         /// <param name="skillGroupRepository">The skill group repository.</param>
         /// <param name="skillTagRepository">The skill tag repository.</param>
         /// <param name="agentSchedulingGroupRepository">The agent scheduling group repository.</param>
+        /// <param name="timezoneRepository">The timezone repository.</param>
         /// <param name="activityLogRepository">The activity log repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
@@ -117,8 +125,10 @@ namespace Css.Api.Scheduling.Business
             ISkillGroupRepository skillGroupRepository,
             ISkillTagRepository skillTagRepository,
             IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
+            ITimezoneRepository timezoneRepository,
             IActivityLogRepository activityLogRepository,
-        IMapper mapper,
+            IAgentSchedulingGroupHistoryRepository agentSchedulingGroupHistoryRepository,
+            IMapper mapper,
             IUnitOfWork uow)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -130,7 +140,9 @@ namespace Css.Api.Scheduling.Business
             _skillGroupRepository = skillGroupRepository;
             _skillTagRepository = skillTagRepository;
             _agentSchedulingGroupRepository = agentSchedulingGroupRepository;
+            _timezoneRepository = timezoneRepository;
             _activityLogRepository = activityLogRepository;
+            _agentSchedulingGroupHistoryRepository = agentSchedulingGroupHistoryRepository;
             _mapper = mapper;
             _uow = uow;
         }
@@ -316,6 +328,20 @@ namespace Css.Api.Scheduling.Business
 
             _activityLogRepository.CreateActivityLog(activityLog);
 
+            AgentSchedulingGroupHistory AgentSchedulingGroupHistory = new AgentSchedulingGroupHistory
+            {
+                EmployeeId = agentAdminDetails.EmployeeId,
+                AgentSchedulingGroupId = agentAdminRequest.AgentSchedulingGroupId,
+                StartDate = await GetCurrentDateOfTimezone(agentSchedulingGroup.TimezoneId),
+                EndDate = null,
+                CreatedBy = agentAdminDetails.CreatedBy,
+                //CreatedDate = await GetCurrentTimeOfTimezone(agentSchedulingGroupBasedonSkillTag.TimezoneId),
+                CreatedDate = DateTime.UtcNow,
+                ActivityOrigin = ActivityOrigin.CSS
+            };
+
+            _agentSchedulingGroupHistoryRepository.UpdateAgentSchedulingGroupHistory(AgentSchedulingGroupHistory);
+
             await _uow.Commit();
 
             return new CSSResponse(new AgentAdminIdDetails { AgentAdminId = agentAdminRequest.Id.ToString() }, HttpStatusCode.Created);
@@ -337,6 +363,7 @@ namespace Css.Api.Scheduling.Business
 
             // get preupdated details
             var preUpdateAgentAdminHireDate = agentAdmin.AgentData.Find(x => x.Group.Description == "Hire Date")?.Group?.Value?.ToString();
+            var preUpdateAsgId = agentAdmin.AgentSchedulingGroupId;
             var preUpdateAgentAdmin = new PreUpdateAgentAdmin()
             {
                 EmployeeId = agentAdmin.Ssn,
@@ -395,25 +422,55 @@ namespace Css.Api.Scheduling.Business
 
             _agentAdminRepository.UpdateAgentAdmin(agentAdminRequest);
 
-            var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
+            if (preUpdateAsgId != agentAdminRequest.AgentSchedulingGroupId)
             {
-                EmployeeId = agentAdminDetails.EmployeeId,
-                FirstName = agentAdminDetails.FirstName,
-                LastName = agentAdminDetails.LastName,
-                AgentSchedulingGroupId = agentSchedulingGroup.AgentSchedulingGroupId,
-                ModifiedBy = agentAdminDetails.ModifiedBy
-            };
 
-            _agentScheduleRepository.UpdateAgentSchedule(employeeIdDetails, updateAgentScheduleEmployeeDetails);
+                DateTime movingDate = await FindMovingDateBasedonTimezone(preUpdateAsgId);
 
-            var updateAgentScheduleManagerEmployeeDetails = new UpdateAgentScheduleManagerEmployeeDetails
-            {
-                EmployeeId = agentAdminDetails.EmployeeId,
-                AgentSchedulingGroupId = agentSchedulingGroup.AgentSchedulingGroupId,
-                ModifiedBy = agentAdminDetails.ModifiedBy
-            };
+                List<AgentScheduleRange> updatedRanges = null;
 
-            _agentScheduleManagerRepository.UpdateAgentScheduleManager(employeeIdDetails, updateAgentScheduleManagerEmployeeDetails);
+                AgentSchedule agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
+                if (agentSchedule != null && agentSchedule.Ranges != null && agentSchedule.Ranges.Count > 0)
+                {
+                    updatedRanges = ScheduleHelper.GenerateAgentScheduleRanges(movingDate, agentAdminRequest.AgentSchedulingGroupId, agentSchedule.Ranges);
+
+                    var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
+                    {
+                        EmployeeId = agentAdminDetails.EmployeeId,
+                        FirstName = agentAdminDetails.FirstName,
+                        LastName = agentAdminDetails.LastName,
+                        AgentSchedulingGroupId = agentAdminRequest.AgentSchedulingGroupId,
+                        Ranges = updatedRanges,
+                        ModifiedBy = agentAdminDetails.ModifiedBy
+                    };
+
+                    _agentScheduleRepository.UpdateAgentScheduleWithRanges(employeeIdDetails, updateAgentScheduleEmployeeDetails);
+                }
+
+                var updateAgentScheduleManagerEmployeeDetails = new UpdateAgentScheduleManagerEmployeeDetails
+                {
+                    EmployeeId = agentAdminDetails.EmployeeId,
+                    AgentSchedulingGroupId = agentAdminRequest.AgentSchedulingGroupId,
+                    MovingDate = movingDate,
+                    ModifiedBy = agentAdminDetails.ModifiedBy
+                };
+
+                _agentScheduleManagerRepository.UpdateAgentScheduleManagerFromMovingDate(employeeIdDetails, updateAgentScheduleManagerEmployeeDetails);
+
+                AgentSchedulingGroupHistory AgentSchedulingGroupHistory = new AgentSchedulingGroupHistory
+                {
+                    EmployeeId = agentAdminDetails.EmployeeId,
+                    AgentSchedulingGroupId = agentAdminRequest.AgentSchedulingGroupId,
+                    StartDate = movingDate,
+                    EndDate = null,
+                    CreatedBy = agentAdminDetails.ModifiedBy,
+                    //CreatedDate = await FindCurrentTimeOfSchedulingGroup(movingAgent.AgentSchedulingGroupId),
+                    CreatedDate = DateTime.UtcNow,
+                    ActivityOrigin = ActivityOrigin.CSS
+                };
+
+                _agentSchedulingGroupHistoryRepository.UpdateAgentSchedulingGroupHistory(AgentSchedulingGroupHistory);
+            }
 
             if (employeeIdDetails.Id != newEmployeeIdDetails.Id)
             {
@@ -422,7 +479,8 @@ namespace Css.Api.Scheduling.Business
 
             var fieldDetails = addActivityLogFields(preUpdateAgentAdmin, agentAdminRequest, preUpdateAgentAdminHireDate);
 
-            var activityLog = new ActivityLog() {
+            var activityLog = new ActivityLog()
+            {
                 ActivityType = ActivityType.AgentAdmin,
                 FieldDetails = fieldDetails,
                 ActivityStatus = ActivityStatus.Updated,
@@ -738,33 +796,132 @@ namespace Css.Api.Scheduling.Business
                 movingAgent.ModifiedBy = moveAgentAdminsDetails.ModifiedBy;
                 movingAgent.ModifiedDate = DateTime.Now;
 
-                var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
+                _agentAdminRepository.UpdateAgentAdmin(movingAgent);
+
+                DateTime movingDate = await FindMovingDateBasedonTimezone(moveAgentAdminsDetails.SourceSchedulingGroupId);
+
+                List<AgentScheduleRange> updatedRanges = null;
+                EmployeeIdDetails employeeIdDetails = new EmployeeIdDetails
                 {
-                    EmployeeId = movingAgent.Ssn,
-                    FirstName = movingAgent.FirstName,
-                    LastName = movingAgent.LastName,
-                    AgentSchedulingGroupId = movingAgent.AgentSchedulingGroupId,
-                    ModifiedBy = movingAgent.ModifiedBy
+                    Id = movingAgent.Ssn
                 };
+
+                AgentSchedule agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
+                if (agentSchedule != null && agentSchedule.Ranges != null && agentSchedule.Ranges.Count > 0)
+                {
+                    updatedRanges = ScheduleHelper.GenerateAgentScheduleRanges(movingDate, moveAgentAdminsDetails.DestinationSchedulingGroupId, agentSchedule.Ranges);
+
+                    var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
+                    {
+                        EmployeeId = movingAgent.Ssn,
+                        FirstName = movingAgent.FirstName,
+                        LastName = movingAgent.LastName,
+                        AgentSchedulingGroupId = movingAgent.AgentSchedulingGroupId,
+                        Ranges = updatedRanges,
+                        ModifiedBy = movingAgent.ModifiedBy
+                    };
+
+                    _agentScheduleRepository.UpdateAgentScheduleWithRanges(employeeIdDetails, updateAgentScheduleEmployeeDetails);
+                }
+
+
 
                 var updateAgentScheduleManagerEmployeeDetails = new UpdateAgentScheduleManagerEmployeeDetails
                 {
                     EmployeeId = movingAgent.Ssn,
                     AgentSchedulingGroupId = movingAgent.AgentSchedulingGroupId,
+                    MovingDate = movingDate,
                     ModifiedBy = movingAgent.ModifiedBy
                 };
 
-                var employeeIdDetails = new EmployeeIdDetails { Id = movingAgent.Ssn };
+                _agentScheduleManagerRepository.UpdateAgentScheduleManagerFromMovingDate(employeeIdDetails, updateAgentScheduleManagerEmployeeDetails);
 
-                _agentAdminRepository.UpdateAgentAdmin(movingAgent);
-                _agentScheduleRepository.UpdateAgentSchedule(employeeIdDetails, updateAgentScheduleEmployeeDetails);
-                _agentScheduleManagerRepository.UpdateAgentScheduleManager(employeeIdDetails, updateAgentScheduleManagerEmployeeDetails);
+                AgentSchedulingGroupHistory AgentSchedulingGroupHistory = new AgentSchedulingGroupHistory
+                {
+                    EmployeeId = movingAgent.Ssn,
+                    AgentSchedulingGroupId = movingAgent.AgentSchedulingGroupId,
+                    StartDate = movingDate,
+                    EndDate = null,
+                    CreatedBy = moveAgentAdminsDetails.ModifiedBy,
+                    //CreatedDate = await FindCurrentTimeOfSchedulingGroup(movingAgent.AgentSchedulingGroupId),
+                    CreatedDate = DateTime.UtcNow,
+                    ActivityOrigin = ActivityOrigin.CSS
+                };
+
+                _agentSchedulingGroupHistoryRepository.UpdateAgentSchedulingGroupHistory(AgentSchedulingGroupHistory);
             }
 
             await _uow.Commit();
 
             return new CSSResponse(HttpStatusCode.NoContent);
 
+        }
+
+        /// <summary>Finds the moving date basedon timezone.</summary>
+        /// <param name="schedulingGroupId">The scheduling group identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        private async Task<DateTime> FindMovingDateBasedonTimezone(int schedulingGroupId)
+        {
+            AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails = new AgentSchedulingGroupIdDetails
+            {
+                AgentSchedulingGroupId = schedulingGroupId
+            };
+            AgentSchedulingGroup asg = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(agentSchedulingGroupIdDetails);
+            int sourceASGTimezoneId = asg.TimezoneId;
+            return await GetCurrentDateOfTimezone(sourceASGTimezoneId);
+        }
+
+        /// <summary>Gets the current date of timezone.</summary>
+        /// <param name="timezoneId">The timezone identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        private async Task<DateTime> GetCurrentDateOfTimezone(int timezoneId)
+        {
+            TimezoneIdDetails timezoneIdDetails = new TimezoneIdDetails
+            {
+                TimezoneId = timezoneId
+            };
+            Timezone timezone = await _timezoneRepository.GetTimeZone(timezoneIdDetails);
+
+            DateTime currentTime = DateTime.UtcNow.Add(timezone.UtcOffset);
+            DateTime currentDateOfTimezone = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, 0, 0, 0, DateTimeKind.Utc);
+            return currentDateOfTimezone;
+        }
+
+        /// <summary>Finds the current time of scheduling group.</summary>
+        /// <param name="schedulingGroupId">The scheduling group identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        private async Task<DateTime> FindCurrentTimeOfSchedulingGroup(int schedulingGroupId)
+        {
+            AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails = new AgentSchedulingGroupIdDetails
+            {
+                AgentSchedulingGroupId = schedulingGroupId
+            };
+            AgentSchedulingGroup asg = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(agentSchedulingGroupIdDetails);
+            int timezoneId = asg.TimezoneId;
+            return await GetCurrentTimeOfTimezone(timezoneId);
+        }
+
+        /// <summary>Gets the current time of timezone.</summary>
+        /// <param name="timezoneId">The timezone identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        private async Task<DateTime> GetCurrentTimeOfTimezone(int timezoneId)
+        {
+            TimezoneIdDetails timezoneIdDetails = new TimezoneIdDetails
+            {
+                TimezoneId = timezoneId
+            };
+            Timezone timezone = await _timezoneRepository.GetTimeZone(timezoneIdDetails);
+
+            DateTime currentTime = DateTime.UtcNow.Add(timezone.UtcOffset);
+            return currentTime;
         }
 
 

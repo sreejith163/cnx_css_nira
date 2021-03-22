@@ -47,6 +47,14 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </returns>
         Task<List<AgentScheduleManager>> GetAgentScheduleManagerChartByEmployeeId(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter);
 
+        /// <summary>Gets the schedule manager chart by employee identifier from date.</summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<List<AgentScheduleManager>> GetScheduleManagerChartByEmployeeIdFromDate(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter);
+
         /// <summary>
         /// Determines whether [has agent schedule manager chart by employee identifier] [the specified employee identifier details].
         /// </summary>
@@ -79,6 +87,10 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="updateAgentScheduleManagerEmployeeDetails">The update agent schedule manager employee details.</param>
         void UpdateAgentScheduleManager(EmployeeIdDetails employeeIdDetails, UpdateAgentScheduleManagerEmployeeDetails updateAgentScheduleManagerEmployeeDetails);
+
+        /// <summary>Updates the agent schedule manager from moving date.</summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="updateAgentScheduleManagerEmployeeDetails">The update agent schedule manager employee details.</param>
+        void UpdateAgentScheduleManagerFromMovingDate(EmployeeIdDetails employeeIdDetails, UpdateAgentScheduleManagerEmployeeDetails updateAgentScheduleManagerEmployeeDetails);
     }
 }
-

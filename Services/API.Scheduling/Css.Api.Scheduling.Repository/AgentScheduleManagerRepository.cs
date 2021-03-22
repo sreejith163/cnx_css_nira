@@ -123,6 +123,24 @@ namespace Css.Api.Scheduling.Repository
             return await Task.FromResult(agentAdmins.ToList());
         }
 
+        /// <summary>Gets the schedule manager chart by employee identifier from date.</summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<List<AgentScheduleManager>> GetScheduleManagerChartByEmployeeIdFromDate(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter)
+        {
+            var query =
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                Builders<AgentScheduleManager>.Filter.Eq(i => i.AgentSchedulingGroupId, myScheduleQueryParameter.AgentSchedulingGroupId) &
+                Builders<AgentScheduleManager>.Filter.Gte(i => i.Date, myScheduleQueryParameter.StartDate) ;
+
+            var agentAdmins = FilterBy(query);
+
+            return await Task.FromResult(agentAdmins.ToList());
+        }
+
         /// <summary>
         /// Determines whether [has agent schedule manager chart by employee identifier] [the specified employee identifier details].
         /// </summary>
@@ -222,6 +240,27 @@ namespace Css.Api.Scheduling.Repository
                 .Set(x => x.ModifiedBy, updateAgentScheduleManagerEmployeeDetails.ModifiedBy)
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
             
+            UpdateManyAsync(query, update);
+        }
+
+        /// <summary>Updates the agent schedule manager from moving date.</summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="updateAgentScheduleManagerEmployeeDetails">The update agent schedule manager employee details.</param>
+        public void UpdateAgentScheduleManagerFromMovingDate(EmployeeIdDetails employeeIdDetails, UpdateAgentScheduleManagerEmployeeDetails updateAgentScheduleManagerEmployeeDetails)
+        {
+            //var query =
+            //    Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
+
+            var query =
+               Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+               Builders<AgentScheduleManager>.Filter.Gte(i => i.Date, updateAgentScheduleManagerEmployeeDetails.MovingDate);
+
+            var update = Builders<AgentScheduleManager>.Update
+                .Set(x => x.EmployeeId, updateAgentScheduleManagerEmployeeDetails.EmployeeId)
+                .Set(x => x.AgentSchedulingGroupId, updateAgentScheduleManagerEmployeeDetails.AgentSchedulingGroupId)
+                .Set(x => x.ModifiedBy, updateAgentScheduleManagerEmployeeDetails.ModifiedBy)
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
+
             UpdateManyAsync(query, update);
         }
 
