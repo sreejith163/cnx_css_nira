@@ -55,9 +55,9 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <summary>
         /// Imports the agent schedule chart.
         /// </summary>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <param name="agentScheduleImport">The agent schedule import details.</param>
         /// <returns></returns>
-        Task<CSSResponse> ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails);
+        Task<CSSResponse> ImportAgentScheduleChart(AgentScheduleImport agentScheduleImport);
 
         /// <summary>
         /// Copies the agent schedule chart.

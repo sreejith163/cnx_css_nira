@@ -141,14 +141,6 @@
               <br />
             </returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.GetAgentScheduledOpen(System.Int32,System.DateTimeOffset)">
-            <summary>
-            Gets the scheduled open
-            </summary>
-            <param name="skillGroupId">The agent schedule identifier.</param>
-            <param name="date"></param>
-            <returns></returns>
-        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.UpdateAgentScheduleMangerChart(Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager.UpdateAgentScheduleManager)">
             <summary>
             Updates the agent schedule manger chart.
@@ -227,7 +219,7 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.ImportAgentScheduleChart(Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.ImportAgentSchedule)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.ImportAgentScheduleChart(Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.AgentScheduleImport)">
             <summary>
             Updates the agent schedule chart.
             </summary>
@@ -328,57 +320,12 @@
             <param name="importForecastDetails"></param>
             <returns></returns>
         </member>
-        <member name="T:Css.Api.Scheduling.Controllers.TimeOffsController">
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.GetAgentScheduledOpen(System.Int32,System.DateTimeOffset)">
             <summary>
-            Controller for handling the Time zones resource
+            Gets the scheduled open
             </summary>
-            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
-        </member>
-        <member name="F:Css.Api.Scheduling.Controllers.TimeOffsController._timeOffService">
-            <summary>
-            The time off service
-            </summary>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.#ctor(Css.Api.Scheduling.Business.Interfaces.ITimeOffService)">
-            <summary>
-            Initializes a new instance of the <see cref="!:TimeZonesController" /> class.
-            </summary>
-            <param name="timeOffService">The time off service.</param>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.GetTimeOffs(Css.Api.Scheduling.Models.DTO.Request.TimeOff.TimeOffQueryparameter)">
-            <summary>
-            Gets the time offs.
-            </summary>
-            <param name="timeOffQueryparameter">The time off queryparameter.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.GetTimeOff(System.String)">
-            <summary>
-            Gets the time off.
-            </summary>
-            <param name="timeOffId">The time off identifier.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.CreateTimeOff(Css.Api.Scheduling.Models.DTO.Request.TimeOff.CreateTimeOff)">
-            <summary>
-            Creates the time off.
-            </summary>
-            <param name="timeOffDetails">The time off details.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.UpdateTimeOff(System.String,Css.Api.Scheduling.Models.DTO.Request.TimeOff.UpdateTimeOff)">
-            <summary>
-            Updates the time off.
-            </summary>
-            <param name="timeOffId">The time off identifier.</param>
-            <param name="timeOffDetails">The time off details.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.DeleteTimeOff(System.String)">
-            <summary>
-            Deletes the time off.
-            </summary>
-            <param name="timeOffId">The time off identifier.</param>
+            <param name="skillGroupId">The agent schedule identifier.</param>
+            <param name="date"></param>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Scheduling.Extensions.DBContextExtension">
@@ -513,26 +460,6 @@
         <member name="M:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator"/> class.
-            </summary>
-        </member>
-        <member name="T:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator">
-            <summary>
-            Validator for handling the validation of update AgentSchedulingGroup object
-            </summary>
-        </member>
-        <member name="M:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator"/> class.
-            </summary>
-        </member>
-        <member name="T:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator">
-            <summary>
-            Validator for handling the validation of update AgentSchedulingGroup object
-            </summary>
-        </member>
-        <member name="M:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator"/> class.
             </summary>
         </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerChartValidator`1">
