@@ -73,7 +73,7 @@ namespace Css.Api.Scheduling.Repository
         public async Task<TimeOff> GetAllTimeOffsByDescription(TimeOffNameDetails timeOffNameDetails)
         {
             var query =
-                Builders<TimeOff>.Filter.Eq(i => i.Description.ToLowerInvariant(), timeOffNameDetails.Description.ToLowerInvariant()) &
+                Builders<TimeOff>.Filter.Eq(i => i.Description, timeOffNameDetails.Description) &
                 Builders<TimeOff>.Filter.Eq(i => i.IsDeleted, false);
 
             return await FindByIdAsync(query);
