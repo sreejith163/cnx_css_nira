@@ -19,6 +19,7 @@ import { TimeZone } from 'src/app/shared/models/time-zone.model';
 import { TranslationDetails } from 'src/app/shared/models/translation-details.model';
 import { AgentSchedulingGroupService } from 'src/app/shared/services/agent-scheduling-group.service';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
+import { GenericPopUpComponent } from 'src/app/shared/popups/generic-pop-up/generic-pop-up.component';
 
 @Component({
   selector: 'app-add-edit-agent-scheduling-group',
@@ -64,11 +65,30 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
     private spinnerService: NgxSpinnerService,
     public activeModal: NgbActiveModal
   ) { }
-  public onChangeProvision(event){
-    this.estartProvisions = event.checked;
   
-    
-}
+  public onChangeProvision(event){
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'm'};
+    const modalRef = this.modalService.open(GenericPopUpComponent, options);
+
+    var msg;
+    if(!this.estartProvisions){
+      msg = "Enabling this provision will include this Agent Scheduling Group to the next eStart export. eStart will send the edited schedules to CSS.";
+    }else {
+      msg = "Disabling this provision will reject incoming edited schedules from eStart for this Agent Scheduling Group.";
+    }
+
+    modalRef.componentInstance.headingMessage = 'Please confirm.';
+    modalRef.componentInstance.contentMessage = msg;
+    modalRef.result.then((result) => {
+      if (result && result === true) {
+        this.estartProvisions = event.target.checked;
+      }
+      else {
+        this.estartProvisions = !event.target.checked;
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key])).map(x => +x);
     this.openTime = this.genericDataService.openTimes();

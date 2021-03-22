@@ -23,11 +23,13 @@ export class SchedulingFilterComponent implements OnInit {
 
   constructor(
     private calendar: NgbCalendar,
-  ) { }
+  ) { 
+  }
 
   ngOnInit(): void {
     this.setStartDateAsToday();
   }
+  
 
   clearSearchText() {
     this.searchKeyword = undefined;

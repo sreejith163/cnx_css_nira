@@ -34,6 +34,11 @@ import { ContenteditableValueAccessor } from 'src/app/shared/directives/contente
 
 import { HorizontalScrollPipe } from './pipes/horizontal-scroll.pipe';
 import { BypassHtmlPipe } from 'src/app/shared/directives/bypassHtml.pipe';
+import { GetIconForGridPipe } from './pipes/get-grid-icon.pipe';
+import { ActivityLogsScheduleManagerComponent } from './components/shared/activity-logs-schedule-manager/activity-logs-schedule-manager.component';
+import { GetIconForScheduleManagerActivityLogsPipe } from './pipes/get-grid-icon-schedule-manager-activity-logs.pipe';
+import { GetIconSchedulingGridPipe } from './pipes/get-scheduling-grid-icon.pipe';
+
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule, BsDropdownModule.forRoot()];
 const components =
@@ -57,7 +62,11 @@ const components =
     MoveAgentsListComponent,
     MoveAgentsSchedulingGroupTypeaheadComponent,
     ContenteditableValueAccessor,
-    BypassHtmlPipe
+    BypassHtmlPipe,
+    GetIconForGridPipe,
+    GetIconSchedulingGridPipe,
+    GetIconForScheduleManagerActivityLogsPipe,
+    ActivityLogsScheduleManagerComponent
   ];
 const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService, AgentScheduleManagersService,
                    MoveAgentsService];

@@ -9,7 +9,7 @@
     <div class="input-group">
       <input class="form-control" placeholder="{{'Select Start Date' | translate}}" name="dp" ngbDatepicker
         [readonly]="true" [(ngModel)]="startDate" [footerTemplate]="footerTemplate"
-        [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker" (dateSelect)="onSelectStartDate($event)">
+        [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker" (dateSelect)="onSelectStartDate($event)" firstDayOfWeek="0">
       <div class="input-group-append">
         <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
       </div>

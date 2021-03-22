@@ -9,7 +9,7 @@ import { UpdateAgentSchedule } from '../models/update-agent-schedule.model';
 import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
 import { UpdateAgentschedulechart } from '../models/update-agent-schedule-chart.model';
 import { CopyAgentScheduleChart } from '../models/copy-agent-schedule-chart.model';
-import { ImportShceduleChart } from '../models/import-schedule-chart.model';
+import { ImportScheduleChart, ShedulingGridImportModel } from '../models/import-schedule-chart.model';
 import { UpdateAgentScheduleMangersChart } from '../models/update-agent-schedule-managers-chart.model';
 import { AgentScheduleChartResponse } from '../models/agent-schedule-chart-response.model';
 import { ScheduleDateRangeBase } from '../models/schedule-date-range-base.model';
@@ -82,7 +82,7 @@ export class AgentSchedulesService extends HttpBaseService {
     .pipe(catchError(this.handleError));
   }
 
-  importAgentScheduleChart(importAgentScheduleChart: ImportShceduleChart) {
+  importAgentScheduleChart(importAgentScheduleChart: ShedulingGridImportModel) {
     const url = `${this.baseURL}/AgentSchedules/import`;
 
     return this.http.put<ApiResponseModel>(url, importAgentScheduleChart)

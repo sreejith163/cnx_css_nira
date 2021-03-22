@@ -111,9 +111,9 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
         [HttpPut("import")]
-        public async Task<IActionResult> ImportAgentScheduleChart([FromBody] ImportAgentSchedule agentScheduleDetails)
+        public async Task<IActionResult> ImportAgentScheduleChart([FromBody] AgentScheduleImport agentScheduleImport)
         {
-            var result = await _agentScheduleService.ImportAgentScheduleChart(agentScheduleDetails);
+            var result = await _agentScheduleService.ImportAgentScheduleChart(agentScheduleImport);
             return StatusCode((int)result.Code, result.Value);
         }
 

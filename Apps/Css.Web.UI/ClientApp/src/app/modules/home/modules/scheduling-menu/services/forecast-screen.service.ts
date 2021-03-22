@@ -58,7 +58,7 @@ export class ForecastScreenService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
   getScheduleOpen(skillGroupId: number, date: string) {
-    const url = `${this.baseURL}/AgentScheduleManagers/${skillGroupId}/scheduledopen?date=${date}`;
+    const url = `${this.baseURL}/forecastscreen/${skillGroupId}/scheduledopen?date=${date}`;
     return this.http.get<ScheduledOpenResponse>(url).pipe(catchError(this.handleError));
   }
 }

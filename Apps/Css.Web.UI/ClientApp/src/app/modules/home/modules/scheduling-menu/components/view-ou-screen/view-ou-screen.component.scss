@@ -387,3 +387,13 @@ hr{
   border-radius: 0.25rem;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+.table-bordered th, .table-bordered td {
+
+  min-width: 16.66666666666667%!important;
+  max-width: 16.66666666666667%!important;
+  width: 16.66666666666667%!important;
+}
+.container-fluid>div>div>h2 {
+  padding-left: 0!important;
+}

@@ -4102,22 +4102,22 @@ export class Constants {
       id: 5,
       value: '5'
     },
-    {
-      id: 10,
-      value: '10'
-    },
+    // {
+    //   id: 10,
+    //   value: '10'
+    // },
     {
       id: 15,
       value: '15'
     },
-    {
-      id: 20,
-      value: '20'
-    },
-    {
-      id: 25,
-      value: '25'
-    },
+    // {
+    //   id: 20,
+    //   value: '20'
+    // },
+    // {
+    //   id: 25,
+    //   value: '25'
+    // },
     {
       id: 30,
       value: '30'

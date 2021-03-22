@@ -21,10 +21,12 @@
     <div class="card-header p-0 border-bottom-0">
       <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
         <li class="pull-right marign-l-auto margin-5">
-          <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
+          <!-- <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
             (click)="exportToExcel()">
           <img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}"
-            class="icon-image float-right padding-2" [ngbTooltip]="'Import'" (click)="openImportSchedule()">
+            class="icon-image float-right padding-2" [ngbTooltip]="'Import'" (click)="openImportSchedule()"> -->
+            <button [ngbTooltip]="'Import csv'" *ngIf="agentSchedulingGroupId" (click)="openImportSchedule()" class="btn btn-primary d  mr-2"><i class="fa fa-upload"></i></button>
+            <button [ngbTooltip]="'Export csv'" *ngIf="agentSchedulingGroupId" (click)="exportToExcel()" class="btn btn-primary d  mr-2"><i class="fa fa-download"></i></button>            
         </li>
       </ul>
     </div>
@@ -257,14 +259,19 @@
                                       attr.time="{{ openTime.split(' ')[0] }}"
                                       attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}" [attr.week]="week"
                                       *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
-                                      (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event)"
+                                      (mouseover)="onMouseOver($event)"  (mousedown)="onMouseDown($event)"
                                       [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-                                      <ng-container *ngIf="getIconFromSelectedGrid(week, openTime)?.length">
-                                        <span ngbTooltip="{{ getIconDescription(week, openTime) }}">
+                                      <!-- <ng-container *ngIf="getIconFromSelectedGrid(week, openTime)?.length"> -->
+                                        <!-- <span ngbTooltip="{{ getIconDescription(week, openTime) }}">
                                           <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime)
                                             }}</i>
+                                        </span> -->
+                                        <!-- {{ ( week | getIconForSchedulingGrid: openTime: selectedGrid: schedulingCodes: timeStampUpdate)?.startTime }}
+                                        {{ ( week | getIconForSchedulingGrid: openTime: selectedGrid: schedulingCodes: timeStampUpdate)?.endTime }} -->
+                                        <span>
+                                          <i class="font-style-normal">{{ ( week | getIconForSchedulingGrid: openTime: selectedGrid: schedulingCodes: timeStampUpdate) }}</i>
                                         </span>
-                                      </ng-container>
+                                      <!-- </ng-container> -->
                                     </td>
                                   </tr>
                                 </tbody>

@@ -26,7 +26,7 @@ namespace Css.Api.Scheduling.Business.Interfaces
         Task<CSSResponse> GetForecastScreenBySkillGroupId(ForecastIdDetails forecastIdDetails);
 
         Task<CSSResponse> GetForecastData(ForecastIdDetails forecastIdDetails);
-        
+
         /// <summary>
         /// Create Forecast screen data.
         /// </summary>
@@ -52,34 +52,12 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <returns></returns>
         Task<CSSResponse> UpdateForecastData(UpdateForecastData updateForecastData, int skillGroupId, string forecastDate);
 
-        /// <summary>
-        /// Updates the agent schedule chart.
-        /// </summary>
-        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        /// <returns></returns>
-        //Task<CSSResponse> UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails);
-        //Task<CSSResponse> ImportForecast(ImportForecast importForecast);
-        /// <summary>
-        /// Updates the agent schedule manger chart.
-        /// </summary>
-        /// <param name="agentScheduleManagerChartDetails">The agent schedule manager chart details.</param>
-        /// <returns></returns>
-        //Task<CSSResponse> UpdateAgentScheduleMangerChart(UpdateAgentScheduleManagerChart agentScheduleManagerChartDetails);
-
-        /// <summary>
-        /// Imports the agent schedule chart.
-        /// </summary>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        /// <returns></returns>
-        //Task<CSSResponse> ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails);
-
-        /// <summary>
-        /// Copies the agent schedule.
-        /// </summary>
-        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
-        /// <returns></returns>
-        //Task<CSSResponse> CopyAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule agentScheduleDetails);
+        /// <summary>Gets the agent my schedule.</summary>
+        /// <param name="skillGroupId">The employee identifier details.</param>
+        /// <param name="date">My schedule query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<CSSResponse> GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date);
     }
-}
+    }

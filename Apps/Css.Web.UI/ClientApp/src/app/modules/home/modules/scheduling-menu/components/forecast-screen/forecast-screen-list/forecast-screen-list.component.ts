@@ -43,9 +43,9 @@ import { ForecastDataResponse } from '../../../models/import-forecast-response';
 import { AgentChartResponse } from '../../../models/agent-chart-response.model';
 import { ScheduledOpenResponse } from '../../../models/scheduled-open-response.model';
 import * as moment from 'moment';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, timeInterval } from 'rxjs/operators';
 import { CursorError } from '@angular/compiler/src/ml_parser/lexer';
-
+import * as Papa from 'papaparse';
 
 
 @Component({
@@ -100,7 +100,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   formatsDateTest = 'MM/dd/yyyy';
   dateModel: any;
   today = this.calendar.getToday();
-
+  convertedObj: any = "";
   dateNow: Date = new Date();
   hoveredDate: NgbDate | null = null;
   toDate: NgbDate | null = null;
@@ -147,11 +147,12 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   csvTableHeader: string[];
   csvData: any;
   importBtn: boolean;
-  importForecastDataModel: ForecastExcelData; 
+  importForecastDataModel: ForecastExcelData;
   dateValidator: boolean;
   allImportForecastData: any = [];
   importForecastDataArray: any = [];
   fileUploaded: File;
+
   constructor(
     private formBuilder: FormBuilder,
     private forecastService: ForecastScreenService,
@@ -185,58 +186,60 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     this.loadTranslations();
     this.subscribeToTranslations();
     this.cd.detectChanges();
+    this.sumScheduledOpen = "0.00";
+    this.avgScheduledOpenValue = "0.00";
+    this.dateValidator = false;
 
   }
 
-  getScheduledOpenCount(time: string) {
-    var convertedTime = moment(time, 'hh:mm A').format('HH:mm:ss')
-    var chart =  this.scheduledOpenResponse.find(x => x.time === convertedTime.toString());
-    // console.log(chart);
-      if (chart) {    
-        var obj = {};
-        for ( var i=0, len= this.scheduledOpenResponse.length; i < len; i++ ) 
-        obj[this.scheduledOpenResponse[i]['time']] = this.scheduledOpenResponse[i];
-        this.scheduledOpenResponse = new Array();
-        for ( var key in obj )
-        this.scheduledOpenResponse.push(obj[key]);
-        var parse_string = chart?.scheduleOpen.toString();
-        var sched_open_sum = this.scheduledOpenResponse.reduce((a, b) => +a + +b.scheduleOpen,0);
-        this.sumScheduledOpen = sched_open_sum.toString();
-        this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
-        
-        var sched_open_length = this.scheduledOpenResponse.length;
-        this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / parseFloat(sched_open_length.toString());
-       this.avgScheduledOpenValue = parseFloat(this.avgScheduledOpen.toString()).toFixed(2);     
-        return parseFloat(parse_string).toFixed(2);
-       
-      }
-      
-      return '0.00';
+  convert(objArray) {
+    console.log(objArray);
+    this.convertedObj = JSON.stringify(objArray, null, 2);
+  }
+  onError(err) {
+    this.convertedObj = err
+    console.log(err);
   }
 
 
-//   exportAsXLSX(): void {
+  // getIconFromSelectedAgent(openTime: string) {
+  //   const chart = this.managerCharts.find(x => x.id === scheduleId);
 
-//     const replaceKeys = {
-//       time: "Time",
-//       forecastedContact: "Forecasted Contacts",
-//       aht: "AHT",
-//       forecastedReq: "Forecasted Req",
-//       scheduledOpen: "Scheduled Open"
-//     };
-//     for (var i = 0; i < this.dataJson.length; i++)
-//       delete this.dataJson[i].scheduledOpen;
+  //   if (chart?.agentScheduleManagerCharts?.length > 0) {
+  //     for (const item of chart.agentScheduleManagerCharts) {
+  //       const weekTimeData = item?.charts?.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x.startTime) &&
+  //         this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
+  //       if (weekTimeData) {
+  //         const code = this.schedulingCodes.find(x => x.id === weekTimeData?.schedulingCodeId);
+  //         return code ? this.unifiedToNative(code?.icon?.value) : '';
+  //       }
+  //     }
+  //   }
 
-//     const newArray = this.changeKeyObjects(this.dataJson, replaceKeys);
+  //   return '';
+  // }
+  //   exportAsXLSX(): void {
 
-//     this.excelService.exportAsExcelFile(newArray, `Forecast-Template`);
-//   }
+  //     const replaceKeys = {
+  //       time: "Time",
+  //       forecastedContact: "Forecasted Contacts",
+  //       aht: "AHT",
+  //       forecastedReq: "Forecasted Req",
+  //       scheduledOpen: "Scheduled Open"
+  //     };
+  //     for (var i = 0; i < this.dataJson.length; i++)
+  //       delete this.dataJson[i].scheduledOpen;
 
-_keyUp(event) {
-  if (event.length == 0 && event.which == 48 ){
+  //     const newArray = this.changeKeyObjects(this.dataJson, replaceKeys);
+
+  //     this.excelService.exportAsExcelFile(newArray, `Forecast-Template`);
+  //   }
+
+  _keyUp(event) {
+    if (event.length == 0 && event.which == 48) {
       return false;
-   }
-}
+    }
+  }
 
   download() {
     let fileName = `ForecastTemplate-${this.skillGroupObj?.name}-${this.convertNgbDateToString(this.dateModel)}.csv`;
@@ -245,15 +248,15 @@ _keyUp(event) {
 
     let csv = header;
     csv += '\r\n';
-  
-    let exportData:any = this.dataJson;
+
+    let exportData: any = this.dataJson;
     let date = this.convertNgbDateToString(this.dateModel);
     let dateNoSeparators = date.replace(/-/g, '');
 
     exportData.map(c => {
       let fc = c["forecastedContact"];
       // console.log(fc);
-      csv += [dateNoSeparators, c["time"], fc , c["aht"], c["forecastedReq"]].join(',');
+      csv += [dateNoSeparators, c["time"], fc, c["aht"], c["forecastedReq"]].join(',');
       csv += '\r\n';
       // console.log(csv);
     })
@@ -305,7 +308,7 @@ _keyUp(event) {
       scheduledOpen: this.formBuilder.control({ value: '0.00', disabled: false })
     });
   }
- 
+
   get formData() { return this.forecastForm.get('forecastFormArrays') as FormArray; }
 
 
@@ -317,13 +320,13 @@ _keyUp(event) {
     // if (current_date.getTime() > specific_date.getTime()) {
 
     //   this.showErrorWarningPopUpMessage('Please select other dates to import a file.');
-     
-      
+
+
     // }
     // else {
-      this.modalService.open(content, { centered: true, size: 'lg' });
+    this.modalService.open(content, { centered: true, size: 'lg' });
     // }
-   
+
   }
 
   ngOnDestroy() {
@@ -366,10 +369,10 @@ _keyUp(event) {
     this.loadSkillGroup();
   }
 
-  searchForecast(){
-    if(this.skillGroupObj == undefined || this.skillGroupObj?.id == null){
+  searchForecast() {
+    if (this.skillGroupObj == undefined || this.skillGroupObj?.id == null) {
       this.showErrorWarningPopUpMessage('Please select skill group first');
-    }else{
+    } else {
       this.loadSkillGroup();
     }
   }
@@ -378,6 +381,7 @@ _keyUp(event) {
   }
   loadSkillGroup() {
  
+
 
     this.prevDate();
     this.forecastFormArray.reset();
@@ -393,7 +397,7 @@ _keyUp(event) {
         forecastFormArrays: this.formBuilder.array(data.forecastData.map(datum => this.generateDatumFormGroup(datum))),
 
       });
-      
+
       this.dataJson = data.forecastData;
       this.dataJson.forEach(ele => {
         this.arrayGenerator(
@@ -405,8 +409,8 @@ _keyUp(event) {
         );
       });
       // console.log(data);
-    
-      console.log(this.dateValidator);
+
+
       this.sumForecastContact = data.forecastData.reduce((a, b) => +a + +b.forecastedContact, 0);
       this.sumAHT = data.forecastData.reduce((a, b) => +a + +b.aht, 0);
       this.sumForecastedReq = data.forecastData.reduce((a, b) => +a + +b.forecastedReq, 0);
@@ -436,7 +440,6 @@ _keyUp(event) {
       this.avgForecastContactValue = this.avgForecastContact.toString();
       this.avgAHTValue = this.avgAHT.toString();
       this.avgForecastedReqValue = this.avgForecastedReq.toString();
-      this.avgScheduledOpenValue = '0.00';
 
 
       this.avgAHTValue = parseFloat(this.avgAHTValue).toFixed(2);
@@ -444,6 +447,8 @@ _keyUp(event) {
       this.avgForecastedReqValue = parseFloat(this.avgForecastedReqValue).toFixed(2);
     
    
+
+
     }, (error) => {
      
       this.spinnerService.hide(this.forecastSpinner);
@@ -545,7 +550,7 @@ _keyUp(event) {
 
   private getSkillGroups(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
-    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+    if (this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
       this.pageNumber = 1;
       queryParams.pageNumber = 1;
     }
@@ -566,14 +571,14 @@ _keyUp(event) {
         this.sumForecastContact = data.reduce((a, b) => +a + +b.forecastedContact, 0);
         this.sumAHT = data.reduce((a, b) => +a + +b.aht, 0);
         this.sumForecastedReq = data.reduce((a, b) => +a + +b.forecastedReq, 0);
-        this.sumScheduledOpen = data.reduce((a, b) => +a + +b.scheduledOpen, 0);
+
 
         this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2);
         this.sumAHT = parseFloat(this.sumAHT).toFixed(2);
         this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
-        this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
 
-        this.avgScheduledOpenValue = '0.00';
+
+
 
 
         this.avgAHTValue = '0.00';
@@ -599,7 +604,7 @@ _keyUp(event) {
     this.enableSaveButton = true;
     this.enableCancelButton = true;
   }
-hideBtn  () {
+  hideBtn() {
     this.enableSaveButton = false;
     this.enableCancelButton = false;
     this.loadSkillGroup();
@@ -636,7 +641,7 @@ hideBtn  () {
   }
 
 
-  validateDateImport(file){
+  validateDateImport(file) {
 
     this.importForecastDataModel = new ForecastExcelData();
 
@@ -644,8 +649,8 @@ hideBtn  () {
     this.importForecastDataModel.forecastScreenDataDetails = [];
 
     this.spinnerService.show(this.importSpinner, SpinnerOptions);
-      // Parse the file you want to select for the operation along with the configuration
-      this.ngxCsvParser.parse(file, { header: false, delimiter: ',' })
+    // Parse the file you want to select for the operation along with the configuration
+    this.ngxCsvParser.parse(file, { header: false, delimiter: ',' })
       .pipe().subscribe((result: Array<any>) => {
         const csvTableData = [...result.slice(1, result.length)];
         // check the csv first if contents are valid
@@ -653,35 +658,39 @@ hideBtn  () {
 
         // convert the headers to proper headers
         this.csvTableHeader = Object.assign(this.csvTableHeader, this.forecastColumns);
+
         for (const ele of csvTableData) {
           const csvJson = new ForecastScreenDataDetails();
           if (ele.length > 0) {
             for (let i = 0; i < ele.length; i++) {
               csvJson[this.csvTableHeader[i]] = ele[i];
             }
+
           }
+
           if (csvJson.date) {
             this.importForecastDataModel.forecastScreenDataDetails.push(csvJson);
           }
+
         }
 
-          this.spinnerService.hide(this.importSpinner);
-          this.uploadFile = file.name;
+        this.spinnerService.hide(this.importSpinner);
+        this.uploadFile = file.name;
 
       }, (error: NgxCSVParserError) => {
 
-          this.spinnerService.hide(this.importSpinner);
-          this.modalService.dismissAll();
-          this.showErrorWarningPopUpMessage('Invalid File Format. Please upload a CSV file only.');
-          this.handleClear();
-  
+        this.spinnerService.hide(this.importSpinner);
+        this.modalService.dismissAll();
+        this.showErrorWarningPopUpMessage('Invalid File Format. Please upload a CSV file only.');
+        this.handleClear();
+
         console.log('Error', error);
-      });                
+      });
   }
 
   onChangeFile(files: File[]) {
 
-    if(files[0]){
+    if (files[0]) {
       this.validateDateImport(files[0]);
       this.importBtn = true;
     }
@@ -689,22 +698,27 @@ hideBtn  () {
   }
 
 
-  importForeCastData(){
+
+  importForeCastData() {
+
+
     this.spinnerService.show(this.importSpinner, SpinnerOptions);
-      this.forecastService.importForecastData(this.importForecastDataModel).subscribe((res:ForecastDataResponse)=>{
-        this.spinnerService.hide(this.importSpinner);
-        this.loadSkillGroup();
-        this.modalService.dismissAll();
-        this.showImportFinished(res.importStatus, res.errors);
-        this.handleClear();
-        
-      }, err =>{
+    this.forecastService.importForecastData(this.importForecastDataModel).subscribe((res: ForecastDataResponse) => {
+      this.spinnerService.hide(this.importSpinner);
+      this.loadSkillGroup();
+      this.modalService.dismissAll();
+      this.showImportFinished(res.importStatus, res.errors);
+      this.handleClear();
+
+    }, err => {
+    
         this.spinnerService.hide(this.importSpinner);
         this.modalService.dismissAll();
         this.showErrorWarningPopUpMessage('Invalid File contents.');
         this.handleClear();
-
-      });
+        console.log(err)
+      
+    });
   }
 
 
@@ -728,8 +742,8 @@ hideBtn  () {
 
   prevDate() {
     var specific_date = new Date(this.convertNgbDateToString(this.dateModel));
-    var current_date = new Date();
-    
+    var current_date = new Date(this.convertNgbDateToString(this.today));
+
 
     if (current_date.getTime() > specific_date.getTime()) {
       this.dateValidator = true;
@@ -739,17 +753,6 @@ hideBtn  () {
     }
   }
 
-private getScheduledOpen() {
-  var date = this.convertNgbDateToString(this.dateModel);
-  this.forecastService.getScheduleOpen(this.skillGroupObj?.id,this.getDateInStringFormat(date)).subscribe(response => {
-      this.scheduledOpenResponse = response;
-      console.log(this.scheduledOpenResponse);
-       },
-         error => {
-           this.scheduledOpenResponse  = []; 
-         }
-       );
-}
 
 
   // updateImport() {
@@ -797,47 +800,47 @@ private getScheduledOpen() {
   addForecastData() {
 
     // if (this.InsertUpdate === true) {
-      let forecastObjArrays: Forecast[];
+    let forecastObjArrays: Forecast[];
 
-      const now = +new Date(this.convertNgbDateToString(this.dateModel));
-
-
-      // console.log(this.formData.value);
-      
-      let insertObject: ForecastDataModel;
-      // let intDate = new getLocaleDateTimeFormat();
-      this.forecastID = this.skillGroupObj?.id;
-      // console.log(this.forecastID);
-      
-      forecastObjArrays = this.formData.value;
-
-      insertObject = {
-        ForecastId: this.forecastID,
-        Date: this.convertNgbDateToString(this.dateModel),
-        SkillGroupId: this.skillGroupObj?.id,
-        ForecastData:
-          forecastObjArrays
-      };
-
-       this.forecastService.addForecast(insertObject).subscribe(res => {
+    const now = +new Date(this.convertNgbDateToString(this.dateModel));
 
 
-       this.showSuccessPopUpMessage('The record has been added!');
-       this.enableSaveButton = false;
-       this.enableCancelButton = false;
-       this.loadSkillGroup();
+    // console.log(this.formData.value);
 
-      },
-        error => {
+    let insertObject: ForecastDataModel;
+    // let intDate = new getLocaleDateTimeFormat();
+    this.forecastID = this.skillGroupObj?.id;
+    // console.log(this.forecastID);
 
-          if (error.status === 409) {
-           this.updateForecast();
-          }
+    forecastObjArrays = this.formData.value;
 
+    insertObject = {
+      ForecastId: this.forecastID,
+      Date: this.convertNgbDateToString(this.dateModel),
+      SkillGroupId: this.skillGroupObj?.id,
+      ForecastData:
+        forecastObjArrays
+    };
+
+    this.forecastService.addForecast(insertObject).subscribe(res => {
+
+
+      this.showSuccessPopUpMessage('The record has been added!');
+      this.enableSaveButton = false;
+      this.enableCancelButton = false;
+      this.loadSkillGroup();
+
+    },
+      error => {
+
+        if (error.status === 409) {
+          this.updateForecast();
         }
-     );
+
+      }
+    );
     // } else {
-     // var forecastObjArrays: Forecast[];
+    // var forecastObjArrays: Forecast[];
 
     //   this.updateForecast();
     //  }
@@ -871,7 +874,7 @@ private getScheduledOpen() {
     updateForecastData = { forecastData: forecastTest };
 
 
-    this.forecastService.updateForecast(this.skillGroupObj?.id, this.convertNgbDateToString(this.dateModel),updateForecastData).subscribe(res => {
+    this.forecastService.updateForecast(this.skillGroupObj?.id, this.convertNgbDateToString(this.dateModel), updateForecastData).subscribe(res => {
       this.showSuccessPopUpMessage('The record has been updated!');
       this.enableSaveButton = false;
       this.enableCancelButton = false;
@@ -908,4 +911,79 @@ private getScheduledOpen() {
       this.translate.use(this.currentLanguage);
     });
   }
+
+  getScheduledOpenCount(time: string) {
+    var chart = this.scheduledOpenResponse?.find(x => x.time === time.toString());
+    if (chart) {
+      var parse_string = chart?.scheduleOpen.toString();
+      return parseFloat(parse_string).toFixed(2);
+    }
+    return '0.00';
+  }
+  private getScheduledOpen() {
+
+    var date = this.convertNgbDateToString(this.dateModel);
+    this.forecastService.getScheduleOpen(this.skillGroupObj?.id, this.getDateInStringFormat(date)).subscribe(response => {
+      if (response != "No scheduled open") {
+        this.scheduledOpenResponse = response;
+        this.scheduledOpenResponse.map(x => {
+          const timeLapses = [":05", ":10", ":15", ":20", ":25", ":35", ":40", ":45", ":50", ":55"];
+          timeLapses.some(i => {
+            if (x.time.includes(i))
+              x.scheduleOpen = 0;
+          }
+          )
+        }
+        );
+
+        const x = this.scheduledOpenResponse;
+        x.map(time => {
+          const roundDownTo = roundTo => x => Math.floor(x / roundTo) * roundTo;
+          const roundUpTo = roundTo => x => Math.ceil(x / roundTo) * roundTo;
+          const roundDownTo5Minutes = roundDownTo(1000 * 60 * 30);
+          const roundUpTo5Minutes = roundUpTo(1000 * 60 * 30);
+          var dt = moment(time.time, ["h:mm A"]).format("HH:mm");
+
+          var datenow = new Date(date + " " + dt)
+          const now = new Date(datenow)
+          const msdown = roundDownTo5Minutes(now)
+          const msup = roundUpTo5Minutes(now)
+          time.time = moment(msdown).format("h:mm A");
+
+        });
+
+        var result = [];
+        x.reduce(function (res, value) {
+          if (!res[value.time]) {
+            res[value.time] = { time: value.time, scheduleOpen: 0 };
+            result.push(res[value.time])
+          }
+          res[value.time].scheduleOpen += value.scheduleOpen;
+          return res;
+        }, {});
+        this.scheduledOpenResponse = result;
+        var sched_open_sum = this.scheduledOpenResponse.reduce((a, b) => +a + +b.scheduleOpen, 0);
+        this.sumScheduledOpen = sched_open_sum.toString();
+        this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+
+        var sched_open_length = this.scheduledOpenResponse.length;
+        this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / parseFloat(sched_open_length.toString());
+        this.avgScheduledOpenValue = parseFloat(this.avgScheduledOpen.toString()).toFixed(2);
+
+      }
+      else {
+        this.scheduledOpenResponse = [];
+        this.sumScheduledOpen = "0.00";
+        this.avgScheduledOpenValue = "0.00";
+      }
+    },
+      error => {
+        this.scheduledOpenResponse = [];
+        console.log(error)
+        this.sumScheduledOpen = "0.00";
+        this.avgScheduledOpenValue = "0.00";
+      }
+    );
+  }
+
 }

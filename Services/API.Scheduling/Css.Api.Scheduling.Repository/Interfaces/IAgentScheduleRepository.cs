@@ -150,6 +150,9 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="dateRange">The date range.</param>
         void DeleteAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
 
+
+        void DeleteAgentScheduleRangeImport(int employeeId, int agentSchedulingGroupId, DateRange dateRange);
+
         /// <summary>
         /// Deletes the agent schedule.
         /// </summary>
