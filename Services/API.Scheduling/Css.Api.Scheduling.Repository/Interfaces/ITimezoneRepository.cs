@@ -13,12 +13,18 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="timezoneQueryParameters">The timezone query parameters.</param>
         Task<PagedList<Entity>> GetTimeZones(TimezoneQueryParameters timezoneQueryParameters);
 
-        /// <summary>
-        /// Gets the timezone.
-        /// </summary>
+        /// <summary>Gets the time zone.</summary>
         /// <param name="timezoneIdDetails">The timezone identifier details.</param>
-        /// <returns></returns>
+        /// <returns>
+        ///   <br />
+        /// </returns>
         Task<Timezone> GetTimeZone(TimezoneIdDetails timezoneIdDetails);
+
+        /// <summary>Gets the timezone count.</summary>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<int> GetTimezoneCount();
 
         /// <summary>
         /// Creates the timezone.

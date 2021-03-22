@@ -50,17 +50,29 @@ namespace Css.Api.Scheduling.Repository
                 .ToPagedList(shapedSkillTags, filteredTimeZones.Count(), timezoneQueryParameters.PageNumber, timezoneQueryParameters.PageSize);
         }
 
-        /// <summary>
-        /// Gets the timezone.
-        /// </summary>
+        /// <summary>Gets the time zone.</summary>
         /// <param name="timezoneIdDetails">The timezone identifier details.</param>
-        /// <returns></returns>
+        /// <returns>
+        ///   <br />
+        /// </returns>
         public async Task<Timezone> GetTimeZone(TimezoneIdDetails timezoneIdDetails)
         {
-            var query = Builders<Timezone>.Filter.Eq(i => i.TimezoneId, timezoneIdDetails.TimezoneId) 
-                & Builders<Timezone>.Filter.Eq(i => i.TimezoneId, timezoneIdDetails.TimezoneId);
+            var query = Builders<Timezone>.Filter.Eq(i => i.TimezoneId, timezoneIdDetails.TimezoneId) &
+               Builders<Timezone>.Filter.Eq(i => i.TimezoneId, timezoneIdDetails.TimezoneId);
 
             return await FindByIdAsync(query);
+        }
+
+        /// <summary>Gets the timezone count.</summary>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<int> GetTimezoneCount()
+        {
+            var count = FilterBy(x => true)
+                .Count();
+
+            return await Task.FromResult(count);
         }
 
         /// <summary>

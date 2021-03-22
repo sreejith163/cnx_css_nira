@@ -20,5 +20,9 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager
         /// Gets or sets the modified by.
         /// </summary>
         public string ModifiedBy { get; set; }
+
+        /// <summary>Gets or sets the moving date.</summary>
+        /// <value>The moving date.</value>
+        public DateTime MovingDate { get; set; }
     }
 }

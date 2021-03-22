@@ -1,4 +1,7 @@
-﻿namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
+﻿using Css.Api.Core.Models.Domain.NoSQL;
+using System.Collections.Generic;
+
+namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
     public class UpdateAgentScheduleEmployeeDetails
     {
@@ -21,6 +24,10 @@
         /// Gets or sets the agent scheduling group identifier.
         /// </summary>
         public int AgentSchedulingGroupId { get; set; }
+
+        /// <summary>Gets or sets the ranges.</summary>
+        /// <value>The ranges.</value>
+        public List<AgentScheduleRange> Ranges { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.

@@ -301,6 +301,27 @@ namespace Css.Api.Scheduling.Repository
             UpdateOneAsync(query, update);
         }
 
+        /// <summary>Updates the agent schedule with ranges.</summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="updateAgentScheduleEmployeeDetails">The update agent schedule employee details.</param>
+        public void UpdateAgentScheduleWithRanges(EmployeeIdDetails employeeIdDetails, UpdateAgentScheduleEmployeeDetails updateAgentScheduleEmployeeDetails)
+        {
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            var update = Builders<AgentSchedule>.Update
+                .Set(x => x.EmployeeId, updateAgentScheduleEmployeeDetails.EmployeeId)
+                .Set(x => x.FirstName, updateAgentScheduleEmployeeDetails.FirstName)
+                .Set(x => x.LastName, updateAgentScheduleEmployeeDetails.LastName)
+                .Set(x => x.ActiveAgentSchedulingGroupId, updateAgentScheduleEmployeeDetails.AgentSchedulingGroupId)
+                .Set(x => x.Ranges, updateAgentScheduleEmployeeDetails.Ranges)
+                .Set(x => x.ModifiedBy, updateAgentScheduleEmployeeDetails.ModifiedBy)
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
+
+            UpdateOneAsync(query, update);
+        }
+
         /// <summary>
         /// Updates the agent schedule chart.
         /// </summary>
