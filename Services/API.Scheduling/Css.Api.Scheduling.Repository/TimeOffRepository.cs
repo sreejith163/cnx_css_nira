@@ -124,7 +124,7 @@ namespace Css.Api.Scheduling.Repository
 
             if (!string.IsNullOrWhiteSpace(timeOffQueryparametere.SearchKeyword))
             {
-                timeOffs = timeOffs.Where(o => string.Equals(o.Description, timeOffQueryparametere.SearchKeyword, StringComparison.OrdinalIgnoreCase));
+                timeOffs = timeOffs.Where(o => o.Description.ToLower().Contains(timeOffQueryparametere.SearchKeyword.Trim().ToLower()));
             }
 
             return timeOffs;
