@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Css.Api.Core.DataAccess.Repository.UnitOfWork.Interfaces;
 using Css.Api.Core.Models.Domain;
+using CoreEnums = Css.Api.Core.Models.Enums;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Business.UnitTest.Mocks;
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
@@ -500,8 +501,8 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         {
             CreateAgentActivityLog agentActivityLogDetails = new CreateAgentActivityLog
             {
-                ActivityOrigin = Models.Enums.ActivityOrigin.CSS,
-                ActivityStatus = Models.Enums.ActivityStatus.Created,
+                ActivityOrigin = CoreEnums.ActivityOrigin.CSS,
+                ActivityStatus = CoreEnums.ActivityStatus.Created,
                 EmployeeId = employeeId,
                 ExecutedBy = "admin"
             };
@@ -529,8 +530,8 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         {
             CreateAgentActivityLog agentActivityLogDetails = new CreateAgentActivityLog
             {
-                ActivityOrigin = Models.Enums.ActivityOrigin.CSS,
-                ActivityStatus = Models.Enums.ActivityStatus.Created,
+                ActivityOrigin = CoreEnums.ActivityOrigin.CSS,
+                ActivityStatus = CoreEnums.ActivityStatus.Created,
                 EmployeeId = employeeId,
                 ExecutedBy = "admin"
             };

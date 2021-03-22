@@ -74,9 +74,9 @@ namespace Css.Api.Setup.Business.UnitTest.Mock
 
         public IQueryable<Timezone> timezonesDB = new List<Timezone>()
         {
-            new Timezone { Id = 1, Name= "Dateline Standard Time", DisplayName = "(UTC-12:00) International Date Line West", Abbreviation = "DST", Offset = -12 },
-            new Timezone { Id = 2, Name= "Hawaiian Standard Time", DisplayName = "(UTC-10:00) Hawaii", Abbreviation = "HST", Offset = -10 },
-            new Timezone { Id = 3, Name= "Alaskan Standard Time", DisplayName = "(UTC-09:00) Alaska", Abbreviation = "AKDT", Offset = -8 }
+            new Timezone { Id = 1, Name= "Dateline Standard Time", DisplayName = "(UTC-12:00) International Date Line West", Abbreviation = "DST", UtcOffset = new TimeSpan(0,-12,0,0,0) },
+            new Timezone { Id = 2, Name= "Hawaiian Standard Time", DisplayName = "(UTC-10:00) Hawaii", Abbreviation = "HST", UtcOffset = new TimeSpan(0,-10,0,0,0) },
+            new Timezone { Id = 3, Name= "Alaskan Standard Time", DisplayName = "(UTC-09:00) Alaska", Abbreviation = "AKDT", UtcOffset = new TimeSpan(0,-9,0,0,0) }
         }.AsQueryable();
 
         public IQueryable<OperationHourOpenType> operationHourOpenTypesDB = new List<OperationHourOpenType>()

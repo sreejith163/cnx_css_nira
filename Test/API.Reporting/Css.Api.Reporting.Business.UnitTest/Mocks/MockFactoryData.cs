@@ -399,7 +399,8 @@ namespace Css.Api.Reporting.Business.UnitTest.Mocks
                         { "FTPServer", "server" },
                         { "FTPInbox", "inbox" },
                         { "FTPOutbox", "outbox" }
-                    }
+                    },
+                    RequestBody = "{\"startDate\":\"2021-02-20\",\"endDate\":\"2021-02-23\",\"timezoneIds\":[91]}"
                 },
                 new MappingContext
                 {
