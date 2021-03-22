@@ -4,7 +4,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 })
 export class NumericDirective {
   private regex: RegExp = new RegExp(/^\d*\.?\d{0,2}$/g);
-  private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home', '-', 'ArrowLeft', 'ArrowRight', 'Del', 'Delete'];
+  private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home', 'ArrowLeft', 'ArrowRight', 'Del', 'Delete'];
   constructor(private el: ElementRef) {
   }
   @HostListener('keydown', ['$event'])
@@ -14,11 +14,18 @@ export class NumericDirective {
     if (this.specialKeys.indexOf(event.key) !== -1) {
       return;
     }
-    const current: string = this.el.nativeElement.value;
-    const position = this.el.nativeElement.selectionStart;
+
+    const current: string = this.el.nativeElement.innerText;
+
+    //console.log(current);
+    const position = this.el.nativeElement.innerText;
     const next: string = [current.slice(0, position), event.key === 'Decimal' ? '.' : event.key, current.slice(position)].join('');
     if (next && !String(next).match(this.regex)) {
       event.preventDefault();
     }
+    if (position == 0 && event.which == 48 ){
+      event.preventDefault();
+   }
+
   }
 }

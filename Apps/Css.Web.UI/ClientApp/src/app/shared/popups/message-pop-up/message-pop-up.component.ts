@@ -11,6 +11,8 @@ export class MessagePopUpComponent implements OnInit {
 
   @Input() headingMessage = '';
   @Input() contentMessage = '';
+  @Input() importErrors?: string[] = [];
+
   constructor(
     public translate: TranslateService,
     public activeModal: NgbActiveModal

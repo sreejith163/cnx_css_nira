@@ -14,11 +14,12 @@ import { ClientService } from 'src/app/modules/home/modules/setup-menu/services/
 export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
 
   pageNumber = 1;
-  clientItemsBufferSize = 10;
+  clientItemsBufferSize = 100;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
   totalPages: number;
 
@@ -82,7 +83,7 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
 
   private subscribeToClients(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getClientNamesSubscription = this.getClients().subscribe(
+    this.getClientNamesSubscription = this.getClients(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -124,7 +125,7 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
     queryParams.pageSize = this.clientItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
-    queryParams.skipPageSize = true;
+    queryParams.skipPageSize = false;
     queryParams.orderBy = undefined;
     queryParams.fields = 'id, name';
 
@@ -133,6 +134,11 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
 
   private getClients(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.clientService.getClients(queryParams);
   }
 }

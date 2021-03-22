@@ -96,7 +96,7 @@
             </div>
             <div class="col-md-8">
 
-              <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId"
+              <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId" [hierarchy]='true'
                 (clientLobSelected)="setClientLobGroup($event)"></app-client-lob-group-typeahead>
               <div *ngIf="!clientLobGroupId && formSubmitted" class="valid-error">
                 {{ 'Client LOB Group is required' | translate }}
@@ -112,7 +112,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)" [clientId]="clientId"
+              <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)" [clientId]="clientId" [hierarchy]='true'
                 [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId"></app-skill-group-typeahead>
               <div *ngIf="!skillGroupId && formSubmitted" class="valid-error">
                 {{ 'Skill Group is required' | translate }}
@@ -129,11 +129,28 @@
             </div>
             <div class="col-md-8">
 
-              <app-skill-tag-typeahead (skillTagSelected)="setSkillTag($event)" [clientId]="clientId"
+              <app-skill-tag-typeahead (skillTagSelected)="setSkillTag($event)" [clientId]="clientId" [hierarchy]='true'
                 [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId" [skillTagId]="skillTagId">
               </app-skill-tag-typeahead>
               <div *ngIf="!skillTagId && formSubmitted" class="valid-error">
                 {{ 'Skill Tags is required' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 m-t-20">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{{ 'Agent_scheduling_group' | translate }}
+                <span class="required">*</span>
+              </label>
+            </div>
+            <div class="col-md-8">
+              <app-agent-scheduling-group-typeahead [agentSchedulingGroupId]="agentSchedulingGroupId" [hierarchy]="true"
+                (agentSchedulingGroupSelected)="setAgentSchedulingGroupId($event)" [skillTagId]="skillTagId">
+              </app-agent-scheduling-group-typeahead>
+              <div *ngIf="!agentSchedulingGroupId && formSubmitted" class="valid-error">
+                {{ 'Agent Scheduling Group is required' | translate }}
               </div>
             </div>
           </div>
@@ -197,7 +214,7 @@
             </div>
             <div class="col-md-8">
               <div class="input-group">
-                <input class="form-control" placeholder="{{ 'Select_hire_date'  | translate }}" name="dp"
+                <input [maxLength]="10" class="form-control" placeholder="{{ 'Select_hire_date'  | translate }} (yyyy-mm-dd)" name="dp"
                   [ngClass]="{'valid-border-error': hasFormControlValidationError('hireDate')}"
                   formControlName="hireDate" ngbDatepicker [footerTemplate]="footerTemplate"
                   [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
@@ -216,6 +233,15 @@
               <div *ngIf="hasFormControlValidationError('hireDate')" class="valid-error">
                 {{ 'Hire Date is required' | translate }}
               </div>
+              <div *ngIf="formSubmitted && !validateHireDateFormat() && !hasFormControlValidationError('hireDate')" class="valid-error">
+                {{ 'Please enter a valid Hire Date in yyyy-mm-dd format' | translate }}
+              </div>
+              <!--
+              <ng-container *ngIf="form.hireDate.status.invalid">
+                <div class="valid-error">
+                  Incorrect Date format {{ form.hireDate }}
+                </div>
+              </ng-container>--->
             </div>
           </div>
         </div>

@@ -1,20 +1,21 @@
 <div class="container-fluid ">
     <div class="row">
         <div class="col-12 col-md-12">
-            <h2 id="page_title" class="mt-2">O/U Screen</h2>
+            <h2 id="page_title" class="mt-2">{{'View O/U Screen' | translate}}</h2>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-left">
-                <li class="breadcrumb-item"><a>Scheduling Menu</a></li>
-                <li class="breadcrumb-item active"><b>O/U Screen</b> </li>
+                <li class="breadcrumb-item"><a>{{'Scheduling Menu' | translate}}</a></li>
+                <li class="breadcrumb-item active"><b>{{'View O/U Screen' | translate}}</b> </li>
             </ol>
         </div>
     </div>
 
-    <div class="row m-b-10">
+    <div class="row m-b-10 align-items-end">
         <div class="col-md-3 d-flex flex-column">
+            <label><strong>Skill Group</strong></label>
             <ng-select [items]="skillGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id"
                 placeholder="{{'All' | translate}}" [typeahead]="typeAheadInput$" (scroll)="onSkillGroupScroll($event)"
                 (scrollToEnd)="onSkillGroupScrollToEnd()" (change)="onSkillGroupChange($event);change($event)"
@@ -33,10 +34,12 @@
         </div>
         <div class="col-md-3 d-flex flex-column">
             <div class="input-group">
-                <input class="form-control" placeholder="{{today}}" name="d2" #c2="ngModel" [(ngModel)]="model2"
-                    ngbDatepicker #d2="ngbDatepicker">
+                <input (dateSelect)="loadSkillGroup()" class="form-control" placeholder="{{'Select Forecast Date' | translate}}" name="dp" ngbDatepicker
+                [readonly]="true" [(ngModel)]="dateModel"
+                [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
+               
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
+                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
                 </div>
             </div>
         </div>
@@ -60,7 +63,10 @@
               
                     <div class="row my-2">
                         <div class="col-lg-6">
-                            <label for=""><strong>{{skillGroupBinder?.name}}</strong></label>
+                            <div class="badge badge-primary" *ngIf="skillGroupBinder?.name != null">
+                                {{skillGroupBinder?.name}}
+                            </div>
+                           
                             <input type="hidden" [value]="skillGroupBinder?.id">
                         </div>
                    
@@ -71,12 +77,12 @@
                         <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
                             <thead>
                                 <tr>
-                                    <th>Time</th>
-                                    <th>Forecasted Contacts</th>
-                                    <th>AHT</th>
-                                    <th>Forecasted Req</th>
-                                    <th>Scheduled Open</th>
-                                    <th>O/U</th>
+                                    <th>{{ 'Time' | translate }}</th>
+                                    <th>{{ 'Forecasted Contacts' | translate }}</th>
+                                    <th>{{ 'AHT' | translate }}</th>
+                                    <th>{{ 'Forecasted Req' | translate }}</th>
+                                    <th>{{ 'Scheduled Open' | translate }}</th>
+                                    <th>{{ 'O/U' | translate }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -101,10 +107,10 @@
                                                     {{el.forecastedReq}}
                                                 </td>
                                                 <td>  
-                                                     {{el.scheduledOpen}}
+                                                    {{ getScheduledOpenCount(el.time) }}
                                                 </td>
-                                                <td>
-                                                    {{el.scheduledOpen - el.forecastedReq}}
+                                                <td [ngClass]="{'negative-uo' : (el.scheduledOpen - el.forecastedReq) < 0}">
+                                                    {{ getScheduledOpenCount1(el.time) - el.forecastedReq }}
                                                 </td>
                                          
                                         </tr>
@@ -114,41 +120,39 @@
                             <tfoot>
                                 <tr class="tr-1">
                                     <td>
-                                        <span><strong>Total</strong></span>
+                                        <span><strong>{{ 'Total' | translate }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span><strong>Average</strong></span>
+                                        <span><strong>{{ 'Average' | translate }}</strong></span>
 
                                     </td>
                                     <td class="forecastContact">
                                         <span><strong>{{ sumForecastContact }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span></span>
+                                        <span>{{ avgForecastContactValue }}</span>
                                     </td>
                                     <td>
                                         <span><strong>{{ sumAHT }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span></span>
+                                        <span>{{ avgAHTValue }}</span>
                                     </td>
                                     <td> <span><strong>{{ sumForecastedReq }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span></span>
+                                        <span>{{ avgForecastedReqValue }}</span>
                                     </td>
                                     <td> <span><strong>{{ sumScheduledOpen }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span></span>
+                                        <span>{{ avgScheduledOpenValue }}</span>
                                     </td>
-
-                                    <td> <span><strong></strong></span>
+                                    <td> <span ><strong>{{ sumOU }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span></span>
+                                        <span>{{ avgOUValue }}</span>
                                     </td>
-
                                 </tr>
 
                             </tfoot>

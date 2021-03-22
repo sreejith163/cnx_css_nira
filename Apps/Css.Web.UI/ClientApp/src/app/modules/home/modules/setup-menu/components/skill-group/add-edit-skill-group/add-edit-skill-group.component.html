@@ -48,7 +48,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId"
+              <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId" [hierarchy]='true'
                 (clientLobSelected)="setClientLobGroup($event)"></app-client-lob-group-typeahead>
               <div *ngIf="!clientLobGroupId && formSubmitted" class="valid-error">
                 {{ 'LOB Group Name is required' | translate }}

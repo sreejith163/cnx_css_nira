@@ -13,3 +13,11 @@
 .w-30p {
   width: 30%;
 }
+
+ul{
+  height:100px;
+  width: 80%;
+  list-style-position: inside;
+  margin: auto;
+}
+ul{overflow:hidden; overflow-y:scroll;}

@@ -116,7 +116,7 @@
             <ngx-spinner [name]="spinner" bdColor="rgba(255, 0, 0, 0.8)"></ngx-spinner>
             <tr *ngIf="skillGroupDetails?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No data to show' | translate }}</td>
+                {{ 'No match records found' | translate }}</td>
             </tr>
             <tr *ngFor="let el of skillGroupDetails; let i = index">
               <td *permission="{rolesPermitted: [1,2]}"><i class="fa fa-edit padding-5 pointer"
@@ -163,7 +163,7 @@
     <div class="col-md-12 d-flex justify-content-end mt-3">
       <nav aria-label="Page navigation example">
         <ul class="pagination p-0 float-right">
-          <ngb-pagination class="p-r-5" [collectionSize]="totalSkillGroupRecord" (pageChange)="changePage($event)"
+          <ngb-pagination class="p-r-5" [collectionSize]="totalSkillGroupRecord" (pageChange)="changePage($event)" [rotate]="true" [maxSize]="10" 
             [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
           <select class="form-control" (change)="changePageSize($event.target.value)">
             <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">

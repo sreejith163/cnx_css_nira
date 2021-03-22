@@ -13,12 +13,13 @@ import { SkillGroupService } from 'src/app/modules/home/modules/setup-menu/servi
 export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChanges {
 
   pageNumber = 1;
-  skillGroupItemsBufferSize = 10;
+  skillGroupItemsBufferSize = 100;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
 
   skillGroupItemsBuffer: SkillGroupDetails[] = [];
@@ -31,6 +32,7 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
   @Input() clientId: number;
   @Input() clientLobGroupId: number;
   @Input() skillGroupId: number;
+  @Input() hierarchy: boolean;
   @Output() skillGroupSelected = new EventEmitter();
 
   constructor(
@@ -38,7 +40,12 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
   ) { }
 
   ngOnInit(): void {
-    this.subscribeToSkillGroups();
+    if (!this.hierarchy) {
+      this.subscribeToSkillGroups();
+    } else {
+      this.skillGroupItemsBuffer = [];
+      this.totalItems = 0;
+    }
     this.subscribeToSearching();
   }
 
@@ -93,7 +100,7 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
 
   private subscribeToSkillGroups(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getSkillGroupsSubscription = this.getSkillGroups().subscribe(
+    this.getSkillGroupsSubscription = this.getSkillGroups(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -137,7 +144,7 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
     queryParams.pageSize = this.skillGroupItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
-    queryParams.skipPageSize = true;
+    queryParams.skipPageSize = false;
     queryParams.orderBy = undefined;
     queryParams.fields = 'id, name';
 
@@ -146,6 +153,11 @@ export class SkillGroupTypeaheadComponent implements OnInit, OnDestroy, OnChange
 
   private getSkillGroups(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.skillGroupService.getSkillGroups(queryParams);
   }
 

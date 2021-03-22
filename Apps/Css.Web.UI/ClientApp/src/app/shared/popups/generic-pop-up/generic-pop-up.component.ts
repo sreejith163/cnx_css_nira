@@ -12,7 +12,7 @@ export class GenericPopUpComponent implements OnInit {
   @Input() contentMessage = '';
   @Input() confirmButton = 'Yes' ;
   @Input() cancelButton = 'No' ;
-  @Input() warning: boolean = false;
+  @Input() warning = false;
 
   constructor(
     public activeModal: NgbActiveModal,

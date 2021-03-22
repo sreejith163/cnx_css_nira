@@ -1,9 +1,7 @@
 export class Forecast {
-      
-      
         time: string;
-        forecastedContact: string;
-        aht: string;
-        forecastedReq: string;
-        scheduledOpen: string;
+        forecastedContact: number;
+        aht: number;
+        forecastedReq: number;
+        scheduledOpen: number;
 }

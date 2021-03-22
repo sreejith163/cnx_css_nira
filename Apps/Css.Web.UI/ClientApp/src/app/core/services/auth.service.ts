@@ -7,6 +7,9 @@ import { EmployeeDetails } from 'src/app/modules/home/modules/system-admin/model
 import { PermissionsService } from 'src/app/modules/home/modules/system-admin/services/permissions.service';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ErrorPopUpComponent } from 'src/app/shared/popups/error-pop-up/error-pop-up.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 // temporary model for UAT
 export class UAT {
@@ -22,8 +25,6 @@ export class AuthService {
 
   constructor(
     private cookieService: CookieService,
-    private router: Router,
-    private permissionsService: PermissionsService
   ) {
 
     // fetch the userUAT details from cookie storage
@@ -78,16 +79,4 @@ export class AuthService {
     window.location.href = environment.sso.authBaseUrl + environment.sso.authAppToken;
   }
 
-  loginUAT(userUAT: UAT) {
-    // store the UAT details inside a cookie to persist uat session
-    this.cookieService.set('employeeId', userUAT.employeeId, null, environment.settings.cookiePath, null, false, 'Strict');
-    this.cookieService.set('uid', userUAT.uid, null, environment.settings.cookiePath, null, false, 'Strict');
-    this.cookieService.set('displayName', userUAT.displayName, null, environment.settings.cookiePath, null, false, 'Strict');
-    this.permissionsService.getEmployee(+userUAT.employeeId).subscribe((user:EmployeeDetails)=>{
-      this.permissionsService.storePermission(userUAT.employeeId);
-    },error=>{
-      console.log(error);
-    })
-    this.router.navigate(['home']);
-  }
 }

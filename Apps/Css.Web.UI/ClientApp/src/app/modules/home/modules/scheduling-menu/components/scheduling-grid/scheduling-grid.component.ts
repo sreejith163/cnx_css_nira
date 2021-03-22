@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { SchedulingCode } from '../../../system-admin/models/scheduling-code.model';
 import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
+import { PermissionsService } from '../../../system-admin/services/permissions.service';
 import { SchedulingCodeQueryParams } from '../../../system-admin/models/scheduling-code-query-params.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AgentScheduleType } from '../../enums/agent-schedule-type.enum';
@@ -16,12 +17,11 @@ import { SchedulingExcelExportData } from '../../constants/scheduling-excel-expo
 import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
 import { ActivatedRoute } from '@angular/router';
 import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
-import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { TranslateService } from '@ngx-translate/core';
 import { AgentScheduleGridResponse } from '../../models/agent-schedule-grid-response.model';
 import { SchedulingStatus } from '../../enums/scheduling-status.enum';
 import { Constants } from 'src/app/shared/util/constants.util';
-import { WeekDay } from '@angular/common';
+import { DatePipe, WeekDay } from '@angular/common';
 import { AgentSchedulesResponse } from '../../models/agent-schedules-response.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
@@ -37,8 +37,16 @@ import { UpdateAgentSchedule } from '../../models/update-agent-schedule.model';
 import { UpdateAgentschedulechart } from '../../models/update-agent-schedule-chart.model';
 import { ActivityOrigin } from '../../enums/activity-origin.enum';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ActivityLogsScheuldeComponent } from '../shared/activity-logs-schedule/activity-logs-schedule.component';
+import { ActivityLogsScheduleComponent } from '../shared/activity-logs-schedule/activity-logs-schedule.component';
 import * as $ from 'jquery';
+import { DateRangePopUpComponent } from 'src/app/modules/home/modules/scheduling-menu/components/shared/date-range-pop-up/date-range-pop-up.component';
+import { ComponentOperation } from 'src/app/shared/enums/component-operation.enum';
+import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
+import { AgentScheduleRange } from '../../models/agent-schedule-range.model';
+import { ScheduleDateRangeBase } from '../../models/schedule-date-range-base.model';
+import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { ContentType } from 'src/app/shared/enums/content-type.enum';
+import { DateRangeQueryParms } from '../../models/date-range-query-params.model';
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -57,7 +65,8 @@ declare function highlightCell(cell: string, className: string);
     )
   ],
   templateUrl: './scheduling-grid.component.html',
-  styleUrls: ['./scheduling-grid.component.scss']
+  styleUrls: ['./scheduling-grid.component.scss'],
+  providers: [DatePipe]
 })
 export class SchedulingGridComponent implements OnInit, OnDestroy {
 
@@ -71,6 +80,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   startIcon = 0;
   endIcon: number;
   totalSchedulingRecord: number;
+  rangeIndex: number;
+  status = SchedulingStatus;
 
   selectedIconId: string;
   icon: string;
@@ -88,6 +99,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   isMouseDown: boolean;
   isDelete: boolean;
   refreshSchedulingTab: boolean;
+  hasNewDateRangeSelected: boolean;
   LoggedUser;
 
   selectedGrid: AgentScheduleGridResponse;
@@ -110,6 +122,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   schedulingCodes: SchedulingCode[] = [];
   importedData: ExcelData[] = [];
 
+  deleteScheduleDateRangeSubscription: ISubscription;
   updateAgentScheduleChartSubscription: ISubscription;
   getAgentSchedulesSubscription: ISubscription;
   getAgentScheduleSubscription: ISubscription;
@@ -117,8 +130,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   getSchedulingCodesSubscription: ISubscription;
   getTranslationSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
-
-  @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
 
   constructor(
     private calendar: NgbCalendar,
@@ -128,10 +139,12 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     private schedulingCodeService: SchedulingCodeService,
     private excelService: ExcelService,
     private authService: AuthService,
+    private permissionsService: PermissionsService,
     private route: ActivatedRoute,
     private languagePreferenceService: LanguagePreferenceService,
     private agentSchedulesService: AgentSchedulesService,
     public translate: TranslateService,
+    private datepipe: DatePipe,
   ) {
     this.LoggedUser = this.authService.getLoggedUserInfo();
   }
@@ -154,38 +167,156 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
 
+  hasSchedulingIconsDisabled(el: AgentSchedulesResponse) {
+    if (el?.ranges[el?.rangeIndex]?.status === SchedulingStatus.Released) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  hasStatusDisabled(el: AgentSchedulesResponse) {
+    if (el?.ranges.length === 0) {
+      return true;
+    }
+    if (el?.ranges.length > 0 && el.ranges[el.rangeIndex]) {
+      if (el.ranges[el.rangeIndex].status === SchedulingStatus['Pending Schedule'] &&
+        el?.ranges[el?.rangeIndex].scheduleCharts.length === 0) {
+        return true;
+      } else if (el.ranges[el.rangeIndex].status === SchedulingStatus['Pending Schedule'] &&
+        el?.ranges[el?.rangeIndex].scheduleCharts.length > 0) {
+        return false;
+      } else if (el.ranges[el.rangeIndex].status === SchedulingStatus.Released) {
+        return true;
+      }
+    }
+
+    return true;
+  }
+
+  getRangeIndex(el: AgentSchedulesResponse) {
+    return el?.rangeIndex;
+  }
+
+  addDateRange(el: AgentSchedulesResponse) {
+    this.hasNewDateRangeSelected = true;
+    this.schedulingGridData = undefined;
+    this.getModalPopup(DateRangePopUpComponent, 'sm');
+    this.modalRef.componentInstance.operation = ComponentOperation.Add;
+    this.modalRef.componentInstance.agentScheduleId = el.id;
+    this.modalRef.componentInstance.isEditNewDateRange = false;
+    this.modalRef.result.then((result: ScheduleDateRangeBase) => {
+      if (result) {
+        this.setNewDateRangeInMemory(el, result);
+        this.setComponentMessages('Success', 'The record has been added!');
+      } else {
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'No changes has been made!');
+      }
+    });
+  }
+
+  editDateRange(el: AgentSchedulesResponse) {
+    this.getModalPopup(DateRangePopUpComponent, 'sm');
+    this.modalRef.componentInstance.dateFrom = this.getFormattedDate(el.ranges[el.rangeIndex].dateFrom);
+    this.modalRef.componentInstance.dateTo = this.getFormattedDate(el.ranges[el.rangeIndex].dateTo);
+    this.modalRef.componentInstance.agentScheduleId = el.id;
+    this.modalRef.componentInstance.operation = ComponentOperation.Edit;
+    this.modalRef.componentInstance.isEditNewDateRange = this.hasNewDateRangeSelected;
+
+    this.modalRef.result.then((result: ScheduleDateRangeBase) => {
+      if (result?.dateFrom && result?.dateTo) {
+        el.ranges[el.rangeIndex].dateFrom = result.dateFrom;
+        el.ranges[el.rangeIndex].dateTo = result.dateTo;
+        if (this.selectedGrid) {
+          this.selectedGrid.dateFrom = result.dateFrom;
+          this.selectedGrid.dateTo = result.dateTo;
+          this.schedulingGridData.dateFrom = result.dateFrom;
+          this.schedulingGridData.dateTo = result.dateTo;
+        }
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'The record has been updated!');
+      } else {
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'No changes has been made!');
+      }
+    });
+  }
+
+  deleteDateRange(el: AgentSchedulesResponse) {
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
+    this.modalRef = this.modalService.open(ConfirmationPopUpComponent, options);
+    this.modalRef.componentInstance.headingMessage = 'Are you sure?';
+    this.modalRef.componentInstance.contentMessage = 'You won’t be able to revert this!';
+    this.modalRef.componentInstance.deleteRecordIndex = el.id;
+
+    this.modalRef.result.then((result) => {
+      if (result && result === el.id) {
+        if (this.hasNewDateRangeSelected) {
+          el.ranges.splice(el.rangeIndex, 1);
+          el.rangeIndex = el.rangeIndex > 0 ? el.rangeIndex - 1 : 0;
+          this.getModalPopup(MessagePopUpComponent, 'sm');
+          this.setComponentMessages('Success', 'The record has been deleted!');
+        } else {
+          this.spinnerService.show(this.spinner, SpinnerOptions);
+          const model = new DateRangeQueryParms();
+          model.dateFrom = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateFrom);
+          model.dateTo = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateTo);
+          this.deleteScheduleDateRangeSubscription = this.agentSchedulesService.deleteAgentScheduleRange(el.id, model)
+            .subscribe((response) => {
+              this.spinnerService.hide(this.spinner);
+              this.getModalPopup(MessagePopUpComponent, 'sm');
+              this.setComponentMessages('Success', 'The record has been deleted!');
+              this.loadAgentSchedules();
+            }, (error) => {
+              this.spinnerService.hide(this.spinner);
+              this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
+              this.setComponentMessages('Error', error.message);
+              this.modalRef.componentInstance.messageType = ContentType.String;
+              console.log(error);
+            });
+
+          this.subscriptions.push(this.deleteScheduleDateRangeSubscription);
+        }
+      }
+    });
+  }
+
+  getSelectedRange(el: AgentSchedulesResponse) {
+    let selectedRange = 'Please select a date range';
+    if (el.ranges.length && el.ranges[el.rangeIndex]) {
+      const formattedDateFrom = this.getFormattedDateString(el.ranges[el.rangeIndex].dateFrom);
+      const formattedDateTo = this.getFormattedDateString(el.ranges[el.rangeIndex].dateTo); if (el.rangeIndex > -1) {
+        selectedRange = `${formattedDateFrom} - ${formattedDateTo}`;
+      }
+    }
+
+    return selectedRange;
+  }
+
+  onDateRangeChange(index: any, el: AgentSchedulesResponse) {
+    const rangeIndex = +index;
+    if (rangeIndex > -1) {
+      el.rangeIndex = rangeIndex;
+    }
+    if (this.selectedGrid) {
+      const item = this.totalSchedulingGridData.find(x => x.id === el.id);
+      this.setSelectedGrid(item);
+    }
+  }
+
+  canShowActivityLog() {
+    const rolesPermitted = [1, 2, 3, 5];
+    const userRoleId = this.permissionsService.userRoleId;
+    return rolesPermitted.indexOf(+userRoleId) > -1;
+  }
+
   getGridMaxWidth() {
     return window.innerWidth > 1350 ? (window.innerWidth - 350) + 'px' : '1250px';
   }
 
   cancel() {
     this.selectedGrid = JSON.parse(JSON.stringify(this.schedulingGridData));
-  }
-
-  onClickDateIcon(index: number) {
-    const fromDate = this.totalSchedulingGridData[index]?.dateFrom;
-    const to = this.totalSchedulingGridData[index]?.dateTo;
-    this.fromDate = this.convertToNgbDate(fromDate) ?? this.today;
-    this.toDate = this.convertToNgbDate(to) ?? this.today;
-  }
-
-  onDateSelection(date: NgbDate, index: number) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
-      this.totalSchedulingGridData[index].dateFrom = newDate;
-    } else if (this.fromDate && !this.toDate && date && !date.before(this.fromDate)) {
-      this.toDate = date;
-      const newDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day, 0, 0, 0, 0);
-      this.totalSchedulingGridData[index].dateTo = newDate;
-    } else {
-      this.toDate = null;
-      this.totalSchedulingGridData[index].dateTo = null;
-      this.fromDate = date;
-      const newDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day, 0, 0, 0, 0);
-      this.totalSchedulingGridData[index].dateFrom = newDate;
-    }
-    this.updateAgentSchedule(index);
   }
 
   isHovered(date: NgbDate) {
@@ -211,16 +342,18 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.selectedGrid && this.selectedGrid.employeeId === el.employeeId) {
       this.selectedGrid = null;
     } else {
-      this.loadAgentSchedule(el.id);
+      const item = this.totalSchedulingGridData.find(x => x.id === el.id);
+      this.setSelectedGrid(item);
+      // this.loadAgentSchedule(el.id);
     }
   }
 
   getIconFromSelectedGrid(week: number, openTime: any) {
-    const weekData = this.selectedGrid.agentScheduleCharts.find(x => x.day === +week);
+    const weekData = this.selectedGrid?.agentScheduleCharts.find(x => x.day === +week);
 
     if (weekData) {
-      const weekTimeData = weekData.charts.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x.startTime) &&
-        this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
+      const weekTimeData = weekData?.charts?.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x?.startTime) &&
+        this.convertToDateFormat(openTime) < this.convertToDateFormat(x?.endTime));
       if (weekTimeData) {
         const code = this.schedulingCodes.find(x => x.id === weekTimeData.schedulingCodeId);
         return code ? this.unifiedToNative(code?.icon?.value) : '';
@@ -263,6 +396,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   onMouseUp(event) {
+    if (this.selectedGrid?.status === SchedulingStatus.Released) {
+      return;
+    }
     this.isMouseDown = false;
     if (this.isDelete) {
       this.saveGridItems();
@@ -273,17 +409,20 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   onMouseDown(event) {
+    if (this.selectedGrid?.status === SchedulingStatus.Released) {
+      return;
+    }
     let days;
     this.isMouseDown = true;
     const time = event.currentTarget.attributes.time.nodeValue;
     const meridiem = event.currentTarget.attributes.meridiem.nodeValue;
     const week = event.currentTarget.attributes.week.nodeValue;
-    days = this.selectedGrid.agentScheduleCharts.find(x => x.day === +week);
+    days = this.selectedGrid?.agentScheduleCharts.find(x => x?.day === +week);
     const fromTime = time + ' ' + meridiem;
-    const object = days?.charts.find(x => this.convertToDateFormat(x.startTime) <= this.convertToDateFormat(fromTime) &&
-      this.convertToDateFormat(x.endTime) > this.convertToDateFormat(fromTime));
+    const object = days?.charts.find(x => this.convertToDateFormat(x?.startTime) <= this.convertToDateFormat(fromTime) &&
+      this.convertToDateFormat(x?.endTime) > this.convertToDateFormat(fromTime));
     if (object) {
-      const code = this.schedulingCodes.find(x => x.id === object.schedulingCodeId);
+      const code = this.schedulingCodes.find(x => x.id === object?.schedulingCodeId);
       this.icon = code?.icon?.value ?? undefined;
       if (this.isMouseDown && this.icon) {
         setRowCellIndex(event.currentTarget.id);
@@ -317,6 +456,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.agentSchedulingGroupId) {
       this.pageSize = pageSize;
       this.loadAgentSchedules();
+      if (this.selectedGrid) {
+        this.cancel();
+      }
     }
   }
 
@@ -324,12 +466,28 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.agentSchedulingGroupId) {
       this.currentPage = page;
       this.loadAgentSchedules();
+      this.selectedGrid = null;
     }
   }
 
-  setSchedulingStatus(status: string, index: number) {
-    this.totalSchedulingGridData[index].status = Number(status);
-    this.updateAgentSchedule(index);
+  setSchedulingStatus(event: any, el: AgentSchedulesResponse) {
+    this.getModalPopup(ConfirmationPopUpComponent, 'sm');
+    this.modalRef.componentInstance.deleteRecordIndex = el.id;
+    this.modalRef.componentInstance.headingMessage = 'Are you sure ?';
+    this.modalRef.componentInstance.contentMessage = 'You can no longer revert the action to Pending status';
+    this.modalRef.componentInstance.confirmSchedulingStatus = true;
+    this.modalRef.result.then((result) => {
+      if (result && result === el.id) {
+        el.ranges[el?.rangeIndex].status = +event.target.value;
+        this.updateAgentSchedule(el);
+      } else {
+        event.target.selectedIndex = 0;
+      }
+    });
+  }
+
+  getSchedulingStatus(el: AgentSchedulesResponse, status: SchedulingStatus) {
+    return +el?.ranges[el?.rangeIndex]?.status;
   }
 
   sort(columnName: string, sortBy: string) {
@@ -338,53 +496,109 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       this.orderBy = columnName;
 
       this.loadAgentSchedules();
+      this.selectedGrid = null;
     }
   }
 
-  save(gridChart: AgentScheduleGridResponse) {
-    this.updateAgentScheduleChart(gridChart.id);
+  save(gridChart: AgentSchedulesResponse) {
+    if (this.matchSchedulingGridDataChanges()) {
+      this.spinnerService.show(this.spinner, SpinnerOptions);
+      const chartModel = new UpdateAgentschedulechart();
+      let gridData = new AgentScheduleGridResponse();
+      gridData = this.getUpdatedScheduleChart();
+      if (gridData.agentScheduleCharts.length > 0) {
+        gridData.agentScheduleCharts.forEach(ele => {
+          this.formatEndTime(ele.charts, true);
+        });
+      }
+      chartModel.dateFrom = this.getFormattedDate(gridData?.dateFrom);
+      chartModel.dateTo = this.getFormattedDate(gridData?.dateTo);
+      chartModel.status = gridData?.status;
+      chartModel.agentScheduleCharts = gridData?.agentScheduleCharts;
+      chartModel.activityOrigin = ActivityOrigin.CSS;
+      chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
+      chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
+
+      this.updateAgentScheduleChartSubscription = this.agentSchedulesService
+        .updateAgentScheduleChart(gridChart.id, chartModel)
+        .subscribe(() => {
+          this.hasNewDateRangeSelected = false;
+          this.spinnerService.hide(this.spinner);
+          this.getModalPopup(MessagePopUpComponent, 'sm');
+          this.setComponentMessages('Success', 'The record has been updated!');
+          this.modalRef.result.then(() => {
+            if (!this.selectedGrid?.agentScheduleCharts?.find(x => x?.charts?.length > 0)) {
+              const rangeData = this.totalSchedulingGridData.find(x => x.id === this.selectedGrid?.id);
+              if (rangeData?.rangeIndex > -1) {
+                rangeData?.ranges?.splice(rangeData.rangeIndex, 1);
+              }
+              rangeData.rangeIndex = rangeData?.rangeIndex !== 0 ? rangeData?.rangeIndex - 1 : rangeData?.rangeIndex;
+              this.selectedGrid = undefined;
+              this.schedulingGridData = undefined;
+            } else {
+              this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
+              gridChart.ranges[gridChart?.rangeIndex].scheduleCharts = this.selectedGrid.agentScheduleCharts;
+              gridChart.ranges[gridChart?.rangeIndex].modifiedBy =  this.authService.getLoggedUserInfo()?.displayName;
+              gridChart.ranges[gridChart?.rangeIndex].modifiedDate = new Date();
+            }
+          });
+        }, (error) => {
+          this.spinnerService.hide(this.spinner);
+          console.log(error);
+        });
+
+      this.subscriptions.push(this.updateAgentScheduleChartSubscription);
+    } else {
+      this.getModalPopup(MessagePopUpComponent, 'sm');
+      this.setComponentMessages('Success', 'No changes has been made!');
+    }
   }
 
-  openActivityLogs(index: number) {
-    this.getModalPopup(ActivityLogsScheuldeComponent, 'xl');
+  openActivityLogs(el: AgentSchedulesResponse) {
+    this.getModalPopup(ActivityLogsScheduleComponent, 'xl');
     this.modalRef.componentInstance.activityType = ActivityType.SchedulingGrid;
-    this.modalRef.componentInstance.employeeId = this.totalSchedulingGridData[index].employeeId;
-    this.modalRef.componentInstance.employeeName = this.selectedGrid.lastName + ' ' + this.selectedGrid.firstName;
+    this.modalRef.componentInstance.employeeId = el.employeeId;
+    this.modalRef.componentInstance.employeeName = this.selectedGrid.lastName + ', ' + this.selectedGrid.firstName;
     this.modalRef.componentInstance.startDate = new Date(this.startDate);
+    this.modalRef.componentInstance.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
+    this.modalRef.componentInstance.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
+    this.modalRef.componentInstance.schedulingCodes = this.schedulingCodes;
   }
 
-  openCopySchedule(index: number) {
-    const agentScheduleId = this.totalSchedulingGridData[index]?.id;
-    const employeeId = this.totalSchedulingGridData[index]?.employeeId;
+  openCopySchedule(el: AgentSchedulesResponse) {
     this.getModalPopup(CopyScheduleComponent, 'lg');
-    this.modalRef.componentInstance.agentSchedulingGroupId = this.schedulingGridData?.agentSchedulingGroupId;
-    this.modalRef.componentInstance.agentScheduleId = agentScheduleId;
-    this.modalRef.componentInstance.employeeId = employeeId;
+    this.modalRef.componentInstance.agentSchedulingGroupId = el?.ranges[el?.rangeIndex]?.agentSchedulingGroupId;
+    this.modalRef.componentInstance.agentScheduleId = el?.id;
+    this.modalRef.componentInstance.employeeId = el?.employeeId;
+    this.modalRef.componentInstance.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
+    this.modalRef.componentInstance.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
     this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.Scheduling;
     this.modalRef.componentInstance.fromDate = new Date(this.startDate);
 
     this.modalRef.result.then((result) => {
       if (result.needRefresh) {
-        this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been copied!');
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'The record has been copied!');
         this.modalRef.result.then(() => {
-          this.loadAgentSchedule(agentScheduleId);
+          // this.loadAgentSchedule(agentScheduleId);
           this.loadAgentSchedules();
         });
       } else {
-        this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'No changes has been made!');
       }
     });
 
   }
 
   getIconDescription(week: number, openTime: any) {
-    const weekData = this.selectedGrid.agentScheduleCharts.find(x => x.day === +week);
+    const weekData = this.selectedGrid?.agentScheduleCharts.find(x => x.day === +week);
 
     if (weekData) {
-      const weekTimeData = weekData.charts.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x.startTime) &&
-        this.convertToDateFormat(openTime) < this.convertToDateFormat(x.endTime));
+      const weekTimeData = weekData.charts.find(x => this.convertToDateFormat(openTime) >= this.convertToDateFormat(x?.startTime) &&
+        this.convertToDateFormat(openTime) < this.convertToDateFormat(x?.endTime));
       if (weekTimeData) {
-        const code = this.schedulingCodes.find(x => x.id === weekTimeData.schedulingCodeId);
+        const code = this.schedulingCodes.find(x => x.id === weekTimeData?.schedulingCodeId);
         return code?.description;
       }
     }
@@ -396,7 +610,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   onSchedulingGroupChange(schedulingGroupId: number) {
     this.agentSchedulingGroupId = schedulingGroupId;
     if (this.agentSchedulingGroupId) {
+      this.currentPage = 1;
+      this.pageSize = 3;
       this.loadAgentSchedules();
+      this.selectedGrid = null;
     } else {
       this.totalSchedulingGridData = [];
       this.totalSchedulingRecord = undefined;
@@ -407,6 +624,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.searchText = searchText;
     if (this.agentSchedulingGroupId) {
       this.loadAgentSchedules();
+      if (this.selectedGrid) {
+        this.cancel();
+      }
     }
   }
 
@@ -414,6 +634,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.startDate = date;
     if (this.agentSchedulingGroupId) {
       this.loadAgentSchedules();
+      if (this.selectedGrid) {
+        this.cancel();
+      }
     }
   }
 
@@ -423,7 +646,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
     this.modalRef.result.then((result) => {
       const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
-      this.getModalPopup(MessagePopUpComponent, 'sm', message);
+      this.getModalPopup(MessagePopUpComponent, 'sm');
+      this.setComponentMessages('Success', message);
       this.modalRef.result.then(() => {
         this.loadAgentSchedules();
         this.selectedGrid = null;
@@ -440,7 +664,50 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       ('0' + String(today.getDate())) : String(today.getDate());
 
     const date = year + month + day;
-    this.excelService.exportAsExcelFile(SchedulingExcelExportData, this.exportFileName + date);
+    this.excelService.exportAsExcelCSVFile(SchedulingExcelExportData, this.exportFileName + date);
+  }
+
+  private setNewDateRangeInMemory(el: AgentSchedulesResponse, result: ScheduleDateRangeBase) {
+    const range = new AgentScheduleRange();
+    range.dateFrom = this.getFormattedDate(result?.dateFrom);
+    range.dateTo = this.getFormattedDate(result?.dateTo);
+    range.status = SchedulingStatus['Pending Schedule'];
+    range.agentSchedulingGroupId = el.activeAgentSchedulingGroupId;
+    range.scheduleCharts = [];
+    el.ranges.push(range);
+    el.rangeIndex = el.ranges.length - 1;
+    el.modifiedBy = this.authService.getLoggedUserInfo().displayName;
+    el.modifiedDate = new Date();
+    this.onDateRangeChange(el.rangeIndex, el);
+    this.getModalPopup(MessagePopUpComponent, 'sm');
+  }
+
+  private setSelectedGrid(el: AgentSchedulesResponse) {
+    this.selectedGrid = new AgentScheduleGridResponse();
+    this.selectedGrid.id = el?.id;
+    this.selectedGrid.employeeId = el?.employeeId;
+    this.selectedGrid.firstName = el?.firstName;
+    this.selectedGrid.lastName = el?.lastName;
+    this.selectedGrid.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
+    this.selectedGrid.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
+    this.selectedGrid.status = el?.ranges[el?.rangeIndex]?.status;
+    this.selectedGrid.activeAgentSchedulingGroupId = el?.activeAgentSchedulingGroupId;
+    this.selectedGrid.agentScheduleCharts = el?.ranges[el?.rangeIndex]?.scheduleCharts;
+
+    if (this.selectedGrid?.agentScheduleCharts?.length > 0) {
+      this.selectedGrid.agentScheduleCharts.forEach(ele => {
+        this.formatEndTime(ele.charts, false);
+      });
+      this.selectedGrid?.agentScheduleCharts.map(x => x?.charts.map(y => {
+        y.startTime = y?.startTime?.trim().toLowerCase();
+        y.endTime = y?.endTime?.trim().toLowerCase();
+      }));
+    } else {
+      this.selectedGrid.agentScheduleCharts = [];
+    }
+    this.sortSelectedGridCalendarTimes();
+    this.formatTimeValuesInSchedulingGrid();
+    this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
   }
 
   private removeHighlightedCells() {
@@ -606,8 +873,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       }
     }
     if (weekData.charts.length === 0) {
-      const index = this.selectedGrid?.agentScheduleCharts.findIndex(x => x.day === weekData.day);
-      this.selectedGrid.agentScheduleCharts[index].charts = [];
+      const index = this.selectedGrid?.agentScheduleCharts.findIndex(x => x.day === weekData?.day);
+      if (index > -1) {
+        this.selectedGrid.agentScheduleCharts[index].charts = [];
+      }
     }
   }
 
@@ -643,20 +912,22 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private formatTimeValuesInSchedulingGrid() {
-    const weekDays = this.selectedGrid.agentScheduleCharts;
-    weekDays.forEach((element) => {
-      element.charts = this.adjustSchedulingCalendarTimesRange(element.charts);
+    const agentScheduleCharts = this.selectedGrid?.agentScheduleCharts;
+    agentScheduleCharts.forEach((element) => {
+      if (element.charts.length > 0) {
+        element.charts = this.adjustSchedulingCalendarTimesRange(element.charts);
+      }
     });
   }
 
   private sortSelectedGridCalendarTimes() {
-    const weekDays = this.selectedGrid.agentScheduleCharts;
-    weekDays.forEach((element) => {
+    const agentScheduleCharts = this.selectedGrid?.agentScheduleCharts;
+    agentScheduleCharts.forEach((element) => {
       if (element.charts.length > 0) {
         element.charts.sort((a, b): number => {
-          if (this.convertToDateFormat(a.startTime) < this.convertToDateFormat(b.startTime)) {
+          if (this.convertToDateFormat(a?.startTime) < this.convertToDateFormat(b?.startTime)) {
             return -1;
-          } else if (this.convertToDateFormat(a.startTime) > this.convertToDateFormat(b.startTime)) {
+          } else if (this.convertToDateFormat(a?.startTime) > this.convertToDateFormat(b?.startTime)) {
             return 1;
           }
           else {
@@ -670,10 +941,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   private getQueryParams(fields?: string) {
     const agentSchedulesQueryParams = new AgentSchedulesQueryParams();
     agentSchedulesQueryParams.agentSchedulingGroupId = this.agentSchedulingGroupId;
-    agentSchedulesQueryParams.fromDate = this.getDateInStringFormat(this.startDate);
     agentSchedulesQueryParams.pageNumber = this.currentPage;
     agentSchedulesQueryParams.pageSize = this.pageSize;
     agentSchedulesQueryParams.searchKeyword = this.searchText ?? '';
+    agentSchedulesQueryParams.skipPageSize = false;
     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentSchedulesQueryParams.fields = fields ?? undefined;
     agentSchedulesQueryParams.employeeIds = undefined;
@@ -681,13 +952,19 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     return agentSchedulesQueryParams;
   }
 
-  private loadAgentSchedules(fields?: string) {
-    const queryParams = this.getQueryParams(fields);
+  private loadAgentSchedules() {
+    const queryParams = this.getQueryParams();
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
     this.getAgentSchedulesSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
       .subscribe((response) => {
         this.totalSchedulingGridData = response.body;
+        this.totalSchedulingGridData.map(x => {
+          x.rangeIndex = 0;
+        });
+        if (this.selectedGrid) {
+          this.setSelectedGrid(this.totalSchedulingGridData.find(x => x.id === this.selectedGrid.id));
+        }
         let headerPaginationValues = new HeaderPagination();
         headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
         this.totalSchedulingRecord = headerPaginationValues.totalCount;
@@ -701,49 +978,33 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getAgentSchedulesSubscription);
   }
 
-  private loadAgentSchedule(agentScheduleId: string) {
-    this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
-
-    this.getAgentScheduleSubscription = this.agentSchedulesService.getAgentSchedule(agentScheduleId)
-      .subscribe((response) => {
-        if (response) {
-          this.selectedGrid = response;
-          this.selectedGrid = this.formatEndTime(this.selectedGrid, false);
-          this.selectedGrid.agentScheduleCharts.map(x => x?.charts.map(y => {
-            y.startTime = y?.startTime?.trim().toLowerCase();
-            y.endTime = y?.endTime?.trim().toLowerCase();
-          }));
-          this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
-        }
-        this.spinnerService.hide(this.scheduleSpinner);
-      }, (error) => {
-        this.spinnerService.hide(this.scheduleSpinner);
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.getAgentScheduleSubscription);
-  }
-
-  private updateAgentSchedule(index: number) {
+  private updateAgentSchedule(el: AgentSchedulesResponse) {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const updateModel = new UpdateAgentSchedule();
-    updateModel.dateFrom = this.totalSchedulingGridData[index].dateFrom;
-    updateModel.dateTo = this.totalSchedulingGridData[index].dateTo;
-    updateModel.status = this.totalSchedulingGridData[index].status;
+    updateModel.dateFrom = this.getFormattedDate(el?.ranges[el?.rangeIndex]?.dateFrom);
+    updateModel.dateTo = this.getFormattedDate(el?.ranges[el?.rangeIndex]?.dateTo);
+    updateModel.status = el?.ranges[el?.rangeIndex]?.status;
     updateModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
+    updateModel.activityOrigin = ActivityOrigin.CSS;
+    updateModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
+
+    const scheduleId = this.totalSchedulingGridData.find(x => x.id === el?.id)?.id;
 
     this.updateAgentScheduleSubscription = this.agentSchedulesService.
-      updateAgentSchedule(this.totalSchedulingGridData[index].id, updateModel)
+      updateAgentSchedule(scheduleId, updateModel)
       .subscribe(() => {
         this.spinnerService.hide(this.spinner);
         if (this.selectedGrid) {
-          this.selectedGrid.dateFrom = updateModel.dateFrom;
-          this.selectedGrid.dateTo = updateModel.dateTo;
+          this.selectedGrid.status = el?.ranges[el?.rangeIndex]?.status;
         }
-        this.totalSchedulingGridData[index].modifiedBy = updateModel.modifiedBy;
-        this.totalSchedulingGridData[index].modifiedDate = new Date();
+        el.modifiedBy = updateModel.modifiedBy;
+        el.modifiedDate = new Date();
       }, (error) => {
         this.spinnerService.hide(this.spinner);
+        this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
+        this.setComponentMessages('Error', error?.message);
+        this.modalRef.componentInstance.messageType = ContentType.String;
+        this.loadAgentSchedules();
         console.log(error);
       });
 
@@ -756,54 +1017,18 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateAgentScheduleChart(agentScheduleId: string) {
-    if (this.matchSchedulingGridDataChanges()) {
-      this.spinnerService.show(this.spinner, SpinnerOptions);
-      const chartModel = new UpdateAgentschedulechart();
-      this.selectedGrid = this.getUpdatedScheduleChart();
-      const gridData = this.formatEndTime(this.selectedGrid, true);
-      chartModel.agentScheduleCharts = gridData.agentScheduleCharts;
-      chartModel.activityOrigin = ActivityOrigin.CSS;
-      chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
-      chartModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
-
-      this.updateAgentScheduleChartSubscription = this.agentSchedulesService
-        .updateAgentScheduleChart(agentScheduleId, chartModel)
-        .subscribe(() => {
-          this.spinnerService.hide(this.spinner);
-          this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been updated!');
-          this.modalRef.result.then(() => {
-            this.loadAgentSchedules();
-            this.loadAgentSchedule(agentScheduleId);
-          });
-        }, (error) => {
-          this.spinnerService.hide(this.spinner);
-          console.log(error);
-        });
-
-      this.subscriptions.push(this.updateAgentScheduleChartSubscription);
-    } else {
-      this.getModalPopup(MessagePopUpComponent, 'sm', 'No changes has been made!');
-    }
-  }
-
   private getUpdatedScheduleChart() {
     const updatedChart = JSON.parse(JSON.stringify(this.selectedGrid));
-    this.selectedGrid.agentScheduleCharts.forEach((x, index) => {
-      if (this.schedulingGridData?.agentScheduleCharts.findIndex(y => y.day === x.day) > -1) {
+    this.selectedGrid?.agentScheduleCharts.forEach((x, index) => {
+      if (this.schedulingGridData?.agentScheduleCharts.findIndex(y => y.day === x?.day) > -1) {
         const gridIndex = this.schedulingGridData?.agentScheduleCharts.findIndex(y => y.day === x.day);
-        if (JSON.stringify(this.selectedGrid.agentScheduleCharts[index].charts) ===
-          JSON.stringify(this.schedulingGridData.agentScheduleCharts[gridIndex].charts)) {
-          const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
-          updatedChart.agentScheduleCharts.splice(updateIndex, 1);
-        } else if (!this.selectedGrid.agentScheduleCharts[index].charts[0].schedulingCodeId) {
-          if (this.schedulingGridData.agentScheduleCharts[gridIndex]?.charts[0]?.schedulingCodeId &&
-            !this.selectedGrid.agentScheduleCharts[index]?.charts[0]?.schedulingCodeId) {
+        if (gridIndex > -1) {
+          if (JSON.stringify(this.selectedGrid?.agentScheduleCharts[index]?.charts) ===
+            JSON.stringify(this.schedulingGridData?.agentScheduleCharts[gridIndex]?.charts)) {
             const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
-            updatedChart.agentScheduleCharts[updateIndex].charts = [];
-          } else {
-            const updateIndex = updatedChart.agentScheduleCharts.findIndex(y => y.day === x.day);
-            updatedChart.agentScheduleCharts.splice(updateIndex, 1);
+            if (updateIndex > -1) {
+              updatedChart.agentScheduleCharts.splice(updateIndex, 1);
+            }
           }
         }
       }
@@ -812,52 +1037,46 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     return updatedChart;
   }
 
-  private formatEndTime(scheduleResponse: AgentScheduleGridResponse, updateChart: boolean) {
-    for (const weekData of scheduleResponse.agentScheduleCharts) {
-      if (weekData.charts.length > 0) {
-        if (!updateChart) {
-          const responseIndex = weekData?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '12:00 am');
-          if (responseIndex > -1) {
-            weekData.charts[responseIndex].endTime = '11:60 pm';
+  private formatEndTime(charts: ScheduleChart[], updateChart: boolean) {
+    if (!updateChart) {
+      const responseIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '12:00 am');
+      if (responseIndex > -1) {
+        charts[responseIndex].endTime = '11:60 pm';
+      }
+      const twelveHourTime = charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '12' ||
+        x?.startTime?.trim().toLowerCase().slice(0, 2) === '12');
+      if (twelveHourTime.length > 0) {
+        twelveHourTime.map(x => {
+          if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
+            x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
           }
-          const twelveHourTime = weekData.charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '12' ||
-            x?.startTime?.trim().toLowerCase().slice(0, 2) === '12');
-          if (twelveHourTime.length > 0) {
-            twelveHourTime.map(x => {
-              if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '12') {
-                x.endTime = '00' + x?.endTime?.trim().toLowerCase().slice(2, 8);
-              }
-              if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
-                x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
-              }
-              this.sortSelectedGridCalendarTimes();
-              this.formatTimeValuesInSchedulingGrid();
-            });
+          if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '12') {
+            x.startTime = '00' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
-        } else {
-          const requestIndex = weekData?.charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
-          if (requestIndex > -1) {
-            weekData.charts[requestIndex].endTime = '12:00 am';
+        });
+        this.sortSelectedGridCalendarTimes();
+        this.formatTimeValuesInSchedulingGrid();
+      }
+    } else {
+      const requestIndex = charts.findIndex(x => x?.endTime?.trim().toLowerCase() === '11:60 pm');
+      if (requestIndex > -1) {
+        charts[requestIndex].endTime = '12:00 am';
+      }
+      const zeroHourTime = charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '00' ||
+        x?.startTime?.trim().toLowerCase().slice(0, 2) === '00');
+      if (zeroHourTime.length > 0) {
+        zeroHourTime.map(x => {
+          if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
+            x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
           }
-          const zeroHourTime = weekData.charts.filter(x => x?.endTime?.trim().toLowerCase().slice(0, 2) === '00' ||
-            x?.startTime?.trim().toLowerCase().slice(0, 2) === '00');
-          if (zeroHourTime.length > 0) {
-            zeroHourTime.map(x => {
-              if (x?.endTime?.trim().toLowerCase().slice(0, 2) === '00') {
-                x.endTime = '12' + x?.endTime?.trim().toLowerCase().slice(2, 8);
-              }
-              if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
-                x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
-              }
-              this.sortSelectedGridCalendarTimes();
-              this.formatTimeValuesInSchedulingGrid();
-            });
+          if (x?.startTime?.trim().toLowerCase().slice(0, 2) === '00') {
+            x.startTime = '12' + x?.startTime?.trim().toLowerCase().slice(2, 8);
           }
-        }
+        });
+        this.sortSelectedGridCalendarTimes();
+        this.formatTimeValuesInSchedulingGrid();
       }
     }
-
-    return scheduleResponse;
 
   }
 
@@ -936,10 +1155,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getSchedulingCodesSubscription);
   }
 
-  private getModalPopup(component: any, size: string, contentMessage?: string) {
+  private getModalPopup(component: any, size: string) {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
     this.modalRef = this.modalService.open(component, options);
-    this.modalRef.componentInstance.headingMessage = 'Success';
+  }
+
+  private setComponentMessages(headingMessage: string, contentMessage: string) {
+    this.modalRef.componentInstance.headingMessage = headingMessage;
     this.modalRef.componentInstance.contentMessage = contentMessage;
   }
 
@@ -963,4 +1185,12 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     return times;
   }
 
+  private getFormattedDate(date: Date) {
+    const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
+    return new Date(transformedDate);
+  }
+
+  private getFormattedDateString(date: Date) {
+    return this.datepipe.transform(date, 'yyyy-MM-dd');
+  }
 }

@@ -14,7 +14,15 @@
                     <p class="text-center confirm-message font-20"><b>{{ headingMessage | translate }}</b></p>
                 </div>
                 <div class="col-md-12">
-                    <p class="text-center confirm-message">{{contentMessage | translate }}</p>
+                    <p class="text-center confirm-message">{{contentMessage | translate }}</p>       
+                    <ng-container *ngIf="importErrors.length > 0">
+                        <p class="text-center confirm-message">More info below:</p>  
+                            <ul class="callout callout-danger text-danger text-xs">
+                                <li class="text-center" *ngFor="let error of importErrors">{{error}}</li>
+                            </ul>                            
+                            <br/>
+                            <br/>
+                    </ng-container>     
                 </div>
             </div>
             <div class="row">

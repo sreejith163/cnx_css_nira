@@ -1,38 +1,51 @@
 
 
 export class EntityHierarchyModel {
-    agentSchedulingGroups: EntityAgentSchedulingGroupDetails [] = [];
+    agentSchedulingGroups: EntityAgentSchedulingGroupDetails[] = [];
     client: EntityClientDetails;
 }
 
 export class EntityAgentSchedulingGroupDetails {
-    clientLOBName: string;
-    clientName: string;
     id: number;
+    refId?: number;
     name: string;
+    ClientId: number;
+    ClientRefId?: number;
+    clientName: string;
+    ClientLOBId: number;
+    ClientLOBRefId?: number;
+    clientLOBName: string;
+    SkillGroupId: number;
+    SkillGroupRefId?: number;
     skillGroupName: string;
+    SkillTagId: number;
+    SkillTagRefId?: number;
     skillTagName: string;
 }
 
 export class EntityClientDetails {
-    clientLOBs: EntityClientLOBDetails [] = [];
+    clientLOBs: EntityClientLOBDetails[] = [];
     id: number;
+    refId?: number;
     name: string;
 }
 
 export class EntityClientLOBDetails {
     id: number;
     name: string;
-    skillGroups: EntitySkillGroupDetails [] = [];
+    refId?: number;
+    skillGroups: EntitySkillGroupDetails[] = [];
 }
 
 export class EntitySkillGroupDetails {
     id: number;
     name: string;
-    skillTags: EntitySkillTagDetails [] = [];
+    refId?: number;
+    skillTags: EntitySkillTagDetails[] = [];
 }
 
-export class EntitySkillTagDetails{
+export class EntitySkillTagDetails {
     id: number;
     name: string;
+    refId?: number;
 }

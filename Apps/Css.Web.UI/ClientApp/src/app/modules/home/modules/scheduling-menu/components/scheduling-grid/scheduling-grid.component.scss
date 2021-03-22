@@ -330,3 +330,45 @@ a {
   padding-left: 20px;
   padding-right: 20px;
 }
+
+.custom-day {
+  text-align: center;
+  padding: 0.185rem 0.25rem;
+  display: inline-block;
+  height: 2rem;
+  width: 2rem;
+}
+
+.custom-day.focused {
+  background-color: #e6e6e6;
+}
+
+.custom-day.range,
+.custom-day:hover {
+  background-color: rgb(2, 117, 216);
+  color: white;
+}
+
+.custom-day.faded {
+  background-color: rgba(2, 117, 216, 0.5);
+}
+
+.m-t-5 {
+  margin-top: 5px;
+}
+
+.w-auto {
+  width: auto;
+}
+
+#button-custom-html {
+  border: 1px solid #ddd8d8;
+}
+
+.custom-dropdown:hover {
+  background-color: #e4e6eb;
+}
+
+.disable-pointer {
+  pointer-events: none;
+}

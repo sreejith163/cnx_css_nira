@@ -15,7 +15,7 @@
   </div>
 
   <div class="row m-l-r-10">
-    <div class="col-md-2 d-flex flex-column">
+    <div class="col-md-3 d-flex flex-column">
       {{ 'Client_name' | translate }}
       <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
     </div>
@@ -33,15 +33,18 @@
         [maxLength]="maxLength" placeholder="{{ 'Enter_a_skill_tag_name' | translate }}" />
       <span *ngIf="searchKeyword?.length > 0" class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
     </div>
+  </div>
+  <div class="row m-l-r-10">
     <div class="col-md-3 col-sm-6">
-      <button class="form-control mt-4" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
-        {{ 'Search' | translate }}
-      </button>
-    </div>
-    <div *permission="{rolesPermitted: [1,2]}" class="col-md-2 text-left">
-      <button type="button" class="btn btn-primary float-r mt-4" (click)="addSkillTag()"><i class="fa fa-plus pr-1"
-          aria-hidden="true"></i>{{ 'Add' | translate }}</button>
-    </div>
+        <button class="form-control  m-t-10" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
+          {{ 'Search' | translate }}
+        </button>
+      </div>
+      <div *permission="{rolesPermitted: [1,2]}" class="col-md-9 text-right">
+        <button type="button" class="btn btn-primary float-r  m-t-10" (click)="addSkillTag()"><i class="fa fa-plus pr-1"
+            aria-hidden="true"></i>{{ 'Add' | translate }}</button>
+      </div>
+    
   </div>
   <br>
   <div class="row m-r-15">
@@ -109,7 +112,7 @@
             <ngx-spinner [name]="spinner"></ngx-spinner>
             <tr *ngIf="skillTags?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No data to show' | translate }}</td>
+                {{ 'No match records found' | translate }}</td>
             </tr>
             <ng-container *ngFor="let el of skillTags; let i = index">
               <tr>
@@ -198,7 +201,7 @@
     <div class="col-md-12 d-flex justify-content-end mt-3">
       <nav aria-label="Page navigation example">
         <ul class="pagination p-0 float-right">
-          <ngb-pagination class="p-r-5" [collectionSize]="totalSkillTagsRecord" (pageChange)="changePage($event)"
+          <ngb-pagination class="p-r-5" [collectionSize]="totalSkillTagsRecord" (pageChange)="changePage($event)" [rotate]="true" [maxSize]="10" 
             [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
           <select class="form-control" (change)="changePageSize($event.target.value)">
             <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">

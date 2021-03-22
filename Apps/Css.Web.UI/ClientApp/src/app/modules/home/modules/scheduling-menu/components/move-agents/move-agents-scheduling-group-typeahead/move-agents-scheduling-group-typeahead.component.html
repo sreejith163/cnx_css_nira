@@ -1,0 +1,14 @@
+<ng-select [items]="agentSchedulingGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id"
+  placeholder="{{ 'All' | translate }}" [typeahead]="typeAheadInput$" (scroll)="onAgentSchedulingGroupScroll($event)"
+  (scrollToEnd)="onAgentSchedulingGroupScrollToEnd()" (change)="onAgentSchedulingGroupChange($event)"
+  (clear)="clearAgentSchedulingGroupValues()" [(ngModel)]="agentSchedulingGroupId">
+  <ng-template ng-header-tmp>
+    <small class="form-text text-muted">{{ 'Loaded' | translate }} {{agentSchedulingGroupItemsBuffer.length}} {{ 'of' | translate }}
+      {{totalItems}}</small>
+  </ng-template>
+  <ng-template ng-option-tmp let-item="item" let-index="index">
+    <span container="body" ngbTooltip="{{ item.name }}">
+      {{ item.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}
+    </span>
+  </ng-template>
+</ng-select>

@@ -2,7 +2,7 @@
     <a routerLink="/home" class="brand-link">
         <img src="assets//images/css-icon.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
             style="opacity: .8" />
-        <span class="brand-text font-weight-light">Concentrix</span>
+        <span class="brand-text font-weight-light">Concentrix Scheduling Solution</span>
     </a>
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex flex-column">
@@ -130,11 +130,18 @@
                             <span>{{ 'Scheduling_grid' | translate }}</span>
                             </a>
                         </li>
-                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3,4],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-manager"
                                 routerLinkActive="active" #schMenu3="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
                             <span>{{ 'Scheduling_manager' | translate }}</span> <!-- NO TRANSLATION -->
+                            </a>
+                        </li>
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3,4],role?.roleId)" class="nav-item">
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/time-offs"
+                                routerLinkActive="active" #schMenu3="routerLinkActive">
+                                <i class="fa fa-circle-o nav-icon"></i>
+                            <span>{{ 'Time Offs' | translate }}</span> <!-- NO TRANSLATION -->
                             </a>
                         </li>
                         <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
@@ -155,12 +162,12 @@
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/entity-hierarchy" routerLinkActive="active"
                                 #schMenu6="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
-                            <span>{{ 'Entity-hierarchy' | translate }}</span> <!-- NO TRANSLATION -->
+                            <span>{{ 'Entity-hierarchy' | translate }}</span>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li [hidden]="permissionService.isMenuHidden([5],role?.roleId)" class="nav-item">
+                <li [hidden]="permissionService.isMenuHidden([0],role?.roleId)" class="nav-item">
                     <a class="nav-link d-flex flex-row" routerLink="agent-schedule-menu/my-schedule" routerLinkActive="active">
                         <i class="nav-icon fa fa-calendar"></i>
                             <span>{{ 'My Schedule' | translate }} </span>

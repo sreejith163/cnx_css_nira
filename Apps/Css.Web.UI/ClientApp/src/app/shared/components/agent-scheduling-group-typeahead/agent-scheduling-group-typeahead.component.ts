@@ -13,12 +13,13 @@ import { AgentSchedulingGroupService } from '../../services/agent-scheduling-gro
 export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy, OnChanges {
 
   pageNumber = 1;
-  agentSchedulingGroupItemsBufferSize = 10;
+  agentSchedulingGroupItemsBufferSize = 100;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
 
   agentSchedulingGroupItemsBuffer: AgentSchedulingGroupBase[] = [];
@@ -33,6 +34,7 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
   @Input() skillGroupId: number;
   @Input() skillTagId: number;
   @Input() agentSchedulingGroupId: number;
+  @Input() hierarchy: boolean;
   @Output() agentSchedulingGroupSelected = new EventEmitter();
 
   constructor(
@@ -40,7 +42,12 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
   ) { }
 
   ngOnInit(): void {
-    this.subscribeToAgentSchedulingGroups();
+    if (!this.hierarchy) {
+      this.subscribeToAgentSchedulingGroups();
+    } else {
+      this.agentSchedulingGroupItemsBuffer = [];
+      this.totalItems = 0;
+    }
     this.subscribeToSearching();
   }
 
@@ -53,7 +60,7 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
   }
 
   ngOnChanges() {
-    if (this.agentSchedulingGroupId) {
+    if (this.skillTagId || this.agentSchedulingGroupId) {
       this.pageNumber = 1;
       this.subscribeToAgentSchedulingGroups();
     } else {
@@ -95,7 +102,7 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
 
   private subscribeToAgentSchedulingGroups(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getAgentSchedulingGroupSubscription = this.getAgentSchedulingGroups().subscribe(
+    this.getAgentSchedulingGroupSubscription = this.getAgentSchedulingGroups(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -151,6 +158,11 @@ export class AgentSchedulingGroupTypeaheadComponent implements OnInit, OnDestroy
 
   private getAgentSchedulingGroups(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.agentSchedulingGroupService.getAgentSchedulingGroups(queryParams);
   }
 }

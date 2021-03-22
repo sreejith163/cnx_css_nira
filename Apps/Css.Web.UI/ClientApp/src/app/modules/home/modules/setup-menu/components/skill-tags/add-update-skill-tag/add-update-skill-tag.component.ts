@@ -196,7 +196,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
       const operationHourGroup = this.formBuilder.group(
         {
           day: new FormControl(element, Validators.required),
-          operationHourOpenTypeId: new FormControl('', Validators.required),
+          operationHourOpenTypeId: new FormControl('1', Validators.required),
           from: new FormControl({ value: '', disabled: true }),
           to: new FormControl({ value: '', disabled: true })
         },

@@ -58,6 +58,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
   clientLobGroupId: number;
   skillGroupId: number;
   skillTagId: number;
+  agentSchedulingGroupId: number;
 
   getAgentAdminSubscription: ISubscription;
   editAgentAdminSubscription: ISubscription;
@@ -81,7 +82,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     private spinnerService: NgxSpinnerService,
   ) { }
 
-    get agentSchForm() { return this.agentProfileForm.controls; }
+  get agentSchForm() { return this.agentProfileForm.controls; }
 
   ngOnInit(): void {
     this.agentFormIntialization();
@@ -107,12 +108,22 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     return ComponentOperation[this.operation];
   }
 
+  validateHireDateFormat() {
+    const hireDate = this.agentProfileForm.controls.hireDate.value;
+    if (!this.calendar.isValid(hireDate) || String(hireDate.year).length !== 4) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   saveAgentAdminDetails() {
     this.formSubmitted = true;
-      if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId && this.skillTagId) {
-        this.saveAgentProfileDetailsOnModel();
-        this.updateAgentAdminProfileDetails();
-      }
+    if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId &&
+       this.skillTagId && this.agentSchedulingGroupId && this.validateHireDateFormat()) {
+      this.saveAgentProfileDetailsOnModel();
+      this.updateAgentAdminProfileDetails();
+    }
   }
 
   isNumberKey(event) {
@@ -139,21 +150,29 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     this.clientLobGroupId = undefined;
     this.skillGroupId = undefined;
     this.skillTagId = undefined;
+    this.agentSchedulingGroupId = undefined;
   }
 
   setClientLobGroup(clientLobGroupId: number) {
     this.clientLobGroupId = clientLobGroupId;
     this.skillGroupId = undefined;
     this.skillTagId = undefined;
+    this.agentSchedulingGroupId = undefined;
   }
 
   setSkillGroup(skillGroupId: number) {
     this.skillGroupId = skillGroupId;
     this.skillTagId = undefined;
+    this.agentSchedulingGroupId = undefined;
   }
 
   setSkillTag(skillTagId: number) {
     this.skillTagId = skillTagId;
+    this.agentSchedulingGroupId = undefined;
+  }
+
+  setAgentSchedulingGroupId(agentSchedulinggroupId: number) {
+    this.agentSchedulingGroupId = agentSchedulinggroupId;
   }
 
   private saveAgentProfileDetailsOnModel() {
@@ -164,6 +183,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     this.agentProfileModel.clientId = this.clientId;
     this.agentProfileModel.clientLobGroupId = this.clientLobGroupId;
     this.agentProfileModel.skillTagId = this.skillTagId;
+    this.agentProfileModel.agentSchedulingGroupId = this.agentSchedulingGroupId;
     this.agentProfileModel.agentData = [];
 
     const newGroup = new AgentAdminAgentGroup();
@@ -220,6 +240,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     if (this.agentProfileModel.employeeId !== this.agentAdminDetails.employeeId ||
       this.agentProfileModel.sso !== this.agentAdminDetails.sso ||
       this.agentProfileModel.skillTagId !== this.agentAdminDetails.skillTagId ||
+      this.agentProfileModel.agentSchedulingGroupId !== this.agentAdminDetails.agentSchedulingGroupId ||
       this.agentProfileModel.pto !== this.agentAdminDetails.pto ||
       this.agentProfileModel.firstName !== this.agentAdminDetails.firstName ||
       this.agentProfileModel.lastName !== this.agentAdminDetails.lastName ||
@@ -232,6 +253,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
       return true;
     }
   }
+
 
   private loadAgentAdminGroup() {
     this.spinnerService.show(this.spinner, SpinnerOptions);
@@ -256,6 +278,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     this.clientLobGroupId = this.agentAdminDetails.clientLobGroupId;
     this.skillGroupId = this.agentAdminDetails.skillGroupId;
     this.skillTagId = this.agentAdminDetails.skillTagId;
+    this.agentSchedulingGroupId = this.agentAdminDetails.agentSchedulingGroupId;
     const tempPTO = this.agentAdminDetails.pto != null ? this.agentAdminDetails.pto : '';
 
     this.agentProfileForm.patchValue({
@@ -269,8 +292,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
       pto: tempPTO,
     });
     const dateValue = this.agentAdminDetails.agentData?.find(x => x.group.description.trim() === 'Hire Date');
-    if (dateValue !== undefined)
-    {
+    if (dateValue !== undefined) {
       const dateString = dateValue.group.value;
       const date = new Date(dateString);
       const ngbDateStruct: NgbDateStruct = {
@@ -292,7 +314,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
       supervisorId: new FormControl('', Validators.compose([Validators.required, Validators.max(9999999999)])),
       supervisorName: new FormControl('', Validators.required),
       supervisorSso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
-      pto: this.formBuilder.group ({
+      pto: this.formBuilder.group({
         earned: new FormControl(),
         credited: new FormControl(),
         cofromlastyear: new FormControl(),
@@ -302,17 +324,17 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
         cofornextyear: new FormControl(),
         remaining: new FormControl(),
       }),
-    },{ validators: [CustomValidators.sameSSO('sso', 'supervisorSso'), CustomValidators.sameEmployeeId('employeeId', 'supervisorId')]});
+    }, { validators: [CustomValidators.sameSSO('sso', 'supervisorSso'), CustomValidators.sameEmployeeId('employeeId', 'supervisorId')] });
   }
 
-  showActivityLogs(){
+  showActivityLogs() {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'xl' };
     this.modalRef = this.modalService.open(ActivityLogsComponent, options);
     this.modalRef.componentInstance.activityType = ActivityType.AgentAdmin;
     this.modalRef.componentInstance.employeeId = this.agentAdminDetails.employeeId;
     this.modalRef.componentInstance.employeeName = this.agentAdminDetails.firstName + ' ' + this.agentAdminDetails.firstName;
     this.modalRef.result.then((confirmed) => {
-      if (confirmed === true){
+      if (confirmed === true) {
       }
     });
   }

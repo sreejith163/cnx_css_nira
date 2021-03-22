@@ -14,12 +14,13 @@ import { ClientLobGroupService } from 'src/app/modules/home/modules/setup-menu/s
 export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnChanges {
 
   pageNumber = 1;
-  clientLobItemsBufferSize = 10;
+  clientLobItemsBufferSize = 100;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
 
   clientLobItemsBuffer: ClientLobGroupBase[] = [];
@@ -31,6 +32,7 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
 
   @Input() clientId: number;
   @Input() clientLobId: number;
+  @Input() hierarchy: boolean;
   @Output() clientLobSelected = new EventEmitter();
 
   constructor(
@@ -38,7 +40,12 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
   ) { }
 
   ngOnInit(): void {
+    if (!this.hierarchy) {
       this.subscribeToClientLobs();
+    } else {
+      this.clientLobItemsBuffer = [];
+      this.totalItems = 0;
+    }
       this.subscribeToSearching();
   }
 
@@ -93,7 +100,7 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
 
   private subscribeToClientLobs(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getClientLobNamesSubscription = this.getClientLobs().subscribe(
+    this.getClientLobNamesSubscription = this.getClientLobs(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -136,7 +143,7 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
     queryParams.pageSize = this.clientLobItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
-    queryParams.skipPageSize = true;
+    queryParams.skipPageSize = false;
     queryParams.orderBy = undefined;
     queryParams.fields = 'id, name';
 
@@ -145,6 +152,11 @@ export class ClientLobGroupTypeaheadComponent implements OnInit, OnDestroy, OnCh
 
   private getClientLobs(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.clientLobService.getClientLOBGroups(queryParams);
   }
 }

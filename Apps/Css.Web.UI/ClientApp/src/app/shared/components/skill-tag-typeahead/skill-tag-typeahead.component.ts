@@ -13,12 +13,13 @@ import { SkillTagService } from 'src/app/modules/home/modules/setup-menu/service
 export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges {
 
   pageNumber = 1;
-  skillTagItemsBufferSize = 10;
+  skillTagItemsBufferSize = 100;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
 
   skillTagItemsBuffer: SkillTagBase[] = [];
@@ -33,6 +34,7 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
   @Input() clientLobGroupId: number;
   @Input() skillGroupId: number;
   @Input() skillTagId: number;
+  @Input() hierarchy: boolean;
   @Output() skillTagSelected = new EventEmitter();
 
   constructor(
@@ -40,7 +42,12 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
   ) { }
 
   ngOnInit(): void {
-    this.subscribeToSkillTags();
+    if (!this.hierarchy) {
+      this.subscribeToSkillTags();
+    } else {
+      this.skillTagItemsBuffer = [];
+      this.totalItems = 0;
+    }
     this.subscribeToSearching();
   }
 
@@ -95,7 +102,7 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
 
   private subscribeToSkillTags(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getSkillTagsSubscription = this.getSkillTags().subscribe(
+    this.getSkillTagsSubscription = this.getSkillTags(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -140,7 +147,7 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
     queryParams.pageSize = this.skillTagItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
-    queryParams.skipPageSize = true;
+    queryParams.skipPageSize = false;
     queryParams.orderBy = undefined;
     queryParams.fields = 'id, name';
 
@@ -149,6 +156,11 @@ export class SkillTagTypeaheadComponent implements OnInit, OnDestroy, OnChanges 
 
   private getSkillTags(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.skillTagService.getSkillTags(queryParams);
   }
 

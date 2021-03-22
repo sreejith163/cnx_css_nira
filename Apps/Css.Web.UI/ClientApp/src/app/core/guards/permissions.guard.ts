@@ -30,17 +30,6 @@ export class PermissionsGuard implements CanActivate {
           }
         }
       });
-      // // check user's role for permissions on the current route
-      // this.permissionsService.getEmployee(+employeeId).subscribe((employee: EmployeeDetails) => {
-      //   if (!next.data.permissions.includes(employee.userRoleId)) {
-      //     if (state.url !== '/home/dashboard') {
-      //       // redirect to home if not permitted
-      //       this.router.navigate(['/home/dashboard']);
-      //     }
-      //   }
-      // }, error => {
-
-      // });
       return true;
     } else {
       this.router.navigate(['/login']);

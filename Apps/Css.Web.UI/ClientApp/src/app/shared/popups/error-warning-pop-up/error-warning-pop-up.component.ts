@@ -13,7 +13,7 @@ export class ErrorWarningPopUpComponent implements OnInit {
 
   @Input() headingMessage: string;
   @Input() contentMessage: any;
-  @Input() messageType: ContentType;
+  @Input() messageType: ContentType = ContentType.String;
 
   constructor(
     public activeModal: NgbActiveModal

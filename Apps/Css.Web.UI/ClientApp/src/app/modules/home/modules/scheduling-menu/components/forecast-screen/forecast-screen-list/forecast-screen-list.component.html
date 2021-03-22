@@ -1,24 +1,26 @@
 <div class="container-fluid ">
     <div class="row">
         <div class="col-12 col-md-12">
-            <h2 id="page_title" class="mt-2">Forecast Screen</h2>
+            <h2 id="page_title" class="mt-2">{{ 'Forecast_screen' | translate }}</h2>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-left">
-                <li class="breadcrumb-item"><a>Scheduling Menu</a></li>
-                <li class="breadcrumb-item active"><b>Forecast Screen</b> </li>
+                <li class="breadcrumb-item"><a>{{ 'Scheduling_menu' | translate }}</a></li>
+                <li class="breadcrumb-item active"><b>{{ 'Forecast_screen' | translate }}</b> </li>
             </ol>
         </div>
     </div>
 
-    <div class="row m-b-10">
+    <div class="row m-b-10 align-items-end">
+
         <div class="col-md-3 d-flex flex-column">
+            <label><strong>Skill Group</strong></label>
             <ng-select [items]="skillGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id"
                 placeholder="{{'All' | translate}}" [typeahead]="typeAheadInput$" (scroll)="onSkillGroupScroll($event)"
                 (scrollToEnd)="onSkillGroupScrollToEnd()" (change)="onSkillGroupChange($event);change($event)"
-                (clear)="clearSkillGroupValues()" [(ngModel)]="skillgroupID">
+                (clear)="clearSkillGroupValues()">
                 <ng-template ng-header-tmp>
                     <small class="form-text text-muted">{{'Loaded' | translate }} {{skillGroupItemsBuffer.length}}
                         {{'of' | translate}}
@@ -32,22 +34,57 @@
             </ng-select>
         </div>
         <div class="col-md-3 d-flex flex-column">
+
             <div class="input-group">
-                <input class="form-control" placeholder="{{today}}" name="d2" #c2="ngModel" [(ngModel)]="model2"
-                    ngbDatepicker #d2="ngbDatepicker">
+                <input (dateSelect)="loadSkillGroup()" class="form-control" placeholder="{{'Select Forecast Date' | translate}}" name="dp" ngbDatepicker
+                [readonly]="true" [(ngModel)]="dateModel"
+                [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
+                <!-- <input class="form-control" name="d2" #c2="ngModel" [(ngModel)]="dateModel"
+                    ngbDatepicker #d2="ngbDatepicker" > -->
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
+                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
                 </div>
             </div>
         </div>
         <div class="col-md-2 col-sm-6">
-            <button (click)="loadSkillGroup()" class="form-control" id="btn_search"><i class="fa fa-search"
+
+            <button (click)="searchForecast()" class="form-control" id="btn_search"><i class="fa fa-search"
                     aria-hidden="true"></i>
                 {{ 'Search' | translate }}
             </button>
         </div>
     </div>
 
+</div>
+<div class="container-fluid">
+    <div class="row my-2 align-items-center">
+        <div class="col-lg-6">
+            <div class="badge badge-primary" *ngIf="skillGroupObj?.name != null">
+                {{skillGroupObj?.name}}
+            </div>
+
+            <input type="hidden" [value]="skillGroupObj?.id">
+        </div>
+        <div *ngIf="enableImportButton == true" [ngClass]="{'d-block': enableImportButton}"
+            class="d-none col-lg-6 pull-right marign-l-auto">
+            <div class="footer-button float-right d-flex">
+               
+                <button (click)="hideBtn()" *ngIf="enableCancelButton == true"
+                [ngClass]="{'d-block': enableCancelButton}" class="btn btn-default d-none  mr-2">Cancel</button>
+                    <button [ngbTooltip]="'Import csv'" (click)="openImportModal(content)" class="btn btn-primary d  mr-2"><i class="fa fa-upload"></i></button>
+                    <button [ngbTooltip]="'Export csv'" (click)="download()" class="btn btn-primary d  mr-2"><i class="fa fa-download"></i></button>
+                
+                <button (click)="addForecastData()" *ngIf="enableSaveButton == true"
+                    [ngClass]="{'d-block': enableSaveButton}" class="btn btn-primary d-none mr-2">Save&nbsp;<i class="fa fa-save"></i></button>
+
+            </div>
+            <!-- <img (click)="download()" src="assets/images/Export.jpg" class="icon-image float-right padding-2"
+                [ngbTooltip]="'Export'"> -->
+            <!-- <img src="assets/images/Import.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
+                (click)="openVerticallyCentered(content)"> -->
+
+        </div>
+    </div>
 </div>
 <div class="container-fluid">
 
@@ -58,57 +95,47 @@
                 <ngx-spinner [name]="forecastSpinner"></ngx-spinner>
                 <!-- forecast screen table -->
                 <form *ngIf="forecastForm" [formGroup]="forecastForm">
-                    <div class="row my-2">
-                        <div class="col-lg-6">
-                            <label for=""><strong>{{skillGroupBinder?.name}}</strong></label>
-                            <input type="hidden" [value]="skillGroupBinder?.id">
-                        </div>
-                        <div *ngIf="enableImportButton == true" [ngClass]="{'d-block': enableImportButton}"
-                            class="d-none col-lg-6 pull-right marign-l-auto">
 
-                            <img (click)="exportToExcel()" src="assets/images/Export.jpg" class="icon-image float-right padding-2"
-                                [ngbTooltip]="'Export'" >
-                            <img src="assets/images/Import.jpg" class="icon-image float-right padding-2"
-                                [ngbTooltip]="'Import'" (click)="openImportSchedule()">
-
-                        </div>
-                    </div>
 
 
                     <div class="scrollable-table forecastContainer" #epltable>
                         <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
                             <thead>
                                 <tr>
-                                    <th>Time</th>
-                                    <th>Forecasted Contacts</th>
-                                    <th>AHT</th>
-                                    <th>Forecasted Req</th>
-                                    <th>Scheduled Open</th>
+                                    <th>{{'Time' | translate}}</th>
+                                    <th>{{'Forecasted Contacts' | translate}}</th>
+                                    <th>{{'AHT' | translate}}</th>
+                                    <th>{{'Forecasted Req' | translate}}</th>
+                                    <th>{{'Scheduled Open' | translate}}</th>
 
                                 </tr>
                             </thead>
                             <tbody>
-                                <ng-container *ngIf="skillGroupBinder?.id == null;else enableField">
+                                <ng-container *ngIf="skillGroupObj?.id == null;else enableField">
                                     <tr *ngFor="let item of dataJson; let i = index">
-                                        <ng-container >
+                                        <ng-container>
 
                                             <td>
-                                              
-                                               {{item.time}}
-                                                
-                                            </td>   
+
+                                                {{item.time}}
+
+                                            </td>
 
                                             <td (dblclick)="checkSkillId()">
                                                 <span class="d-none">{{item.forecastedContact}}</span>
-                                                <input type="text" value="{{item.forecastedContact}}"></td>
-                                            <td (dblclick)="checkSkillId()"><input type="text" value="{{item.aht}}"></td>
-                                            <td (dblclick)="checkSkillId()"><input type="text" value="{{item.forecastedReq}}"></td>
-                                            <td (dblclick)="checkSkillId()"><input type="text" value="{{item.scheduledOpen}}"></td>
+                                                <input type="text" value="{{item.forecastedContact}}" [readonly]="true">
+                                            </td>
+                                            <td (dblclick)="checkSkillId()"><input type="text" value="{{item.aht}}"
+                                                    [readonly]="true"></td>
+                                            <td (dblclick)="checkSkillId()"><input type="text"
+                                                    value="{{item.forecastedReq}}" [readonly]="true"></td>
+                                            <td (dblclick)="checkSkillId()"><input type="text"
+                                                    value="{{item.scheduledOpen}}" [readonly]="true"></td>
                                         </ng-container>
                                     </tr>
 
                                 </ng-container>
-                                <ng-template #enableField> 
+                                <ng-template #enableField>
 
                                     <ng-container formArrayName="forecastFormArrays">
 
@@ -116,70 +143,87 @@
                                             <ng-container [formGroupName]="i">
 
                                                 <td>
-                                                    <!-- {{dataJson[i].Time}}  -->
+                                                  
                                                     <label for="">{{dataJson[i].time}}</label>
                                                     <input formControlName="time" type="hidden">
                                                 </td>
 
-                                                <td >
-                                                 <span class="d-none">{{dataJson[i].forecastedContact}}</span>
-                                                    <input [class.enabled]="!isEnabled['forecastedContact' + i]" (click)="isEnabled['forecastedContact' + i] = !isEnabled['forecastedContact' + i];" [readonly]="isEnabled['forecastedContact' + i]" numberOnly (change)="showBtn()"
-                                                        formControlName="forecastedContact" type="text"
-                                                        class="">
+                                                <td (keypress)="_keyUp($event)" (dblclick)="showBtn()" numberOnly
+                                                    class="contenteditable" contenteditable
+                                                    formControlName="forecastedContact">
+
+                                             
+
                                                 </td>
-                                                <td>
-                                                    <span class="d-none">{{dataJson[i].aht}}</span>
-                                                    <input [class.enabled]="!isEnabled[i + x]" (click)="isEnabled[i + x] = !isEnabled[i + x];"  [readonly]="isEnabled[i + x]"  numberOnly (change)="showBtn()"
-                                                        formControlName="aht" type="text" class=""></td>
-                                                <td>
-                                                    <span class="d-none">{{dataJson[i].forecastedReq}}</span>
-                                                    
-                                                    <input [class.enabled]="!isEnabled[i + x]" (click)="isEnabled[i + x] = !isEnabled[i + x];"   [readonly]="isEnabled[i + x]" numberOnly (change)="showBtn()"
-                                                        formControlName="forecastedReq" type="text"
-                                                        class="">
+                                                <td (dblclick)="showBtn()" numberOnly class="contenteditable"
+                                                    contenteditable formControlName="aht">
+
+                                                
                                                 </td>
+                                              
+                                              
+                                                <!-- <td  (dblclick)="showBtn()" numberOnly class="contenteditable"
+                                                    contenteditable formControlName="forecastedReq">
+
+
+                                                  
+                                                </td> -->
+                                     
+                                                
+                                                <td [ngClass]="{'d-none': dateValidator === true}" (dblclick)="showBtn()" numberOnly class="contenteditable"
+                                                contenteditable formControlName="forecastedReq">
+
+
+                                              
+                                            </td>
+                                
+                                            <td [ngClass]="{'d-none': dateValidator === false}">
+                                                <input [readonly]="true" [class.enabled]="!isEnabled[i + 1]"
+                                                (dblclick)="showErrorDate()" numberOnly
+                                                (change)="showBtn()" formControlName="forecastedReq" type="text"
+                                                class="">
+                                            </td>
+                                          
                                                 <td>
-                                                    <span class="d-none">{{dataJson[i].scheduledOpen}}</span>
-                                                    <input [readonly]="true" [class.enabled]="!isEnabled[i + 1]" (click)="isEnabled[i + 1] = !isEnabled[i + 1];"  numberOnly (change)="showBtn()"
-                                                        formControlName="scheduledOpen" type="text"
-                                                        class="">
+
+                                                   {{ getScheduledOpenCount(dataJson[i].time) }}
                                                 </td>
                                             </ng-container>
                                         </tr>
                                     </ng-container>
-                                 </ng-template> 
+                                </ng-template>
                             </tbody>
                             <tfoot>
                                 <tr class="tr-1">
                                     <td>
                                         
-                                        <span><strong>Total</strong></span>
+                                        <span><strong>{{'Total' | translate}}</strong></span>
                                         <br>
                                         <hr>
-                                        <span><strong>Average</strong></span>
+                                        <span><strong>{{'Average' | translate}}</strong></span>
 
                                     </td>
                                     <td class="forecastContact">
                                         <span><strong>{{ sumForecastContact }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span></span>
+                                        <span>{{ avgForecastContactValue }}</span>
                                     </td>
                                     <td>
                                         <span><strong>{{ sumAHT }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span></span>
+                                        <span>{{ avgAHTValue }}</span>
                                     </td>
                                     <td> <span><strong>{{ sumForecastedReq }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span></span>
+                                        <span>{{ avgForecastedReqValue }}</span>
                                     </td>
                                     <td> <span><strong>{{ sumScheduledOpen }}</strong></span>
                                         <br>
                                         <hr>
-                                        <span></span>
+                                        <span>{{ avgScheduledOpenValue }}</span>
                                     </td>
 
                                 </tr>
@@ -194,9 +238,57 @@
 
 
         </div>
+        <div class="col-md-12 mb-5">
+        </div>
     </div>
-    <div class="footer-button float-right">
-        <button (click)="addForecastData()" *ngIf="enableSaveButton == true" [ngClass]="{'d-block': enableSaveButton}"
-            class="btn btn-primary d-none mt-3">Save</button>
-    </div>
+
 </div>
+
+
+<ng-template #content let-modal>
+    <ngx-spinner [name]="importSpinner"></ngx-spinner>
+    <div class="modal-header header-color">
+        <h6 class="modal-title w-100 font-weight-bold header">
+            <p>{{ 'Import Forecast' | translate }}
+            </p>
+        </h6>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');handleClear()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+    </div>
+    <div class="modal-body mx-3 modal-style">
+        <div class="col-md-12 m-t-20">
+            <div class="row">
+                <div class="col-md-10 col-sm-10 p-r-0">
+                    <!-- <input  type="file" name="files" class="form-control" 
+                    #uploads  (change)="onChangeFile(uploads.files)" accept=".csv" multiple
+                    value="process"/> -->
+                    <input value="process" name="files" #file id="fileLoader" type="file"
+                        (change)="onChangeFile(file.files)" accept=".csv">
+                    <input (change)="onChangeFile(file.files)" (fileDropped)="onChangeFile(file.files)"
+                        class="form-control" placeholder="Choose file..." [(ngModel)]="uploadFile">
+                </div>
+                <div class="col-md-2 col-sm-2 p-l-0">
+                    <button class="btn btn-style" (click)="file.click()">
+                        {{ 'Browse' | translate }}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-center header-color">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-8"></div>
+                <div class="col-md-4">
+                    <button [disabled]="importBtn == false" class="btn btn-primary float-r" data-dismiss="modal" (click)="importForeCastData()">
+                        {{ 'Import' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ng-template>

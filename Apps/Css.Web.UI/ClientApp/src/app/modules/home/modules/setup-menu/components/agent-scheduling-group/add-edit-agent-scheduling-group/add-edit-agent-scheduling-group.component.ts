@@ -66,7 +66,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
   ) { }
   public onChangeProvision(event){
     this.estartProvisions = event.checked;
-    console.log(event);
+  
     
 }
   ngOnInit(): void {
@@ -295,7 +295,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
       const operationHourGroup = this.formBuilder.group(
         {
           day: new FormControl(element, Validators.required),
-          operationHourOpenTypeId: new FormControl('', Validators.required),
+          operationHourOpenTypeId: new FormControl('1', Validators.required),
           from: new FormControl({ value: '', disabled: true }),
           to: new FormControl({ value: '', disabled: true })
         },

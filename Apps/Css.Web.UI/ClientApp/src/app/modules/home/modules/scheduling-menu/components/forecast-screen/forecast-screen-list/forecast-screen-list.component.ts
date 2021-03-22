@@ -1,16 +1,13 @@
-import { Component, Input, EventEmitter, OnChanges, OnDestroy, OnInit, Output, Injectable, ElementRef, ViewChild } from '@angular/core';
-import { SortingType } from '../../../enums/sorting-type.enum';
+import { Component, OnChanges, OnDestroy, OnInit, Output, Injectable, ElementRef, ViewChild, EventEmitter, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 
 import { Subject, SubscriptionLike as ISubscription } from 'rxjs';
-import { fromPromise } from 'rxjs/internal-compatibility';
-import { FormArray, FormBuilder, FormControl, FormGroup, NumberValueAccessor, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ForecastScreenService } from '../../../services/forecast-screen.service';
 import { Forecast } from '../../../models/forecast.model';
 import { ForecastDataModel } from '../../../models/forecast-data.model';
 import { SkillGroupDetails } from '../../../../setup-menu/models/skill-group-details.model';
-import { NgbCalendar, NgbDate, NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDate, NgbDateAdapter, NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
-import { catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { LanguagePreferenceService } from 'src/app/shared/services/language-preference.service';
@@ -24,64 +21,30 @@ import { SkillTagDetails } from '../../../../setup-menu/models/skill-tag-details
 import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
 import { Constants } from 'src/app/shared/util/constants.util';
 import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
-import { AgentScheduleType } from '../../../enums/agent-schedule-type.enum';
+
 import { SkillGroupQueryParameters } from '../../../../setup-menu/models/skill-group-query-parameters.model';
-import { ImportScheduleComponent } from '../../shared/import-schedule/import-schedule.component';
-import { ForecastExcelExportData } from '../../../constants/forecast-excel-export-data';
+
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
-import { stringify } from '@angular/compiler/src/util';
-import { element } from 'protractor';
+
 import { HttpClient } from '@angular/common/http';
-import { UpdateAgentAdmin } from '../../../models/update-agent-admin.model';
+
 import { UpdateForecastData } from '../../../models/update-forecast-data.model';
 import { getLocaleDateTimeFormat } from '@angular/common';
-import * as xlsx from 'xlsx';
-/**
- * This Service handles how the date is represented in scripts i.e. ngModel.
- */
-@Injectable()
-export class CustomAdapter extends NgbDateAdapter<string> {
 
-  readonly DELIMITER = '/';
+import { ActivatedRoute } from '@angular/router';
+import { LanguagePreference } from 'src/app/shared/models/language-preference.model';
+import { AuthService } from 'src/app/core/services/auth.service';
 
-  fromModel(value: string | null): NgbDateStruct | null {
-    if (value) {
-      const date = value.split(this.DELIMITER);
-      return {
-        month: parseInt(date[0], 10),
-        day: parseInt(date[1], 10),
-        year: parseInt(date[2], 10)
-      };
-    }
-    return null;
-  }
+import { ForecastExcelData } from '../../../models/forecast-excel.model';
+import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 
-  toModel(date: NgbDateStruct | null): string | null {
-    return date ? date.month + this.DELIMITER + date.day + this.DELIMITER + date.year : null;
-  }
-}
-
-@Injectable()
-export class CustomDateParserFormatter extends NgbDateParserFormatter {
-
-  readonly DELIMITER = '/';
-
-  parse(value: string): NgbDateStruct | null {
-    if (value) {
-      const date = value.split(this.DELIMITER);
-      return {
-        month: parseInt(date[0], 10),
-        day: parseInt(date[1], 10),
-        year: parseInt(date[2], 10)
-      };
-    }
-    return null;
-  }
-
-  format(date: NgbDateStruct | null): string {
-    return date ? date.month + this.DELIMITER + date.day + this.DELIMITER + date.year : '';
-  }
-}
+import { ForecastScreenDataDetails } from '../../../models/forecast-data-details';
+import { ForecastDataResponse } from '../../../models/import-forecast-response';
+import { AgentChartResponse } from '../../../models/agent-chart-response.model';
+import { ScheduledOpenResponse } from '../../../models/scheduled-open-response.model';
+import * as moment from 'moment';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { CursorError } from '@angular/compiler/src/ml_parser/lexer';
 
 
 
@@ -89,23 +52,15 @@ export class CustomDateParserFormatter extends NgbDateParserFormatter {
   selector: 'app-forecast-screen-list',
   templateUrl: './forecast-screen-list.component.html',
   styleUrls: ['./forecast-screen-list.component.scss'],
-  // NOTE: For this example we are only providing current component, but probably
-  // NOTE: you will want to provide your main App Module
-  providers: [
-    { provide: NgbDateAdapter, useClass: CustomAdapter },
-    { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter }
-  ]
 })
 
 export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('epltable', { static: false }) epltable: ElementRef;
+  @Output() dateSelect = new EventEmitter<NgbDateStruct>();
   @ViewChild('epltable') divView: ElementRef;
   isEnabled: boolean[] = [];
-  model2: string;
-  skillgroupID: number;
   forecastModelBinder: Forecast[];
   forecastBinder: ForecastDataModel;
-  DateModel: NgbDateStruct;
   pageNumber = 1;
   skillGroupItemsBufferSize = 10;
   numberOfItemsFromEndBeforeFetchingMore = 10;
@@ -113,6 +68,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
+  dropdownSearchKeyWord = '';
   loading = false;
   skillGroupItemsBuffer: SkillGroupDetails[] = [];
   typeAheadInput$ = new Subject<string>();
@@ -129,6 +85,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   orderBy = 'createdDate';
   sortBy = 'desc';
   spinner = 'skillTags';
+  importSpinner = "spinner";
   forecastID: number;
   clientId: number;
   clientLobGroupId: number;
@@ -141,7 +98,9 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   totalSchedulingGridData: AgentSchedulesResponse[] = [];
   forecastScreenGridData: Forecast[] = [];
   formatsDateTest = 'MM/dd/yyyy';
-  startDate: any = this.calendar.getToday();
+  dateModel: any;
+  today = this.calendar.getToday();
+
   dateNow: Date = new Date();
   hoveredDate: NgbDate | null = null;
   toDate: NgbDate | null = null;
@@ -149,8 +108,9 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   exportFileName = 'Forecast_Template';
   modalRef: NgbModalRef;
   agentSchedulingGroupId?: number;
-  skillGroupBinder: SkillGroupDetails;
+  skillGroupObj: SkillGroupDetails;
   enableSaveButton = false;
+  enableCancelButton = false;
   enableImportButton = false;
   forecastData: ForecastDataModel[];
   forecastForm: FormGroup;
@@ -159,30 +119,56 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   skillGroupForecast: ForecastDataModel;
   capabilityForm: FormGroup;
   forecastFormArray = new FormArray([]);
+  forecastDataAttribute: Forecast[] = [];
   sumForecastContact: string;
   sumAHT: string;
+
   sumForecastedReq: string;
   sumScheduledOpen: string;
+  avgForecastContact: number;
+  avgAHT: number;
+  avgForecastedReq: number;
+  avgScheduledOpen: number;
+  scheduledOpenResponse: ScheduledOpenResponse[] = [];
+  avgForecastContactValue: string;
+  avgAHTValue: string;
+  avgForecastedReqValue: string;
+  avgScheduledOpenValue: string;
   forecastSpinner = 'forecastSpinner';
   InsertUpdate = false;
+  currentLanguage: string;
+  LoggedUser;
+  getTranslationSubscription: ISubscription;
+  uploadFile: string;
+  importForecastData: any;
+
+  jsonData: any[] = [];
+  forecastColumns = ['date', 'time', 'forecastedContact', 'aht', 'forecastedReq', 'scheduledOpen'];
+  csvTableHeader: string[];
+  csvData: any;
+  importBtn: boolean;
+  importForecastDataModel: ForecastExcelData; 
+  dateValidator: boolean;
+  allImportForecastData: any = [];
+  importForecastDataArray: any = [];
+  fileUploaded: File;
   constructor(
     private formBuilder: FormBuilder,
     private forecastService: ForecastScreenService,
-
     private calendar: NgbCalendar,
     private spinnerService: NgxSpinnerService,
-    private skillTagSevice: SkillTagService,
     private languagePreferenceService: LanguagePreferenceService,
     public translate: TranslateService,
     private excelService: ExcelService,
     private modalService: NgbModal,
     private skillGroupService: SkillGroupService,
-    private ngbCalendar: NgbCalendar,
-    private dateAdapter: NgbDateAdapter<string>,
     private http: HttpClient,
-
-
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private ngxCsvParser: NgxCsvParser,
+    private cd: ChangeDetectorRef
   ) {
+    this.LoggedUser = this.authService.getLoggedUserInfo();
 
   }
 
@@ -190,27 +176,108 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     return forecastDataCalc.reduce((acc, product) => acc + +product.aht, 0);
   }
   ngOnInit() {
-    this.model2 = this.today;
+    this.importBtn = false;
+    this.setStartDateAsToday();
     this.getForecastDefaultValue();
-
     this.subscribeToSkillGroups();
-
+    this.subscribeToSearching();
+    this.preLoadTranslations();
+    this.loadTranslations();
+    this.subscribeToTranslations();
+    this.cd.detectChanges();
 
   }
-  exportToExcel() {
-    const ws: xlsx.WorkSheet =
-      xlsx.utils.table_to_sheet(this.epltable.nativeElement);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
-    xlsx.writeFile(wb, 'epltable.xlsx');
+
+  getScheduledOpenCount(time: string) {
+    var convertedTime = moment(time, 'hh:mm A').format('HH:mm:ss')
+    var chart =  this.scheduledOpenResponse.find(x => x.time === convertedTime.toString());
+    // console.log(chart);
+      if (chart) {    
+        var obj = {};
+        for ( var i=0, len= this.scheduledOpenResponse.length; i < len; i++ ) 
+        obj[this.scheduledOpenResponse[i]['time']] = this.scheduledOpenResponse[i];
+        this.scheduledOpenResponse = new Array();
+        for ( var key in obj )
+        this.scheduledOpenResponse.push(obj[key]);
+        var parse_string = chart?.scheduleOpen.toString();
+        var sched_open_sum = this.scheduledOpenResponse.reduce((a, b) => +a + +b.scheduleOpen,0);
+        this.sumScheduledOpen = sched_open_sum.toString();
+        this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+        
+        var sched_open_length = this.scheduledOpenResponse.length;
+        this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / parseFloat(sched_open_length.toString());
+       this.avgScheduledOpenValue = parseFloat(this.avgScheduledOpen.toString()).toFixed(2);     
+        return parseFloat(parse_string).toFixed(2);
+       
+      }
+      
+      return '0.00';
+  }
+
+
+//   exportAsXLSX(): void {
+
+//     const replaceKeys = {
+//       time: "Time",
+//       forecastedContact: "Forecasted Contacts",
+//       aht: "AHT",
+//       forecastedReq: "Forecasted Req",
+//       scheduledOpen: "Scheduled Open"
+//     };
+//     for (var i = 0; i < this.dataJson.length; i++)
+//       delete this.dataJson[i].scheduledOpen;
+
+//     const newArray = this.changeKeyObjects(this.dataJson, replaceKeys);
+
+//     this.excelService.exportAsExcelFile(newArray, `Forecast-Template`);
+//   }
+
+_keyUp(event) {
+  if (event.length == 0 && event.which == 48 ){
+      return false;
+   }
+}
+
+  download() {
+    let fileName = `ForecastTemplate-${this.skillGroupObj?.name}-${this.convertNgbDateToString(this.dateModel)}.csv`;
+    let columnNames = ["Date", "Time", "Forecasted Contact", "AHT", "Forecasted Req"];
+    let header = columnNames.join(',');
+
+    let csv = header;
+    csv += '\r\n';
+  
+    let exportData:any = this.dataJson;
+    let date = this.convertNgbDateToString(this.dateModel);
+    let dateNoSeparators = date.replace(/-/g, '');
+
+    exportData.map(c => {
+      let fc = c["forecastedContact"];
+      // console.log(fc);
+      csv += [dateNoSeparators, c["time"], fc , c["aht"], c["forecastedReq"]].join(',');
+      csv += '\r\n';
+      // console.log(csv);
+    })
+
+    var blob = new Blob([csv], { type: "text/csv" });
+
+    var link = document.createElement("a");
+    if (link.download !== undefined) {
+      var url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }
 
   checkSkillId() {
 
-    if (this.skillGroupBinder?.id == null) {
+    if (this.skillGroupObj?.id == null) {
       this.showErrorWarningPopUpMessage('Please select skill group first');
     }
   }
+
   enableInput(i) {
 
     this.isEnabled[i] = false;
@@ -221,9 +288,9 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
     return this.formBuilder.group({
       time: this.formBuilder.control({ value: datum.time, disabled: false }),
-      forecastedContact: this.formBuilder.control({ value: datum.forecastedContact, disabled: false }),
-      aht: this.formBuilder.control({ value: datum.aht, disabled: false }),
-      forecastedReq: this.formBuilder.control({ value: datum.forecastedReq, disabled: false }),
+      forecastedContact: this.formBuilder.control({ value: parseFloat(datum.forecastedContact).toFixed(2), disabled: false }),
+      aht: this.formBuilder.control({ value: parseFloat(datum.aht).toFixed(2), disabled: false }),
+      forecastedReq: this.formBuilder.control({ value: parseFloat(datum.forecastedReq).toFixed(2), disabled: false }),
       scheduledOpen: this.formBuilder.control({ value: datum.scheduledOpen, disabled: false })
     });
   }
@@ -232,30 +299,32 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
     return this.formBuilder.group({
       time: this.formBuilder.control({ value: datum.time, disabled: false }),
-      forecastedContact: this.formBuilder.control({ value: datum.forecastedContact, disabled: false }),
-      aht: this.formBuilder.control({ value: datum.aht, disabled: false }),
-      forecastedReq: this.formBuilder.control({ value: datum.forecastedReq, disabled: false }),
-      scheduledOpen: this.formBuilder.control({ value: datum.scheduledOpen, disabled: false })
+      forecastedContact: this.formBuilder.control({ value: parseFloat(datum.forecastedContact).toFixed(2), disabled: false }),
+      aht: this.formBuilder.control({ value: parseFloat(datum.aht).toFixed(2), disabled: false }),
+      forecastedReq: this.formBuilder.control({ value: parseFloat(datum.forecastedReq).toFixed(2), disabled: false }),
+      scheduledOpen: this.formBuilder.control({ value: '0.00', disabled: false })
     });
   }
+ 
   get formData() { return this.forecastForm.get('forecastFormArrays') as FormArray; }
 
 
+  openImportModal(content) {
 
-  openImportSchedule() {
-    this.getModalPopup(ImportScheduleComponent, 'lg');
-    this.modalRef.componentInstance.translationValues = this.translationValues;
-    this.modalRef.componentInstance.agentScheduleType = this.tabIndex;
+    // var specific_date = new Date(this.convertNgbDateToString(this.dateModel));
+    // var current_date = new Date();
 
-    // this.modalRef.result.then((result) => {
-    //   const message = result.partialImport ? 'The record has been paritially imported!' : 'The record has been imported!';
-    //   this.getModalPopup(MessagePopUpComponent, 'sm', message);
-    //   this.modalRef.result.then(() => {
-    //     //this.tabIndex === AgentScheduleType.Scheduling ? this.loadAgentSchedules() : this.loadAgentScheduleManger();
-    //   });
-    // });
+    // if (current_date.getTime() > specific_date.getTime()) {
+
+    //   this.showErrorWarningPopUpMessage('Please select other dates to import a file.');
+     
+      
+    // }
+    // else {
+      this.modalService.open(content, { centered: true, size: 'lg' });
+    // }
+   
   }
-
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
@@ -274,9 +343,10 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
       this.totalItems = 0;
     }
   }
-  get today() {
-    return this.dateAdapter.toModel(this.ngbCalendar.getToday());
-  }
+  // get today() {
+  //   return this.dateAdapter.toModel(this.ngbCalendar.getToday());
+  // }
+
   onSkillGroupScrollToEnd() {
     this.fetchMoreSkillGroups();
   }
@@ -292,19 +362,30 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   }
 
   onSkillGroupChange(skillGroup: SkillGroupDetails) {
-
-
-    this.skillGroupBinder = skillGroup;
+    this.skillGroupObj = skillGroup;
     this.loadSkillGroup();
-
   }
 
+  searchForecast(){
+    if(this.skillGroupObj == undefined || this.skillGroupObj?.id == null){
+      this.showErrorWarningPopUpMessage('Please select skill group first');
+    }else{
+      this.loadSkillGroup();
+    }
+  }
+  showErrorDate() {
+    this.showErrorWarningPopUpMessage('You cannot edit records from previous dates. Please select current date or future dates.');
+  }
   loadSkillGroup() {
+ 
+
+    this.prevDate();
     this.forecastFormArray.reset();
-    // var dateParse = `${this.DateModel.month}-${this.DateModel.day}-${this.DateModel.year}`
+    // var dateParse = `${this.convertNgbDateToString(this.dateModel).month}-${this.convertNgbDateToString(this.dateModel).day}-${this.convertNgbDateToString(this.dateModel).year}`
 
     this.spinnerService.show(this.forecastSpinner, SpinnerOptions);
-    this.getSkillGroupForecast = this.forecastService.getForecastDataById(this.skillGroupBinder?.id, this.model2).subscribe((data) => {
+    this.getScheduledOpen();
+    this.getSkillGroupForecast = this.forecastService.getForecastDataById(this.skillGroupObj?.id, this.convertNgbDateToString(this.dateModel)).subscribe((data) => {
       this.spinnerService.hide(this.forecastSpinner);
       this.forecastID = data.forecastId;
       this.forecastForm = this.formBuilder.group({
@@ -312,6 +393,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
         forecastFormArrays: this.formBuilder.array(data.forecastData.map(datum => this.generateDatumFormGroup(datum))),
 
       });
+      
       this.dataJson = data.forecastData;
       this.dataJson.forEach(ele => {
         this.arrayGenerator(
@@ -323,22 +405,51 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
         );
       });
       // console.log(data);
+    
+      console.log(this.dateValidator);
       this.sumForecastContact = data.forecastData.reduce((a, b) => +a + +b.forecastedContact, 0);
       this.sumAHT = data.forecastData.reduce((a, b) => +a + +b.aht, 0);
       this.sumForecastedReq = data.forecastData.reduce((a, b) => +a + +b.forecastedReq, 0);
-      this.sumScheduledOpen = data.forecastData.reduce((a, b) => +a + +b.scheduledOpen, 0);
+      // this.sumScheduledOpen = data.forecastData.reduce((a, b) => +a + +b.scheduledOpen, 0);
 
+
+      let nonZeroforecastedContact = data.forecastData.map(item => item.forecastedContact).filter(item => (isFinite(item) && item !== '0.00'));
+      let nonZeroaht = data.forecastData.map(item => item.aht).filter(item => (isFinite(item) && item !== '0.00'));
+      let nonZeroForecastedReq = data.forecastData.map(item => item.forecastedReq).filter(item => (isFinite(item) && item !== '0.00'));
+
+      let nonZeroScheduledOpen = data.forecastData.map(item => item.scheduledOpen).filter(item => (isFinite(item) && item !== '0.00'));
+      //sum
       this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2);
       this.sumAHT = parseFloat(this.sumAHT).toFixed(2);
       this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
-      this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+      // this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
 
+
+      //avg
+
+      this.avgForecastContact = parseFloat(this.sumForecastContact) / nonZeroforecastedContact.length;
+      this.avgAHT = parseFloat(this.sumAHT) / nonZeroaht.length;
+      this.avgForecastedReq = parseFloat(this.sumForecastedReq) / nonZeroForecastedReq.length;
+      this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / nonZeroScheduledOpen.length;
+
+      // parse to string first
+      this.avgForecastContactValue = this.avgForecastContact.toString();
+      this.avgAHTValue = this.avgAHT.toString();
+      this.avgForecastedReqValue = this.avgForecastedReq.toString();
+      this.avgScheduledOpenValue = '0.00';
+
+
+      this.avgAHTValue = parseFloat(this.avgAHTValue).toFixed(2);
+      this.avgForecastContactValue = parseFloat(this.avgForecastContactValue).toFixed(2);
+      this.avgForecastedReqValue = parseFloat(this.avgForecastedReqValue).toFixed(2);
+    
+   
     }, (error) => {
-
+     
       this.spinnerService.hide(this.forecastSpinner);
       if (error.status === 404) {
         this.getForecastDefaultValue();
-      
+
         this.InsertUpdate = true;
 
 
@@ -352,7 +463,13 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
   // date: { year: number, month: number };
 
-
+  private getDateInStringFormat(startDate: any): string {
+    if (!startDate) {
+      return undefined;
+    }
+    const date = new Date(startDate);
+    return date.toDateString();
+  }
   change(event) {
     this.enableImportButton = true;
   }
@@ -362,6 +479,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     this.searchKeyWord = '';
     this.pageNumber = 1;
     this.subscribeToSkillGroups();
+    this.enableImportButton = false;
   }
 
   private fetchMoreSkillGroups() {
@@ -373,7 +491,7 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
   private subscribeToSkillGroups(needBufferAdd?: boolean) {
     this.loading = true;
-    this.getSkillGroupsSubscription = this.getSkillGroups().subscribe(
+    this.getSkillGroupsSubscription = this.getSkillGroups(this.dropdownSearchKeyWord).subscribe(
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
@@ -385,11 +503,22 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     this.subscriptions.push(this.getSkillGroupsSubscription);
   }
 
+  private subscribeToSearching() {
+    this.typeAheadValueSubscription = this.typeAheadInput$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(term => this.getSkillGroups(term))
+    ).subscribe(response => {
+      if (response.body) {
+        this.setPaginationValues(response);
+        this.skillGroupItemsBuffer = response.body;
+      }
+    }, (error) => {
+      console.log(error);
+    });
 
-
-
-
-
+    this.subscriptions.push(this.typeAheadValueSubscription);
+  }
 
   private setPaginationValues(response: any) {
     const paging = JSON.parse(response.headers.get('x-pagination'));
@@ -416,9 +545,13 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
   private getSkillGroups(searchKeyword?: string) {
     const queryParams = this.getQueryParams(searchKeyword);
+    if(this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
     return this.skillGroupService.getSkillGroups(queryParams);
   }
-
 
   private getForecastDefaultValue() {
     this.http.get('/assets/time-table.json')
@@ -439,6 +572,13 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
         this.sumAHT = parseFloat(this.sumAHT).toFixed(2);
         this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
         this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+
+        this.avgScheduledOpenValue = '0.00';
+
+
+        this.avgAHTValue = '0.00';
+        this.avgForecastContactValue = '0.00';
+        this.avgForecastedReqValue = '0.00';
       });
   }
 
@@ -457,6 +597,13 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
 
   showBtn() {
     this.enableSaveButton = true;
+    this.enableCancelButton = true;
+  }
+hideBtn  () {
+    this.enableSaveButton = false;
+    this.enableCancelButton = false;
+    this.loadSkillGroup();
+
   }
   private getModalPopup(component: any, size: string) {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
@@ -471,6 +618,13 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     this.setComponentMessages('Success', contentMessage);
   }
 
+  private showImportFinished(contentMessage: string, errors: string[], needRefresh = true) {
+    this.getModalPopup(MessagePopUpComponent, 'md');
+    this.modalRef.componentInstance.headingMessage = 'Import Finished';
+    this.modalRef.componentInstance.contentMessage = contentMessage;
+    this.modalRef.componentInstance.importErrors = errors;
+  }
+
   private showErrorWarningPopUpMessage(contentMessage: string) {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
     const modalRef = this.modalService.open(ErrorWarningPopUpComponent, options);
@@ -481,47 +635,228 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
     return modalRef;
   }
 
+
+  validateDateImport(file){
+
+    this.importForecastDataModel = new ForecastExcelData();
+
+    this.importForecastDataModel.skillGroupId = this.skillGroupObj?.id;
+    this.importForecastDataModel.forecastScreenDataDetails = [];
+
+    this.spinnerService.show(this.importSpinner, SpinnerOptions);
+      // Parse the file you want to select for the operation along with the configuration
+      this.ngxCsvParser.parse(file, { header: false, delimiter: ',' })
+      .pipe().subscribe((result: Array<any>) => {
+        const csvTableData = [...result.slice(1, result.length)];
+        // check the csv first if contents are valid
+        this.csvTableHeader = result[0];
+
+        // convert the headers to proper headers
+        this.csvTableHeader = Object.assign(this.csvTableHeader, this.forecastColumns);
+        for (const ele of csvTableData) {
+          const csvJson = new ForecastScreenDataDetails();
+          if (ele.length > 0) {
+            for (let i = 0; i < ele.length; i++) {
+              csvJson[this.csvTableHeader[i]] = ele[i];
+            }
+          }
+          if (csvJson.date) {
+            this.importForecastDataModel.forecastScreenDataDetails.push(csvJson);
+          }
+        }
+
+          this.spinnerService.hide(this.importSpinner);
+          this.uploadFile = file.name;
+
+      }, (error: NgxCSVParserError) => {
+
+          this.spinnerService.hide(this.importSpinner);
+          this.modalService.dismissAll();
+          this.showErrorWarningPopUpMessage('Invalid File Format. Please upload a CSV file only.');
+          this.handleClear();
+  
+        console.log('Error', error);
+      });                
+  }
+
+  onChangeFile(files: File[]) {
+
+    if(files[0]){
+      this.validateDateImport(files[0]);
+      this.importBtn = true;
+    }
+
+  }
+
+
+  importForeCastData(){
+    this.spinnerService.show(this.importSpinner, SpinnerOptions);
+      this.forecastService.importForecastData(this.importForecastDataModel).subscribe((res:ForecastDataResponse)=>{
+        this.spinnerService.hide(this.importSpinner);
+        this.loadSkillGroup();
+        this.modalService.dismissAll();
+        this.showImportFinished(res.importStatus, res.errors);
+        this.handleClear();
+        
+      }, err =>{
+        this.spinnerService.hide(this.importSpinner);
+        this.modalService.dismissAll();
+        this.showErrorWarningPopUpMessage('Invalid File contents.');
+        this.handleClear();
+
+      });
+  }
+
+
+  changeKeyObjects = (arr, replaceKeys) => {
+    return arr.map(item => {
+      const newItem = {};
+      Object.keys(item).forEach(index => {
+        newItem[replaceKeys[index]] = item[index];
+      });
+      return newItem;
+    });
+  };
+
+  deleteColnameRecursive(obj) {
+    delete obj.scheduledOpen;
+    if (obj.children) {
+      for (var i = 0; i < obj.children.length; i++)
+        this.deleteColnameRecursive(obj.children[i]);
+    }
+  }
+
+  prevDate() {
+    var specific_date = new Date(this.convertNgbDateToString(this.dateModel));
+    var current_date = new Date();
+    
+
+    if (current_date.getTime() > specific_date.getTime()) {
+      this.dateValidator = true;
+
+    } else {
+      this.dateValidator = false;
+    }
+  }
+
+private getScheduledOpen() {
+  var date = this.convertNgbDateToString(this.dateModel);
+  this.forecastService.getScheduleOpen(this.skillGroupObj?.id,this.getDateInStringFormat(date)).subscribe(response => {
+      this.scheduledOpenResponse = response;
+      console.log(this.scheduledOpenResponse);
+       },
+         error => {
+           this.scheduledOpenResponse  = []; 
+         }
+       );
+}
+
+
+  // updateImport() {
+  //   const replaceKeys = {
+  //     "Time": "Time",
+  //     "Forecasted Contact": "forecastedContact",
+  //     "AHT": "Aht",
+  //     "Forecasted Req": "forecastedReq"
+  //   };
+  //   const newArrays = this.changeKeyObjects(this.importForecastData, replaceKeys);
+  //   let updateForecastData: UpdateForecastData;
+
+  //   let forecastTest: Forecast[];
+
+
+  //   forecastTest = newArrays;
+
+
+  //   // var returnedTarget = Object.assign(forecastTest, this.formData.value);
+  //   updateForecastData = new UpdateForecastData();
+  //   updateForecastData = { forecastData: forecastTest };
+
+
+  //   this.forecastService.updateForecast(this.forecastID, updateForecastData).subscribe(res => {
+  //     this.modalService.dismissAll();
+  //     this.showSuccessPopUpMessage('The record has been updated!');
+  //     this.handleClear();
+  //     this.enableSaveButton = false;
+  //     this.enableCancelButton = false;
+  //     this.loadSkillGroup();
+  //   },
+  //     error => {
+  //     if(error.status == 400){
+  //       this.showErrorWarningPopUpMessage('Data mismatch');
+  //     }
+  //     }
+  //   );
+  // }
+  handleClear() {
+    this.uploadFile = '';
+    this.importBtn = false;
+  }
+
+
   addForecastData() {
 
-    if (this.InsertUpdate === true) {
+    // if (this.InsertUpdate === true) {
       let forecastObjArrays: Forecast[];
 
-      const now = +new Date(this.model2);
+      const now = +new Date(this.convertNgbDateToString(this.dateModel));
 
+
+      // console.log(this.formData.value);
+      
       let insertObject: ForecastDataModel;
       // let intDate = new getLocaleDateTimeFormat();
-      this.forecastID = +`${this.skillGroupBinder?.id}${now}`;
-      console.log(this.forecastID);
+      this.forecastID = this.skillGroupObj?.id;
+      // console.log(this.forecastID);
+      
       forecastObjArrays = this.formData.value;
+
       insertObject = {
         ForecastId: this.forecastID,
-        Date: this.model2,
-        SkillGroupId: this.skillGroupBinder?.id,
+        Date: this.convertNgbDateToString(this.dateModel),
+        SkillGroupId: this.skillGroupObj?.id,
         ForecastData:
           forecastObjArrays
       };
 
-      this.forecastService.addForecast(insertObject).subscribe(res => {
-        this.showSuccessPopUpMessage('The record has been added!');
-        this.enableSaveButton = false;
-this.loadSkillGroup();
+       this.forecastService.addForecast(insertObject).subscribe(res => {
+
+
+       this.showSuccessPopUpMessage('The record has been added!');
+       this.enableSaveButton = false;
+       this.enableCancelButton = false;
+       this.loadSkillGroup();
+
       },
         error => {
 
           if (error.status === 409) {
-            this.updateForecast();
+           this.updateForecast();
           }
 
         }
-      );
-    } else {
-      // var forecastObjArrays: Forecast[];
+     );
+    // } else {
+     // var forecastObjArrays: Forecast[];
 
-      this.updateForecast();
-    }
+    //   this.updateForecast();
+    //  }
 
 
   }
+
+  setStartDateAsToday() {
+    this.dateModel = this.today;
+    // const currentDate = this.setCurrentDate();
+  }
+
+  convertNgbDateToString(date) {
+    const day = date.day < 10 ? '0' + date.day : date.day;
+    const month = date.month < 10 ? '0' + date.month : date.month;
+
+    return date.year + '-' + month + '-' + day;
+  }
+
   updateForecast() {
     let updateForecastData: UpdateForecastData;
 
@@ -536,14 +871,41 @@ this.loadSkillGroup();
     updateForecastData = { forecastData: forecastTest };
 
 
-    this.forecastService.updateForecast(this.forecastID, updateForecastData).subscribe(res => {
+    this.forecastService.updateForecast(this.skillGroupObj?.id, this.convertNgbDateToString(this.dateModel),updateForecastData).subscribe(res => {
       this.showSuccessPopUpMessage('The record has been updated!');
       this.enableSaveButton = false;
+      this.enableCancelButton = false;
       this.loadSkillGroup();
     },
       error => {
         this.showErrorWarningPopUpMessage('Error');
       }
     );
+  }
+
+  private subscribeToTranslations() {
+    this.getTranslationSubscription = this.languagePreferenceService.userLanguageChanged.subscribe(
+      (language) => {
+        if (language) {
+          this.loadTranslations();
+        }
+      });
+
+    this.subscriptions.push(this.getTranslationSubscription);
+  }
+
+  private preLoadTranslations() {
+    // Preload the user language //
+    const browserLang = this.route.snapshot.data.languagePreference.languagePreference;
+    this.currentLanguage = browserLang ? browserLang : 'en';
+    this.translate.use(this.currentLanguage);
+  }
+
+  private loadTranslations() {
+    // load the user language from api //
+    this.languagePreferenceService.getLanguagePreference(this.LoggedUser.employeeId).subscribe((langPref: LanguagePreference) => {
+      this.currentLanguage = langPref.languagePreference ? langPref.languagePreference : 'en';
+      this.translate.use(this.currentLanguage);
+    });
   }
 }

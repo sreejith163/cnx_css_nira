@@ -28,8 +28,8 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
 
   timeOffForm: FormGroup;
   today = this.calendar.getToday();
-  timeOffAgentAccess = Constants.TimeOffAgentAccess;
-  deselectedTimeOption = Constants.TimeOffDeselectedTimeOption;
+  // timeOffAgentAccess = Constants.TimeOffAgentAccess;
+  // deselectedTimeOption = Constants.TimeOffDeselectedTimeOption;
 
   weekDays: Array<WeekDay>;
   timeOffCodes = [];

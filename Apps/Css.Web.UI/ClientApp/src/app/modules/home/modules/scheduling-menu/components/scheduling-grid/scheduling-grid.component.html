@@ -13,8 +13,9 @@
     </div>
   </div>
 
-  <app-scheduling-filter (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
-    (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)"></app-scheduling-filter>
+  <app-scheduling-filter [agentScheduleType]="0" (startDateSelected)="onSelectStartDate($event)"
+    (keywordToSearch)="search($event)" (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
+  </app-scheduling-filter>
 
   <div class="card card-primary card-outline card-outline-tabs">
     <div class="card-header p-0 border-bottom-0">
@@ -22,8 +23,8 @@
         <li class="pull-right marign-l-auto margin-5">
           <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
             (click)="exportToExcel()">
-          <img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}" class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
-            (click)="openImportSchedule()">
+          <img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}"
+            class="icon-image float-right padding-2" [ngbTooltip]="'Import'" (click)="openImportSchedule()">
         </li>
       </ul>
     </div>
@@ -49,7 +50,7 @@
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field width-18-p" (click)="sort('dateFrom', sortBy)">
+              <th class="sortable-field" (click)="sort('dateFrom', sortBy)">
                 {{ 'Date_range' | translate }}
                 <i *ngIf="orderBy !== 'dateFrom'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'dateFrom'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
@@ -97,7 +98,7 @@
             <ngx-spinner [name]="spinner"></ngx-spinner>
             <tr *ngIf="totalSchedulingGridData?.length === 0" class="valid-record">
               <td colspan="12">
-                {{ 'No data to show' | translate }}</td>
+                {{ 'No match records found' | translate }}</td>
             </tr>
             <ng-container *ngFor="let el of totalSchedulingGridData; let i = index">
               <tr class="table-row">
@@ -110,35 +111,59 @@
                 <td>
                   <span ngbTooltip="{{ el.lastName + ' ' + el.firstName }}">
                     {{el.lastName + ' ' + el.firstName | truncate: { sliceStart: 0, sliceEnd:
-                        characterSplice, append: '...' } }}
+                    characterSplice, append: '...' } }}
                   </span>
                 </td>
-                <td>{{el.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="el.dateTo">-</span> {{ el.dateTo | date:
-                      'yyyy-MM-dd'}}
-                  <i class="fa fa-calendar float-right padding-5" aria-hidden="true"
-                    (click)="onClickDateIcon(i); datepicker.toggle()"></i>
-                  <input name="datepicker" class="hidden-datepicker" ngbDatepicker #datepicker="ngbDatepicker"
-                    [autoClose]="'outside'" (dateSelect)="onDateSelection($event, i)" [displayMonths]="2"
-                    [dayTemplate]="t" [container]="'body'" [placement]="'bottom'" outsideDays="hidden">
-                  <ng-template #t let-date let-focused="focused">
-                    <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                      [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                      (mouseleave)="hoveredDate = null">
-                      {{ date.day }}
+                <td class="d-flex">
+                  <div class="btn-group" dropdown [placement]="'top'" container="body" [isDisabled]="el.ranges.length === 0">
+                    <button id="button-custom-html" dropdownToggle type="button"
+                      class="btn btn-defaulty dropdown-toggle" aria-controls="dropdown-custom-html">
+                      {{ getSelectedRange(el) }} <span class="caret"></span>
+                    </button>
+                    <ul id="dropdown-custom-html" *dropdownMenu class="dropdown-menu" role="menu"
+                      aria-labelledby="button-custom-html">
+                      <li *ngFor="let range of el.ranges; let i = index;" role="menuitem">
+                        <a class="custom-dropdown dropdown-item cursor-pointer" (click)="onDateRangeChange(i, el)">
+                          <ng-container [ngSwitch]="range.status">
+                            <ng-container *ngSwitchCase="1">
+                              <span class="badge badge-pill badge-warning">Pending</span>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="2">
+                              <span class="badge badge-pill badge-success">Released</span>
+                            </ng-container>
+                          </ng-container>
+                          <span class="padding-left-15">
+                            <span>{{range.dateFrom | date: 'yyyy-MM-dd'}}</span>
+                            <span *ngIf="range.dateTo">-</span>
+                            <span>{{ range.dateTo | date: 'yyyy-MM-dd'}}</span>
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
+                    <span>
+                      <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1"
+                        (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
+                      <i class="fa fa-trash padding-5 pointer m-t-5"
+                        *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1"
+                        (click)="deleteDateRange(el)" [ngbTooltip]="'Delete'"></i>
+                      <i class="fa fa-calendar-plus-o float-right padding-5 m-t-5" aria-hidden="true"
+                        (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
                     </span>
-                  </ng-template>
+                  </div>
                 </td>
                 <td>
-                  <select class="form-control" (change)="setSchedulingStatus($event.target.value, i)">
-                    <option [value]="status" [selected]="el.status === +status" *ngFor="let status of schedulingStatus">
+                  <select class="form-control" (change)="setSchedulingStatus($event, el)"
+                    [disabled]="hasStatusDisabled(el)">
+                    <option *ngIf="!el?.ranges[getRangeIndex(el)]?.status">{{ 'Please select a status' | translate }}
+                    </option>
+                    <option [value]="status" [selected]="getSchedulingStatus(el, status) === +status"
+                      *ngFor="let status of schedulingStatus">
                       {{ scheduleStatus[status] }}
                     </option>
                   </select>
                 </td>
-                <!-- <td>{{el.createdBy}}</td>
-              <td>{{el.createdDate | date: 'yyyy-MM-dd'}}</td> -->
-                <td>{{el.modifiedBy}}</td>
-                <td>{{el.modifiedDate | date: 'yyyy-MM-dd'}}</td>
+                <td>{{el?.ranges[getRangeIndex(el)]?.modifiedBy}}</td>
+                <td>{{el?.ranges[getRangeIndex(el)]?.modifiedDate | date: 'yyyy-MM-dd'}}</td>
               </tr>
               <ng-container>
                 <tr class="row-details" *ngIf="selectedGrid?.employeeId === el?.employeeId"
@@ -187,7 +212,8 @@
                                 <i id="{{ code.icon.value }}" class="icon-style icon"
                                   [ngClass]="{'icon-active': icon === code.icon.value}"
                                   (click)="onIconClick($event); t.close()" (mousedown)="t.close()"
-                                  [ngClass]="{ 'icon-active': (selectedIconId == code.icon.value)}" cdkDrag>
+                                  [ngClass]="{ 'icon-active': (selectedIconId == code.icon.value)}"
+                                  [cdkDragDisabled]="el?.ranges[getRangeIndex(el)]?.status == 2" cdkDrag>
                                   <span ngbTooltip="{{ code.description }}" #t="ngbTooltip">
                                     {{ unifiedToNative(code.icon.value) }}</span></i>
                               </ng-container>
@@ -236,7 +262,7 @@
                                       <ng-container *ngIf="getIconFromSelectedGrid(week, openTime)?.length">
                                         <span ngbTooltip="{{ getIconDescription(week, openTime) }}">
                                           <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime)
-                                                }}</i>
+                                            }}</i>
                                         </span>
                                       </ng-container>
                                     </td>
@@ -251,26 +277,27 @@
                     <div class="row padding-10">
                       <div class="col-md-12 padding-12 row">
                         <div class="col-s-2 m-b-5">
-                          <button class="btn btn-success" id="btn_copy_schedule"
-                            (click)="openCopySchedule(i)">
+                          <button [disabled]="el?.ranges[getRangeIndex(el)]?.scheduleCharts?.length === 0 || !el?.ranges[getRangeIndex(el)]?.scheduleCharts"
+                            class="btn btn-success" id="btn_copy_schedule" (click)="openCopySchedule(el)">
                             <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
                           </button>
                         </div>
                         <div class="col-md-2 m-b-3">
-                          <button class="btn btn-primary btn-activity" id="btn_activity_logs"
-                            (click)="openActivityLogs(i)">
+                          <button [disabled]="!selectedGrid?.dateFrom" class="btn btn-primary btn-activity"
+                            id="btn_activity_logs" *ngIf="canShowActivityLog()" (click)="openActivityLogs(el)">
                             {{ 'Activity Logs' | translate }}
                           </button>
                         </div>
                         <div class="col-md-6 m-b-5"></div>
                         <div class="col-md-1  m-b-5">
-                          <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)"
-                            id="btn_save">
+                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 2"
+                            class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)" id="btn_save">
                             <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
                           </button>
                         </div>
                         <div class="col-s-1  m-b-5">
-                          <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
+                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 2"
+                            class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
                             id="btn_cancel">
                             <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
                           </button>
@@ -290,8 +317,9 @@
     <div class="col-md-12 d-flex justify-content-end mt-3">
       <nav aria-label="Page navigation example">
         <ul class="pagination p-0 float-right">
-          <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalSchedulingRecord"
-            (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
+          <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalSchedulingRecord" [rotate]="true"
+            [maxSize]="10" (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage"
+            [boundaryLinks]="true">
           </ngb-pagination>
           <select class="form-control" (change)="changePageSize($event.target.value)">
             <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
