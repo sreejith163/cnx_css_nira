@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using Css.Api.Scheduling.Models.Domain;
 using System;
+using Css.Api.Core.Models.Enums;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {

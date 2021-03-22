@@ -50,37 +50,22 @@ namespace Css.Api.Admin.Repository
         /// <summary>
         /// Gets or sets the CSS language repository.
         /// </summary>
-        private ICssLanguageRepository _cssLanguageRepository { get; set; }
+        public ICssLanguageRepository _cssLanguageRepository { get; set; }
 
         /// <summary>
         /// Gets or sets the CSS menu repository.
         /// </summary>
-        private ICssMenuRepository _cssMenuRepository { get; set; }
+        public ICssMenuRepository _cssMenuRepository { get; set; }
 
         /// <summary>
         /// Gets or sets the CSS variable repository.
         /// </summary>
-        private ICssVariableRepository _cssVariableRepository { get; set; }
+        public ICssVariableRepository _cssVariableRepository { get; set; }
 
         /// <summary>
         /// Gets or sets the language translation repository.
         /// </summary>
-        private ILanguageTranslationRepository _languageTranslationRepository { get; set; }
-
-        /// <summary>
-        /// Gets or sets the role repository.
-        /// </summary>
-        private IRoleRepository _roleRepository { get; set; }
-
-        /// <summary>
-        /// Gets or sets the user permission repository.
-        /// </summary>
-        private IUserPermissionRepository _userPermissionRepository { get; set; }
-
-        /// <summary>
-        /// Gets or sets the user language repository.
-        /// </summary>
-        private IUserLanguageRepository _userLanguageRepository { get; set; }
+        public ILanguageTranslationRepository _languageTranslationRepository { get; set; }
 
         /// <summary>
         /// Gets the scheduling codes.

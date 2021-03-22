@@ -2,6 +2,7 @@
 using Css.Api.Reporting.Business.Services;
 using Css.Api.Reporting.Business.UnitTest.Mocks;
 using Css.Api.Reporting.Models.DTO.Request;
+using Css.Api.Reporting.Models.DTO.Request.EStart;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System;
@@ -94,6 +95,20 @@ namespace Css.Api.Reporting.Business.UnitTest.Services
             IMapperService mapperService = GetMapperService();
             Action invocation = () => mapperService.InitializeFTP<IMapperService>();
             Assert.Throws<NotImplementedException>(invocation);
+        }
+        #endregion
+
+        #region GetFilterParams<T>()
+        
+        /// <summary>
+        /// The method to check the mapping of EStartFilter
+        /// </summary>
+        [Fact]
+        public void CheckGetEStartFilter()
+        {
+            IMapperService mapperService = GetMapperService("EStart");
+            var filter = mapperService.GetFilterParams<EStartFilter>();
+            Assert.NotNull(filter);
         }
         #endregion
 

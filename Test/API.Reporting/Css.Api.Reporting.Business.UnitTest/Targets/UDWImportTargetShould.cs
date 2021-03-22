@@ -11,6 +11,8 @@ using Css.Api.Reporting.Models.DTO.Response;
 using Css.Api.Reporting.Models.Enums;
 using Css.Api.Reporting.Models.Profiles.Agent;
 using Css.Api.Reporting.Models.Profiles.AgentData;
+using Css.Api.Reporting.Models.Profiles.AgentSchedule;
+using Css.Api.Reporting.Models.Profiles.AgentSchedulingGroupProfile;
 using Css.Api.Reporting.Repository.Interfaces;
 using Moq;
 using System;
@@ -71,10 +73,14 @@ namespace Css.Api.Reporting.Business.UnitTest.Targets
             {
                 cfg.AddProfile(new AgentProfile());
                 cfg.AddProfile(new AgentDataProfile());
+                cfg.AddProfile(new AgentScheduleProfile());
+                cfg.AddProfile(new AgentSchedulingGroupProfile());
+                cfg.AddProfile(new AgentScheduleProfile());
             });
 
             _mapper = new Mapper(mapperConfig);
             _mockAgentRepository = new Mock<IAgentRepository>();
+            _mockAgentRepository.SetReturnsDefault<Task<List<Agent>>>(Task.FromResult<List<Agent>>(new List<Agent>()));
             _mockAgentSchedulingGroupRepository = new Mock<IAgentSchedulingGroupRepository>();
             _mockAgentSchedulingGroupRepository.SetReturnsDefault<Task<List<AgentSchedulingGroup>>>(Task.FromResult<List<AgentSchedulingGroup>>(factory.GetAgentSchedulingGroups()));
             _mockAgentScheduleRepository = new Mock<IAgentScheduleRepository>();
