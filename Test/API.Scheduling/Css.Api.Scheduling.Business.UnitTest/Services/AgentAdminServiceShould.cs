@@ -101,19 +101,19 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             mockDataContext = new MockDataContext();
 
-            agentAdminService = new AgentAdminService(
-                mockHttContext.Object,
-                mockAgentAdminRepository.Object,
-                mockAgentScheduleRepository.Object,
-                mockClientRepository.Object,
-                mockClientLobGroupRepository.Object,
-                mockSkillGroupRepository.Object,
-                mockSkillTagRepository.Object,
-                mockAgentSchedulingGroupRepository.Object,
-                mockActivityLogRepository.Object,
-                mapper,
-                mockUnitWork.Object
-                );
+            //agentAdminService = new AgentAdminService(
+            //    mockHttContext.Object,
+            //    mockAgentAdminRepository.Object,
+            //    mockAgentScheduleRepository.Object,
+            //    mockClientRepository.Object,
+            //    mockClientLobGroupRepository.Object,
+            //    mockSkillGroupRepository.Object,
+            //    mockSkillTagRepository.Object,
+            //    mockAgentSchedulingGroupRepository.Object,
+            //    mockActivityLogRepository.Object,
+            //    mapper,
+            //    mockUnitWork.Object
+            //    );
         }
 
         //#region GetAgentAdmins

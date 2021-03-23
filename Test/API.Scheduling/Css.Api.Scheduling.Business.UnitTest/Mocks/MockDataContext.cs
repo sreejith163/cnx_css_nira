@@ -81,8 +81,8 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                                 Ranges = new List<AgentScheduleRange>
                                 {
                                     new AgentScheduleRange {
-                                        DateFrom = DateTime.UtcNow, 
-                                        DateTo = DateTime.UtcNow,
+                                        DateFrom = new DateTime(2021, 3, 21),
+                                        DateTo = new DateTime(2021, 3, 27),
                                         AgentSchedulingGroupId = 1,
                                         Status = SchedulingStatus.Released,
                                         ScheduleCharts = new List<AgentScheduleChart>
@@ -109,8 +109,8 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                                 Ranges = new List<AgentScheduleRange>
                                 {
                                     new AgentScheduleRange {
-                                        DateFrom = DateTime.UtcNow,
-                                        DateTo = DateTime.UtcNow,
+                                        DateFrom = new DateTime(2021, 3, 21),
+                                        DateTo = new DateTime(2021, 3, 27),
                                         AgentSchedulingGroupId = 1,
                                         Status = SchedulingStatus.Released,
                                         ScheduleCharts = new List<AgentScheduleChart>
@@ -136,23 +136,49 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
 
         private readonly IQueryable<AgentScheduleManager> agentScheduleManagersDB = new List<AgentScheduleManager>() {
             new AgentScheduleManager { Id = new ObjectId("5fe0b5ad6a05416894c0718e"), EmployeeId = 1, AgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow,
-                                       Date = DateTime.Now, Charts = new List<AgentScheduleManagerChart>
+                                       Date = new DateTime(2021, 3, 21), Charts = new List<AgentScheduleManagerChart>
                                        {
-                                           new AgentScheduleManagerChart {
-                                               StartDateTime = DateTime.Now.AddHours(1),
-                                               EndDateTime = DateTime.UtcNow.AddHours(2),
+                                           new AgentScheduleManagerChart 
+                                           {
+                                               StartDateTime = new DateTime(2021, 3, 21, 8, 0, 0),
+                                               EndDateTime = new DateTime(2021, 3, 21, 9, 0, 0),
                                                SchedulingCodeId = 1
-                                            }
+                                           },
+                                           new AgentScheduleManagerChart
+                                           {
+                                               StartDateTime = new DateTime(2021, 3, 21, 9, 0, 0),
+                                               EndDateTime = new DateTime(2021, 3, 21, 10, 0, 0),
+                                               SchedulingCodeId = 2
+                                           },
+                                           new AgentScheduleManagerChart
+                                           {
+                                               StartDateTime = new DateTime(2021, 3, 21, 10, 0, 0),
+                                               EndDateTime = new DateTime(2021, 3, 21, 11, 0, 0),
+                                               SchedulingCodeId = 3
+                                           }
                                        },
             },
             new AgentScheduleManager { Id = new ObjectId("5fe0b5ad6a05416894c0718f"), EmployeeId = 2, AgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow,
-                                       Date = DateTime.Now, Charts = new List<AgentScheduleManagerChart>
+                                       Date = new DateTime(2021, 3, 22), Charts = new List<AgentScheduleManagerChart>
                                        {
-                                           new AgentScheduleManagerChart {
-                                               StartDateTime = DateTime.Now.AddHours(1),
-                                               EndDateTime = DateTime.UtcNow.AddHours(2),
+                                           new AgentScheduleManagerChart
+                                           {
+                                               StartDateTime = new DateTime(2021, 3, 21, 8, 0, 0),
+                                               EndDateTime = new DateTime(2021, 3, 21, 9, 0, 0),
                                                SchedulingCodeId = 1
-                                            }
+                                           },
+                                           new AgentScheduleManagerChart
+                                           {
+                                               StartDateTime = new DateTime(2021, 3, 21, 9, 0, 0),
+                                               EndDateTime = new DateTime(2021, 3, 21, 10, 0, 0),
+                                               SchedulingCodeId = 2
+                                           },
+                                           new AgentScheduleManagerChart
+                                           {
+                                               StartDateTime = new DateTime(2021, 3, 21, 10, 0, 0),
+                                               EndDateTime = new DateTime(2021, 3, 21, 11, 0, 0),
+                                               SchedulingCodeId = 3
+                                           }
                                        },
             },
         }.AsQueryable();
@@ -219,7 +245,21 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
             return skillTagDB.Where(x => x.IsDeleted == false && x.Id == new ObjectId(skillTagIdDetails.SkillTagId.ToString())).FirstOrDefault();
         }
 
-        #endregion      
+        #endregion
+
+        #region Agent Scheduling Group
+
+        /// <summary>
+        /// Gets the agent scheduling group.
+        /// </summary>
+        /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
+        /// <returns></returns>
+        public List<AgentSchedulingGroup> GetAgentSchedulingGroupBySkillGroupId(SkillGroupIdDetails skillGroupIdDetails)
+        {
+            return agentSchedulingGroupDB.Where(x => x.IsDeleted == false && x.SkillGroupId == skillGroupIdDetails.SkillGroupId).ToList();
+        }
+
+        #endregion
 
         #region Agent Admin
 
@@ -273,7 +313,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// </summary>
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
         /// <returns></returns>
-        public Agent GetAgentAdminIdsByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails)
+        public Agent GetAgentAdminIdByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails)
         {
             return agentAdminsDB.Where(x => x.IsDeleted == false && x.Ssn == agentAdminEmployeeIdDetails.Id).FirstOrDefault();
         }
@@ -306,6 +346,17 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         public AgentSchedulingGroup GetAgentSchedulingGroupBasedonSkillTag(SkillTagIdDetails skillTagIdDetails)
         {
             return agentSchedulingGroupDB.Where(x => x.IsDeleted == false && x.SkillTagId == skillTagIdDetails.SkillTagId).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the employee ids by agent scheduling group.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <returns></returns>
+        public List<int> GetEmployeeIdsByAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        {
+            return agentAdminsDB.Where(x => x.IsDeleted == false && x.AgentSchedulingGroupId == agentSchedulingGroupIdDetails.AgentSchedulingGroupId)
+                ?.Select(x => x.Ssn).ToList();
         }
 
         /// <summary>
