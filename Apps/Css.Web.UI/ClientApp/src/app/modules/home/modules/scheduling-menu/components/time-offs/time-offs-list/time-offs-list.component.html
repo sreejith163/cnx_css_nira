@@ -86,23 +86,76 @@
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field" (click)="sort('agentAccess', sortBy)">
-                {{ 'Agent Access' | translate }}
-                <i *ngIf="orderBy !== 'agentAccess'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'agentAccess'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-                  [class.fa-sort-up]="sortBy === 'asc'">
-                </i></th>
-              <th class="sortable-field" (click)="sort('fullWeeks', sortBy)">
-                {{ 'Full Weeks' | translate }}
-                <i *ngIf="orderBy !== 'fullWeeks'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'fullWeeks'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+
+
+              <th class="sortable-field" (click)="sort('viewAllotments', sortBy)">
+                {{ 'Allow agents to view time off allotments' | translate }}
+                <i *ngIf="orderBy !== 'viewAllotments'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'viewAllotments'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field" (click)="sort('deselectedTime', sortBy)">
+              <th class="sortable-field" (click)="sort('viewWaitLists', sortBy)">
+                {{ 'Allow agents to see the wait list for any day' | translate }}
+                <i *ngIf="orderBy !== 'viewWaitLists'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'viewWaitLists'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('timeOffs', sortBy)">
+                {{ 'Allow agents to see who has time off for any day' | translate }}
+                <i *ngIf="orderBy !== 'timeOffs'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'timeOffs'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('addNotes', sortBy)">
+                {{ 'Allow agents to add notes allotments' | translate }}
+                <i *ngIf="orderBy !== 'addNotes'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'addNotes'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('showPastDays', sortBy)">
+                {{ 'Show past days as full if allowed time was all taken allotments' | translate }}
+                <i *ngIf="orderBy !== 'showPastDays'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'showPastDays'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+
+              <th class="sortable-field" (click)="sort('forceOffDaysBeforeWeek', sortBy)">
+                {{ 'Number of days to force off before a week' | translate }}
+                <i *ngIf="orderBy !== 'forceOffDaysBeforeWeek'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'forceOffDaysBeforeWeek'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('forceOffDaysAfterWeek', sortBy)">
+                {{ 'Number of days to force off after a week' | translate }}
+                <i *ngIf="orderBy !== 'forceOffDaysAfterWeek'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'forceOffDaysAfterWeek'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('allowFullWeekRequest', sortBy)">
+                {{ 'Allow full week requests on' | translate }}
+                <i *ngIf="orderBy !== 'allowFullWeekRequest'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'allowFullWeekRequest'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('deSelectedTime', sortBy)">
                 {{ 'Deselected Time' | translate }}
-                <i *ngIf="orderBy !== 'deselectedTime'" class="fa fa-sort"></i>
-                <i id="sortIcon" *ngIf="orderBy === 'deselectedTime'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                <i *ngIf="orderBy !== 'deSelectedTime'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'deSelectedTime'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('deselectSavedDays', sortBy)">
+                {{ 'Allow agent to deselect saved days' | translate }}
+                <i *ngIf="orderBy !== 'deselectSavedDays'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'deselectSavedDays'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
@@ -127,9 +180,16 @@
                 <td>{{getDayRequestOn(el?.allowDayRequestOn)}}</td>
                 <td>{{el.FTEDayLength }}</td>
                 <td>{{weekDay[el.firstDayOfWeek]}}</td>
-                <td>{{el.agentAccess }}</td>
-                <td>{{el.fullWeeks }}</td>
-                <td>{{el.deselectedTime }}</td>
+                <td>{{el.viewAllotments }}</td>
+                <td>{{el.viewWaitLists }}</td>
+                <td>{{el.timeOffs }}</td>
+                <td>{{el.addNotes }}</td>
+                <td>{{el.showPastDays }}</td>
+                <td>{{el.forceOffDaysBeforeWeek }}</td>
+                <td>{{el.forceOffDaysAfterWeek }}</td>
+                <td>{{el.allowFullWeekRequest }}</td>
+                <td>{{el.deSelectedTime }}</td>
+                <td>{{el.deselectSavedDays }}</td>
                 </tr>
             </ng-container>
           </tbody>

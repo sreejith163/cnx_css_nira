@@ -15,6 +15,7 @@ import { AddUpdateTimeOffsComponent } from '../add-update-time-offs/add-update-t
 import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-pop-up/confirmation-pop-up.component';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
 
 @Component({
   selector: 'app-time-offs-list',
@@ -85,20 +86,20 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
   }
 
   changePageSize(pageSize: number) {
-      this.pageSize = pageSize;
-      // this.loadTimeOffs();
+    this.pageSize = pageSize;
+    this.loadTimeOffs();
   }
 
   changePage(page: number) {
-      this.currentPage = page;
-      // this.loadTimeOffs();
+    this.currentPage = page;
+    this.loadTimeOffs();
   }
 
   sort(columnName: string, sortBy: string) {
-      this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
-      this.orderBy = columnName;
+    this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
+    this.orderBy = columnName;
 
-      this.loadTimeOffs();
+    this.loadTimeOffs();
   }
 
   clearSearchText() {
@@ -180,9 +181,22 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
+  private getQueryParams() {
+    const queryParams = new QueryStringParameters();
+    queryParams.pageNumber = this.currentPage;
+    queryParams.pageSize = this.pageSize;
+    queryParams.searchKeyword = this.searchKeyword ?? '';
+    queryParams.skipPageSize = false;
+    queryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
+    queryParams.fields = undefined;
+
+    return queryParams;
+  }
+
   private loadTimeOffs() {
+    const queryParams = this.getQueryParams();
     this.spinnerService.show(this.spinner, SpinnerOptions);
-    this.getTimeOffsSubscription = this.timeOffsService.getTimeOffs()
+    this.getTimeOffsSubscription = this.timeOffsService.getTimeOffs(queryParams)
       .subscribe((response) => {
         this.spinnerService.hide(this.spinner);
         if (response) {
@@ -190,6 +204,7 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
           this.totalRecord = this.timeOffs.length;
         }
       }, (error) => {
+        this.spinnerService.hide(this.spinner);
         console.log(error);
       });
 
@@ -207,6 +222,7 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
           this.schedulingCodes = response.body;
         }
       }, (error) => {
+        this.spinnerService.hide(this.spinner);
         console.log(error);
       });
 

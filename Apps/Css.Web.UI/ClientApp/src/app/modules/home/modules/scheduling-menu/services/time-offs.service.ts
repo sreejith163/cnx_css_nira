@@ -1,68 +1,54 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { HttpBaseService } from 'src/app/core/services/http-base.service';
+import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
+import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
+import { environment } from 'src/environments/environment';
 import { AddTimeOffs } from '../models/add-time-offs.model';
 import { TimeOffResponse } from '../models/time-offs-response.model';
+import { UpdateTimeOffs } from '../models/update-time-offs.model';
 
 @Injectable()
-export class TimeOffsService {
+export class TimeOffsService extends HttpBaseService {
 
-  timeOffs: TimeOffResponse[] = [];
+  private baseURL = '';
 
-  constructor() {
-    this.createTimeOffs();
+  constructor(
+    private http: HttpClient
+  ) {
+    super();
+    this.baseURL = environment.services.gatewayService;
   }
 
-  createTimeOffs() {
-    for (let i = 1; i <= 7; i++) {
-      const timeOff = new TimeOffResponse();
-      timeOff.id = i;
-      timeOff.description = 'Description' + i;
-      timeOff.startDate = new Date('01/01/2021');
-      timeOff.endDate = new Date('10/01/2021');
-      timeOff.allowDayRequestOn = i < 5 ? [i, i + 1, i + 2] : [1, 2, 3];
-      timeOff.firstDayOfWeek = i - 1;
-      timeOff.timeOffCode = i;
-      timeOff.FTEDayLength = '0' + i + ':' + '00';
-      timeOff.agentAccess = {
-        addNoteAllotments: true,
-        waitList: true,
-        timeOffAnyDay: true,
-        timeOffAllotments: true,
-        showPastDays: true
-      };
-      timeOff.fullWeeks = {
-        daysAfterWeek: 22,
-        daysBeforeWeek: 99,
-        fullWeekList: [1, 2, 3]
-      };
-      this.timeOffs.push(timeOff);
-    }
+  getTimeOffs(queryParams: QueryStringParameters) {
+    const url = `${this.baseURL}/TimeOffs`;
+
+    return this.http.get<TimeOffResponse>(url, {
+      params: this.convertToHttpParam(queryParams),
+      observe: 'response'
+    }).pipe(catchError(this.handleError));
   }
 
-  getTimeOffs() {
-    return of(this.timeOffs);
+  addTimeOff(data: AddTimeOffs) {
+    const url = `${this.baseURL}/TimeOffs`;
+
+    return this.http.post<ApiResponseModel>(url, data)
+    .pipe(catchError(this.handleError));
   }
 
-  addTimeOff(data: TimeOffResponse) {
-    data.id = this.timeOffs.length + 1;
-    this.timeOffs.push(data);
-    return of(undefined);
-  }
+  updateTimeOff(data: UpdateTimeOffs) {
+    const url = `${this.baseURL}/TimeOffs`;
 
-  updateTimeOff(data: TimeOffResponse) {
-    const index = this.timeOffs.findIndex(x => x.id === data.id);
-    if (index > -1) {
-      this.timeOffs[index] = data;
-    }
-    return of(undefined);
+    return this.http.put<ApiResponseModel>(url, data)
+    .pipe(catchError(this.handleError));
   }
 
   deleteTimeoff(id: number) {
-    const index = this.timeOffs.findIndex(x => x.id === id);
-    if (index > -1) {
-      this.timeOffs.splice(index, 1);
-    }
-    return of(undefined);
+    const url = `${this.baseURL}/TimeOffs/${id}`;
+
+    return this.http.delete<ApiResponseModel>(url)
+    .pipe(catchError(this.handleError));
   }
 
 }

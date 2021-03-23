@@ -34,7 +34,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <select class="form-control" id="icon" formControlName="timeOffCode">
+              <select class="form-control" id="icon" formControlName="schedulingCodeId">
                 <option></option>
                 <option *ngFor="let fonts of timeOffCodes" class="fa" [value]="fonts.value" [innerHTML]="fonts.data">
                 </option>
@@ -160,11 +160,11 @@
           </p>
         </h6>
         <div class="form-group" >
-          <ng-container formGroupName="agentAccess">
+          <ng-container>
             <div class="form-group clearfix margin-b-05-rem">
               <div class="icheck-primary d-inline">
                 <input type="checkbox" id="{{ 'check_box_1' }}" name="agentAccess"
-                  formControlName="timeOffAllotments">
+                  formControlName="viewAllotments">
                 <label class="mr-1" for="{{ 'check_box_1' }}">
                   {{ 'Allow agents to view time off allotments' | translate }}
                 </label>
@@ -173,7 +173,7 @@
             <div class="form-group clearfix margin-b-05-rem">
               <div class="icheck-primary d-inline">
                 <input type="checkbox" id="{{ 'check_box_2' }}" name="agentAccess"
-                  formControlName="waitList">
+                  formControlName="viewWaitLists">
                 <label class="mr-1" for="{{ 'check_box_2' }}">
                   {{ 'Allow agents to see the wait list for any day' | translate }}
                 </label>
@@ -182,7 +182,7 @@
             <div class="form-group clearfix margin-b-05-rem">
               <div class="icheck-primary d-inline">
                 <input type="checkbox" id="{{ 'check_box_3' }}" name="agentAccess"
-                  formControlName="timeOffAnyDay">
+                  formControlName="timeOffs">
                 <label class="mr-1" for="{{ 'check_box_3' }}">
                   {{ 'Allow agents to see who has time off for any day' | translate }}
                 </label>
@@ -191,7 +191,7 @@
             <div class="form-group clearfix margin-b-05-rem">
               <div class="icheck-primary d-inline">
                 <input type="checkbox" id="{{ 'check_box_4' }}" name="agentAccess"
-                  formControlName="addNoteAllotments">
+                  formControlName="addNotes">
                 <label class="mr-1" for="{{ 'check_box_4' }}">
                   {{ 'Allow agents to add notes allotments' | translate }}
                 </label>
@@ -213,7 +213,7 @@
           <p>{{ 'Full Weeks' | translate }}
           </p>
         </h6>
-        <ng-container formGroupName="fullWeeks">
+        <ng-container>
         <div class="col-md-12 m-t-20">
           <div class="row">
             <div class="col-md-4">
@@ -222,7 +222,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="number" class="form-control" formControlName="daysBeforeWeek" />
+              <input type="number" class="form-control" formControlName="forceOffDaysBeforeWeek" />
             </div>
           </div>
         </div>
@@ -234,7 +234,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="number" class="form-control" formControlName="daysAfterWeek"/>
+              <input type="number" class="form-control" formControlName="forceOffDaysAfterWeek"/>
             </div>
           </div>
         </div>
@@ -269,10 +269,10 @@
           </p>
         </h6>
         <div class="form-group">
-          <ng-container formGroupName="deselectedTime" *ngFor="let x of deselectedTimeOption; let i=index;">
+          <ng-container *ngFor="let x of deselectedTimeOption; let i=index;">
             <div *ngIf="i < 3" class="form-group clearfix margin-b-05-rem">
               <div class="icheck-primary d-inline">
-                <input type="radio" id="{{ 'radio_box' + i }}" name="deselectTime" [value]="x.id" formControlName="deselectTime">
+                <input type="radio" id="{{ 'radio_box' + i }}" name="deselectedTime" [value]="x.id" formControlName="deselectedTime">
                 <label class="mr-1" for="{{ 'radio_box' + i }}">
                   {{ x.value | translate }}
                 </label>
