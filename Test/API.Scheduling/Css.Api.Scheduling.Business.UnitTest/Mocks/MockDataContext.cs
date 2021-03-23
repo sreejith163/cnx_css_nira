@@ -84,6 +84,28 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                                         DateFrom = new DateTime(2021, 3, 21),
                                         DateTo = new DateTime(2021, 3, 27),
                                         AgentSchedulingGroupId = 1,
+                                        Status = SchedulingStatus.Pending_Schedule,
+                                        ScheduleCharts = new List<AgentScheduleChart>
+                                        {
+                                            new AgentScheduleChart
+                                            {
+                                                Day = 0,
+                                                Charts = new List<ScheduleChart>
+                                                {
+                                                    new ScheduleChart
+                                                    {
+                                                        StartTime = "00:00 am",
+                                                        EndTime = "00:05pm",
+                                                        SchedulingCodeId = 1
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    new AgentScheduleRange {
+                                        DateFrom = new DateTime(2021, 3, 7),
+                                        DateTo = new DateTime(2021, 3, 13),
+                                        AgentSchedulingGroupId = 1,
                                         Status = SchedulingStatus.Released,
                                         ScheduleCharts = new List<AgentScheduleChart>
                                         {
@@ -111,6 +133,28 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                                     new AgentScheduleRange {
                                         DateFrom = new DateTime(2021, 3, 21),
                                         DateTo = new DateTime(2021, 3, 27),
+                                        AgentSchedulingGroupId = 1,
+                                        Status = SchedulingStatus.Pending_Schedule,
+                                        ScheduleCharts = new List<AgentScheduleChart>
+                                        {
+                                            new AgentScheduleChart
+                                            {
+                                                Day = 0,
+                                                Charts = new List<ScheduleChart>
+                                                {
+                                                    new ScheduleChart
+                                                    {
+                                                        StartTime = "00:00 am",
+                                                        EndTime = "00:05pm",
+                                                        SchedulingCodeId = 1
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    new AgentScheduleRange {
+                                        DateFrom = new DateTime(2021, 3, 7),
+                                        DateTo = new DateTime(2021, 3, 13),
                                         AgentSchedulingGroupId = 1,
                                         Status = SchedulingStatus.Released,
                                         ScheduleCharts = new List<AgentScheduleChart>
