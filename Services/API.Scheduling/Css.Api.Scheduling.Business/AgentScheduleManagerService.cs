@@ -5,17 +5,14 @@ using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Core.Models.Enums;
 using Css.Api.Scheduling.Business.Interfaces;
-using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
-using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Response.MySchedule;
-using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -49,11 +46,6 @@ namespace Css.Api.Scheduling.Business
         private readonly IAgentScheduleManagerRepository _agentScheduleManagerRepository;
 
         /// <summary>
-        /// The agent schedule group repository
-        /// </summary>
-        private readonly IAgentSchedulingGroupRepository _agentSchedulingGroupRepository;
-
-        /// <summary>
         /// The agent admin repository
         /// </summary>
         private readonly IAgentAdminRepository _agentAdminRepository;
@@ -74,7 +66,7 @@ namespace Css.Api.Scheduling.Business
         private readonly IUnitOfWork _uow;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentAdminService" /> class.
+        /// Initializes a new instance of the <see cref="AgentScheduleManagerService"/> class.
         /// </summary>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="activityLogRepository">The activity log repository.</param>
@@ -89,7 +81,6 @@ namespace Css.Api.Scheduling.Business
             IAgentScheduleManagerRepository agentScheduleManagerRepository,
             IAgentAdminRepository agentAdminRepository,
             ISchedulingCodeRepository schedulingCodeRepository,
-            IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
             IMapper mapper,
             IUnitOfWork uow)
         {
@@ -98,7 +89,6 @@ namespace Css.Api.Scheduling.Business
             _agentScheduleManagerRepository = agentScheduleManagerRepository;
             _agentAdminRepository = agentAdminRepository;
             _schedulingCodeRepository = schedulingCodeRepository;
-            _agentSchedulingGroupRepository = agentSchedulingGroupRepository;
             _mapper = mapper;
             _uow = uow;
         }

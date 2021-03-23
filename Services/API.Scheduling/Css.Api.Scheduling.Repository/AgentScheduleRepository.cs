@@ -301,9 +301,15 @@ namespace Css.Api.Scheduling.Repository
             UpdateOneAsync(query, update);
         }
 
-        /// <summary>Updates the agent schedule with ranges.</summary>
-        /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <param name="updateAgentScheduleEmployeeDetails">The update agent schedule employee details.</param>
+        /// <summary>
+        /// Updates the agent schedule with ranges.
+        /// </summary>
+        /// <param name="employeeIdDetails">
+        /// The employee identifier details.
+        /// </param>
+        /// <param name="updateAgentScheduleEmployeeDetails">
+        /// The update agent schedule employee details.
+        /// </param>
         public void UpdateAgentScheduleWithRanges(EmployeeIdDetails employeeIdDetails, UpdateAgentScheduleEmployeeDetails updateAgentScheduleEmployeeDetails)
         {
             var query =
@@ -394,8 +400,6 @@ namespace Css.Api.Scheduling.Repository
             UpdateOneAsync(query, update);
         }
 
-
-
         /// <summary>
         /// Updates the agent schedule range.
         /// </summary>
@@ -447,6 +451,12 @@ namespace Css.Api.Scheduling.Repository
             UpdateOneAsync(query, update);
         }
 
+        /// <summary>
+        /// Deletes the agent schedule range import.
+        /// </summary>
+        /// <param name="employeeId">The employee identifier.</param>
+        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
+        /// <param name="dateRange">The date range.</param>
         public void DeleteAgentScheduleRangeImport(int employeeId, int agentSchedulingGroupId, DateRange dateRange)
         {
             var query =

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Css.Api.Auth
 {
@@ -57,6 +58,25 @@ namespace Css.Api.Auth
                     // set the redirect URI to https://localhost:5001/signin-google
                     options.ClientId = "copy client ID from Google here";
                     options.ClientSecret = "copy client secret from Google here";
+                })
+                .AddOpenIdConnect("adfs", "AD authentication", options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+
+                    options.Authority = "https://adfs.concentrix.com/adfs";
+                    options.ClientId = "6c5485e1-da90-4789-81ee-d3a37d8706ea";
+                    options.ClientSecret = "12f8hNIMqE-83exCiNRR36c0Z7E6k1vgtqhXiTDl";
+                    options.ResponseType = "id_token";
+
+                    options.CallbackPath = "/signin-adfs";
+                    options.SignedOutCallbackPath = "/signout-callback-adfs";
+                    options.RemoteSignOutPath = "/signout-adfs";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = "name",
+                        RoleClaimType = "role"
+                    };
                 });
         }
 

@@ -226,7 +226,9 @@ namespace Css.Api.Scheduling.Repository
             }
         }
 
-        /// <summary>Updates the agent schedule manager.</summary>
+        /// <summary>
+        /// Updates the agent schedule manager.
+        /// </summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="updateAgentScheduleManagerEmployeeDetails">The update agent schedule manager employee details.</param>
         public void UpdateAgentScheduleManager(EmployeeIdDetails employeeIdDetails, UpdateAgentScheduleManagerEmployeeDetails updateAgentScheduleManagerEmployeeDetails)
@@ -243,14 +245,13 @@ namespace Css.Api.Scheduling.Repository
             UpdateManyAsync(query, update);
         }
 
-        /// <summary>Updates the agent schedule manager from moving date.</summary>
+        /// <summary>
+        /// Updates the agent schedule manager from moving date.
+        /// </summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="updateAgentScheduleManagerEmployeeDetails">The update agent schedule manager employee details.</param>
         public void UpdateAgentScheduleManagerFromMovingDate(EmployeeIdDetails employeeIdDetails, UpdateAgentScheduleManagerEmployeeDetails updateAgentScheduleManagerEmployeeDetails)
         {
-            //var query =
-            //    Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id);
-
             var query =
                Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
                Builders<AgentScheduleManager>.Filter.Gte(i => i.Date, updateAgentScheduleManagerEmployeeDetails.MovingDate);

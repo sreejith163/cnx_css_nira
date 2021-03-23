@@ -106,9 +106,9 @@ namespace Css.Api.Scheduling.Controllers
         }
 
         /// <summary>
-        /// Updates the agent schedule chart.
+        /// Imports the agent schedule chart.
         /// </summary>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <param name="agentScheduleImport">The agent schedule import.</param>
         /// <returns></returns>
         [HttpPut("import")]
         public async Task<IActionResult> ImportAgentScheduleChart([FromBody] AgentScheduleImport agentScheduleImport)
