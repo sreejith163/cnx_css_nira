@@ -55,6 +55,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddTransient<IAgentScheduleService, AgentScheduleService>();
             services.AddTransient<IAgentScheduleManagerService, AgentScheduleManagerService>();
             services.AddTransient<IEntityHierarchyService, EntityHierarchyService>();
+            services.AddTransient<ITimeOffService, TimeOffService>();
 
             services.AddTransient<IForecastScreenService, ForecastScreenService>();
             services.AddScoped<ITimezoneRepository, TimezoneRepository>();
@@ -67,6 +68,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddScoped<ISkillGroupRepository, SkillGroupRepository>();
             services.AddScoped<ISkillTagRepository, SkillTagRepository>();
             services.AddScoped<IAgentSchedulingGroupRepository, AgentSchedulingGroupRepository>();
+            services.AddScoped<ITimeOffRepository, TimeOffRepository>();
             services.AddScoped<IAgentSchedulingGroupHistoryRepository, AgentSchedulingGroupHistoryRepository>();
             services.AddScoped<ISchedulingCodeRepository, SchedulingCodeRepository>();
             services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
