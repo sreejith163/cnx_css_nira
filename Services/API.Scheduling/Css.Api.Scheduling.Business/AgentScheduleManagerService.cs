@@ -10,6 +10,7 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
+using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Response.MySchedule;
@@ -45,6 +46,12 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IAgentScheduleManagerRepository _agentScheduleManagerRepository;
 
+
+        /// <summary>
+        /// The agent schedule group repository
+        /// </summary>
+        private readonly IAgentSchedulingGroupRepository _agentSchedulingGroupRepository;
+
         /// <summary>
         /// The agent admin repository
         /// </summary>
@@ -66,7 +73,7 @@ namespace Css.Api.Scheduling.Business
         private readonly IUnitOfWork _uow;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentScheduleManagerService"/> class.
+        /// Initializes a new instance of the <see cref="AgentAdminService" /> class.
         /// </summary>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="activityLogRepository">The activity log repository.</param>
@@ -81,6 +88,7 @@ namespace Css.Api.Scheduling.Business
             IAgentScheduleManagerRepository agentScheduleManagerRepository,
             IAgentAdminRepository agentAdminRepository,
             ISchedulingCodeRepository schedulingCodeRepository,
+            IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
             IMapper mapper,
             IUnitOfWork uow)
         {
@@ -89,6 +97,7 @@ namespace Css.Api.Scheduling.Business
             _agentScheduleManagerRepository = agentScheduleManagerRepository;
             _agentAdminRepository = agentAdminRepository;
             _schedulingCodeRepository = schedulingCodeRepository;
+            _agentSchedulingGroupRepository = agentSchedulingGroupRepository;
             _mapper = mapper;
             _uow = uow;
         }
@@ -139,6 +148,86 @@ namespace Css.Api.Scheduling.Business
             return new CSSResponse(mappedAgentScheduleManagers.Distinct(), HttpStatusCode.OK);
         }
 
+        /// <summary>
+        /// Gets the agent my schedule.
+        /// </summary>
+        /// <param name="skillGroupId">The employee identifier details.</param>
+        /// <param name="date"></param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<CSSResponse> GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date)
+        {
+            var skillGroupIdDetails = new SkillGroupIdDetails { SkillGroupId = skillGroupId };
+            var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBySkillGroupId(skillGroupIdDetails);
+
+            var agentSchedulingGroupId = new List<int>();
+
+            foreach (var id in agentSchedulingGroup)
+            {
+                agentSchedulingGroupId.Add(id.AgentSchedulingGroupId);
+            }
+
+            if (agentSchedulingGroupId == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var dateTimeWithZeroTimeSpan = new DateTimeOffset(date.Date, TimeSpan.Zero);
+            var agentSchedule = await _agentScheduleManagerRepository.GetAgentScheduleByAgentSchedulingGroupId(agentSchedulingGroupId, dateTimeWithZeroTimeSpan);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            int[] numbers = { 3, 15, 16, 17, 20, 21, 22, 173, 174, 175, 176, 177 };
+            foreach (var item1 in agentSchedule)
+            {
+                item1.Charts = item1.Charts.Where(p => numbers.Contains(p.SchedulingCodeId)).ToList();
+            }
+
+            int minutes = 30;
+            var interval = new TimeSpan(0, minutes, 0);
+            var schedOpen = agentSchedule.SelectMany(x => x.Charts).ToList();
+
+            agentSchedule.RemoveAll(x => x.Charts.Count() == 0);
+
+            var myTimeList = new List<ScheduleOpen>();
+            var timeList = new List<TimeSpan>();
+
+            foreach (var chart in schedOpen)
+            {
+                TimeSpan start = chart.StartDateTime.TimeOfDay;
+                TimeSpan end = chart.EndDateTime.TimeOfDay;
+
+                var diffSpan = end - start;
+                var diffMinutes = diffSpan.TotalMinutes > 0 ? diffSpan.TotalMinutes : diffSpan.TotalMinutes + (60 * 24);
+                for (int i = 0; i < diffMinutes + minutes; i += minutes)
+                {
+                    var scheduleOpen = new ScheduleOpen { Time = start };
+                    myTimeList.Add(scheduleOpen);
+                    timeList.Add(start);
+                    start = start.Add(interval);
+                }
+            }
+
+            var groupedTime = myTimeList
+                .GroupBy(x => x.Time)
+                .Select(
+                    group => new
+                    {
+                        time = RoundToNearestMinutes(group.Key, 30),
+                        scheduleOpen = group.Count()
+                    }
+                );
+
+            if (groupedTime.Count() == 0)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            return new CSSResponse(groupedTime, HttpStatusCode.OK);
+        }
 
         /// <summary>Gets the agent my schedule.</summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
@@ -148,7 +237,7 @@ namespace Css.Api.Scheduling.Business
         /// </returns>
         public async Task<CSSResponse> GetAgentMySchedule(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter)
         {
-            var  agentSchedules = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails, myScheduleQueryParameter);
+            var agentSchedules = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails, myScheduleQueryParameter);
             if (agentSchedules == null || agentSchedules.Count < 1)
             {
                 return new CSSResponse(HttpStatusCode.NotFound);
@@ -159,46 +248,49 @@ namespace Css.Api.Scheduling.Business
                 AgentMySchedules = new List<AgentMyScheduleDay>()
             };
 
-            //AgentMyScheduleDay schedule;
+            AgentMyScheduleDay schedule;
 
-            //foreach (DateTime date in EachDay(myScheduleQueryParameter.StartDate, myScheduleQueryParameter.EndDate))
-            //{
-            //    AgentScheduleManager agentSchedule = agentSchedules.Where(s => s.Date == date).FirstOrDefault();
-            //    if (agentSchedule != null)
-            //    {
+            foreach (DateTime date in EachDay(myScheduleQueryParameter.StartDate, myScheduleQueryParameter.EndDate))
+            {
+                AgentScheduleManager agentSchedule = agentSchedules.Where(s => s.Date == date).FirstOrDefault();
+                if (agentSchedule != null)
+                {
 
-            //        bool isChartAvailableForDay =
-            //            agentSchedule.Charts.Any();
-            //        if (isChartAvailableForDay)
-            //        {
-            //            var chartsOfDay = agentSchedule.Charts;
+                    bool isChartAvailableForDay =
+                        agentSchedule.Charts.Any();
+                    if (isChartAvailableForDay)
+                    {
+                        var chartsOfDay = agentSchedule.Charts;
 
                         //var firstStartTime = chartsOfDay.Min(chart => DateTime.
-                        //ParseExact(chart.StartTime, "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
+                        //ParseExact(chart.StartDateTime.ToString(), "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
                         //var lastEndTime = chartsOfDay.Max(chart => DateTime.
-                        //ParseExact(chart.EndTime, "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
+                        //ParseExact(chart.EndDateTime.ToString(), "hh:mm tt", CultureInfo.InvariantCulture)).ToString("hh:mm tt");
 
-                        //schedule = new AgentMyScheduleDay
-                        //{
-                        //    Day = (int)agentSchedule.Date.DayOfWeek,
-                        //    Date = agentSchedule.Date,
-                        //    Charts = chartsOfDay,
-                        //    FirstStartTime = firstStartTime,
-                        //    LastEndTime = lastEndTime
-                        //};
-            //        }
-            //        else
-            //        {
-            //            schedule = CreateMyScheduleDayWithNoChart(date);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        schedule = CreateMyScheduleDayWithNoChart(date);
+                        var firstStartTime = chartsOfDay.Min(chart => chart.StartDateTime);
+                        var lastEndTime = chartsOfDay.Max(chart => chart.EndDateTime);
 
-            //    }
-            //    agentMyScheduleDetailsDTO.AgentMySchedules.Add(schedule);
-            //}
+                        schedule = new AgentMyScheduleDay
+                        {
+                            Day = (int)agentSchedule.Date.DayOfWeek,
+                            Date = agentSchedule.Date,
+                            Charts = chartsOfDay,
+                            FirstStartTime = firstStartTime.ToString(),
+                            LastEndTime = lastEndTime.ToString()
+                        };
+                    }
+                    else
+                    {
+                        schedule = CreateMyScheduleDayWithNoChart(date);
+                    }
+                }
+                else
+                {
+                    schedule = CreateMyScheduleDayWithNoChart(date);
+
+                }
+                agentMyScheduleDetailsDTO.AgentMySchedules.Add(schedule);
+            }
 
             return new CSSResponse(agentMyScheduleDetailsDTO, HttpStatusCode.OK);
         }
@@ -292,7 +384,7 @@ namespace Css.Api.Scheduling.Business
 
             var activityLogs = new List<ActivityLog>();
 
-            agentScheduleDetails.Date = new DateTime(agentScheduleDetails.Date.Year, agentScheduleDetails.Date.Month, agentScheduleDetails.Date.Day, 
+            agentScheduleDetails.Date = new DateTime(agentScheduleDetails.Date.Year, agentScheduleDetails.Date.Month, agentScheduleDetails.Date.Day,
                                                      0, 0, 0, DateTimeKind.Utc);
 
             foreach (var employeeId in agentScheduleDetails.EmployeeIds)
@@ -431,6 +523,17 @@ namespace Css.Api.Scheduling.Business
             };
         }
 
-       
+        /// <summary>
+        /// Rounds to nearest minutes.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="minutes">The minutes.</param>
+        /// <returns></returns>
+        private TimeSpan RoundToNearestMinutes(TimeSpan input, int minutes)
+        {
+            var totalMinutes = (int)(input + new TimeSpan(0, minutes / 2, 0)).TotalMinutes;
+
+            return new TimeSpan(0, totalMinutes - totalMinutes % minutes, 0);
+        }
     }
 }
