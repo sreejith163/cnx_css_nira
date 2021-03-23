@@ -40,9 +40,7 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
         /// <returns></returns>
-        Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupBySkillGroupId(int skillGroupId);
-
-
+        Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupBySkillGroupId(SkillGroupIdDetails skillGroupIdDetails);
 
         /// <summary>
         /// Creates the agent scheduling group.

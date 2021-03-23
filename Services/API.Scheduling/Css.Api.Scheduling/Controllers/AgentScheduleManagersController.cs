@@ -59,7 +59,18 @@ namespace Css.Api.Scheduling.Controllers
         }
 
 
- 
+        /// <summary>
+        /// Gets the scheduled open
+        /// </summary>
+        /// <param name="skillGroupId">The agent schedule identifier.</param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        [HttpGet("{skillGroupId}/scheduledopen")]
+        public async Task<IActionResult> GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date)
+        {
+            var result = await _agentScheduleManagerService.GetAgentScheduledOpen(skillGroupId, date);
+            return StatusCode((int)result.Code, result.Value);
+        }
 
         /// <summary>
         /// Updates the agent schedule manger chart.

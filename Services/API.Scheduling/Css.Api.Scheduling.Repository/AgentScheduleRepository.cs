@@ -353,9 +353,9 @@ namespace Css.Api.Scheduling.Repository
             var document = FindByIdAsync(query).Result;
             if (document != null)
             {
-                var scheduleRange = document.Ranges.Where(x => x.Status == SchedulingStatus.Pending_Schedule &&
+                var scheduleRange = document.Ranges.FirstOrDefault(x => x.Status == SchedulingStatus.Pending_Schedule &&
                                                                         x.DateFrom == agentScheduleRange.DateFrom &&
-                                                                        x.DateTo == agentScheduleRange.DateTo).FirstOrDefault();
+                                                                        x.DateTo == agentScheduleRange.DateTo);
 
                 if (scheduleRange != null)
                 {
@@ -438,30 +438,6 @@ namespace Css.Api.Scheduling.Repository
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
-                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
-
-            dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
-            dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
-
-            var update = Builders<AgentSchedule>.Update
-                .PullFilter(x => x.Ranges, builder => builder.Status == SchedulingStatus.Pending_Schedule &&
-                                                      builder.DateFrom == dateRange.DateFrom &&
-                                                      builder.DateTo == dateRange.DateTo);
-
-            UpdateOneAsync(query, update);
-        }
-
-        /// <summary>
-        /// Deletes the agent schedule range import.
-        /// </summary>
-        /// <param name="employeeId">The employee identifier.</param>
-        /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
-        /// <param name="dateRange">The date range.</param>
-        public void DeleteAgentScheduleRangeImport(int employeeId, int agentSchedulingGroupId, DateRange dateRange)
-        {
-            var query =
-                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeId) &
-                Builders<AgentSchedule>.Filter.Eq(i => i.ActiveAgentSchedulingGroupId, agentSchedulingGroupId) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);

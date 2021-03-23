@@ -137,11 +137,11 @@ namespace Css.Api.Scheduling.Validators.AgentSchedule
                         endTimeDateTime = endTimeDateTime.AddDays(1);
                     }
 
-                    //if (startTimeDateTime >= endTimeDateTime)
-                    //{
-                    //    validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time and End time range is not valid"));
-                    //    return validationFailures;
-                    //}
+                    if (startTimeDateTime >= endTimeDateTime)
+                    {
+                        validationFailures.Add(new ValidationFailure("Agent Scheduling Chart", "Start time and End time range is not valid"));
+                        return validationFailures;
+                    }
                 }
             }
 

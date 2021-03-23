@@ -3,11 +3,10 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Response.MySchedule
 {
-    public class AgentMyScheduleDay
+    public class AgentMyScheduleDay : AgentScheduleChart
     {
         /// <summary>
         /// Gets or sets the agent schedule identifier.
@@ -16,21 +15,9 @@ namespace Css.Api.Scheduling.Models.DTO.Response.MySchedule
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string AgentScheduleManagerId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the day.
-        /// </summary>
-        public int Day { get; set; }
-
-        /// <summary>
-        /// Gets or sets the date.
-        /// </summary>
-        [BsonDateTimeOptions(Representation = BsonType.Document, Kind = DateTimeKind.Utc)]
+        /// <summary>Gets or sets the date.</summary>
+        /// <value>The date.</value>
         public DateTime Date { get; set; }
-
-        /// <summary>
-        /// Gets or sets the charts.
-        /// </summary>
-        public List<AgentScheduleManagerChart> Charts { get; set; }
 
         /// <summary>Gets or sets the first start time.</summary>
         /// <value>The first start time.</value>

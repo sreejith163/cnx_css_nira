@@ -80,9 +80,9 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="skillGroupIdDetails">The skill group identifier details.</param>
         /// <returns></returns>
-        public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupBySkillGroupId(int skillGroupId)
+        public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupBySkillGroupId(SkillGroupIdDetails skillGroupIdDetails)
         {
-            var query = Builders<AgentSchedulingGroup>.Filter.Eq(i => i.SkillGroupId, skillGroupId) &
+            var query = Builders<AgentSchedulingGroup>.Filter.Eq(i => i.SkillGroupId, skillGroupIdDetails.SkillGroupId) &
                Builders<AgentSchedulingGroup>.Filter.Eq(i => i.IsDeleted, false);
 
             var result = FilterBy(query);

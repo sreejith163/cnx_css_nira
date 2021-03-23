@@ -25,7 +25,13 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// </returns>
         Task<CSSResponse> GetAgentMySchedule(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter);
 
-       
+        /// <summary>Gets the agent my schedule.</summary>
+        /// <param name="skillGroupId">The employee identifier details.</param>
+        /// <param name="DateTimeOffset">My schedule query parameter.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<CSSResponse> GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date);
 
         /// <summary>
         /// Updates the agent schedule manger chart.
