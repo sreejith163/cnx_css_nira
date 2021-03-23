@@ -159,7 +159,7 @@ namespace Css.Api.Scheduling.Business
         public async Task<CSSResponse> GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date)
         {
             var skillGroupIdDetails = new SkillGroupIdDetails { SkillGroupId = skillGroupId };
-            var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBySkillGroupId(skillGroupIdDetails);
+            var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupBySkillGroupId(skillGroupId);
 
             var agentSchedulingGroupId = new List<int>();
 
