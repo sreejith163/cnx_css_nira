@@ -130,6 +130,66 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
         #endregion
 
+        #region GetAgentMySchedule
+
+        /// <summary>
+        /// Gets the agent my schedule with not found.
+        /// </summary>
+        /// <param name="employeeId">The employee identifier.</param>
+        [Theory]
+        [InlineData(100)]
+        [InlineData(101)]
+        public async void GetAgentMyScheduleWithNotFound(int employeeId)
+        {
+            EmployeeIdDetails employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
+
+            MyScheduleQueryParameter myScheduleQueryParameter = new MyScheduleQueryParameter
+            {
+                AgentSchedulingGroupId = 1,
+                StartDate = new DateTime(2021, 3, 21),
+                EndDate = new DateTime(2021, 3, 21)
+            };
+
+            mockAgentScheduleManagerRepository.Setup(mr => mr.GetAgentScheduleManagerChartByEmployeeId(It.IsAny<EmployeeIdDetails>(), It.IsAny<MyScheduleQueryParameter>())).ReturnsAsync(
+                (EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter) => mockDataContext.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails, myScheduleQueryParameter));
+
+            var result = await agentScheduleManagerService.GetAgentMySchedule(employeeIdDetails, myScheduleQueryParameter);
+
+            Assert.NotNull(result);
+            Assert.Null(result.Value);
+            Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        }
+
+        /// <summary>
+        /// Gets the agent my schedule.
+        /// </summary>
+        /// <param name="employeeId">The employee identifier.</param>
+        [Theory]
+        [InlineData(1)]
+        public async void GetAgentMySchedule(int employeeId)
+        {
+            EmployeeIdDetails employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
+
+            MyScheduleQueryParameter myScheduleQueryParameter = new MyScheduleQueryParameter
+            {
+                AgentSchedulingGroupId = 1,
+                StartDate = new DateTime(2021, 3, 21),
+                EndDate = new DateTime(2021, 3, 21)
+            };
+
+            mockAgentScheduleManagerRepository.Setup(mr => mr.GetAgentScheduleManagerChartByEmployeeId(It.IsAny<EmployeeIdDetails>(), It.IsAny<MyScheduleQueryParameter>())).ReturnsAsync(
+                (EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter) => mockDataContext.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails, myScheduleQueryParameter));
+
+            var result = await agentScheduleManagerService.GetAgentMySchedule(employeeIdDetails, myScheduleQueryParameter);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.IsType<AgentMyScheduleDetailsDTO>(result.Value);
+            Assert.Equal(HttpStatusCode.OK, result.Code);
+        }
+
+        #endregion
+
         #region GetAgentScheduledOpen
 
         /// <summary>
@@ -196,66 +256,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
         #endregion
 
-        #region GetAgentMySchedule
-
-        /// <summary>
-        /// Gets the agent my schedule with not found.
-        /// </summary>
-        /// <param name="employeeId">The employee identifier.</param>
-        [Theory]
-        [InlineData(100)]
-        [InlineData(101)]
-        public async void GetAgentMyScheduleWithNotFound(int employeeId)
-        {
-            EmployeeIdDetails employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
-
-            MyScheduleQueryParameter myScheduleQueryParameter = new MyScheduleQueryParameter
-            {
-                AgentSchedulingGroupId = 1,
-                StartDate = new DateTime(2021, 3, 21),
-                EndDate = new DateTime(2021, 3, 21)
-            };
-
-            mockAgentScheduleManagerRepository.Setup(mr => mr.GetAgentScheduleManagerChartByEmployeeId(It.IsAny<EmployeeIdDetails>(), It.IsAny<MyScheduleQueryParameter>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter) => mockDataContext.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails, myScheduleQueryParameter));
-
-            var result = await agentScheduleManagerService.GetAgentMySchedule(employeeIdDetails, myScheduleQueryParameter);
-
-            Assert.NotNull(result);
-            Assert.Null(result.Value);
-            Assert.Equal(HttpStatusCode.NotFound, result.Code);
-        }
-
-        /// <summary>
-        /// Gets the agent my schedule.
-        /// </summary>
-        /// <param name="employeeId">The employee identifier.</param>
-        [Theory]
-        [InlineData(1)]
-        public async void GetAgentMySchedule(int employeeId)
-        {
-            EmployeeIdDetails employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
-
-            MyScheduleQueryParameter myScheduleQueryParameter = new MyScheduleQueryParameter
-            {
-                AgentSchedulingGroupId = 1,
-                StartDate = new DateTime(2021, 3, 21),
-                EndDate = new DateTime(2021, 3, 21)
-            };
-
-            mockAgentScheduleManagerRepository.Setup(mr => mr.GetAgentScheduleManagerChartByEmployeeId(It.IsAny<EmployeeIdDetails>(), It.IsAny<MyScheduleQueryParameter>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter) => mockDataContext.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails, myScheduleQueryParameter));
-
-            var result = await agentScheduleManagerService.GetAgentMySchedule(employeeIdDetails, myScheduleQueryParameter);
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.Value);
-            Assert.IsType<AgentMyScheduleDetailsDTO>(result.Value);
-            Assert.Equal(HttpStatusCode.OK, result.Code);
-        }
-
-        #endregion
-
         #region UpdateAgentScheduleMangerChart
 
         /// <summary>
@@ -306,7 +306,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 (EmployeeIdDetails employeeIdDetails, DateDetails dateDetails) => mockDataContext.IsAgentScheduleManagerChartExists(employeeIdDetails, dateDetails));
 
             mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminIdByEmployeeId(employeeIdDetails));
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
 
             var result = await agentScheduleManagerService.UpdateAgentScheduleMangerChart(agentScheduleManager);
 
@@ -363,7 +363,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 (EmployeeIdDetails employeeIdDetails, DateDetails dateDetails) => mockDataContext.IsAgentScheduleManagerChartExists(employeeIdDetails, dateDetails));
 
             mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminIdByEmployeeId(employeeIdDetails));
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
 
             var result = await agentScheduleManagerService.UpdateAgentScheduleMangerChart(agentScheduleManager);
 
@@ -420,7 +420,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 (EmployeeIdDetails employeeIdDetails, DateDetails dateDetails) => mockDataContext.IsAgentScheduleManagerChartExists(employeeIdDetails, dateDetails));
 
             mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminIdByEmployeeId(employeeIdDetails));
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
 
             var result = await agentScheduleManagerService.UpdateAgentScheduleMangerChart(agentScheduleManager);
 
@@ -437,16 +437,19 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// Copies the agent schedule manager chart with not found.
         /// </summary>
         /// <param name="employeeId">The employee identifier.</param>
+        /// <param name="year">The year.</param>
+        /// <param name="month">The month.</param>
+        /// <param name="day">The day.</param>
         [Theory]
-        [InlineData(100)]
-        [InlineData(101)]
-        public async void CopyAgentScheduleManagerChartWithNotFound(int employeeId)
+        [InlineData(100, 2021, 3, 21)]
+        [InlineData(101, 2021, 3, 22)]
+        public async void CopyAgentScheduleManagerChartWithNotFound(int employeeId, int year, int month, int day)
         {
             EmployeeIdDetails employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
             CopyAgentScheduleManager copyAgentScheduleManager = new CopyAgentScheduleManager
             {
                 AgentSchedulingGroupId = 1,
-                Date = DateTime.Now,
+                Date = new DateTime(year, month, day),
                 ActivityOrigin = ActivityOrigin.CSS,
                 EmployeeIds = new List<int> { 1, 2 },
                 ModifiedBy = "admin",
@@ -460,7 +463,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 (EmployeeIdDetails employeeIdDetails, DateDetails dateDetails) => mockDataContext.IsAgentScheduleManagerChartExists(employeeIdDetails, dateDetails));
 
             mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminIdByEmployeeId(employeeIdDetails));
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
 
             var result = await agentScheduleManagerService.CopyAgentScheduleManagerChart(employeeIdDetails, copyAgentScheduleManager);
 
@@ -499,7 +502,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 (EmployeeIdDetails employeeIdDetails, DateDetails dateDetails) => mockDataContext.IsAgentScheduleManagerChartExists(employeeIdDetails, dateDetails));
 
             mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminIdByEmployeeId(employeeIdDetails));
+                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
 
             mockAgentAdminRepository.Setup(mr => mr.GetEmployeeIdsByAgentSchedulingGroup(It.IsAny<AgentSchedulingGroupIdDetails>())).ReturnsAsync(
                 (AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails) => mockDataContext.GetEmployeeIdsByAgentSchedulingGroup(agentSchedulingGroupIdDetails));

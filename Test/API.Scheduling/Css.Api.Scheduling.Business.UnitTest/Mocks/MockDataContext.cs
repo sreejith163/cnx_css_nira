@@ -280,8 +280,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                 .Skip((agentAdminQueryParameter.PageNumber - 1) * agentAdminQueryParameter.PageSize)
                 .Take(agentAdminQueryParameter.PageSize);
 
-            // var mappedAgentAdmins = JsonConvert.DeserializeObject<List<AgentAdminDTO>>(JsonConvert.SerializeObject(pagedAgentAdmins)) as IQueryable<AgentAdminDTO>;
-
             var shapedAgentAdmins = DataShaper.ShapeData(pagedAgentAdmins, agentAdminQueryParameter.Fields);
 
             return PagedList<Entity>
@@ -313,7 +311,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// </summary>
         /// <param name="agentAdminEmployeeIdDetails">The agent admin employee identifier details.</param>
         /// <returns></returns>
-        public Agent GetAgentAdminIdByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails)
+        public Agent GetAgentAdminByEmployeeId(EmployeeIdDetails agentAdminEmployeeIdDetails)
         {
             return agentAdminsDB.Where(x => x.IsDeleted == false && x.Ssn == agentAdminEmployeeIdDetails.Id).FirstOrDefault();
         }
