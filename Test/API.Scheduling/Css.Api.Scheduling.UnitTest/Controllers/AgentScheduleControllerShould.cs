@@ -72,7 +72,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         public async void GetAgentSchedule_ReturnsNotFoundResult(string agentScheduleId)
         {
             mockAgentScheduleService.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails) =>
-                mockAgentScheduleData.GetAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }));
+                mockAgentScheduleData.GetAgentSchedule(agentScheduleIdDetails));
 
             var value = await controller.GetAgentSchedule(agentScheduleId);
 
@@ -89,7 +89,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         public async void GetAgentSchedule_ReturnsOKResult(string agentScheduleId)
         {
             mockAgentScheduleService.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails) =>
-                mockAgentScheduleData.GetAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }));
+                mockAgentScheduleData.GetAgentSchedule(agentScheduleIdDetails));
 
             var value = await controller.GetAgentSchedule(agentScheduleId);
 
@@ -173,7 +173,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
             mockAgentScheduleService.Setup(mr => mr.GetAgentScheduleCharts(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<AgentScheduleChartQueryparameter>()))
                 .ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter) =>
-                mockAgentScheduleData.GetAgentScheduleCharts(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChartQueryparameter));
+                mockAgentScheduleData.GetAgentScheduleCharts(agentScheduleIdDetails, agentScheduleChartQueryparameter));
 
             var value = await controller.GetAgentScheduleCharts(agentScheduleId, agentScheduleChartQueryparameter);
 
@@ -193,7 +193,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
             mockAgentScheduleService.Setup(mr => mr.GetAgentScheduleCharts(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<AgentScheduleChartQueryparameter>()))
                 .ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter) =>
-                mockAgentScheduleData.GetAgentScheduleCharts(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChartQueryparameter));
+                mockAgentScheduleData.GetAgentScheduleCharts(agentScheduleIdDetails, agentScheduleChartQueryparameter));
 
             var value = await controller.GetAgentScheduleCharts(agentScheduleId, agentScheduleChartQueryparameter);
 
@@ -225,7 +225,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
             mockAgentScheduleService.Setup(mr => mr.UpdateAgentSchedule(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentSchedule>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule updateAgentSchedule) =>
-                mockAgentScheduleData.UpdateAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, updateAgentSchedule));
+                mockAgentScheduleData.UpdateAgentSchedule(agentScheduleIdDetails, updateAgentSchedule));
 
             var value = await controller.UpdateAgentSchedule(agentScheduleId, agentSchedule);
 
@@ -253,7 +253,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
             mockAgentScheduleService.Setup(mr => mr.UpdateAgentSchedule(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentSchedule>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule updateAgentSchedule) =>
-                mockAgentScheduleData.UpdateAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, updateAgentSchedule));
+                mockAgentScheduleData.UpdateAgentSchedule(agentScheduleIdDetails, updateAgentSchedule));
 
             var value = await controller.UpdateAgentSchedule(agentScheduleId, agentSchedule);
 
@@ -305,7 +305,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
             mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart updateAgentScheduleChart) =>
-                mockAgentScheduleData.UpdateAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChart));
+                mockAgentScheduleData.UpdateAgentScheduleChart(agentScheduleIdDetails, updateAgentScheduleChart));
 
             var value = await controller.UpdateAgentScheduleChart(agentScheduleId, agentScheduleChart);
 
@@ -353,7 +353,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
             mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart updateAgentScheduleChart) =>
-                mockAgentScheduleData.UpdateAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChart));
+                mockAgentScheduleData.UpdateAgentScheduleChart(agentScheduleIdDetails, updateAgentScheduleChart));
 
             var value = await controller.UpdateAgentScheduleChart(agentScheduleId, agentScheduleChart);
 
@@ -401,7 +401,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
             mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart updateAgentScheduleChart) =>
-                mockAgentScheduleData.UpdateAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChart));
+                mockAgentScheduleData.UpdateAgentScheduleChart(agentScheduleIdDetails, updateAgentScheduleChart));
 
             var value = await controller.UpdateAgentScheduleChart(agentScheduleId, agentScheduleChart);
 
@@ -601,7 +601,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
             mockAgentScheduleService.Setup(mr => mr.CopyAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<CopyAgentSchedule>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule copyAgentSchedule) =>
-                mockAgentScheduleData.CopyAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, copyAgentSchedule));
+                mockAgentScheduleData.CopyAgentScheduleChart(agentScheduleIdDetails, copyAgentSchedule));
 
             var value = await controller.CopyAgentScheduleChart(agentScheduleId, copyAgentSchedule);
 
@@ -637,7 +637,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
             mockAgentScheduleService.Setup(mr => mr.CopyAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<CopyAgentSchedule>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule copyAgentSchedule) =>
-                mockAgentScheduleData.CopyAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, copyAgentSchedule));
+                mockAgentScheduleData.CopyAgentScheduleChart(agentScheduleIdDetails, copyAgentSchedule));
 
             var value = await controller.CopyAgentScheduleChart(agentScheduleId, copyAgentSchedule);
 
