@@ -4,7 +4,6 @@ using Css.Api.Scheduling.Business.UnitTest.Mocks;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
-using MongoDB.Bson;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -18,12 +17,6 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 {
     public class MockAgentScheduleData
     {
-        readonly List<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
-        {
-            new SchedulingCode { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), SchedulingCodeId = 1, Name = "lunch", IsDeleted = false},
-            new SchedulingCode { Id = new ObjectId("5fe0b5c46a05416894c0718f"), SchedulingCodeId = 2, Name = "lunch", IsDeleted = false},
-        };
-
         /// <summary>
         /// Gets the agent schedules.
         /// </summary>
@@ -485,9 +478,11 @@ namespace Css.Api.Scheduling.UnitTest.Mock
                 }
             }
 
+            codes = codes.Distinct().ToList();
+
             if (codes.Any())
             {
-                var schedulingCodesCount = schedulingCodesDB.FindAll(x => x.IsDeleted == false && codes.Contains(x.SchedulingCodeId))?.Count();
+                var schedulingCodesCount = new MockDataContext().GetSchedulingCodesCountByIds(codes);
                 if (schedulingCodesCount != codes.Count())
                 {
                     isValid = false;
