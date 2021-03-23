@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System;
-using Css.Api.Core.Models.Enums;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Core.Models.Domain;
 using Newtonsoft.Json;
@@ -264,10 +263,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
                             CreatedDate = DateTimeOffset.UtcNow
                         };
 
-                        var activityLog = GetActivityLogForSchedulingManager(agentScheduleManager, employeeIdDetails.Id,
-                                                                             agentScheduleDetails.ModifiedBy, agentScheduleDetails.ModifiedUser,
-                                                                             agentScheduleDetails.ActivityOrigin);
-                        activityLogs.Add(activityLog);
+                        new MockDataContext().UpdateAgentScheduleMangerChart(employeeIdDetails, agentScheduleManager);
                     }
                 }
             }
@@ -324,39 +320,12 @@ namespace Css.Api.Scheduling.UnitTest.Mock
                             CreatedDate = DateTimeOffset.UtcNow
                         };
 
-                        var activityLog = GetActivityLogForSchedulingManager(agentScheduleManagerChart, employeeId, agentScheduleDetails.ModifiedBy,
-                                                                             agentScheduleDetails.ModifiedUser, agentScheduleDetails.ActivityOrigin);
-                        activityLogs.Add(activityLog);
+                        new MockDataContext().UpdateAgentScheduleMangerChart(employeeDetails, agentScheduleManagerChart);
                     }
                 }
             }
 
             return new CSSResponse(HttpStatusCode.NoContent);
-        }
-
-        /// <summary>
-        /// Gets the activity log for scheduling manager.
-        /// </summary>
-        /// <param name="agentScheduleManagerChart">The agent schedule manager chart.</param>
-        /// <param name="employeeId">The employee identifier.</param>
-        /// <param name="executedBy">The executed by.</param>
-        /// <param name="executedUser">The executed user.</param>
-        /// <param name="activityOrigin">The activity origin.</param>
-        /// <returns></returns>
-        private ActivityLog GetActivityLogForSchedulingManager(AgentScheduleManager agentScheduleManagerChart, int employeeId, string executedBy, int executedUser,
-                                                               ActivityOrigin activityOrigin)
-        {
-            return new ActivityLog()
-            {
-                EmployeeId = employeeId,
-                ExecutedBy = executedBy,
-                ExecutedUser = executedUser,
-                TimeStamp = DateTimeOffset.UtcNow,
-                ActivityOrigin = activityOrigin,
-                ActivityStatus = ActivityStatus.Updated,
-                ActivityType = ActivityType.SchedulingmanagerGrid,
-                SchedulingFieldDetails = new SchedulingFieldDetails()
-            };
         }
 
         /// <summary>
@@ -408,14 +377,16 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             };
 
             return new MockDataContext().GetAgentAdmins(agentAdminQueryParameter);
-        }/// <summary>
-         /// Eaches the day.
-         /// </summary>
-         /// <param name="from">From.</param>
-         /// <param name="to">To.</param>
-         /// <returns>
-         ///   <br />
-         /// </returns>
+        }
+
+        /// <summary>
+        /// Eaches the day.
+        /// </summary>
+        /// <param name="from">From.</param>
+        /// <param name="to">To.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
         private IEnumerable<DateTime> EachDay(DateTime from, DateTime to)
         {
             for (var day = from.Date; day.Date <= to.Date; day = day.AddDays(1))

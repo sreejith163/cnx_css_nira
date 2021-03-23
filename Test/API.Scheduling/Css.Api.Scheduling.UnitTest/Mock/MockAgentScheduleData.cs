@@ -4,303 +4,497 @@ using Css.Api.Scheduling.Business.UnitTest.Mocks;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
-using Css.Api.Scheduling.Models.Enums;
 using MongoDB.Bson;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Css.Api.Scheduling.Models.Domain;
 using System;
 using Css.Api.Core.Models.Enums;
+using Newtonsoft.Json;
+using Css.Api.Core.Utilities.Extensions;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 
 namespace Css.Api.Scheduling.UnitTest.Mock
 {
     public class MockAgentScheduleData
     {
-        //readonly List<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
-        //{
-        //    new SchedulingCode { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), SchedulingCodeId = 1, Name = "lunch", IsDeleted = false},
-        //    new SchedulingCode { Id = new ObjectId("5fe0b5c46a05416894c0718f"), SchedulingCodeId = 2, Name = "lunch", IsDeleted = false},
-        //};
+        readonly List<SchedulingCode> schedulingCodesDB = new List<SchedulingCode>()
+        {
+            new SchedulingCode { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), SchedulingCodeId = 1, Name = "lunch", IsDeleted = false},
+            new SchedulingCode { Id = new ObjectId("5fe0b5c46a05416894c0718f"), SchedulingCodeId = 2, Name = "lunch", IsDeleted = false},
+        };
 
-        ///// <summary>
-        ///// Gets the agent schedules.
-        ///// </summary>
-        ///// <param name="agentScheduleQueryparameter">The agent schedule queryparameter.</param>
-        ///// <returns></returns>
-        //public CSSResponse GetAgentSchedules(AgentScheduleQueryparameter agentScheduleQueryparameter)
-        //{
-        //    var agentSchedules = new MockDataContext().GetAgentSchedules(agentScheduleQueryparameter);
-        //    return new CSSResponse(agentSchedules, HttpStatusCode.OK);
-        //}
+        /// <summary>
+        /// Gets the agent schedules.
+        /// </summary>
+        /// <param name="agentScheduleQueryparameter">The agent schedule queryparameter.</param>
+        /// <returns></returns>
+        public CSSResponse GetAgentSchedules(AgentScheduleQueryparameter agentScheduleQueryparameter)
+        {
+            var agentSchedules = new MockDataContext().GetAgentSchedules(agentScheduleQueryparameter);
+            return new CSSResponse(agentSchedules, HttpStatusCode.OK);
+        }
 
-        ///// <summary>
-        ///// Gets the agent schedule.
-        ///// </summary>
-        ///// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        ///// <returns></returns>
-        //public CSSResponse GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails)
-        //{
-        //    var agentSchedule = new MockDataContext().GetAgentSchedule(agentScheduleIdDetails);
-        //    if (agentSchedule == null)
-        //    {
-        //        return new CSSResponse(HttpStatusCode.NotFound);
-        //    }
+        /// <summary>
+        /// Gets the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <returns></returns>
+        public CSSResponse GetAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails)
+        {
+            var agentSchedule = new MockDataContext().GetAgentSchedule(agentScheduleIdDetails);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
 
-        //    var agentProfile = new MockDataContext().GetAgentAdminIdsByEmployeeId(new EmployeeIdDetails { Id = agentSchedule.EmployeeId });
-        //    return new CSSResponse(agentProfile, HttpStatusCode.OK);
-        //}
+            var mappedAgentSchedule = JsonConvert.DeserializeObject<AgentScheduleDetailsDTO>(JsonConvert.SerializeObject(agentSchedule));
+            return new CSSResponse(mappedAgentSchedule, HttpStatusCode.OK);
+        }
 
-        //public CSSResponse GetAgentScheduleCharts(AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter)
-        //{
-        //    var agentSchedule = new MockDataContext().GetAgentSchedule(agentScheduleIdDetails);
-        //    if (agentSchedule == null)
-        //    {
-        //        return new CSSResponse(HttpStatusCode.NotFound);
-        //    }
+        /// <summary>
+        /// Determines whether [is agent schedule range exist] [the specified agent schedule identifier details].
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <returns></returns>
+        public CSSResponse IsAgentScheduleRangeExist(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange)
+        {
+            var result = new MockDataContext().IsAgentScheduleRangeExist(agentScheduleIdDetails, dateRange);
+            return new CSSResponse(result, HttpStatusCode.OK);
+        }
 
-        //    if (agentScheduleChartQueryparameter.AgentScheduleType == AgentScheduleType.SchedulingTab)
-        //    {
-        //        var mappedAgentScheduleChart = new AgentScheduleChartDetailsDTO {
-        //            Id = agentSchedule.Id.ToString(),
-        //            AgentScheduleCharts = agentSchedule.AgentScheduleCharts
-        //        };
-        //        return new CSSResponse(mappedAgentScheduleChart, HttpStatusCode.OK);
-        //    }
-        //    else
-        //    {
-        //        var mappedAgentScheduleChart = new AgentScheduleManagerChartDetailsDTO
-        //        {
-        //            Id = agentSchedule.Id.ToString(),
-        //            AgentScheduleManagerCharts = agentSchedule.AgentScheduleManagerCharts
-        //        };
-        //        return new CSSResponse(mappedAgentScheduleChart, HttpStatusCode.OK);
-        //    }
-        //}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MockAgentScheduleData"/> class.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleChartQueryparameter">The agent schedule chart queryparameter.</param>
+        public CSSResponse GetAgentScheduleCharts(AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter)
+        {
+            var agentSchedule = new MockDataContext().GetAgentSchedule(agentScheduleIdDetails);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
 
-        ///// <summary>
-        ///// Updates the Agent Admin.
-        ///// </summary>
-        ///// <param name="agentScheduleIdDetails"></param>
-        ///// <param name="agentScheduleDetails"></param>
-        ///// <returns></returns>
-        //public CSSResponse UpdateAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule agentScheduleDetails)
-        //{
-        //    var agentScheduleCount = new MockDataContext().GetAgentScheduleCount(agentScheduleIdDetails);
-        //    if (agentScheduleCount < 1)
-        //    {
-        //        return new CSSResponse(HttpStatusCode.NotFound);
-        //    }
+            if (agentScheduleChartQueryparameter.FromDate.HasValue && agentScheduleChartQueryparameter.FromDate != default(DateTime))
+            {
+                var date = agentScheduleChartQueryparameter.FromDate.Value;
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
 
-        //    new MockDataContext().UpdateAgentSchedule(agentScheduleIdDetails, agentScheduleDetails);
+                agentSchedule.Ranges = agentSchedule.Ranges.Where(x => x.DateFrom == dateTimeWithZeroTimeSpan).ToList();
+            }
 
-        //    return new CSSResponse(HttpStatusCode.NoContent);
-        //}
+            if (agentScheduleChartQueryparameter.ToDate.HasValue && agentScheduleChartQueryparameter.ToDate != default(DateTime))
+            {
+                var date = agentScheduleChartQueryparameter.ToDate.Value;
+                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
 
-        ///// <summary>
-        ///// Updates the agent schedule chart.
-        ///// </summary>
-        ///// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        ///// <param name="agentScheduleDetails">The agent schedule details.</param>
-        ///// <returns></returns>
-        //public CSSResponse UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails)
-        //{
-        //    var agentSchedule = new MockDataContext().GetAgentSchedule(agentScheduleIdDetails);
-        //    if (agentSchedule == null)
-        //    {
-        //        return new CSSResponse(HttpStatusCode.NotFound);
-        //    }
+                agentSchedule.Ranges = agentSchedule.Ranges.Where(x => x.DateTo == dateTimeWithZeroTimeSpan).ToList();
+            }
 
-        //    var hasValidCodes = HasValidSchedulingCodes(agentScheduleDetails);
-        //    if (!hasValidCodes)
-        //    {
-        //        return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
-        //    }
+            var mappedAgentScheduleChart = JsonConvert.DeserializeObject<AgentScheduleChartDetailsDTO>(JsonConvert.SerializeObject(agentSchedule));
+            return new CSSResponse(mappedAgentScheduleChart, HttpStatusCode.OK);
+        }
 
-        //    var agentScheduleCharts = agentSchedule.AgentScheduleCharts;
+        /// <summary>
+        /// Updates the Agent Admin.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails"></param>
+        /// <param name="agentScheduleDetails"></param>
+        /// <returns></returns>
+        public CSSResponse UpdateAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule agentScheduleDetails)
+        {
+            var dateRange = new DateRange { DateFrom = agentScheduleDetails.DateFrom, DateTo = agentScheduleDetails.DateTo };
+            var agentSchedule = new MockDataContext().GetAgentSchedule(agentScheduleIdDetails, dateRange);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
 
-        //    foreach (var agentScheduleChart in agentScheduleDetails.AgentScheduleCharts)
-        //    {
-        //        if (agentScheduleCharts.Exists(x => x.Day == agentScheduleChart.Day))
-        //        {
-        //            var scheduleChart = agentScheduleCharts.Find(x => x.Day == agentScheduleChart.Day);
-        //            scheduleChart.Charts = agentScheduleChart.Charts;
-        //        }
-        //        else
-        //        {
-        //            agentScheduleCharts.Add(agentScheduleChart);
-        //        }
-        //    }
+            if (agentScheduleDetails.Status == SchedulingStatus.Released)
+            {
+                var employeeIdDetails = new EmployeeIdDetails { Id = agentSchedule.EmployeeId };
+                var agentScheduleRange = new MockDataContext().GetAgentScheduleRange(agentScheduleIdDetails, dateRange);
 
-        //    var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
-        //    new MockDataContext().UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleCharts, modifiedUserDetails);
+                var scheduleManagerCharts = ScheduleHelper.GenerateAgentScheduleManagers(agentSchedule.EmployeeId, agentScheduleRange, agentScheduleDetails.ModifiedBy);
 
-        //    return new CSSResponse(HttpStatusCode.NoContent);
-        //}
+                foreach (var scheduleManagerChart in scheduleManagerCharts)
+                {
+                    new MockDataContext().UpdateAgentScheduleMangerChart(employeeIdDetails, scheduleManagerChart);
+                }
+            }
 
-        ///// <summary>
-        ///// Updates the agent schedule manger chart.
-        ///// </summary>
-        ///// <param name="agentScheduleManagerChartDetails">The agent schedule manager chart details.</param>
-        ///// <returns></returns>
-        //public CSSResponse UpdateAgentScheduleMangerChart(UpdateAgentScheduleManagerChart agentScheduleManagerChartDetails)
-        //{
-        //    var hasValidCodes = HasValidSchedulingCodes(agentScheduleManagerChartDetails);
-        //    if (!hasValidCodes)
-        //    {
-        //        return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
-        //    }
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
 
-        //    foreach (var agentScheduleManager in agentScheduleManagerChartDetails.AgentScheduleManagers)
-        //    {
-        //        var employeeIdDetails = new EmployeeIdDetails { Id = agentScheduleManager.EmployeeId };
-        //        var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleManagerChartDetails.ModifiedBy };
-        //        new MockDataContext().UpdateAgentScheduleMangerChart(employeeIdDetails, agentScheduleManager.AgentScheduleManagerChart, modifiedUserDetails);
-        //    }
+        /// <summary>
+        /// Updates the agent schedule chart.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        public CSSResponse UpdateAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart agentScheduleDetails)
+        {
+            var agentSchedule = new MockDataContext().GetAgentSchedule(agentScheduleIdDetails);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
 
-        //    return new CSSResponse(HttpStatusCode.NoContent);
-        //}
+            var hasValidCodes = HasValidSchedulingCodes(agentScheduleDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            }
 
-        ///// <summary>
-        ///// Imports the agent schedule chart.
-        ///// </summary>
-        ///// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        ///// <param name="agentScheduleDetails">The agent schedule details.</param>
-        ///// <returns></returns>
-        //public CSSResponse ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails)
-        //{
-        //    var hasValidCodes = HasValidSchedulingCodes(agentScheduleDetails);
-        //    if (!hasValidCodes)
-        //    {
-        //        return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
-        //    }
+            agentScheduleDetails.DateFrom = new DateTime(agentScheduleDetails.DateFrom.Year, agentScheduleDetails.DateFrom.Month, agentScheduleDetails.DateFrom.Day,
+                                                         0, 0, 0, DateTimeKind.Utc);
+            agentScheduleDetails.DateTo = new DateTime(agentScheduleDetails.DateTo.Year, agentScheduleDetails.DateTo.Month, agentScheduleDetails.DateTo.Day,
+                                                       0, 0, 0, DateTimeKind.Utc);
 
-        //    foreach (var importAgentScheduleChart in agentScheduleDetails.ImportAgentScheduleCharts)
-        //    {
-        //        var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
-        //        new MockDataContext().ImportAgentScheduleChart(importAgentScheduleChart, modifiedUserDetails);
-        //    }
+            var employeeIdDetails = new EmployeeIdDetails { Id = agentSchedule.EmployeeId };
+            var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
 
-        //    return new CSSResponse(HttpStatusCode.NoContent);
-        //}
+            var agentScheduleRange = agentSchedule.Ranges.FirstOrDefault(x => x.DateFrom == agentScheduleDetails.DateFrom &&
+                                                                              x.DateTo == agentScheduleDetails.DateTo);
 
-        ///// <summary>
-        ///// Copies the agent schedule.
-        ///// </summary>
-        ///// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
-        ///// <param name="agentScheduleDetails">The agent schedule details.</param>
-        ///// <returns></returns>
-        //public CSSResponse CopyAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule agentScheduleDetails)
-        //{
-        //    var agentSchedule = new MockDataContext().GetAgentSchedule(agentScheduleIdDetails);
-        //    if (agentSchedule == null)
-        //    {
-        //        return new CSSResponse(HttpStatusCode.NotFound);
-        //    }
+            if (agentScheduleRange != null && agentScheduleRange.ScheduleCharts.Any())
+            {
+                foreach (var agentScheduleChart in agentScheduleDetails.AgentScheduleCharts)
+                {
+                    if (agentScheduleRange.ScheduleCharts.Exists(x => x.Day == agentScheduleChart.Day))
+                    {
+                        var scheduleChart = agentScheduleRange.ScheduleCharts.Find(x => x.Day == agentScheduleChart.Day);
+                        scheduleChart.Charts = agentScheduleChart.Charts;
+                    }
+                    else
+                    {
+                        agentScheduleRange.ScheduleCharts.Add(agentScheduleChart);
+                    }
+                }
 
-        //    new MockDataContext().CopyAgentSchedules(agentSchedule, agentScheduleDetails);
+                agentScheduleRange.ScheduleCharts = agentScheduleRange.ScheduleCharts.Where(x => x.Charts.Any()).ToList();
+                agentScheduleRange.ModifiedBy = agentScheduleDetails.ModifiedBy;
+                agentScheduleRange.ModifiedDate = DateTimeOffset.UtcNow;
 
-        //    return new CSSResponse(HttpStatusCode.NoContent);
-        //}
+                new MockDataContext().UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleRange, modifiedUserDetails);
 
-        ///// <summary>
-        ///// Gets the activity log for scheduling chart.
-        ///// </summary>
-        ///// <param name="scheduleCharts">The schedule charts.</param>
-        ///// <param name="employeeId">The employee identifier.</param>
-        ///// <param name="executedBy">The executed by.</param>
-        ///// <param name="activityOrigin">The activity origin.</param>
-        ///// <returns></returns>
-        //private ActivityLog GetActivityLogForSchedulingChart(object scheduleCharts, int employeeId, string executedBy, ActivityOrigin activityOrigin)
-        //{
-        //    var activityLog = new ActivityLog()
-        //    {
-        //        EmployeeId = employeeId,
-        //        ExecutedBy = executedBy,
-        //        TimeStamp = DateTimeOffset.UtcNow,
-        //        ActivityOrigin = activityOrigin,
-        //        ActivityStatus = ActivityStatus.Updated,
-        //        SchedulingFieldDetails = new SchedulingFieldDetails()
-        //    };
+                var scheduleRange = new AgentScheduleRange
+                {
+                    AgentSchedulingGroupId = agentScheduleRange.AgentSchedulingGroupId,
+                    DateFrom = agentScheduleRange.DateFrom,
+                    DateTo = agentScheduleRange.DateTo,
+                    Status = SchedulingStatus.Pending_Schedule,
+                    ScheduleCharts = agentScheduleDetails.AgentScheduleCharts,
+                    CreatedBy = agentScheduleDetails.ModifiedBy,
+                    CreatedDate = DateTimeOffset.UtcNow
+                };
+            }
+            else
+            {
+                var agentAdmin = new MockDataContext().GetAgentAdminByEmployeeId(employeeIdDetails);
+                if (agentAdmin != null)
+                {
+                    agentScheduleDetails.AgentScheduleCharts = agentScheduleDetails.AgentScheduleCharts.Where(x => x.Charts.Any()).ToList();
+                    if (agentScheduleDetails.AgentScheduleCharts.Any())
+                    {
+                        agentScheduleRange = new AgentScheduleRange()
+                        {
+                            AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
+                            DateFrom = agentScheduleDetails.DateFrom,
+                            DateTo = agentScheduleDetails.DateTo,
+                            Status = SchedulingStatus.Pending_Schedule,
+                            ScheduleCharts = agentScheduleDetails.AgentScheduleCharts,
+                            CreatedBy = agentScheduleDetails.ModifiedBy,
+                            CreatedDate = DateTimeOffset.UtcNow
+                        };
 
-        //    if (scheduleCharts is List<AgentScheduleChart>)
-        //    {
-        //        var charts = scheduleCharts as List<AgentScheduleChart>;
-        //        activityLog.ActivityType = ActivityType.SchedulingGrid;
-        //        activityLog.SchedulingFieldDetails.AgentScheduleCharts = charts;
-        //    }
-        //    else if (scheduleCharts is List<AgentScheduleManagerChart>)
-        //    {
-        //        var charts = scheduleCharts as List<AgentScheduleManagerChart>;
-        //        activityLog.ActivityType = ActivityType.SchedulingmanagerGrid;
-        //        activityLog.SchedulingFieldDetails.AgentScheduleManagerCharts = charts;
-        //    }
-        //    else if (scheduleCharts is AgentScheduleManagerChart)
-        //    {
-        //        var chart = scheduleCharts as AgentScheduleManagerChart;
-        //        activityLog.ActivityType = ActivityType.SchedulingmanagerGrid;
-        //        activityLog.SchedulingFieldDetails.AgentScheduleManagerCharts = new List<AgentScheduleManagerChart>
-        //        {
-        //            chart
-        //        };
-        //    }
+                        new MockDataContext().UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleRange, modifiedUserDetails);
+                    }
+                }
+            }
 
-        //    return activityLog;
-        //}
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
 
-        ///// Determines whether [has valid scheduling codes] [the specified agent schedule details].
-        ///// </summary>
-        ///// <param name="agentScheduleDetails">The agent schedule details.</param>
-        ///// <returns>
-        /////   <c>true</c> if [has valid scheduling codes] [the specified agent schedule details]; otherwise, <c>false</c>.
-        ///// </returns>
-        //private bool HasValidSchedulingCodes(object agentScheduleDetails)
-        //{
-        //    bool isValid = true;
-        //    List<int> codes = new List<int>();
+        /// <summary>
+        /// Imports the agent schedule chart.
+        /// </summary>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        public CSSResponse ImportAgentScheduleChart(ImportAgentSchedule agentScheduleDetails)
+        {
+            var hasValidCodes = HasValidSchedulingCodes(agentScheduleDetails);
+            if (!hasValidCodes)
+            {
+                return new CSSResponse("One of the scheduling code does not exists", HttpStatusCode.NotFound);
+            }
 
-        //    if (agentScheduleDetails is UpdateAgentScheduleChart)
-        //    {
-        //        var details = agentScheduleDetails as UpdateAgentScheduleChart;
-        //        foreach (var agentScheduleChart in details.AgentScheduleCharts)
-        //        {
-        //            var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
-        //            codes.AddRange(scheduleCodes);
-        //        }
-        //    }
-        //    else if (agentScheduleDetails is UpdateAgentScheduleManagerChart)
-        //    {
-        //        var details = agentScheduleDetails as UpdateAgentScheduleManagerChart;
-        //        foreach (var agentScheduleManager in details.AgentScheduleManagers)
-        //        {
-        //            var scheduleManagerCodes = agentScheduleManager.AgentScheduleManagerChart.Charts.Select(x => x.SchedulingCodeId).ToList().ToList();
-        //            codes.AddRange(scheduleManagerCodes);
-        //        }
-        //    }
-        //    else if (agentScheduleDetails is ImportAgentSchedule)
-        //    {
+            var activityLogs = new List<ActivityLog>();
 
-        //        var details = agentScheduleDetails as ImportAgentSchedule;
-        //        foreach (var importAgentScheduleChart in details.ImportAgentScheduleCharts)
-        //        {
-        //            foreach (var agentScheduleChart in importAgentScheduleChart.AgentScheduleCharts)
-        //            {
-        //                var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
-        //                codes.AddRange(scheduleCodes);
-        //            }
-        //        }
-        //    }
+            foreach (var importAgentScheduleChart in agentScheduleDetails.ImportAgentScheduleCharts)
+            {
+                var employeeIdDetails = new EmployeeIdDetails { Id = importAgentScheduleChart.EmployeeId };
+                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
 
-        //    if (codes.Any())
-        //    {
-        //        var schedulingCodesCount = schedulingCodesDB.FindAll(x => x.IsDeleted == false && codes.Contains(x.SchedulingCodeId))?.Count();
-        //        if (schedulingCodesCount != codes.Count())
-        //        {
-        //            isValid = false;
-        //        }
-        //    }
+                var agentSchedule = new MockDataContext().GetAgentScheduleByEmployeeId(employeeIdDetails);
+                if (agentSchedule != null)
+                {
+                    var agentAdmin = new MockDataContext().GetAgentAdminByEmployeeId(employeeIdDetails);
+                    if (agentAdmin != null)
+                    {
+                        foreach (var range in importAgentScheduleChart.Ranges)
+                        {
+                            range.DateFrom = new DateTime(range.DateFrom.Year, range.DateFrom.Month, range.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+                            range.DateTo = new DateTime(range.DateTo.Year, range.DateTo.Month, range.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
 
-        //    return isValid;
-        //}
+                            var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => x.Status == SchedulingStatus.Released &&
+                                                                                           ((range.DateFrom < x.DateTo && range.DateTo > x.DateFrom) ||
+                                                                                           (range.DateFrom == x.DateFrom && range.DateTo == x.DateTo)));
+
+                            if (!hasConflictingSchedules)
+                            {
+                                var availableScheduleRange = agentSchedule.Ranges
+                                    .FirstOrDefault(x => x.Status == SchedulingStatus.Pending_Schedule &&
+                                                         ((range.DateFrom < x.DateTo && range.DateTo > x.DateFrom) ||
+                                                         (range.DateFrom == x.DateFrom && range.DateTo == x.DateTo)));
+
+                                if (availableScheduleRange != null)
+                                {
+                                    if (availableScheduleRange != null && availableScheduleRange.ScheduleCharts.Any())
+                                    {
+                                        availableScheduleRange.ScheduleCharts = range.AgentScheduleCharts;
+                                        availableScheduleRange.CreatedBy = modifiedUserDetails.ModifiedBy;
+                                        availableScheduleRange.CreatedDate = DateTimeOffset.UtcNow;
+
+                                        var agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentSchedule.Id.ToString() };
+                                        new MockDataContext().UpdateAgentScheduleChart(agentScheduleIdDetails, availableScheduleRange, modifiedUserDetails);
+                                    }
+                                }
+                                else
+                                {
+                                    var agentScheduleRange = new AgentScheduleRange
+                                    {
+                                        AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
+                                        DateFrom = range.DateFrom,
+                                        DateTo = range.DateTo,
+                                        Status = SchedulingStatus.Pending_Schedule,
+                                        ScheduleCharts = range.AgentScheduleCharts,
+                                        CreatedBy = modifiedUserDetails.ModifiedBy,
+                                        CreatedDate = DateTimeOffset.UtcNow
+                                    };
+
+                                    new MockDataContext().CopyAgentSchedules(employeeIdDetails, agentScheduleRange);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Copies the agent schedule.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns></returns>
+        public CSSResponse CopyAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule agentScheduleDetails)
+        {
+            var agentSchedule = new MockDataContext().GetAgentSchedule(agentScheduleIdDetails);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            if (!agentScheduleDetails.EmployeeIds.Any())
+            {
+                AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails = new AgentSchedulingGroupIdDetails { AgentSchedulingGroupId = agentScheduleDetails.AgentSchedulingGroupId };
+                agentScheduleDetails.EmployeeIds = new MockDataContext().GetEmployeeIdsByAgentScheduleGroupId(agentSchedulingGroupIdDetails);
+                agentScheduleDetails.EmployeeIds = agentScheduleDetails.EmployeeIds.FindAll(x => x != agentSchedule.EmployeeId);
+            }
+
+            agentScheduleDetails.DateFrom = new DateTime(agentScheduleDetails.DateFrom.Year, agentScheduleDetails.DateFrom.Month,
+                                                         agentScheduleDetails.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+            agentScheduleDetails.DateTo = new DateTime(agentScheduleDetails.DateTo.Year, agentScheduleDetails.DateTo.Month,
+                                                       agentScheduleDetails.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+
+            var activityLogs = new List<ActivityLog>();
+
+            foreach (var employeeId in agentScheduleDetails.EmployeeIds)
+            {
+                var employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
+                var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleDetails.ModifiedBy };
+
+                var employeeSchedule = new MockDataContext().GetAgentScheduleByEmployeeId(employeeIdDetails);
+                if (employeeSchedule != null)
+                {
+                    var hasConflictingSchedules = employeeSchedule.Ranges.Exists(x => x.Status == SchedulingStatus.Released &&
+                                                                                      ((agentScheduleDetails.DateFrom < x.DateTo && agentScheduleDetails.DateTo > x.DateFrom) ||
+                                                                                      (agentScheduleDetails.DateFrom == x.DateFrom && agentScheduleDetails.DateTo == x.DateTo)));
+
+                    if (!hasConflictingSchedules)
+                    {
+                        var availableScheduleRange = employeeSchedule.Ranges
+                                    .FirstOrDefault(x => x.Status == SchedulingStatus.Pending_Schedule &&
+                                                         ((agentScheduleDetails.DateFrom < x.DateTo && agentScheduleDetails.DateTo > x.DateFrom) ||
+                                                         (agentScheduleDetails.DateFrom == x.DateFrom && agentScheduleDetails.DateTo == x.DateTo)));
+
+                        var copiedAgentScheduleRange = agentSchedule.Ranges
+                            .FirstOrDefault(x => x.DateFrom == agentScheduleDetails.DateFrom &&
+                                                 x.DateTo == agentScheduleDetails.DateTo);
+
+                        if (copiedAgentScheduleRange != null)
+                        {
+                            if (availableScheduleRange != null)
+                            {
+                                if (availableScheduleRange != null && availableScheduleRange.ScheduleCharts.Any())
+                                {
+                                    availableScheduleRange.ScheduleCharts = copiedAgentScheduleRange.ScheduleCharts;
+                                    availableScheduleRange.CreatedBy = modifiedUserDetails.ModifiedBy;
+                                    availableScheduleRange.CreatedDate = DateTimeOffset.UtcNow;
+
+                                    var scheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = employeeSchedule.Id.ToString() };
+                                    new MockDataContext().UpdateAgentScheduleChart(scheduleIdDetails, availableScheduleRange, modifiedUserDetails);
+                                }
+                            }
+                            else
+                            {
+                                var agentAdmin = new MockDataContext().GetAgentAdminByEmployeeId(employeeIdDetails);
+                                if (agentAdmin != null)
+                                {
+                                    var agentScheduleRange = new AgentScheduleRange
+                                    {
+                                        AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId,
+                                        DateFrom = agentScheduleDetails.DateFrom,
+                                        DateTo = agentScheduleDetails.DateTo,
+                                        Status = SchedulingStatus.Pending_Schedule,
+                                        ScheduleCharts = copiedAgentScheduleRange.ScheduleCharts,
+                                        CreatedBy = modifiedUserDetails.ModifiedBy,
+                                        CreatedDate = DateTimeOffset.UtcNow
+                                    };
+
+                                    var agentScheduleCharts = agentSchedule.Ranges
+                                        .FirstOrDefault(x => x.DateFrom == agentScheduleDetails.DateFrom && x.DateTo == agentScheduleDetails.DateTo)?.ScheduleCharts;
+
+                                    new MockDataContext().CopyAgentSchedules(employeeIdDetails, agentScheduleRange);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Updates the agent schedule range.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRangeDetails">The date range details.</param>
+        /// <returns></returns>
+        public CSSResponse UpdateAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleDateRange dateRangeDetails)
+        {
+            var dateRange = new DateRange { DateFrom = dateRangeDetails.OldDateFrom, DateTo = dateRangeDetails.OldDateTo };
+            var agentSchedule = new MockDataContext().GetAgentSchedule(agentScheduleIdDetails, dateRange, SchedulingStatus.Pending_Schedule);
+
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var newDateFrom = new DateTime(dateRangeDetails.NewDateFrom.Year, dateRangeDetails.NewDateFrom.Month, dateRangeDetails.NewDateFrom.Day,
+                                           0, 0, 0, DateTimeKind.Utc);
+            var newDateTo = new DateTime(dateRangeDetails.NewDateTo.Year, dateRangeDetails.NewDateTo.Month, dateRangeDetails.NewDateTo.Day,
+                                         0, 0, 0, DateTimeKind.Utc);
+            var oldDateFrom = new DateTime(dateRangeDetails.OldDateFrom.Year, dateRangeDetails.OldDateFrom.Month, dateRangeDetails.OldDateFrom.Day,
+                                           0, 0, 0, DateTimeKind.Utc);
+            var oldDateTo = new DateTime(dateRangeDetails.OldDateTo.Year, dateRangeDetails.OldDateTo.Month, dateRangeDetails.OldDateTo.Day,
+                                         0, 0, 0, DateTimeKind.Utc);
+
+            var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => oldDateFrom != x.DateFrom && oldDateTo != x.DateTo &&
+                                                                           ((dateRangeDetails.NewDateFrom < x.DateTo && dateRangeDetails.NewDateTo > x.DateFrom)) ||
+                                                                             dateRangeDetails.NewDateFrom == x.DateFrom && dateRangeDetails.NewDateTo == x.DateTo);
+            if (hasConflictingSchedules)
+            {
+                return new CSSResponse(HttpStatusCode.Conflict);
+            }
+
+            new MockDataContext().UpdateAgentScheduleRange(agentScheduleIdDetails, dateRangeDetails);
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Deletes the agent schedule range.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <returns></returns>
+        public CSSResponse DeleteAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange)
+        {
+            var agentScheduleRange = new MockDataContext().GetAgentScheduleRange(agentScheduleIdDetails, dateRange);
+            if (agentScheduleRange == null || agentScheduleRange.Status == SchedulingStatus.Released)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            new MockDataContext().DeleteAgentScheduleRange(agentScheduleIdDetails, dateRange);
+
+            return new CSSResponse(HttpStatusCode.NoContent);
+        }
+
+        /// Determines whether [has valid scheduling codes] [the specified agent schedule details].
+        /// </summary>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <returns>
+        ///   <c>true</c> if [has valid scheduling codes] [the specified agent schedule details]; otherwise, <c>false</c>.
+        /// </returns>
+        private bool HasValidSchedulingCodes(object agentScheduleDetails)
+        {
+            bool isValid = true;
+            List<int> codes = new List<int>();
+
+            if (agentScheduleDetails is UpdateAgentScheduleChart)
+            {
+                var details = agentScheduleDetails as UpdateAgentScheduleChart;
+                foreach (var agentScheduleChart in details.AgentScheduleCharts)
+                {
+                    var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                    codes.AddRange(scheduleCodes);
+                }
+            }
+            else if (agentScheduleDetails is ImportAgentSchedule)
+            {
+
+                var details = agentScheduleDetails as ImportAgentSchedule;
+                foreach (var importAgentScheduleChart in details.ImportAgentScheduleCharts)
+                {
+                    foreach (var range in importAgentScheduleChart.Ranges)
+                    {
+                        foreach (var agentScheduleChart in range.AgentScheduleCharts)
+                        {
+                            var scheduleCodes = agentScheduleChart.Charts.Select(x => x.SchedulingCodeId).ToList();
+                            codes.AddRange(scheduleCodes);
+                        }
+                    }
+                }
+            }
+
+            if (codes.Any())
+            {
+                var schedulingCodesCount = schedulingCodesDB.FindAll(x => x.IsDeleted == false && codes.Contains(x.SchedulingCodeId))?.Count();
+                if (schedulingCodesCount != codes.Count())
+                {
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
     }
 }
