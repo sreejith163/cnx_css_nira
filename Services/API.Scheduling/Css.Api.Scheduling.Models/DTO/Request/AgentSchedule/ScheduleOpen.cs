@@ -6,7 +6,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the time.
         /// </summary>
-        public string Time { get; set; }
+        public TimeSpan Time { get; set; }
 
         /// <summary>
         /// Gets or sets the schedule open.
