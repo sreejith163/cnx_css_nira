@@ -85,16 +85,19 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   }
 
   onSchedulingGroupChange(schedulingGroupId: number) {
+   
     this.masterSelected = false;
     this.checkAll = false;
     if (schedulingGroupId) {
       this.checkedAgents = [];
       this.agentSchedulingGroupId = +schedulingGroupId;
       this.agentScheduleType === AgentScheduleType.Scheduling ? this.loadSchedulingAgents() : this.loadManagerAgents();
+     
     } else {
       this.agentSchedulingGroupId = undefined;
       this.agents = [];
     }
+ 
   }
 
   changePageSize(pageSize: number) {
@@ -162,7 +165,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     agentSchedulesQueryParams.pageSize = this.pageSize;
     agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentSchedulesQueryParams.fields = 'employeeId,firstName,lastName';
-
+console.log(agentSchedulesQueryParams);
     return agentSchedulesQueryParams;
   }
 
@@ -195,6 +198,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     this.getAgentsSubscription = this.agentSchedulesService.getAgentSchedules(queryParams)
       .subscribe((response) => {
         this.agents = response.body;
+        console.log(response)
         let headerPaginationValues = new HeaderPagination();
         headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
         this.totalAgents = +headerPaginationValues.totalCount;

@@ -6,7 +6,7 @@
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-left">
+            <ol class="breadcrumb float-sm-left pl-0">
                 <li class="breadcrumb-item"><a>{{'Scheduling Menu' | translate}}</a></li>
                 <li class="breadcrumb-item active"><b>{{'View O/U Screen' | translate}}</b> </li>
             </ol>
@@ -34,10 +34,10 @@
         </div>
         <div class="col-md-3 d-flex flex-column">
             <div class="input-group">
-                <input (dateSelect)="loadSkillGroup()" class="form-control" placeholder="{{'Select Forecast Date' | translate}}" name="dp" ngbDatepicker
-                [readonly]="true" [(ngModel)]="dateModel"
-                [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
-               
+                <input (dateSelect)="loadSkillGroup()" class="form-control"
+                    placeholder="{{'Select Forecast Date' | translate}}" name="dp" ngbDatepicker [readonly]="true"
+                    [(ngModel)]="dateModel" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
+
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
                 </div>
@@ -53,6 +53,18 @@
 
 </div>
 <div class="container-fluid">
+    <div class="row my-2">
+        <div class="col-lg-6">
+            <div class="badge badge-primary" *ngIf="skillGroupBinder?.name != null">
+                {{skillGroupBinder?.name}}
+            </div>
+
+           
+        </div>
+
+    </div>
+</div>
+<div class="container-fluid">
 
     <div class="row">
         <div class="col-md-12 mt-2 table-responsive">
@@ -60,105 +72,97 @@
             <ng-container>
                 <ngx-spinner [name]="forecastSpinner"></ngx-spinner>
                 <!-- forecast screen table -->
-              
-                    <div class="row my-2">
-                        <div class="col-lg-6">
-                            <div class="badge badge-primary" *ngIf="skillGroupBinder?.name != null">
-                                {{skillGroupBinder?.name}}
-                            </div>
-                           
-                            <input type="hidden" [value]="skillGroupBinder?.id">
-                        </div>
-                   
-                    </div>
 
 
-                    <div class="scrollable-table forecastContainer" #epltable>
-                        <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
-                            <thead>
-                                <tr>
-                                    <th>{{ 'Time' | translate }}</th>
-                                    <th>{{ 'Forecasted Contacts' | translate }}</th>
-                                    <th>{{ 'AHT' | translate }}</th>
-                                    <th>{{ 'Forecasted Req' | translate }}</th>
-                                    <th>{{ 'Scheduled Open' | translate }}</th>
-                                    <th>{{ 'O/U' | translate }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              
+                <input type="hidden" [value]="skillGroupBinder?.id">
 
-                                 
+                <div class="scrollable-table forecastContainer" #epltable>
+                    <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+                        <thead>
+                            <tr>
+                                <th>{{ 'Time' | translate }}</th>
+                                <th>{{ 'Forecasted Contacts' | translate }}</th>
+                                <th>{{ 'AHT' | translate }}</th>
+                                <th>{{ 'Forecasted Req' | translate }}</th>
+                                <th>{{ 'Scheduled Open' | translate }}</th>
+                                <th>{{ 'O/U' | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                                        <tr *ngFor="let el of dataJson; let i = index;">
-                                        
 
-                                                <td>
-                                                    <!-- {{dataJson[i].Time}}  -->
-                                                    <label for="">{{el.time}}</label>
-                                                  
-                                                </td>
 
-                                                <td >
-                                                    {{el.forecastedContact}}
-                                                </td>
-                                                <td>{{el.aht}}</td>
-                                                <td>
-                                                    {{el.forecastedReq}}
-                                                </td>
-                                                <td>  
-                                                    {{ getScheduledOpenCount(el.time) }}
-                                                </td>
-                                                <td [ngClass]="{'negative-uo' : (el.scheduledOpen - el.forecastedReq) < 0}">
-                                                    {{ getScheduledOpenCount1(el.time) - el.forecastedReq }}
-                                                </td>
-                                         
-                                        </tr>
-                                
-                          
-                            </tbody>
-                            <tfoot>
-                                <tr class="tr-1">
-                                    <td>
-                                        <span><strong>{{ 'Total' | translate }}</strong></span>
-                                        <br>
-                                        <hr>
-                                        <span><strong>{{ 'Average' | translate }}</strong></span>
 
-                                    </td>
-                                    <td class="forecastContact">
-                                        <span><strong>{{ sumForecastContact }}</strong></span>
-                                        <br>
-                                        <hr>
-                                        <span>{{ avgForecastContactValue }}</span>
-                                    </td>
-                                    <td>
-                                        <span><strong>{{ sumAHT }}</strong></span>
-                                        <br>
-                                        <hr>
-                                        <span>{{ avgAHTValue }}</span>
-                                    </td>
-                                    <td> <span><strong>{{ sumForecastedReq }}</strong></span>
-                                        <br>
-                                        <hr>
-                                        <span>{{ avgForecastedReqValue }}</span>
-                                    </td>
-                                    <td> <span><strong>{{ sumScheduledOpen }}</strong></span>
-                                        <br>
-                                        <hr>
-                                        <span>{{ avgScheduledOpenValue }}</span>
-                                    </td>
-                                    <td> <span ><strong>{{ sumOU }}</strong></span>
-                                        <br>
-                                        <hr>
-                                        <span>{{ avgOUValue }}</span>
-                                    </td>
-                                </tr>
+                            <tr *ngFor="let el of dataJson; let i = index;">
 
-                            </tfoot>
-                        </table>
-                    </div>
-              
+
+                                <td>
+                                    <!-- {{dataJson[i].Time}}  -->
+                                    <label for="">{{el.time}}</label>
+
+                                </td>
+
+                                <td>
+                                    {{el.forecastedContact}}
+                                </td>
+                                <td>{{el.aht}}</td>
+                                <td>
+                                    {{el.forecastedReq}}
+                                </td>
+                                <td>
+                                    {{ getScheduledOpenCount(el.time) }}
+                                </td>
+                                <td [ngClass]="{'negative-uo' : (el.scheduledOpen - el.forecastedReq) < 0}">
+                                    {{ getScheduledOpenCount1(el.time) - el.forecastedReq }}
+                                </td>
+
+                            </tr>
+
+
+                        </tbody>
+                        <tfoot>
+                            <tr class="tr-1">
+                                <td>
+                                    <span><strong>{{ 'Total' | translate }}</strong></span>
+                                    <br>
+                                    <hr>
+                                    <span><strong>{{ 'Average' | translate }}</strong></span>
+
+                                </td>
+                                <td class="forecastContact">
+                                    <span><strong>{{ sumForecastContact }}</strong></span>
+                                    <br>
+                                    <hr>
+                                    <span>{{ avgForecastContactValue }}</span>
+                                </td>
+                                <td>
+                                    <span><strong>{{ sumAHT }}</strong></span>
+                                    <br>
+                                    <hr>
+                                    <span>{{ avgAHTValue }}</span>
+                                </td>
+                                <td> <span><strong>{{ sumForecastedReq }}</strong></span>
+                                    <br>
+                                    <hr>
+                                    <span>{{ avgForecastedReqValue }}</span>
+                                </td>
+                                <td> <span><strong>{{ sumScheduledOpen }}</strong></span>
+                                    <br>
+                                    <hr>
+                                    <span>{{ avgScheduledOpenValue }}</span>
+                                </td>
+                                <td>
+                                    <span [ngClass]="{'negative-uo' : sumOUInt < 0}"><strong>{{ sumOU }}</strong></span>
+                                    <br>
+                                    <hr>
+                                    <span [ngClass]="{'negative-uo' : avgOU < 0}">{{ avgOUValue }}</span>
+                                </td>
+                            </tr>
+
+                        </tfoot>
+                    </table>
+                </div>
+
                 <!-- /forecast screen table -->
             </ng-container>
 
@@ -166,5 +170,5 @@
 
         </div>
     </div>
-  
+
 </div>

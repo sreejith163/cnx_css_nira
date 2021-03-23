@@ -109,6 +109,7 @@ export class ViewOuScreenComponent implements OnInit {
   sumForecastContact: string;
   sumAHT: string;
   sumOU: string;
+  sumOUInt: number;
   sumForecastedReq: string;
   sumScheduledOpen: string;
   forecastSpinner = 'forecastSpinner';
@@ -311,21 +312,76 @@ avgOU: number;
   private getScheduledOpen() {
 
     var date = this.convertNgbDateToString(this.dateModel);
-   
-  
-    this.forecastService.getScheduleOpen(this.skillGroupBinder?.id,this.getDateInStringFormat(date)).subscribe(response => {
+    this.forecastService.getScheduleOpen(this.skillGroupBinder?.id, this.getDateInStringFormat(date)).subscribe(response => {
+      if (response != "No scheduled open") {
         this.scheduledOpenResponse = response;
-      console.log(this.scheduledOpenResponse);
-         },
-           error => {
-            this.scheduledOpenResponse = [];
-             console.log(error);
+        this.scheduledOpenResponse.map(x => {
+          const timeLapses = [":05", ":10", ":15", ":20", ":25", ":35", ":40", ":45", ":50", ":55"];
+          timeLapses.some(i => {
+            if (x.time.includes(i))
+              x.scheduleOpen = .5;
+          }
+          )
+        }
+        );
+        const x = this.scheduledOpenResponse;
+        x.map(time => {
+          const roundDownTo = roundTo => x => Math.floor(x / roundTo) * roundTo;
+          const roundUpTo = roundTo => x => Math.ceil(x / roundTo) * roundTo;
+          const roundDownTo5Minutes = roundDownTo(1000 * 60 * 30);
+          const roundUpTo5Minutes = roundUpTo(1000 * 60 * 30);
+          var dt = moment(time.time, ["h:mm A"]).format("HH:mm");
+
+          var datenow = new Date(date + " " + dt)
+          const now = new Date(datenow)
+          const msdown = roundDownTo5Minutes(now)
+          const msup = roundUpTo5Minutes(now)
+          time.time = moment(msup).format("h:mm A");
+
+        });
+
+        var result = [];
+        x.reduce(function (res, value) {
+          if (!res[value.time]) {
+            res[value.time] = { time: value.time, scheduleOpen: 0 };
+            result.push(res[value.time])
+          }
+          res[value.time].scheduleOpen += value.scheduleOpen;
+          return res;
+        }, {});
+
+
+
+        this.scheduledOpenResponse = result;
+        // var obj = {};
+        // for (var i = 0, len = this.scheduledOpenResponse.length; i < len; i++)
+        //   obj[this.scheduledOpenResponse[i]['time']] = this.scheduledOpenResponse[i];
+        // this.scheduledOpenResponse = new Array();
+        // for (var key in obj)
+        //   this.scheduledOpenResponse.push(obj[key]);
+
+        var sched_open_sum = this.scheduledOpenResponse.reduce((a, b) => +a + +b.scheduleOpen, 0);
+        this.sumScheduledOpen = sched_open_sum.toString();
+        this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+
+        var sched_open_length = this.scheduledOpenResponse.length;
+        this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / parseFloat(sched_open_length.toString());
+        this.avgScheduledOpenValue = parseFloat(this.avgScheduledOpen.toString()).toFixed(2);
      
-           }
-         );
-     
-     
-    
+      }
+      else {
+        this.scheduledOpenResponse = [];
+        this.sumScheduledOpen = "0.00";
+        this.avgScheduledOpenValue = "0.00";
+      }
+    },
+      error => {
+        this.scheduledOpenResponse = [];
+        console.log(error)
+        this.sumScheduledOpen = "0.00";
+        this.avgScheduledOpenValue = "0.00";
+      }
+    );
   }
   private getDateInStringFormat(startDate: any): string {
     if (!startDate) {
@@ -367,54 +423,12 @@ avgOU: number;
       return 0;
   }
   getScheduledOpenCount(time: string) {
-  
-  
-    var convertedTime = moment(time, 'hh:mm A').format('HH:mm:ss')
-  
-    var chart =  this.scheduledOpenResponse.find(x => x.time === convertedTime.toString());
-    // console.log(chart);
-  
-      if (chart) {    
-        var obj = {};
-  
-        for ( var i=0, len= this.scheduledOpenResponse.length; i < len; i++ ) 
-           
-        obj[this.scheduledOpenResponse[i]['time']] = this.scheduledOpenResponse[i];
-        
-        this.scheduledOpenResponse = new Array();
-        for ( var key in obj )
-        this.scheduledOpenResponse.push(obj[key]);
-  
-      
-        var parse_string = chart?.scheduleOpen.toString();
-        var sched_open_sum = this.scheduledOpenResponse.reduce((a, b) => +a + +b.scheduleOpen, 0);
-        this.sumScheduledOpen = sched_open_sum.toString();
-      
-     
-       
-        var OU = parseFloat(this.sumScheduledOpen) - parseFloat(this.sumForecastedReq); 
-        
-        
-        this.sumOU = parseFloat(OU.toString()).toFixed(2);
-       
-        this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
-  
-  
-        var sched_open_length = this.scheduledOpenResponse.length;
-        
-        this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / parseFloat(sched_open_length.toString());
-  
-      
-     this.avgOU = parseFloat(this.sumOU) / parseFloat(sched_open_length.toString());
-      
-        this.avgOUValue = parseFloat(this.avgOU.toString()).toFixed(2);
-        this.avgScheduledOpenValue = parseFloat(this.avgScheduledOpen.toString()).toFixed(2);
-        
-        return parseFloat(parse_string).toFixed(2);
-        
-      }
-  
-      return '0.00';
+    var chart = this.scheduledOpenResponse?.find(x => x.time === time.toString());
+    if (chart) {
+      var parse_string = chart?.scheduleOpen.toString();
+      return parseFloat(parse_string).toFixed(2);
+    }
+    return '0.00';
   }
   loadForecast() {
     const queryParams = this.getQueryParams();
@@ -437,8 +451,7 @@ avgOU: number;
         this.sumAHT = parseFloat(this.sumAHT).toFixed(2)
         this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2)
         this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2)
-
-       
+      
         this.spinnerService.hide(this.spinner);
       }, (error) => {
         this.spinnerService.hide(this.spinner);
@@ -486,7 +499,7 @@ avgOU: number;
       this.sumForecastContact = data.forecastData.reduce((a, b) => +a + +b.forecastedContact, 0);
       this.sumAHT = data.forecastData.reduce((a, b) => +a + +b.aht, 0);
       this.sumForecastedReq = data.forecastData.reduce((a, b) => +a + +b.forecastedReq, 0);
-      this.sumScheduledOpen = data.forecastData.reduce((a, b) => +a + +b.scheduledOpen, 0);
+      //this.sumScheduledOpen = data.forecastData.reduce((a, b) => +a + +b.scheduledOpen, 0);
      
      
       let nonZeroforecastedContact = data.forecastData.map(item => item.forecastedContact).filter(item => (isFinite(item) && item!=='0.00'));
@@ -498,15 +511,24 @@ avgOU: number;
       this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2);
       this.sumAHT = parseFloat(this.sumAHT).toFixed(2);
       this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
-      this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
+      //this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
 
-      
+      let sumHolder = parseFloat(this.sumScheduledOpen) - parseFloat(this.sumForecastedReq);
+     
+      this.sumOU = parseFloat(sumHolder.toString()).toFixed(2); 
+      this.sumOUInt = parseFloat(this.sumOU)
       //avg
 
     this.avgForecastContact  = parseFloat(this.sumForecastContact) / nonZeroforecastedContact.length;
       this.avgAHT = parseFloat(this.sumAHT) / nonZeroaht.length;
       this.avgForecastedReq = parseFloat(this.sumForecastedReq) / nonZeroForecastedReq.length;
       this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / nonZeroScheduledOpen.length;
+
+      this.avgOU  = parseFloat(this.avgScheduledOpen.toString()) - parseFloat(this.avgForecastedReq.toString());
+      
+      
+
+      this.avgOUValue = parseFloat(this.avgOU.toString()).toFixed(2)
 
     // parse to string first
     this.avgForecastContactValue = this.avgForecastContact.toString();
@@ -524,7 +546,7 @@ avgOU: number;
       this.spinnerService.hide(this.forecastSpinner);
       if (error.status === 404) {
         this.getForecastDefaultValue();
-      
+        this.sumOUInt = 0;
         this.InsertUpdate = true;
 
 

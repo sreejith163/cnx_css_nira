@@ -389,3 +389,18 @@ hr{
     border-radius: 0.25rem;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+.table-bordered th, .table-bordered td {
+
+  min-width: 20%!important;
+  max-width: 20%!important;
+  width: 20%!important;
+}
+.container-fluid>div>div>h2 {
+  padding-left: 0!important;
+}
+section{
+
+
+  height: auto;
+
+}

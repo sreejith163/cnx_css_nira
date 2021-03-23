@@ -59,15 +59,15 @@ button.calendar:active {
 .jsgrid-cell {
   cursor: pointer;
   background-color: white;
-  max-height: 40px;
-  max-width: 40px;
+  // max-height: 40px;
+  // max-width: 40px;
 }
 
 .jsgrid-cell:hover {
   cursor: pointer;
   background-color: lightgrey;
-  height: 40px;
-  width: 40px;
+  // height: 40px;
+  // width: 40px;
 }
 
 .jsgrid-cell-week {

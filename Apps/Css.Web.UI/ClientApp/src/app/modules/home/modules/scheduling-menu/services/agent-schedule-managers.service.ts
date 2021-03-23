@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpBaseService } from 'src/app/core/services/http-base.service';
 import { ApiResponseModel } from 'src/app/shared/models/api-response.model';
@@ -7,12 +8,14 @@ import { environment } from 'src/environments/environment';
 import { AgentChartResponse } from '../models/agent-chart-response.model';
 import { AgentScheduleManagersQueryParams } from '../models/agent-schedule-mangers-query-params.model';
 import { CopyAgentScheduleManagerChart } from '../models/copy-agent-schedule-manager-chart.model';
-import { UpdateAgentScheduleMangersChart } from '../models/update-agent-schedule-managers-chart.model';
+import { ScheduleManagerChartUpdate, ScheduleManagerGridChartDisplay } from '../models/schedule-manager-chart.model';
 
 @Injectable()
 export class AgentScheduleManagersService extends HttpBaseService {
 
   private baseURL = '';
+  scheduleMangerChartsGridSubject$ = new BehaviorSubject<Array<ScheduleManagerGridChartDisplay>>([]); 
+  scheduleMangerChartsGrid$ = this.scheduleMangerChartsGridSubject$.asObservable();
 
   constructor(
     private http: HttpClient
@@ -30,7 +33,7 @@ export class AgentScheduleManagersService extends HttpBaseService {
     }).pipe(catchError(this.handleError));
   }
 
-  updateScheduleManagerChart(updateAgentScheduleMangagerChart: UpdateAgentScheduleMangersChart) {
+  updateScheduleManagerChart(updateAgentScheduleMangagerChart: ScheduleManagerChartUpdate) {
     const url = `${this.baseURL}/AgentScheduleManagers/charts`;
 
     return this.http.put<ApiResponseModel>(url, updateAgentScheduleMangagerChart)

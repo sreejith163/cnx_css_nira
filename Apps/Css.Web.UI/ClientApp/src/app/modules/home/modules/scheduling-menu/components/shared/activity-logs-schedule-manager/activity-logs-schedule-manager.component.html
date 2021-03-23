@@ -1,0 +1,227 @@
+<div class="modal-dialog-activity w-1000 add-edit-modal" role="document">
+    <div class="modal-content">
+      <ngx-spinner [name]="spinner"></ngx-spinner>
+      <div class="modal-header header-color">
+        <h6 class="modal-title w-100 font-weight-bold header">
+          <p>{{ 'Activity Logs' | translate }}
+          </p>
+        </h6>
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3 modal-style">
+        <div class="row">
+          <div class="col-12 col-md-12 d-flex">
+            <p>{{ 'Agent' | translate }}</p>:
+            <b><span>   {{employeeId}}   {{employeeName}}</span></b>
+            <b><span class="agent">{{startDate | date:'EEEE'}}</span></b>
+            <b><span class="agent">{{startDate | date:'yyyy-MM-dd'}}</span></b>
+          </div>
+        </div>
+        <div class="row col-md-12 m-t-6">
+          <div class="col-md-8 row bg-color">
+            <div class="col-md-1 col-sm-1">
+              <div class="test">{{ unifiedToNative(iconCode) }}</div>
+            </div>
+            <div class="col-md-3 col-sm-3">
+              <input readonly type="text" disabled [(ngModel)]="iconDescription" class="form-control margin-4 manager">
+            </div>
+            <div class="col-md-2 col-sm-2">
+              <input readonly type="text" disabled [(ngModel)]="startTimeFilter" class="form-control margin-4 manager">
+            </div>
+            <div class="col-md-2 col-sm-2">
+              <input readonly type="text" disabled [(ngModel)]="endTimeFilter" class="form-control margin-4 manager">
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-3 label-color p-t-10">
+              <span>
+                <label>{{ 'Total Revisions' | translate }}:</label>
+                <b>{{totalRecord}}</b>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-2 m-l-10">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchKeyword">
+              <div class="input-group-append">
+                <button class="btn btn-secondary" type="button" (click)="search()">
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-secondary icon float-left" type="button" [ngbPopover]="popContent"
+              [popoverTitle]="popTitle" [placement]="'left'" container="body" [autoClose]="'outside'">
+              <i class="fa fa-sort-down"></i>
+              <ng-template #popContent>
+                <div class="form-group clearfix margin-b-05-rem" *ngFor="let x of this.columnList; let i = index">
+                  <div class="icheck-primary d-inline">
+                    <input type="checkbox" id="{{ x }}" [value]="x" [checked]="hasHiddenColumnSelected(x)"
+                      (change)="onCheckColumnsToHide($event)">
+                    <label for="{{ x }}">
+                      {{ x | translate }}
+                    </label>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template #popTitle>
+                {{ 'Select_columns_to_hide' | translate }}
+              </ng-template>
+            </button>
+            <button class="btn btn-secondary icon float-right" type="button" (click)="exportToExcel()">
+              <i class="fa fa-download"></i>
+            </button>
+          </div>
+        </div>
+        <br>
+        <div class="row table-responsive" [style.max-width]="getGridMaxWidth()">
+          <div class="col-md-12 col-sm-12 scrollable-table">
+            <table class="jsgrid-table table" id="schedulingActivityTable">
+              <thead>
+                <tr style="background-color: transparent;">
+                    <th colspan="5"></th>
+                    <ng-container *ngFor="let openTime of openTimes;">
+                      <th class="text-xs" style="background-color: #dfdfeb;">{{ openTime.dateHeader | date: 'MMM d'}}</th>               
+                    </ng-container>               
+                </tr>
+                <tr class="jsgrid-header-row">
+                  <th *ngIf="hasColumnHidden('Employee Id')" class="sortable-field" (click)="sort('executedUser', sortBy)">
+                    {{ 'Employee_id' | translate }}
+                    <i *ngIf="orderBy !== 'executedUser'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'executedUser'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                      [class.fa-sort-up]="sortBy === 'asc'">
+                    </i>
+                  </th>
+                  <th *ngIf="hasColumnHidden('Day') && activityType === activityTypeEnum.SchedulingGrid" class="sortable-field" (click)="sort('day', sortBy)">
+                    {{ 'Day' | translate }}
+                    <i *ngIf="orderBy !== 'day'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'day'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                      [class.fa-sort-up]="sortBy === 'asc'">
+                    </i>
+                  </th>
+                  <th *ngIf="hasColumnHidden('Time Stamp')" class="sortable-field">
+                    {{ 'Time Stamp' | translate }}
+                  </th>
+                  <th *ngIf="hasColumnHidden('Executed By')" class="sortable-field" (click)="sort('executedBy', sortBy)">
+                    {{ 'Executed By' | translate }}
+                    <i *ngIf="orderBy !== 'executedBy'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'executedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                      [class.fa-sort-up]="sortBy === 'asc'">
+                    </i>
+                  </th>
+                  <th *ngIf="hasColumnHidden('Origin')" class="sortable-field" (click)="sort('origin', sortBy)">
+                    {{ 'Origin' | translate }}
+                    <i *ngIf="orderBy !== 'origin'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'origin'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                      [class.fa-sort-up]="sortBy === 'asc'">
+                    </i>
+                  </th>
+                  <th *ngIf="hasColumnHidden('Status')" class="sortable-field" (click)="sort('status', sortBy)">
+                    {{ 'Status' | translate }}
+                    <i *ngIf="orderBy !== 'status'" class="fa fa-sort"></i>
+                    <i id="sortIcon" *ngIf="orderBy === 'status'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                      [class.fa-sort-up]="sortBy === 'asc'">
+                    </i>
+                  </th>
+                  <ng-container *ngFor="let data of openTimes;">
+                    <ng-container *ngIf="isMainMinute(data.time); else subMinutes">
+                      <th [ngClass]="data.time.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                        class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                        {{ data.time.split(':')[0] === '00' ? '12' : data.time.split(':')[0] }}
+                      </th>
+                    </ng-container>
+                    <ng-template #subMinutes>
+                      <th [ngClass]="data.time.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                        class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                        <sup>{{ data.time.split(':')[1].split(' ')[0] }}</sup>
+                      </th>
+                    </ng-template>
+                  </ng-container>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="activityLogsData?.length === 0" class="valid-record">
+                  <td colspan="25">
+                    {{ 'No match records found' | translate }}</td>
+                </tr>
+                <tr class="jsgrid-row user-select-none"
+                 *ngFor="let el of activityLogsChart | slice: (currentPage-1) * pageSize : (currentPage) * pageSize; let i = index;">
+                  <td *ngIf="hasColumnHidden('Employee Id')" class="jsgrid-cell-emp">{{el.employeeId}}</td>
+                  <td *ngIf="hasColumnHidden('Day') && activityType === activityTypeEnum.SchedulingGrid" class="jsgrid-cell-day">
+                    <span ngbTooltip="{{ weekDay[el?.day] }}">
+                      {{weekDay[el?.day] | truncate: { sliceStart: 0, sliceEnd:
+                      characterSplice, append: '...' } }}
+                    </span>
+                  </td>
+                  <td *ngIf="hasColumnHidden('Time Stamp')" class="jsgrid-cell-time-stamp">
+                    <span ngbTooltip="{{ el.timeStamp | date:'MMM d, y, h:mm a' }}">
+                      {{el.timeStamp | date:'MMM d, y, h:mm a' }}
+                    </span>
+                  </td>
+                  <td *ngIf="hasColumnHidden('Executed By')" class="jsgrid-cell-executedBy">
+                    <span ngbTooltip="{{ el.executedBy }}">
+                      {{el.executedBy | truncate: { sliceStart: 0, sliceEnd:
+                      characterSplice, append: '...' } }}
+                    </span>
+                  </td>
+                  <td *ngIf="hasColumnHidden('Origin')" class="jsgrid-cell-origin">
+                    <span ngbTooltip="{{ activityOrigin[el.activityOrigin] }}">
+                      {{activityOrigin[el.activityOrigin] | truncate: { sliceStart: 0, sliceEnd:
+                      characterSplice, append: '...' } }}
+                    </span>
+                  </td>
+                  <td *ngIf="hasColumnHidden('Status')" class="jsgrid-cell-status">
+                    <span ngbTooltip="{{ activityStatus[el.activityStatus] }}">
+                      {{activityStatus[el.activityStatus] | truncate: { sliceStart: 0, sliceEnd:
+                      characterSplice, append: '...' } }}
+                    </span>
+                  </td>
+                  <td id="grid_col_{{i+1}}_{{j}}" class="jsgrid-cell" attr.time="{{ openTime?.time.split(' ')[0] }}"
+                    attr.scheduleId="{{el.id}}"
+                    attr.date="{{openTime?.date}}" attr.startDateTime="{{ openTime?.startDateTime }}" attr.endDateTime="{{ openTime?.endDateTime }}"
+                    *ngFor="let openTime of openTimes;let j = index">
+                    <ng-template #tipContent>{{ (el.id | scheduleManagerActivityLogsIcon: activityLogsChart: schedulingCodes: openTime.date)?.description }}</ng-template>
+                      <span [ngbTooltip]="tipContent">
+                        <i class="font-style-normal">{{ (el.id | scheduleManagerActivityLogsIcon: activityLogsChart: schedulingCodes: openTime.date)?.icon }}</i>
+                      </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-12 d-flex justify-content-end mt-3">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination p-0 float-right">
+                <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalRecord" (pageChange)="changePage($event)" [rotate]="true" [maxSize]="10" 
+                  [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
+                </ngb-pagination>
+                <select class="form-control" (change)="changePageSize($event.target.value)">
+                  <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+                    {{ x.text | translate }}
+                  </option>
+                </select>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center header-color">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+              <button class="btn btn-secondary btn-sm m-2 float-r" data-dismiss="modal"
+                (click)="activeModal.dismiss('Cross click')">
+                {{ 'Close' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

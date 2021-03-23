@@ -34,9 +34,14 @@ import { ContenteditableValueAccessor } from 'src/app/shared/directives/contente
 
 import { HorizontalScrollPipe } from './pipes/horizontal-scroll.pipe';
 import { BypassHtmlPipe } from 'src/app/shared/directives/bypassHtml.pipe';
+import { GetIconForGridPipe } from './pipes/get-grid-icon.pipe';
+import { ActivityLogsScheduleManagerComponent } from './components/shared/activity-logs-schedule-manager/activity-logs-schedule-manager.component';
+import { GetIconForScheduleManagerActivityLogsPipe } from './pipes/get-grid-icon-schedule-manager-activity-logs.pipe';
+import { GetIconSchedulingGridPipe } from './pipes/get-scheduling-grid-icon.pipe';
 import { TimeOffsListComponent } from './components/time-offs/time-offs-list/time-offs-list.component';
 import { AddUpdateTimeOffsComponent } from './components/time-offs/add-update-time-offs/add-update-time-offs.component';
 import { TimeOffsService } from './services/time-offs.service';
+
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule, BsDropdownModule.forRoot()];
 const components =
@@ -59,10 +64,14 @@ const components =
     ActivityLogsComponent,
     MoveAgentsListComponent,
     MoveAgentsSchedulingGroupTypeaheadComponent,
+    ContenteditableValueAccessor,
+    BypassHtmlPipe,
+    GetIconForGridPipe,
+    GetIconSchedulingGridPipe,
+    GetIconForScheduleManagerActivityLogsPipe,
+    ActivityLogsScheduleManagerComponent,
     TimeOffsListComponent,
     AddUpdateTimeOffsComponent,
-    ContenteditableValueAccessor,
-    BypassHtmlPipe
   ];
 const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService, AgentScheduleManagersService,
                    MoveAgentsService, TimeOffsService];
