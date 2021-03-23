@@ -164,32 +164,32 @@
           <tbody>
             <ngx-spinner [name]="spinner"></ngx-spinner>
             <tr *ngIf="timeOffs?.length === 0" class="valid-record">
-              <td colspan="12">
+              <td colspan="20">
                 {{ 'No data to show' | translate }}</td>
             </tr>
-            <ng-container *ngFor="let el of timeOffs | slice: (currentPage-1) * pageSize : (currentPage) * pageSize; let i = index">
+            <ng-container *ngFor="let el of timeOffs; let i = index">
               <tr>
                 <td>
                   <i class="fa fa-edit padding-5 pointer" (click)="editTimeOffs(el)"></i>
                   <i class="fa fa-trash padding-5 pointer" (click)="deleteTimeOffs(el.id)"></i>
                 </td>
-                <td>{{el.id}}</td>
-                <td>{{el.description}}</td>
-                <td>{{getTimeOffCode(el.timeOffCode)}}</td>
-                <td>{{el.startDate | date: 'yyyy-MM-dd'}} - {{el.endDate | date: 'yyyy-MM-dd'}}</td>
-                <td>{{getDayRequestOn(el?.allowDayRequestOn)}}</td>
-                <td>{{el.FTEDayLength }}</td>
-                <td>{{weekDay[el.firstDayOfWeek]}}</td>
-                <td>{{el.viewAllotments }}</td>
-                <td>{{el.viewWaitLists }}</td>
-                <td>{{el.timeOffs }}</td>
-                <td>{{el.addNotes }}</td>
-                <td>{{el.showPastDays }}</td>
-                <td>{{el.forceOffDaysBeforeWeek }}</td>
-                <td>{{el.forceOffDaysAfterWeek }}</td>
-                <td>{{el.allowFullWeekRequest }}</td>
-                <td>{{el.deSelectedTime }}</td>
-                <td>{{el.deselectSavedDays }}</td>
+                <td>{{el?.id}}</td>
+                <td>{{el?.description}}</td>
+                <td>{{getTimeOffCode(el?.schedulingCodeId)}}</td>
+                <td>{{el?.startDate | date: 'yyyy-MM-dd'}} - {{el?.endDate | date: 'yyyy-MM-dd'}}</td>
+                <td>{{getDayRequestOn(el?.allowDayRequest)}}</td>
+                <td>{{el?.fTEDayLength }}</td>
+                <td>{{weekDay[el?.firstDayOfWeek]}}</td>
+                <td>{{el?.viewAllotments }}</td>
+                <td>{{el?.viewWaitLists }}</td>
+                <td>{{el?.timeOffs }}</td>
+                <td>{{el?.addNotes }}</td>
+                <td>{{el?.showPastDays }}</td>
+                <td>{{el?.forceOffDaysBeforeWeek }}</td>
+                <td>{{el?.forceOffDaysAfterWeek }}</td>
+                <td>{{el?.allowFullWeekRequest }}</td>
+                <td>{{getDeselectedTime(el?.deSelectedTime) }}</td>
+                <td>{{el?.deselectSavedDays }}</td>
                 </tr>
             </ng-container>
           </tbody>

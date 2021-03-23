@@ -1,12 +1,8 @@
 import { WeekDay } from '@angular/common';
-import { KeyValue } from 'src/app/shared/models/key-value.model';
 import { DeSelectedTime } from '../enums/deSelected-time.enum';
-import { AgentAccess } from './agent-access.model';
-import { DeselectedTime } from './deselected-time.model';
-import { FullWeeks } from './full-weeks.model';
 
 export class TimeOffsBase {
-    id: number;
+    id: string;
     description: string;
     schedulingCodeId: number;
     startDate: Date;
@@ -24,5 +20,4 @@ export class TimeOffsBase {
     allowFullWeekRequest: number;
     deSelectedTime: DeSelectedTime;
     deselectSavedDays: boolean;
-
 }

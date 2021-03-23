@@ -13,6 +13,8 @@ import { SubscriptionLike as ISubscription } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { UpdateTimeOffs } from '../../../models/update-time-offs.model';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { CustomValidators } from 'src/app/shared/util/validations.util';
 
 @Component({
   selector: 'app-add-update-time-offs',
@@ -51,6 +53,7 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
     public config: NgbTimepickerConfig,
     private timeOffsService: TimeOffsService,
     private spinnerService: NgxSpinnerService,
+    private authService: AuthService,
     private datepipe: DatePipe,
   ) {
     config.seconds = true;
@@ -173,19 +176,19 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
   }
 
   hasDayRequestOnValueSelected(value) {
-    const allowDayRequestOn: FormArray = this.timeOffForm.controls.allowDayRequestOn as FormArray;
-    return allowDayRequestOn.controls.findIndex(x => x.value === value) !== -1;
+    const allowDayRequest: FormArray = this.timeOffForm.controls.allowDayRequest as FormArray;
+    return allowDayRequest.controls.findIndex(x => x.value === value) !== -1;
   }
 
   onDayRequestOnCheckboxChange(e) {
-    const allowDayRequestOn: FormArray = this.timeOffForm.controls.allowDayRequestOn as FormArray;
+    const allowDayRequest: FormArray = this.timeOffForm.controls.allowDayRequest as FormArray;
     if (e.target.checked) {
-      allowDayRequestOn.push(new FormControl(Number(e.target.value)));
+      allowDayRequest.push(new FormControl(Number(e.target.value)));
     } else {
       let i = 0;
-      allowDayRequestOn.controls.forEach((item: FormControl) => {
+      allowDayRequest.controls.forEach((item: FormControl) => {
         if (item.value === Number(e.target.value)) {
-          allowDayRequestOn.removeAt(i);
+          allowDayRequest.removeAt(i);
           return;
         }
         i++;
@@ -194,34 +197,41 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
   }
 
   private populateTimeOffFormDetails() {
-    this.timeOffForm.controls.description.setValue(this.timeOffCodeData.description);
-    this.timeOffForm.controls.description.setValue(this.timeOffCodeData.description);
-    this.timeOffForm.controls.startDate.setValue(this.timeOffCodeData.startDate);
-    this.timeOffForm.controls.endDate.setValue(this.timeOffCodeData.endDate);
-    this.timeOffForm.controls.fTEDayLength.setValue(this.timeOffCodeData.fTEDayLength);
-    this.timeOffForm.controls.firstDayOfWeek.setValue(this.timeOffCodeData.firstDayOfWeek);
-    this.startDateValue = this.setDateInNgbFormat(this.timeOffCodeData.startDate);
-    this.endDateValue = this.setDateInNgbFormat(this.timeOffCodeData.endDate);
-    this.timeOffForm.controls.viewAllotments.setValue(this.timeOffCodeData.viewAllotments);
-    this.timeOffForm.controls.viewWaitLists.setValue(this.timeOffCodeData.viewWaitLists);
-    this.timeOffForm.controls.timeOffs.setValue(this.timeOffCodeData.timeOffs);
-    this.timeOffForm.controls.addNotes.setValue(this.timeOffCodeData.addNotes);
-    this.timeOffForm.controls.showPastDays.setValue(this.timeOffCodeData.showPastDays);
-    this.timeOffForm.controls.forceOffDaysBeforeWeek.setValue(this.timeOffCodeData.forceOffDaysBeforeWeek);
-    this.timeOffForm.controls.forceOffDaysAfterWeek.setValue(this.timeOffCodeData.forceOffDaysAfterWeek);
-    this.timeOffForm.controls.allowFullWeekRequest.setValue(this.timeOffCodeData.allowFullWeekRequest);
-    this.timeOffForm.controls.deSelectedTime.setValue(this.timeOffCodeData.deSelectedTime);
-    this.timeOffForm.controls.deselectSavedDays.setValue(this.timeOffCodeData.deselectSavedDays);
-    
+    this.timeOffForm.controls.description.setValue(this.timeOffCodeData?.description);
+    this.timeOffForm.controls.schedulingCodeId.setValue(this.timeOffCodeData?.schedulingCodeId);
+    this.timeOffForm.controls.startDate.setValue(this.timeOffCodeData?.startDate);
+    this.timeOffForm.controls.endDate.setValue(this.timeOffCodeData?.endDate);
+    this.timeOffForm.controls.fTEDayLength.setValue(this.timeOffCodeData?.fTEDayLength);
+    this.setFTEDayLength(this.timeOffCodeData?.fTEDayLength);
+    this.timeOffForm.controls.firstDayOfWeek.setValue(this.timeOffCodeData?.firstDayOfWeek);
+    this.startDateValue = this.setDateInNgbFormat(this.timeOffCodeData?.startDate);
+    this.endDateValue = this.setDateInNgbFormat(this.timeOffCodeData?.endDate);
+    this.timeOffForm.controls.viewAllotments.setValue(this.timeOffCodeData?.viewAllotments);
+    this.timeOffForm.controls.viewWaitLists.setValue(this.timeOffCodeData?.viewWaitLists);
+    this.timeOffForm.controls.timeOffs.setValue(this.timeOffCodeData?.timeOffs);
+    this.timeOffForm.controls.addNotes.setValue(this.timeOffCodeData?.addNotes);
+    this.timeOffForm.controls.showPastDays.setValue(this.timeOffCodeData?.showPastDays);
+    this.timeOffForm.controls.forceOffDaysBeforeWeek.setValue(this.timeOffCodeData?.forceOffDaysBeforeWeek);
+    this.timeOffForm.controls.forceOffDaysAfterWeek.setValue(this.timeOffCodeData?.forceOffDaysAfterWeek);
+    this.timeOffForm.controls.allowFullWeekRequest.setValue(this.timeOffCodeData?.allowFullWeekRequest);
+    this.timeOffForm.controls.deSelectedTime.setValue(this.timeOffCodeData?.deSelectedTime);
+    this.timeOffForm.controls.deselectSavedDays.setValue(this.timeOffCodeData?.deselectSavedDays);
+  }
+
+  private setFTEDayLength(dayLength: string) {
+    const data = dayLength.trim();
+    this.time.hour = +data.slice(0, 2);
+    this.time.minute = +data.slice(3, 5);
+    this.time.second = +data.slice(6, 8);
   }
 
   private setDateInNgbFormat(date: Date) {
+    const dateValue = new Date(date);
     const value: NgbDateStruct = {
-      day: date.getDate(),
-      month: +date.getMonth() + 1,
-      year: date.getFullYear()
+      day: dateValue.getDate(),
+      month: +dateValue.getMonth() + 1,
+      year: dateValue.getFullYear()
     };
-
 
     return value;
   }
@@ -233,6 +243,7 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
 
   private addTimeOff() {
     const model = this.timeOffForm.value as AddTimeOffs;
+    model.createdby = this.authService.getLoggedUserInfo().displayName;
 
     this.addTimeOffSubscription = this.timeOffsService.addTimeOff(model)
       .subscribe((response) => {
@@ -250,10 +261,9 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
     if (this.hasTimeOffCodeDetailsMisMatch()) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
       const model = this.timeOffForm.value as UpdateTimeOffs;
-      model.id = this.timeOffCodeData.id;
-      this.setDeselectedTimeModel(model);
+      model.modifiedBy = this.authService.getLoggedUserInfo().displayName;
 
-      this.updateTimeOffSubscription = this.timeOffsService.updateTimeOff(model)
+      this.updateTimeOffSubscription = this.timeOffsService.updateTimeOff(this.timeOffCodeData.id, model)
         .subscribe((response) => {
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
@@ -276,34 +286,7 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private setDeselectedTimeModel(model: any) {
-    const deselectedTime: FormGroup = this.timeOffForm.controls.deselectedTime as FormGroup;
-    if (+deselectedTime.controls.deselectTime.value === 1) {
-      model.deselectedTime.released = true;
-      model.deselectedTime.reserve = false;
-      model.deselectedTime.waitListExists = false;
-    } else if (+deselectedTime.controls.deselectTime.value === 2) {
-      model.deselectedTime.released = false;
-      model.deselectedTime.reserve = true;
-      model.deselectedTime.waitListExists = false;
-    } else if (+deselectedTime.controls.deselectTime.value === 3) {
-      model.deselectedTime.released = false;
-      model.deselectedTime.reserve = false;
-      model.deselectedTime.waitListExists = true;
-    }
-
-  }
-
   private createAllowDayRequestOnArray() {
-    const array = new FormArray([]);
-    this.weekDays.forEach((element, index) => {
-      array.push(new FormControl(element));
-    });
-
-    return array;
-  }
-
-  private createFullWeeksArray() {
     const array = new FormArray([]);
     this.weekDays.forEach((element, index) => {
       array.push(new FormControl(element));
@@ -314,23 +297,27 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
 
   private intializeTimeOffForm() {
     this.timeOffForm = this.formBuilder.group({
-      description: new FormControl(''),
-      schedulingCodeId: new FormControl(''),
-      startDate: new FormControl(''),
-      endDate: new FormControl(''),
-      allowDayRequestOn: this.createAllowDayRequestOnArray(),
-      fTEDayLength: new FormControl(''),
-      firstDayOfWeek: new FormControl(''),
-      viewAllotments: new FormControl(true),
-      viewWaitLists: new FormControl(false),
-      timeOffs: new FormControl(false),
-      addNotes: new FormControl(true),
-      showPastDays: new FormControl(true),
-      forceOffDaysBeforeWeek: new FormControl(false),
-      forceOffDaysAfterWeek: new FormControl(false),
-      allowFullWeekRequest: new FormControl(true),
-      deselectedTime: new FormControl(2),
-      deselectSavedDays: new FormControl(true),
+      description: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.maxLength(50),
+        CustomValidators.cannotContainSpace
+      ])),
+      schedulingCodeId: new FormControl('', Validators.required),
+      startDate: new FormControl('', Validators.required),
+      endDate: new FormControl('', Validators.required),
+      allowDayRequest: this.createAllowDayRequestOnArray(),
+      fTEDayLength: new FormControl('', Validators.required),
+      firstDayOfWeek: new FormControl('', Validators.required),
+      viewAllotments: new FormControl(true, Validators.required),
+      viewWaitLists: new FormControl(false, Validators.required),
+      timeOffs: new FormControl(false, Validators.required),
+      addNotes: new FormControl(true, Validators.required),
+      showPastDays: new FormControl(true, Validators.required),
+      forceOffDaysBeforeWeek: new FormControl(false, Validators.required),
+      forceOffDaysAfterWeek: new FormControl(false, Validators.required),
+      allowFullWeekRequest: new FormControl(true, Validators.required),
+      deSelectedTime: new FormControl(2, Validators.required),
+      deselectSavedDays: new FormControl(true, Validators.required),
     });
   }
 

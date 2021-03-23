@@ -16,6 +16,8 @@ import { ConfirmationPopUpComponent } from 'src/app/shared/popups/confirmation-p
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
 import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
+import { HeaderPagination } from 'src/app/shared/models/header-pagination.model';
+import { DeSelectedTime } from '../../../enums/deSelected-time.enum';
 
 @Component({
   selector: 'app-time-offs-list',
@@ -63,6 +65,11 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
         subscription.unsubscribe();
       }
     });
+  }
+
+  getDeselectedTime(value: number) {
+    const deselectedTime = Constants.TimeOffDeselectedTimeOption;
+    return deselectedTime.find(x => x.id === +value).value;
   }
 
   getTimeOffCode(id: number) {
@@ -200,8 +207,10 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         this.spinnerService.hide(this.spinner);
         if (response) {
-          this.timeOffs = response;
-          this.totalRecord = this.timeOffs.length;
+          this.timeOffs = response.body;
+          let headerPaginationValues = new HeaderPagination();
+          headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
+          this.totalRecord = headerPaginationValues.totalCount;
         }
       }, (error) => {
         this.spinnerService.hide(this.spinner);

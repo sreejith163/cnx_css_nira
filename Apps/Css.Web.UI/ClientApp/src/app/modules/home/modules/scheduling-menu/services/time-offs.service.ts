@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { identifierModuleUrl } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { HttpBaseService } from 'src/app/core/services/http-base.service';
@@ -37,8 +38,8 @@ export class TimeOffsService extends HttpBaseService {
     .pipe(catchError(this.handleError));
   }
 
-  updateTimeOff(data: UpdateTimeOffs) {
-    const url = `${this.baseURL}/TimeOffs`;
+  updateTimeOff(id: string, data: UpdateTimeOffs) {
+    const url = `${this.baseURL}/TimeOffs/${id}`;
 
     return this.http.put<ApiResponseModel>(url, data)
     .pipe(catchError(this.handleError));

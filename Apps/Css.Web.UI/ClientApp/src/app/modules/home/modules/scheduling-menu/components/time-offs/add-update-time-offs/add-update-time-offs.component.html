@@ -272,7 +272,7 @@
           <ng-container *ngFor="let x of deselectedTimeOption; let i=index;">
             <div *ngIf="i < 3" class="form-group clearfix margin-b-05-rem">
               <div class="icheck-primary d-inline">
-                <input type="radio" id="{{ 'radio_box' + i }}" name="deselectedTime" [value]="x.id" formControlName="deselectedTime">
+                <input type="radio" id="{{ 'radio_box' + i }}" name="deSelectedTime" [value]="x.id" formControlName="deSelectedTime">
                 <label class="mr-1" for="{{ 'radio_box' + i }}">
                   {{ x.value | translate }}
                 </label>
@@ -280,7 +280,7 @@
             </div>
             <div *ngIf="i==3" class="form-group clearfix margin-b-05-rem">
               <div class="icheck-primary d-inline">
-                <input type="checkbox" id="{{ 'deselect_check_box' + i }}" name="deselectedTime" [value]="x.id" formControlName="deselectSavedDays">
+                <input type="checkbox" id="{{ 'deselect_check_box' + i }}" name="deSelectedTime" [value]="x.id" formControlName="deselectSavedDays">
                 <label class="mr-1" for="{{ 'deselect_check_box' + i }}">
                   {{ x.value | translate }}
                 </label>
