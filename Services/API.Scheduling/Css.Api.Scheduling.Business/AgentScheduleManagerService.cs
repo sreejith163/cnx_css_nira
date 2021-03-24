@@ -144,7 +144,7 @@ namespace Css.Api.Scheduling.Business
 
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agents));
 
-            return new CSSResponse(mappedAgentScheduleManagers.Distinct(), HttpStatusCode.OK);
+            return new CSSResponse(mappedAgentScheduleManagers.Distinct().ToList(), HttpStatusCode.OK);
         }
 
 

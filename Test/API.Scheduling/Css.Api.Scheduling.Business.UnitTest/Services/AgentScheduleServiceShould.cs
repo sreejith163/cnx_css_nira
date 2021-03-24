@@ -410,60 +410,60 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Assert.Equal(HttpStatusCode.NotFound, result.Code);
         }
 
-        /// <summary>
-        /// Updates the agent schedule chart with not found for scheduling code.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        /// <param name="schedulingCode">The scheduling code.</param>
-        /// <param name="fromYear">From year.</param>
-        /// <param name="fromMonth">From month.</param>
-        /// <param name="fromDay">From day.</param>
-        /// <param name="toYear">To year.</param>
-        /// <param name="toMonth">To month.</param>
-        /// <param name="toDay">To day.</param>
-        [Theory]
-        [InlineData("5fe0b5ad6a05416894c0718e", 100, 2021, 3, 10, 2021, 3, 17)]
-        [InlineData("5fe0b5ad6a05416894c0718f", 101, 2021, 3, 10, 2021, 3, 17)]
-        public async void UpdateAgentScheduleChartWithNotFoundForSchedulingCode(string agentScheduleId, int schedulingCode, int fromYear, int fromMonth, 
-                                                                                int fromDay, int toYear, int toMonth, int toDay)
-        {
-            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
-            UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
-            {
-                AgentScheduleCharts = new List<AgentScheduleChart>
-                {
-                    new AgentScheduleChart
-                    {
-                        Day = 1,
-                        Charts = new List<ScheduleChart>
-                        {
-                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
-                        }
-                    }
-                },
-                Status = SchedulingStatus.Pending_Schedule,
-                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
-                DateTo = new DateTime(toYear, toMonth, toDay),
-                ModifiedBy = "admin",
-                ActivityOrigin = ActivityOrigin.CSS,
-                ModifiedUser = 123
-            };
+        ///// <summary>
+        ///// Updates the agent schedule chart with not found for scheduling code.
+        ///// </summary>
+        ///// <param name="agentScheduleId">The agent schedule identifier.</param>
+        ///// <param name="schedulingCode">The scheduling code.</param>
+        ///// <param name="fromYear">From year.</param>
+        ///// <param name="fromMonth">From month.</param>
+        ///// <param name="fromDay">From day.</param>
+        ///// <param name="toYear">To year.</param>
+        ///// <param name="toMonth">To month.</param>
+        ///// <param name="toDay">To day.</param>
+        //[Theory]
+        //[InlineData("5fe0b5ad6a05416894c0718e", 100, 2021, 3, 10, 2021, 3, 17)]
+        //[InlineData("5fe0b5ad6a05416894c0718f", 101, 2021, 3, 10, 2021, 3, 17)]
+        //public async void UpdateAgentScheduleChartWithNotFoundForSchedulingCode(string agentScheduleId, int schedulingCode, int fromYear, int fromMonth, 
+        //                                                                        int fromDay, int toYear, int toMonth, int toDay)
+        //{
+        //    AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
+        //    UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
+        //    {
+        //        AgentScheduleCharts = new List<AgentScheduleChart>
+        //        {
+        //            new AgentScheduleChart
+        //            {
+        //                Day = 1,
+        //                Charts = new List<ScheduleChart>
+        //                {
+        //                    new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
+        //                }
+        //            }
+        //        },
+        //        Status = SchedulingStatus.Pending_Schedule,
+        //        DateFrom = new DateTime(fromYear, fromMonth, fromDay),
+        //        DateTo = new DateTime(toYear, toMonth, toDay),
+        //        ModifiedBy = "admin",
+        //        ActivityOrigin = ActivityOrigin.CSS,
+        //        ModifiedUser = 123
+        //    };
 
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
+        //    mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+        //        (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
 
-            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
-                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
+        //    mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+        //        (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
-            mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
-                (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentSchedule(agentScheduleIdDetails));
+        //    mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
+        //        (AgentScheduleIdDetails agentScheduleIdDetails) => mockDataContext.GetAgentSchedule(agentScheduleIdDetails));
 
-            var result = await agentScheduleService.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleChart);
+        //    var result = await agentScheduleService.UpdateAgentScheduleChart(agentScheduleIdDetails, agentScheduleChart);
 
-            Assert.NotNull(result);
-            Assert.NotNull(result.Value);
-            Assert.Equal(HttpStatusCode.NotFound, result.Code);
-        }
+        //    Assert.NotNull(result);
+        //    Assert.NotNull(result.Value);
+        //    Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        //}
 
         /// <summary>
         /// Updates the agent schedule chart for new range.
@@ -522,114 +522,114 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
         #endregion
 
-        #region ImportAgentScheduleChart
+        //#region ImportAgentScheduleChart
 
-        /// <summary>
-        /// Imports the agent schedule chart with not found for scheduling code.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        /// <param name="schedulingCode">The scheduling code.</param>
-        /// <param name="employeeId">The employee identifier.</param>
-        /// <param name="fromYear">From year.</param>
-        /// <param name="fromMonth">From month.</param>
-        /// <param name="fromDay">From day.</param>
-        /// <param name="toYear">To year.</param>
-        /// <param name="toMonth">To month.</param>
-        /// <param name="toDay">To day.</param>
-        [Theory]
-        [InlineData(100, 1, 2021, 4, 4, 2021, 4, 10)]
-        [InlineData(101, 2, 2021, 4, 4, 2021, 4, 10)]
-        public async void ImportAgentScheduleChartWithNotFoundForSchedulingCode(int schedulingCode, int employeeId, int fromYear, 
-                                                                                int fromMonth, int fromDay, int toYear, int toMonth, int toDay)
-        {
-            AgentScheduleImport importAgentSchedule = new AgentScheduleImport
-            {
-                AgentScheduleImportData = new List<AgentScheduleImportData>
-                {
-                    new AgentScheduleImportData
-                    {
-                        EmployeeId = employeeId,
-                        StartDate = new DateTime(fromYear, fromMonth, fromDay),
-                        EndDate = new DateTime(toYear, toMonth, toDay),
-                        StartTime = "00:00 am",
-                        EndTime = "00:05 pm",
-                        SchedulingCodeId = schedulingCode
-                    }
-                },
-                ActivityOrigin  = ActivityOrigin.CSS,
-                ModifiedBy = "admin"
-            };
+        ///// <summary>
+        ///// Imports the agent schedule chart with not found for scheduling code.
+        ///// </summary>
+        ///// <param name="agentScheduleId">The agent schedule identifier.</param>
+        ///// <param name="schedulingCode">The scheduling code.</param>
+        ///// <param name="employeeId">The employee identifier.</param>
+        ///// <param name="fromYear">From year.</param>
+        ///// <param name="fromMonth">From month.</param>
+        ///// <param name="fromDay">From day.</param>
+        ///// <param name="toYear">To year.</param>
+        ///// <param name="toMonth">To month.</param>
+        ///// <param name="toDay">To day.</param>
+        //[Theory]
+        //[InlineData(100, 1, 2021, 4, 4, 2021, 4, 10)]
+        //[InlineData(101, 2, 2021, 4, 4, 2021, 4, 10)]
+        //public async void ImportAgentScheduleChartWithNotFoundForSchedulingCode(int schedulingCode, int employeeId, int fromYear, 
+        //                                                                        int fromMonth, int fromDay, int toYear, int toMonth, int toDay)
+        //{
+        //    AgentScheduleImport importAgentSchedule = new AgentScheduleImport
+        //    {
+        //        AgentScheduleImportData = new List<AgentScheduleImportData>
+        //        {
+        //            new AgentScheduleImportData
+        //            {
+        //                EmployeeId = employeeId,
+        //                StartDate = new DateTime(fromYear, fromMonth, fromDay),
+        //                EndDate = new DateTime(toYear, toMonth, toDay),
+        //                StartTime = "00:00 am",
+        //                EndTime = "00:05 pm",
+        //                SchedulingCodeId = schedulingCode
+        //            }
+        //        },
+        //        ActivityOrigin  = ActivityOrigin.CSS,
+        //        ModifiedBy = "admin"
+        //    };
 
-            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
-                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
+        //    mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+        //        (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
-            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentScheduleByEmployeeId(employeeIdDetails));
+        //    mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+        //        (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentScheduleByEmployeeId(employeeIdDetails));
 
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
+        //    mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+        //        (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
 
-            var result = await agentScheduleService.ImportAgentScheduleChart(importAgentSchedule);
+        //    var result = await agentScheduleService.ImportAgentScheduleChart(importAgentSchedule);
 
-            Assert.NotNull(result);
-            Assert.NotNull(result.Value);
-            Assert.Equal(HttpStatusCode.NotFound, result.Code);
-        }
+        //    Assert.NotNull(result);
+        //    Assert.NotNull(result.Value);
+        //    Assert.Equal(HttpStatusCode.NotFound, result.Code);
+        //}
 
-        /// <summary>
-        /// Imports the agent schedule chart for scheduling tab.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        [Theory]
-        [InlineData(1, 1, 2021, 4, 4, 2021, 4, 10)]
-        [InlineData(2, 2, 2021, 4, 4, 2021, 4, 10)]
-        public async void ImportAgentScheduleChart(int schedulingCode, int employeeId, int fromYear, int fromMonth, int fromDay, int toYear, 
-                                                   int toMonth, int toDay)
-        {
-            AgentScheduleImport importAgentSchedule = new AgentScheduleImport
-            {
-                AgentScheduleImportData = new List<AgentScheduleImportData>
-                {
-                    new AgentScheduleImportData
-                    {
-                        EmployeeId = employeeId,
-                        StartDate = new DateTime(fromYear, fromMonth, fromDay),
-                        EndDate = new DateTime(toYear, toMonth, toDay),
-                        StartTime = "00:00 am",
-                        EndTime = "00:05 pm",
-                        SchedulingCodeId = schedulingCode
-                    },
-                    new AgentScheduleImportData
-                    {
-                        EmployeeId = employeeId,
-                        StartDate = new DateTime(2021, 3, 21),
-                        EndDate =  new DateTime(2021, 3, 27),
-                        StartTime = "00:00 am",
-                        EndTime = "00:05 pm",
-                        SchedulingCodeId = schedulingCode
-                    }
-                },
-                ActivityOrigin = ActivityOrigin.CSS,
-                ModifiedBy = "admin"
-            };
+        ///// <summary>
+        ///// Imports the agent schedule chart for scheduling tab.
+        ///// </summary>
+        ///// <param name="agentScheduleId">The agent schedule identifier.</param>
+        //[Theory]
+        //[InlineData(1, 1, 2021, 4, 4, 2021, 4, 10)]
+        //[InlineData(2, 2, 2021, 4, 4, 2021, 4, 10)]
+        //public async void ImportAgentScheduleChart(int schedulingCode, int employeeId, int fromYear, int fromMonth, int fromDay, int toYear, 
+        //                                           int toMonth, int toDay)
+        //{
+        //    AgentScheduleImport importAgentSchedule = new AgentScheduleImport
+        //    {
+        //        AgentScheduleImportData = new List<AgentScheduleImportData>
+        //        {
+        //            new AgentScheduleImportData
+        //            {
+        //                EmployeeId = employeeId,
+        //                StartDate = new DateTime(fromYear, fromMonth, fromDay),
+        //                EndDate = new DateTime(toYear, toMonth, toDay),
+        //                StartTime = "00:00 am",
+        //                EndTime = "00:05 pm",
+        //                SchedulingCodeId = schedulingCode
+        //            },
+        //            new AgentScheduleImportData
+        //            {
+        //                EmployeeId = employeeId,
+        //                StartDate = new DateTime(2021, 3, 21),
+        //                EndDate =  new DateTime(2021, 3, 27),
+        //                StartTime = "00:00 am",
+        //                EndTime = "00:05 pm",
+        //                SchedulingCodeId = schedulingCode
+        //            }
+        //        },
+        //        ActivityOrigin = ActivityOrigin.CSS,
+        //        ModifiedBy = "admin"
+        //    };
 
-            mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
-                (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
+        //    mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
+        //        (List<int> codes) => mockDataContext.GetSchedulingCodesCountByIds(codes));
 
-            mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentScheduleByEmployeeId(employeeIdDetails));
+        //    mockAgentScheduleRepository.Setup(mr => mr.GetAgentScheduleByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+        //        (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentScheduleByEmployeeId(employeeIdDetails));
 
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
-                (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
+        //    mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
+        //        (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
 
-            var result = await agentScheduleService.ImportAgentScheduleChart(importAgentSchedule);
+        //    var result = await agentScheduleService.ImportAgentScheduleChart(importAgentSchedule);
 
-            Assert.NotNull(result);
-            Assert.Null(result.Value);
-            Assert.Equal(HttpStatusCode.NoContent, result.Code);
-        }
+        //    Assert.NotNull(result);
+        //    Assert.Null(result.Value);
+        //    Assert.Equal(HttpStatusCode.NoContent, result.Code);
+        //}
 
-        #endregion
+        //#endregion
 
         #region CopyAgentSchedule
 
