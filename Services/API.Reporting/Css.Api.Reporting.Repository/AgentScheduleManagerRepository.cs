@@ -99,6 +99,10 @@ namespace Css.Api.Reporting.Repository
         /// <param name="updatedAgentSchedulingGroupDetails"></param>
         public void UpdateAgentSchedulingGroupForManagerCharts(UpdatedAgentSchedulingGroupDetails updatedAgentSchedulingGroupDetails)
         {
+            updatedAgentSchedulingGroupDetails.StartDate = new DateTime(updatedAgentSchedulingGroupDetails.StartDate.Year,
+                                    updatedAgentSchedulingGroupDetails.StartDate.Month, updatedAgentSchedulingGroupDetails.StartDate.Day,
+                                    0, 0, 0, DateTimeKind.Utc);
+
             var query = Builders<AgentScheduleManager>.Filter.Where(i => i.EmployeeId == updatedAgentSchedulingGroupDetails.EmployeeId
                                                                     && i.Date >= updatedAgentSchedulingGroupDetails.StartDate);
             var update = Builders<AgentScheduleManager>.Update
@@ -115,6 +119,10 @@ namespace Css.Api.Reporting.Repository
         {
             updatedAgentSchedulingGroupDetailsList.ForEach(updatedAgentSchedulingGroupDetails =>
             {
+                updatedAgentSchedulingGroupDetails.StartDate = new DateTime(updatedAgentSchedulingGroupDetails.StartDate.Year,
+                                    updatedAgentSchedulingGroupDetails.StartDate.Month, updatedAgentSchedulingGroupDetails.StartDate.Day,
+                                    0, 0, 0, DateTimeKind.Utc);
+
                 var query = Builders<AgentScheduleManager>.Filter.Where(i => i.EmployeeId == updatedAgentSchedulingGroupDetails.EmployeeId 
                                                                     && i.Date >= updatedAgentSchedulingGroupDetails.StartDate);
                 var update = Builders<AgentScheduleManager>.Update
@@ -132,6 +140,9 @@ namespace Css.Api.Reporting.Repository
         {
             agentScheduleManagers.ForEach(agentScheduleManagerDetails =>
             {
+                agentScheduleManagerDetails.Date = new DateTime(agentScheduleManagerDetails.Date.Year, agentScheduleManagerDetails.Date.Month,
+                                agentScheduleManagerDetails.Date.Day, 0, 0, 0, DateTimeKind.Utc);
+
                 var query = Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, agentScheduleManagerDetails.EmployeeId) &
                            Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, agentScheduleManagerDetails.Date);
 

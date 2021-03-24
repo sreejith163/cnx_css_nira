@@ -141,14 +141,6 @@
               <br />
             </returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.GetAgentScheduledOpen(System.Int32,System.DateTimeOffset)">
-            <summary>
-            Gets the scheduled open
-            </summary>
-            <param name="skillGroupId">The agent schedule identifier.</param>
-            <param name="date"></param>
-            <returns></returns>
-        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.UpdateAgentScheduleMangerChart(Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager.UpdateAgentScheduleManager)">
             <summary>
             Updates the agent schedule manger chart.
@@ -227,7 +219,7 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.ImportAgentScheduleChart(Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.ImportAgentSchedule)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.ImportAgentScheduleChart(Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.AgentScheduleImport)">
             <summary>
             Updates the agent schedule chart.
             </summary>
@@ -326,6 +318,14 @@
             import forecast data
             </summary>
             <param name="importForecastDetails"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.GetAgentScheduledOpen(System.Int32,System.DateTimeOffset)">
+            <summary>
+            Gets the scheduled open
+            </summary>
+            <param name="skillGroupId">The agent schedule identifier.</param>
+            <param name="date"></param>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Scheduling.Extensions.DBContextExtension">

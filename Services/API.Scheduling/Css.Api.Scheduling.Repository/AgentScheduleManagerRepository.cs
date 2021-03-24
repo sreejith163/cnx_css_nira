@@ -308,7 +308,6 @@ namespace Css.Api.Scheduling.Repository
 
             return agentScheduleManagers;
         }
-              
     }
 }
 
