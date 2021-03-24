@@ -166,7 +166,7 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
 
   save() {
     this.formSubmitted = true;
-    if (this.timeOffForm.valid && this.time) {
+    if (this.timeOffForm.valid && this.time && !this.hasFTEDayLengthValidationError()) {
       this.operation === ComponentOperation.Edit ? this.updateTimeOff() : this.addTimeOff();
     }
   }

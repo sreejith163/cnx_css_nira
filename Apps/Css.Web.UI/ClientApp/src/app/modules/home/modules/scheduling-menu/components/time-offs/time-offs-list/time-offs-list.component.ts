@@ -111,6 +111,7 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
 
   clearSearchText() {
     this.searchKeyword = undefined;
+    this.loadTimeOffs();
   }
 
   addTimeOff() {
@@ -125,7 +126,7 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
   }
 
   search() {
-
+    this.loadTimeOffs();
   }
 
   editTimeOffs(timeOffData: TimeOffResponse) {
