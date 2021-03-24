@@ -18,10 +18,23 @@
             <div class="col-md-4">
               <label>
                 {{ 'Description' | translate }}
+                <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
               <input type="text" class="form-control" formControlName="description" [maxLength]="50" />
+              <ng-container *ngIf="formSubmitted && form.description.invalid">
+                <ng-container *ngIf="hasFormControlValidationError('description'); else maxLengthError">
+                  <div *ngIf="hasFormControlValidationError('description')" class="valid-error">
+                    {{ 'Description is required' | translate }}
+                  </div>
+                </ng-container>
+                <ng-template #maxLengthError>
+                  <div class="valid-error">
+                    {{ 'Description cannot exceed 50 characters' | translate }}
+                  </div>
+                </ng-template>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -30,7 +43,7 @@
             <div class="col-md-4">
               <label class="my-2">
                 {{ 'Time Off Code' | translate }}
-                <!-- <span class="required">*</span> -->
+                <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
@@ -39,6 +52,9 @@
                 <option *ngFor="let fonts of timeOffCodes" class="fa" [value]="fonts.value" [innerHTML]="fonts.data">
                 </option>
               </select>
+              <div *ngIf="hasFormControlValidationError('schedulingCodeId') && formSubmitted" class="valid-error">
+                {{ 'Time Off Code is required' | translate }}
+              </div>
             </div>
           </div>
         </div>
@@ -48,6 +64,7 @@
             <div class="col-md-4">
               <label class="my-2">
                 {{ 'Start Date' | translate }}
+                <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
@@ -68,6 +85,9 @@
                         | translate }}</button> -->
                 </ng-template>
               </div>
+              <div *ngIf="hasFormControlValidationError('startDate') && formSubmitted" class="valid-error">
+                {{ 'Start Date is required' | translate }}
+              </div>
             </div>
           </div>
         </div>
@@ -76,6 +96,7 @@
             <div class="col-md-4">
               <label class="my-2">
                 {{ 'End Date' | translate }}
+                <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
@@ -96,6 +117,9 @@
                         | translate }}</button> -->
                 </ng-template>
               </div>
+              <div *ngIf="hasFormControlValidationError('endDate') && formSubmitted" class="valid-error">
+                {{ 'End Date is required' | translate }}
+              </div>
             </div>
           </div>
         </div>
@@ -105,6 +129,7 @@
             <div class="col-md-4">
               <label class="my-2">
                 {{ 'Allow day request on' | translate }}
+                <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
@@ -121,6 +146,9 @@
                   </div>
                 </ng-container>
               </div>
+              <div *ngIf="hasAllowDayRequestValidationError() && formSubmitted" class="valid-error">
+                {{ 'Allow day request on is required' | translate }}
+              </div>
             </div>
           </div>
         </div>
@@ -130,12 +158,22 @@
             <div class="col-md-4">
               <label class="my-2">
                 {{ 'FTE day length' | translate }}
+                <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
               <div class="input-group clockpicker">
                 <ngb-timepicker [(ngModel)]="time" [ngModelOptions]="{standalone: true}" (change)="onDayLengthChange()"></ngb-timepicker>
               </div>
+              <ng-container *ngIf="formSubmitted">
+                <div *ngIf="hasFTEDayLengthValidationError()"
+                  class="valid-error">
+                  {{ 'FTE day length is required' | translate }}
+                </div>
+                <div *ngIf="!hasFormControlValidationError('fTEDayLength') && !time" class="valid-error">
+                  {{ 'Please fill FTE day length correctly' | translate }}
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -144,6 +182,7 @@
             <div class="col-md-4">
               <label class="my-2">
                 {{ 'First day of week' | translate }}
+                <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
@@ -151,12 +190,16 @@
                 <option></option>
                 <option *ngFor="let day of weekDays" class="fa" [value]="day">{{ getWeekDay(day) | translate }}</option>
               </select>
+              <div *ngIf="hasFormControlValidationError('firstDayOfWeek') && formSubmitted" class="valid-error">
+                {{ 'First day of week is required' | translate }}
+              </div>
             </div>
           </div>
         </div>
         <hr>
         <h6 class="font-weight-bold">
           <p>{{ 'Agent Access' | translate }}
+            <span class="required">*</span>
           </p>
         </h6>
         <div class="form-group" >
@@ -207,10 +250,14 @@
               </div>
             </div>
           </ng-container>
+          <div *ngIf="hasAgentAccessValidationError() && formSubmitted" class="valid-error">
+            {{ 'Agent Access is required' | translate }}
+          </div>
         </div>
         <hr>
         <h6 class="font-weight-bold">
           <p>{{ 'Full Weeks' | translate }}
+            <span class="required">*</span>
           </p>
         </h6>
         <ng-container>
@@ -219,10 +266,14 @@
             <div class="col-md-4">
               <label class="my-2">
                 {{ 'Number of days to force off before a week' | translate }}
+                <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
               <input type="number" class="form-control" formControlName="forceOffDaysBeforeWeek" />
+               <div *ngIf="hasFormControlValidationError('forceOffDaysBeforeWeek') && formSubmitted" class="valid-error">
+            {{ 'Number of days to force off before a week is required' | translate }}
+          </div>
             </div>
           </div>
         </div>
@@ -231,10 +282,14 @@
             <div class="col-md-4">
               <label class="my-2">
                 {{ 'Number of days to force off after a week' | translate }}
+                <span class="required">*</span>
               </label>
             </div>
             <div class="col-md-8">
               <input type="number" class="form-control" formControlName="forceOffDaysAfterWeek"/>
+              <div *ngIf="hasFormControlValidationError('forceOffDaysAfterWeek') && formSubmitted" class="valid-error">
+                {{ 'Number of days to force off after a week is required' | translate }}
+              </div>
             </div>
           </div>
         </div>
@@ -266,6 +321,7 @@
         <hr>
         <h6 class="font-weight-bold">
           <p>{{ 'Deselected Time' | translate }}
+            <span class="required">*</span>
           </p>
         </h6>
         <div class="form-group">

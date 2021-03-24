@@ -46,6 +46,10 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
   @Input() timeOffCodeData: TimeOffResponse;
   @Input() schedulingCodes: SchedulingCode[];
 
+  get form() {
+    return this.timeOffForm.controls;
+  }
+
   constructor(
     private formBuilder: FormBuilder,
     public activeModal: NgbActiveModal,
@@ -65,7 +69,7 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key])).map(x => +x);
     this.intializeTimeOffForm();
     this.getTimeOffCodes();
-    this.onDayLengthChange();
+    // this.onDayLengthChange();
     if (this.operation === ComponentOperation.Edit) {
       this.populateTimeOffFormDetails();
     }
@@ -97,10 +101,29 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
     return ComponentOperation[this.operation];
   }
 
+  hasAgentAccessValidationError() {
+    if (!this.timeOffForm.controls.viewAllotments?.value &&
+      !this.timeOffForm.controls.viewWaitLists?.value &&
+      !this.timeOffForm.controls.timeOffs?.value &&
+      !this.timeOffForm.controls.addNotes?.value &&
+      !this.timeOffForm.controls.showPastDays?.value) {
+      return true;
+    }
+  }
+
+  hasAllowDayRequestValidationError() {
+    const allowDayRequest: FormArray = this.timeOffForm.controls.allowDayRequest as FormArray;
+    return allowDayRequest.length === 0;
+  }
+
+  hasFTEDayLengthValidationError() {
+    return this.time?.hour === 0 && this.time?.minute === 0 && this.time?.second === 0;
+  }
+
   hasFormControlValidationError(control: string) {
     return (
       this.formSubmitted &&
-      this.timeOffForm.controls[control].errors?.required
+      this.timeOffForm.controls[control]?.errors?.required
     );
   }
 
@@ -120,11 +143,13 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
   }
 
   onDayLengthChange() {
-    const hour = String(this.time.hour).length === 1 ? '0' + this.time.hour : this.time.hour;
-    const minute = String(this.time.minute).length === 1 ? '0' + this.time.minute : this.time.minute;
-    const second = String(this.time.second).length === 1 ? '0' + this.time.second : this.time.second;
-    const item = hour + ':' + minute + ':' + second;
-    this.timeOffForm.controls.fTEDayLength.patchValue(item);
+    if (this.time) {
+      const hour = String(this.time.hour).length === 1 ? '0' + this.time.hour : this.time.hour;
+      const minute = String(this.time.minute).length === 1 ? '0' + this.time.minute : this.time.minute;
+      const second = String(this.time.second).length === 1 ? '0' + this.time.second : this.time.second;
+      const item = hour + ':' + minute + ':' + second;
+      this.timeOffForm.controls.fTEDayLength.patchValue(item);
+    }
   }
 
   getTimeOffCodes() {
@@ -141,7 +166,7 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
 
   save() {
     this.formSubmitted = true;
-    if (this.timeOffForm.valid) {
+    if (this.timeOffForm.valid && this.time) {
       this.operation === ComponentOperation.Edit ? this.updateTimeOff() : this.addTimeOff();
     }
   }
@@ -214,6 +239,7 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
     this.timeOffForm.controls.forceOffDaysBeforeWeek.setValue(this.timeOffCodeData?.forceOffDaysBeforeWeek);
     this.timeOffForm.controls.forceOffDaysAfterWeek.setValue(this.timeOffCodeData?.forceOffDaysAfterWeek);
     this.timeOffForm.controls.allowFullWeekRequest.setValue(this.timeOffCodeData?.allowFullWeekRequest);
+    this.timeOffCodeData?.allowFullWeekRequest ? this.fullWeekArray = [0, 1, 2, 3, 4, 5, 6] : this.fullWeekArray = [];
     this.timeOffForm.controls.deSelectedTime.setValue(this.timeOffCodeData?.deSelectedTime);
     this.timeOffForm.controls.deselectSavedDays.setValue(this.timeOffCodeData?.deselectSavedDays);
   }
@@ -278,19 +304,29 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
 
   }
 
-  hasTimeOffCodeDetailsMisMatch() {
+  private hasTimeOffCodeDetailsMisMatch() {
     for (const propertyName in this.timeOffForm.value) {
-      if (this.timeOffForm.value[propertyName] !== this.timeOffCodeData[propertyName]) {
+      if (this.timeOffForm.value[propertyName] !== this.timeOffCodeData[propertyName] && propertyName !== 'allowDayRequest') {
         return true;
+      } else if (propertyName === 'allowDayRequest') {
+        if (JSON.stringify(this.timeOffForm.value[propertyName]) !== JSON.stringify(this.timeOffCodeData[propertyName])) {
+          return true;
+        }
       }
     }
   }
 
   private createAllowDayRequestOnArray() {
     const array = new FormArray([]);
-    this.weekDays.forEach((element, index) => {
-      array.push(new FormControl(element));
-    });
+    if (this.operation === ComponentOperation.Add) {
+      this.weekDays.forEach((element, index) => {
+        array.push(new FormControl(element));
+      });
+    } else {
+      this.timeOffCodeData.allowDayRequest.forEach((element, index) => {
+        array.push(new FormControl(element));
+      });
+    }
 
     return array;
   }
@@ -313,8 +349,8 @@ export class AddUpdateTimeOffsComponent implements OnInit, OnDestroy {
       timeOffs: new FormControl(false, Validators.required),
       addNotes: new FormControl(true, Validators.required),
       showPastDays: new FormControl(true, Validators.required),
-      forceOffDaysBeforeWeek: new FormControl(false, Validators.required),
-      forceOffDaysAfterWeek: new FormControl(false, Validators.required),
+      forceOffDaysBeforeWeek: new FormControl('', Validators.required),
+      forceOffDaysAfterWeek: new FormControl('', Validators.required),
       allowFullWeekRequest: new FormControl(true, Validators.required),
       deSelectedTime: new FormControl(2, Validators.required),
       deselectSavedDays: new FormControl(true, Validators.required),

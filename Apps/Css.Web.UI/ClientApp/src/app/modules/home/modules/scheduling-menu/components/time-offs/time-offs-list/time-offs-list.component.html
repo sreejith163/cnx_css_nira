@@ -180,16 +180,16 @@
                 <td>{{getDayRequestOn(el?.allowDayRequest)}}</td>
                 <td>{{el?.fTEDayLength }}</td>
                 <td>{{weekDay[el?.firstDayOfWeek]}}</td>
-                <td>{{el?.viewAllotments }}</td>
-                <td>{{el?.viewWaitLists }}</td>
-                <td>{{el?.timeOffs }}</td>
-                <td>{{el?.addNotes }}</td>
-                <td>{{el?.showPastDays }}</td>
+                <td>{{el?.viewAllotments ? 'Yes': 'No' }}</td>
+                <td>{{el?.viewWaitLists ? 'Yes': 'No' }}</td>
+                <td>{{el?.timeOffs ? 'Yes': 'No' }}</td>
+                <td>{{el?.addNotes ? 'Yes': 'No' }}</td>
+                <td>{{el?.showPastDays ? 'Yes': 'No' }}</td>
                 <td>{{el?.forceOffDaysBeforeWeek }}</td>
                 <td>{{el?.forceOffDaysAfterWeek }}</td>
-                <td>{{el?.allowFullWeekRequest }}</td>
+                <td>{{el?.allowFullWeekRequest ? 'Yes': 'No' }}</td>
                 <td>{{getDeselectedTime(el?.deSelectedTime) }}</td>
-                <td>{{el?.deselectSavedDays }}</td>
+                <td>{{el?.deselectSavedDays ? 'Yes': 'No' }}</td>
                 </tr>
             </ng-container>
           </tbody>
