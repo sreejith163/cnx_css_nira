@@ -65,89 +65,6 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             return new CSSResponse(mappedAgentScheduleManagers.Distinct().ToList(), HttpStatusCode.OK);
         }
 
-
-
-        /// <summary>
-        /// Gets the agent my schedule.
-        /// </summary>
-        /// <param name="skillGroupId">The employee identifier details.</param>
-        /// <param name="date"></param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public CSSResponse GetAgentScheduledOpen(int skillGroupId, DateTimeOffset date)
-        {
-            var skillGroupIdDetails = new SkillGroupIdDetails { SkillGroupId = skillGroupId };
-            var agentSchedulingGroup = new MockDataContext().GetAgentSchedulingGroupBySkillGroupId(skillGroupIdDetails);
-
-            var agentSchedulingGroupId = new List<int>();
-
-            foreach (var id in agentSchedulingGroup)
-            {
-                agentSchedulingGroupId.Add(id.AgentSchedulingGroupId);
-            }
-
-            if (agentSchedulingGroupId == null)
-            {
-                return new CSSResponse(HttpStatusCode.NotFound);
-            }
-
-            var dateTimeWithZeroTimeSpan = new DateTimeOffset(date.Date, TimeSpan.Zero);
-            var agentSchedule = new MockDataContext().GetAgentScheduleByAgentSchedulingGroupId(agentSchedulingGroupId, dateTimeWithZeroTimeSpan);
-            if (agentSchedule == null)
-            {
-                return new CSSResponse(HttpStatusCode.NotFound);
-            }
-
-            int[] numbers = { 3, 15, 16, 17, 20, 21, 22, 173, 174, 175, 176, 177 };
-            foreach (var item1 in agentSchedule)
-            {
-                item1.Charts = item1.Charts.Where(p => numbers.Contains(p.SchedulingCodeId)).ToList();
-            }
-
-            int minutes = 30;
-            var interval = new TimeSpan(0, minutes, 0);
-            var schedOpen = agentSchedule.SelectMany(x => x.Charts).ToList();
-
-            agentSchedule.RemoveAll(x => x.Charts.Count() == 0);
-
-            var myTimeList = new List<ScheduleOpen>();
-            var timeList = new List<TimeSpan>();
-
-            foreach (var chart in schedOpen)
-            {
-                TimeSpan start = chart.StartDateTime.TimeOfDay;
-                TimeSpan end = chart.EndDateTime.TimeOfDay;
-
-                var diffSpan = end - start;
-                var diffMinutes = diffSpan.TotalMinutes > 0 ? diffSpan.TotalMinutes : diffSpan.TotalMinutes + (60 * 24);
-                for (int i = 0; i < diffMinutes + minutes; i += minutes)
-                {
-                    var scheduleOpen = new ScheduleOpen { Time = start };
-                    myTimeList.Add(scheduleOpen);
-                    timeList.Add(start);
-                    start = start.Add(interval);
-                }
-            }
-
-            var groupedTime = myTimeList
-                .GroupBy(x => x.Time)
-                .Select(
-                    group => new
-                    {
-                        time = RoundToNearestMinutes(group.Key, 30),
-                        scheduleOpen = group.Count()
-                    }
-                );
-
-            if (groupedTime.Count() == 0)
-            {
-                return new CSSResponse(HttpStatusCode.NotFound);
-            }
-
-            return new CSSResponse(groupedTime, HttpStatusCode.OK);
-        }
-
         /// <summary>Gets the agent my schedule.</summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="myScheduleQueryParameter">My schedule query parameter.</param>
@@ -398,19 +315,6 @@ namespace Css.Api.Scheduling.UnitTest.Mock
                 Day = (int)date.DayOfWeek,
                 Date = date
             };
-        }
-
-        /// <summary>
-        /// Rounds to nearest minutes.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <param name="minutes">The minutes.</param>
-        /// <returns></returns>
-        private TimeSpan RoundToNearestMinutes(TimeSpan input, int minutes)
-        {
-            var totalMinutes = (int)(input + new TimeSpan(0, minutes / 2, 0)).TotalMinutes;
-
-            return new TimeSpan(0, totalMinutes - totalMinutes % minutes, 0);
         }
     }
 }

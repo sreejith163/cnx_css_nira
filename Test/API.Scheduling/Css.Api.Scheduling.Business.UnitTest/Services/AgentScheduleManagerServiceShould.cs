@@ -20,7 +20,6 @@ using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
 using Css.Api.Scheduling.Models.Profiles.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 using Css.Api.Scheduling.Models.DTO.Response.MySchedule;
-using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 
 namespace Css.Api.Scheduling.Business.UnitTest.Services
@@ -185,72 +184,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Assert.NotNull(result);
             Assert.NotNull(result.Value);
             Assert.IsType<AgentMyScheduleDetailsDTO>(result.Value);
-            Assert.Equal(HttpStatusCode.OK, result.Code);
-        }
-
-        #endregion
-
-        #region GetAgentScheduledOpen
-
-        /// <summary>
-        /// Gets the agent scheduled open with not found for agent sheduling group.
-        /// </summary>
-        /// <param name="skillGroupId">The skill group identifier.</param>
-        [Theory]
-        [InlineData(100)]
-        [InlineData(101)]
-        public async void GetAgentScheduledOpenWithNotFoundForAgentShedulingGroup(int skillGroupId)
-        {
-            var date = new DateTime(2021, 3, 21);
-
-            MyScheduleQueryParameter myScheduleQueryParameter = new MyScheduleQueryParameter
-            {
-                AgentSchedulingGroupId = 1,
-                StartDate = new DateTime(2021, 3, 21),
-                EndDate = new DateTime(2021, 3, 21)
-            };
-
-            mockAgentSchedulingGroupRepository.Setup(mr => mr.GetAgentSchedulingGroupBySkillGroupId(It.IsAny<SkillGroupIdDetails>())).ReturnsAsync(
-               (SkillGroupIdDetails skillGroupIdDetails) => mockDataContext.GetAgentSchedulingGroupBySkillGroupId(skillGroupIdDetails));
-
-            mockAgentScheduleManagerRepository.Setup(mr => mr.GetAgentScheduleByAgentSchedulingGroupId(It.IsAny<List<int>>(), It.IsAny<DateTimeOffset>())).ReturnsAsync(
-                (List<int> agentSchedulingGroupIdDetailsList, DateTimeOffset date) => mockDataContext.GetAgentScheduleByAgentSchedulingGroupId(agentSchedulingGroupIdDetailsList, date));
-
-            var result = await agentScheduleManagerService.GetAgentScheduledOpen(skillGroupId, date);
-
-            Assert.NotNull(result);
-            Assert.Null(result.Value);
-            Assert.Equal(HttpStatusCode.NotFound, result.Code);
-        }
-
-        /// <summary>
-        /// Gets the agent scheduled open.
-        /// </summary>
-        /// <param name="skillGroupId">The skill group identifier.</param>
-        /// <returns></returns>
-        [Theory]
-        [InlineData(1)]
-        public async void GetAgentScheduledOpen(int skillGroupId)
-        {
-            var date = new DateTime(2021, 3, 21);
-
-            MyScheduleQueryParameter myScheduleQueryParameter = new MyScheduleQueryParameter
-            {
-                AgentSchedulingGroupId = 1,
-                StartDate = new DateTime(2021, 3, 21),
-                EndDate = new DateTime(2021, 3, 21)
-            };
-
-            mockAgentSchedulingGroupRepository.Setup(mr => mr.GetAgentSchedulingGroupBySkillGroupId(It.IsAny<SkillGroupIdDetails>())).ReturnsAsync(
-               (SkillGroupIdDetails skillGroupIdDetails) => mockDataContext.GetAgentSchedulingGroupBySkillGroupId(skillGroupIdDetails));
-
-            mockAgentScheduleManagerRepository.Setup(mr => mr.GetAgentScheduleByAgentSchedulingGroupId(It.IsAny<List<int>>(), It.IsAny<DateTimeOffset>())).ReturnsAsync(
-                (List<int> agentSchedulingGroupIdDetailsList, DateTimeOffset date) => mockDataContext.GetAgentScheduleByAgentSchedulingGroupId(agentSchedulingGroupIdDetailsList, date));
-
-            var result = await agentScheduleManagerService.GetAgentScheduledOpen(skillGroupId, date);
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.Value);
             Assert.Equal(HttpStatusCode.OK, result.Code);
         }
 

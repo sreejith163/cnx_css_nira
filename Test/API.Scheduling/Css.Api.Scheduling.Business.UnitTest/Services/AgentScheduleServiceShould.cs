@@ -542,42 +542,22 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         public async void ImportAgentScheduleChartWithNotFoundForSchedulingCode(int schedulingCode, int employeeId, int fromYear, 
                                                                                 int fromMonth, int fromDay, int toYear, int toMonth, int toDay)
         {
-            ImportAgentSchedule importAgentSchedule = new ImportAgentSchedule
+            AgentScheduleImport importAgentSchedule = new AgentScheduleImport
             {
-                ImportAgentScheduleCharts = new List<ImportAgentScheduleChart>
+                AgentScheduleImportData = new List<AgentScheduleImportData>
                 {
-                    new ImportAgentScheduleChart
+                    new AgentScheduleImportData
                     {
                         EmployeeId = employeeId,
-                        Ranges = new List<ImportAgentScheduleRange>
-                        {
-                            new ImportAgentScheduleRange
-                            {
-                                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
-                                DateTo = new DateTime(toYear, toMonth, toDay),
-                                AgentScheduleCharts = new List<AgentScheduleChart>
-                                {
-                                    new AgentScheduleChart
-                                    {
-                                        Day = 0,
-                                        Charts = new List<ScheduleChart>
-                                        {
-                                            new ScheduleChart
-                                            {
-                                                StartTime = "00:00 am",
-                                                EndTime = "00:05 pm",
-                                                SchedulingCodeId = schedulingCode
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        StartDate = new DateTime(fromYear, fromMonth, fromDay),
+                        EndDate = new DateTime(toYear, toMonth, toDay),
+                        StartTime = "00:00 am",
+                        EndTime = "00:05 pm",
+                        SchedulingCodeId = schedulingCode
                     }
                 },
                 ActivityOrigin  = ActivityOrigin.CSS,
-                ModifiedBy = "admin",
-                ModifiedUser = 123
+                ModifiedBy = "admin"
             };
 
             mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(
@@ -606,70 +586,31 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         public async void ImportAgentScheduleChart(int schedulingCode, int employeeId, int fromYear, int fromMonth, int fromDay, int toYear, 
                                                    int toMonth, int toDay)
         {
-            ImportAgentSchedule importAgentSchedule = new ImportAgentSchedule
+            AgentScheduleImport importAgentSchedule = new AgentScheduleImport
             {
-                ImportAgentScheduleCharts = new List<ImportAgentScheduleChart>
+                AgentScheduleImportData = new List<AgentScheduleImportData>
                 {
-                    new ImportAgentScheduleChart
+                    new AgentScheduleImportData
                     {
                         EmployeeId = employeeId,
-                        Ranges = new List<ImportAgentScheduleRange>
-                        {
-                            new ImportAgentScheduleRange
-                            {
-                                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
-                                DateTo = new DateTime(toYear, toMonth, toDay),
-                                AgentScheduleCharts = new List<AgentScheduleChart>
-                                {
-                                    new AgentScheduleChart
-                                    {
-                                        Day = 0,
-                                        Charts = new List<ScheduleChart>
-                                        {
-                                            new ScheduleChart
-                                            {
-                                                StartTime = "00:00 am",
-                                                EndTime = "00:05 pm",
-                                                SchedulingCodeId = schedulingCode
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        StartDate = new DateTime(fromYear, fromMonth, fromDay),
+                        EndDate = new DateTime(toYear, toMonth, toDay),
+                        StartTime = "00:00 am",
+                        EndTime = "00:05 pm",
+                        SchedulingCodeId = schedulingCode
                     },
-                    new ImportAgentScheduleChart
+                    new AgentScheduleImportData
                     {
                         EmployeeId = employeeId,
-                        Ranges = new List<ImportAgentScheduleRange>
-                        {
-                            new ImportAgentScheduleRange
-                            {
-                                DateFrom = new DateTime(2021, 3, 21),
-                                DateTo = new DateTime(2021, 3, 27),
-                                AgentScheduleCharts = new List<AgentScheduleChart>
-                                {
-                                    new AgentScheduleChart
-                                    {
-                                        Day = 0,
-                                        Charts = new List<ScheduleChart>
-                                        {
-                                            new ScheduleChart
-                                            {
-                                                StartTime = "00:00 am",
-                                                EndTime = "00:05 pm",
-                                                SchedulingCodeId = schedulingCode
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        StartDate = new DateTime(2021, 3, 21),
+                        EndDate =  new DateTime(2021, 3, 27),
+                        StartTime = "00:00 am",
+                        EndTime = "00:05 pm",
+                        SchedulingCodeId = schedulingCode
                     }
                 },
                 ActivityOrigin = ActivityOrigin.CSS,
-                ModifiedBy = "admin",
-                ModifiedUser = 123
+                ModifiedBy = "admin"
             };
 
             mockSchedulingCodeRepository.Setup(mr => mr.GetSchedulingCodesCountByIds(It.IsAny<List<int>>())).ReturnsAsync(

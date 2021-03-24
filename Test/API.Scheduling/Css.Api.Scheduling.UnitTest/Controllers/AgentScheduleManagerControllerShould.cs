@@ -118,47 +118,6 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
         #endregion
 
-        #region GetAgentScheduledOpen
-
-        /// <summary>
-        /// Gets the agent scheduled open returns not found result.
-        /// </summary>
-        /// <param name="skillGroupId">The skill group identifier.</param>
-        [Theory]
-        [InlineData(100)]
-        [InlineData(101)]
-        public async void GetAgentScheduledOpen_ReturnsNotFoundResult(int skillGroupId)
-        {
-            var date = new DateTime(2021, 3, 21);
-
-            mockAgentScheduleManagerService.Setup(mr => mr.GetAgentScheduledOpen(It.IsAny<int>(), It.IsAny<DateTimeOffset>())).ReturnsAsync(
-                (int skillGroupId, DateTimeOffset date) => mockAgentScheduleManagerData.GetAgentScheduledOpen(skillGroupId, date));
-
-            var value = await controller.GetAgentScheduledOpen(skillGroupId, date);
-
-            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
-        }
-
-        /// <summary>
-        /// Gets the agent scheduled open returns ok result.
-        /// </summary>
-        /// <param name="skillGroupId">The skill group identifier.</param>
-        [Theory]
-        [InlineData(1)]
-        public async void GetAgentScheduledOpen_ReturnsOKResult(int skillGroupId)
-        {
-            var date = new DateTime(2021, 3, 21);
-
-            mockAgentScheduleManagerService.Setup(mr => mr.GetAgentScheduledOpen(It.IsAny<int>(), It.IsAny<DateTimeOffset>())).ReturnsAsync(
-                (int skillGroupId, DateTimeOffset date) => mockAgentScheduleManagerData.GetAgentScheduledOpen(skillGroupId, date));
-
-            var value = await controller.GetAgentScheduledOpen(skillGroupId, date);
-
-            Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
-        }
-
-        #endregion
-
         #region UpdateAgentScheduleMangerChart
 
         /// <summary>
