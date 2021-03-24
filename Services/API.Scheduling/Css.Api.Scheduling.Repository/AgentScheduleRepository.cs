@@ -301,9 +301,15 @@ namespace Css.Api.Scheduling.Repository
             UpdateOneAsync(query, update);
         }
 
-        /// <summary>Updates the agent schedule with ranges.</summary>
-        /// <param name="employeeIdDetails">The employee identifier details.</param>
-        /// <param name="updateAgentScheduleEmployeeDetails">The update agent schedule employee details.</param>
+        /// <summary>
+        /// Updates the agent schedule with ranges.
+        /// </summary>
+        /// <param name="employeeIdDetails">
+        /// The employee identifier details.
+        /// </param>
+        /// <param name="updateAgentScheduleEmployeeDetails">
+        /// The update agent schedule employee details.
+        /// </param>
         public void UpdateAgentScheduleWithRanges(EmployeeIdDetails employeeIdDetails, UpdateAgentScheduleEmployeeDetails updateAgentScheduleEmployeeDetails)
         {
             var query =
@@ -347,9 +353,9 @@ namespace Css.Api.Scheduling.Repository
             var document = FindByIdAsync(query).Result;
             if (document != null)
             {
-                var scheduleRange = document.Ranges.Where(x => x.Status == SchedulingStatus.Pending_Schedule &&
+                var scheduleRange = document.Ranges.FirstOrDefault(x => x.Status == SchedulingStatus.Pending_Schedule &&
                                                                         x.DateFrom == agentScheduleRange.DateFrom &&
-                                                                        x.DateTo == agentScheduleRange.DateTo).FirstOrDefault();
+                                                                        x.DateTo == agentScheduleRange.DateTo);
 
                 if (scheduleRange != null)
                 {
@@ -393,8 +399,6 @@ namespace Css.Api.Scheduling.Repository
 
             UpdateOneAsync(query, update);
         }
-
-
 
         /// <summary>
         /// Updates the agent schedule range.

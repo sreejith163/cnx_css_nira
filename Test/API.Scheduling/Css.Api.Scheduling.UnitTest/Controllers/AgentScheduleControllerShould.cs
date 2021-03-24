@@ -3,7 +3,6 @@ using Css.Api.Scheduling.Controllers;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Core.Models.Enums;
-using Css.Api.Scheduling.Models.Enums;
 using Css.Api.Scheduling.UnitTest.Mock;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -61,70 +60,6 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
 
         #endregion
 
-        #region GetAgentScheduleCharts
-
-        /// <summary>
-        /// Gets the agent schedule charts returns not found result.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        [Theory]
-        [InlineData("6fe0b5ad6a05416894c0718e")]
-        [InlineData("6fe0b5ad6a05416894c0718f")]
-        public async void GetAgentScheduleCharts_ReturnsNotFoundResult(string agentScheduleId)
-        {
-            var agentScheduleChartQueryparameter = new AgentScheduleChartQueryparameter();
-
-            mockAgentScheduleService.Setup(mr => mr.GetAgentScheduleCharts(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<AgentScheduleChartQueryparameter>()))
-                .ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter) =>
-                mockAgentScheduleData.GetAgentScheduleCharts(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChartQueryparameter));
-
-            var value = await controller.GetAgentScheduleCharts(agentScheduleId, agentScheduleChartQueryparameter);
-
-            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
-        }
-
-        /// <summary>
-        /// Gets the agent schedule charts for scheduling tab returns ok result.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        [Theory]
-        [InlineData("5fe0b5ad6a05416894c0718e")]
-        [InlineData("5fe0b5ad6a05416894c0718f")]
-        public async void GetAgentScheduleChartsForSchedulingTab_ReturnsOKResult(string agentScheduleId)
-        {
-            var agentScheduleChartQueryparameter = new AgentScheduleChartQueryparameter() { AgentScheduleType = AgentScheduleType.SchedulingTab };
-
-            mockAgentScheduleService.Setup(mr => mr.GetAgentScheduleCharts(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<AgentScheduleChartQueryparameter>()))
-                .ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter) =>
-                mockAgentScheduleData.GetAgentScheduleCharts(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChartQueryparameter));
-
-            var value = await controller.GetAgentScheduleCharts(agentScheduleId, agentScheduleChartQueryparameter);
-
-            Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
-        }
-
-        /// <summary>
-        /// Gets the agent schedule charts for scheduling manager tab returns ok result.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        [Theory]
-        [InlineData("5fe0b5ad6a05416894c0718e")]
-        [InlineData("5fe0b5ad6a05416894c0718f")]
-        public async void GetAgentScheduleChartsForSchedulingManagerTab_ReturnsOKResult(string agentScheduleId)
-        {
-            var agentScheduleChartQueryparameter = new AgentScheduleChartQueryparameter() { AgentScheduleType = AgentScheduleType.SchedulingMangerTab };
-
-            mockAgentScheduleService.Setup(mr => mr.GetAgentScheduleCharts(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<AgentScheduleChartQueryparameter>()))
-                .ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter) =>
-                mockAgentScheduleData.GetAgentScheduleCharts(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChartQueryparameter));
-
-            var value = await controller.GetAgentScheduleCharts(agentScheduleId, agentScheduleChartQueryparameter);
-
-            Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
-        }
-
-        #endregion
-
         #region GetAgentSchedule
 
         /// <summary>
@@ -137,7 +72,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         public async void GetAgentSchedule_ReturnsNotFoundResult(string agentScheduleId)
         {
             mockAgentScheduleService.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails) =>
-                mockAgentScheduleData.GetAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }));
+                mockAgentScheduleData.GetAgentSchedule(agentScheduleIdDetails));
 
             var value = await controller.GetAgentSchedule(agentScheduleId);
 
@@ -154,9 +89,113 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         public async void GetAgentSchedule_ReturnsOKResult(string agentScheduleId)
         {
             mockAgentScheduleService.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails) =>
-                mockAgentScheduleData.GetAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }));
+                mockAgentScheduleData.GetAgentSchedule(agentScheduleIdDetails));
 
             var value = await controller.GetAgentSchedule(agentScheduleId);
+
+            Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
+        }
+
+        #endregion
+
+        #region IsAgentScheduleRangeExist
+
+        /// <summary>
+        /// Determines whether [is agent schedule range exist returns false if not] [the specified agent schedule identifier].
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="fromYear">From year.</param>
+        /// <param name="fromMonth">From month.</param>
+        /// <param name="fromDay">From day.</param>
+        /// <param name="toYear">To year.</param>
+        /// <param name="toMonth">To month.</param>
+        /// <param name="toDay">To day.</param>
+        [Theory]
+        [InlineData("5fe0b5ad6a05416894c0718e", 2021, 3, 10, 2021, 3, 17)]
+        [InlineData("5fe0b5ad6a05416894c0718f", 2021, 3, 10, 2021, 3, 17)]
+        public async void IsAgentScheduleRangeExist_ReturnsFalseIfNot(string agentScheduleId, int fromYear, int fromMonth, int fromDay,
+                                                                      int toYear, int toMonth, int toDay)
+        {
+            mockAgentScheduleService.Setup(mr => mr.IsAgentScheduleRangeExist(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<DateRange>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails, DateRange range) =>
+                mockAgentScheduleData.IsAgentScheduleRangeExist(agentScheduleIdDetails, range));
+
+            var value = await controller.IsAgentScheduleRangeExist(agentScheduleId, new DateRange { 
+                                                                   DateFrom = new DateTime(fromYear, fromMonth, fromDay), DateTo = new DateTime(toYear, toMonth, toDay)
+            });
+
+            Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
+        }
+
+        /// <summary>
+        /// Determines whether [is agent schedule range exist returns true if] [the specified agent schedule identifier].
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="fromYear">From year.</param>
+        /// <param name="fromMonth">From month.</param>
+        /// <param name="fromDay">From day.</param>
+        /// <param name="toYear">To year.</param>
+        /// <param name="toMonth">To month.</param>
+        /// <param name="toDay">To day.</param>
+        [Theory]
+        [InlineData("5fe0b5ad6a05416894c0718e", 2021, 3, 21, 2021, 3, 27)]
+        [InlineData("5fe0b5ad6a05416894c0718f", 2021, 3, 21, 2021, 3, 27)]
+        public async void IsAgentScheduleRangeExist_ReturnsTrueIf(string agentScheduleId, int fromYear, int fromMonth, int fromDay,
+                                                                  int toYear, int toMonth, int toDay)
+        {
+            mockAgentScheduleService.Setup(mr => mr.IsAgentScheduleRangeExist(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<DateRange>())).ReturnsAsync(
+                   (AgentScheduleIdDetails agentScheduleIdDetails, DateRange range) =>
+                   mockAgentScheduleData.IsAgentScheduleRangeExist(agentScheduleIdDetails, range));
+
+            var value = await controller.IsAgentScheduleRangeExist(agentScheduleId, new DateRange
+            {
+                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
+                DateTo = new DateTime(toYear, toMonth, toDay)
+            });
+
+            Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
+        }
+
+        #endregion
+
+        #region GetAgentScheduleCharts
+
+        /// <summary>
+        /// Gets the agent schedule charts returns not found result.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        [Theory]
+        [InlineData("6fe0b5ad6a05416894c0718e")]
+        [InlineData("6fe0b5ad6a05416894c0718f")]
+        public async void GetAgentScheduleCharts_ReturnsNotFoundResult(string agentScheduleId)
+        {
+            var agentScheduleChartQueryparameter = new AgentScheduleChartQueryparameter();
+
+            mockAgentScheduleService.Setup(mr => mr.GetAgentScheduleCharts(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<AgentScheduleChartQueryparameter>()))
+                .ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter) =>
+                mockAgentScheduleData.GetAgentScheduleCharts(agentScheduleIdDetails, agentScheduleChartQueryparameter));
+
+            var value = await controller.GetAgentScheduleCharts(agentScheduleId, agentScheduleChartQueryparameter);
+
+            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+        }
+
+        /// <summary>
+        /// Gets the agent schedule charts for scheduling tab returns ok result.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        [Theory]
+        [InlineData("5fe0b5ad6a05416894c0718e")]
+        [InlineData("5fe0b5ad6a05416894c0718f")]
+        public async void GetAgentScheduleCharts_ReturnsOKResult(string agentScheduleId)
+        {
+            var agentScheduleChartQueryparameter = new AgentScheduleChartQueryparameter();
+
+            mockAgentScheduleService.Setup(mr => mr.GetAgentScheduleCharts(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<AgentScheduleChartQueryparameter>()))
+                .ReturnsAsync((AgentScheduleIdDetails agentScheduleIdDetails, AgentScheduleChartQueryparameter agentScheduleChartQueryparameter) =>
+                mockAgentScheduleData.GetAgentScheduleCharts(agentScheduleIdDetails, agentScheduleChartQueryparameter));
+
+            var value = await controller.GetAgentScheduleCharts(agentScheduleId, agentScheduleChartQueryparameter);
 
             Assert.Equal((int)HttpStatusCode.OK, (value as ObjectResult).StatusCode);
         }
@@ -170,23 +209,25 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
         [Theory]
-        [InlineData("6fe0b5ad6a05416894c0718e")]
-        [InlineData("6fe0b5ad6a05416894c0718f")]
-        public async void UpdateAgentSchedule_ReturnsNotFoundResult(string agentScheduleId)
+        [InlineData("6fe0b5ad6a05416894c0718e", 2021, 3, 21, 2021, 3, 27)]
+        [InlineData("6fe0b5ad6a05416894c0718f", 2021, 3, 21, 2021, 3, 27)]
+        public async void UpdateAgentSchedule_ReturnsNotFoundResult(string agentScheduleId, int fromYear, int fromMonth, int fromDay,
+                                                                    int toYear, int toMonth, int toDay)
         {
-            UpdateAgentSchedule updateAgentSchedule = new UpdateAgentSchedule()
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
+            UpdateAgentSchedule agentSchedule = new UpdateAgentSchedule
             {
-                Status = SchedulingStatus.Approved,
-                DateFrom = DateTime.UtcNow,
-                DateTo = DateTime.UtcNow,
+                Status = SchedulingStatus.Released,
+                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
+                DateTo = new DateTime(toYear, toMonth, toDay),
                 ModifiedBy = "admin"
             };
 
             mockAgentScheduleService.Setup(mr => mr.UpdateAgentSchedule(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentSchedule>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule updateAgentSchedule) =>
-                mockAgentScheduleData.UpdateAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, updateAgentSchedule));
+                mockAgentScheduleData.UpdateAgentSchedule(agentScheduleIdDetails, updateAgentSchedule));
 
-            var value = await controller.UpdateAgentSchedule(agentScheduleId, updateAgentSchedule);
+            var value = await controller.UpdateAgentSchedule(agentScheduleId, agentSchedule);
 
             Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
         }
@@ -196,23 +237,25 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
         [Theory]
-        [InlineData("5fe0b5ad6a05416894c0718e")]
-        [InlineData("5fe0b5ad6a05416894c0718f")]
-        public async void UpdateAgentSchedule_ReturnsNoContentResult(string agentScheduleId)
+        [InlineData("5fe0b5ad6a05416894c0718e", 2021, 3, 21, 2021, 3, 27)]
+        [InlineData("5fe0b5ad6a05416894c0718f", 2021, 3, 21, 2021, 3, 27)]
+        public async void UpdateAgentSchedule_ReturnsNoContentResult(string agentScheduleId, int fromYear, int fromMonth, int fromDay,
+                                                                     int toYear, int toMonth, int toDay)
         {
-            UpdateAgentSchedule updateAgentSchedule = new UpdateAgentSchedule()
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
+            UpdateAgentSchedule agentSchedule = new UpdateAgentSchedule
             {
-                Status = SchedulingStatus.Approved,
-                DateFrom = DateTime.UtcNow,
-                DateTo = DateTime.UtcNow,
+                Status = SchedulingStatus.Released,
+                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
+                DateTo = new DateTime(toYear, toMonth, toDay),
                 ModifiedBy = "admin"
             };
 
             mockAgentScheduleService.Setup(mr => mr.UpdateAgentSchedule(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentSchedule>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule updateAgentSchedule) =>
-                mockAgentScheduleData.UpdateAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, updateAgentSchedule));
+                mockAgentScheduleData.UpdateAgentSchedule(agentScheduleIdDetails, updateAgentSchedule));
 
-            var value = await controller.UpdateAgentSchedule(agentScheduleId, updateAgentSchedule);
+            var value = await controller.UpdateAgentSchedule(agentScheduleId, agentSchedule);
 
             Assert.Equal((int)HttpStatusCode.NoContent, (value as ObjectResult).StatusCode);
         }
@@ -222,348 +265,515 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         #region UpdateAgentScheduleChart
 
         /// <summary>
-        /// Updates the agent schedule returns not found result.
+        /// Updates the agent schedule chart returns not found result.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        /// <param name="schedulingCodeId">The scheduling code identifier.</param>
-        [Theory]
-        [InlineData("6fe0b5ad6a05416894c0718e", 100)]
-        [InlineData("6fe0b5ad6a05416894c0718f", 101)]
-        public async void UpdateAgentScheduleChart_ReturnsNotFoundResult(string agentScheduleId, int schedulingCodeId)
-        {
-            UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
-            {
-                AgentScheduleCharts = new List<AgentScheduleChart>
-                {
-                    new AgentScheduleChart
-                    {
-                        Day = 1,
-                        Charts = new List<ScheduleChart>
-                        {
-                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCodeId }
-                        }
-                    }
-                },
-                ModifiedBy = "admin"
-            };
-
-            mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
-                (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart updateAgentScheduleChart) =>
-                mockAgentScheduleData.UpdateAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChart));
-
-            var value = await controller.UpdateAgentScheduleChart(agentScheduleId, agentScheduleChart);
-
-            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
-        }
-
-        [Theory]
-        [InlineData("5fe0b5ad6a05416894c0718e", 100)]
-        [InlineData("5fe0b5ad6a05416894c0718f", 101)]
-        public async void UpdateAgentScheduleChart_ReturnsNotFoundResultForSchedulingCodes(string agentScheduleId, int schedulingCodeId)
-        {
-            UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
-            {
-                AgentScheduleCharts = new List<AgentScheduleChart>
-                {
-                    new AgentScheduleChart
-                    {
-                        Day = 1,
-                        Charts = new List<ScheduleChart>
-                        {
-                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCodeId }
-                        }
-                    }
-                },
-                ModifiedBy = "admin"
-            };
-
-            mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
-                (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart updateAgentScheduleChart) =>
-                mockAgentScheduleData.UpdateAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChart));
-
-            var value = await controller.UpdateAgentScheduleChart(agentScheduleId, agentScheduleChart);
-
-            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
-        }
-
-        /// <summary>
-        /// Updates the agent schedule returns no content result.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        /// <param name="schedulingCodeId">The scheduling code identifier.</param>
-        [Theory]
-        [InlineData("5fe0b5ad6a05416894c0718e", 1)]
-        [InlineData("5fe0b5ad6a05416894c0718f", 2)]
-        public async void UpdateAgentScheduleChart_ReturnsNoContentResultForSchedulingTab(string agentScheduleId, int schedulingCodeId)
-        {
-            UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
-            {
-                AgentScheduleCharts = new List<AgentScheduleChart>
-                {
-                    new AgentScheduleChart
-                    {
-                        Day = 1,
-                        Charts = new List<ScheduleChart>
-                        {
-                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCodeId }
-                        }
-                    }
-                },
-                ModifiedBy = "admin"
-            };
-
-            mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
-                (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart updateAgentScheduleChart) =>
-                mockAgentScheduleData.UpdateAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleChart));
-
-            var value = await controller.UpdateAgentScheduleChart(agentScheduleId, agentScheduleChart);
-
-            Assert.Equal((int)HttpStatusCode.NoContent, (value as ObjectResult).StatusCode);
-        }
-
-        #endregion
-
-        #region UpdateAgentScheduleManagerChart
-
-        /// <summary>
-        /// Imports the agent schedule manager chart returns not found result.
-        /// </summary>
         /// <param name="schedulingCode">The scheduling code.</param>
-        /// <param name="employeeId">The employee identifier.</param>
+        /// <param name="fromYear">From year.</param>
+        /// <param name="fromMonth">From month.</param>
+        /// <param name="fromDay">From day.</param>
+        /// <param name="toYear">To year.</param>
+        /// <param name="toMonth">To month.</param>
+        /// <param name="toDay">To day.</param>
         [Theory]
-        [InlineData(100, 100)]
-        [InlineData(101, 101)]
-        public async void ImportAgentScheduleManagerChart_ReturnsNotFoundResult(int schedulingCode, int employeeId)
+        [InlineData("6fe0b5ad6a05416894c0718e", 100, 2021, 3, 10, 2021, 3, 17)]
+        [InlineData("6fe0b5ad6a05416894c0718f", 101, 2021, 3, 10, 2021, 3, 17)]
+        public async void UpdateAgentScheduleChart_ReturnsNotFoundResult(string agentScheduleId, int schedulingCode, int fromYear,
+                                                                         int fromMonth, int fromDay, int toYear, int toMonth, int toDay)
         {
-            UpdateAgentScheduleManagerChart agentScheduleChart = new UpdateAgentScheduleManagerChart
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
+            UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
             {
-                AgentScheduleManagers = new List<AgentScheduleManager>()
+                AgentScheduleCharts = new List<AgentScheduleChart>
                 {
-                    new AgentScheduleManager
+                    new AgentScheduleChart
                     {
-                        EmployeeId = employeeId,
-                        AgentScheduleManagerChart = new AgentScheduleManagerChart
+                        Day = 1,
+                        Charts = new List<ScheduleChart>
                         {
-                             Date = DateTime.UtcNow,
-                             Charts = new List<ScheduleChart>
-                             {
-                                new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
-                             }
+                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
                         }
                     }
                 },
-                ModifiedBy = "admin"
+                Status = SchedulingStatus.Pending_Schedule,
+                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
+                DateTo = new DateTime(toYear, toMonth, toDay),
+                ModifiedBy = "admin",
+                ActivityOrigin = ActivityOrigin.CSS,
+                ModifiedUser = 123
             };
 
-            mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleMangerChart(It.IsAny<UpdateAgentScheduleManagerChart>())).ReturnsAsync(
-                (UpdateAgentScheduleManagerChart updateAgentScheduleChart) =>
-                mockAgentScheduleData.UpdateAgentScheduleMangerChart(agentScheduleChart));
+            mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart updateAgentScheduleChart) =>
+                mockAgentScheduleData.UpdateAgentScheduleChart(agentScheduleIdDetails, updateAgentScheduleChart));
 
-            var value = await controller.UpdateAgentScheduleManagerChart(agentScheduleChart);
+            var value = await controller.UpdateAgentScheduleChart(agentScheduleId, agentScheduleChart);
 
             Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
         }
 
         /// <summary>
-        /// Updates the agent schedule chart returns no content result for scheduling manager tab.
+        /// Updates the agent schedule chart returns not found result for scheduling codes.
         /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
         /// <param name="schedulingCode">The scheduling code.</param>
-        /// <param name="employeeId">The employee identifier.</param>
+        /// <param name="fromYear">From year.</param>
+        /// <param name="fromMonth">From month.</param>
+        /// <param name="fromDay">From day.</param>
+        /// <param name="toYear">To year.</param>
+        /// <param name="toMonth">To month.</param>
+        /// <param name="toDay">To day.</param>
         [Theory]
-        [InlineData(1, 1)]
-        [InlineData(1, 2)]
-        public async void UpdateAgentScheduleChart_ReturnsNoContentResultForSchedulingManagerTab(int schedulingCode, int employeeId)
+        [InlineData("5fe0b5ad6a05416894c0718e", 100, 2021, 3, 10, 2021, 3, 17)]
+        [InlineData("5fe0b5ad6a05416894c0718f", 101, 2021, 3, 10, 2021, 3, 17)]
+        public async void UpdateAgentScheduleChart_ReturnsNotFoundResultForSchedulingCodes(string agentScheduleId, int schedulingCode, int fromYear, 
+                                                                                           int fromMonth, int fromDay, int toYear, int toMonth, int toDay)
         {
-            UpdateAgentScheduleManagerChart agentScheduleChart = new UpdateAgentScheduleManagerChart
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
+            UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
             {
-                AgentScheduleManagers = new List<AgentScheduleManager>()
+                AgentScheduleCharts = new List<AgentScheduleChart>
                 {
-                    new AgentScheduleManager
+                    new AgentScheduleChart
                     {
-                        EmployeeId = employeeId,
-                        AgentScheduleManagerChart = new AgentScheduleManagerChart
+                        Day = 1,
+                        Charts = new List<ScheduleChart>
                         {
-                             Date = DateTime.UtcNow,
-                             Charts = new List<ScheduleChart>
-                             {
-                                new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
-                             }
+                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
                         }
                     }
                 },
-                ModifiedBy = "admin"
+                Status = SchedulingStatus.Pending_Schedule,
+                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
+                DateTo = new DateTime(toYear, toMonth, toDay),
+                ModifiedBy = "admin",
+                ActivityOrigin = ActivityOrigin.CSS,
+                ModifiedUser = 123
             };
 
-            mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleMangerChart(It.IsAny<UpdateAgentScheduleManagerChart>())).ReturnsAsync(
-                (UpdateAgentScheduleManagerChart updateAgentScheduleChart) =>
-                mockAgentScheduleData.UpdateAgentScheduleMangerChart(agentScheduleChart));
+            mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart updateAgentScheduleChart) =>
+                mockAgentScheduleData.UpdateAgentScheduleChart(agentScheduleIdDetails, updateAgentScheduleChart));
 
-            var value = await controller.UpdateAgentScheduleManagerChart(agentScheduleChart);
-
-            Assert.Equal((int)HttpStatusCode.NoContent, (value as ObjectResult).StatusCode);
-        }
-
-        #endregion
-
-        #region ImportAgentScheduleChart
-
-        /// <summary>
-        /// Updates the agent schedule returns not found result.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        [Theory]
-        [InlineData(100, 100)]
-        [InlineData(101, 101)]
-        public async void ImportAgentScheduleChart_ReturnsNotFoundResult(int schedulingCode, int employeeId)
-        {
-            ImportAgentSchedule importAgentSchedule = new ImportAgentSchedule
-            {
-                ImportAgentScheduleCharts = new List<ImportAgentScheduleChart>
-                {
-                    new ImportAgentScheduleChart
-                    {
-                        EmployeeId = employeeId,
-                        AgentScheduleCharts = new List<AgentScheduleChart>
-                        {
-                            new AgentScheduleChart
-                            {
-                                Day = 1,
-                                Charts = new List<ScheduleChart>
-                                {
-                                    new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
-                                }
-                            }
-                        }
-                    }
-                },
-                ModifiedBy = "admin"
-            };
-
-            mockAgentScheduleService.Setup(mr => mr.ImportAgentScheduleChart(It.IsAny<ImportAgentSchedule>())).ReturnsAsync(
-                (ImportAgentSchedule importAgentSchedule) =>
-                mockAgentScheduleData.ImportAgentScheduleChart(importAgentSchedule));
-
-            var value = await controller.ImportAgentScheduleChart(importAgentSchedule);
+            var value = await controller.UpdateAgentScheduleChart(agentScheduleId, agentScheduleChart);
 
             Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
         }
 
         /// <summary>
-        /// Updates the agent schedule returns no content result.
+        /// Updates the agent schedule chart returns no content result.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="schedulingCode">The scheduling code.</param>
+        /// <param name="fromYear">From year.</param>
+        /// <param name="fromMonth">From month.</param>
+        /// <param name="fromDay">From day.</param>
+        /// <param name="toYear">To year.</param>
+        /// <param name="toMonth">To month.</param>
+        /// <param name="toDay">To day.</param>
         [Theory]
-        [InlineData(1, 1)]
-        [InlineData(2, 2)]
-        public async void ImportAgentScheduleChart_ReturnsNoContentResultForSchedulingTab(int schedulingCode, int employeeId)
+        [InlineData("5fe0b5ad6a05416894c0718e", 1, 2021, 3, 21, 2021, 3, 27)]
+        [InlineData("5fe0b5ad6a05416894c0718f", 2, 2021, 2, 28, 2021, 3, 6)]
+        public async void UpdateAgentScheduleChart_ReturnsNoContentResult(string agentScheduleId, int schedulingCode, int fromYear, int fromMonth,
+                                                                          int fromDay, int toYear, int toMonth, int toDay)
         {
-            ImportAgentSchedule importAgentSchedule = new ImportAgentSchedule
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
+            UpdateAgentScheduleChart agentScheduleChart = new UpdateAgentScheduleChart
             {
-                ImportAgentScheduleCharts = new List<ImportAgentScheduleChart>
+                AgentScheduleCharts = new List<AgentScheduleChart>
                 {
-                    new ImportAgentScheduleChart
+                    new AgentScheduleChart
                     {
-                        EmployeeId = employeeId,
-                        AgentScheduleCharts = new List<AgentScheduleChart>
+                        Day = 1,
+                        Charts = new List<ScheduleChart>
                         {
-                            new AgentScheduleChart
-                            {
-                                Day = 1,
-                                Charts = new List<ScheduleChart>
-                                {
-                                    new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
-                                }
-                            }
+                            new ScheduleChart { StartTime = "00:00 am", EndTime = "00:05 pm", SchedulingCodeId = schedulingCode }
                         }
                     }
                 },
-                ModifiedBy = "admin"
+                Status = SchedulingStatus.Pending_Schedule,
+                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
+                DateTo = new DateTime(toYear, toMonth, toDay),
+                ModifiedBy = "admin",
+                ActivityOrigin = ActivityOrigin.CSS,
+                ModifiedUser = 123
             };
 
-            mockAgentScheduleService.Setup(mr => mr.ImportAgentScheduleChart(It.IsAny<ImportAgentSchedule>())).ReturnsAsync(
-                (ImportAgentSchedule importAgentSchedule) =>
-                mockAgentScheduleData.ImportAgentScheduleChart(importAgentSchedule));
+            mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleChart updateAgentScheduleChart) =>
+                mockAgentScheduleData.UpdateAgentScheduleChart(agentScheduleIdDetails, updateAgentScheduleChart));
 
-            var value = await controller.ImportAgentScheduleChart(importAgentSchedule);
+            var value = await controller.UpdateAgentScheduleChart(agentScheduleId, agentScheduleChart);
 
             Assert.Equal((int)HttpStatusCode.NoContent, (value as ObjectResult).StatusCode);
         }
 
         #endregion
+
+        //#region ImportAgentScheduleChart
+
+        ///// <summary>
+        ///// Imports the agent schedule chart returns not found result.
+        ///// </summary>
+        ///// <param name="schedulingCode">The scheduling code.</param>
+        ///// <param name="employeeId">The employee identifier.</param>
+        ///// <param name="fromYear">From year.</param>
+        ///// <param name="fromMonth">From month.</param>
+        ///// <param name="fromDay">From day.</param>
+        ///// <param name="toYear">To year.</param>
+        ///// <param name="toMonth">To month.</param>
+        ///// <param name="toDay">To day.</param>
+        //[Theory]
+        //[InlineData(100, 1, 2021, 4, 4, 2021, 4, 10)]
+        //[InlineData(101, 2, 2021, 4, 4, 2021, 4, 10)]
+        //public async void ImportAgentScheduleChart_ReturnsNotFoundResult(int schedulingCode, int employeeId, int fromYear,
+        //                                                                 int fromMonth, int fromDay, int toYear, int toMonth, int toDay)
+        //{
+        //    AgentScheduleImport importAgentSchedule = new AgentScheduleImport
+        //    {
+        //        AgentScheduleImportData = new List<AgentScheduleImportData>
+        //        {
+        //            new AgentScheduleImportData
+        //            {
+        //                EmployeeId = employeeId,
+        //                StartDate = new DateTime(fromYear, fromMonth, fromDay),
+        //                EndDate = new DateTime(toYear, toMonth, toDay),
+        //                StartTime = "00:00 am",
+        //                EndTime = "00:05 pm",
+        //                SchedulingCodeId = schedulingCode
+        //            }
+        //        },
+        //        ActivityOrigin = ActivityOrigin.CSS,
+        //        ModifiedBy = "admin"
+        //    };
+
+        //    mockAgentScheduleService.Setup(mr => mr.ImportAgentScheduleChart(It.IsAny<AgentScheduleImport>())).ReturnsAsync(
+        //        (AgentScheduleImport importAgentSchedule) =>
+        //        mockAgentScheduleData.ImportAgentScheduleChart(importAgentSchedule));
+
+        //    var value = await controller.ImportAgentScheduleChart(importAgentSchedule);
+
+        //    Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+        //}
+
+        ///// <summary>
+        ///// Imports the agent schedule chart returns no content result.
+        ///// </summary>
+        ///// <param name="schedulingCode">The scheduling code.</param>
+        ///// <param name="employeeId">The employee identifier.</param>
+        ///// <param name="fromYear">From year.</param>
+        ///// <param name="fromMonth">From month.</param>
+        ///// <param name="fromDay">From day.</param>
+        ///// <param name="toYear">To year.</param>
+        ///// <param name="toMonth">To month.</param>
+        ///// <param name="toDay">To day.</param>
+        //[Theory]
+        //[InlineData(1, 1, 2021, 4, 4, 2021, 4, 10)]
+        //[InlineData(2, 2, 2021, 4, 4, 2021, 4, 10)]
+        //public async void ImportAgentScheduleChart_ReturnsNoContentResult(int schedulingCode, int employeeId, int fromYear,
+        //                                                                  int fromMonth, int fromDay, int toYear, int toMonth, int toDay)
+        //{
+        //    AgentScheduleImport importAgentSchedule = new AgentScheduleImport
+        //    {
+        //        AgentScheduleImportData = new List<AgentScheduleImportData>
+        //        {
+        //            new AgentScheduleImportData
+        //            {
+        //                EmployeeId = employeeId,
+        //                StartDate = new DateTime(fromYear, fromMonth, fromDay),
+        //                EndDate = new DateTime(toYear, toMonth, toDay),
+        //                StartTime = "00:00 am",
+        //                EndTime = "00:05 pm",
+        //                SchedulingCodeId = schedulingCode
+        //            },
+        //            new AgentScheduleImportData
+        //            {
+        //                EmployeeId = employeeId,
+        //                StartDate = new DateTime(2021, 3, 21),
+        //                EndDate =  new DateTime(2021, 3, 27),
+        //                StartTime = "00:00 am",
+        //                EndTime = "00:05 pm",
+        //                SchedulingCodeId = schedulingCode
+        //            }
+        //        },
+        //        ActivityOrigin = ActivityOrigin.CSS,
+        //        ModifiedBy = "admin"
+        //    };
+
+        //    mockAgentScheduleService.Setup(mr => mr.ImportAgentScheduleChart(It.IsAny<AgentScheduleImport>())).ReturnsAsync(
+        //        (AgentScheduleImport importAgentSchedule) =>
+        //        mockAgentScheduleData.ImportAgentScheduleChart(importAgentSchedule));
+
+        //    var value = await controller.ImportAgentScheduleChart(importAgentSchedule);
+
+        //    Assert.Equal((int)HttpStatusCode.NoContent, (value as ObjectResult).StatusCode);
+        //}
+
+        //#endregion
 
         #region CopyAgentScheduleChart
 
         /// <summary>
-        /// Updates the agent schedule returns not found result.
+        /// Copies the agent schedule chart returns not found result.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="fromYear">From year.</param>
+        /// <param name="fromMonth">From month.</param>
+        /// <param name="fromDay">From day.</param>
+        /// <param name="toYear">To year.</param>
+        /// <param name="toMonth">To month.</param>
+        /// <param name="toDay">To day.</param>
         [Theory]
-        [InlineData("6fe0b5ad6a05416894c0718e")]
-        [InlineData("6fe0b5ad6a05416894c0718f")]
-        public async void CopyAgentScheduleChart_ReturnsNotFoundResult(string agentScheduleId)
+        [InlineData("6fe0b5ad6a05416894c0718e", 2021, 4, 4, 2021, 4, 10)]
+        [InlineData("6fe0b5ad6a05416894c0718f", 2021, 4, 4, 2021, 4, 10)]
+        public async void CopyAgentScheduleChart_ReturnsNotFoundResult(string agentScheduleId, int fromYear, int fromMonth, int fromDay, int toYear,
+                                                                       int toMonth, int toDay)
         {
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
             CopyAgentSchedule copyAgentSchedule = new CopyAgentSchedule
             {
-                AgentScheduleType = AgentScheduleType.SchedulingTab,
-                EmployeeIds = new List<int> { 1, 2 },
-                ModifiedBy = "admin"
+                AgentSchedulingGroupId = 1,
+                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
+                DateTo = new DateTime(toYear, toMonth, toDay),
+                ActivityOrigin = ActivityOrigin.CSS,
+                ModifiedBy = "admin",
+                ModifiedUser = 123
             };
 
-            mockAgentScheduleService.Setup(mr => mr.CopyAgentSchedule(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<CopyAgentSchedule>())).ReturnsAsync(
+            mockAgentScheduleService.Setup(mr => mr.CopyAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<CopyAgentSchedule>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule copyAgentSchedule) =>
-                mockAgentScheduleData.CopyAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, copyAgentSchedule));
+                mockAgentScheduleData.CopyAgentScheduleChart(agentScheduleIdDetails, copyAgentSchedule));
 
-            var value = await controller.CopyAgentSchedule(agentScheduleId, copyAgentSchedule);
+            var value = await controller.CopyAgentScheduleChart(agentScheduleId, copyAgentSchedule);
 
             Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
         }
 
         /// <summary>
-        /// Copies the agent schedule chart returns no content result for scheduling tab.
+        /// Copies the agent schedule chart returns no content result.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="fromYear">From year.</param>
+        /// <param name="fromMonth">From month.</param>
+        /// <param name="fromDay">From day.</param>
+        /// <param name="toYear">To year.</param>
+        /// <param name="toMonth">To month.</param>
+        /// <param name="toDay">To day.</param>
         [Theory]
-        [InlineData("5fe0b5ad6a05416894c0718e")]
-        [InlineData("5fe0b5ad6a05416894c0718f")]
-        public async void CopyAgentScheduleChart_ReturnsNoContentResultForSchedulingTab(string agentScheduleId)
+        [InlineData("5fe0b5ad6a05416894c0718e", 2021, 3, 21, 2021, 3, 27)]
+        [InlineData("5fe0b5ad6a05416894c0718f", 2021, 3, 21, 2021, 3, 27)]
+        public async void CopyAgentScheduleChart_ReturnsNoContentResult(string agentScheduleId, int fromYear, int fromMonth, int fromDay, 
+                                                                                        int toYear, int toMonth, int toDay)
         {
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
             CopyAgentSchedule copyAgentSchedule = new CopyAgentSchedule
             {
-                AgentScheduleType = AgentScheduleType.SchedulingTab,
-                EmployeeIds = new List<int> { 1, 2 },
-                ModifiedBy = "admin"
+                AgentSchedulingGroupId = 1,
+                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
+                DateTo = new DateTime(toYear, toMonth, toDay),
+                ActivityOrigin = ActivityOrigin.CSS,
+                ModifiedBy = "admin",
+                ModifiedUser = 123
             };
 
-            mockAgentScheduleService.Setup(mr => mr.CopyAgentSchedule(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<CopyAgentSchedule>())).ReturnsAsync(
+            mockAgentScheduleService.Setup(mr => mr.CopyAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<CopyAgentSchedule>())).ReturnsAsync(
                 (AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule copyAgentSchedule) =>
-                mockAgentScheduleData.CopyAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, copyAgentSchedule));
+                mockAgentScheduleData.CopyAgentScheduleChart(agentScheduleIdDetails, copyAgentSchedule));
 
-            var value = await controller.CopyAgentSchedule(agentScheduleId, copyAgentSchedule);
+            var value = await controller.CopyAgentScheduleChart(agentScheduleId, copyAgentSchedule);
 
             Assert.Equal((int)HttpStatusCode.NoContent, (value as ObjectResult).StatusCode);
         }
 
+        #endregion
+
+        #region UpdateAgentScheduleRange
+
         /// <summary>
-        /// Copies the agent schedule chart returns no content result for scheduling manager tab.
+        /// Updates the agent schedule range with not found.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="oldFromYear">The old from year.</param>
+        /// <param name="oldFromMonth">The old from month.</param>
+        /// <param name="oldFromDay">The old from day.</param>
+        /// <param name="oldToYear">The old to year.</param>
+        /// <param name="oldToMonth">The old to month.</param>
+        /// <param name="oldToDay">The old to day.</param>
+        /// <param name="newFromYear">The new from year.</param>
+        /// <param name="newFromMonth">The new from month.</param>
+        /// <param name="newFromDay">The new from day.</param>
+        /// <param name="newToYear">The new to year.</param>
+        /// <param name="newToMonth">The new to month.</param>
+        /// <param name="newToDay">The new to day.</param>
         [Theory]
-        [InlineData("5fe0b5ad6a05416894c0718e")]
-        [InlineData("5fe0b5ad6a05416894c0718f")]
-        public async void CopyAgentScheduleChart_ReturnsNoContentResultForSchedulingManagerTab(string agentScheduleId)
+        [InlineData("6fe0b5ad6a05416894c0718e", 2021, 3, 21, 2021, 3, 27, 2021, 3, 14, 2021, 3, 20)]
+        [InlineData("6fe0b5ad6a05416894c0718f", 2021, 3, 21, 2021, 3, 27, 2021, 3, 14, 2021, 3, 20)]
+        public async void UpdateAgentScheduleRange_ReturnsNotFound(string agentScheduleId, int oldFromYear, int oldFromMonth, int oldFromDay,
+                                                                   int oldToYear, int oldToMonth, int oldToDay, int newFromYear, int newFromMonth,
+                                                                   int newFromDay, int newToYear, int newToMonth, int newToDay)
         {
-            CopyAgentSchedule copyAgentSchedule = new CopyAgentSchedule
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
+            UpdateAgentScheduleDateRange agentScheduleRange = new UpdateAgentScheduleDateRange
             {
-                AgentScheduleType = AgentScheduleType.SchedulingMangerTab,
-                EmployeeIds = new List<int> { 1, 2 },
-                ModifiedBy = "admin"
+                OldDateFrom = new DateTime(oldFromYear, oldFromMonth, oldFromDay),
+                OldDateTo = new DateTime(oldToYear, oldToMonth, oldToDay),
+                NewDateFrom = new DateTime(newFromYear, newFromMonth, newFromDay),
+                NewDateTo = new DateTime(newToYear, newToMonth, newToDay),
+                ModifiedBy = "admin",
             };
 
-            mockAgentScheduleService.Setup(mr => mr.CopyAgentSchedule(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<CopyAgentSchedule>())).ReturnsAsync(
-                (AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule copyAgentSchedule) =>
-                mockAgentScheduleData.CopyAgentSchedule(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, copyAgentSchedule));
+            mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleRange(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleDateRange>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleDateRange dateRange) => mockAgentScheduleData.UpdateAgentScheduleRange(agentScheduleIdDetails, dateRange));
 
-            var value = await controller.CopyAgentSchedule(agentScheduleId, copyAgentSchedule);
+            var value = await controller.UpdateAgentScheduleRange(agentScheduleId, agentScheduleRange);
+
+            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+        }
+
+        /// <summary>
+        /// Updates the agent schedule range with conflict.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="oldFromYear">The old from year.</param>
+        /// <param name="oldFromMonth">The old from month.</param>
+        /// <param name="oldFromDay">The old from day.</param>
+        /// <param name="oldToYear">The old to year.</param>
+        /// <param name="oldToMonth">The old to month.</param>
+        /// <param name="oldToDay">The old to day.</param>
+        /// <param name="newFromYear">The new from year.</param>
+        /// <param name="newFromMonth">The new from month.</param>
+        /// <param name="newFromDay">The new from day.</param>
+        /// <param name="newToYear">The new to year.</param>
+        /// <param name="newToMonth">The new to month.</param>
+        /// <param name="newToDay">The new to day.</param>
+        [Theory]
+        [InlineData("5fe0b5ad6a05416894c0718e", 2021, 3, 21, 2021, 3, 27, 2021, 3, 7, 2021, 3, 13)]
+        [InlineData("5fe0b5ad6a05416894c0718f", 2021, 3, 21, 2021, 3, 27, 2021, 3, 7, 2021, 3, 13)]
+        public async void UpdateAgentScheduleRange_ReturnsConflict(string agentScheduleId, int oldFromYear, int oldFromMonth, int oldFromDay,
+                                                                   int oldToYear, int oldToMonth, int oldToDay, int newFromYear, int newFromMonth,
+                                                                   int newFromDay, int newToYear, int newToMonth, int newToDay)
+        {
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
+            UpdateAgentScheduleDateRange agentScheduleRange = new UpdateAgentScheduleDateRange
+            {
+                OldDateFrom = new DateTime(oldFromYear, oldFromMonth, oldFromDay),
+                OldDateTo = new DateTime(oldToYear, oldToMonth, oldToDay),
+                NewDateFrom = new DateTime(newFromYear, newFromMonth, newFromDay),
+                NewDateTo = new DateTime(newToYear, newToMonth, newToDay),
+                ModifiedBy = "admin",
+            };
+
+            mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleRange(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleDateRange>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleDateRange dateRange) => mockAgentScheduleData.UpdateAgentScheduleRange(agentScheduleIdDetails, dateRange));
+
+            var value = await controller.UpdateAgentScheduleRange(agentScheduleId, agentScheduleRange);
+
+            Assert.Equal((int)HttpStatusCode.Conflict, (value as ObjectResult).StatusCode);
+        }
+
+        /// <summary>
+        /// Updates the agent schedule range.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="oldFromYear">The old from year.</param>
+        /// <param name="oldFromMonth">The old from month.</param>
+        /// <param name="oldFromDay">The old from day.</param>
+        /// <param name="oldToYear">The old to year.</param>
+        /// <param name="oldToMonth">The old to month.</param>
+        /// <param name="oldToDay">The old to day.</param>
+        /// <param name="newFromYear">The new from year.</param>
+        /// <param name="newFromMonth">The new from month.</param>
+        /// <param name="newFromDay">The new from day.</param>
+        /// <param name="newToYear">The new to year.</param>
+        /// <param name="newToMonth">The new to month.</param>
+        /// <param name="newToDay">The new to day.</param>
+        [Theory]
+        [InlineData("5fe0b5ad6a05416894c0718e", 2021, 3, 21, 2021, 3, 27, 2021, 3, 14, 2021, 3, 20)]
+        [InlineData("5fe0b5ad6a05416894c0718f", 2021, 3, 21, 2021, 3, 27, 2021, 3, 14, 2021, 3, 20)]
+        public async void UpdateAgentScheduleRange_ReturnsNoContent(string agentScheduleId, int oldFromYear, int oldFromMonth, int oldFromDay,
+                                                                    int oldToYear, int oldToMonth, int oldToDay, int newFromYear, int newFromMonth,
+                                                                    int newFromDay, int newToYear, int newToMonth, int newToDay)
+        {
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
+            UpdateAgentScheduleDateRange agentScheduleRange = new UpdateAgentScheduleDateRange
+            {
+                OldDateFrom = new DateTime(oldFromYear, oldFromMonth, oldFromDay),
+                OldDateTo = new DateTime(oldToYear, oldToMonth, oldToDay),
+                NewDateFrom = new DateTime(newFromYear, newFromMonth, newFromDay),
+                NewDateTo = new DateTime(newToYear, newToMonth, newToDay),
+                ModifiedBy = "admin",
+            };
+
+            mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleRange(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleDateRange>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentScheduleDateRange dateRange) => mockAgentScheduleData.UpdateAgentScheduleRange(agentScheduleIdDetails, dateRange));
+
+            var value = await controller.UpdateAgentScheduleRange(agentScheduleId, agentScheduleRange);
+
+            Assert.Equal((int)HttpStatusCode.NoContent, (value as ObjectResult).StatusCode);
+        }
+
+        #endregion
+
+        #region DeleteAgentScheduleRange
+
+        /// <summary>
+        /// Deletes the agent schedule range return not found.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="fromYear">From year.</param>
+        /// <param name="fromMonth">From month.</param>
+        /// <param name="fromDay">From day.</param>
+        /// <param name="toYear">To year.</param>
+        /// <param name="toMonth">To month.</param>
+        /// <param name="toDay">To day.</param>
+        [Theory]
+        [InlineData("6fe0b5ad6a05416894c0718e", 2021, 3, 21, 2021, 3, 27)]
+        [InlineData("6fe0b5ad6a05416894c0718f", 2021, 3, 21, 2021, 3, 27)]
+        public async void DeleteAgentScheduleRange_ReturnNotFound(string agentScheduleId, int fromYear, int fromMonth, int fromDay,
+                                                                                int toYear, int toMonth, int toDay)
+        {
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
+            DateRange daterange = new DateRange
+            {
+                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
+                DateTo = new DateTime(toYear, toMonth, toDay),
+            };
+
+            mockAgentScheduleService.Setup(mr => mr.DeleteAgentScheduleRange(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<DateRange>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange) => mockAgentScheduleData.DeleteAgentScheduleRange(agentScheduleIdDetails, dateRange));
+
+            var value = await controller.DeleteAgentScheduleRange(agentScheduleId, daterange);
+
+            Assert.Equal((int)HttpStatusCode.NotFound, (value as ObjectResult).StatusCode);
+        }
+
+        /// <summary>
+        /// Deletes the content of the agent schedule range return no.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="fromYear">From year.</param>
+        /// <param name="fromMonth">From month.</param>
+        /// <param name="fromDay">From day.</param>
+        /// <param name="toYear">To year.</param>
+        /// <param name="toMonth">To month.</param>
+        /// <param name="toDay">To day.</param>
+        [Theory]
+        [InlineData("5fe0b5ad6a05416894c0718e", 2021, 3, 21, 2021, 3, 27)]
+        [InlineData("5fe0b5ad6a05416894c0718f", 2021, 3, 21, 2021, 3, 27)]
+        public async void DeleteAgentScheduleRange_ReturnNoContent(string agentScheduleId, int fromYear, int fromMonth, int fromDay,
+                                                                    int toYear, int toMonth, int toDay)
+        {
+            AgentScheduleIdDetails agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId };
+            DateRange daterange = new DateRange
+            {
+                DateFrom = new DateTime(fromYear, fromMonth, fromDay),
+                DateTo = new DateTime(toYear, toMonth, toDay),
+            };
+
+            mockAgentScheduleService.Setup(mr => mr.DeleteAgentScheduleRange(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<DateRange>())).ReturnsAsync(
+                (AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange) => mockAgentScheduleData.DeleteAgentScheduleRange(agentScheduleIdDetails, dateRange));
+
+            var value = await controller.DeleteAgentScheduleRange(agentScheduleId, daterange);
 
             Assert.Equal((int)HttpStatusCode.NoContent, (value as ObjectResult).StatusCode);
         }

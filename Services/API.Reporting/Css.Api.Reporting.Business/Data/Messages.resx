@@ -160,7 +160,7 @@
     <value>Invalid target specified for key - '{0}'</value>
   </data>
   <data name="InvalidTimezone" xml:space="preserve">
-    <value>Invalid timezone, format supported - '[+/-]UTC{hh:mm}' for e.g. UTC+0600, UTC-1230</value>
+    <value>Invalid timezone, format supported - 'UTC[+/-]{hh:mm}' for e.g. UTC+0600, UTC-1230</value>
   </data>
   <data name="MappingNotFound" xml:space="preserve">
     <value>Mapping not found for key - '{0}'</value>

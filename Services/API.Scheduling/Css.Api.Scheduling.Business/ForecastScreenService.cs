@@ -178,18 +178,6 @@ namespace Css.Api.Scheduling.Business
             
             // check first if skillGroup exists
             var skillGroup = await _skillGroupRepository.GetSkillGroup(new SkillGroupIdDetails { SkillGroupId = importForecastDetails.SkillGroupId });
-
-
-            var regex = new Regex (@"^[1-9]\d*(\.\d+)?$");
-            foreach(var test in importForecastDetails.ForecastScreenDataDetails)
-            {
-                if (!regex.IsMatch(test.ForecastedReq.ToString()))
-                {
-
-                    errors.Add("Invalid Field Format");
-                }
-            }
-
             if (skillGroup == null)
             {
                 //List<string> skillGroupError = new List<string>();

@@ -331,9 +331,7 @@ namespace Css.Api.Reporting.Business.Services
                             var schedule = new ActivitySchedule()
                             {
                                 ScheduleDetail = new List<ActivityScheduleDetail>(),
-                                ScheduleDate = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
-                                StartDateTime = dateCharts.Min(x => x.StartDateTime).ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
-                                EndDateTime = dateCharts.Max(x => x.EndDateTime).ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture)
+                                ScheduleDate = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)
                             };
                             dateCharts.ForEach(chart =>
                             {
@@ -422,7 +420,7 @@ namespace Css.Api.Reporting.Business.Services
             var existingSchedule = await _agentScheduleManagerRepository.GetManagerSchedules(new List<int>() { agent.Ssn }, new List<DateTime> { scheduledDate });
             var dateTimeNow = DateTime.UtcNow;
             DateTime? modifiedDate = dateTimeNow;
-            if(existingSchedule.Any())
+            if(!existingSchedule.Any())
             {
                 modifiedDate = null;
             }
@@ -788,9 +786,8 @@ namespace Css.Api.Reporting.Business.Services
         {
             calendarChartDatas.ForEach(calendarChartData =>
             {
-                var actStartDateTime = string.Join(" ", calendarChartData.SchDate, calendarChartData.ActStartTime);
-                var actEndDateTime = string.Join(" ", calendarChartData.ActDate, calendarChartData.ActEndTime);
-                DateTime schDate, startDateTime, endDateTime;
+                DateTime schDate, startDateTime = DateTime.MinValue, endDateTime = DateTime.MinValue;
+                TimeSpan startTime, endTime;
                 int empNo = 0;
                 var code = schedulingCodes.FirstOrDefault(x => x.Name.Equals(calendarChartData.ActText.Trim()));
 
@@ -799,14 +796,30 @@ namespace Css.Api.Reporting.Business.Services
                 bool actStatus = DateTime.TryParseExact(calendarChartData.ActDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out schDate);
                 bool schStatus = DateTime.TryParseExact(calendarChartData.SchDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out schDate);
                 bool actTextStatus = !string.IsNullOrWhiteSpace(calendarChartData.ActText);
-                bool startStatus = DateTime.TryParseExact(actStartDateTime, "yyyyMMdd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDateTime);
-                bool endStatus = DateTime.TryParseExact(actEndDateTime, "yyyyMMdd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDateTime);
                 bool codeStatus = code != null;
                 bool allDateStatus = false;
-
-                if (empStatus && schStatus && startStatus && endStatus)
+                bool startTimeStatus = TimeSpan.TryParseExact(string.Join(":",calendarChartData.ActStartTime,"00"), "g", CultureInfo.InvariantCulture, out startTime);
+                bool endTimeStatus = TimeSpan.TryParseExact(string.Join(":",calendarChartData.ActEndTime,"00"), "g", CultureInfo.InvariantCulture, out endTime);
+                
+                if (empStatus && schStatus && startTimeStatus && endTimeStatus)
                 {
-                    if(startDateTime < endDateTime && ValidateScheduleDateClocks(schDate, startDateTime, endDateTime))
+                    bool startStatus = false;
+                    bool endStatus = false;
+                    string actStartDateTime = string.Empty;
+                    string actEndDateTime = string.Join(" ", calendarChartData.ActDate, calendarChartData.ActEndTime);
+                    if (startTime > endTime)
+                    {
+                        actStartDateTime = string.Join(" ", calendarChartData.SchDate, calendarChartData.ActStartTime);
+                    }
+                    else
+                    {
+                        actStartDateTime = string.Join(" ", calendarChartData.ActDate, calendarChartData.ActStartTime);
+                    }
+
+                    startStatus = DateTime.TryParseExact(actStartDateTime, "yyyyMMdd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDateTime);
+                    endStatus = DateTime.TryParseExact(actEndDateTime, "yyyyMMdd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDateTime);
+
+                    if (startStatus && endStatus && startDateTime < endDateTime && ValidateScheduleDateClocks(schDate, startDateTime, endDateTime))
                     {
                         allDateStatus = true;
                     }
@@ -816,7 +829,12 @@ namespace Css.Api.Reporting.Business.Services
                     }
                 }
 
-                bool parseStatus = empStatus && empValueStatus && schStatus && actTextStatus && startStatus && endStatus
+                //if(!codeStatus && schStatus)
+                //{
+                //    invalidEmpDates[empNo].Add(schDate);
+                //}
+
+                bool parseStatus = empStatus && empValueStatus && schStatus && actTextStatus 
                         && codeStatus && allDateStatus;
 
                 if (parseStatus)
@@ -896,8 +914,8 @@ namespace Css.Api.Reporting.Business.Services
                     scheduleManagerData.ManagerCharts.Add(new AgentScheduleManagerChart
                     {
                         SchedulingCodeId = code.SchedulingCodeId,
-                        EndDateTime = new DateTime(endDateTime.Year, endDateTime.Month, endDateTime.Day, 0, 0, 0, DateTimeKind.Utc),
-                        StartDateTime = new DateTime(startDateTime.Year, startDateTime.Month, startDateTime.Day, 0, 0, 0, DateTimeKind.Utc)
+                        EndDateTime = new DateTime(endDateTime.Year, endDateTime.Month, endDateTime.Day, endDateTime.Hour, endDateTime.Minute, endDateTime.Second, DateTimeKind.Utc),
+                        StartDateTime = new DateTime(startDateTime.Year, startDateTime.Month, startDateTime.Day, startDateTime.Hour, startDateTime.Minute, endDateTime.Second, DateTimeKind.Utc)
                     });
                 }
             });
@@ -1099,7 +1117,7 @@ namespace Css.Api.Reporting.Business.Services
             }
 
             TimeSpan? timezoneOffset = null;
-            Regex regex = new Regex(@"^UTC(?'offset'(\+|\-)(?'hours'(0|1)[0-9])(?'min'[0-5][0-9]))$");
+            Regex regex = new Regex(@"^UTC(?'offset'(?'hours'(\+|\-)(0|1)[0-9])(?'min'[0-5][0-9]))$");
             var match = regex.Match(offsetString.Trim());
             if(match.Success)
             {

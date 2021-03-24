@@ -40,5 +40,13 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// Gets or sets the modified by.
         /// </summary>
         public string ModifiedBy { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CopyAgentSchedule"/> class.
+        /// </summary>
+        public CopyAgentSchedule()
+        {
+            EmployeeIds = new List<int>();
+        }
     }
 }

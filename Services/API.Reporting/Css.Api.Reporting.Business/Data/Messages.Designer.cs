@@ -187,7 +187,7 @@ namespace Css.Api.Reporting.Business.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid timezone, format supported - &apos;[+/-]UTC{hh:mm}&apos; for e.g. UTC+0600, UTC-1230.
+        ///   Looks up a localized string similar to Invalid timezone, format supported - &apos;UTC[+/-]{hh:mm}&apos; for e.g. UTC+0600, UTC-1230.
         /// </summary>
         internal static string InvalidTimezone {
             get {
