@@ -422,9 +422,13 @@ namespace Css.Api.Scheduling.Business
 
             _agentAdminRepository.UpdateAgentAdmin(agentAdminRequest);
 
-            if (preUpdateAsgId != agentAdminRequest.AgentSchedulingGroupId)
-            {
+            bool isASGIdDifferent = preUpdateAsgId != agentAdminRequest.AgentSchedulingGroupId;
+            bool isEmployeeIdDifferent = preUpdateAgentAdmin.EmployeeId != agentAdminDetails.EmployeeId;
+            bool isFirstNameDifferent = !(preUpdateAgentAdmin.FirstName.Equals(agentAdminDetails.FirstName));
+            bool isLastNameDifferent = !(preUpdateAgentAdmin.LastName.Equals(agentAdminDetails.LastName));
 
+            if (isASGIdDifferent || isEmployeeIdDifferent || isFirstNameDifferent || isLastNameDifferent)
+            {
                 DateTime movingDate = await FindMovingDateBasedonTimezone(preUpdateAsgId);
 
                 List<AgentScheduleRange> updatedRanges = null;
