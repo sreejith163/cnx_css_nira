@@ -163,7 +163,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input [maxLength]="50" type="text" class="form-control"
+              <input [maxLength]="45" type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('firstName')}"
                 formControlName="firstName" placeholder="{{ 'First_name' | translate }}" [maxLength]="maxLength" />
                 <ng-container *ngIf="formSubmitted && form.firstName.invalid">
@@ -174,7 +174,7 @@
                         </ng-container>
                         <ng-template #maxLengthError>
                           <div class="valid-error">
-                            {{ 'First Name cannot exceed 50 characters' | translate }}
+                            {{ 'First Name cannot exceed 45 characters' | translate }}
                           </div>
                         </ng-template>
                       </ng-container>
@@ -188,7 +188,7 @@
                 <span class="required">*</span></label>
             </div>
             <div class="col-md-8">
-              <input [maxLength]="50" type="text" class="form-control"
+              <input [maxLength]="45" type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('lastName')}" formControlName="lastName"
                 placeholder="{{ 'Last_name' | translate }}" [maxLength]="maxLength" />
                 <ng-container *ngIf="formSubmitted && form.lastName.invalid">
@@ -199,7 +199,7 @@
                         </ng-container>
                         <ng-template #maxLengthError>
                           <div class="valid-error">
-                            {{ 'Last Name cannot exceed 50 characters' | translate }}
+                            {{ 'Last Name cannot exceed 45 characters' | translate }}
                           </div>
                         </ng-template>
                       </ng-container>
@@ -255,7 +255,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input [maxLength]="50" type="text" class="form-control"
+              <input [maxLength]="45" type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorName')}"
                 formControlName="supervisorName" placeholder="{{ 'Team Lead Name' | translate }}" [maxLength]="maxLength" />
                 <ng-container *ngIf="formSubmitted && form.supervisorName.invalid">
@@ -266,7 +266,7 @@
                         </ng-container>
                         <ng-template #maxLengthError>
                           <div class="valid-error">
-                            {{ 'Team Lead Name cannot exceed 50 characters' | translate }}
+                            {{ 'Team Lead Name cannot exceed 45 characters' | translate }}
                           </div>
                         </ng-template>
                       </ng-container>
