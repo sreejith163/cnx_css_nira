@@ -120,7 +120,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
   saveAgentAdminDetails() {
     this.formSubmitted = true;
     if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId &&
-       this.skillTagId && this.agentSchedulingGroupId && this.validateHireDateFormat()) {
+      this.skillTagId && this.agentSchedulingGroupId && this.validateHireDateFormat()) {
       this.saveAgentProfileDetailsOnModel();
       this.operation === ComponentOperation.Edit ? this.updateAgentAdminProfileDetails() : this.addAgentAdminProfileDetails();
     }
@@ -258,7 +258,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       this.agentProfileModel.supervisorName !== this.agentAdminDetails.supervisorName ||
       this.agentProfileModel.supervisorSso !== this.agentAdminDetails.supervisorSso ||
       this.agentProfileModel.agentData.find(x => x.group.description.trim() === 'Hire Date')?.group.value
-        !== this.agentAdminDetails.agentData.find(x => x.group.description.trim() === 'Hire Date')?.group.value
+      !== this.agentAdminDetails.agentData.find(x => x.group.description.trim() === 'Hire Date')?.group.value
     ) {
       return true;
     }
@@ -298,8 +298,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       supervisorSso: this.agentAdminDetails.supervisorSso
     });
     const dateValue = this.agentAdminDetails.agentData?.find(x => x.group.description.trim() === 'Hire Date');
-    if (dateValue !== undefined)
-    {
+    if (dateValue !== undefined) {
       const dateString = dateValue.group.value;
       const date = new Date(dateString);
       const ngbDateStruct: NgbDateStruct = {
@@ -315,21 +314,24 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     this.agentProfileForm = this.formBuilder.group({
       employeeId: new FormControl('', Validators.compose([Validators.required, Validators.max(9999999999)])),
       sso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
-      firstName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(Constants.DefaultTextMaxLength)])),
-      lastName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(Constants.DefaultTextMaxLength)])),
+      firstName: new FormControl('',
+       Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
+      lastName: new FormControl('',
+       Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
       hireDate: new FormControl('', Validators.required),
       supervisorId: new FormControl('', Validators.compose([Validators.required, Validators.max(9999999999)])),
-      supervisorName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(Constants.DefaultTextMaxLength)])),
+      supervisorName: new FormControl('',
+       Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
       supervisorSso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
     }, { validators: [CustomValidators.sameSSO('sso', 'supervisorSso'), CustomValidators.sameEmployeeId('employeeId', 'supervisorId')] });
   }
 
-  showActivityLogs(){
+  showActivityLogs() {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'lg' };
     this.modalRef = this.modalService.open(ActivityLogsComponent, options);
     // this.modalRef.componentInstance.employee = employee;
     this.modalRef.result.then((confirmed) => {
-      if (confirmed === true){
+      if (confirmed === true) {
         console.log(closed);
         // this.currentPage = 1;
         // this.loadEmployees();
