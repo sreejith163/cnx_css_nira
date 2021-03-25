@@ -188,7 +188,7 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input [maxLength]="50" type="text" class="form-control"
+                  <input [maxLength]="45" type="text" class="form-control"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('firstName')}"
                     formControlName="firstName" placeholder="{{ 'First_name' | translate }}" />
                   <div *ngIf="hasFormControlValidationError('firstName')" class="valid-error">
@@ -204,7 +204,7 @@
                     <span class="required">*</span></label>
                 </div>
                 <div class="col-md-8">
-                  <input [maxLength]="50" type="text" class="form-control"
+                  <input [maxLength]="45" type="text" class="form-control"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('lastName')}" formControlName="lastName"
                     placeholder="{{ 'Last_name' | translate }}" />
                   <div *ngIf="hasFormControlValidationError('lastName')" class="valid-error">
@@ -256,7 +256,7 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input [maxLength]="50" type="text" class="form-control"
+                  <input [maxLength]="45" type="text" class="form-control"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorName')}"
                     formControlName="supervisorName" placeholder="{{ 'Team Lead Name' | translate }}" />
                   <div *ngIf="hasFormControlValidationError('supervisorName')" class="valid-error">
