@@ -28,6 +28,7 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
 
   currentPage = 1;
   pageSize = 10;
+  characterSplice = 25;
   totalRecord: number;
   searchKeyword: string;
   orderBy = 'createdDate';
@@ -117,7 +118,7 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
   addTimeOff() {
     this.getModalPopup(AddUpdateTimeOffsComponent, 'xl');
     this.modalRef.componentInstance.operation = ComponentOperation.Add;
-    this.modalRef.componentInstance.schedulingCodes = this.schedulingCodes;
+    this.modalRef.componentInstance.schedulingCodes = this.schedulingCodes.filter(x => x.timeOffCode === true);
 
     this.modalRef.result.then(() => {
       this.currentPage = 1;
@@ -132,7 +133,7 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
   editTimeOffs(timeOffData: TimeOffResponse) {
     this.getModalPopup(AddUpdateTimeOffsComponent, 'xl');
     this.modalRef.componentInstance.operation = ComponentOperation.Edit;
-    this.modalRef.componentInstance.schedulingCodes = this.schedulingCodes;
+    this.modalRef.componentInstance.schedulingCodes = this.schedulingCodes.filter(x => x.timeOffCode === true);
     this.modalRef.componentInstance.timeOffCodeData = timeOffData;
 
     this.modalRef.result.then((result: any) => {
@@ -224,7 +225,7 @@ export class TimeOffsListComponent implements OnInit, OnDestroy {
   private loadSchedulingCodes() {
     const queryParams = new SchedulingCodeQueryParams();
     queryParams.skipPageSize = true;
-    queryParams.fields = 'id, description, icon';
+    queryParams.fields = 'id, description, icon, timeOffCode';
 
     this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)
       .subscribe((response) => {

@@ -174,10 +174,22 @@
                   <i class="fa fa-trash padding-5 pointer" (click)="deleteTimeOffs(el.id)"></i>
                 </td>
                 <td>{{el?.id}}</td>
-                <td>{{el?.description}}</td>
-                <td>{{getTimeOffCode(el?.schedulingCodeId)}}</td>
+                <td>
+                  <span
+                    ngbTooltip="{{ el.description }}">{{ el.description | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}
+                  </span>
+                </td>
+                <td>
+                  <span
+                  ngbTooltip="{{getTimeOffCode(el?.schedulingCodeId)}}">{{getTimeOffCode(el?.schedulingCodeId) | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}
+                </span>
+                  </td>
                 <td>{{el?.startDate | date: 'yyyy-MM-dd'}} - {{el?.endDate | date: 'yyyy-MM-dd'}}</td>
-                <td>{{getDayRequestOn(el?.allowDayRequest)}}</td>
+                <td>
+                  <span
+                  ngbTooltip="{{getDayRequestOn(el?.allowDayRequest)}}">{{getDayRequestOn(el?.allowDayRequest) | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}
+                </span>
+                   </td>
                 <td>{{el?.fTEDayLength }}</td>
                 <td>{{weekDay[el?.firstDayOfWeek]}}</td>
                 <td>{{el?.viewAllotments ? 'Yes': 'No' }}</td>
@@ -188,7 +200,11 @@
                 <td>{{el?.forceOffDaysBeforeWeek }}</td>
                 <td>{{el?.forceOffDaysAfterWeek }}</td>
                 <td>{{el?.allowFullWeekRequest ? 'Yes': 'No' }}</td>
-                <td>{{getDeselectedTime(el?.deSelectedTime) }}</td>
+                <td>
+                  <span
+                  ngbTooltip="{{getDeselectedTime(el?.deSelectedTime)}}">{{getDeselectedTime(el?.deSelectedTime) | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}
+                </span>
+                  </td>
                 <td>{{el?.deselectSavedDays ? 'Yes': 'No' }}</td>
                 </tr>
             </ng-container>
