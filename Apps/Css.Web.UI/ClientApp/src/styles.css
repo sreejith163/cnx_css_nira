@@ -1,7 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "~@ng-select/ng-select/themes/default.theme.css";
-
+.toast-top-right {
+  top: 70px!important;
+  right: 12px;
+}
 #sortIcon {
   color: #000;
   font-size: 12px;

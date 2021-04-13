@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { forkJoin, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpBaseService } from 'src/app/core/services/http-base.service';
 import { QueryStringParameters } from 'src/app/shared/models/query-string-parameters.model';
@@ -12,6 +13,7 @@ import { EmployeeRole } from '../models/employee-role.model';
 import { Employee } from '../models/employee.model';
 import { PermissionDetails } from '../models/permission-details.model';
 import { Permission } from '../models/permission.model';
+import { UserLoginLog } from '../models/user-logger.model';
 
 @Injectable()
 export class PermissionsService extends HttpBaseService {
@@ -61,6 +63,28 @@ export class PermissionsService extends HttpBaseService {
 
     return this.http.get<EmployeeDetails>(url)
       .pipe(catchError(this.handleError));
+  }
+
+  authLogin(username: string, password : string){
+    const url = `${this.baseURL}/Auth/${username}/key/${password}`;
+
+    return this.http.get<EmployeeDetails>(url)
+      .pipe(catchError(this.handleError));
+  }
+
+  userLogging(employeeId: number, userLoginLog: UserLoginLog): Observable<any[]> {
+    const userLogApiUrl = `${this.baseURL}/log`;
+
+    let userLogResponse = this.http.post<any>(userLogApiUrl, userLoginLog)
+    .pipe(catchError(this.handleError));
+
+    const getEmployeeUrl = `${this.baseURL}/userpermissions/${employeeId}`;
+
+    let employeeResponse = this.http.get<EmployeeDetails>(getEmployeeUrl)
+      .pipe(catchError(this.handleError));
+    
+    // Observable.forkJoin (RxJS 5) changes to just forkJoin() in RxJS 6
+    return forkJoin([userLogResponse, employeeResponse]);
   }
 
   deleteEmployee(employeeId: number) {
@@ -114,6 +138,17 @@ export class PermissionsService extends HttpBaseService {
 
   storePermission(userRoleId){
     this.cookieService.set('userRoleId', userRoleId, null, environment.settings.cookiePath, null, false, 'Strict');
+  }
+
+  addUserLog(userLoginLog: UserLoginLog){
+    const url = `https://localhost:44318/api/log`;
+    console.log(url, this.convertToHttpParam(userLoginLog));
+
+    return this.http.post<any>(url, {
+      params: this.convertToHttpParam(userLoginLog),
+      observe: 'response'
+    })
+      .pipe(catchError(this.handleError));
   }
 
 }

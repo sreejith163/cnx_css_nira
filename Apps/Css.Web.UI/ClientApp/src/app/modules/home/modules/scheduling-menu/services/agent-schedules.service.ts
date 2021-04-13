@@ -15,6 +15,7 @@ import { AgentScheduleChartResponse } from '../models/agent-schedule-chart-respo
 import { ScheduleDateRangeBase } from '../models/schedule-date-range-base.model';
 import { UpdateScheduleDateRange } from '../models/update-schedule-date-range.model';
 import { DateRangeQueryParms } from '../models/date-range-query-params.model';
+import { AgentSchedulingGridExport } from '../models/agent-scheduling-grid-export.model';
 
 @Injectable()
 export class AgentSchedulesService extends HttpBaseService {
@@ -41,6 +42,18 @@ export class AgentSchedulesService extends HttpBaseService {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}`;
 
     return this.http.get<AgentSchedulesResponse>(url)
+    .pipe(catchError(this.handleError));
+  }
+  exportAgentSchedulingGrid(agentSchedulingGroupId: number) {
+    const url = `${this.baseURL}/AgentSchedules/${agentSchedulingGroupId}/export`;
+
+    return this.http.get<AgentSchedulingGridExport>(url)
+    .pipe(catchError(this.handleError));
+  }
+  exportAgentSchedulingGridByEmployee(employeeId: number) {
+    const url = `${this.baseURL}/AgentSchedules/${employeeId}/employeeexport`;
+
+    return this.http.get<AgentSchedulingGridExport>(url)
     .pipe(catchError(this.handleError));
   }
 

@@ -9,6 +9,7 @@ namespace Css.Api.Reporting.Models.DTO.Response
     public class ActivityApiResponse : StrategyResponse
     {
         public object Data { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; set; }
         [JsonIgnore]
         public HttpStatusCode StatusCode { get; set; }

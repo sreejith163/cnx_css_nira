@@ -15,8 +15,16 @@ import { HttpBaseService } from './services/http-base.service';
 import { PermissionsService } from '../modules/home/modules/system-admin/services/permissions.service';
 import { PermissionsGuard } from './guards/permissions.guard';
 import { NgxCsvParserModule } from 'ngx-csv-parser';
+import { ToastrModule } from 'ngx-toastr';
+import { FormsModule } from '@angular/forms';
 
-const modules = [BrowserModule, BrowserAnimationsModule, CommonModule, HttpClientModule,  NgxCsvParserModule];
+const modules = [BrowserModule, 
+  FormsModule, 
+  BrowserAnimationsModule,
+  ToastrModule.forRoot({
+    timeOut: 2000,
+    positionClass: 'toast-top-right'
+  }) , CommonModule, HttpClientModule,  NgxCsvParserModule];
 
 const providers = [PermissionsService, PermissionsGuard, AuthGuard, AuthService, CookieService, HttpBaseService,
                    TokenInterceptorProviders, UnAuthorizedInterceptorProviders];

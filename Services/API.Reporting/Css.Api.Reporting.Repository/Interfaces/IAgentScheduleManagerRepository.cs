@@ -36,6 +36,14 @@ namespace Css.Api.Reporting.Repository.Interfaces
         Task<List<AgentScheduleManager>> GetManagerSchedules(ScheduleFilter filter);
 
         /// <summary>
+        /// The method to fetch manager schedules for input employee from a specific date
+        /// </summary>
+        /// <param name="agentId"></param>
+        /// <param name="fromDate"></param>
+        /// <returns></returns>
+        Task<List<AgentScheduleManager>> GetManagerSchedules(int agentId, DateTime fromDate);
+
+        /// <summary>
         /// The method to update the agent scheduling group for the manager charts of an agent
         /// </summary>
         /// <param name="updatedAgentSchedulingGroupDetails"></param>

@@ -1,6 +1,7 @@
 ﻿using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using NoSQL = Css.Api.Core.Models.Domain.NoSQL;
 using System;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 
 namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
 {
@@ -28,8 +29,11 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
 
             CreateMap<NoSQL.AgentScheduleRange, AgentScheduleRangeDTO>()
                 .ReverseMap();
+            CreateMap<NoSQL.AgentSchedule, ExportAgentSchedulingGroupSchedule>()
+               .ReverseMap();
+           
 
-            
+
         }
     }
 }

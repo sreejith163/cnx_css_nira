@@ -27,11 +27,11 @@ services:
     container_name: css.service.bus
   
   css.web.ui:
-   image: ${DOCKER_REGISTRY:-cnx}/css.web.ui:${PLATFORM:-linux}-${TAG:-latest} 
-   container_name: css.web.ui
-   build:
-     context: .
-     dockerfile: Apps/Css.Web.UI/Dockerfile
+    image: ${DOCKER_REGISTRY:-cnx}/css.web.ui:${PLATFORM:-linux}-${TAG:-latest} 
+    container_name: css.web.ui
+    build:
+      context: .
+      dockerfile: Apps/Css.Web.UI/Dockerfile
 
   css.api.gateway:
     image: ${DOCKER_REGISTRY:-cnx}/css.api.gateway:${PLATFORM:-linux}-${TAG:-latest}

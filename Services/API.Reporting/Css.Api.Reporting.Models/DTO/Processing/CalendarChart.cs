@@ -13,6 +13,7 @@ namespace Css.Api.Reporting.Models.DTO.Processing
         public string ActivityName { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
+        public string Timezone { get; set; }
         public string TimezoneOffset { get; set; }
     }
 }

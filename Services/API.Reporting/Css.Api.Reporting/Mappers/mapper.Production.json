@@ -1,0 +1,62 @@
+{
+  "Mappers": {
+    "Dispatchers": [
+      {
+        "Key": "EStart",
+        "TargetDataOption": "CSSFTP"
+      }
+    ],
+    "Activities": [
+      {
+        "Key": "UDW-Import",
+        "Source": "UDWImp",
+        "SourceDataOption": "CSSFTP",
+        "Target": "UDWImpTar",
+        "TargetDataOption": "CSSMongo"
+      },
+      {
+        "Key": "EStart-Export",
+        "Source": "EStartExp",
+        "SourceDataOption": "CSSMongo",
+        "Target": "EStartExpTar",
+        "TargetDataOption": "CSSFTP"
+      },
+      {
+        "Key": "EStart-Import",
+        "Source": "EStartImp",
+        "SourceDataOption": "CSSFTP",
+        "Target": "EStartImpTar",
+        "TargetDataOption": "CSSMongo"
+      },
+      {
+        "Key": "CNX1-Import",
+        "Target": "CNX1ImpTar",
+        "TargetDataOption": "CSSMongo"
+      },
+      {
+        "Key": "CNX1-Export",
+        "Source": "CNX1Exp",
+        "SourceDataOption": "CSSMongo"
+      }
+    ],
+    "DataOptions": [
+      {
+        "Key": "CSSMongo",
+        "Type": "MongoDB",
+        "Options": {
+          "ConnectionString": "",
+          "DatabaseName": ""
+        }
+      },
+      {
+        "Key": "CSSFTP",
+        "Type": "FTP",
+        "Options": {
+          "FTPServer": "",
+          "FTPInbox": "/ftp/{0}/Inbox",
+          "FTPOutbox": "/ftp/{0}/Outbox"
+        }
+      }
+    ]
+  }
+}

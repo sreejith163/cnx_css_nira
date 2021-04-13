@@ -7,6 +7,7 @@ namespace Css.Api.Reporting.Models.DTO.Processing
     public class ActivitySchedule
     {
         public string ScheduleDate { get; set; }
+        public string Timezone { get; set; }
         public List<ActivityScheduleDetail> ScheduleDetail { get; set; }
 
         public ActivitySchedule()

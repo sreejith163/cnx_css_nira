@@ -68,6 +68,7 @@ namespace Css.Api.Reporting.Business.Extensions
             services.AddScoped<IMapperService, MapperService>();
             services.AddScoped<IFTPService, FTPService>();
             services.AddScoped<IScheduleService, ScheduleService>();
+            services.AddScoped<IDispatchService, DispatchService>();
             services.AddMongoConfiguration();
             return services;
         }
@@ -112,6 +113,7 @@ namespace Css.Api.Reporting.Business.Extensions
         private static IServiceCollection AddStrategies(this IServiceCollection services)
         {
             services.AddScoped<IActivityStrategy, ActivityStrategy>();
+            services.AddScoped<IDispatchStrategy, DispatchStrategy>();
             return services;
         }
 

@@ -30,7 +30,7 @@ namespace Css.Api.Job.Extensions
             var options = provider.GetService<IOptions<Jobs>>();
 
             services
-                .AddJobFramework()
+                .AddJobFramework(configuration)
                 .ConfigureCronJobs(options.Value.Cron);
 
             return services;
@@ -44,28 +44,34 @@ namespace Css.Api.Job.Extensions
         /// <returns></returns>
         private static IServiceCollection ConfigureCronJobs(this IServiceCollection services, List<CronJob> cronJobs)
         {
-            //services.AddCronJob<UDWImportJob>(c =>
-            //{
-            //    c.TimeZoneInfo = GetTimeZoneInfo("UDWImport", cronJobs);
-            //    c.CronExpression = GetCronExpression("UDWImport", cronJobs);
-            //});
+            services.AddCronJob<UDWImportJob>(c =>
+            {
+                c.TimeZoneInfo = GetTimeZoneInfo("UDWImport", cronJobs);
+                c.CronExpression = GetCronExpression("UDWImport", cronJobs);
+            });
 
-            //services.AddCronJob<EStartImportJob>(c =>
-            //{
-            //    c.TimeZoneInfo = GetTimeZoneInfo("EStartImport", cronJobs);
-            //    c.CronExpression = GetCronExpression("EStartImport", cronJobs);
-            //});
+            services.AddCronJob<EStartImportJob>(c =>
+            {
+                c.TimeZoneInfo = GetTimeZoneInfo("EStartImport", cronJobs);
+                c.CronExpression = GetCronExpression("EStartImport", cronJobs);
+            });
 
-            //services.AddCronJob<EStartExportJob>(c =>
-            //{
-            //    c.TimeZoneInfo = GetTimeZoneInfo("EStartExport", cronJobs);
-            //    c.CronExpression = GetCronExpression("EStartExport", cronJobs);
-            //});
+            services.AddCronJob<EStartExportJob>(c =>
+            {
+                c.TimeZoneInfo = GetTimeZoneInfo("EStartExport", cronJobs);
+                c.CronExpression = GetCronExpression("EStartExport", cronJobs);
+            });
 
             services.AddCronJob<EStartExportIntraDayJob>(c =>
             {
                 c.TimeZoneInfo = GetTimeZoneInfo("EStartExportIntraDay", cronJobs);
                 c.CronExpression = GetCronExpression("EStartExportIntraDay", cronJobs);
+            });
+
+            services.AddCronJob<EStartEmpExportJob>(c =>
+            {
+                c.TimeZoneInfo = GetTimeZoneInfo("EStartEmpExport", cronJobs);
+                c.CronExpression = GetCronExpression("EStartEmpExport", cronJobs);
             });
 
             return services;

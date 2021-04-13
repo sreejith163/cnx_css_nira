@@ -353,9 +353,9 @@ namespace Css.Api.Scheduling.Repository
             var document = FindByIdAsync(query).Result;
             if (document != null)
             {
-                var scheduleRange = document.Ranges.FirstOrDefault(x => x.Status == SchedulingStatus.Pending_Schedule &&
+                var scheduleRange = document.Ranges.Where(x => x.Status == SchedulingStatus.Pending_Schedule &&
                                                                         x.DateFrom == agentScheduleRange.DateFrom &&
-                                                                        x.DateTo == agentScheduleRange.DateTo);
+                                                                        x.DateTo == agentScheduleRange.DateTo).FirstOrDefault();
 
                 if (scheduleRange != null)
                 {
@@ -451,11 +451,15 @@ namespace Css.Api.Scheduling.Repository
             UpdateOneAsync(query, update);
         }
 
-        public void DeleteAgentScheduleRangeImport(int employeeId, int agentSchedulingGroupId, DateRange dateRange)
+        public void DeleteAgentScheduleRangeImport(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange)
         {
+            //var query =
+            //    Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeId) &
+            //    Builders<AgentSchedule>.Filter.Eq(i => i.ActiveAgentSchedulingGroupId, agentSchedulingGroupId) &
+            //    Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
             var query =
-                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeId) &
-                Builders<AgentSchedule>.Filter.Eq(i => i.ActiveAgentSchedulingGroupId, agentSchedulingGroupId) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
 
             dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
@@ -467,6 +471,9 @@ namespace Css.Api.Scheduling.Repository
                                                       builder.DateTo == dateRange.DateTo);
 
             UpdateOneAsync(query, update);
+
+            //return true;
+
         }
 
         /// <summary>
@@ -562,6 +569,34 @@ namespace Css.Api.Scheduling.Repository
             }
 
             return agentSchedules;
+        }
+       
+        /// <summary>
+        /// Gets the agent scheduling group export.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <returns></returns>
+        public async Task<List<AgentSchedule>> GetAgentSchedulingGroupExport(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        {
+            var query = Builders<AgentSchedule>.Filter.Eq(i => i.ActiveAgentSchedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId) &
+               Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            var result = FilterBy(query);
+            return await Task.FromResult(result.ToList());
+        }
+
+        /// <summary>
+        /// Gets the agent scheduling group export.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <returns></returns>
+        public async Task<List<AgentSchedule>> GetEmployeeScheduleExport(int employeeId)
+        {
+            var query = Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeId) &
+               Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            var result = FilterBy(query);
+            return await Task.FromResult(result.ToList());
         }
     }
 }

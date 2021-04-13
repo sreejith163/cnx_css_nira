@@ -29,47 +29,21 @@ namespace Css.Api.Core.Utilities.Extensions
             agentScheduleRanges.AddRange(ranges.Where(x => x.DateTo < date).ToList());
             ranges.RemoveAll(x => x.DateTo < date);
 
-            var range = ranges.FirstOrDefault(x => x.DateFrom < date & x.DateTo >= date);
+            var range = ranges.FirstOrDefault(x => x.DateFrom <= date & x.DateTo >= date);
 
             if (range != null)
             {
+                range.AgentSchedulingGroupId = newAgentSchedulingGroupId;
                 ranges.Remove(range);
-
-                var retainRange = new AgentScheduleRange
-                {
-                    AgentSchedulingGroupId = range.AgentSchedulingGroupId,
-                    CreatedBy = range.CreatedBy,
-                    CreatedDate = range.CreatedDate,
-                    DateFrom = range.DateFrom,
-                    DateTo = date.AddDays(-1),
-                    ModifiedBy = range.ModifiedBy,
-                    ModifiedDate = range.ModifiedDate,
-                    ScheduleCharts = range.ScheduleCharts,
-                    Status = range.Status
-                };
-
-                var newRange = new AgentScheduleRange
-                {
-                    AgentSchedulingGroupId = newAgentSchedulingGroupId,
-                    CreatedBy = range.CreatedBy,
-                    CreatedDate = range.CreatedDate,
-                    DateFrom = date,
-                    DateTo = range.DateTo,
-                    ModifiedBy = range.ModifiedBy,
-                    ModifiedDate = range.ModifiedDate,
-                    ScheduleCharts = range.ScheduleCharts,
-                    Status = range.Status
-                };
-
-                agentScheduleRanges.Add(retainRange);
-                agentScheduleRanges.Add(newRange);
+                agentScheduleRanges.Add(range);
             }
 
-            agentScheduleRanges.AddRange(ranges.Where(x => x.DateFrom >= date).Select(x =>
+            agentScheduleRanges.AddRange(ranges.Select(x =>
             {
                 x.AgentSchedulingGroupId = newAgentSchedulingGroupId;
                 return x;
             }).ToList());
+            ranges.RemoveAll(x => true);
 
             return agentScheduleRanges;
         }
@@ -102,8 +76,8 @@ namespace Css.Api.Core.Utilities.Extensions
                             EmployeeId = employeeId,
                             ActivityId = x.SchedulingCodeId,
                             CurrentAgentSchedulingGroupId = range.AgentSchedulingGroupId,
-                            Date = date,
-                            ScheduledDate = date,
+                            Date = new DateTime(date.Year, date.Month, date.Day,0,0,0,DateTimeKind.Utc),
+                            ScheduledDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc),
                             FromTime = ConvertTo24HrClock(x.StartTime),
                             ToTime = ConvertTo24HrClock(x.EndTime)
                         };

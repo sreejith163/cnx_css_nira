@@ -28,6 +28,7 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <returns></returns>
         Task<AgentSchedulingGroup> GetAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
 
+       
         /// <summary>Gets the agent scheduling groups of skill tag.</summary>
         /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
         /// <returns>

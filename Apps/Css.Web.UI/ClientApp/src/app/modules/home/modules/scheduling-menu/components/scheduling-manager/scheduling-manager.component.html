@@ -1,37 +1,74 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-12 col-md-12">
-      <h2 id="page_title">{{ 'Scheduling_manager' | translate }}</h2> <!-- NO TRANSLATION -->
+      <h2 id="page_title" class="pl-0" style="padding-left: 0!important;">{{ 'Scheduling_manager' | translate }}</h2> <!-- NO TRANSLATION -->
     </div>
   </div>
   <div class="row">
     <div class="col-sm-6">
-      <ol class="breadcrumb float-sm-left">
+      <ol class="breadcrumb float-sm-left pl-0">
         <li class="breadcrumb-item"><a>{{ 'Scheduling_menu' | translate }}</a></li>
-        <li class="breadcrumb-item active"><b>{{ 'Scheduling_manager_list' | translate }}</b> </li><!-- NO TRANSLATION -->
+        <li class="breadcrumb-item active"><b>{{ 'Scheduling_manager_list' | translate }}</b> </li>
+        <!-- NO TRANSLATION -->
       </ol>
     </div>
   </div>
 
-  <app-scheduling-filter [agentScheduleType]="1" (startDateSelected)="onSelectStartDate($event)" (keywordToSearch)="search($event)"
-  (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)"></app-scheduling-filter>
+  <app-scheduling-filter [agentScheduleType]="1" (startDateSelected)="onSelectStartDate($event)"
+    (keywordToSearch)="search($event)" (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
+  </app-scheduling-filter>
 
-  <div class="card card-primary card-outline card-outline-tabs">
-    <div class="card-header p-0 border-bottom-0">
-      <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-        
-        <li *permission="{rolesPermitted: [1,2,3]}" class="pull-right marign-l-auto margin-5">
-          <!-- <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
-            (click)="exportToExcel()"> -->
-            <button *ngIf="agentSchedulingGroupId > 0" [ngbTooltip]="'Export csv'" (click)="exportToExcel()" class="btn btn-primary d  mr-2"><i class="fa fa-download"></i></button>            
-          <!-- <img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}"
-           class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
-            (click)="openImportSchedule()"> -->
-        </li>
-      </ul>
+  <div class="card card-primary card-outline card-outline-tabs mt-3">
+    <div class="card-header p-2 border-bottom-0">
+      <div class="row">
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="input-group align-items-center">
+                <div class="input-group-prepend pr-3">
+                  <label for="inputEmail3" class=" pb-0 pt-0 mb-0">{{ 'Time Interval' | translate }}</label>
+                </div>
+                <select class="form-control" [(ngModel)]="timeIntervals"
+                  (change)="changeTimeInterval($event.target.value)">
+                  <ng-container *ngFor="let interval of schedulingIntervals; let i = index">
+                    <option [value]="interval.id">{{ interval.value }}</option>
+                  </ng-container>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="input-group align-items-center">
+                <div class="input-group-prepend pr-3">
+                  <label for="inputEmail3" class=" pb-0 pt-0 mb-0">{{ 'Start Time Sorting' | translate }}:</label>
+                </div>
+                <select class="form-control" (change)="onSortTypeChange($event.target.value)"
+                  [(ngModel)]="sortTypeValue">
+                  <option *ngFor="let item of sortingType" [value]="item">{{sortType[item]}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <ul class="nav nav-tabs border-bottom-0" id="custom-tabs-three-tab" role="tablist">
+
+            <li *permission="{rolesPermitted: [1,2,3]}" class="pull-right marign-l-auto ">
+              <!-- <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
+                (click)="exportToExcel()"> -->
+              <button *ngIf="agentSchedulingGroupId > 0" [ngbTooltip]="'Export csv'" (click)="exportToExcel()"
+                class="btn btn-primary btn-sm  mr-2"><i class="fa fa-download"></i></button>
+              <!-- <img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}"
+               class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
+                (click)="openImportSchedule()"> -->
+            </li>
+          </ul>
+        </div>
+      </div>
+
     </div>
   </div>
-<!-- <div class="row col-md-12 bg-color m-t-6">
+  <!-- <div class="row col-md-12 bg-color m-t-6">
   <div class="col-md-8 row">
     <div class="col-md-1 col-sm-1">
       <div class="test">{{ unifiedToNative(iconCode) }}</div>
@@ -57,223 +94,258 @@
     </span>
   </div>
 </div> -->
-<div class="col-md-12 m-t-20">
-  <div class="row">
-    <div class="col-md-4 col-sm-4">
-      <p class="float-left">
-        {{ 'Time Interval' | translate }}:
-      </p>
-      <select class="form-control width-sm" [(ngModel)]="timeIntervals"
-        (change)="changeTimeInterval($event.target.value)">
-        <ng-container *ngFor="let interval of schedulingIntervals; let i = index">
-          <option [value]="interval.id">{{ interval.value }}</option>
+  <div class="col-md-12 m-t-20" #stickyMenu [class.sticky]="sticky">
+    <div class="row">
+      <div class="drag-div col-md-12 col-sm-12 align" cdkDropList (cdkDropListDropped)="dragged($event)">
+        <span>
+          <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true" (click)="toBeginning()"
+            [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
+          <i class="fa fa-caret-left arrow-icon" aria-hidden="true" (click)="previous()"
+            [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
+        </span>
+        <ng-container
+          *ngFor="let code of schedulingCodes | horizontalScroll : startIcon: endIcon: iconCount; let i= index;">
+          <i id="{{ code.icon.value }}" class="icon-style icon" [ngClass]="{'icon-active': icon === code.icon.value}"
+            (click)="onIconClick($event); t.close()" (mousedown)="t.close()"
+            [ngClass]="{ 'icon-active': (selectedIconId == code.icon.value)}" cdkDrag>
+            <span ngbTooltip="{{ code.description }}" #t="ngbTooltip">
+              {{ unifiedToNative(code.icon.value) }}</span></i>
         </ng-container>
-      </select>
-    </div>
-    <div class="col-md-4 col-sm-4">
-      <p class="float-left">
-        {{ 'Start Time Sorting' | translate }}:
-      </p>
-      <select class="form-control width-43p m-b-10" (change)="onSortTypeChange($event.target.value)"
-        [(ngModel)]="sortTypeValue">
-        <option *ngFor="let item of sortingType" [value]="item">{{sortType[item]}}</option>
-      </select>
+        <span>
+          <i class="fa fa-caret-right arrow-icon" aria-hidden="true" (click)="next()"
+            [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
+          <i class="fa fa-angle-double-right arrow-icon" aria-hidden="true" (click)="toEnd()"
+            [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
+        </span>
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12 col-sm-12 align" cdkDropList (cdkDropListDropped)="dragged($event)">
-      <span>
-        <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true" (click)="toBeginning()"
-          [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-        <i class="fa fa-caret-left arrow-icon" aria-hidden="true" (click)="previous()"
-          [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-      </span>
-      <ng-container
-        *ngFor="let code of schedulingCodes | horizontalScroll : startIcon: endIcon: iconCount; let i= index;">
-        <i id="{{ code.icon.value }}" class="icon-style icon" [ngClass]="{'icon-active': icon === code.icon.value}"
-          (click)="onIconClick($event); t.close()" (mousedown)="t.close()"
-          [ngClass]="{ 'icon-active': (selectedIconId == code.icon.value)}" cdkDrag>
-          <span ngbTooltip="{{ code.description }}" #t="ngbTooltip">
-            {{ unifiedToNative(code.icon.value) }}</span></i>
-      </ng-container>
-      <span>
-        <i class="fa fa-caret-right arrow-icon" aria-hidden="true" (click)="next()"
-          [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-        <i class="fa fa-angle-double-right arrow-icon" aria-hidden="true" (click)="toEnd()"
-          [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-      </span>
-    </div>
-  </div>
-</div>
-<br>
-<div class="row table-responsive" [style.max-width]="getGridMaxWidth()">
-
-  <div class="col-md-12 col-sm-12 scrollable-table">
-    <table class="jsgrid-table table" id="schedulingManagerTable">
-      <ngx-spinner [name]="spinner"></ngx-spinner>
-      <thead>
-        <tr style="background-color: transparent;">
-          <th colspan="2"></th>
-          <ng-container *ngFor="let openTime of openTimes;">
-            <th class="text-xs" style="background-color: #dfdfeb;">{{ openTime.dateHeader | date: 'MMM d'}}</th>               
-          </ng-container>               
-        </tr>
-        <tr class="jsgrid-header-row">
-          <th style="vertical-align: middle;" class="sortable-field" (click)="sort('employeeId', sortBy)">
-            {{ 'Employee_id' | translate }}
-            <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
-            <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-              [class.fa-sort-up]="sortBy === 'asc'">
-            </i>
-          </th>
-          <th style="vertical-align: middle;" class="sortable-field" (click)="sort('lastName', sortBy)">
-            {{ 'Name' | translate }}
-            <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
-            <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
-              [class.fa-sort-up]="sortBy === 'asc'">
-            </i>
-          </th>
-          <ng-container *ngFor="let openTime of openTimes;">
-            <ng-container *ngIf="isMainMinute(openTime.time); else subMinutes">
-              <th [ngClass]="openTime.time.split(' ')[1] === 'am' ? 'morning' : 'night'"
-                class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                {{ openTime.time.split(':')[0] === '00' ? '12' : openTime.time.split(':')[0] }}
-              </th>
-            </ng-container>
-            <ng-template #subMinutes>
-              <th [ngClass]="openTime.time.split(' ')[1] === 'am' ? 'morning' : 'night'"
-                class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                <sup>{{ openTime.time.split(':')[1].split(' ')[0] }}</sup>
-              </th>
-            </ng-template>
-          </ng-container>
-          <!-- <th style="padding: 0;">
-            <table style="padding: 0;">
-              <thead>
-                <tr style="background-color: #dfdfeb;">
-                  <ng-container *ngFor="let dateHeader of dateHeaders;">
-                    <th [attr.colspan]="headerColSpan">{{ dateHeader.date | date: 'longDate'}}</th>               
-                  </ng-container>               
-                </tr>
-                <tr>
-                  <ng-container *ngFor="let openTime of openTimes;">
-                    <ng-container *ngIf="isMainMinute(openTime.time); else subMinutes">
-                      <th colspan="1%" [ngClass]="openTime.time.split(' ')[1] === 'am' ? 'morning' : 'night'"
-                        class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                        {{ openTime.time.split(':')[0] === '00' ? '12' : openTime.time.split(':')[0] }}
-                      </th>
-                    </ng-container>
-                    <ng-template #subMinutes>
-                      <th colspan="1%" [ngClass]="openTime.time.split(' ')[1] === 'am' ? 'morning' : 'night'"
-                        class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                        <sup>{{ openTime.time.split(':')[1].split(' ')[0] }}</sup>
-                      </th>
-                    </ng-template>
-                  </ng-container>
-                </tr>
-              </thead>
-            </table>
-          </th> -->
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngIf="managerCharts?.length === 0" class="valid-record">
-          <td colspan="25">
-            {{ 'No match records found' | translate }}</td>
-        </tr>
-        <!-- <tr class="jsgrid-row user-select-none" *ngFor="let el of managerCharts; let i = index"
-          [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.employeeId, i)">
-          <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
-          <td class="jsgrid-cell-empName">
-            <span ngbTooltip="{{ el.lastName + ' ' + el.firstName }}">
-              {{el.lastName + ' ' + el.firstName | truncate: { sliceStart: 0, sliceEnd:
-              characterSplice, append: '...' } }}
-            </span>
-          </td>
-          <td id="grid_manager_col_{{i+1}}_{{j}}" class="jsgrid-cell" attr.date="{{openTime.date}}" attr.time="{{ openTime.time.split(' ')[0] }}"
-            attr.employeeId="{{el.employeeId}}" attr.meridiem="{{ openTime.time.split(':')[1].split(' ')[1] }}"
-            *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
-            (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event,j,i+1)"
-            [ngClass]="openTime.time.split(' ')[1] === 'am' ? 'morning' : ''">
-            <ng-container *ngIf="getIconFromSelectedAgent(el.employeeId,openTime)?.length">
-              <span ngbTooltip="{{ getAgentIconDescription(el.employeeId,openTime) }}">
-                <i class="font-style-normal">{{ getIconFromSelectedAgent(el.employeeId,openTime) }}</i>
-              
-              </span>
-            </ng-container>
-          </td>
-        </tr> -->
-        <ng-container *ngIf="(managerGridDisplay$ | async)?.length > 0">
-          <tr class="jsgrid-row user-select-none" *ngFor="let el of (managerGridDisplay$ | async); let i = index"
-          [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.employeeId, i)">
-            <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
-            <td class="jsgrid-cell-empName">
-              <span ngbTooltip="{{ el.lastName + ' ' + el.firstName }}">
-                {{el.lastName + ' ' + el.firstName | truncate: { sliceStart: 0, sliceEnd:
-                characterSplice, append: '...' } }}
-              </span>
-            </td>
-            <td *ngFor="let openTime of openTimes;let j = index" id="grid_manager_col_{{i+1}}_{{j}}" class="jsgrid-cell" attr.date="{{openTime?.date}}" attr.startDateTime="{{ openTime?.startDateTime }}"
-            attr.employeeId="{{el.employeeId}}" attr.endDateTime="{{ openTime?.endDateTime }}"
-            (mouseup)="onMouseUp($event)" (contextmenu)="onRightClick($event)"
-            (mouseover)="onMouseOver($event)" (mousedown)="onMouseDown($event,j,i+1)">
-              <span ngbTooltip="{{ (el.employeeId | getIconForGrid: managerGridDisplay$: schedulingCodes: openTime.date: timeStampUpdate)?.description }}">
-                <i class="font-style-normal">{{ (el.employeeId | getIconForGrid: managerGridDisplay$: schedulingCodes: openTime.date: timeStampUpdate)?.icon }}</i>
-              </span>
-            </td>         
+  <br>
+  <div class="row table-container" [style.max-width]="getGridMaxWidth()">
+    <!-- <div class="col-sm-3 col-md-3 p-0" *ngIf="(managerGridDisplay$ | async)?.length > 0">
+      <table class="jsgrid-table table">
+        <thead #stickyMenu1 [class.sticky1] = "sticky1">
+          <tr class="jsgrid-row">
+            <th colspan="2"></th>
           </tr>
-        </ng-container>        
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="row padding-10">
-  <div class="col-lg-12">
-  <div class="col-md-12 padding-12 row">
-    <!-- <div class="col-md-2 m-b-5">
-      <button class="btn btn-success" id="btn_copy_schedule"
-      [disabled]="!agentSchedulingGroupId" (click)="openCopySchedule(selectedRow)">
-        <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
-      </button>
+          <tr class="jsgrid-row" style="background-color: transparent;">
+            <th style="vertical-align: middle;" class="sortable-field" (click)="sort('employeeId', sortBy)">
+              {{ 'Employee_id' | translate }}
+              <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
+              <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                [class.fa-sort-up]="sortBy === 'asc'">
+              </i>
+            </th>
+            <th style="vertical-align: middle;" class="sortable-field" (click)="sort('lastName', sortBy)">
+              {{ 'Name' | translate }}
+              <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
+              <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                [class.fa-sort-up]="sortBy === 'asc'">
+              </i>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="(managerGridDisplay$ | async)?.length > 0">
+            <tr class="jsgrid-row user-select-none" *ngFor="let el of (managerGridDisplay$ | async); let i = index"
+              [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.employeeId, i)">
+              <td class="jsgrid-cell-emp">{{el.employeeId}}</td>
+              <td class="jsgrid-cell-empName">
+                <span ngbTooltip="{{ el.lastName + ' ' + el.firstName }}">
+                  {{el.lastName + ' ' + el.firstName | truncate: { sliceStart: 0, sliceEnd:
+                  characterSplice, append: '...' } }}
+                </span>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
     </div> -->
-    <div class="col-md-2 m-b-3">
-      <button class="btn btn-primary btn-activity" id="btn_activity_logs" *ngIf="canShowActivityLog()"
-      [disabled]="!agentSchedulingGroupId" (click)="openActivityLogs(selectedRow)">
-        {{ 'Activity Logs' | translate }}
-      </button>
+    <div class="sched-manager-scrollable p-0"
+      [ngClass]="[(managerGridDisplay$ | async)?.length > 0 ? 'col-sm-12 col-md-12' : 'col-sm-12 col-md-12']">
+      <table (contextmenu)="disableRightClick($event)" class="jsgrid-table table" id="schedulingManagerTable">
+        <ngx-spinner [name]="scheduleSpinner"></ngx-spinner>
+        <thead>
+          <tr style="background-color: transparent;">
+            <th class="employee_id_header" style="background-color: #dfdfeb;"></th>
+            <th class="name_header" style="background-color: #dfdfeb;"></th>
+            <ng-container *ngFor="let openTime of openTimes;">
+              <th class="text-xs jsgrid-header-cell date_header" style="background-color: #dfdfeb;">{{
+                openTime.dateHeader | date:
+                'MMM d'}}</th>
+            </ng-container>
+          </tr>
+          <tr class="jsgrid-header-row second_row">
+            <th style="vertical-align: middle;" class="sortable-field employee_id_header"
+              (click)="sort('ssn', sortBy)">
+              {{ 'Employee_id' | translate }}
+              <i *ngIf="orderBy !== 'ssn'" class="fa fa-sort"></i>
+              <i id="sortIcon" *ngIf="orderBy === 'ssn'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                [class.fa-sort-up]="sortBy === 'asc'">
+              </i>
+            </th>
+            <th style="vertical-align: middle;" class="sortable-field name_header" (click)="sort('lastName', sortBy)">
+              {{ 'Name' | translate }}
+              <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
+              <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                [class.fa-sort-up]="sortBy === 'asc'">
+              </i>
+            </th>
+            <ng-container *ngFor="let openTime of openTimes;">
+              <ng-container *ngIf="isMainMinute(openTime.time); else subMinutes">
+                <th [ngClass]="openTime.time.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                  class="jsgrid-header-cell jsgrid-header-sortable user-select-none whole">
+                  {{ openTime.time.split(':')[0] === '00' ? '12' : openTime.time.split(':')[0] }}
+                </th>
+              </ng-container>
+              <ng-template #subMinutes>
+                <th [ngClass]="openTime.time.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                  class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                  <sup>{{ openTime.time.split(':')[1].split(' ')[0] }}</sup>
+                </th>
+              </ng-template>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody class="schedule_table_body" style="z-index: 0!important;">
+
+
+          <!-- <td>
+            <td colspan="25">
+            </td>
+          </td> -->
+          <ng-container *ngIf="(managerGridDisplay$ | async)?.length > 0">
+            <tr class="jsgrid-row user-select-none" *ngFor="let el of (managerGridDisplay$ | async); let i = index"
+              [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.employeeId, i)">
+              <td class="jsgrid-cell-emp" style="z-index: 0;">{{el.employeeId}}</td>
+              <td class="jsgrid-cell-empName">
+                <span ngbTooltip="{{ el.lastName + ' ' + el.firstName }}" placement="left">
+                  <span class="name_wrapper">
+                    {{el.lastName + ' ' + el.firstName | truncate: { sliceStart: 0, sliceEnd:
+                    characterSplice, append: '...' } }}
+                  </span>
+
+                </span>
+                <!-- <a class="float-right" type="button" [ngbPopover]="popContent" [placement]="'auto'" triggers="manual"
+                  #hierarchyPopOver="ngbPopover" (click)="popOverAction(hierarchyPopOver)" container="body">
+                  <i class="fa fa-ellipsis-v "></i>
+                </a>
+                <ng-template let-hierarchy="hierarchy" #popContent>
+
+                  <button class="btn btn-sm btn-danger">Delete row</button>
+
+                </ng-template> -->
+              </td>
+              <!-- <ng-container *ngFor="let el of (managerGridDisplay$ | async); let i = index"> -->
+              <!-- <tr class="jsgrid-row user-select-none" *ngFor="let el of (managerGridDisplay$ | async); let i = index"
+                  [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.employeeId, i)"> -->
+
+
+              <td *ngFor="let openTime of openTimes;let j = index" id="grid_manager_col_{{i+1}}_{{j}}"
+                class="jsgrid-cell" attr.date="{{openTime?.date}}" attr.startDateTime="{{ openTime?.startDateTime }}"
+                attr.employeeId="{{el.employeeId}}" attr.endDateTime="{{ openTime?.endDateTime }}"
+                (mouseup)="onMouseUp($event)" (contextmenu)="onRightClick($event)" (mouseover)="onMouseOver($event)"
+                (mousedown)="onMouseDown($event,j,i+1)">
+                <span
+                  ngbTooltip="{{ (el.employeeId | getIconForGrid: managerGridDisplay$: schedulingCodes: openTime.date: timeStampUpdate)?.description }}">
+                  <i class="font-style-normal">{{ (el.employeeId | getIconForGrid: managerGridDisplay$: schedulingCodes:
+                    openTime.date: timeStampUpdate)?.icon }}<br></i>
+                </span>
+              </td>
+              <!-- </tr> -->
+              <!-- </ng-container> -->
+            </tr>
+          </ng-container>
+          <!-- <ng-container *ngIf="(managerGridDisplay$ | async)?.length > 0">
+            <tr class="jsgrid-row user-select-none" *ngFor="let el of (managerGridDisplay$ | async); let i = index"
+              [ngClass]="{'selected': isRowSelected(i)}" (click)="setAgent(el.employeeId, i)">
+
+
+              <td *ngFor="let openTime of openTimes;let j = index" id="grid_manager_col_{{i+1}}_{{j}}"
+                class="jsgrid-cell" attr.date="{{openTime?.date}}" attr.startDateTime="{{ openTime?.startDateTime }}"
+                attr.employeeId="{{el.employeeId}}" attr.endDateTime="{{ openTime?.endDateTime }}"
+                (mouseup)="onMouseUp($event)" (contextmenu)="onRightClick($event)" (mouseover)="onMouseOver($event)"
+                (mousedown)="onMouseDown($event,j,i+1)">
+                <span
+                  ngbTooltip="{{ (el.employeeId | getIconForGrid: managerGridDisplay$: schedulingCodes: openTime.date: timeStampUpdate)?.description }}">
+                  <i class="font-style-normal">{{ (el.employeeId | getIconForGrid: managerGridDisplay$: schedulingCodes:
+                    openTime.date: timeStampUpdate)?.icon }}<br></i>
+                </span>
+              </td>
+            </tr>
+          </ng-container> -->
+          <ng-container *ngIf="managerCharts?.length === 0" class="valid-record">
+        <tbody>
+          <td>
+            {{ 'No match records found' | translate }}
+          </td>
+        </tbody>
+        </ng-container>
+        </tbody>
+      </table>
     </div>
-    <div class="col-md-2 m-b-3"></div>
-    <div class="col-md-6 m-b-5"></div>
-    <div class="col-md-1  m-b-5">
-      <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save()"
-      [disabled]="!agentSchedulingGroupId" id="btn_save">
-        <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
-      </button>
+  </div>
+  <div class="row">
+    <div class="col-md-6 p-0 mt-3">
+
+
+      <div class="button-wrapper btn-container-left float-left">
+        <button class="btn btn-primary btn-activity btn-sm mt-0 mb-0" id="btn_activity_logs" *ngIf="canShowActivityLog()"
+          [disabled]="!agentSchedulingGroupId" (click)="openActivityLogs(selectedRow)">
+          <i class="fa fa-tasks"></i>&nbsp;
+          {{ 'Activity Logs' | translate }}
+        </button>
+        <button class="btn btn-primary btn-sm mt-0 mb-0" data-dismiss="modal" (click)="cancel()" id="btn_cancel"
+          [disabled]="!agentSchedulingGroupId">
+          <i class="fa fa-times"></i>&nbsp;{{ 'Cancel' | translate }}
+        </button>
+        <button class="btn btn-primary btn-sm mt-0 mb-0" data-dismiss="modal" (click)="save()"
+          [disabled]="!agentSchedulingGroupId" id="btn_save">
+          <i class="fa fa-save "></i>&nbsp;{{ 'Save' | translate }}
+        </button>
+      </div>
     </div>
-    <div class="col-md-1  m-b-5">
-      <button class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
-        id="btn_cancel" [disabled]="!agentSchedulingGroupId">
-        <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
-      </button>
-    </div>
+    <div class="col-md-6 d-flex justify-content-end mt-3">
+      <nav aria-label="Page navigation example">
+          <ul class="pagination p-0 float-right">
+            {{totalSchedulingRecord}}
+              <ngb-pagination class="p-r-5" [collectionSize]="totalScheduleMangerRecord" [rotate]="true" [maxSize]="10" 
+                  (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage"
+                  [boundaryLinks]="true"></ngb-pagination>
+              <select class="form-control" (change)="changePageSize($event.target.value)">
+                  <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+                      {{x.text | translate}}</option>
+              </select>
+          </ul>
+      </nav>
   </div>
 </div>
 
-<ng-container *ngIf="managerCharts?.length">
-  <!-- Agent Info -->
-  <div class="row">
-    <div class="col-12 col-md-12">
-      <h3>{{ 'Agent Info' | translate }}</h3>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12 col-md-12 d-flex">
-      <p>{{ 'Agent' | translate }}</p>:
-      <b><span>{{agentInfo?.employeeId}} {{agentInfo?.firstName}}, {{agentInfo?.lastName}}</span>
-      </b>
-    </div>
-  </div>
-  <!-- <div class="col-md-12 bg-color">
+
+    <ng-container *ngIf="managerCharts?.length">
+      <!-- Agent Info -->
+
+      <div class="col-12 col-md-12 p-0">
+        <h3>{{ 'Agent Info' | translate }}</h3>
+      </div>
+
+
+      <div class="col-lg-12 p-0">
+        <div class="callout callout-info py-1">
+          <div class="row">
+            <div class="col-lg-2">
+              <p><b>Employee ID</b> : {{agentInfo?.employeeId}}</p>
+            </div>
+            <div class="col-lg-5">
+              <p><b>Name</b> : {{agentInfo?.firstName}}, {{agentInfo?.lastName}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- <div class="col-md-12 bg-color">
     <div class="col-md-6  d-flex  row">
       <p *ngIf="openTimeAgentIcon" class="agent-info-lbl col-md-6 col-sm-6">
         {{unifiedToNative(openTimeAgentIcon?.codeValue)}} Open Time {{openTimeAgentIcon?.startDateTime}} -
@@ -282,66 +354,66 @@
         Lunch {{lunchAgentIcon?.startDateTime}} - {{lunchAgentIcon?.endDateTime}}</p>
     </div>
   </div> -->
-  <div class="col-md-12 mt-2 table-responsive">
-    <div class="scrollable-table">
-      <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
-        <thead>
-          <tr>
-            <th class="sortable-field">
-              {{ 'Schedule Type' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Supervisor' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Employee ID' | translate }}
-            <th class="sortable-field">
-              {{ 'Hire_date' | translate }}
-            <th class="sortable-field">
-              {{ 'Production Date' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Term Date' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'LOA Date' | translate }}
-            </th>
+      <div class="col-md-12 mt-2 p-0 table-responsive agent_details_table">
+        <div class="scrollable-table">
+          <table id="tableSortExample " class="table table-bordered table-striped table-fixed">
+            <thead>
+              <tr>
+                <th class="sortable-field">
+                  {{ 'Schedule Type' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Supervisor' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Employee ID' | translate }}
+                <th class="sortable-field" style="width: 4%;">
+                  {{ 'Hire_date' | translate }}
+                <th class="sortable-field" style="width: 6%;">
+                  {{ 'Production Date' | translate }}
+                </th>
+                <th class="sortable-field" style="width: 4%;">
+                  {{ 'Term Date' | translate }}
+                </th>
+                <th class="sortable-field" style="width: 4%;">
+                  {{ 'LOA Date' | translate }}
+                </th>
 
-            <th class="sortable-field">
-              {{ 'Primary CT/Skill' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Tour Band' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Rank' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Part Time/Full Time' | translate }}
-            </th>
-            <th class="sortable-field">
-              {{ 'Operations Manager' | translate }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="table-row">
-            <td>Accommodated</td>
-            <td>{{agentInfo?.supervisorName}}</td>
-            <td>{{agentInfo?.supervisorId}}</td>
-            <td>{{getAgentHireDate()}}</td>
-            <td>2020-12-14</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+                <th class="sortable-field">
+                  {{ 'Primary CT/Skill' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Tour Band' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Rank' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Part Time/Full Time' | translate }}
+                </th>
+                <th class="sortable-field">
+                  {{ 'Operations Manager' | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-row">
+                <td>Accommodated</td>
+                <td>{{agentInfo?.supervisorName}}</td>
+                <td>{{agentInfo?.supervisorId}}</td>
+                <td>{{getAgentHireDate()}}</td>
+                <td>2020-12-14</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
   </div>
-</ng-container>
-</div>

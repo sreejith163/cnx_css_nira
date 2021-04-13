@@ -42,7 +42,7 @@ namespace Css.Api.Scheduling.Business.Interfaces
 
         /// <param name="importForecastDetails">forecast import details</param>
         /// <returns></returns>
-        Task<CSSResponse> ImportForecastData(ImportForecastDetails importForecastDetails);
+        Task<CSSResponse> ImportForecastData(ImportForecastMain importForecastDetails, int skillGroupId);
 
         /// <summary>
         /// Updates the Forecast Data

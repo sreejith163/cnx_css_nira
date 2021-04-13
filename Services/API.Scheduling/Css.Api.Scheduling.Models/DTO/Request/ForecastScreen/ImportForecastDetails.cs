@@ -6,9 +6,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ForecastScreen
 {
     public class ImportForecastDetails
     {
-        //public List<ForecastScreenRequest> ForecastScreens { get; set; }
-        public int SkillGroupId { get; set; }
+ 
 
-        public List<ImportForecastScreenDataDetails> ForecastScreenDataDetails { get; set; }
+        public string Date { get; set; }
+
+
+        public List<ForecastDataAtrribute> ForecastData { get; set; }
     }
 }

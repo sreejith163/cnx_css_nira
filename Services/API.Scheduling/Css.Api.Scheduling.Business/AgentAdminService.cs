@@ -434,9 +434,16 @@ namespace Css.Api.Scheduling.Business
                 List<AgentScheduleRange> updatedRanges = null;
 
                 AgentSchedule agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
-                if (agentSchedule != null && agentSchedule.Ranges != null && agentSchedule.Ranges.Count > 0)
+                if (agentSchedule != null)
                 {
-                    updatedRanges = ScheduleHelper.GenerateAgentScheduleRanges(movingDate, agentAdminRequest.AgentSchedulingGroupId, agentSchedule.Ranges);
+                    if (agentSchedule.Ranges != null && agentSchedule.Ranges.Count > 0)
+                    {
+                        updatedRanges = ScheduleHelper.GenerateAgentScheduleRanges(movingDate, agentAdminRequest.AgentSchedulingGroupId, agentSchedule.Ranges);
+                    }
+                    else
+                    {
+                        updatedRanges = new List<AgentScheduleRange>();
+                    }
 
                     var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
                     {
@@ -449,8 +456,8 @@ namespace Css.Api.Scheduling.Business
                     };
 
                     _agentScheduleRepository.UpdateAgentScheduleWithRanges(employeeIdDetails, updateAgentScheduleEmployeeDetails);
-                }
 
+                }
                 var updateAgentScheduleManagerEmployeeDetails = new UpdateAgentScheduleManagerEmployeeDetails
                 {
                     EmployeeId = agentAdminDetails.EmployeeId,
@@ -811,9 +818,16 @@ namespace Css.Api.Scheduling.Business
                 };
 
                 AgentSchedule agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
-                if (agentSchedule != null && agentSchedule.Ranges != null && agentSchedule.Ranges.Count > 0)
+                if (agentSchedule != null)
                 {
-                    updatedRanges = ScheduleHelper.GenerateAgentScheduleRanges(movingDate, moveAgentAdminsDetails.DestinationSchedulingGroupId, agentSchedule.Ranges);
+                    if(agentSchedule.Ranges != null && agentSchedule.Ranges.Count > 0)
+                    {
+                        updatedRanges = ScheduleHelper.GenerateAgentScheduleRanges(movingDate, moveAgentAdminsDetails.DestinationSchedulingGroupId, agentSchedule.Ranges);
+                    }
+                    else
+                    {
+                        updatedRanges = new List<AgentScheduleRange>();
+                    }
 
                     var updateAgentScheduleEmployeeDetails = new UpdateAgentScheduleEmployeeDetails
                     {
@@ -890,7 +904,7 @@ namespace Css.Api.Scheduling.Business
             };
             Timezone timezone = await _timezoneRepository.GetTimeZone(timezoneIdDetails);
 
-            DateTime currentTime = DateTime.UtcNow.Add(timezone.UtcOffset);
+            DateTime currentTime = DateTime.UtcNow.Add(TimezoneHelper.GetOffset(timezone.Abbreviation).Value);
             DateTime currentDateOfTimezone = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, 0, 0, 0, DateTimeKind.Utc);
             return currentDateOfTimezone;
         }
@@ -924,7 +938,7 @@ namespace Css.Api.Scheduling.Business
             };
             Timezone timezone = await _timezoneRepository.GetTimeZone(timezoneIdDetails);
 
-            DateTime currentTime = DateTime.UtcNow.Add(timezone.UtcOffset);
+            DateTime currentTime = DateTime.UtcNow.Add(TimezoneHelper.GetOffset(timezone.Abbreviation).Value);
             return currentTime;
         }
 

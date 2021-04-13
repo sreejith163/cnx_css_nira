@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs';
 import { AgentAdminDetails } from '../../../models/agent-admin-details.model';
@@ -9,7 +9,7 @@ import { MoveAgentsService } from '../../../services/move-agents.service';
   templateUrl: './move-agents-list.component.html',
   styleUrls: ['./move-agents-list.component.scss']
 })
-export class MoveAgentsListComponent implements OnInit {
+export class MoveAgentsListComponent implements OnInit, OnDestroy {
 
   @ViewChild('agentListTable', {static: false}) agentListTable: ElementRef;
   @ViewChild('agentListTableContainer', {static: false}) agentListTableContainer: ElementRef;
@@ -28,6 +28,9 @@ export class MoveAgentsListComponent implements OnInit {
 
   isSelected: boolean[] = [];
   selectedAgentAdminIds: string[] = [];
+
+  orderBy = 'ssn';
+  sortBy = 'desc';
 
   constructor(private moveAgentAdminService: MoveAgentsService, private spinnerService: NgxSpinnerService) { 
     this.subscribeToMoveAgentsUpdate();
@@ -53,6 +56,13 @@ export class MoveAgentsListComponent implements OnInit {
   }
 
   search(){
+    this.loadAgentAdminList();
+  }
+
+  sort(columnName: string, sortBy: string) {
+    this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
+    this.orderBy = columnName;
+
     this.loadAgentAdminList();
   }
 
@@ -111,8 +121,8 @@ export class MoveAgentsListComponent implements OnInit {
       this.moveAgentAdminService.totalAgentAdminsSubjectLeft$.next(null);
       
       var searchKeyword = this.searchKeyword ?? '';
-
-      this.moveAgentAdminService.loadAgentAdminsLeft(schedulingGroupId, searchKeyword);
+      
+      this.moveAgentAdminService.loadAgentAdminsLeft(schedulingGroupId, searchKeyword, this.orderBy, this.sortBy);
       this.totalAgentAdminsRecord$ = this.moveAgentAdminService.totalAgentAdminsLeft$;
       this.agentAdmins$ = this.moveAgentAdminService.agentAdminsLeft$;
 
@@ -141,7 +151,7 @@ export class MoveAgentsListComponent implements OnInit {
       
       var searchKeyword = this.searchKeyword ?? '';
 
-      this.moveAgentAdminService.loadAgentAdminsRight(schedulingGroupId, searchKeyword);
+      this.moveAgentAdminService.loadAgentAdminsRight(schedulingGroupId, searchKeyword, this.orderBy, this.sortBy);
       this.totalAgentAdminsRecord$ = this.moveAgentAdminService.totalAgentAdminsRight$;
       this.agentAdmins$ = this.moveAgentAdminService.agentAdminsRight$;
 
@@ -170,6 +180,12 @@ export class MoveAgentsListComponent implements OnInit {
     }
 
     this.moveAgentAdminService.selectedAgentAdminIdsSubject$.next(this.selectedAgentAdminIds);
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.agentSchedulingGroupId = undefined;
   }
 
 }

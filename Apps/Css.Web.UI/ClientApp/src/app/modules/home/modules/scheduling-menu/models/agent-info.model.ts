@@ -3,7 +3,7 @@ import { AgentAdminAgentData } from './agent-admin-agent-data.model';
 export class AgentInfo {
     scheduleType: string;
     supervisorName: string;
-    supervisorId: number;
+    supervisorId: string;
     employeeId: number;
     hireDate: string;
     productionDate: string;

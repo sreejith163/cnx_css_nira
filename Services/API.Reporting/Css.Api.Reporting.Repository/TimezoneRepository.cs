@@ -36,6 +36,17 @@ namespace Css.Api.Reporting.Repository
         }
 
         /// <summary>
+        /// The method to fetch all the timezones
+        /// </summary>
+        /// <returns>The list of instances of Timezone</returns>
+        public async Task<List<Timezone>> GetTimezones()
+        {
+            var query = Builders<Timezone>.Filter.Gt(i => i.TimezoneId, 0);
+            var timezone = FilterBy(query);
+            return await Task.FromResult(timezone.ToList());
+        }
+
+        /// <summary>
         /// The method to fetch all the timezone matching the input timezone ids
         /// </summary>
         /// <param name="timezoneIds"></param>

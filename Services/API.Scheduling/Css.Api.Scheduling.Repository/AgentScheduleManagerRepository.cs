@@ -180,7 +180,12 @@ namespace Css.Api.Scheduling.Repository
         public async Task<List<AgentScheduleManager>> GetAgentScheduleByAgentSchedulingGroupId(List<int> agentSchedulingGroupIdDetailsList, DateTimeOffset date)
         {
             var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
-            var query = Builders<AgentScheduleManager>.Filter.Eq(i => i.Date, dateTimeWithZeroTimeSpan) &
+            var less_one = dateTimeWithZeroTimeSpan.AddDays(-1);
+            var datelist = new List<object>();
+            datelist.Add(less_one);
+            datelist.Add(dateTimeWithZeroTimeSpan);
+
+            var query = Builders<AgentScheduleManager>.Filter.In(i => i.Date,  datelist) &
                      Builders<AgentScheduleManager>.Filter.In(i => i.AgentSchedulingGroupId, agentSchedulingGroupIdDetailsList);
 
             var x = FilterBy(query);
@@ -290,21 +295,29 @@ namespace Css.Api.Scheduling.Repository
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.AgentSchedulingGroupId == agentScheduleManagerChartQueryparameter.AgentSchedulingGroupId);
             }
 
-            if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime) &&
-                !agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
+
+            if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime))
             {
                 var date = agentScheduleManagerChartQueryparameter.Date.Value;
                 var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.Date == dateTimeWithZeroTimeSpan);
             }
 
-            if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime) &&
-                agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
-            {
-                var date = agentScheduleManagerChartQueryparameter.Date.Value;
-                var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
-                agentScheduleManagers = agentScheduleManagers.Where(x => x.Date != dateTimeWithZeroTimeSpan);
-            }
+            //if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime) &&
+            //    !agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
+            //{
+            //    var date = agentScheduleManagerChartQueryparameter.Date.Value;
+            //    var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+            //    agentScheduleManagers = agentScheduleManagers.Where(x => x.Date == dateTimeWithZeroTimeSpan);
+            //}
+
+            //if (agentScheduleManagerChartQueryparameter.Date.HasValue && agentScheduleManagerChartQueryparameter.Date != default(DateTime) &&
+            //    agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
+            //{
+            //    var date = agentScheduleManagerChartQueryparameter.Date.Value;
+            //    var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+            //    agentScheduleManagers = agentScheduleManagers.Where(x => x.Date != dateTimeWithZeroTimeSpan);
+            //}
 
             return agentScheduleManagers;
         }

@@ -198,6 +198,7 @@ export class SkillGroupListComponent implements OnInit, OnDestroy {
 
   setClient(client: number) {
     this.clientId = client;
+    this.clientLobGroupId = undefined;
     this.loadSkillGroups();
   }
 

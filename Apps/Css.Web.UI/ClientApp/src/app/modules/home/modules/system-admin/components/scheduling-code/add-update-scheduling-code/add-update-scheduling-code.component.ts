@@ -132,6 +132,17 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  isNumberKeyRefId(evt) {
+    const currentValue = this.schedulingCodeForm.controls.refId?.value;
+    const charCode = (evt.which) ? evt.which : evt.keyCode;
+    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
+    if (isValid) {
+      return false;
+    }
+
+    return true;
+  }
+
   onCheckboxChange(e) {
     const schedulingTypeCode: FormArray = this.schedulingCodeForm.get('schedulingTypeCode') as FormArray;
     if (e.target.checked) {

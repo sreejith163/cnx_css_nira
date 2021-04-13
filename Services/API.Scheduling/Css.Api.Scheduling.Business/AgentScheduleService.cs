@@ -47,6 +47,11 @@ namespace Css.Api.Scheduling.Business
         private readonly IAgentScheduleRepository _agentScheduleRepository;
 
         /// <summary>
+        /// The agent scheduling group repository
+        /// </summary>
+        private readonly IAgentSchedulingGroupRepository _agentSchedulingGroupRepository;
+
+        /// <summary>
         /// The agent schedule manager repository
         /// </summary>
         private readonly IAgentScheduleManagerRepository _agentScheduleManagerRepository;
@@ -80,6 +85,7 @@ namespace Css.Api.Scheduling.Business
         /// <param name="agentScheduleManagerRepository">The agent schedule manager repository.</param>
         /// <param name="agentAdminRepository">The agent admin repository.</param>
         /// <param name="schedulingCodeRepository">The scheduling code repository.</param>
+        /// <param name="agentSchedulingGroupRepository">The scheduling group repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
         public AgentScheduleService(
@@ -88,6 +94,7 @@ namespace Css.Api.Scheduling.Business
             IAgentScheduleRepository agentScheduleRepository, 
             IAgentScheduleManagerRepository agentScheduleManagerRepository,
             IAgentAdminRepository agentAdminRepository,
+            IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
             ISchedulingCodeRepository schedulingCodeRepository,
             IMapper mapper,
             IUnitOfWork uow)
@@ -96,6 +103,7 @@ namespace Css.Api.Scheduling.Business
             _activityLogRepository = activityLogRepository;
             _agentScheduleRepository = agentScheduleRepository;
             _agentScheduleManagerRepository = agentScheduleManagerRepository;
+            _agentSchedulingGroupRepository = agentSchedulingGroupRepository;
             _agentAdminRepository = agentAdminRepository;
             _schedulingCodeRepository = schedulingCodeRepository;
             _mapper = mapper;
@@ -344,14 +352,12 @@ namespace Css.Api.Scheduling.Business
         public async Task<CSSResponse> ImportAgentScheduleChart(AgentScheduleImport agentScheduleImport)
         {
 
-            List<AgentScheduleChart> agentScheduleChartsDefault = new List<AgentScheduleChart>();
 
             List<string> errors = new List<string>();
             List<string> success = new List<string>();
 
             ImportAgentScheduleResponse importAgentScheduleResponse = new ImportAgentScheduleResponse();
 
-            List<object> testing = new List<object>();
 
             int importCount = 0;
             int importSuccess = 0;
@@ -398,8 +404,9 @@ namespace Css.Api.Scheduling.Business
                             ModifiedBy = agentScheduleImport.ModifiedBy,
                             EmployeeId = employeeIdDetails.Id,
                             Status = SchedulingStatus.Pending_Schedule
-                        };  
-                        
+                        };
+
+                        success.Add($"{employeeIdDetails.Id}");
 
                         var hasConflictingSchedules = agentSchedule.Ranges.Exists(x => x.Status == SchedulingStatus.Released &&
                                                                                        ((weekRange.DateFrom < x.DateTo && weekRange.DateTo > x.DateFrom) ||
@@ -414,29 +421,38 @@ namespace Css.Api.Scheduling.Business
                                                      (weekRange.DateTo <= x.DateTo && weekRange.DateTo >= x.DateFrom))).FirstOrDefault();
 
                             // check if there is an available schedule range
-                            if (availableScheduleRange != null && availableScheduleRange.ScheduleCharts.Any())
+                            if (availableScheduleRange != null)
                             {
+                                var agentScheduleIdDetails = new AgentScheduleIdDetails { AgentScheduleId = agentSchedule.Id.ToString() };
                                 // delete existing range object
-                                _agentScheduleRepository.DeleteAgentScheduleRangeImport(employeeIdDetails.Id, agentAdmin.AgentSchedulingGroupId, new DateRange { DateFrom = weekRange.DateFrom, DateTo = weekRange.DateTo });
+                                //var deleted = await _agentScheduleRepository.DeleteAgentScheduleRangeImport(agentScheduleIdDetails, new DateRange { DateFrom = weekRange.DateFrom, DateTo = weekRange.DateTo });
+                                _agentScheduleRepository.DeleteAgentScheduleRangeImport(agentScheduleIdDetails, new DateRange { DateFrom = weekRange.DateFrom, DateTo = weekRange.DateTo });
 
-                                if (importRanges.Exists(x => x.DateFrom == weekRange.DateFrom & x.DateTo == weekRange.DateTo))
+                                await _uow.Commit();
+
+                                if (importRanges.Exists(x => x.DateFrom == weekRange.DateFrom & x.DateTo == weekRange.DateTo & x.EmployeeId == employeeIdDetails.Id))
                                 {
-                                    foreach(var range in importRanges)
-                                    {
+                                    foreach(var range in importRanges.Where(x => x.DateFrom == weekRange.DateFrom & x.DateTo == weekRange.DateTo & x.EmployeeId == employeeIdDetails.Id))
+                                    {                                        
                                         // check if Schedule Chart Day already exists in the pre-update model
                                         if(range.ScheduleCharts.Exists(x => x.Day == (int)importData.StartDate.DayOfWeek))
                                         {
                                             // check if chart time has no conflicts inside the charts array
                                             var selectedDayFromImport = range.ScheduleCharts.Find(x => x.Day == (int)importData.StartDate.DayOfWeek);
 
-                                            if (!selectedDayFromImport.Charts.Exists(x => 
+                                            var checkChart1 = selectedDayFromImport.Charts.Exists(x =>
                                                 DateTime.Parse(importData.StartTime).TimeOfDay >= DateTime.Parse(x.StartTime).TimeOfDay
-                                                & DateTime.Parse(importData.StartTime).TimeOfDay <= DateTime.Parse(x.EndTime).TimeOfDay)
-                                               ||
-                                               !selectedDayFromImport.Charts.Exists(x =>
+                                                & DateTime.Parse(importData.StartTime).TimeOfDay <= DateTime.Parse(x.EndTime).TimeOfDay
+                                                );
+
+                                            var checkChart2 = selectedDayFromImport.Charts.Exists(x =>
                                                 DateTime.Parse(importData.EndTime).TimeOfDay >= DateTime.Parse(x.StartTime).TimeOfDay
-                                                & DateTime.Parse(importData.EndTime).TimeOfDay <= DateTime.Parse(x.EndTime).TimeOfDay)
-                                                )
+                                                & DateTime.Parse(importData.EndTime).TimeOfDay <= DateTime.Parse(x.EndTime).TimeOfDay
+                                                );
+
+                                            if (!checkChart1
+                                               ||
+                                               !checkChart2)
                                             {
                                                 // create chart if it does not exists
                                                 var chart = new ScheduleChart();
@@ -501,9 +517,9 @@ namespace Css.Api.Scheduling.Business
                             else
                             {
 
-                                if (importRanges.Exists(x => x.DateFrom == weekRange.DateFrom & x.DateTo == weekRange.DateTo))
+                                if (importRanges.Exists(x => x.DateFrom == weekRange.DateFrom & x.DateTo == weekRange.DateTo & x.EmployeeId == employeeIdDetails.Id))
                                 {
-                                    foreach (var range in importRanges)
+                                    foreach (var range in importRanges.Where(x => x.DateFrom == weekRange.DateFrom & x.DateTo == weekRange.DateTo & x.EmployeeId == employeeIdDetails.Id))
                                     {
                                         // check if Schedule Chart Day already exists in the pre-update model
                                         // update range in the pre-update model
@@ -512,17 +528,20 @@ namespace Css.Api.Scheduling.Business
                                             // check if chart time has no conflicts inside the charts array
                                             var selectedDayFromImport = range.ScheduleCharts.Find(x => x.Day == (int)importData.StartDate.DayOfWeek);
 
-                                            var startTime = DateTime.Parse(importData.StartTime).TimeOfDay;
-                                            var endTime = DateTime.Parse(importData.EndTime).TimeOfDay;
-
-                                            if (!selectedDayFromImport.Charts.Exists(x =>
+                                            var checkChart1 = selectedDayFromImport.Charts.Exists(x =>
                                                 DateTime.Parse(importData.StartTime).TimeOfDay >= DateTime.Parse(x.StartTime).TimeOfDay
-                                                & DateTime.Parse(importData.StartTime).TimeOfDay <= DateTime.Parse(x.EndTime).TimeOfDay)
-                                               ||
-                                               !selectedDayFromImport.Charts.Exists(x =>
+                                                & DateTime.Parse(importData.StartTime).TimeOfDay <= DateTime.Parse(x.EndTime).TimeOfDay
+                                                );
+
+                                            var checkChart2 = selectedDayFromImport.Charts.Exists(x =>
                                                 DateTime.Parse(importData.EndTime).TimeOfDay >= DateTime.Parse(x.StartTime).TimeOfDay
-                                                & DateTime.Parse(importData.EndTime).TimeOfDay <= DateTime.Parse(x.EndTime).TimeOfDay)
-                                                )
+                                                & DateTime.Parse(importData.EndTime).TimeOfDay <= DateTime.Parse(x.EndTime).TimeOfDay
+                                                );
+
+
+                                            if (!checkChart1
+                                               ||
+                                               !checkChart2)
                                             {
                                                 // create chart if it does not exists
                                                 var chart = new ScheduleChart();
@@ -536,12 +555,25 @@ namespace Css.Api.Scheduling.Business
                                                 success.Add($"'1 Agent Schedule data updated.");
                                                 importSuccess = importSuccess + 1;
 
-                                            }
-                                            else
+                                            } else if ((checkChart1 & checkChart2) & (importData.StartDate != importData.EndDate))
                                             {
-                                                //display error
-                                                errors.Add($"Employee Id {range.EmployeeId} Schedule Chart conflicts on time {importData.StartTime} - {importData.EndTime} with Date Range {range.DateFrom} - {range.DateTo}");
+                                                    // create chart if it does not exists
+                                                    var chart = new ScheduleChart();
+                                                    chart.StartTime = importData.StartTime;
+                                                    chart.EndTime = importData.EndTime;
+                                                    chart.SchedulingCodeId = importData.SchedulingCodeId;
+
+                                                    selectedDayFromImport.Charts.Add(chart);
+
+                                                    // success
+                                                    success.Add($"'1 Agent Schedule data updated.");
+                                                    importSuccess = importSuccess + 1;                                               
                                             }
+                                        else
+                                        {
+                                            //display error
+                                            errors.Add($"Employee Id {range.EmployeeId} Schedule Chart conflicts on time {importData.StartTime} - {importData.EndTime} with Date {importData.StartDate} - {importData.EndDate}");
+                                        }
 
                                         }
                                         else
@@ -910,6 +942,240 @@ namespace Css.Api.Scheduling.Business
             }
 
             return isValid;
+        }
+        public async Task<CSSResponse> AgentSchedulingGroupScheduleExport(int agentSchedulingGroupId)
+        {
+            var agentSchedule = await _agentScheduleRepository.GetAgentSchedulingGroupExport(new AgentSchedulingGroupIdDetails { AgentSchedulingGroupId = agentSchedulingGroupId });
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var matchSchedulingId = await _schedulingCodeRepository.FindSchedulingCodes();
+
+            var schedCode = (from s in matchSchedulingId
+                             select new MatchSchedulingCode
+                             {
+                                 SchedulingCodeId = s.SchedulingCodeId,
+                                 Name = s.Name
+                             }
+                             ).ToList();
+            schedCode.Where(sc => sc.SchedulingCodeId == 23).Select(r => r.Name);
+
+            var msg = new List<object>();
+
+            var items = (from i in agentSchedule
+                         from r in i.Ranges
+                        
+                         from s in r.ScheduleCharts
+                         let start_date = r.DateFrom.AddDays(s.Day)
+
+                         let end_date = r.DateFrom.AddDays(s.Day)
+                         let check = s.Charts.Zip(s.Charts.Skip(0), (x, y) => y.StartTime == x.EndTime && y.SchedulingCodeId == x.SchedulingCodeId)
+                         from c in s.Charts  
+                         //end_date.ToString("yyyyMMdd"),
+                         select new ExportAgentSchedulingGroupSchedule()
+                         {
+                             EmployeeId = i.EmployeeId,
+                             StartDate = start_date.ToString("yyyyMMdd"),
+                             EndDate = end_date.ToString("yyyyMMdd"),
+                                       
+                             ActivityCode = schedCode
+                                            .Where(x => x.SchedulingCodeId == c.SchedulingCodeId)
+                                            .Select(x => x.Name).SingleOrDefault(),
+                             StartTime = c.StartTime,
+                             EndTime = c.EndTime
+                         }
+                        
+                         ).ToList().ToArray();
+            //var Items = items.SkipWhile(x => x.EndDate == x.StartTime & x.ActivityCode == x.ActivityCode).Take(1).ToList();
+
+
+            //var items2 = items.Zip(items.Skip(1), (x, y) => y.StartTime == x.EndTime && y.ActivityCode == x.ActivityCode);
+
+       
+            var items2 = items.Select((x, index) => new ExportAgentSchedulingGroupSchedule
+                {
+                    
+                    EmployeeId = x.EmployeeId,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    ActivityCode = x.ActivityCode,
+                    StartTime = x.StartTime,
+                    EndTime = x.EndTime
+
+                });
+
+          
+                //msg.Add(items2);
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (i < items.Length - 1)
+                {
+
+                    var convertStartDate = DateTime.ParseExact(items[i + 1].StartDate, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                    var convertEndDate = DateTime.ParseExact(items[i].EndDate, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                    DateTime nextday = DateTime.Parse(convertStartDate);
+                    DateTime current = DateTime.Parse(convertEndDate);
+                    DateTime nextDay2 = nextday.AddDays(-1);
+                    if (items[i].EndTime.Equals(items[i + 1].StartTime) &&
+                        items[i].ActivityCode.Equals(items[i + 1].ActivityCode) &&
+                        current == nextDay2 &&
+                        items[i].EmployeeId == items[i + 1].EmployeeId)
+                    {
+                        var object1 = new ExportAgentSchedulingGroupSchedule
+                        {
+                            EmployeeId = items[i].EmployeeId,
+                            StartDate = items[i].StartDate,
+                            EndDate = items[i + 1].EndDate,
+                            ActivityCode = items[i].ActivityCode,
+                            StartTime = items[i].StartTime,
+                            EndTime = items[i + 1].EndTime
+                        };
+                        msg.Add(object1);
+                        i++;
+                    } else if (items[i].EndTime == "12:00 AM" || items[i].EndTime == "12:00 am")
+                    {
+                       var date_plus_one = DateTime.ParseExact(items[i].EndDate, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                       DateTime date_increment_one = date_plus_one.AddDays(1);
+                        var object2 = new ExportAgentSchedulingGroupSchedule
+                        {
+                            EmployeeId = items[i].EmployeeId,
+                            StartDate = items[i].StartDate,
+                            EndDate = date_increment_one.ToString("yyyyMMdd"),
+                            ActivityCode = items[i].ActivityCode,
+                            StartTime = items[i].StartTime,
+                            EndTime = items[i].EndTime
+                        };
+                        msg.Add(object2);
+                        i++;
+                    }
+                    else
+                    {
+                        msg.Add(items[i]);
+                    }
+                }
+            }
+            return new CSSResponse(msg, HttpStatusCode.OK);
+        }
+
+        public async Task<CSSResponse> EmployeeScheduleExport(int employeeId)
+        {
+            var agentSchedule = await _agentScheduleRepository.GetEmployeeScheduleExport(employeeId);
+            if (agentSchedule == null)
+            {
+                return new CSSResponse(HttpStatusCode.NotFound);
+            }
+
+            var matchSchedulingId = await _schedulingCodeRepository.FindSchedulingCodes();
+
+            var schedCode = (from s in matchSchedulingId
+                             select new MatchSchedulingCode
+                             {
+                                 SchedulingCodeId = s.SchedulingCodeId,
+                                 Name = s.Name
+                             }
+                             ).ToList();
+            schedCode.Where(sc => sc.SchedulingCodeId == 23).Select(r => r.Name);
+
+            var msg = new List<object>();
+
+            var items = (from i in agentSchedule
+                         from r in i.Ranges
+
+                         from s in r.ScheduleCharts
+                         let start_date = r.DateFrom.AddDays(s.Day)
+
+                         let end_date = r.DateFrom.AddDays(s.Day)
+                         let check = s.Charts.Zip(s.Charts.Skip(0), (x, y) => y.StartTime == x.EndTime && y.SchedulingCodeId == x.SchedulingCodeId)
+                         from c in s.Charts
+                             //end_date.ToString("yyyyMMdd"),
+                         select new ExportAgentSchedulingGroupSchedule()
+                         {
+                             EmployeeId = i.EmployeeId,
+                             StartDate = start_date.ToString("yyyyMMdd"),
+                             EndDate = end_date.ToString("yyyyMMdd"),
+
+                             ActivityCode = schedCode
+                                            .Where(x => x.SchedulingCodeId == c.SchedulingCodeId)
+                                            .Select(x => x.Name).SingleOrDefault(),
+                             StartTime = c.StartTime,
+                             EndTime = c.EndTime
+                         }
+
+                         ).ToList().ToArray();
+            //var Items = items.SkipWhile(x => x.EndDate == x.StartTime & x.ActivityCode == x.ActivityCode).Take(1).ToList();
+
+
+            //var items2 = items.Zip(items.Skip(1), (x, y) => y.StartTime == x.EndTime && y.ActivityCode == x.ActivityCode);
+
+
+            var items2 = items.Select((x, index) => new ExportAgentSchedulingGroupSchedule
+            {
+
+                EmployeeId = x.EmployeeId,
+                StartDate = x.StartDate,
+                EndDate = x.EndDate,
+                ActivityCode = x.ActivityCode,
+                StartTime = x.StartTime,
+                EndTime = x.EndTime
+
+            });
+
+
+            //msg.Add(items2);
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (i < items.Length - 1)
+                {
+
+                    var convertStartDate = DateTime.ParseExact(items[i + 1].StartDate, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                    var convertEndDate = DateTime.ParseExact(items[i].EndDate, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                    DateTime nextday = DateTime.Parse(convertStartDate);
+                    DateTime current = DateTime.Parse(convertEndDate);
+                    DateTime nextDay2 = nextday.AddDays(-1);
+                    if (items[i].EndTime.Equals(items[i + 1].StartTime) &&
+                        items[i].ActivityCode.Equals(items[i + 1].ActivityCode) &&
+                        current == nextDay2 &&
+                        items[i].EmployeeId == items[i + 1].EmployeeId)
+                    {
+                        var object1 = new ExportAgentSchedulingGroupSchedule
+                        {
+                            EmployeeId = items[i].EmployeeId,
+                            StartDate = items[i].StartDate,
+                            EndDate = items[i + 1].EndDate,
+                            ActivityCode = items[i].ActivityCode,
+                            StartTime = items[i].StartTime,
+                            EndTime = items[i + 1].EndTime
+                        };
+                        msg.Add(object1);
+                        i++;
+                    }
+                    else if (items[i].EndTime == "12:00 AM" || items[i].EndTime == "12:00 am")
+                    {
+                        var date_plus_one = DateTime.ParseExact(items[i].EndDate, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        DateTime date_increment_one = date_plus_one.AddDays(1);
+                        var object2 = new ExportAgentSchedulingGroupSchedule
+                        {
+                            EmployeeId = items[i].EmployeeId,
+                            StartDate = items[i].StartDate,
+                            EndDate = date_increment_one.ToString("yyyyMMdd"),
+                            ActivityCode = items[i].ActivityCode,
+                            StartTime = items[i].StartTime,
+                            EndTime = items[i].EndTime
+                        };
+                        msg.Add(object2);
+                        i++;
+                    }
+                    else
+                    {
+                        msg.Add(items[i]);
+                    }
+                }
+            }
+            return new CSSResponse(msg, HttpStatusCode.OK);
         }
     }
 }

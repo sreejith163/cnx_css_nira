@@ -10,11 +10,11 @@ import { ClientService } from 'src/app/modules/home/modules/setup-menu/services/
   selector: 'app-client-name-typeahead',
   templateUrl: './client-name-typeahead.component.html',
   styleUrls: ['./client-name-typeahead.component.css']
-})
+})  
 export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
 
   pageNumber = 1;
-  clientItemsBufferSize = 100;
+  clientItemsBufferSize = 10;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   characterSplice = 25;
   totalItems = 0;
@@ -87,7 +87,9 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
       response => {
         if (response?.body) {
           this.setPaginationValues(response);
-          this.clientItemsBuffer = needBufferAdd ? this.clientItemsBuffer.concat(response.body) : response.body;
+          // this.clientItemsBuffer = needBufferAdd ? this.clientItemsBuffer.concat(response.body) : response.body;
+          //temporary fix
+          this.clientItemsBuffer = response.body;
         }
         this.loading = false;
       }, err => this.loading = false);
@@ -125,7 +127,7 @@ export class ClientNameTypeAheadComponent implements OnInit, OnDestroy {
     queryParams.pageSize = this.clientItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
-    queryParams.skipPageSize = false;
+    queryParams.skipPageSize = true;
     queryParams.orderBy = undefined;
     queryParams.fields = 'id, name';
 

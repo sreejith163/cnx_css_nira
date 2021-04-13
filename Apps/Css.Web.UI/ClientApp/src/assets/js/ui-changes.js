@@ -12,7 +12,7 @@ var startCellIndex = null;
 function setRowCellIndex(cellId) {
   const clickedCell = $('#' + cellId);
   startCellIndex = clickedCell.index();
-  startRowIndex = clickedCell.parent().index();
+  startRowIndex = clickedCell.parent().index() + 1;
 }
 
 function setManagerRowCellIndex(cellIndex, rowIndex) {
@@ -26,7 +26,7 @@ function highlightSelectedCells(tableId, cellId) {
 
   const row = cell.parent();
   const cellIndex = cell.index();
-  const rowIndex = row.index();
+  const rowIndex = row.index() + 1;
 
   let rowStart;
   let rowEnd;

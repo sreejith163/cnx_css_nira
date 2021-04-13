@@ -248,14 +248,18 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         // if (x?.startTime?.trim()?.toLowerCase()?.slice(0, 2) === '00') {
         //   x.startTime = '12' + x?.startTime?.trim()?.toLowerCase()?.slice(2, 8);
         // }
-        if (x?.endTime === '11:60 pm') {
-          x.endTime = '12:00 am';
-        }
 
         x.ActivityCode = x?.ActivityCode.trim().toLowerCase();
 
-        if((this.convertTimeFormat(x.StartDate) !== this.convertTimeFormat(x.EndDate)) && 
-          this.convertTimeFormat(x.endTime) > this.convertTimeFormat("00:00 am")){
+        if((x.StartDate !== x.EndDate) && 
+            moment(x.endTime, ["h:mm a"]).format("HH:mm") > 
+            moment("12:00 am", ["h:mm a"]).format("HH:mm")
+          ){
+          
+          // if (x?.endTime === '11:60 pm') {
+          //   x.endTime = '12:00 am';
+          // }
+
           const originalEndTime = x.endTime;
           x.endTime = "12:00 am";
 
@@ -269,9 +273,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           
           this.csvData.push(halfSched);
         }
-
-        
-        
       });
 
       
@@ -279,6 +280,8 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         x.startTime = moment(x.startTime, ["h:mm a"]).format("hh:mm a");
         x.endTime = moment(x.endTime, ["h:mm a"]).format("hh:mm a");
       });
+
+      this.csvData = this.csvData.filter(x=> x.startTime !== x.endTime);
 
       console.log(this.csvData)
 
@@ -309,7 +312,8 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           this.activeModal.close({ partialImport: hasMismatch });
         }, (error) => {
           this.spinnerService.hide(this.spinner);
-          console.log(error);
+          const errorMessage = `An error occurred upon importing the file. Please check the following<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time<br>Not recognized Employee ID`;
+          this.showErrorWarningPopUpMessage(errorMessage);
         });
       this.subscriptions.push(this.importAgentScheduleChartSubscription);
   }
@@ -389,12 +393,14 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         importObj.startDate = x?.StartDate;
         importObj.endDate = x?.EndDate;
         importObj.startTime = x?.startTime;
-        importObj.endTime = x?.endTime;0
+        importObj.endTime = x?.endTime;
         importObj.schedulingCodeId = schedulingCodes.find(c => c.description.trim().toLowerCase() === x?.ActivityCode.trim().toLowerCase()).id;
         importObj.employeeId = +x?.EmployeeId;
 
         importModelArray.push(importObj);        
       });
+
+      console.log(importModelArray)
 
     return importModelArray;
   }
@@ -429,7 +435,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       } else {
         time = time?.split(':')[0] + ':' + time?.split(':')[1]?.split(' ')[0];
       }
-
+      console.log(time)
       return time;
     }
   }

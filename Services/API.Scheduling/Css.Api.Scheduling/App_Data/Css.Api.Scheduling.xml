@@ -250,6 +250,16 @@
             <param name="dateRangeDetails">The date range details.</param>
             <returns></returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.AgentSchedulingGroupScheduleExport(System.Int32)">
+            <summary>
+            Gets the agent schedule.
+            </summary>
+            <param name="agentSchedulingGroupId">The agent schedule chart queryparameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.EmployeeScheduleExport(System.Int32)">
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Scheduling.Controllers.EntityHierarchyController">
             <summary>controller for entity hierarchy</summary>
         </member>
@@ -313,7 +323,7 @@
                /// <param name="date">Forecast ID</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.ImportForecast(Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.ImportForecastDetails)">
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.ImportForecast(Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.ImportForecastMain,System.Int32)">
             <summary>
             import forecast data
             </summary>

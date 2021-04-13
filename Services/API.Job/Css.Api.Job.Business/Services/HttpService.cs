@@ -1,5 +1,7 @@
 ﻿using Css.Api.Job.Business.Interfaces;
 using Css.Api.Job.Models.DTO.Configurations;
+using IdentityModel.Client;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -19,6 +21,11 @@ namespace Css.Api.Job.Business.Services
         /// The service provider
         /// </summary>
         private readonly IHttpClientFactory _httpClient;
+
+        /// <summary>
+        /// The configuration
+        /// </summary>
+        private readonly IConfiguration _configuration;
         #endregion
 
         #region Constructor
@@ -27,9 +34,11 @@ namespace Css.Api.Job.Business.Services
         /// Constructor to initialize properties
         /// </summary>
         /// <param name="httpClient"></param>
-        public HttpService(IHttpClientFactory httpClient)
+        /// <param name="configuration"></param>
+        public HttpService(IHttpClientFactory httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _configuration = configuration;
         }
         #endregion
 
@@ -98,6 +107,7 @@ namespace Css.Api.Job.Business.Services
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage reqMessage)
         {
             var client = _httpClient.CreateClient();
+            client.SetBearerToken(await GetAccessToken());
             var responseMessage = await client.SendAsync(reqMessage);
             client.Dispose();
             return responseMessage;
@@ -112,6 +122,7 @@ namespace Css.Api.Job.Business.Services
         {
             List<HttpResponseMessage> responseMessages = new List<HttpResponseMessage>();
             var client = _httpClient.CreateClient();
+            client.SetBearerToken(await GetAccessToken());
             foreach(var request in reqMessages)
             {
                 HttpResponseMessage response;
@@ -128,6 +139,39 @@ namespace Css.Api.Job.Business.Services
             }
             client.Dispose();
             return responseMessages;
+        }
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// A helper method to get access token
+        /// </summary>
+        /// <returns></returns>
+        private async Task<string> GetAccessToken()
+        {
+            var client = _httpClient.CreateClient();
+            var auth = _configuration.GetSection("Auth");
+            var disco = await client.GetDiscoveryDocumentAsync(auth["Url"]);
+            if (disco.IsError)
+            {
+                return string.Empty;
+            }
+
+            var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            {
+                Address = disco.TokenEndpoint,
+                ClientId = auth["ClientId"],
+                ClientSecret = auth["ClientSecret"],
+                Scope = auth["Scope"]
+            });
+
+            if (tokenResponse.IsError)
+            {
+                return string.Empty;
+            }
+
+            return tokenResponse.AccessToken;
         }
         #endregion
     }

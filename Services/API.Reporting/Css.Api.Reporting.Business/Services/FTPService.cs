@@ -44,6 +44,35 @@ namespace Css.Api.Reporting.Business.Services
 		}
 
 		/// <summary>
+		/// A helper method to determine the destination folder
+		/// </summary>
+		/// <param name="startDateTime"></param>
+		/// <param name="endDateTime"></param>
+		/// <param name="recentlyUpdated"></param>
+		/// <returns></returns>
+		public string GetDestinationFolder(DateTime startDateTime, DateTime endDateTime, bool? recentlyUpdated = null)
+        {
+			if ((endDateTime - startDateTime).TotalDays == 2 && recentlyUpdated.HasValue && recentlyUpdated.Value)
+				return "CSSIntraDayFiles/";
+			else if(startDateTime == endDateTime || (endDateTime - startDateTime).TotalDays == 2)
+				return "CSS1DayFiles/";
+			else if ((endDateTime - startDateTime).TotalDays == 13)
+				return "CSS14DayFiles/";
+			else 
+				return string.Empty;
+		}
+
+		/// <summary>
+		/// The method to generate the filename for export employees
+		/// </summary>
+		/// <param name="agentSchedulingGroup"></param>
+		/// <returns></returns>
+		public string GetEmployeesFileName(string agentSchedulingGroup)
+        {
+			return string.Join("/", "CSSEmpIDFiles", string.Join("_", "CSS", agentSchedulingGroup) + ".txt");
+        }
+
+		/// <summary>
 		/// The method reads data using the key to map to the FTP service present in the mapper json
 		/// </summary>
 		/// <param name="key">The 'Key' field defined in the mapper json</param>
@@ -88,29 +117,22 @@ namespace Css.Api.Reporting.Business.Services
 		public bool Write(string filename, string contents)
 		{
 			string outbox = _options.Outbox;
-            try
-            {
-				using (SftpClient sftp = CreateClient())
+			using (SftpClient sftp = CreateClient())
+			{
+				sftp.Connect();
+				try
 				{
-					sftp.Connect();
-                    try
-                    {
-						sftp.DeleteFile(string.Join('/', outbox, filename));
-					}
-					catch
-                    {
-
-                    }
-					sftp.WriteAllText(string.Join('/', outbox, filename), contents);
-					sftp.Disconnect();
-					sftp.Dispose();
+					sftp.DeleteFile(string.Join('/', outbox, filename));
 				}
-				return true;
+				catch
+				{
+
+				}
+				sftp.WriteAllText(string.Join('/', outbox, filename), contents);
+				sftp.Disconnect();
+				sftp.Dispose();
 			}
-            catch
-            {
-				return false;
-            }
+			return true;
 		}
 
 		/// <summary>

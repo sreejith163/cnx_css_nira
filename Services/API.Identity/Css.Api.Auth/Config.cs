@@ -21,7 +21,7 @@ namespace Css.Api.Auth
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
-                new ApiScope("api_reporting", "Reporting API")
+                new ApiScope("api.reporting", "Reporting API")
             };
 
         public static IEnumerable<Client> Clients =>
@@ -35,17 +35,27 @@ namespace Css.Api.Auth
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F58B".Sha256()) },
 
-                    AllowedScopes = { "api_reporting" }
+                    AllowedScopes = { "api.reporting" }
+                },
+                 new Client
+                {
+                    ClientId = "css.job",
+                    ClientName = "CSS Web Job",
+
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets = { new Secret("088C3423-04AD-4011-95B6-8D034AB3182C".Sha256()) },
+
+                    AllowedScopes = { "api.reporting" }
                 },
                   new Client
                 {
-                    ClientId = "client.cnx1",
+                    ClientId = "CNX1",
                     ClientName = "CNX1",
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets = { new Secret("511536EF-F258-4058-80CE-1C89C192F2C6".Sha256()) },
 
-                    AllowedScopes = { "api_reporting" }
+                    AllowedScopes = { "api.reporting" }
                 },
                  new Client
                 {

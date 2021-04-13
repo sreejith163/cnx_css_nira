@@ -107,7 +107,7 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
 
   save() {
     this.formSubmitted = true;
-    if (this.agentCategoryForm.valid && this.numericRangeValidation()) {
+    if (this.agentCategoryForm.valid && this.numericRangeValidation() && this.aplhaNumericRangeValidation() && this.aplhaNumericMinRangeValidation() && this.aplhaNumericMaxRangeValidation()) {
       this.saveAgentCategoryDetailsOnModel();
       this.operation === ComponentOperation.Edit ? this.updateAgentcategoryDetails() : this.addAgentCategoryDetails();
     }
@@ -126,6 +126,9 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
         this.spinnerService.hide(this.spinner);
         if (error.status === 409) {
           this.showErrorWarningPopUpMessage(error.error);
+        }
+        else {
+          this.showErrorWarningPopUpMessage('Please fill the fields with correct details');
         }
       });
 
@@ -166,6 +169,47 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  aplhaNumericRangeValidation() {
+    if (+this.agentCategoryForm.get('dataType').value === 1 &&
+      this.rangeForm.controls.minRange.value && this.rangeForm.controls.maxRange.value) {
+      if (+this.rangeForm.controls.minRange.value === +this.rangeForm.controls.maxRange.value) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  aplhaNumericMinRangeValidation() {
+    if (+this.agentCategoryForm.get('dataType').value === 1 &&
+      this.rangeForm.controls.minRange.value && this.rangeForm.controls.maxRange.value) {
+      if (!isNaN(+this.rangeForm.controls.minRange.value) && +this.rangeForm.controls.minRange.value <= 0) {
+        return false;
+      }
+    } else if (+this.agentCategoryForm.get('dataType').value === 2) {
+      return true;
+    } else if (this.rangeForm.controls.minRange.value === "") {
+      return false;
+    }
+
+    return true;
+  }
+
+  aplhaNumericMaxRangeValidation() {
+    if (+this.agentCategoryForm.get('dataType').value === 1 &&
+      this.rangeForm.controls.minRange.value && this.rangeForm.controls.maxRange.value) {
+      if (!isNaN(+this.rangeForm.controls.maxRange.value) && +this.rangeForm.controls.maxRange.value <= 0) {
+        return false;
+      }
+    } else if (+this.agentCategoryForm.get('dataType').value === 2) {
+      return true;
+    } else if (this.rangeForm.controls.maxRange.value === "") {
+      return false;
+    }
+
+    return true;
+  }
+
   addAlphaNumericControl(range?) {
     if (this.agentCategoryForm.get('dateRange')) {
       this.agentCategoryForm.removeControl('dateRange');
@@ -173,7 +217,7 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
     this.rangeForm.reset();
     this.agentCategoryForm.addControl('range', this.rangeForm);
     if (+this.agentCategoryForm.get('dataType').value === 3 &&
-     this.rangeForm.controls.minRange.value && this.rangeForm.controls.maxRange.value) {
+      this.rangeForm.controls.minRange.value && this.rangeForm.controls.maxRange.value) {
       this.agentCategoryForm.get('range').setValidators([
         CustomValidators.rangeValidator('minRange', 'maxRange')
       ]);
@@ -271,7 +315,7 @@ export class AddAgentCategoryComponent implements OnInit, OnDestroy {
         .get('minRange').value;
       this.agentCategoryModel.dataTypeMaxValue = this.agentCategoryForm.get('range')
         .get('maxRange').value;
-    } 
+    }
     // else {
     //   this.agentCategoryModel.dataTypeMinValue = this.ngbDateParserFormatter
     //     .format(this.agentCategoryForm.get('dateRange')

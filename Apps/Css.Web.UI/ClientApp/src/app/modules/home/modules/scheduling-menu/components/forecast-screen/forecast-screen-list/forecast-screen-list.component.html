@@ -41,7 +41,7 @@
                     <div class="input-group">
                         <input (dateSelect)="loadSkillGroup()" class="form-control"
                             placeholder="{{'Select Forecast Date' | translate}}" name="dp" ngbDatepicker
-                            [readonly]="true" [(ngModel)]="dateModel" [minDate]="{year: 1990, month: 1, day: 1}"
+                            [readonly]="true" [(ngModel)]="dateModel" firstDayOfWeek="7" [minDate]="{year: 1990, month: 1, day: 1}"
                             #d="ngbDatepicker">
                         <!-- <input class="form-control" name="d2" #c2="ngModel" [(ngModel)]="dateModel"
                     ngbDatepicker #d2="ngbDatepicker" > -->
@@ -160,8 +160,8 @@
                                                             <input formControlName="time" type="hidden">
                                                         </td>
 
-                                                        <td (keypress)="_keyUp($event)" (dblclick)="showBtn()"
-                                                            numberOnly class="contenteditable" contenteditable
+                                                        <td  (dblclick)="showBtn()" appOnlynumber 
+                                                            class="contenteditable" contenteditable
                                                             formControlName="forecastedContact">
 
 
@@ -182,20 +182,20 @@
                                                 </td> -->
 
 
-                                                        <td [ngClass]="{'d-none': dateValidator === true}"
-                                                            (dblclick)="showBtn()" numberOnly class="contenteditable"
+                                                        <td *ngIf="dateValidator == false;"
+                                                          
+                                                            (dblclick)="showBtn()" appOnlynumber class="contenteditable"
                                                             contenteditable formControlName="forecastedReq">
 
 
 
                                                         </td>
-
-                                                        <td [ngClass]="{'d-none': dateValidator === false}">
-                                                            <input [readonly]="true" [class.enabled]="!isEnabled[i + 1]"
-                                                                (dblclick)="showErrorDate()" numberOnly
-                                                                (change)="showBtn()" formControlName="forecastedReq"
-                                                                type="text" class="">
+                                                        <td *ngIf="dateValidator == true;"
+                                                            (dblclick)="showErrorDate()" class="contenteditable"
+                                                            notcontenteditable formControlName="forecastedReq">
                                                         </td>
+
+
 
                                                         <td>
 

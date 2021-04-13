@@ -110,7 +110,16 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
 
   validateHireDateFormat() {
     const hireDate = this.agentProfileForm.controls.hireDate.value;
-    if (!this.calendar.isValid(hireDate) || String(hireDate.year).length !== 4) {
+    if (!this.calendar.isValid(hireDate) || String(hireDate.year).length !== 4 || !this.validateHireDate()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  validateHireDate() {
+    const hireDate = new Date(this.ngbDateParserFormatter.format(this.agentProfileForm.controls.hireDate.value));
+    if (hireDate > new Date()) {
       return false;
     } else {
       return true;
@@ -126,9 +135,21 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  isNumberKey(event) {
+  isIdNumberKey(event) {
+    const currentValue = this.agentProfileForm.controls.employeeId?.value == null ? '' : this.agentProfileForm.controls.employeeId?.value;
     const charCode = (event.which) ? event.which : event.keyCode;
-    if ((charCode < 48 || charCode > 57)) {
+    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
+    if (isValid) {
+      return false;
+    }
+    return true;
+  }
+
+  isSupervisorIdNumberKey(event) {
+    const currentValue = this.agentProfileForm.controls.supervisorId?.value == null ? '' : this.agentProfileForm.controls.supervisorId?.value;
+    const charCode = (event.which) ? event.which : event.keyCode;
+    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
+    if (isValid) {
       return false;
     }
     return true;
@@ -311,7 +332,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
       firstName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
       lastName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
       hireDate: new FormControl('', Validators.required),
-      supervisorId: new FormControl('', Validators.compose([Validators.required, Validators.max(9999999999)])),
+      supervisorId: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
       supervisorName: new FormControl('', Validators.required),
       supervisorSso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
       pto: this.formBuilder.group({

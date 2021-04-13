@@ -41,7 +41,7 @@ export class GetIconForGridPipe implements PipeTransform {
     }
 
     changeToUTCDate(date){
-        return new Date(new Date(date).toString().replace("GMT+0800","GMT+0000"));
+      return new Date(new Date(date).toString().slice(0, 24).concat(" GMT+0000"));
     }
 
     unifiedToNative(unified: string) {
@@ -53,7 +53,7 @@ export class GetIconForGridPipe implements PipeTransform {
 
       getTimeStamp(date: any){
         if(date){
-          date = new Date(date)?.getTime()
+          date = new Date(new Date(date).toString().slice(0, 24).concat(" GMT+0000"))?.getTime()
         }
     
         return date;

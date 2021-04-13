@@ -1,5 +1,6 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Business.Interfaces
@@ -82,5 +83,13 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <param name="dateRange">The date range.</param>
         /// <returns></returns>
         Task<CSSResponse> DeleteAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
+
+
+        Task<CSSResponse> AgentSchedulingGroupScheduleExport(int agentSchedulingGroupId);
+
+
+        Task<CSSResponse> EmployeeScheduleExport(int employeeId);
+
+        
     }
 }

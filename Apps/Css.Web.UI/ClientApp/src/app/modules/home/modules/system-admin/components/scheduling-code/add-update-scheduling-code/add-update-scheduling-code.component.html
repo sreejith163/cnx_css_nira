@@ -23,7 +23,7 @@
             </div>
             <div class="col-md-8">
               <input type="text" class="form-control" formControlName="refId" [maxLength]="10"
-                (keypress)="isNumberKey($event)" onpaste="return false;" />
+                (keypress)="isNumberKeyRefId($event)" onpaste="return false;" />
               <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.refId.invalid">
                 <ng-template #maxLengthError>
                   <div class="valid-error">

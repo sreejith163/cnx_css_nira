@@ -137,6 +137,7 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
             Context.AddCommand(() => Collection.FindOneAndDeleteAsync(filterExpression));
         }
 
+
         /// <summary>
         /// Deletes the one asynchronous.
         /// </summary>

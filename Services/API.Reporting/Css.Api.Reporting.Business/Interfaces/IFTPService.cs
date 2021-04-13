@@ -19,6 +19,22 @@ namespace Css.Api.Reporting.Business.Interfaces
         public void Set(Dictionary<string, string> options);
 
         /// <summary>
+		/// A helper method to determine the destination folder
+		/// </summary>
+		/// <param name="startDateTime"></param>
+		/// <param name="endDateTime"></param>
+		/// <param name="recentlyUpdated"></param>
+		/// <returns></returns>
+		string GetDestinationFolder(DateTime startDateTime, DateTime endDateTime, bool? recentlyUpdated = null);
+
+        /// <summary>
+		/// The method to generate the filename for export employees
+		/// </summary>
+		/// <param name="agentSchedulingGroup"></param>
+		/// <returns></returns>
+		string GetEmployeesFileName(string agentSchedulingGroup);
+
+        /// <summary>
         /// The method to read data from FTP Inbox for the mapped context.
         /// </summary>
         /// <returns>A list of instances of DataFeed for all files present in import directory</returns>

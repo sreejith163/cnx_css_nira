@@ -35,6 +35,17 @@ namespace Css.Api.Reporting.Repository
         }
 
         /// <summary>
+        /// A method to pull all existing agents in the input agent scheduling group
+        /// </summary>
+        /// <param name="agentSchedulingGroupId"></param>
+        /// <returns></returns>
+        public async Task<List<Agent>> GetAgents(int agentSchedulingGroupId)
+        {
+            var agents = FilterBy(x => !x.IsDeleted && x.AgentSchedulingGroupId == agentSchedulingGroupId);
+            return await Task.FromResult(agents.ToList());
+        }
+
+        /// <summary>
         /// The method to upsert agents to the mongo collection
         /// </summary>
         /// <param name="agents"></param>

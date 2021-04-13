@@ -30,7 +30,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input [maxLength]="10" type="number" class="form-control" (keypress)="isNumberKey($event)"
+              <input [maxLength]="10" type="number" class="form-control" (keypress)="isIdNumberKey($event)"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('employeeId')}"
                 formControlName="employeeId" placeholder="{{ 'Employee_id' | translate }}" />
               <div *ngIf="hasFormControlValidationError('employeeId')" class="valid-error">
@@ -165,7 +165,7 @@
             <div class="col-md-8">
               <input [maxLength]="45" type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('firstName')}"
-                formControlName="firstName" placeholder="{{ 'First_name' | translate }}" [maxLength]="maxLength" />
+                formControlName="firstName" placeholder="{{ 'First_name' | translate }}" />
                 <ng-container *ngIf="formSubmitted && form.firstName.invalid">
                         <ng-container *ngIf="hasFormControlValidationError('firstName'); else maxLengthError">
                           <div *ngIf="hasFormControlValidationError('firstName')" class="valid-error">
@@ -190,7 +190,7 @@
             <div class="col-md-8">
               <input [maxLength]="45" type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('lastName')}" formControlName="lastName"
-                placeholder="{{ 'Last_name' | translate }}" [maxLength]="maxLength" />
+                placeholder="{{ 'Last_name' | translate }}" />
                 <ng-container *ngIf="formSubmitted && form.lastName.invalid">
                         <ng-container *ngIf="hasFormControlValidationError('lastName'); else maxLengthError">
                            <div *ngIf="hasFormControlValidationError('lastName')" class="valid-error">
@@ -257,7 +257,7 @@
             <div class="col-md-8">
               <input [maxLength]="45" type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorName')}"
-                formControlName="supervisorName" placeholder="{{ 'Team Lead Name' | translate }}" [maxLength]="maxLength" />
+                formControlName="supervisorName" placeholder="{{ 'Team Lead Name' | translate }}" />
                 <ng-container *ngIf="formSubmitted && form.supervisorName.invalid">
                         <ng-container *ngIf="hasFormControlValidationError('supervisorName'); else maxLengthError">
                             <div *ngIf="hasFormControlValidationError('supervisorName')" class="valid-error">
@@ -313,7 +313,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input [maxLength]="10" type="number" class="form-control" (keypress)="isNumberKey($event)"
+              <input [maxLength]="10" type="number" class="form-control" (keypress)="isSupervisorIdNumberKey($event)"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorId')}"
                 formControlName="supervisorId" placeholder="{{ 'Team Lead EID' | translate }}" />
                 <ng-container *ngIf="formSubmitted && form.supervisorId.invalid">

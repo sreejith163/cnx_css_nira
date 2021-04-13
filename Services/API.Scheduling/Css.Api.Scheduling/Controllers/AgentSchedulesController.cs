@@ -1,5 +1,6 @@
 ﻿using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -153,6 +154,29 @@ namespace Css.Api.Scheduling.Controllers
         public async Task<IActionResult> DeleteAgentScheduleRange(string agentScheduleId, [FromQuery] DateRange dateRangeDetails)
         {
             var result = await _agentScheduleService.DeleteAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+
+        /// <summary>
+        /// Gets the agent schedule.
+        /// </summary>
+
+        /// <param name="agentSchedulingGroupId">The agent schedule chart queryparameter.</param>
+        /// <returns></returns>
+        [HttpGet("{agentSchedulingGroupId}/export")]
+        public async Task<IActionResult> AgentSchedulingGroupScheduleExport(int agentSchedulingGroupId)
+        {
+            var result = await _agentScheduleService.AgentSchedulingGroupScheduleExport(agentSchedulingGroupId);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        // <param name="employeeId">The agent schedule chart queryparameter.</param>
+        /// <returns></returns>
+        [HttpGet("{employeeId}/employeeexport")]
+        public async Task<IActionResult> EmployeeScheduleExport(int employeeId)
+        {
+            var result = await _agentScheduleService.EmployeeScheduleExport(employeeId);
             return StatusCode((int)result.Code, result.Value);
         }
     }

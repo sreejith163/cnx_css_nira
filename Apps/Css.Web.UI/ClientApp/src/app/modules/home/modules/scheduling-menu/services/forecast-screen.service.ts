@@ -12,6 +12,7 @@ import { UpdateAgentAdmin } from '../models/update-agent-admin.model';
 import { UpdateForecastData } from '../models/update-forecast-data.model';
 import { ForecastExcelData } from '../models/forecast-excel.model';
 import { ScheduledOpenResponse } from '../models/scheduled-open-response.model';
+import { ForecastImportModel } from '../models/forecast-import.model';
 
 
 @Injectable({
@@ -51,8 +52,8 @@ export class ForecastScreenService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
 
-  importForecastData(importForecastDataModel: ForecastExcelData){
-    const url = `${this.baseURL}/forecastscreen/import`;
+  importForecastData(importForecastDataModel: any,skillgroupID: number){
+    const url = `${this.baseURL}/forecastscreen/${skillgroupID}/import`;
 
     return this.http.put<ApiResponseModel>(url, importForecastDataModel)
       .pipe(catchError(this.handleError));

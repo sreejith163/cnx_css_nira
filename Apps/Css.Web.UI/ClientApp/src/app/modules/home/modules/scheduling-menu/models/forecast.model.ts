@@ -5,3 +5,7 @@ export class Forecast {
         forecastedReq: number;
         scheduledOpen: number;
 }
+
+export class Data {
+        
+}

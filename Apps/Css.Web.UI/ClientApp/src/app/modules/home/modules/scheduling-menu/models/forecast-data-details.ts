@@ -5,5 +5,13 @@ export class ForecastScreenDataDetails {
         forecastedContact: number;
         aht: number;
         forecastedReq: number;
-        scheduledOpen: number;
+        // scheduledOpen: number;
+}
+export class ForecastScreenDataDetails2 {
+      
+        time: string;
+        forecastedContact: number;
+        aht: number;
+        forecastedReq: number;
+        // scheduledOpen: number;
 }

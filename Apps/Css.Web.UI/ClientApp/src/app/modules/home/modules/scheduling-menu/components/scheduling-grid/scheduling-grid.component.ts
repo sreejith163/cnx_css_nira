@@ -48,6 +48,8 @@ import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { DateRangeQueryParms } from '../../models/date-range-query-params.model';
 import * as moment from 'moment';
+import { AgentSchedulingGridExport } from '../../models/agent-scheduling-grid-export.model';
+
 
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
@@ -102,7 +104,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   refreshSchedulingTab: boolean;
   hasNewDateRangeSelected: boolean;
   LoggedUser;
-
+  exportData: AgentSchedulingGridExport[] = [];
   selectedGrid: AgentScheduleGridResponse;
   schedulingGridData: AgentScheduleGridResponse;
   modalRef: NgbModalRef;
@@ -131,6 +133,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   getSchedulingCodesSubscription: ISubscription;
   getTranslationSubscription: ISubscription;
   subscriptions: ISubscription[] = [];
+  agentScheduleGridExportSubsciption: ISubscription;
 
   timeStampUpdate: number;
 
@@ -204,7 +207,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   addDateRange(el: AgentSchedulesResponse) {
     this.hasNewDateRangeSelected = true;
     this.schedulingGridData = undefined;
-    this.getModalPopup(DateRangePopUpComponent, 'sm');
+    this.getCalendarPopup(DateRangePopUpComponent, 'sm', el);
     this.modalRef.componentInstance.operation = ComponentOperation.Add;
     this.modalRef.componentInstance.agentScheduleId = el.id;
     this.modalRef.componentInstance.isEditNewDateRange = false;
@@ -503,6 +506,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     }
   }
 
+  private changeToUTCDate(date) {
+    return new Date(new Date(date).toString().replace(/\sGMT.*$/, " GMT+0000"));
+  }
+
   save(gridChart: AgentSchedulesResponse) {
     if (this.matchSchedulingGridDataChanges()) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
@@ -514,10 +521,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           this.formatendTime(ele.charts, true);
         });
       }
-      chartModel.dateFrom = this.getFormattedDate(gridData?.dateFrom);
-      chartModel.dateTo = this.getFormattedDate(gridData?.dateTo);
+      chartModel.dateFrom = this.changeToUTCDate(gridData?.dateFrom);
+      chartModel.dateTo = this.changeToUTCDate(gridData?.dateTo);
       chartModel.status = gridData?.status;
       chartModel.agentScheduleCharts = gridData?.agentScheduleCharts;
+
       // console.log(gridData.agentScheduleCharts)
       chartModel.activityOrigin = ActivityOrigin.CSS;
       chartModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
@@ -542,7 +550,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
             } else {
               this.schedulingGridData = JSON.parse(JSON.stringify(this.selectedGrid));
               gridChart.ranges[gridChart?.rangeIndex].scheduleCharts = this.selectedGrid.agentScheduleCharts;
-              gridChart.ranges[gridChart?.rangeIndex].modifiedBy =  this.authService.getLoggedUserInfo()?.displayName;
+              gridChart.ranges[gridChart?.rangeIndex].modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
               gridChart.ranges[gridChart?.rangeIndex].modifiedDate = new Date();
             }
           });
@@ -670,52 +678,117 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     });
   }
   exportToExcel() {
-    const today = new Date();
-    const year = String(today.getFullYear());
-    const month = String((today.getMonth() + 1)).length === 1 ?
-      ('0' + String((today.getMonth() + 1))) : String((today.getMonth() + 1));
-    const day = String(today.getDate()).length === 1 ?
-      ('0' + String(today.getDate())) : String(today.getDate());
-    const date = year + month + day;
-    let fileName = `${this.exportFileName + date}.csv`;;
-    let columnNames = ["EmployeeId", "StartDate", "EndDate", "ActivityCode", "StartTime", "EndTime"];
-    let header = columnNames.join(',');
-    let csv = header;
-    csv += '\r\n';
-    let exportData = this.totalSchedulingGridData;
-    exportData.map(data => {
-      data.ranges.map(ranges => {
-        ranges.scheduleCharts.map(schedule_chart => {
-          schedule_chart.charts.map(charts => {
-            const StartDate = moment(ranges.dateFrom).format("YYYYMMDD");
-            const EndDate = moment(ranges.dateTo).format("YYYYMMDD");
-            const SchedulingCode = this.schedulingCodes.find(x => x.id === charts?.schedulingCodeId);
-            const startDateTime = charts.startTime.toUpperCase();
-            const endDateTime = charts.endTime.toUpperCase();
-            csv += [
-              data.employeeId,
-              StartDate,
-              EndDate,
-              SchedulingCode.description,
-              startDateTime,
-              endDateTime
-            ].join(',');
-            csv += '\r\n';
-          });
+    this.agentSchedulesService
+      .exportAgentSchedulingGrid(this.agentSchedulingGroupId)
+      .subscribe(response => {
+        this.exportData = response;
+
+        console.log(this.exportData)
+
+
+        const today = new Date();
+        const year = String(today.getFullYear());
+        const month = String((today.getMonth() + 1)).length === 1 ?
+          ('0' + String((today.getMonth() + 1))) : String((today.getMonth() + 1));
+        const day = String(today.getDate()).length === 1 ?
+          ('0' + String(today.getDate())) : String(today.getDate());
+        const date = year + month + day;
+        let fileName = `${this.exportFileName + date}.csv`;;
+        let columnNames = ["EmployeeId", "StartDate", "EndDate", "ActivityCode", "StartTime", "EndTime"];
+        let header = columnNames.join(',');
+        let csv = header;
+        csv += '\r\n';
+
+
+
+        this.exportData.map(exportData => {
+          csv += [
+            exportData.employeeId,
+            exportData.startDate,
+            exportData.endDate,
+            exportData.activityCode,
+            exportData.startTime,
+            exportData.endTime
+
+          ].join(',');
+          csv += '\r\n';
+        })
+
+        var blob = new Blob([csv], { type: "text/csv" });
+        var link = document.createElement("a");
+        if (link.download !== undefined) {
+          var url = URL.createObjectURL(blob);
+          link.setAttribute("href", url);
+          link.setAttribute("download", fileName);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+        }
+      },
+        error => {
+          this.exportData = [];
         });
-      });
-    });
-    var blob = new Blob([csv], { type: "text/csv" });
-    var link = document.createElement("a");
-    if (link.download !== undefined) {
-      var url = URL.createObjectURL(blob);
-      link.setAttribute("href", url);
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-    }
+
+
+  }
+  exportToExcelByEmployee(employeeId : number) {
+    this.agentSchedulesService
+      .exportAgentSchedulingGridByEmployee(employeeId)
+      .subscribe(response => {
+        this.exportData = response;
+
+        console.log(this.exportData)
+
+
+        const today = new Date();
+        const year = String(today.getFullYear());
+        const month = String((today.getMonth() + 1)).length === 1 ?
+          ('0' + String((today.getMonth() + 1))) : String((today.getMonth() + 1));
+        const day = String(today.getDate()).length === 1 ?
+          ('0' + String(today.getDate())) : String(today.getDate());
+        const date = year + month + day;
+        let fileName = `${this.exportFileName + date + "_" + employeeId}.csv`;;
+        let columnNames = ["EmployeeId", "StartDate", "EndDate", "ActivityCode", "StartTime", "EndTime"];
+        let header = columnNames.join(',');
+        let csv = header;
+        csv += '\r\n';
+
+
+
+        this.exportData.map(exportData => {
+          csv += [
+            exportData.employeeId,
+            exportData.startDate,
+            exportData.endDate,
+            exportData.activityCode,
+            exportData.startTime,
+            exportData.endTime
+
+          ].join(',');
+          csv += '\r\n';
+        })
+
+        var blob = new Blob([csv], { type: "text/csv" });
+        var link = document.createElement("a");
+        if (link.download !== undefined) {
+          var url = URL.createObjectURL(blob);
+          link.setAttribute("href", url);
+          link.setAttribute("download", fileName);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+        }
+      },
+        error => {
+          this.exportData = [];
+        });
+
+
+  }
+
+
   // exportToExcel() {
   //   const today = new Date();
   //   const year = String(today.getFullYear());
@@ -732,6 +805,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     const range = new AgentScheduleRange();
     range.dateFrom = this.getFormattedDate(result?.dateFrom);
     range.dateTo = this.getFormattedDate(result?.dateTo);
+    console.log(range)
     range.status = SchedulingStatus['Pending Schedule'];
     range.agentSchedulingGroupId = el.activeAgentSchedulingGroupId;
     range.scheduleCharts = [];
@@ -772,7 +846,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
     this.timeStampUpdate = new Date().getTime();
 
-    console.log(this.schedulingGridData);
+    // console.log(this.schedulingGridData);
   }
 
   private removeHighlightedCells() {
@@ -844,7 +918,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (weekData.charts.find(x => x.startTime === insertIcon.startTime && x.endTime === insertIcon.endTime)) {
       const item = weekData.charts.find(x => x.startTime === insertIcon.startTime && x.endTime === insertIcon.endTime);
       item.schedulingCodeId = insertIcon.schedulingCodeId;
-    } 
+    }
     else if (weekData.charts.filter(x => this.convertToDateFormat(x.startTime) >= this.convertToDateFormat(insertIcon.startTime) &&
       this.convertToDateFormat(x.endTime) <= this.convertToDateFormat(insertIcon.endTime)).length > 0) {
       const timeDataArray = weekData.charts.filter(x => this.convertToDateFormat(x.startTime) >=
@@ -1029,6 +1103,10 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         this.totalSchedulingGridData = response.body;
         this.totalSchedulingGridData.map(x => {
           x.rangeIndex = 0;
+          x.ranges.map(r => {
+            r.dateFrom = this.getFormattedDate(r.dateFrom);
+            r.dateTo = this.getFormattedDate(r.dateTo);
+          })
         });
         if (this.selectedGrid) {
           this.setSelectedGrid(this.totalSchedulingGridData.find(x => x.id === this.selectedGrid.id));
@@ -1048,12 +1126,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   private updateAgentSchedule(el: AgentSchedulesResponse) {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const updateModel = new UpdateAgentSchedule();
-    updateModel.dateFrom = this.getFormattedDate(el?.ranges[el?.rangeIndex]?.dateFrom);
-    updateModel.dateTo = this.getFormattedDate(el?.ranges[el?.rangeIndex]?.dateTo);
+    updateModel.dateFrom = this.changeToUTCDate(this.getFormattedDate(el?.ranges[el?.rangeIndex]?.dateFrom));
+    updateModel.dateTo = this.changeToUTCDate(this.getFormattedDate(el?.ranges[el?.rangeIndex]?.dateTo));
     updateModel.status = el?.ranges[el?.rangeIndex]?.status;
     updateModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     updateModel.activityOrigin = ActivityOrigin.CSS;
-    updateModel.modifiedUser = +this.authService.getLoggedUserInfo()?.employeeId;
+    updateModel.modifiedUser = +el?.employeeId;
+
+    console.log(updateModel)
 
     const scheduleId = this.totalSchedulingGridData.find(x => x.id === el?.id)?.id;
 
@@ -1066,6 +1146,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         }
         el.modifiedBy = updateModel.modifiedBy;
         el.modifiedDate = new Date();
+        this.getModalPopup(MessagePopUpComponent, 'sm');
+        this.setComponentMessages('Success', 'The schedule status has been changed!');
       }, (error) => {
         this.spinnerService.hide(this.spinner);
         this.getModalPopup(ErrorWarningPopUpComponent, 'sm');
@@ -1144,6 +1226,25 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
     return updatedChart;
   }
+  private formatFilterTimeFormat(timeDataISO: string) {
+
+    let timeData = timeDataISO;
+
+    if (timeData?.trim().toLowerCase().slice(0, 2) === '00') {
+      timeData = '12' + timeData?.trim().toLowerCase().slice(2, 8);
+    }
+    if (timeData.trim().toLowerCase() === '11:60 pm') {
+      timeData = '12:00 am';
+    }
+
+    return timeData;
+  }
+  // private getTimeFormat(dateISO: string){
+  //   let date = new Date(dateISO);
+  //   (charts.endTime),['h:mm a']).format("hh:mm a")
+  //   const transformedDate = moment(date,).format();
+  //   return transformedDate;
+  // }
 
   private formatendTime(charts: ScheduleChart[], updateChart: boolean) {
     // for (const weekData of scheduleResponse?.ranges[this.selectedGrid?.rangeIndex]?.scheduleCharts) {
@@ -1270,6 +1371,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(component, options);
   }
 
+  private getCalendarPopup(component: any, size: string, el: AgentSchedulesResponse) {
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size };
+    this.modalRef = this.modalService.open(component, options);
+    this.modalRef.componentInstance.el = el;
+  }
+
+
   private setComponentMessages(headingMessage: string, contentMessage: string) {
     this.modalRef.componentInstance.headingMessage = headingMessage;
     this.modalRef.componentInstance.contentMessage = contentMessage;
@@ -1296,11 +1404,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
 
   private getFormattedDate(date: Date) {
-    const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
-    return new Date(transformedDate);
+    const transformedDate = this.datepipe.transform(date.toString().replace("Z", ""), 'yyyy-MM-dd');
+    return new Date(`${transformedDate} 00:00`);
   }
 
   private getFormattedDateString(date: Date) {
-    return this.datepipe.transform(date, 'yyyy-MM-dd');
+    return this.datepipe.transform(date.toString().replace("Z", ""), 'yyyy-MM-dd');
   }
 }

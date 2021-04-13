@@ -9,5 +9,6 @@ namespace Css.Api.Reporting.Models.DTO.Processing
         public int AgentSchedulingGroupId { get; set; }
         public int TimezoneId { get; set; }
         public string TimezoneValue { get; set; }
+        public string TimezoneOffsetValue { get; set; }
     }
 }

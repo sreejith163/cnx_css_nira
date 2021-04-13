@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AgentExportNotAllowed" xml:space="preserve">
+    <value>The export of agent info has been disabled for the requested system. Kindly contact system administrator.</value>
+  </data>
   <data name="AgentNotFound" xml:space="preserve">
     <value>Invalid Agent id - couldn't find the agent details in our system</value>
   </data>
@@ -160,18 +163,30 @@
     <value>Invalid target specified for key - '{0}'</value>
   </data>
   <data name="InvalidTimezone" xml:space="preserve">
-    <value>Invalid timezone, format supported - 'UTC[+/-]{hh:mm}' for e.g. UTC+0600, UTC-1230</value>
+    <value>Invalid timezone - the timezone specified is an invalid IANA timezone. Please refer 'https://en.wikipedia.org/wiki/List_of_tz_database_time_zones' </value>
   </data>
   <data name="MappingNotFound" xml:space="preserve">
     <value>Mapping not found for key - '{0}'</value>
   </data>
+  <data name="NoAgentsEStartProvisioned" xml:space="preserve">
+    <value>Currently no agents are provisioned for EStart</value>
+  </data>
+  <data name="NoSchedulesPresent" xml:space="preserve">
+    <value>No schedules present between '{0}' and '{1}' for the agent</value>
+  </data>
   <data name="NoSchedulesToUpdate" xml:space="preserve">
     <value>No schedules to update</value>
+  </data>
+  <data name="OverlappingExistingSchedules" xml:space="preserve">
+    <value>The schedule starting at {0} and ending at {1} overlaps an existing schedule on {2}</value>
   </data>
   <data name="OverlappingSchedules" xml:space="preserve">
     <value>Overlapping schedules exists for the schedule on '{0}'</value>
   </data>
   <data name="RouteNotFound" xml:space="preserve">
     <value>Unable to map the route - '{0}'</value>
+  </data>
+  <data name="ScheduleUpdateNotAllowed" xml:space="preserve">
+    <value>Not permitted to update a schedule for a past date</value>
   </data>
 </root>

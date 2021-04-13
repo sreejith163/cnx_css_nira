@@ -16,8 +16,7 @@ namespace Css.Api.Setup.Models.Domain
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public string Abbreviation { get; set; }
-        public TimeSpan UtcOffset { get; set; }
-
+        
         public virtual ICollection<AgentSchedulingGroup> AgentSchedulingGroup { get; set; }
         public virtual ICollection<ClientLobGroup> ClientLobGroup { get; set; }
         public virtual ICollection<SkillGroup> SkillGroup { get; set; }

@@ -4,6 +4,7 @@ using Domain = Css.Api.Core.Models.Domain.NoSQL;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Css.Api.Core.Utilities.Extensions;
 
 namespace Css.Api.Reporting.Models.Profiles.ValueResolvers
 {
@@ -12,7 +13,7 @@ namespace Css.Api.Reporting.Models.Profiles.ValueResolvers
         public string Resolve(Domain.Timezone source, TimezoneDetails destination, string destMember, ResolutionContext context)
         {
             string offsetStringValue = "UTC";
-            var utcOffset = source.UtcOffset.ToString().TrimEnd('0').Replace(":", "");
+            var utcOffset = TimezoneHelper.GetOffset(source.Abbreviation).Value.ToString().TrimEnd('0').Replace(":", "");
             if(!utcOffset.Contains("-"))
             {
                 offsetStringValue = offsetStringValue + "+" + utcOffset;

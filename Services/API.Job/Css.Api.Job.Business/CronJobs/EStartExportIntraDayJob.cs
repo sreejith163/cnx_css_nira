@@ -112,15 +112,33 @@ namespace Css.Api.Job.Business.CronJobs
                 var responseMessages = await _httpService.SendAsync(requestMessages);
                 if (responseMessages.All(x => x.IsSuccessStatusCode))
                 {
+                    responseMessages.ForEach(async msg =>
+                    {
+                        var requestString = await msg.RequestMessage.Content.ReadAsStringAsync();
+                        var responseString = await msg.Content.ReadAsStringAsync();
+                        _logger.LogInformation($"Request - \n{requestString}\n Response - {responseString}\n");
+                    });
                     _logger.LogInformation($"EStart Intraday export run at {startTime} completed.");
                 }
                 else if (responseMessages.All(x => !x.IsSuccessStatusCode))
                 {
+                    responseMessages.Where(x => x.IsSuccessStatusCode).ToList().ForEach(async msg =>
+                    {
+                        var requestString = await msg.RequestMessage.Content.ReadAsStringAsync();
+                        var responseString = await msg.Content.ReadAsStringAsync();
+                        _logger.LogInformation($"Request - \n{requestString}\n Response - {responseString}\n");
+                    });
                     _logger.LogError($"EStart Intraday export run at {startTime} failed.");
                     await LogFailedRequests(startTime, responseMessages);
                 }
                 else
                 {
+                    responseMessages.Where(x => x.IsSuccessStatusCode).ToList().ForEach(async msg =>
+                    {
+                        var requestString = await msg.RequestMessage.Content.ReadAsStringAsync();
+                        var responseString = await msg.Content.ReadAsStringAsync();
+                        _logger.LogInformation($"Request - \n{requestString}\n Response - {responseString}\n");
+                    });
                     _logger.LogInformation($"EStart Intraday export run at {startTime} processed partially.");
                     await LogFailedRequests(startTime, responseMessages);
                 }
@@ -154,10 +172,11 @@ namespace Css.Api.Job.Business.CronJobs
         private async Task LogFailedRequests(string runTime, List<HttpResponseMessage> responseMessages)
         {
             var failedRequests = responseMessages.Where(x => !x.IsSuccessStatusCode).ToList();
-            foreach (var req in failedRequests)
+            foreach (var res in failedRequests)
             {
-                var requestContent = await req.RequestMessage.Content.ReadAsStringAsync();
-                _logger.LogError($"EStart Intraday export run at {runTime} failed with {req.StatusCode} for request - {requestContent}");
+                var requestContent = await res.RequestMessage.Content.ReadAsStringAsync();
+                var responseContent = await res.Content.ReadAsStringAsync();
+                _logger.LogError($"EStart Intraday export run at {runTime} failed with {res.StatusCode}\n for request - {requestContent}\n and response - {responseContent}");
             }
         }
         #endregion

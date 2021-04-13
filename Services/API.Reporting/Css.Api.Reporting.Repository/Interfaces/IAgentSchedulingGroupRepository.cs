@@ -18,6 +18,21 @@ namespace Css.Api.Reporting.Repository.Interfaces
         Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroups();
 
         /// <summary>
+        /// Method to fetch all agent scheduling groups based on whether the EStart provisioning is enabled or not
+        /// </summary>
+        /// <param name="EstartProvisioning">The enabled or disable Estart flag</param>
+        /// <returns>A list of instances of AgentSchedulingGroup</returns>
+        Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroups(bool EstartProvisioning);
+
+        /// <summary>
+        /// Method to fetch agent scheduling group by input id
+        /// </summary>
+        /// <param name="agentSchedulingGroupId"></param>
+        /// <param name="estartProvisioning"></param>
+        /// <returns>An instance of AgentSchedulingGroup if the id matches, else returns null</returns>
+        Task<AgentSchedulingGroup> GetAgentSchedulingGroupsById(int agentSchedulingGroupId, bool? estartProvisioning = null);
+
+        /// <summary>
         /// Method to fetch agent scheduling groups by input identifiers
         /// </summary>
         /// <param name="agentSchedulingGroupIds">The agent scheduling group identifiers</param>

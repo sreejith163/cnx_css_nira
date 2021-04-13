@@ -18,8 +18,9 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the UTC Offset
+        /// Get or sets the timezone Iana timezone abbreviation
         /// </summary>
-        public TimeSpan UtcOffset { get; set; }
+        public string Abbreviation { get; set; }
+
     }
 }

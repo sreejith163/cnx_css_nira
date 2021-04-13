@@ -61,6 +61,15 @@ namespace Css.Api.Reporting.Business.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The export of agent info has been disabled for the requested system. Kindly contact system administrator..
+        /// </summary>
+        internal static string AgentExportNotAllowed {
+            get {
+                return ResourceManager.GetString("AgentExportNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Agent id - couldn&apos;t find the agent details in our system.
         /// </summary>
         internal static string AgentNotFound {
@@ -187,7 +196,7 @@ namespace Css.Api.Reporting.Business.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid timezone, format supported - &apos;UTC[+/-]{hh:mm}&apos; for e.g. UTC+0600, UTC-1230.
+        ///   Looks up a localized string similar to Invalid timezone - the timezone specified is an invalid IANA timezone. Please refer &apos;https://en.wikipedia.org/wiki/List_of_tz_database_time_zones&apos; .
         /// </summary>
         internal static string InvalidTimezone {
             get {
@@ -205,11 +214,38 @@ namespace Css.Api.Reporting.Business.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Currently no agents are provisioned for EStart.
+        /// </summary>
+        internal static string NoAgentsEStartProvisioned {
+            get {
+                return ResourceManager.GetString("NoAgentsEStartProvisioned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No schedules present between &apos;{0}&apos; and &apos;{1}&apos; for the agent.
+        /// </summary>
+        internal static string NoSchedulesPresent {
+            get {
+                return ResourceManager.GetString("NoSchedulesPresent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No schedules to update.
         /// </summary>
         internal static string NoSchedulesToUpdate {
             get {
                 return ResourceManager.GetString("NoSchedulesToUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The schedule starting at {0} and ending at {1} overlaps an existing schedule on {2}.
+        /// </summary>
+        internal static string OverlappingExistingSchedules {
+            get {
+                return ResourceManager.GetString("OverlappingExistingSchedules", resourceCulture);
             }
         }
         
@@ -228,6 +264,15 @@ namespace Css.Api.Reporting.Business.Data {
         internal static string RouteNotFound {
             get {
                 return ResourceManager.GetString("RouteNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not permitted to update a schedule for a past date.
+        /// </summary>
+        internal static string ScheduleUpdateNotAllowed {
+            get {
+                return ResourceManager.GetString("ScheduleUpdateNotAllowed", resourceCulture);
             }
         }
     }

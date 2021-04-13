@@ -52,6 +52,20 @@
             <param name="agentCategoryId">The agent category identifier.</param>
             <returns></returns>
         </member>
+        <member name="M:Css.Api.Admin.Controllers.AuthController.#ctor(Css.Api.Admin.Business.Interfaces.IAuthService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.LogController"/> class.
+            </summary>
+            <param name="authService">The role service.</param>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.AuthController.Login(System.String,System.String)">
+            <summary>
+            login
+            </summary>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Admin.Controllers.CssLanguagesController">
             <summary>
             Controller for handling the language resource
@@ -188,6 +202,19 @@
             Deletes the language translation.
             </summary>
             <param name="translationId">The translation identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.LogController.#ctor(Css.Api.Admin.Business.Interfaces.ILogService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Admin.Controllers.LogController"/> class.
+            </summary>
+            <param name="logService">The role service.</param>
+        </member>
+        <member name="M:Css.Api.Admin.Controllers.LogController.CreateLogger(Css.Api.Admin.Models.DTO.Request.Log.CreateLogDTO)">
+            <summary>
+            Creates login log
+            </summary>
+            <param name="createLog">The user log details.</param>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Admin.Controllers.RolesController">

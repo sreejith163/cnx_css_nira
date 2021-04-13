@@ -87,7 +87,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control"
+              <input type="text" class="form-control" (keypress)="isSpecialChar($event)"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('name')}" formControlName="name"
                 [maxLength]="maxLength" />
               <ng-container *ngIf="formSubmitted && form.name.invalid">
@@ -112,7 +112,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control" formControlName="refId" />
+              <input type="text" class="form-control" formControlName="refId" (keypress)="isNumberKeyRefId($event)"/>
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ export class AgentAdminBase {
     firstName: string;
     lastName: string;
     agentData: AgentAdminAgentData[];
-    supervisorId: number;
+    supervisorId: string;
     supervisorName: string;
     supervisorSso: string;
     pto: {

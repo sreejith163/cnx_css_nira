@@ -1,0 +1,805 @@
+﻿{
+  "Routes": [
+    //********* Clients Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/clients",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-setup",
+          "Port": 4204
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clients",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/clients/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-setup",
+          "Port": 4204
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clients/{id}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* ClientLOBGroup Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/clientlobgroups",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-setup",
+          "Port": 4204
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clientlobgroups",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/clientlobgroups/{clientLOBGroupId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-setup",
+          "Port": 4204
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clientlobgroups/{clientLOBGroupId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* SkillGroups Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/skillgroups",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-setup",
+          "Port": 4204
+        }
+      ],
+      "UpstreamPathTemplate": "/api/skillgroups",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/skillgroups/{skillGroupId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-setup",
+          "Port": 4204
+        }
+      ],
+      "UpstreamPathTemplate": "/api/skillgroups/{skillGroupId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* SkillTags Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/skilltags",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-setup",
+          "Port": 4204
+        }
+      ],
+      "UpstreamPathTemplate": "/api/skilltags",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/skilltags/{skillTagId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-setup",
+          "Port": 4204
+        }
+      ],
+      "UpstreamPathTemplate": "/api/skilltags/{skillTagId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* TimeZones Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/timezones",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-setup",
+          "Port": 4204
+        }
+      ],
+      "UpstreamPathTemplate": "/api/timezones",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* AgentSchedulingGroups Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedulinggroups",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-setup",
+          "Port": 4204
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedulinggroups",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedulinggroups/{agentSchedulingGroupId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-setup",
+          "Port": 4204
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedulinggroups/{agentSchedulingGroupId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+
+    //********* User Permission Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/userpermissions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/userpermissions",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/userpermissions/{agentEmployeeId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/userpermissions/{agentEmployeeId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+
+    //********* Language Preference Route *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/UserLanguage/{employeeId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/UserLanguage/{employeeId}",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    //********* Login Auth For Non SSO ******
+    {
+      "DownstreamPathTemplate": "/api/v1/auth/{username}/key/{password}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/{username}/key/{password}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* User Log Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/Log",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Log",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    //********* Role Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/roles",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/roles",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/roles/{roleId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/roles/{roleId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+
+    //********* CSS Languages *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/csslanguages",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/csslanguages",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/csslanguages/{languageId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/csslanguages/{languageId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* CSS Menus *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/cssmenus",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cssmenus",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/cssmenus/{menuId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cssmenus/{menuId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/cssmenus/{menuId}/variables",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cssmenus/{menuId}/variables",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* Language Translations *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/languagetranslations",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/languagetranslations",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/languagetranslations/{translationId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/languagetranslations/{translationId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/languagetranslations/languages/{languageId}/menus/{menuId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/languagetranslations/languages/{languageId}/menus/{menuId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* CSS Variables *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/cssvariables",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cssvariables",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/cssvariables/{variableId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cssvariables/{variableId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* AgentCategories Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentcategories",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentcategories",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentcategories/{agentCategoryId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentcategories/{agentCategoryId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* SchedulingCodes Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/schedulingcodes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedulingcodes",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/schedulingcodes/{schedulingCodeId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedulingcodes/{schedulingCodeId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    //********* SchedulingCodeTypes Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/schedulingcodetypes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedulingcodetypes",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* SchedulingCodeIcons Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/schedulingcodeicons",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-admin",
+          "Port": 4203
+        }
+      ],
+      "UpstreamPathTemplate": "/api/schedulingcodeicons",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //*********************Entity Hierarchy *************************
+    {
+      "DownstreamPathTemplate": "/api/v1/EntityHierarchy/{ClientId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/EntityHierarchy/{ClientId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* Agent Admin Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentadmins",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentadmins",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentadmins/employees/{employeeId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentadmins/employees/{employeeId}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentadmins/{agentAdminId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentadmins/{agentAdminId}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentadmins/move",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentadmins/move",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    //********* Agent Schedule Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/exists",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/exists",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/charts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/charts",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/import",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/import",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/copy",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/copy",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentScheduleId}/range",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentScheduleId}/range",
+      "UpstreamHttpMethod": [ "Put", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentEmployeeId}/myschedule",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentEmployeeId}/myschedule",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentSchedulingGroupId}/export",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentSchedulingGroupId}/export",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{employeeId}/employeeexport",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{employeeId}/employeeexport",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* Agent Schedule Manager Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedulemanagers",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers/charts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedulemanagers/charts",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedulemanagers/{employeeId}/copy",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedulemanagers/{employeeId}/copy",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+
+    //********* Forecast Screen Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastscreen",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}/date/{date}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastScreen/{skillGroupId}/date/{date}",
+      "UpstreamHttpMethod": [ "Get", "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}/import",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastScreen/{skillGroupId}/import",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}/scheduledopen",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/forecastScreen/{skillGroupId}/scheduledopen",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* Activity Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/activity",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-reporting",
+          "Port": 4206
+        }
+      ],
+      "UpstreamPathTemplate": "/api/activity",
+      "UpstreamHttpMethod": [ "Post" ],
+      "QoSOptions": {
+        "TimeoutValue": 300000
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/activity/{source}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-reporting",
+          "Port": 4206
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reporting/getagentschedules/{source}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "QoSOptions": {
+        "TimeoutValue": 300000
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/activity/{source}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-reporting",
+          "Port": 4206
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reporting/replaceagentschedule/{source}",
+      "UpstreamHttpMethod": [ "Put" ],
+      "QoSOptions": {
+        "TimeoutValue": 300000
+      }
+    },
+    //********* Scheduling service Activity Log Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/activitylogs",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/activitylogs",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* Dispatch Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/dispatch/{target}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-reporting",
+          "Port": 4206
+        }
+      ],
+      "UpstreamPathTemplate": "/api/dispatch/{target}",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    //********* Reporting Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/weatherforecast",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-reporting",
+          "Port": 4206
+        }
+      ],
+      "UpstreamPathTemplate": "/api/weatherforecast",
+      "UpstreamHttpMethod": [ "Get" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://css-apig-prod.concentrix.com/"
+  }
+}

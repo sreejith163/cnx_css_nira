@@ -50,7 +50,10 @@ namespace Css.Api.Scheduling.Repository
 
         }
 
-
+        public void DeleteForecast(ForecastIdDetails forecastIdDetails)
+        {
+                DeleteOneAsync(x => x.SkillGroupId == forecastIdDetails.SkillGroupId && x.Date == forecastIdDetails.Date);
+        }
         public async Task<ForecastScreen> GetForecastData(ForecastIdDetails forecastIdDetails)
         {
             var query = Builders<ForecastScreen>.Filter.Eq(i => i.SkillGroupId, forecastIdDetails.SkillGroupId)

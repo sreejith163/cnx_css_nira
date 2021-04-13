@@ -29,8 +29,39 @@ namespace Css.Api.Reporting.Repository
         /// <returns>A list of instances of AgentSchedulingGroup</returns>
         public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroups()
         {
-            var agents = FilterBy(x => !x.IsDeleted);
-            return await Task.FromResult(agents.ToList());
+            var agentSchedulingGroups = FilterBy(x => !x.IsDeleted);
+            return await Task.FromResult(agentSchedulingGroups.ToList());
+        }
+
+        /// <summary>
+        /// Method to fetch all agent scheduling groups based on whether the EStart provisioning is enabled or not
+        /// </summary>
+        /// <param name="EstartProvisioning">The enabled or disable Estart flag</param>
+        /// <returns>A list of instances of AgentSchedulingGroup</returns>
+        public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroups(bool EstartProvisioning)
+        {
+            var agentSchedulingGroups = FilterBy(x => !x.IsDeleted && x.EstartProvision  == EstartProvisioning);
+            return await Task.FromResult(agentSchedulingGroups.ToList());
+        }
+
+        /// <summary>
+        /// Method to fetch agent scheduling group by input id
+        /// </summary>
+        /// <param name="agentSchedulingGroupId"></param>
+        /// <param name="estartProvisioning"></param>
+        /// <returns>An instance of AgentSchedulingGroup if the id matches, else returns null</returns>
+        public async Task<AgentSchedulingGroup> GetAgentSchedulingGroupsById(int agentSchedulingGroupId, bool? estartProvisioning = null)
+        {
+            IQueryable<AgentSchedulingGroup> agentSchedulingGroups;
+            if (estartProvisioning.HasValue)
+            {
+                agentSchedulingGroups = FilterBy(x => x.AgentSchedulingGroupId == agentSchedulingGroupId && x.EstartProvision == estartProvisioning.Value);
+            }
+            else
+            {
+                agentSchedulingGroups = FilterBy(x => x.AgentSchedulingGroupId == agentSchedulingGroupId);
+            }
+            return await Task.FromResult(agentSchedulingGroups.FirstOrDefault());
         }
 
         /// <summary>

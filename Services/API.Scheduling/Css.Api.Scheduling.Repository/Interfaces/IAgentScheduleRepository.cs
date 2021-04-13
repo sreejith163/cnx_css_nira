@@ -97,6 +97,16 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<long> GetAgentScheduleCountByEmployeeId(EmployeeIdDetails employeeIdDetails);
 
         /// <summary>
+        /// Gets the agent scheduling group export.
+        /// </summary>
+        /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
+        /// <returns></returns>
+        Task<List<AgentSchedule>> GetAgentSchedulingGroupExport(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
+
+
+        Task<List<AgentSchedule>> GetEmployeeScheduleExport(int employeeId);
+
+        /// <summary>
         /// Creates the agent schedule.
         /// </summary>
         /// <param name="agentScheduleRequest">The agent schedule request.</param>
@@ -151,7 +161,7 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         void DeleteAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
 
 
-        void DeleteAgentScheduleRangeImport(int employeeId, int agentSchedulingGroupId, DateRange dateRange);
+        void DeleteAgentScheduleRangeImport(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
 
         /// <summary>
         /// Deletes the agent schedule.

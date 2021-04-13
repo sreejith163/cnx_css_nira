@@ -35,6 +35,7 @@ namespace Css.Api.Scheduling.Extensions
                 .Enrich.WithThreadId()
                 .Enrich.FromLogContext()
                 .ReadFrom.Configuration(configuration)
+                .WriteTo.Console()
                 .CreateLogger();
 
             services.AddSingleton(Log.Logger);

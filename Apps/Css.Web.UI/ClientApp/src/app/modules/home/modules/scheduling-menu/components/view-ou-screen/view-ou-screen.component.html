@@ -36,7 +36,7 @@
             <div class="input-group">
                 <input (dateSelect)="loadSkillGroup()" class="form-control"
                     placeholder="{{'Select Forecast Date' | translate}}" name="dp" ngbDatepicker [readonly]="true"
-                    [(ngModel)]="dateModel" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
+                    [(ngModel)]="dateModel" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker" firstDayOfWeek="7">
 
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
@@ -113,7 +113,7 @@
                                     {{ getScheduledOpenCount(el.time) }}
                                 </td>
                                 <td [ngClass]="{'negative-uo' : (el.scheduledOpen - el.forecastedReq) < 0}">
-                                    {{ getScheduledOpenCount1(el.time) - el.forecastedReq }}
+                                    {{ getScheduledOpenCount1(el.time) - el.forecastedReq  | number : '1.2-2'}}
                                 </td>
 
                             </tr>

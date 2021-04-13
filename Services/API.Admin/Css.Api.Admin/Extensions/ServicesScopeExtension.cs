@@ -29,6 +29,7 @@ namespace Css.Api.Admin.Extensions
         {
             //Configure logger
             Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
                 .Enrich.WithThreadId()
                 .Enrich.FromLogContext()
                 .ReadFrom.Configuration(configuration)
@@ -52,6 +53,9 @@ namespace Css.Api.Admin.Extensions
             services.AddTransient<ILanguageTranslationService, LanguageTranslationService>();
 
             services.AddTransient<IUserPermissionService, UserPermissionService>();
+            services.AddTransient<ILogService, LogService>();
+
+            services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IRoleService, RoleService>();
 
             services.AddTransient<IUserLanguageService, UserLanguageService>();

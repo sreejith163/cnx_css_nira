@@ -22,17 +22,20 @@
       <div class="modal-body">
         <form [formGroup]="uatLoginForm">
           <label for="typeahead-basic">Username:</label>
-          <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="uatUsername"
+          <input id="typeahead-basic" #username type="text"  class="form-control" [(ngModel)]="uatUsername"
             formControlName="uatUsername" />
+          
           <hr>
           <label for="typeahead-basic">Password:</label>
           <input id="typeahead-basic" type="password" class="form-control" [(ngModel)]="uatPassword"
             formControlName="uatPassword" />
+
+           <!-- <div class="callout callout-danger mt-3" *ngIf="errorMessage">{{ errorMessage }}</div> -->
         </form>
-        <hr>
+        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-light" (click)="login_uat_test()">Login</button>
+        <button type="button" class="btn btn-primary" (click)="login_uat_test()">Login</button>
       </div>
     </ng-template>
     <!-- temporary for UAT -->

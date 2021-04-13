@@ -22,6 +22,11 @@ namespace Css.Api.Admin.Repository.Interfaces
         /// </summary>
         IRoleRepository Roles { get; }
 
+
+        ILogRepository Log { get; }
+
+        IAuthRepository Auth { get; }
+
         /// <summary>
         /// Gets the scheduling codes.
         /// </summary>

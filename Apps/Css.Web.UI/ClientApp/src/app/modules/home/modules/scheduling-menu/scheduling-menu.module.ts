@@ -38,6 +38,7 @@ import { GetIconForGridPipe } from './pipes/get-grid-icon.pipe';
 import { ActivityLogsScheduleManagerComponent } from './components/shared/activity-logs-schedule-manager/activity-logs-schedule-manager.component';
 import { GetIconForScheduleManagerActivityLogsPipe } from './pipes/get-grid-icon-schedule-manager-activity-logs.pipe';
 import { GetIconSchedulingGridPipe } from './pipes/get-scheduling-grid-icon.pipe';
+import { OnlynumberDirective } from 'src/app/shared/directives/integer-only.directive';
 
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule, BsDropdownModule.forRoot()];
@@ -58,6 +59,7 @@ const components =
     DateRangePopUpComponent,
     ViewOuScreenComponent,
     NumericDirective,
+    OnlynumberDirective, 
     ActivityLogsComponent,
     MoveAgentsListComponent,
     MoveAgentsSchedulingGroupTypeaheadComponent,

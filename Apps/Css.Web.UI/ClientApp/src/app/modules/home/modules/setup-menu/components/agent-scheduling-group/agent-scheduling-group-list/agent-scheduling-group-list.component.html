@@ -17,20 +17,20 @@
   <div class="row m-l-r-10">
     <div class="col-md-3 d-flex flex-column">
       {{ 'Client_name' | translate }}
-      <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
+      <app-client-name-typeahead [clientId]="clientId" (clientSelected)="setClient($event)"></app-client-name-typeahead>
     </div>
     <div class="col-md-3 d-flex flex-column">
       {{ 'Client_lob_group_name' | translate }}
-      <app-client-lob-group-typeahead (clientLobSelected)="setClientLobgroup($event)">
+      <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId" (clientLobSelected)="setClientLobgroup($event)">
       </app-client-lob-group-typeahead>
     </div>
     <div class="col-md-3 d-flex flex-column">
       {{ 'Skill_groups' | translate }}
-      <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)"></app-skill-group-typeahead>
+      <app-skill-group-typeahead [clientId]="clientId" [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId"(skillGroupSelected)="setSkillGroup($event)"></app-skill-group-typeahead>
     </div>
     <div class="col-md-3 d-flex flex-column">
       {{ 'Skill_tags' | translate }}
-      <app-skill-tag-typeahead (skillTagSelected)="setSkillTag($event)"></app-skill-tag-typeahead>
+      <app-skill-tag-typeahead [clientId]="clientId" [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId" [skillTagId]="skillTagId" (skillTagSelected)="setSkillTag($event)"></app-skill-tag-typeahead>
     </div>
 
   </div>

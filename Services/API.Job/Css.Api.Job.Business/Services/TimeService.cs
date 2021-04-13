@@ -1,4 +1,5 @@
 ﻿using Css.Api.Core.Models.Domain.NoSQL;
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Job.Business.Interfaces;
 using Css.Api.Job.Models.DTO.Common;
 using Css.Api.Job.Repository.Interfaces;
@@ -50,15 +51,15 @@ namespace Css.Api.Job.Business.Services
             spanFilters.ForEach(spanFilter =>
             {
                 var timeDetails = (from t in timezones
-                                   where DateTime.UtcNow.Add(t.UtcOffset).TimeOfDay >= spanFilter.Start
-                                   && DateTime.UtcNow.Add(t.UtcOffset).TimeOfDay < spanFilter.End
+                                   where DateTime.UtcNow.Add(TimezoneHelper.GetOffset(t.Abbreviation).Value).TimeOfDay >= spanFilter.Start
+                                   && DateTime.UtcNow.Add(TimezoneHelper.GetOffset(t.Abbreviation).Value).TimeOfDay < spanFilter.End
                                    && (!spanFilter.Include.Any() || spanFilter.Include.Contains(t.TimezoneId))
                                    && (!spanFilter.Exclude.Any() || !spanFilter.Exclude.Contains(t.TimezoneId))
                                    select new SpanDetails
                                    {
                                        Days = spanFilter.DaysOfData,
-                                       CurrentDate = DateTime.UtcNow.Add(t.UtcOffset).Date,
-                                       CurrentDateTime = DateTime.UtcNow.Add(t.UtcOffset),
+                                       CurrentDate = DateTime.UtcNow.Add(TimezoneHelper.GetOffset(t.Abbreviation).Value).Date,
+                                       CurrentDateTime = DateTime.UtcNow.Add(TimezoneHelper.GetOffset(t.Abbreviation).Value),
                                        TimezoneId = t.TimezoneId
                                    }).ToList();
 
@@ -88,10 +89,10 @@ namespace Css.Api.Job.Business.Services
                                    select new IntraDayDetails
                                    {
                                        TimezoneId = t.TimezoneId,
-                                       CurrentDate = DateTime.UtcNow.Add(t.UtcOffset).Date,
-                                       CurrentDateTime = DateTime.UtcNow.Add(t.UtcOffset),
-                                       StartDate = DateTime.UtcNow.Add(t.UtcOffset).Date.AddDays(intraDayFilter.RelativeStartDay),
-                                       EndDate = DateTime.UtcNow.Add(t.UtcOffset).Date.AddDays(intraDayFilter.RelativeEndDay),
+                                       CurrentDate = DateTime.UtcNow.Add(TimezoneHelper.GetOffset(t.Abbreviation).Value).Date,
+                                       CurrentDateTime = DateTime.UtcNow.Add(TimezoneHelper.GetOffset(t.Abbreviation).Value),
+                                       StartDate = DateTime.UtcNow.Add(TimezoneHelper.GetOffset(t.Abbreviation).Value).Date.AddDays(intraDayFilter.RelativeStartDay),
+                                       EndDate = DateTime.UtcNow.Add(TimezoneHelper.GetOffset(t.Abbreviation).Value).Date.AddDays(intraDayFilter.RelativeEndDay),
                                        RecentlyUpdatedInDays = intraDayFilter.PickRecentlyUpdatedInDays
                                    }).ToList();
 

@@ -61,29 +61,15 @@ namespace Css.Api.Reporting.Business.Middlewares
         {
             try
             {
-                if (!httpContext.Request.Path.Value.Contains("/api/v1/activity"))
+                if (httpContext.Request.Path.Value.Contains("/api/v1/activity"))
                 {
-                    await _next(httpContext);
-                    return;
+                    await PreprocessActivityRequests(httpContext);
                 }
-
-                switch (httpContext.Request.Method.ToUpper())
+                else if(httpContext.Request.Path.Value.Contains("/api/v1/dispatch"))
                 {
-                    case "POST":
-                        await MapToActivity(httpContext);
-                        break;
-                    case "GET":
-                        await MapToCollector(httpContext);
-                        break;
-                    case "PUT":
-                        await MapToAssigner(httpContext);
-                        break;
-                    default:
-                        break;
+                    PreprocessDispatchRequests(httpContext);
                 }
-
                 await _next(httpContext);
-
             }
             catch(Exception ex)
             {
@@ -96,6 +82,49 @@ namespace Css.Api.Reporting.Business.Middlewares
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// A helper to pre-process all activity requests
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <returns></returns>
+        private async Task PreprocessActivityRequests(HttpContext httpContext)
+        {
+            switch (httpContext.Request.Method.ToUpper())
+            {
+                case "POST":
+                    await MapToActivity(httpContext);
+                    break;
+                case "GET":
+                    await MapToCollector(httpContext);
+                    break;
+                case "PUT":
+                    await MapToAssigner(httpContext);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// A helper to pre-process all dispatch requests
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <returns></returns>
+        private void PreprocessDispatchRequests(HttpContext httpContext)
+        {
+            var key = GetRouteParam(@"\/api\/v1\/dispatch\/(?'key'\w*)", httpContext);
+            var settings = GetDispatch(key);
+            var dataOption = GetTargetDataOption(settings.TargetDataOption);
+            AddMappingContext(httpContext, new MappingContext()
+            {
+                Key = settings.Key,
+                Source = string.Empty,
+                SourceType = string.Empty,
+                TargetType = dataOption.Type,
+                TargetOptions = dataOption.Options
+            });
+        }
 
         /// <summary>
         /// Helper method to map the activity POST request
@@ -141,7 +170,7 @@ namespace Css.Api.Reporting.Business.Middlewares
         /// <param name="httpContext"></param>
         private async Task MapToCollector(HttpContext httpContext)
         {
-            var routeParam = GetRouteParam(httpContext);
+            var routeParam = GetRouteParam(@"\/api\/v1\/activity\/(?'key'\w*)", httpContext);
 
             var key = string.Join("-", routeParam, "Export");
 
@@ -165,7 +194,7 @@ namespace Css.Api.Reporting.Business.Middlewares
         /// <param name="httpContext"></param>
         private async Task MapToAssigner(HttpContext httpContext)
         {
-            var routeParam = GetRouteParam(httpContext);
+            var routeParam = GetRouteParam(@"\/api\/v1\/activity\/(?'key'\w*)", httpContext);
 
             var key = string.Join("-", routeParam, "Import");
 
@@ -188,9 +217,9 @@ namespace Css.Api.Reporting.Business.Middlewares
         /// </summary>
         /// <param name="httpContext"></param>
         /// <returns></returns>
-        private string GetRouteParam(HttpContext httpContext)
+        private string GetRouteParam(string routePattern, HttpContext httpContext)
         {
-            var pattern = new Regex(@"\/api\/v1\/activity\/(?'key'\w*)");
+            var pattern = new Regex(routePattern);
             var match = pattern.Match(httpContext.Request.Path);
 
             if (!match.Success)
@@ -215,6 +244,22 @@ namespace Css.Api.Reporting.Business.Middlewares
         private Activity GetActivity(string key)
         {
             var settings = _mapper.Activities.FirstOrDefault(x => x.Key.Equals(key));
+            if (settings == null)
+            {
+                throw new MappingException(string.Format(Messages.MappingNotFound, key));
+            }
+
+            return settings;
+        }
+
+        /// <summary>
+        /// The method to get the dispatcher details
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private Dispatch GetDispatch(string key)
+        {
+            var settings = _mapper.Dispatchers.FirstOrDefault(x => x.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
             if (settings == null)
             {
                 throw new MappingException(string.Format(Messages.MappingNotFound, key));
@@ -261,6 +306,22 @@ namespace Css.Api.Reporting.Business.Middlewares
             if (targetDataOption == null)
             {
                 throw new MappingException(string.Format(Messages.InvalidDataTarget, key));
+            }
+
+            return targetDataOption;
+        }
+
+        /// <summary>
+        /// The helper to map the target data option
+        /// </summary>
+        /// <param name="targetOption"></param>
+        /// <returns></returns>
+        private DataOption GetTargetDataOption(string targetOption)
+        {
+            var targetDataOption = _mapper.DataOptions.FirstOrDefault(x => x.Key.Equals(targetOption));
+            if (targetDataOption == null)
+            {
+                throw new MappingException(string.Format(Messages.InvalidDataTarget, targetOption));
             }
 
             return targetDataOption;

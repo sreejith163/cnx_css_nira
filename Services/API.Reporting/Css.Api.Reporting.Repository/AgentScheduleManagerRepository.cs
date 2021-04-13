@@ -58,6 +58,23 @@ namespace Css.Api.Reporting.Repository
         }
 
         /// <summary>
+        /// The method to fetch manager schedules for input employee from a specific date
+        /// </summary>
+        /// <param name="agentId"></param>
+        /// <param name="fromDate"></param>
+        /// <returns></returns>
+        public async Task<List<AgentScheduleManager>> GetManagerSchedules(int agentId, DateTime fromDate)
+        {
+            fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0, DateTimeKind.Utc);
+            var query = Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, agentId) &
+                        Builders<AgentScheduleManager>.Filter.Where(i => i.Date >= fromDate);
+
+            var schedules = FilterBy(query);
+
+            return await Task.FromResult(schedules.ToList());
+        }
+
+        /// <summary>
         /// The method to fetch manager schedules for matching filter details
         /// </summary>
         /// <param name="filter"></param>

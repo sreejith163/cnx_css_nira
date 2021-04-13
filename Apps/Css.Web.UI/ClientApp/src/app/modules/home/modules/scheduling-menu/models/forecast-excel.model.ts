@@ -3,5 +3,6 @@ import { ForecastDataModel } from "./forecast-data.model";
 
 export class ForecastExcelData {
         skillGroupId: number;
+   
         forecastScreenDataDetails: ForecastScreenDataDetails[];
 }

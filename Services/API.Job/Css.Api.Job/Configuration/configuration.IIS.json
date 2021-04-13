@@ -46,6 +46,14 @@
         "Content": "",
         "TimeZone": "UTC",
         "Filters": "[{\"relativeStartDay\": -1, \"relativeEndDay\": 1, \"include\": [], \"exclude\": [], \"pickRecentlyUpdatedInDays\": 3 }]"
+      },
+      {
+        "Key": "EStartEmpExport",
+        "CronExpression": "* * * * *",
+        "Url": "https://localhost:44397/api/dispatch/estart",
+        "Method": "PUT",
+        "Content": "",
+        "TimeZone": "UTC"
       }
     ]
   }

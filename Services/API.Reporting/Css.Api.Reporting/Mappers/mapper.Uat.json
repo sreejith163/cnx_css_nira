@@ -1,5 +1,11 @@
 {
   "Mappers": {
+    "Dispatchers": [
+      {
+        "Key": "EStart",
+        "TargetDataOption": "CSSFTP"
+      }
+    ],
     "Activities": [
       {
         "Key": "UDW-Import",

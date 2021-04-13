@@ -39,6 +39,29 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Css.Api.Reporting.Controllers.DispatchController">
+            <summary>
+            The Dispatch controller
+            </summary>
+        </member>
+        <member name="F:Css.Api.Reporting.Controllers.DispatchController._dispatchStrategy">
+            <summary>
+            The dispatch strategy
+            </summary>
+        </member>
+        <member name="M:Css.Api.Reporting.Controllers.DispatchController.#ctor(Css.Api.Reporting.Business.Interfaces.IDispatchStrategy)">
+            <summary>
+            The constructor to initialize properties
+            </summary>
+            <param name="dispatchStrategy"></param>
+        </member>
+        <member name="M:Css.Api.Reporting.Controllers.DispatchController.Put(System.String)">
+            <summary>
+            The method to export the agent info to the target
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
         <member name="T:Css.Api.Reporting.Extensions.DBContextExtension">
             <summary>
             Extension for adding the DB Context
