@@ -109,7 +109,7 @@ namespace Css.Api.Admin.Business
                 {
                     agentCategoryRequest.Id,
                     agentCategoryRequest.Name,
-                    agentCategoryRequest.DataTypeId,
+                    agentCategoryType = agentCategoryRequest.DataTypeId,
                     agentCategoryRequest.DataTypeMinValue,
                     agentCategoryRequest.DataTypeMaxValue,
                     agentCategoryRequest.ModifiedDate,
