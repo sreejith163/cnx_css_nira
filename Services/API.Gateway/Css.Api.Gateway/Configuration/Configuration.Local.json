@@ -579,7 +579,7 @@
       "UpstreamHttpMethod": [ "Put", "Delete" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentEmployeeId}/myschedule",
+      "DownstreamPathTemplate": "/api/v1/AgentScheduleManagers/{agentEmployeeId}/myschedule",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -587,7 +587,7 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedules/{agentEmployeeId}/myschedule",
+      "UpstreamPathTemplate": "/api/agentschedulemanagers/{agentEmployeeId}/myschedule",
       "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {

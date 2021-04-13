@@ -43,7 +43,7 @@
                             <td>
                               <i class="icon-style">{{ getSchedulingIcon(chart.schedulingCodeId) }} &nbsp; {{ getSchedulingCode(chart.schedulingCodeId) }}</i>
                             </td>
-                            <td>{{chart.startTime}} - {{chart.endTime}}</td>
+                            <td>{{chart.startDateTime}} - {{chart.endDateTime}}</td>
                           </tr>
                         </ng-container>  
                       </tbody>
@@ -155,12 +155,12 @@
                                     </td>
                                     <td width="20%">
                                       <ng-container *ngFor="let activity of schedWeek.charts">
-                                        <p>{{activity.startTime}}</p>
+                                        <p>{{activity.startDateTime}}</p>
                                       </ng-container>
                                     </td>
                                     <td width="20%">
                                       <ng-container *ngFor="let activity of schedWeek.charts">
-                                        <p>{{activity.endTime}}</p>
+                                        <p>{{activity.endDateTime}}</p>
                                       </ng-container>
                                     </td>
                                   </ng-container>               

@@ -16,6 +16,7 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { WeekDay } from '@angular/common';
 import { NgbCalendar, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
+import * as moment from 'moment';
 
 export class DaysInWeek {
   dayName: String;
@@ -174,6 +175,15 @@ export class AgentScheduleComponent implements OnInit {
   getCurrentWeekSchedule(startDate, endDate){
     this.spinnerService.show(this.weeklyViewSpinner, SpinnerOptions);
     this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, startDate, endDate).subscribe((resp: AgentMyScheduleResponse)=>{
+        for (let index = 0; index < resp.agentMySchedules.length; index++) {
+          if (resp.agentMySchedules[index].charts != null){
+            resp.agentMySchedules[index].charts.map(x =>{
+              x.endDateTime = moment(x.endDateTime.replace('Z', '').replace('T', ' ')).format('hh:mm a'),
+              x.startDateTime = moment(x.startDateTime.replace('Z', '').replace('T', ' ')).format('hh:mm a'),
+              x.schedulingCodeId = x.schedulingCodeId
+            });
+          }
+        }
         this.myScheduleWeek = resp.agentMySchedules;
         this.spinnerService.hide(this.weeklyViewSpinner);
       },error => {
@@ -205,10 +215,16 @@ export class AgentScheduleComponent implements OnInit {
 
     this.dateToday = `${year}-${month}-${day}`;
 
-    var startDate = this.dateToday;
-    var endDate = this.dateToday;
+    const isoDate = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate() + 1);
+    var startDate = today.toISOString();
+    var endDate = isoDate.toISOString();
 
     this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, startDate, endDate).subscribe((resp: AgentMyScheduleResponse)=>{
+      resp.agentMySchedules[0].charts.map(x =>{
+        x.endDateTime = moment(x.endDateTime.replace('Z', '').replace('T', ' ')).format('hh:mm a'),
+        x.startDateTime = moment(x.startDateTime.replace('Z', '').replace('T', ' ')).format('hh:mm a'),
+        x.schedulingCodeId = x.schedulingCodeId
+      })
       // get the first obj from the array response
       this.myScheduleChartsToday = resp.agentMySchedules[0].charts;
       

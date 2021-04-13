@@ -167,6 +167,13 @@ namespace Css.Api.Scheduling.Business
         /// </returns>
         public async Task<CSSResponse> GetAgentMySchedule(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter)
         {
+            // Gets agent scheduling group Id, if the AgentSchedulingGroupId is not specified
+            if (myScheduleQueryParameter.AgentSchedulingGroupId == 0)
+            {
+                var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
+                myScheduleQueryParameter.AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId;
+            }
+
             var agentSchedules = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails, myScheduleQueryParameter);
             if (agentSchedules == null || agentSchedules.Count < 1)
             {
