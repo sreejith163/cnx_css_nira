@@ -104,7 +104,7 @@ namespace Css.Api.Admin.EventHandlers.Registrations
                 c.Consumer<SchedulingCodeDeleteFailedConsumer>(ctx);
             });
 
-            cfg.ReceiveEndpoint(MassTransitConstants.AgentCategoryEventQueueBindingPattern, c =>
+            cfg.ReceiveEndpoint(MassTransitConstants.AgentCategoryEventQueue, c =>
             {
                 c.RegisterExchange(MassTransitConstants.AgentCategoryExchange, MassTransitConstants.AgentCategoryEventQueueBindingPattern);
                 c.Consumer<AgentCategoryCreateSuccessConsumer>(ctx);
