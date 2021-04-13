@@ -107,6 +107,11 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public List<AgentData> AgentData { get; set; }
 
         /// <summary>
+        /// Gets or sets the agent categories.
+        /// </summary>
+        public List<AgentCategory> AgentCategories { get; set; }
+
+        /// <summary>
         /// Gets or sets the created by.
         /// </summary>
         public string CreatedBy { get; set; }

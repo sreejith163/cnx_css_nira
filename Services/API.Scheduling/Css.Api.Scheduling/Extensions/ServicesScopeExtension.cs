@@ -70,6 +70,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddScoped<IAgentSchedulingGroupRepository, AgentSchedulingGroupRepository>();
             services.AddScoped<IAgentSchedulingGroupHistoryRepository, AgentSchedulingGroupHistoryRepository>();
             services.AddScoped<ISchedulingCodeRepository, SchedulingCodeRepository>();
+            services.AddScoped<IAgentCategoryRepository, AgentCategoryRepository>();
             services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
 
             return services;

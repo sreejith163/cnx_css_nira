@@ -61,6 +61,132 @@ namespace Css.Api.Core.EventBus {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.commands.
+        /// </summary>
+        public static string AgentCategoryCommandQueue {
+            get {
+                return ResourceManager.GetString("AgentCategoryCommandQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.commands.#.
+        /// </summary>
+        public static string AgentCategoryCommandQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("AgentCategoryCommandQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.commands.create.css.agentcategory.
+        /// </summary>
+        public static string AgentCategoryCreateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("AgentCategoryCreateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.events.create.failed.
+        /// </summary>
+        public static string AgentCategoryCreateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("AgentCategoryCreateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.events.create.success.
+        /// </summary>
+        public static string AgentCategoryCreateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("AgentCategoryCreateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.commands.delete.css.agentcategory.
+        /// </summary>
+        public static string AgentCategoryDeleteCommandRouteKey {
+            get {
+                return ResourceManager.GetString("AgentCategoryDeleteCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.events.delete.failed.
+        /// </summary>
+        public static string AgentCategoryDeleteFailedRouteKey {
+            get {
+                return ResourceManager.GetString("AgentCategoryDeleteFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.events.delete.success.
+        /// </summary>
+        public static string AgentCategoryDeleteSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("AgentCategoryDeleteSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.events.
+        /// </summary>
+        public static string AgentCategoryEventQueue {
+            get {
+                return ResourceManager.GetString("AgentCategoryEventQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.events.#.
+        /// </summary>
+        public static string AgentCategoryEventQueueBindingPattern {
+            get {
+                return ResourceManager.GetString("AgentCategoryEventQueueBindingPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.
+        /// </summary>
+        public static string AgentCategoryExchange {
+            get {
+                return ResourceManager.GetString("AgentCategoryExchange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.commands.update.css.agentcategory.
+        /// </summary>
+        public static string AgentCategoryUpdateCommandRouteKey {
+            get {
+                return ResourceManager.GetString("AgentCategoryUpdateCommandRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.events.update.failed.
+        /// </summary>
+        public static string AgentCategoryUpdateFailedRouteKey {
+            get {
+                return ResourceManager.GetString("AgentCategoryUpdateFailedRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to css.agentcategory.events.update.success.
+        /// </summary>
+        public static string AgentCategoryUpdateSuccessRouteKey {
+            get {
+                return ResourceManager.GetString("AgentCategoryUpdateSuccessRouteKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to css.agentschedulinggroup.commands.
         /// </summary>
         public static string AgentSchedulingGroupCommandQueue {

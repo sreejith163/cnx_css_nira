@@ -3,21 +3,19 @@ using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-namespace Css.Api.Admin.EventHandlers.Faults
+namespace Css.Api.Admin.EventHandlers.Faults.SchedulingCode
 {
-    public class SchedulingCodeUpdateSuccessFault : IConsumer<Fault<ISchedulingCodeUpdateSuccess>>
+    public class SchedulingCodeDeleteSuccessFault : IConsumer<Fault<ISchedulingCodeDeleteSuccess>>
     {
-
         /// <summary>Consumes the specified context.</summary>
         /// <param name="context">The context.</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        public Task Consume(ConsumeContext<Fault<ISchedulingCodeUpdateSuccess>> context)
+        public Task Consume(ConsumeContext<Fault<ISchedulingCodeDeleteSuccess>> context)
         {
             Console.WriteLine($"request with message id {context.Message.FaultedMessageId} failed. SchedulingCode Id: {context.Message.Message.Id}");
             return Task.CompletedTask;
         }
     }
 }
-

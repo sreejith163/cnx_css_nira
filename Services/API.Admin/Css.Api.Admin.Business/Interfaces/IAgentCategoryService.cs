@@ -37,6 +37,14 @@ namespace Css.Api.Admin.Business.Interfaces
         Task<CSSResponse> UpdateAgentCategory(AgentCategoryIdDetails agentCategoryIdDetails, UpdateAgentCategory agentCategoryDetails);
 
         /// <summary>
+        /// Reverts the agent category.
+        /// </summary>
+        /// <param name="agentCategoryIdDetails">The agent category identifier details.</param>
+        /// <param name="agentCategoryDetails">The agent category details.</param>
+        /// <returns></returns>  
+        Task<CSSResponse> RevertAgentCategory(AgentCategoryIdDetails agentCategoryIdDetails, UpdateAgentCategory agentCategoryDetails);
+        
+        /// <summary>
         /// Deletes the agent category.
         /// </summary>
         /// <param name="agentCategoryIdDetails">The agent category identifier details.</param>

@@ -3,7 +3,7 @@ using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-namespace Css.Api.Admin.EventHandlers.Faults
+namespace Css.Api.Admin.EventHandlers.Faults.SchedulingCode
 {
 
     public class SchedulingCodeDeleteFailedFault : IConsumer<Fault<ISchedulingCodeDeleteFailed>>

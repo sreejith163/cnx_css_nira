@@ -1,6 +1,9 @@
-﻿using Css.Api.Admin.EventHandlers.Consumers.SchedulingCode;
-using Css.Api.Admin.EventHandlers.Faults;
+﻿using Css.Api.Admin.EventHandlers.Consumers.AgentCategory;
+using Css.Api.Admin.EventHandlers.Consumers.SchedulingCode;
+using Css.Api.Admin.EventHandlers.Faults.AgentCategory;
+using Css.Api.Admin.EventHandlers.Faults.SchedulingCode;
 using Css.Api.Core.EventBus;
+using Css.Api.Core.EventBus.Commands.AgentCategory;
 using Css.Api.Core.EventBus.Commands.SchedulingCode;
 using MassTransit;
 using MassTransit.ExtensionsDependencyInjectionIntegration;
@@ -37,6 +40,23 @@ namespace Css.Api.Admin.EventHandlers.Registrations
             config.AddConsumer<SchedulingCodeDeleteFailedConsumer>();
             config.AddConsumer<SchedulingCodeDeleteFailedFault>();
 
+            config.AddConsumer<AgentCategoryCreateSuccessConsumer>();
+            config.AddConsumer<AgentCategoryCreateSuccessFault>();
+
+            config.AddConsumer<AgentCategoryCreateFailedConsumer>();
+            config.AddConsumer<AgentCategoryCreateFailedFault>();
+
+            config.AddConsumer<AgentCategoryUpdateSuccessConsumer>();
+            config.AddConsumer<AgentCategoryUpdateSuccessFault>();
+
+            config.AddConsumer<AgentCategoryUpdateFailedConsumer>();
+            config.AddConsumer<AgentCategoryUpdateFailedFault>();
+
+            config.AddConsumer<AgentCategoryDeleteSuccessConsumer>();
+            config.AddConsumer<AgentCategoryDeleteSuccessFault>();
+
+            config.AddConsumer<AgentCategoryDeleteFailedConsumer>();
+            config.AddConsumer<AgentCategoryDeleteFailedFault>();
         }
 
         /// <summary>
@@ -55,11 +75,13 @@ namespace Css.Api.Admin.EventHandlers.Registrations
         /// <param name="cfg"></param>
         public static void RegisterPublishers(this IRabbitMqBusFactoryConfigurator cfg)
         {
-            //TODO register all publisher using the RegisterPublisher<T>(exchangeName, queueName)           
+            //TODO register all publisher using the RegisterPublisher<T>(exchangeName, queueName)
             cfg.RegisterPublisher<CreateSchedulingCodeCommand>(MassTransitConstants.SchedulingCodeExchange);
             cfg.RegisterPublisher<UpdateSchedulingCodeCommand>(MassTransitConstants.SchedulingCodeExchange);
             cfg.RegisterPublisher<DeleteSchedulingCodeCommand>(MassTransitConstants.SchedulingCodeExchange);
-
+            cfg.RegisterPublisher<CreateAgentCategoryCommand>(MassTransitConstants.AgentCategoryExchange);
+            cfg.RegisterPublisher<UpdateAgentCategoryCommand>(MassTransitConstants.AgentCategoryExchange);
+            cfg.RegisterPublisher<DeleteAgentCategoryCommand>(MassTransitConstants.AgentCategoryExchange);
         }
 
         /// <summary>
@@ -80,6 +102,19 @@ namespace Css.Api.Admin.EventHandlers.Registrations
 
                 c.Consumer<SchedulingCodeDeleteSuccessConsumer>(ctx);
                 c.Consumer<SchedulingCodeDeleteFailedConsumer>(ctx);
+            });
+
+            cfg.ReceiveEndpoint(MassTransitConstants.AgentCategoryEventQueueBindingPattern, c =>
+            {
+                c.RegisterExchange(MassTransitConstants.AgentCategoryExchange, MassTransitConstants.AgentCategoryEventQueueBindingPattern);
+                c.Consumer<AgentCategoryCreateSuccessConsumer>(ctx);
+                c.Consumer<AgentCategoryCreateFailedConsumer>(ctx);
+
+                c.Consumer<AgentCategoryUpdateSuccessConsumer>(ctx);
+                c.Consumer<AgentCategoryUpdateFailedConsumer>(ctx);
+
+                c.Consumer<AgentCategoryDeleteSuccessConsumer>(ctx);
+                c.Consumer<AgentCategoryDeleteFailedConsumer>(ctx);
             });
         }
     }
