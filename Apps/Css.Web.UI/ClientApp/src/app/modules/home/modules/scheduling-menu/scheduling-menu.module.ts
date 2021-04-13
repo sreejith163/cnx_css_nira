@@ -39,6 +39,7 @@ import { ActivityLogsScheduleManagerComponent } from './components/shared/activi
 import { GetIconForScheduleManagerActivityLogsPipe } from './pipes/get-grid-icon-schedule-manager-activity-logs.pipe';
 import { GetIconSchedulingGridPipe } from './pipes/get-scheduling-grid-icon.pipe';
 import { OnlynumberDirective } from 'src/app/shared/directives/integer-only.directive';
+import { AgentCategoryValueComponent } from './components/agent-category-value/agent-category-value.component';
 
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule, BsDropdownModule.forRoot()];
@@ -59,7 +60,7 @@ const components =
     DateRangePopUpComponent,
     ViewOuScreenComponent,
     NumericDirective,
-    OnlynumberDirective, 
+    OnlynumberDirective,
     ActivityLogsComponent,
     MoveAgentsListComponent,
     MoveAgentsSchedulingGroupTypeaheadComponent,
@@ -68,7 +69,8 @@ const components =
     GetIconForGridPipe,
     GetIconSchedulingGridPipe,
     GetIconForScheduleManagerActivityLogsPipe,
-    ActivityLogsScheduleManagerComponent
+    ActivityLogsScheduleManagerComponent,
+    AgentCategoryValueComponent
   ];
 const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService, AgentScheduleManagersService,
                    MoveAgentsService];

@@ -1,0 +1,15 @@
+<ng-select [items]="agentCategoriesBuffer" [loading]="loading" bindLabel="name" bindValue="id"
+  placeholder="{{ 'All' | translate }}" [typeahead]="typeAheadInput$" (scroll)="onAgentCategoriesScroll($event)"
+  (scrollToEnd)="onAgentCategoriesScrollToEnd()" (change)="onAgentCategoriesChange($event)"
+  (clear)="clearAgentCategoriesValues()" [(ngModel)]="agentCategoryId">
+  <ng-template ng-header-tmp>
+    <small class="form-text text-muted">{{ 'Loaded' | translate }} {{agentCategoriesBuffer.length}} {{ 'of' | translate }}
+      {{totalItems}}</small>
+  </ng-template>
+  <ng-template ng-option-tmp let-item="item" let-index="index">
+    <span container="body" ngbTooltip="{{ item.name }}">
+      <!-- {{ item.name | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }} -->
+      {{ item.name }}
+    </span>
+  </ng-template>
+</ng-select>
