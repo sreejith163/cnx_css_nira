@@ -35,6 +35,11 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         private readonly Mock<IActivityLogRepository> mockActivityLogRepository;
 
         /// <summary>
+        /// The mock agent scheduling group repository
+        /// </summary>
+        private readonly Mock<IAgentSchedulingGroupRepository> mockAgentSchedulingGroupRepository;
+
+        /// <summary>
         /// The mock agent schedule repository
         /// </summary>
         private readonly Mock<IAgentScheduleRepository> mockAgentScheduleRepository;
@@ -84,6 +89,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockHttContext.Setup(_ => _.HttpContext).Returns(context);
 
             mockActivityLogRepository = new Mock<IActivityLogRepository>();
+            mockAgentSchedulingGroupRepository = new Mock<IAgentSchedulingGroupRepository>();
             mockAgentScheduleRepository = new Mock<IAgentScheduleRepository>();
             mockAgentScheduleManagerRepository = new Mock<IAgentScheduleManagerRepository>();
             mockAgentAdminRepository = new Mock<IAgentAdminRepository>();
@@ -95,7 +101,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
 
             agentScheduleService = new AgentScheduleService(mockHttContext.Object, mockActivityLogRepository.Object, mockAgentScheduleRepository.Object,
                                                             mockAgentScheduleManagerRepository.Object, mockAgentAdminRepository.Object,
-                                                            mockSchedulingCodeRepository.Object, mapper, mockUnitWork.Object);
+                                                            mockAgentSchedulingGroupRepository.Object, mockSchedulingCodeRepository.Object, mapper, mockUnitWork.Object);
         }
 
         #region GetAgentSchedules
