@@ -34,6 +34,7 @@ import { ConfirmationPopUpComponent } from './popups/confirmation-pop-up/confirm
 import { ErrorWarningPopUpComponent } from './popups/error-warning-pop-up/error-warning-pop-up.component';
 import { MessagePopUpComponent } from './popups/message-pop-up/message-pop-up.component';
 import { GenericPopUpComponent } from './popups/generic-pop-up/generic-pop-up.component';
+import { AgentCategoriesTypeaheadComponent } from './components/agent-categories-typeahead/agent-categories-typeahead.component';
 
 import { TranslationPipe } from './pipes/translation.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
@@ -42,6 +43,7 @@ import { LanguagePreferenceResolver } from './resolvers/language-preference.reso
 import { PermissionDirective } from './directives/permission.directive';
 import { SortDirective } from './directives/sort.directive';
 import { DradAndDropFileDirective } from './directives/drad-and-drop-file.directive';
+
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -60,6 +62,7 @@ const components =
     SkillTagTypeaheadComponent,
     SkillGroupTypeaheadComponent,
     AgentSchedulingGroupTypeaheadComponent,
+    AgentCategoriesTypeaheadComponent,
     SortDirective,
     TranslationPipe,
     SafeHtmlPipe,
