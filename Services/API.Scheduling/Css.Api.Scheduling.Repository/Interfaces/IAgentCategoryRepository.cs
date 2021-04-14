@@ -16,7 +16,7 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="agentCategoryQueryparameter">The scheduling code queryparameter.</param>
         /// <returns></returns>
-        Task<PagedList<Entity>> GetAgentCategorys(AgentCategoryQueryparameter agentCategoryQueryparameter);
+        Task<PagedList<Entity>> GetAgentCategories(AgentCategoryQueryparameter agentCategoryQueryparameter);
 
         /// <summary>
         /// Gets the scheduling code.

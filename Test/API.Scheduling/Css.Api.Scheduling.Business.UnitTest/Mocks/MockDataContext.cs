@@ -5,6 +5,7 @@ using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Request.AgentCategory;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
@@ -288,6 +289,12 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         {
             new SchedulingCode { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), SchedulingCodeId = 1, Name = "lunch", IsDeleted = false},
             new SchedulingCode { Id = new ObjectId("5fe0b5c46a05416894c0718f"), SchedulingCodeId = 2, Name = "lunch", IsDeleted = false},
+        }.AsQueryable();
+
+        private readonly IQueryable<AgentCategory> agentCategoriesDB = new List<AgentCategory>()
+        {
+            new AgentCategory { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), AgentCategoryId = 1, Name = "lunch", AgentCategoryType = AgentCategoryType.Numeric, DataTypeMinValue = "1", DataTypeMaxValue = "2" IsDeleted = false},
+            new AgentCategory { Id = new ObjectId("5fe0b5c46a05416894c0718f"), AgentCategoryId = 2, Name = "lunch", AgentCategoryType = AgentCategoryType.Date, IsDeleted = false},
         }.AsQueryable();
 
         #endregion
@@ -1452,6 +1459,119 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
             }
 
             return schedulingCodes;
+        }
+
+        #endregion
+
+        #region Agent Categories
+
+        /// <summary>
+        /// Gets the agentCategorys.
+        /// </summary>
+        /// <param name="agentCategoryQueryparameter">The agentCategory queryparameter.</param>
+        /// <returns></returns>
+        public PagedList<Entity> GetAgentCategorys(AgentCategoryQueryparameter agentCategoryQueryparameter)
+        {
+            var agentCategories = agentCategoriesDB.Where(x => x.IsDeleted == false);
+
+            var filteredAgentCategories = FilterAgentCategorys(agentCategories, agentCategoryQueryparameter);
+
+            var sortedAgentCategories = SortHelper.ApplySort(filteredAgentCategories, agentCategoryQueryparameter.OrderBy);
+
+            var pagedAgentCategories = sortedAgentCategories;
+
+            if (!agentCategoryQueryparameter.SkipPageSize)
+            {
+                pagedAgentCategories = sortedAgentCategories
+                   .Skip((agentCategoryQueryparameter.PageNumber - 1) * agentCategoryQueryparameter.PageSize)
+                   .Take(agentCategoryQueryparameter.PageSize);
+            }
+
+            var shapedAgentCategories = DataShaper.ShapeData(pagedAgentCategories, agentCategoryQueryparameter.Fields);
+
+            return PagedList<Entity>
+                .ToPagedList(shapedAgentCategories, filteredAgentCategories.Count(), agentCategoryQueryparameter.PageNumber, agentCategoryQueryparameter.PageSize).Result;
+        }
+
+        /// <summary>
+        /// Gets the agentCategory.
+        /// </summary>
+        /// <param name="agentCategoryIdDetails">The agentCategory identifier details.</param>
+        /// <returns></returns>
+        public AgentCategory GetAgentCategory(AgentCategoryIdDetails agentCategoryIdDetails)
+        {
+            return agentCategoriesDB.Where(x => x.IsDeleted == false && x.AgentCategoryId == agentCategoryIdDetails.AgentCategoryId).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the scheduling codes by ids.
+        /// </summary>
+        /// <param name="codes">The codes.</param>
+        /// <returns></returns>
+        public long GetAgentCategorysCountByIds(List<int> codes)
+        {
+            return agentCategoriesDB.Where(x => x.IsDeleted == false && codes.Contains(x.AgentCategoryId)).Count();
+        }
+
+        /// <summary>
+        /// Finds the agent categorys.
+        /// </summary>
+        /// <returns></returns>
+        public List<AgentCategory> FindAgentCategorys()
+        {
+            return agentCategoriesDB.Where(x => x.IsDeleted == false).ToList();
+        }
+
+        /// <summary>
+        /// Gets the agentCategorys count.
+        /// </summary>
+        /// <returns></returns>
+        public int GetAgentCategorysCount()
+        {
+            return agentCategoriesDB.Where(x => x.IsDeleted == false).Count();
+        }
+
+        /// <summary>
+        /// Creates the agentCategory.
+        /// </summary>
+        /// <param name="agentCategoryRequest">The agentCategory request.</param>
+        public void CreateAgentCategory(AgentCategory agentCategoryRequest)
+        {
+            agentCategoriesDB.ToList().Add(agentCategoryRequest);
+        }
+
+        /// <summary>
+        /// Updates the agentCategory.
+        /// </summary>
+        /// <param name="agentCategoryRequest">The agentCategory request.</param>
+        public void UpdateAgentCategory(AgentCategory agentCategoryRequest)
+        {
+            var agentCategory = agentCategoriesDB.Where(x => x.AgentCategoryId == agentCategoryRequest.AgentCategoryId).FirstOrDefault();
+            if (agentCategory != null)
+            {
+                agentCategory = agentCategoryRequest;
+            }
+        }
+
+        /// <summary>
+        /// Filters the agentCategorys.
+        /// </summary>
+        /// <param name="agentCategorys">The agentCategorys.</param>
+        /// <param name="agentCategoryQueryparameter">The agentCategory queryparameter.</param>
+        /// <returns></returns>
+        private IQueryable<AgentCategory> FilterAgentCategorys(IQueryable<AgentCategory> agentCategorys, AgentCategoryQueryparameter agentCategoryQueryparameter)
+        {
+            if (!agentCategorys.Any())
+            {
+                return agentCategorys;
+            }
+
+            if (!string.IsNullOrWhiteSpace(agentCategoryQueryparameter.SearchKeyword))
+            {
+                agentCategorys = agentCategorys.Where(o => o.Name.ToLower().Contains(agentCategoryQueryparameter.SearchKeyword.Trim().ToLower()));
+            }
+
+            return agentCategorys;
         }
 
         #endregion

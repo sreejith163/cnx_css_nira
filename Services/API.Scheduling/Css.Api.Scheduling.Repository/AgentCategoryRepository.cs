@@ -27,27 +27,27 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentCategoryQueryparameter">The agentCategory queryparameter.</param>
         /// <returns></returns>
-        public async Task<PagedList<Entity>> GetAgentCategorys(AgentCategoryQueryparameter agentCategoryQueryparameter)
+        public async Task<PagedList<Entity>> GetAgentCategories(AgentCategoryQueryparameter agentCategoryQueryparameter)
         {
-            var agentCategorys = FilterBy(x => true);
+            var agentCategories = FilterBy(x => true);
 
-            var filteredAgentCategorys = FilterAgentCategorys(agentCategorys, agentCategoryQueryparameter);
+            var filteredAgentCategories = FilterAgentCategorys(agentCategories, agentCategoryQueryparameter);
 
-            var sortedAgentCategorys = SortHelper.ApplySort(filteredAgentCategorys, agentCategoryQueryparameter.OrderBy);
+            var sortedAgentCategories = SortHelper.ApplySort(filteredAgentCategories, agentCategoryQueryparameter.OrderBy);
 
-            var pagedAgentCategorys = sortedAgentCategorys;
+            var pagedAgentCategories = sortedAgentCategories;
 
             if (!agentCategoryQueryparameter.SkipPageSize)
             {
-                pagedAgentCategorys = sortedAgentCategorys
+                pagedAgentCategories = sortedAgentCategories
                    .Skip((agentCategoryQueryparameter.PageNumber - 1) * agentCategoryQueryparameter.PageSize)
                    .Take(agentCategoryQueryparameter.PageSize);
             }
 
-            var shapedAgentCategorys = DataShaper.ShapeData(pagedAgentCategorys, agentCategoryQueryparameter.Fields);
+            var shapedAgentCategories = DataShaper.ShapeData(pagedAgentCategories, agentCategoryQueryparameter.Fields);
 
             return await PagedList<Entity>
-                .ToPagedList(shapedAgentCategorys, filteredAgentCategorys.Count(), agentCategoryQueryparameter.PageNumber, agentCategoryQueryparameter.PageSize);
+                .ToPagedList(shapedAgentCategories, filteredAgentCategories.Count(), agentCategoryQueryparameter.PageNumber, agentCategoryQueryparameter.PageSize);
         }
 
         /// <summary>
