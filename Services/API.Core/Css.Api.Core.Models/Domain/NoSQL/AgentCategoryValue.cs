@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace Css.Api.Core.Models.Domain.NoSQL
 {
@@ -7,6 +9,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the start date.
         /// </summary>
+        [BsonRepresentation(BsonType.String)]
         public DateTime StartDate { get; set; }
 
         /// <summary>

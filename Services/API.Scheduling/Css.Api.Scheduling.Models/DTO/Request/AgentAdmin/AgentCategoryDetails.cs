@@ -12,7 +12,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
         /// <summary>
         /// Gets or sets the start date.
         /// </summary>
-        public DateTime StartDate { get; set; }
+        public string StartDate { get; set; }
 
         /// <summary>
         /// Gets or sets the category id.

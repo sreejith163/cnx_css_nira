@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -885,18 +886,17 @@ namespace Css.Api.Scheduling.Business
         public async Task<CSSResponse> UpdateAgentCategoryValues(CreateAgentCategoryValue agentCategoryValue)
         {
             var processedAgentCategoriesResponse = await ProcessAgentCategoryValues(agentCategoryValue.AgentCategoryDetails);
-            var categoryDetails = processedAgentCategoriesResponse.Value as List<AgentCategoryDetails>;
 
             foreach (var agentCategoryDetails in agentCategoryValue.AgentCategoryDetails)
             {
-                if (!categoryDetails.Exists(x => x.EmployeeId == agentCategoryDetails.EmployeeId))
+                if (!processedAgentCategoriesResponse.Exists(x => x.EmployeeId == agentCategoryDetails.EmployeeId))
                 {
                     var employeeIdDetails = new EmployeeIdDetails { Id = agentCategoryDetails.EmployeeId };
                     var agentCategory = new AgentCategoryValue
                     {
                         CategoryId = agentCategoryDetails.CategoryId,
-                        CategoryValue = agentCategoryDetails.CategoryValue,
-                        StartDate = agentCategoryDetails.StartDate
+                        CategoryValue = agentCategoryDetails.CategoryValue.Trim(),
+                        StartDate = DateTime.ParseExact(agentCategoryDetails.StartDate.Trim(), "yyyyMMdd", CultureInfo.InvariantCulture)
                     };
 
                     _agentAdminRepository.UpdateAgentCategoryValue(employeeIdDetails, agentCategory);
@@ -905,7 +905,7 @@ namespace Css.Api.Scheduling.Business
 
             await _uow.Commit();
 
-            return new CSSResponse(processedAgentCategoriesResponse.Value, HttpStatusCode.NoContent);
+            return new CSSResponse(processedAgentCategoriesResponse, HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -913,15 +913,85 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         /// <param name="agentCategoryDetails">The agent category details.</param>
         /// <returns></returns>
-        private async Task<CSSResponse> ProcessAgentCategoryValues(List<AgentCategoryDetails> agentCategoryDetails)
+        private async Task<List<AgentCategoryValueUpdateResponse>> ProcessAgentCategoryValues(List<AgentCategoryDetails> agentCategoryDetails)
         {
+            string[] format = { "yyyyMMdd" };
+            var response = new List<AgentCategoryValueUpdateResponse>();
             var employeeIds = agentCategoryDetails.Select(x => x.EmployeeId).ToList();
             var agentCategoryIds = agentCategoryDetails.Select(x => x.CategoryId).ToList();
 
             var agentsByEmployeeIds = await _agentAdminRepository.GetAgentAdminsByEmployeeIds(employeeIds);
             var agentsByCategoryIds = await _agentAdminRepository.GetAgentAdminsByCategoryId(agentCategoryIds);
 
-            return new CSSResponse(HttpStatusCode.BadRequest);
+            foreach (var categoryDetails in agentCategoryDetails)
+            {
+                var employeeExists = agentsByEmployeeIds.Exists(x => x.Ssn == categoryDetails.EmployeeId);
+                var categoryExists = agentsByCategoryIds.Exists(x => x.AgentCategoryValues.Exists(x => x.CategoryId == categoryDetails.CategoryId));
+                var categoryTypeValid = IsAgentCatgoryTypeValid(categoryDetails);
+                var categoryDateValid = DateTime.TryParseExact(categoryDetails.StartDate, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate);
+
+                if (!employeeExists || !categoryExists || !categoryTypeValid || !categoryDateValid)
+                {
+                    var agentCategoryValueUpdateResponse = new AgentCategoryValueUpdateResponse
+                    {
+                        EmployeeId = categoryDetails.EmployeeId
+                    };
+                    if (!employeeExists)
+                    {
+                        agentCategoryValueUpdateResponse.Messages.Add("Unrecognized Employee ID");
+                    }
+                    if (!categoryExists)
+                    {
+                        agentCategoryValueUpdateResponse.Messages.Add("Unrecognized Agent Category");
+                    }
+                    if (!categoryTypeValid)
+                    {
+                        agentCategoryValueUpdateResponse.Messages.Add("Invalid Date Agent Category Type");
+                    }
+                    if (!categoryDateValid)
+                    {
+                        agentCategoryValueUpdateResponse.Messages.Add("Invalid Date Format (YYYYMMDD)");
+                    }
+
+                    response.Add(agentCategoryValueUpdateResponse);
+                }
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Determines whether [is agent catgory type valid] [the specified category details].
+        /// </summary>
+        /// <param name="categoryDetails">The category details.</param>
+        /// <returns>
+        ///   <c>true</c> if [is agent catgory type valid] [the specified category details]; otherwise, <c>false</c>.
+        /// </returns>
+        private bool IsAgentCatgoryTypeValid(AgentCategoryDetails categoryDetails)
+        {
+            bool isValid = false;
+            string[] format = { "yyyyMMdd" };
+
+            if (Enum.IsDefined(typeof(AgentCategoryType), categoryDetails.CategoryId))
+            {
+                var categoryType = (AgentCategoryType)categoryDetails.CategoryId;
+                switch (categoryType)
+                {
+                    case AgentCategoryType.Numeric:
+                        isValid = int.TryParse(categoryDetails.CategoryValue.Trim(), out _);
+                        break;
+
+                    case AgentCategoryType.AlphaNumeric:
+                        isValid = true;
+                        break;
+
+                    case AgentCategoryType.Date:
+                        isValid = DateTime.TryParseExact(categoryDetails.CategoryValue.Trim(), format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate);
+                        break;
+                }
+            }
+
+            return isValid;
         }
 
         /// <summary>Finds the moving date basedon timezone.</summary>
