@@ -8,6 +8,7 @@ using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Request.AgentCategory;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
@@ -91,6 +92,11 @@ namespace Css.Api.Scheduling.Business
         private readonly IActivityLogRepository _activityLogRepository;
 
         /// <summary>
+        /// The agent category repository
+        /// </summary>
+        private readonly IAgentCategoryRepository _agentCategoryRepository;
+
+        /// <summary>
         /// The agent scheduling group history repository
         /// </summary>
         private readonly IAgentSchedulingGroupHistoryRepository _agentSchedulingGroupHistoryRepository;
@@ -105,7 +111,9 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IUnitOfWork _uow;
 
-        /// <summary>Initializes a new instance of the <see cref="AgentAdminService" /> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgentAdminService" /> class.
+        /// </summary>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="agentAdminRepository">The agent admin repository.</param>
         /// <param name="agentScheduleRepository">The agent schedule repository.</param>
@@ -117,6 +125,8 @@ namespace Css.Api.Scheduling.Business
         /// <param name="agentSchedulingGroupRepository">The agent scheduling group repository.</param>
         /// <param name="timezoneRepository">The timezone repository.</param>
         /// <param name="activityLogRepository">The activity log repository.</param>
+        /// <param name="agentCategoryRepository">The agent category repository.</param>
+        /// <param name="agentSchedulingGroupHistoryRepository">The agent scheduling group history repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
         public AgentAdminService(
@@ -131,6 +141,7 @@ namespace Css.Api.Scheduling.Business
             IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
             ITimezoneRepository timezoneRepository,
             IActivityLogRepository activityLogRepository,
+            IAgentCategoryRepository agentCategoryRepository,
             IAgentSchedulingGroupHistoryRepository agentSchedulingGroupHistoryRepository,
             IMapper mapper,
             IUnitOfWork uow)
@@ -146,6 +157,7 @@ namespace Css.Api.Scheduling.Business
             _agentSchedulingGroupRepository = agentSchedulingGroupRepository;
             _timezoneRepository = timezoneRepository;
             _activityLogRepository = activityLogRepository;
+            _agentCategoryRepository = agentCategoryRepository;
             _agentSchedulingGroupHistoryRepository = agentSchedulingGroupHistoryRepository;
             _mapper = mapper;
             _uow = uow;
@@ -927,8 +939,31 @@ namespace Css.Api.Scheduling.Business
             {
                 var employeeExists = agentsByEmployeeIds.Exists(x => x.Ssn == categoryDetails.EmployeeId);
                 var categoryExists = agentsByCategoryIds.Exists(x => x.AgentCategoryValues.Exists(x => x.CategoryId == categoryDetails.CategoryId));
-                var categoryTypeValid = IsAgentCatgoryTypeValid(categoryDetails);
+                var categoryTypeValid = IsAgentCatgoryTypeValid(categoryDetails, format);
                 var categoryDateValid = DateTime.TryParseExact(categoryDetails.StartDate, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate);
+
+                if (Enum.IsDefined(typeof(AgentCategoryType), categoryDetails.CategoryId))
+                {
+                    var categoryType = (AgentCategoryType)categoryDetails.CategoryId;
+                    if (categoryType == AgentCategoryType.Numeric)
+                    {
+                        var agentCategoryIdDetails = new AgentCategoryIdDetails { AgentCategoryId = categoryDetails.CategoryId };
+                        var agentCategory = await _agentCategoryRepository.GetAgentCategory(agentCategoryIdDetails);
+                        if (agentCategoryIdDetails != null)
+                        {
+                            bool isValid = int.TryParse(categoryDetails.CategoryValue.Trim(), out int value);
+                            if (isValid)
+                            {
+                                int.TryParse(agentCategory.DataTypeMinValue.Trim(), out int minValue); 
+                                int.TryParse(agentCategory.DataTypeMaxValue.Trim(), out int maxValue);
+                                if (value <= minValue || value >= maxValue)
+                                {
+                                    categoryTypeValid = false;
+                                }
+                            }
+                        }
+                    }
+                }
 
                 if (!employeeExists || !categoryExists || !categoryTypeValid || !categoryDateValid)
                 {
@@ -964,13 +999,13 @@ namespace Css.Api.Scheduling.Business
         /// Determines whether [is agent catgory type valid] [the specified category details].
         /// </summary>
         /// <param name="categoryDetails">The category details.</param>
+        /// <param name="format">The format.</param>
         /// <returns>
         ///   <c>true</c> if [is agent catgory type valid] [the specified category details]; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsAgentCatgoryTypeValid(AgentCategoryDetails categoryDetails)
+        private bool IsAgentCatgoryTypeValid(AgentCategoryDetails categoryDetails, string[] format)
         {
             bool isValid = false;
-            string[] format = { "yyyyMMdd" };
 
             if (Enum.IsDefined(typeof(AgentCategoryType), categoryDetails.CategoryId))
             {

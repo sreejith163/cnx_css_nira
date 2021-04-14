@@ -72,13 +72,24 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// </summary>
         private readonly Mock<IAgentSchedulingGroupRepository> mockAgentSchedulingGroupRepository;
 
-        /// <summary>The mock timezone repository</summary>
+        /// <summary>
+        /// The mock timezone repository
+        /// </summary>
         private readonly Mock<ITimezoneRepository> mockTimezoneRepository;
 
-        /// <summary>The mock activity log repository</summary>
+        /// <summary>
+        /// The mock activity log repository
+        /// </summary>
         private readonly Mock<IActivityLogRepository> mockActivityLogRepository;
 
-        /// <summary>The mock agent scheduling group history repository</summary>
+        /// <summary>
+        /// The mock agent category repository
+        /// </summary>
+        private readonly Mock<IAgentCategoryRepository> mockAgentCategoryRepository;
+
+        /// <summary>
+        /// The mock agent scheduling group history repository
+        /// </summary>
         private readonly Mock<IAgentSchedulingGroupHistoryRepository> mockAgentSchedulingGroupHistoryRepository;
 
         /// <summary>
@@ -114,6 +125,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockAgentSchedulingGroupRepository = new Mock<IAgentSchedulingGroupRepository>();
             mockTimezoneRepository = new Mock<ITimezoneRepository>();
             mockActivityLogRepository = new Mock<IActivityLogRepository>();
+            mockAgentCategoryRepository = new Mock<IAgentCategoryRepository>();
             mockAgentSchedulingGroupHistoryRepository = new Mock<IAgentSchedulingGroupHistoryRepository>();
             var mockUnitWork = new Mock<IUnitOfWork>();
 
@@ -131,6 +143,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 mockAgentSchedulingGroupRepository.Object,
                 mockTimezoneRepository.Object,
                 mockActivityLogRepository.Object,
+                mockAgentCategoryRepository.Object,
                 mockAgentSchedulingGroupHistoryRepository.Object,
                 mapper,
                 mockUnitWork.Object

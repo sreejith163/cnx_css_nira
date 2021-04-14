@@ -14,16 +14,16 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <summary>
         /// Gets the scheduling codes.
         /// </summary>
-        /// <param name="schedulingCodeQueryparameter">The scheduling code queryparameter.</param>
+        /// <param name="agentCategoryQueryparameter">The scheduling code queryparameter.</param>
         /// <returns></returns>
-        Task<PagedList<Entity>> GetAgentCategorys(AgentCategoryQueryparameter schedulingCodeQueryparameter);
+        Task<PagedList<Entity>> GetAgentCategorys(AgentCategoryQueryparameter agentCategoryQueryparameter);
 
         /// <summary>
         /// Gets the scheduling code.
         /// </summary>
-        /// <param name="schedulingCodeIdDetails">The scheduling code identifier details.</param>
+        /// <param name="agentCategoryIdDetails">The scheduling code identifier details.</param>
         /// <returns></returns>
-        Task<AgentCategory> GetAgentCategory(AgentCategoryIdDetails schedulingCodeIdDetails);
+        Task<AgentCategory> GetAgentCategory(AgentCategoryIdDetails agentCategoryIdDetails);
 
         /// <summary>
         /// Finds the agent categorys.
@@ -34,9 +34,9 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <summary>
         /// Gets the scheduling codes count by ids.
         /// </summary>
-        /// <param name="schedulingCodes">The scheduling codes.</param>
+        /// <param name="agentCategorys">The scheduling codes.</param>
         /// <returns></returns>
-        Task<long> GetAgentCategorysCountByIds(List<int> schedulingCodes);
+        Task<long> GetAgentCategorysCountByIds(List<int> agentCategorys);
 
         /// <summary>
         /// Gets the scheduling codes count.
@@ -47,14 +47,14 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <summary>
         /// Creates the scheduling code.
         /// </summary>
-        /// <param name="schedulingCodeRequest">The scheduling code request.</param>
-        void CreateAgentCategory(AgentCategory schedulingCodeRequest);
+        /// <param name="agentCategoryRequest">The scheduling code request.</param>
+        void CreateAgentCategory(AgentCategory agentCategoryRequest);
 
         /// <summary>
         /// Updates the scheduling code.
         /// </summary>
-        /// <param name="schedulingCodeRequest">The scheduling code request.</param>
-        void UpdateAgentCategory(AgentCategory schedulingCodeRequest);
+        /// <param name="agentCategoryRequest">The scheduling code request.</param>
+        void UpdateAgentCategory(AgentCategory agentCategoryRequest);
     }
 }
 
