@@ -70,10 +70,13 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         {
             new Agent { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), FirstName = "abc", LastName = "def", Ssn = 1,
                         Sso = "user1@concentrix.com", ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
-                        CreatedBy = "Admin", CreatedDate = DateTime.UtcNow },
+                        CreatedBy = "Admin", CreatedDate = DateTime.UtcNow, 
+                        AgentCategoryValues = new List<AgentCategoryValue> { new AgentCategoryValue { CategoryId = 1, StartDate = DateTime.Now, CategoryValue = "1" } } },
             new Agent { Id = new ObjectId("5fe0b5c46a05416894c0718f"), FirstName = "lmn", LastName = "pqr", Ssn = 2,
                         Sso = "user2@concentrix.com", ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
-                        CreatedBy = "Admin", CreatedDate = DateTime.UtcNow }
+                        CreatedBy = "Admin", CreatedDate = DateTime.UtcNow,
+                        AgentCategoryValues = new List<AgentCategoryValue> { new AgentCategoryValue { CategoryId = 2, StartDate = DateTime.Now, CategoryValue = "2" } }
+                      }
         }.AsQueryable();
 
         private readonly IQueryable<ActivityLog> activityLogsDB = new List<ActivityLog>()
