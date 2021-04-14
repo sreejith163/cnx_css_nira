@@ -494,6 +494,18 @@
       "UpstreamPathTemplate": "/api/agentadmins/move",
       "UpstreamHttpMethod": [ "Put" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentadmins/agentCategoryValues",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentadmins/agentCategoryValues",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
     //********* Agent Schedule Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules",
@@ -580,7 +592,7 @@
       "UpstreamHttpMethod": [ "Put", "Delete" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentEmployeeId}/myschedule",
+      "DownstreamPathTemplate": "/api/v1/AgentScheduleManagers/{agentEmployeeId}/myschedule",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -588,7 +600,7 @@
           "Port": 4205
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedules/{agentEmployeeId}/myschedule",
+      "UpstreamPathTemplate": "/api/agentschedulemanagers/{agentEmployeeId}/myschedule",
       "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {

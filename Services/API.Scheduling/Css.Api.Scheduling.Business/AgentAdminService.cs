@@ -880,16 +880,23 @@ namespace Css.Api.Scheduling.Business
         /// <summary>
         /// Updates the agent category values.
         /// </summary>
-        /// <param name="agentCategoryValues">The agent category value.</param>
+        /// <param name="agentCategoryValue">The agent category value.</param>
         /// <returns></returns>
-        public async Task<CSSResponse> UpdateAgentCategoryValues(CreateAgentCategoryValue agentCategoryValues)
+        public async Task<CSSResponse> UpdateAgentCategoryValues(CreateAgentCategoryValue agentCategoryValue)
         {
-            foreach (var agentCategoryValue in agentCategoryValues)
+            foreach (var agentCategoryDetails in agentCategoryValue.AgentCategoryDetails)
             {
+                var employeeIdDetails = new EmployeeIdDetails { Id = agentCategoryDetails.EmployeeId };
+                var agentCategory = new AgentCategoryValue
+                {
+                    CategoryId = agentCategoryDetails.CategoryId,
+                    CategoryValue = agentCategoryDetails.CategoryValue,
+                    StartDate = agentCategoryDetails.StartDate
+                };
 
+                _agentAdminRepository.UpdateAgentCategoryValue(employeeIdDetails, agentCategory);
             }
 
-            _agentAdminRepository.UpdateAgentCategoryValue();
             await _uow.Commit();
 
             return new CSSResponse(HttpStatusCode.NoContent);
