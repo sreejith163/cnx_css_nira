@@ -22,6 +22,7 @@ using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using System.Collections.Generic;
 using MongoDB.Bson;
+using Css.Api.Scheduling.Models.DTO.Request.AgentCategory;
 
 namespace Css.Api.Scheduling.Business.UnitTest.Services
 {
@@ -556,6 +557,87 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Assert.Equal(HttpStatusCode.NoContent, result.Code);
 
         }
+        #endregion
+
+        #region UpdateAgentCategoryValues
+
+        /// <summary>
+        /// Gets the agent admin.
+        /// </summary>
+        /// <param name="employeeId">The employee identifier.</param>
+        [Theory]
+        [InlineData(100)]
+        [InlineData(101)]
+        public async void UpdateAgentCategoryValuesWithUnprocessedData(int employeeId)
+        {
+            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminsByEmployeeIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> agentAdminEmployeeIdsDetails) => mockDataContext.GetAgentAdminsByEmployeeIds(agentAdminEmployeeIdsDetails));
+
+            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminsByCategoryId(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> agentCategoryDetails) => mockDataContext.GetAgentAdminsByCategoryId(agentCategoryDetails));
+
+            mockAgentCategoryRepository.Setup(mr => mr.GetAgentCategory(It.IsAny<AgentCategoryIdDetails>())).ReturnsAsync(
+                (AgentCategoryIdDetails agentCategoryIdDetails) => mockDataContext.GetAgentCategory(agentCategoryIdDetails));
+
+            CreateAgentCategoryValue agentCategory = new CreateAgentCategoryValue
+            {
+                AgentCategoryDetails = new List<AgentCategoryDetails>()
+                {
+                    new AgentCategoryDetails
+                    {
+                        EmployeeId = employeeId,
+                        CategoryId = 1,
+                        CategoryValue = "1",
+                        StartDate = "20210202"
+                    }
+                }
+            };
+
+            var result = await agentAdminService.UpdateAgentCategoryValues(agentCategory);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.Equal(HttpStatusCode.NoContent, result.Code);
+        }
+
+        /// <summary>
+        /// Gets the agent admin.
+        /// </summary>
+        /// <param name="employeeId">The employee identifier.</param>
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void UpdateAgentCategoryValues(int employeeId)
+        {
+            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminsByEmployeeIds(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> agentAdminEmployeeIdsDetails) => mockDataContext.GetAgentAdminsByEmployeeIds(agentAdminEmployeeIdsDetails));
+
+            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminsByCategoryId(It.IsAny<List<int>>())).ReturnsAsync(
+                (List<int> agentCategoryDetails) => mockDataContext.GetAgentAdminsByCategoryId(agentCategoryDetails));
+
+            mockAgentCategoryRepository.Setup(mr => mr.GetAgentCategory(It.IsAny<AgentCategoryIdDetails>())).ReturnsAsync(
+                (AgentCategoryIdDetails agentCategoryIdDetails) => mockDataContext.GetAgentCategory(agentCategoryIdDetails));
+
+            CreateAgentCategoryValue agentCategory = new CreateAgentCategoryValue
+            {
+                AgentCategoryDetails = new List<AgentCategoryDetails>() 
+                {
+                    new AgentCategoryDetails
+                    {
+                        EmployeeId = employeeId,
+                        CategoryId = 1,
+                        CategoryValue = "1",
+                        StartDate = "20210202"
+                    }
+                }
+            };
+
+            var result = await agentAdminService.UpdateAgentCategoryValues(agentCategory);
+
+            Assert.NotNull(result);
+            Assert.Equal(HttpStatusCode.NoContent, result.Code);
+        }
+
         #endregion
 
         #region DeleteAgentAdmin

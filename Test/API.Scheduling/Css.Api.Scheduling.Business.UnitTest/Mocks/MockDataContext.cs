@@ -293,7 +293,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
 
         private readonly IQueryable<AgentCategory> agentCategoriesDB = new List<AgentCategory>()
         {
-            new AgentCategory { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), AgentCategoryId = 1, Name = "lunch", AgentCategoryType = AgentCategoryType.Numeric, DataTypeMinValue = "1", DataTypeMaxValue = "2" IsDeleted = false},
+            new AgentCategory { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), AgentCategoryId = 1, Name = "lunch", AgentCategoryType = AgentCategoryType.Numeric, DataTypeMinValue = "1", DataTypeMaxValue = "2", IsDeleted = false},
             new AgentCategory { Id = new ObjectId("5fe0b5c46a05416894c0718f"), AgentCategoryId = 2, Name = "lunch", AgentCategoryType = AgentCategoryType.Date, IsDeleted = false},
         }.AsQueryable();
 
@@ -446,6 +446,18 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         public List<Agent> GetAgentAdminsByEmployeeIds(List<int> agentAdminEmployeeIdsDetails)
         {
             return agentAdminsDB.Where(x => x.IsDeleted == false && agentAdminEmployeeIdsDetails.Contains(x.Ssn)).ToList();
+        }
+
+
+
+        /// <summary>
+        /// Gets the agent admins by category identifier.
+        /// </summary>
+        /// <param name="agentCategoryDetails">The agent category details.</param>
+        /// <returns></returns>
+        public List<Agent> GetAgentAdminsByCategoryId(List<int> agentCategoryDetails)
+        {
+            return agentAdminsDB.Where(x => x.IsDeleted == false && x.AgentCategoryValues.Exists(x => agentCategoryDetails.Contains(x.CategoryId))).ToList();
         }
 
         /// <summary>
