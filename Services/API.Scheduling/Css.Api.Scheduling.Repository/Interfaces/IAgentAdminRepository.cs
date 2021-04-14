@@ -55,6 +55,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <returns></returns>
         Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<int> agentAdminEmployeeIdsDetails);
 
+        /// <summary>
+        /// Gets the agent admins by category identifier.
+        /// </summary>
+        /// <param name="agentCategoryDetails">The agent category details.</param>
+        /// <returns></returns>
+        Task<List<Agent>> GetAgentAdminsByCategoryId(List<int> agentCategoryDetails);
+
         /// <summary>Gets the agent admins by ids.</summary>
         /// <param name="agentAdminIdsDetails">The agent admin ids details.</param>
         /// <param name="sourceSchedulingGroupId">The source scheduling group identifier.</param>

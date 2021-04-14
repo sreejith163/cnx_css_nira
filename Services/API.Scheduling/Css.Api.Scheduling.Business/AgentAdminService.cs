@@ -884,22 +884,44 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> UpdateAgentCategoryValues(CreateAgentCategoryValue agentCategoryValue)
         {
+            var processedAgentCategoriesResponse = await ProcessAgentCategoryValues(agentCategoryValue.AgentCategoryDetails);
+            var categoryDetails = processedAgentCategoriesResponse.Value as List<AgentCategoryDetails>;
+
             foreach (var agentCategoryDetails in agentCategoryValue.AgentCategoryDetails)
             {
-                var employeeIdDetails = new EmployeeIdDetails { Id = agentCategoryDetails.EmployeeId };
-                var agentCategory = new AgentCategoryValue
+                if (!categoryDetails.Exists(x => x.EmployeeId == agentCategoryDetails.EmployeeId))
                 {
-                    CategoryId = agentCategoryDetails.CategoryId,
-                    CategoryValue = agentCategoryDetails.CategoryValue,
-                    StartDate = agentCategoryDetails.StartDate
-                };
+                    var employeeIdDetails = new EmployeeIdDetails { Id = agentCategoryDetails.EmployeeId };
+                    var agentCategory = new AgentCategoryValue
+                    {
+                        CategoryId = agentCategoryDetails.CategoryId,
+                        CategoryValue = agentCategoryDetails.CategoryValue,
+                        StartDate = agentCategoryDetails.StartDate
+                    };
 
-                _agentAdminRepository.UpdateAgentCategoryValue(employeeIdDetails, agentCategory);
+                    _agentAdminRepository.UpdateAgentCategoryValue(employeeIdDetails, agentCategory);
+                }
             }
 
             await _uow.Commit();
 
-            return new CSSResponse(HttpStatusCode.NoContent);
+            return new CSSResponse(processedAgentCategoriesResponse.Value, HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Processes the agent category values.
+        /// </summary>
+        /// <param name="agentCategoryDetails">The agent category details.</param>
+        /// <returns></returns>
+        private async Task<CSSResponse> ProcessAgentCategoryValues(List<AgentCategoryDetails> agentCategoryDetails)
+        {
+            var employeeIds = agentCategoryDetails.Select(x => x.EmployeeId).ToList();
+            var agentCategoryIds = agentCategoryDetails.Select(x => x.CategoryId).ToList();
+
+            var agentsByEmployeeIds = await _agentAdminRepository.GetAgentAdminsByEmployeeIds(employeeIds);
+            var agentsByCategoryIds = await _agentAdminRepository.GetAgentAdminsByCategoryId(agentCategoryIds);
+
+            return new CSSResponse(HttpStatusCode.BadRequest);
         }
 
         /// <summary>Finds the moving date basedon timezone.</summary>
