@@ -193,6 +193,35 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
+        /// Updates the agent category value.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="categoryValue">The category value.</param>
+        public void UpdateAgentCategoryValue(EmployeeIdDetails employeeIdDetails, AgentCategoryValue categoryValue)
+        {            
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.Ssn, employeeIdDetails.Id) & 
+                Builders<Agent>.Filter.ElemMatch(
+                    i => i.AgentCategoryValues, category => category.CategoryId == categoryValue.CategoryId) &
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false);
+
+            var documentCount = FindCountByIdAsync(query).Result;
+            if (documentCount > 0)
+            {
+                var update = Builders<Agent>.Update
+                    .Set(x => x.AgentCategoryValues[-1].StartDate, categoryValue.StartDate)
+                    .Set(x => x.AgentCategoryValues[-1].CategoryValue, categoryValue.CategoryValue);
+
+                UpdateOneAsync(query, update);
+            }
+            else
+            {
+                var update = Builders<Agent>.Update.AddToSet(x => x.AgentCategoryValues, categoryValue);
+                UpdateOneAsync(query, update);
+            }
+        }
+
+        /// <summary>
         /// Creates the agent admin.
         /// </summary>
         /// <param name="agentAdminRequest">The agent admin request.</param>

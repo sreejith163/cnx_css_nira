@@ -102,6 +102,18 @@ namespace Css.Api.Scheduling.Controllers
         }
 
         /// <summary>
+        /// Updates the agent category values.
+        /// </summary>
+        /// <param name="agentCategoryValue">The agent category value.</param>
+        /// <returns></returns>
+        [HttpPut("agentCategoryValues")]
+        public async Task<IActionResult> UpdateAgentCategoryValues([FromBody] CreateAgentCategoryValue agentCategoryValue)
+        {
+            var result = await _agentAdminService.UpdateAgentCategoryValues(agentCategoryValue);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>
         /// Deletes the agent admin.
         /// </summary>
         /// <param name="agentAdminId">The agentAdmin identifier.</param>

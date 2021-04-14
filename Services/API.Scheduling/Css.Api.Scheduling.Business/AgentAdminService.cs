@@ -79,7 +79,9 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IAgentSchedulingGroupRepository _agentSchedulingGroupRepository;
 
-        /// <summary>The timezone repository</summary>
+        /// <summary>
+        /// The timezone repository
+        /// </summary>
         private readonly ITimezoneRepository _timezoneRepository;
 
         /// <summary>
@@ -87,7 +89,9 @@ namespace Css.Api.Scheduling.Business
         /// </summary>
         private readonly IActivityLogRepository _activityLogRepository;
 
-        /// <summary>The agent scheduling group history repository</summary>
+        /// <summary>
+        /// The agent scheduling group history repository
+        /// </summary>
         private readonly IAgentSchedulingGroupHistoryRepository _agentSchedulingGroupHistoryRepository;
 
         /// <summary>
@@ -99,7 +103,6 @@ namespace Css.Api.Scheduling.Business
         /// The uow
         /// </summary>
         private readonly IUnitOfWork _uow;
-
 
         /// <summary>Initializes a new instance of the <see cref="AgentAdminService" /> class.</summary>
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
@@ -872,7 +875,24 @@ namespace Css.Api.Scheduling.Business
             await _uow.Commit();
 
             return new CSSResponse(HttpStatusCode.NoContent);
+        }
 
+        /// <summary>
+        /// Updates the agent category values.
+        /// </summary>
+        /// <param name="agentCategoryValues">The agent category value.</param>
+        /// <returns></returns>
+        public async Task<CSSResponse> UpdateAgentCategoryValues(CreateAgentCategoryValue agentCategoryValues)
+        {
+            foreach (var agentCategoryValue in agentCategoryValues)
+            {
+
+            }
+
+            _agentAdminRepository.UpdateAgentCategoryValue();
+            await _uow.Commit();
+
+            return new CSSResponse(HttpStatusCode.NoContent);
         }
 
         /// <summary>Finds the moving date basedon timezone.</summary>

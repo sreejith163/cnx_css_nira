@@ -10,14 +10,14 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public DateTime StartDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the category.
+        /// Gets or sets the category id.
         /// </summary>
-        public string Category { get; set; }
+        public int CategoryId { get; set; }
 
         /// <summary>
-        /// Gets or sets the value.
+        /// Gets or sets the category value.
         /// </summary>
-        public string Value { get; set; }
+        public string CategoryValue { get; set; }
 
     }
 }

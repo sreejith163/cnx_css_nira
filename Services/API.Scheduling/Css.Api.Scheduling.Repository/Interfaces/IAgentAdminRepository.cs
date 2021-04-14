@@ -77,6 +77,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<int> GetAgentAdminsCount();
 
         /// <summary>
+        /// Updates the agent category values.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="categoryValue">The category valu.</param>
+        void UpdateAgentCategoryValue(EmployeeIdDetails employeeIdDetails, AgentCategoryValue categoryValue);
+
+        /// <summary>
         /// Creates the agent admin.
         /// </summary>
         /// <param name="agentAdminRequest">The agent admin request.</param>
