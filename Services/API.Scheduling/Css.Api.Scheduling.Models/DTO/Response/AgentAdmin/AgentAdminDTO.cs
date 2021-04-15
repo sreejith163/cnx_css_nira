@@ -50,6 +50,11 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
         public List<AgentData> AgentData { get; set; }
 
         /// <summary>
+        /// Gets or sets the agent category values.
+        /// </summary>
+        public List<AgentCategoryValue> AgentCategoryValues { get; set; }
+
+        /// <summary>
         /// Gets or sets the super visor identifier.
         /// </summary>
         public string SupervisorId { get; set; }
