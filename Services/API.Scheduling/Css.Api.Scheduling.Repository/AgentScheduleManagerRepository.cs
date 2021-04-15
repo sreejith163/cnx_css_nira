@@ -112,11 +112,14 @@ namespace Css.Api.Scheduling.Repository
         /// </returns>
         public async Task<List<AgentScheduleManager>> GetAgentScheduleManagerChartByEmployeeId(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter)
         {
+            var startDate = new DateTime(myScheduleQueryParameter.StartDate.Year, myScheduleQueryParameter.StartDate.Month, myScheduleQueryParameter.StartDate.Day, 0, 0, 0, DateTimeKind.Utc);
+            var endDate = new DateTime(myScheduleQueryParameter.EndDate.Year, myScheduleQueryParameter.EndDate.Month, myScheduleQueryParameter.EndDate.Day, 0, 0, 0, DateTimeKind.Utc);
+
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.AgentSchedulingGroupId, myScheduleQueryParameter.AgentSchedulingGroupId) &
-                Builders<AgentScheduleManager>.Filter.Gte(i => i.Date, myScheduleQueryParameter.StartDate) &
-                Builders<AgentScheduleManager>.Filter.Lte(i => i.Date, myScheduleQueryParameter.EndDate);
+                Builders<AgentScheduleManager>.Filter.Gte(i => i.Date, startDate) &
+                Builders<AgentScheduleManager>.Filter.Lte(i => i.Date, endDate);
 
             var agentAdmins = FilterBy(query);
 
@@ -162,7 +165,7 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
-        public async Task<List<int>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        public async Task<List<string>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
         {
             var query =
                 Builders<AgentScheduleManager>.Filter.Eq(i => i.AgentSchedulingGroupId, agentSchedulingGroupIdDetails.AgentSchedulingGroupId);
@@ -283,9 +286,9 @@ namespace Css.Api.Scheduling.Repository
                 return agentScheduleManagers;
             }
 
-            agentScheduleManagers = agentScheduleManagers.Where(x => x.EmployeeId != 0);
+            agentScheduleManagers = agentScheduleManagers.Where(x => x.EmployeeId != null || x.EmployeeId != "");
 
-            if (agentScheduleManagerChartQueryparameter.EmployeeId.HasValue && agentScheduleManagerChartQueryparameter.EmployeeId != default(int))
+            if (!string.IsNullOrWhiteSpace(agentScheduleManagerChartQueryparameter.EmployeeId))
             {
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.EmployeeId == agentScheduleManagerChartQueryparameter.EmployeeId);
             }

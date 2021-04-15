@@ -5,7 +5,6 @@ using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.Domain;
 using Css.Api.Scheduling.Models.DTO.Request.ActivityLog;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
-using Css.Api.Scheduling.Models.DTO.Request.AgentCategory;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
@@ -60,35 +59,32 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
 
         private readonly IQueryable<AgentSchedulingGroupHistory> agentSchedulingGroupHistoryDB = new List<AgentSchedulingGroupHistory>()
         {
-            new AgentSchedulingGroupHistory { Id= new ObjectId("3de0b5ad6a05416894c0718d"), EmployeeId=1, AgentSchedulingGroupId=1, StartDate= new DateTime(2020,1,1),
+            new AgentSchedulingGroupHistory { Id= new ObjectId("3de0b5ad6a05416894c0718d"), EmployeeId="1", AgentSchedulingGroupId=1, StartDate= new DateTime(2020,1,1),
             ActivityOrigin=ActivityOrigin.CSS, EndDate=null},
-            new AgentSchedulingGroupHistory { Id= new ObjectId("3de0b5ad6a05416894c0718e"), EmployeeId=2, AgentSchedulingGroupId=1, StartDate= new DateTime(2020,1,1),
+            new AgentSchedulingGroupHistory { Id= new ObjectId("3de0b5ad6a05416894c0718e"), EmployeeId="2", AgentSchedulingGroupId=1, StartDate= new DateTime(2020,1,1),
             ActivityOrigin=ActivityOrigin.CSS, EndDate=null}
         }.AsQueryable();
 
         private readonly IQueryable<Agent> agentAdminsDB = new List<Agent>()
         {
-            new Agent { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), FirstName = "abc", LastName = "def", Ssn = 1,
+            new Agent { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), FirstName = "abc", LastName = "def", Ssn = "1",
                         Sso = "user1@concentrix.com", ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
-                        CreatedBy = "Admin", CreatedDate = DateTime.UtcNow, 
-                        AgentCategoryValues = new List<AgentCategoryValue> { new AgentCategoryValue { CategoryId = 1, StartDate = DateTime.Now, CategoryValue = "1" } } },
-            new Agent { Id = new ObjectId("5fe0b5c46a05416894c0718f"), FirstName = "lmn", LastName = "pqr", Ssn = 2,
+                        CreatedBy = "Admin", CreatedDate = DateTime.UtcNow },
+            new Agent { Id = new ObjectId("5fe0b5c46a05416894c0718f"), FirstName = "lmn", LastName = "pqr", Ssn = "2",
                         Sso = "user2@concentrix.com", ClientId = 1, ClientLobGroupId = 1, SkillGroupId = 1, SkillTagId = 1, AgentSchedulingGroupId = 1,
-                        CreatedBy = "Admin", CreatedDate = DateTime.UtcNow,
-                        AgentCategoryValues = new List<AgentCategoryValue> { new AgentCategoryValue { CategoryId = 2, StartDate = DateTime.Now, CategoryValue = "2" } }
-                      }
+                        CreatedBy = "Admin", CreatedDate = DateTime.UtcNow }
         }.AsQueryable();
 
         private readonly IQueryable<ActivityLog> activityLogsDB = new List<ActivityLog>()
         {
             new ActivityLog { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), ActivityOrigin=ActivityOrigin.CSS, ActivityStatus=ActivityStatus.Created,
-                ActivityType=ActivityType.AgentAdmin, ExecutedBy="admin", EmployeeId = 1 },
+                ActivityType=ActivityType.AgentAdmin, ExecutedBy="admin", EmployeeId = "1" },
              new ActivityLog { Id = new ObjectId("5fe0b5c46a05416894c0718f"), ActivityOrigin=ActivityOrigin.CSS, ActivityStatus=ActivityStatus.Updated,
-                ActivityType=ActivityType.AgentAdmin, ExecutedBy="admin", EmployeeId = 1},
+                ActivityType=ActivityType.AgentAdmin, ExecutedBy="admin", EmployeeId = "1"},
         }.AsQueryable();
 
         private readonly IQueryable<AgentSchedule> agentSchedulesDB = new List<AgentSchedule>() {
-            new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718e"), EmployeeId = 1, FirstName = "Test", LastName = "last",
+            new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718e"), EmployeeId = "1", FirstName = "Test", LastName = "last",
                                 ActiveAgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow, IsDeleted = false,
                                 Ranges = new List<AgentScheduleRange>
                                 {
@@ -138,7 +134,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                                     }
                                 },
             },
-            new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718f"), EmployeeId = 2, FirstName = "Acr", LastName = "test",
+            new AgentSchedule { Id = new ObjectId("5fe0b5ad6a05416894c0718f"), EmployeeId = "2", FirstName = "Acr", LastName = "test",
                                 ActiveAgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow, IsDeleted = false,
                                 Ranges = new List<AgentScheduleRange>
                                 {
@@ -191,7 +187,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         }.AsQueryable();
 
         private readonly IQueryable<AgentScheduleManager> agentScheduleManagersDB = new List<AgentScheduleManager>() {
-            new AgentScheduleManager { Id = new ObjectId("5fe0b5ad6a05416894c0718e"), EmployeeId = 1, AgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow,
+            new AgentScheduleManager { Id = new ObjectId("5fe0b5ad6a05416894c0718e"), EmployeeId = "1", AgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow,
                                        Date = new DateTime(2021, 3, 21), Charts = new List<AgentScheduleManagerChart>
                                        {
                                            new AgentScheduleManagerChart 
@@ -214,7 +210,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                                            }
                                        },
             },
-            new AgentScheduleManager { Id = new ObjectId("5fe0b5ad6a05416894c0718f"), EmployeeId = 2, AgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow,
+            new AgentScheduleManager { Id = new ObjectId("5fe0b5ad6a05416894c0718f"), EmployeeId = "2", AgentSchedulingGroupId = 1, CreatedBy = "Admin", CreatedDate = DateTime.UtcNow,
                                        Date = new DateTime(2021, 3, 22), Charts = new List<AgentScheduleManagerChart>
                                        {
                                            new AgentScheduleManagerChart
@@ -292,12 +288,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         {
             new SchedulingCode { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), SchedulingCodeId = 1, Name = "lunch", IsDeleted = false},
             new SchedulingCode { Id = new ObjectId("5fe0b5c46a05416894c0718f"), SchedulingCodeId = 2, Name = "lunch", IsDeleted = false},
-        }.AsQueryable();
-
-        private readonly IQueryable<AgentCategory> agentCategoriesDB = new List<AgentCategory>()
-        {
-            new AgentCategory { Id = new ObjectId("5fe0b5ad6a05416894c0718d"), AgentCategoryId = 1, Name = "lunch", AgentCategoryType = AgentCategoryType.Numeric, DataTypeMinValue = "1", DataTypeMaxValue = "2", IsDeleted = false},
-            new AgentCategory { Id = new ObjectId("5fe0b5c46a05416894c0718f"), AgentCategoryId = 2, Name = "lunch", AgentCategoryType = AgentCategoryType.Date, IsDeleted = false},
         }.AsQueryable();
 
         #endregion
@@ -446,21 +436,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// </summary>
         /// <param name="agentAdminEmployeeIdsDetails">The agent admin employee ids details.</param>
         /// <returns></returns>
-        public List<Agent> GetAgentAdminsByEmployeeIds(List<int> agentAdminEmployeeIdsDetails)
+        public List<Agent> GetAgentAdminsByEmployeeIds(List<string> agentAdminEmployeeIdsDetails)
         {
             return agentAdminsDB.Where(x => x.IsDeleted == false && agentAdminEmployeeIdsDetails.Contains(x.Ssn)).ToList();
-        }
-
-
-
-        /// <summary>
-        /// Gets the agent admins by category identifier.
-        /// </summary>
-        /// <param name="agentCategoryDetails">The agent category details.</param>
-        /// <returns></returns>
-        public List<Agent> GetAgentAdminsByCategoryId(List<int> agentCategoryDetails)
-        {
-            return agentAdminsDB.Where(x => x.IsDeleted == false && x.AgentCategoryValues.Exists(x => agentCategoryDetails.Contains(x.CategoryId))).ToList();
         }
 
         /// <summary>
@@ -509,7 +487,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
-        public List<int> GetEmployeeIdsByAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        public List<string> GetEmployeeIdsByAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
         {
             return agentAdminsDB.Where(x => x.IsDeleted == false && x.AgentSchedulingGroupId == agentSchedulingGroupIdDetails.AgentSchedulingGroupId)
                 ?.Select(x => x.Ssn).ToList();
@@ -804,7 +782,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <returns></returns>
-        public int GetEmployeeIdByAgentScheduleId(AgentScheduleIdDetails agentScheduleIdDetails)
+        public string GetEmployeeIdByAgentScheduleId(AgentScheduleIdDetails agentScheduleIdDetails)
         {
             return agentSchedulesDB.Where(x => x.IsDeleted == false && x.Id == new ObjectId(agentScheduleIdDetails.AgentScheduleId)).FirstOrDefault().EmployeeId;
         }
@@ -814,7 +792,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
-        public List<int> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        public List<string> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
         {
             return agentSchedulesDB.Where(x => x.IsDeleted == false && x.ActiveAgentSchedulingGroupId == agentSchedulingGroupIdDetails.AgentSchedulingGroupId)
                 .Select(x => x.EmployeeId).ToList();
@@ -1028,7 +1006,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// <param name="employeeId">The employee identifier.</param>
         /// <param name="agentSchedulingGroupId">The agent scheduling group identifier.</param>
         /// <param name="dateRange">The date range.</param>
-        public void DeleteAgentScheduleRangeImport(int employeeId, int agentSchedulingGroupId, DateRange dateRange)
+        public void DeleteAgentScheduleRangeImport(string employeeId, int agentSchedulingGroupId, DateRange dateRange)
         {
             dateRange.DateFrom = new DateTime(dateRange.DateFrom.Year, dateRange.DateFrom.Month, dateRange.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
             dateRange.DateTo = new DateTime(dateRange.DateTo.Year, dateRange.DateTo.Month, dateRange.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
@@ -1083,7 +1061,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                     scheduleStatus = (SchedulingStatus)Enum.Parse(typeof(SchedulingStatus), status, true);
                 }
 
-                agentSchedules = agentSchedules.Where(o => (o.EmployeeId == employeeId && employeeId != 0) ||
+                agentSchedules = agentSchedules.Where(o => (o.EmployeeId.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower())) ||
                                                            (o.Ranges.Any(x => x.Status == scheduleStatus && !string.IsNullOrWhiteSpace(status))) ||
                                                             o.FirstName.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
                                                             o.LastName.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
@@ -1246,7 +1224,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
-        public List<int> GetManagerEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        public List<string> GetManagerEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
         {
             return agentScheduleManagersDB.Where(x => x.AgentSchedulingGroupId == agentSchedulingGroupIdDetails.AgentSchedulingGroupId).Select(x => x.EmployeeId).ToList();
         }
@@ -1346,9 +1324,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
                 return agentScheduleManagers;
             }
 
-            agentScheduleManagers = agentScheduleManagers.Where(x => x.EmployeeId != 0);
+            agentScheduleManagers = agentScheduleManagers.Where(x => !string.IsNullOrWhiteSpace(x.EmployeeId));
 
-            if (agentScheduleManagerChartQueryparameter.EmployeeId.HasValue && agentScheduleManagerChartQueryparameter.EmployeeId != default(int))
+            if (!string.IsNullOrWhiteSpace(agentScheduleManagerChartQueryparameter.EmployeeId))
             {
                 agentScheduleManagers = agentScheduleManagers.Where(x => x.EmployeeId == agentScheduleManagerChartQueryparameter.EmployeeId);
             }
@@ -1474,119 +1452,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Mocks
             }
 
             return schedulingCodes;
-        }
-
-        #endregion
-
-        #region Agent Categories
-
-        /// <summary>
-        /// Gets the agentCategorys.
-        /// </summary>
-        /// <param name="agentCategoryQueryparameter">The agentCategory queryparameter.</param>
-        /// <returns></returns>
-        public PagedList<Entity> GetAgentCategorys(AgentCategoryQueryparameter agentCategoryQueryparameter)
-        {
-            var agentCategories = agentCategoriesDB.Where(x => x.IsDeleted == false);
-
-            var filteredAgentCategories = FilterAgentCategorys(agentCategories, agentCategoryQueryparameter);
-
-            var sortedAgentCategories = SortHelper.ApplySort(filteredAgentCategories, agentCategoryQueryparameter.OrderBy);
-
-            var pagedAgentCategories = sortedAgentCategories;
-
-            if (!agentCategoryQueryparameter.SkipPageSize)
-            {
-                pagedAgentCategories = sortedAgentCategories
-                   .Skip((agentCategoryQueryparameter.PageNumber - 1) * agentCategoryQueryparameter.PageSize)
-                   .Take(agentCategoryQueryparameter.PageSize);
-            }
-
-            var shapedAgentCategories = DataShaper.ShapeData(pagedAgentCategories, agentCategoryQueryparameter.Fields);
-
-            return PagedList<Entity>
-                .ToPagedList(shapedAgentCategories, filteredAgentCategories.Count(), agentCategoryQueryparameter.PageNumber, agentCategoryQueryparameter.PageSize).Result;
-        }
-
-        /// <summary>
-        /// Gets the agentCategory.
-        /// </summary>
-        /// <param name="agentCategoryIdDetails">The agentCategory identifier details.</param>
-        /// <returns></returns>
-        public AgentCategory GetAgentCategory(AgentCategoryIdDetails agentCategoryIdDetails)
-        {
-            return agentCategoriesDB.Where(x => x.IsDeleted == false && x.AgentCategoryId == agentCategoryIdDetails.AgentCategoryId).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Gets the scheduling codes by ids.
-        /// </summary>
-        /// <param name="codes">The codes.</param>
-        /// <returns></returns>
-        public long GetAgentCategorysCountByIds(List<int> codes)
-        {
-            return agentCategoriesDB.Where(x => x.IsDeleted == false && codes.Contains(x.AgentCategoryId)).Count();
-        }
-
-        /// <summary>
-        /// Finds the agent categorys.
-        /// </summary>
-        /// <returns></returns>
-        public List<AgentCategory> FindAgentCategorys()
-        {
-            return agentCategoriesDB.Where(x => x.IsDeleted == false).ToList();
-        }
-
-        /// <summary>
-        /// Gets the agentCategorys count.
-        /// </summary>
-        /// <returns></returns>
-        public int GetAgentCategorysCount()
-        {
-            return agentCategoriesDB.Where(x => x.IsDeleted == false).Count();
-        }
-
-        /// <summary>
-        /// Creates the agentCategory.
-        /// </summary>
-        /// <param name="agentCategoryRequest">The agentCategory request.</param>
-        public void CreateAgentCategory(AgentCategory agentCategoryRequest)
-        {
-            agentCategoriesDB.ToList().Add(agentCategoryRequest);
-        }
-
-        /// <summary>
-        /// Updates the agentCategory.
-        /// </summary>
-        /// <param name="agentCategoryRequest">The agentCategory request.</param>
-        public void UpdateAgentCategory(AgentCategory agentCategoryRequest)
-        {
-            var agentCategory = agentCategoriesDB.Where(x => x.AgentCategoryId == agentCategoryRequest.AgentCategoryId).FirstOrDefault();
-            if (agentCategory != null)
-            {
-                agentCategory = agentCategoryRequest;
-            }
-        }
-
-        /// <summary>
-        /// Filters the agentCategorys.
-        /// </summary>
-        /// <param name="agentCategorys">The agentCategorys.</param>
-        /// <param name="agentCategoryQueryparameter">The agentCategory queryparameter.</param>
-        /// <returns></returns>
-        private IQueryable<AgentCategory> FilterAgentCategorys(IQueryable<AgentCategory> agentCategorys, AgentCategoryQueryparameter agentCategoryQueryparameter)
-        {
-            if (!agentCategorys.Any())
-            {
-                return agentCategorys;
-            }
-
-            if (!string.IsNullOrWhiteSpace(agentCategoryQueryparameter.SearchKeyword))
-            {
-                agentCategorys = agentCategorys.Where(o => o.Name.ToLower().Contains(agentCategoryQueryparameter.SearchKeyword.Trim().ToLower()));
-            }
-
-            return agentCategorys;
         }
 
         #endregion

@@ -37,6 +37,31 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
+        /// Gets the agent schedules by list of employee Ids.
+        /// </summary>
+        /// <param name="employeeIdList">The list of agent employee id.</param>
+        /// <returns></returns>
+        public async Task<List<AgentSchedule>> GetAgentSchedulesByEmployeeIdList(List<string> employeeIdList)
+        {
+            var filterDef = new FilterDefinitionBuilder<AgentSchedule>();
+            var filter = filterDef.In(x => x.EmployeeId, employeeIdList.Distinct());
+
+            var agentSchedules = GetSchedules(employeeIdList);
+
+            return await Task.FromResult(agentSchedules.ToList());
+        }
+
+        public virtual IEnumerable<AgentSchedule> GetSchedules(List<string> employeeIdList)
+        {
+            var filterDef = new FilterDefinitionBuilder<AgentSchedule>();
+            var filter = filterDef.In(x => x.EmployeeId, employeeIdList.Distinct());
+
+            return Collection.Find(filter).ToEnumerable();
+        }
+
+
+
+        /// <summary>
         /// Gets the agent schedules.
         /// </summary>
         /// <param name="agentScheduleQueryparameter">The agent schedule queryparameter.</param>
@@ -184,7 +209,7 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <returns></returns>
-        public async Task<int> GetEmployeeIdByAgentScheduleId(AgentScheduleIdDetails agentScheduleIdDetails)
+        public async Task<string> GetEmployeeIdByAgentScheduleId(AgentScheduleIdDetails agentScheduleIdDetails)
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.Id, new ObjectId(agentScheduleIdDetails.AgentScheduleId)) &
@@ -199,7 +224,7 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
-        public async Task<List<int>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        public async Task<List<string>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
         {
             var query =
                 Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) &
@@ -400,6 +425,18 @@ namespace Css.Api.Scheduling.Repository
             UpdateOneAsync(query, update);
         }
 
+        public void MultipleCopyAgentScheduleChart(EmployeeIdDetails employeeIdDetails, AgentScheduleRange agentScheduleRange)
+        {
+                var query =
+                    Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                    Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+                var update = Builders<AgentSchedule>.Update
+                    .AddToSet(x => x.Ranges, agentScheduleRange);
+
+                UpdateOneAsync(query, update);
+        }
+
         /// <summary>
         /// Updates the agent schedule range.
         /// </summary>
@@ -506,6 +543,7 @@ namespace Css.Api.Scheduling.Repository
                 return agentSchedules;
             }
 
+
             if (!string.IsNullOrWhiteSpace(agentScheduleQueryparameter.SearchKeyword))
             {
                 SchedulingStatus scheduleStatus = SchedulingStatus.Released;
@@ -517,12 +555,17 @@ namespace Css.Api.Scheduling.Repository
                     scheduleStatus = (SchedulingStatus)Enum.Parse(typeof(SchedulingStatus), status, true);
                 }
 
-                agentSchedules = agentSchedules.Where(o => (o.EmployeeId == employeeId && employeeId != 0) ||
+                agentSchedules = agentSchedules.Where(o => (o.EmployeeId.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower())) ||
                                                            (o.Ranges.Any(x => x.Status == scheduleStatus && !string.IsNullOrWhiteSpace(status))) ||
                                                             o.FirstName.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
                                                             o.LastName.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
                                                             o.CreatedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()) ||
                                                             o.ModifiedBy.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.Trim().ToLower()));
+            }
+
+            if (agentScheduleQueryparameter.ExcludedEmployeeId != null && agentScheduleQueryparameter.ExcludedEmployeeId != "")
+            {
+                agentSchedules = agentSchedules.Where(x => x.EmployeeId != agentScheduleQueryparameter.ExcludedEmployeeId);
             }
 
             if (agentScheduleQueryparameter.EmployeeIds.Any())
@@ -568,6 +611,7 @@ namespace Css.Api.Scheduling.Repository
                                                                                agentScheduleQueryparameter.DateTo == y.DateTo))));
             }
 
+
             return agentSchedules;
         }
        
@@ -590,7 +634,7 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
-        public async Task<List<AgentSchedule>> GetEmployeeScheduleExport(int employeeId)
+        public async Task<List<AgentSchedule>> GetEmployeeScheduleExport(string employeeId)
         {
             var query = Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeId) &
                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);

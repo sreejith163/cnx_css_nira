@@ -7,7 +7,7 @@ namespace Css.Api.Reporting.Models.DTO.Processing
 {
     public class AgentActivitySchedule
     {
-        public int AgentId { get; set; }
+        public string AgentId { get; set; }
         
         public List<ActivitySchedule> BaseSchedule { get; set; }
 

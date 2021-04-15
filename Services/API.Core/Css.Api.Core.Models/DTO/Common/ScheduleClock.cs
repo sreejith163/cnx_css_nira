@@ -6,7 +6,7 @@ namespace Css.Api.Core.Models.DTO.Common
 {
     public class ScheduleClock
     {
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         public int CurrentAgentSchedulingGroupId { get; set; }
         public DateTime Date { get; set; }
         public DateTime ScheduledDate { get; set; }

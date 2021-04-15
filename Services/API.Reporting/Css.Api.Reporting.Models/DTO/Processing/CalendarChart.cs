@@ -6,7 +6,7 @@ namespace Css.Api.Reporting.Models.DTO.Processing
 {
     public class CalendarChart
     {
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         public int AgentSchedulingGroupId { get; set; }
         public DateTime ScheduledDate { get; set; }
         public int ActivityId { get; set; }

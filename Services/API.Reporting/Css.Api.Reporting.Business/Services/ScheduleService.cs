@@ -179,8 +179,8 @@ namespace Css.Api.Reporting.Business.Services
             var schedulingCodes = _schedulingCodeRepository.GetSchedulingCodesByNames(parsedChartList.Select(x => x.ActText).ToList()).Result;
             var empIds = parsedChartList.Select(x =>
                     {
-                        int value;
-                        bool success = int.TryParse(x.EmpNo, out value);
+                        string value = x.EmpNo;
+                        bool success = true;
                         return new { value, success };
                     })
                     .Where(pair => pair.success)
@@ -189,7 +189,7 @@ namespace Css.Api.Reporting.Business.Services
                     .ToList();
 
             var agents = _agentRepository.GetAgents(empIds).Result;
-            Dictionary<int, List<DateTime>> invalidEmpDates = empIds.Distinct()
+            Dictionary<string, List<DateTime>> invalidEmpDates = empIds.Distinct()
                                         .Select(x => {
                                             return new { key = x, value = new List<DateTime>() };
                                         })
@@ -380,7 +380,7 @@ namespace Css.Api.Reporting.Business.Services
                 scheduleData.Messages.Add(Messages.InvalidScheduleDate);
             }
 
-            var agentInfo = await _agentRepository.GetAgents(new List<int>() { activityScheduleUpdate.AgentId });
+            var agentInfo = await _agentRepository.GetAgents(new List<string>() { activityScheduleUpdate.AgentId });
             if (!agentInfo.Any())
             {
                 scheduleData.Messages.Add(Messages.AgentNotFound);
@@ -400,7 +400,7 @@ namespace Css.Api.Reporting.Business.Services
             scheduledDate = new DateTime(scheduledDate.Year, scheduledDate.Month, scheduledDate.Day, 0, 0, 0, DateTimeKind.Utc);
             var agent = agentInfo.First();
             
-            var existingSchedule = await _agentScheduleManagerRepository.GetManagerSchedules(new List<int>() { agent.Ssn }, new List<DateTime> { scheduledDate });
+            var existingSchedule = await _agentScheduleManagerRepository.GetManagerSchedules(new List<string>() { agent.Ssn }, new List<DateTime> { scheduledDate });
             TimeSpan offset;
             var dateTimeNow = DateTime.UtcNow;
             DateTime? modifiedDate = dateTimeNow;
@@ -577,7 +577,7 @@ namespace Css.Api.Reporting.Business.Services
         /// <param name="clocks"></param>
         /// <param name="empIds"></param>
         /// <returns>A list of instances of ScheduleClock</returns>
-        private List<ScheduleClock> ReconcileScheduleClocks(List<ScheduleClock> clocks, List<int> empIds)
+        private List<ScheduleClock> ReconcileScheduleClocks(List<ScheduleClock> clocks, List<string> empIds)
         {
             List<ScheduleClock> reconciledClocks = new List<ScheduleClock>();
 
@@ -825,13 +825,14 @@ namespace Css.Api.Reporting.Business.Services
         /// <param name="calendarChartDatas"></param>
         /// <param name="schedulingCodes"></param>
         /// <param name="agents"></param>
-        private void ParseCalenderChartData(List<CalendarChartData> calendarChartDatas, List<SchedulingCode> schedulingCodes, List<Agent> agents, Dictionary<int, List<DateTime>> invalidEmpDates)
+        private void ParseCalenderChartData(List<CalendarChartData> calendarChartDatas, List<SchedulingCode> schedulingCodes, List<Agent> agents, Dictionary<string, List<DateTime>> invalidEmpDates)
         {
             calendarChartDatas.ForEach(calendarChartData =>
             {
                 DateTime schDate, startDateTime = DateTime.MinValue, endDateTime = DateTime.MinValue;
                 TimeSpan startTime, endTime;
                 int empNo = 0;
+                string employeeNo = calendarChartData.EmpNo;
                 var code = schedulingCodes.FirstOrDefault(x => x.Name.Equals(calendarChartData.ActText.Trim()));
 
                 bool empStatus = (int.TryParse(calendarChartData.EmpNo, out empNo) || empNo == 0);
@@ -865,7 +866,7 @@ namespace Css.Api.Reporting.Business.Services
                     }
                     else
                     {
-                        invalidEmpDates[empNo].Add(schDate);
+                        // invalidEmpDates[empNo].Add(schDate);
                     }
                 }
 
@@ -881,8 +882,8 @@ namespace Css.Api.Reporting.Business.Services
                 { 
                     calendarChartData.Chart = new CalendarChart()
                     {
-                        EmployeeId = empNo,
-                        AgentSchedulingGroupId = agents.First(x => x.Ssn == empNo).AgentSchedulingGroupId,
+                        EmployeeId = employeeNo,
+                        AgentSchedulingGroupId = agents.First(x => x.Ssn == employeeNo).AgentSchedulingGroupId,
                         ScheduledDate = new DateTime(schDate.Year, schDate.Month, schDate.Day, 0, 0, 0, DateTimeKind.Utc),
                         ActivityId = code.SchedulingCodeId,
                         ActivityName = calendarChartData.ActText.Trim(),
@@ -900,7 +901,7 @@ namespace Css.Api.Reporting.Business.Services
         /// <param name="scheduledDate"></param>
         /// <param name="activitySchedules"></param>
         /// <returns>An instance of ScheduleManagerData</returns>
-        private async Task<ScheduleManagerData> ParseActivityScheduleUpdateDetail(int agentId, DateTime scheduledDate, List<ActivityScheduleUpdateDetail> activitySchedules)
+        private async Task<ScheduleManagerData> ParseActivityScheduleUpdateDetail(string agentId, DateTime scheduledDate, List<ActivityScheduleUpdateDetail> activitySchedules)
         {
             ScheduleManagerData scheduleManagerData = new ScheduleManagerData()
             {
@@ -1022,7 +1023,7 @@ namespace Css.Api.Reporting.Business.Services
                             }
                             else
                             {
-                                var adjacentDaySchedules = await _agentScheduleManagerRepository.GetManagerSchedules(new List<int>() { emp }, new List<DateTime>() { day.AddDays(-1), day.AddDays(1) });
+                                var adjacentDaySchedules = await _agentScheduleManagerRepository.GetManagerSchedules(new List<string>() { emp }, new List<DateTime>() { day.AddDays(-1), day.AddDays(1) });
                                 if (empDayClockData.Any(x => CheckIfOverlapSchedulesExists(x.Chart, adjacentDaySchedules)))
                                 {
                                     overlappingClocks.AddRange(empDayClockData);
@@ -1100,12 +1101,12 @@ namespace Css.Api.Reporting.Business.Services
         /// <param name="scheduledDate"></param>
         /// <param name="agentScheduleManagerCharts"></param>
         /// <returns></returns>
-        private async Task<List<string>> CheckOverlapsInExistingSchedules(int agentId, DateTime scheduledDate, List<AgentScheduleManagerChart> agentScheduleManagerCharts)
+        private async Task<List<string>> CheckOverlapsInExistingSchedules(string agentId, DateTime scheduledDate, List<AgentScheduleManagerChart> agentScheduleManagerCharts)
         {
             List<string> messages = new List<string>();
             var prevDay = scheduledDate.Date.AddDays(-1);
             var nextDay = scheduledDate.Date.AddDays(1);
-            var otherDaySchedules = await _agentScheduleManagerRepository.GetManagerSchedules(new List<int>() { agentId }, new List<DateTime>() { prevDay, nextDay });
+            var otherDaySchedules = await _agentScheduleManagerRepository.GetManagerSchedules(new List<string>() { agentId }, new List<DateTime>() { prevDay, nextDay });
 
             foreach(var chart in agentScheduleManagerCharts)
             {

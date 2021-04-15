@@ -31,7 +31,7 @@ namespace Css.Api.Reporting.Repository
         /// </summary>
         /// <param name="agentIds"></param>
         /// <returns></returns>
-        public async Task<List<AgentScheduleManager>> GetManagerSchedules(List<int> agentIds)
+        public async Task<List<AgentScheduleManager>> GetManagerSchedules(List<string> agentIds)
         {
             var query = Builders<AgentScheduleManager>.Filter.Where(i => agentIds.Contains(i.EmployeeId));
 
@@ -45,7 +45,7 @@ namespace Css.Api.Reporting.Repository
         /// </summary>
         /// <param name="agentIds"></param>
         /// <returns></returns>
-        public async Task<List<AgentScheduleManager>> GetManagerSchedules(List<int> agentIds, List<DateTime> dates)
+        public async Task<List<AgentScheduleManager>> GetManagerSchedules(List<string> agentIds, List<DateTime> dates)
         {
             List<DateTime> schDates = dates.Select(x => { return new DateTime(x.Year, x.Month, x.Day, 0, 0, 0, DateTimeKind.Utc); }).ToList();
 
@@ -63,7 +63,7 @@ namespace Css.Api.Reporting.Repository
         /// <param name="agentId"></param>
         /// <param name="fromDate"></param>
         /// <returns></returns>
-        public async Task<List<AgentScheduleManager>> GetManagerSchedules(int agentId, DateTime fromDate)
+        public async Task<List<AgentScheduleManager>> GetManagerSchedules(string agentId, DateTime fromDate)
         {
             fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0, DateTimeKind.Utc);
             var query = Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, agentId) &

@@ -10,6 +10,6 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
     }
 }

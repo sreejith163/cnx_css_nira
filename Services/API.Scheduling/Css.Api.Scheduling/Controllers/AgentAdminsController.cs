@@ -58,7 +58,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="employeeId">The employee identifier.</param>
         /// <returns></returns>
         [HttpGet("employees/{employeeId}")]
-        public async Task<IActionResult> GetAgentAdminByEmployeeId(int employeeId)
+        public async Task<IActionResult> GetAgentAdminByEmployeeId(string employeeId)
         {
             var result = await _agentAdminService.GetAgentAdminByEmployeeId(new EmployeeIdDetails { Id = employeeId });
             return StatusCode((int)result.Code, result.Value);

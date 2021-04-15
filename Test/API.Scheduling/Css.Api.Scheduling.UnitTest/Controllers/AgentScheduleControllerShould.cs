@@ -300,7 +300,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
                 DateTo = new DateTime(toYear, toMonth, toDay),
                 ModifiedBy = "admin",
                 ActivityOrigin = ActivityOrigin.CSS,
-                ModifiedUser = 123
+                ModifiedUser = "123"
             };
 
             mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
@@ -348,7 +348,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
                 DateTo = new DateTime(toYear, toMonth, toDay),
                 ModifiedBy = "admin",
                 ActivityOrigin = ActivityOrigin.CSS,
-                ModifiedUser = 123
+                ModifiedUser = "123"
             };
 
             mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
@@ -396,7 +396,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
                 DateTo = new DateTime(toYear, toMonth, toDay),
                 ModifiedBy = "admin",
                 ActivityOrigin = ActivityOrigin.CSS,
-                ModifiedUser = 123
+                ModifiedUser = "123"
             };
 
             mockAgentScheduleService.Setup(mr => mr.UpdateAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<UpdateAgentScheduleChart>())).ReturnsAsync(
@@ -537,7 +537,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
                 DateTo = new DateTime(toYear, toMonth, toDay),
                 ActivityOrigin = ActivityOrigin.CSS,
                 ModifiedBy = "admin",
-                ModifiedUser = 123
+                ModifiedUser = "123"
             };
 
             mockAgentScheduleService.Setup(mr => mr.CopyAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<CopyAgentSchedule>())).ReturnsAsync(
@@ -573,7 +573,7 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
                 DateTo = new DateTime(toYear, toMonth, toDay),
                 ActivityOrigin = ActivityOrigin.CSS,
                 ModifiedBy = "admin",
-                ModifiedUser = 123
+                ModifiedUser = "123"
             };
 
             mockAgentScheduleService.Setup(mr => mr.CopyAgentScheduleChart(It.IsAny<AgentScheduleIdDetails>(), It.IsAny<CopyAgentSchedule>())).ReturnsAsync(

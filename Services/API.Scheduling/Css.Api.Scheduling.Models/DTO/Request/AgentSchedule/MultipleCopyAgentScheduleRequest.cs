@@ -1,17 +1,25 @@
-﻿using Css.Api.Core.Models.Domain.NoSQL;
-using Css.Api.Core.Models.Enums;
-using Css.Api.Scheduling.Models.Enums;
+﻿using Css.Api.Core.Models.Enums;
 using System;
 using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
-    public class UpdateAgentScheduleChart
+    public class MultipleCopyAgentScheduleRequest
     {
         /// <summary>
-        /// Gets or sets the agent schedule charts.
+        /// Gets or sets the employee identifier.
         /// </summary>
-        public List<AgentScheduleChart> AgentScheduleCharts { get; set; }
+        public List<string> EmployeeIds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected date ranges to be imported to.
+        /// </summary>
+        public List<DateRange> SelectedDateRanges { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent scheduling group identifier.
+        /// </summary>
+        public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the activity origin.
@@ -29,11 +37,6 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         public DateTime DateTo { get; set; }
 
         /// <summary>
-        /// Gets or sets the status.
-        /// </summary>
-        public SchedulingStatus Status { get; set; }
-
-        /// <summary>
         /// Gets or sets the modified user.
         /// </summary>
         public string ModifiedUser { get; set; }
@@ -43,5 +46,13 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// </summary>
         public string ModifiedBy { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CopyAgentSchedule"/> class.
+        /// </summary>
+        public MultipleCopyAgentScheduleRequest()
+        {
+            EmployeeIds = new List<string>();
+            SelectedDateRanges = new List<DateRange>();
+        }
     }
 }

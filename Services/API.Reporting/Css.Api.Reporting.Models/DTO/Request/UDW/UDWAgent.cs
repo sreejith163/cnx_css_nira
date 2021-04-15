@@ -8,6 +8,6 @@ namespace Css.Api.Reporting.Models.DTO.Request.UDW
     public class UDWAgent : UDWAgentAttributes
     {
         [XmlElement(ElementName = "ssn")]
-        public int SSN { get; set; }
+        public string SSN { get; set; }
     }
 }

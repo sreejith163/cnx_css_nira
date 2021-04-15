@@ -132,7 +132,7 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentAdminEmployeeIdsDetails">The agent admin employee ids details.</param>
         /// <returns></returns>
-        public async Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<int> agentAdminEmployeeIdsDetails)
+        public async Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<string> agentAdminEmployeeIdsDetails)
         {
             var query =
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
@@ -183,7 +183,7 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
-        public async Task<List<int>> GetEmployeeIdsByAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        public async Task<List<string>> GetEmployeeIdsByAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
         {
             var query =
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &

@@ -55,7 +55,7 @@ namespace Css.Api.Core.Utilities.Extensions
         /// <param name="range"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static List<AgentScheduleManager> GenerateAgentScheduleManagers(int employeeId, AgentScheduleRange range, string user)
+        public static List<AgentScheduleManager> GenerateAgentScheduleManagers(string employeeId, AgentScheduleRange range, string user)
         {
             var currTimestamp = DateTime.UtcNow;
             var dates = Enumerable.Range(0, 1 + range.DateTo.Date.Subtract(range.DateFrom.Date).Days)

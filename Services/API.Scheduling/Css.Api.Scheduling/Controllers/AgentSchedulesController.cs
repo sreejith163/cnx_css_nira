@@ -42,6 +42,7 @@ namespace Css.Api.Scheduling.Controllers
             return StatusCode((int)result.Code, result.Value);
         }
 
+
         /// <summary>
         /// Gets the agent schedule.
         /// </summary>
@@ -118,26 +119,39 @@ namespace Css.Api.Scheduling.Controllers
             return StatusCode((int)result.Code, result.Value);
         }
 
+        ///// <summary>
+        ///// Copies the agent schedule chart.
+        ///// </summary>
+        ///// <param name="agentScheduleId">The agent schedule identifier.</param>
+        ///// <param name="agentScheduleDetails">The agent schedule details.</param>
+        ///// <returns></returns>
+        //[HttpPut("{agentScheduleId}/copy")]
+        //public async Task<IActionResult> CopyAgentScheduleChart(string agentScheduleId, [FromBody] CopyAgentSchedule agentScheduleDetails)
+        //{
+        //    var result = await _agentScheduleService.CopyAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
+        //    return StatusCode((int)result.Code, result.Value);
+        //}
+
         /// <summary>
         /// Copies the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <param name="agentScheduleDetailsList">The list of agent schedule details.</param>
         /// <returns></returns>
         [HttpPut("{agentScheduleId}/copy")]
-        public async Task<IActionResult> CopyAgentScheduleChart(string agentScheduleId, [FromBody] CopyAgentSchedule agentScheduleDetails)
+        public async Task<IActionResult> CopyAgentScheduleChart(string agentScheduleId, [FromBody] MultipleCopyAgentScheduleRequest agentScheduleDetailsList)
         {
-            var result = await _agentScheduleService.CopyAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
-            return StatusCode((int)result.Code, result.Value);
+            var result = await _agentScheduleService.MultipleCopyAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetailsList);
+            return StatusCode((int) result.Code, result.Value);
         }
 
-        /// <summary>
-        /// Updates the agent schedule range.
-        /// </summary>
-        /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        /// <param name="dateRangeDetails">The date range details.</param>
-        /// <returns></returns>
-        [HttpPut("{agentScheduleId}/range")]
+    /// <summary>
+    /// Updates the agent schedule range.
+    /// </summary>
+    /// <param name="agentScheduleId">The agent schedule identifier.</param>
+    /// <param name="dateRangeDetails">The date range details.</param>
+    /// <returns></returns>
+    [HttpPut("{agentScheduleId}/range")]
         public async Task<IActionResult> UpdateAgentScheduleRange(string agentScheduleId, [FromBody] UpdateAgentScheduleDateRange dateRangeDetails)
         {
             var result = await _agentScheduleService.UpdateAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
@@ -174,7 +188,7 @@ namespace Css.Api.Scheduling.Controllers
         // <param name="employeeId">The agent schedule chart queryparameter.</param>
         /// <returns></returns>
         [HttpGet("{employeeId}/employeeexport")]
-        public async Task<IActionResult> EmployeeScheduleExport(int employeeId)
+        public async Task<IActionResult> EmployeeScheduleExport(string employeeId)
         {
             var result = await _agentScheduleService.EmployeeScheduleExport(employeeId);
             return StatusCode((int)result.Code, result.Value);

@@ -69,6 +69,14 @@ namespace Css.Api.Scheduling.Business.Interfaces
         Task<CSSResponse> CopyAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule agentScheduleDetails);
 
         /// <summary>
+        /// Copies Multiple agent schedule charts.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule source details.</param>
+        /// <param name="agentScheduleDetailsList">The list of multiple agent schedule details.</param>
+        /// <returns></returns>
+        Task<CSSResponse> MultipleCopyAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, MultipleCopyAgentScheduleRequest agentScheduleDetailsList);
+
+        /// <summary>
         /// Updates the agent schedule range.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
@@ -88,7 +96,7 @@ namespace Css.Api.Scheduling.Business.Interfaces
         Task<CSSResponse> AgentSchedulingGroupScheduleExport(int agentSchedulingGroupId);
 
 
-        Task<CSSResponse> EmployeeScheduleExport(int employeeId);
+        Task<CSSResponse> EmployeeScheduleExport(string employeeId);
 
         
     }

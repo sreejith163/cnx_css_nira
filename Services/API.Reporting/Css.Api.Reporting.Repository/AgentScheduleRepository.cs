@@ -51,7 +51,7 @@ namespace Css.Api.Reporting.Repository
         /// </summary>
         /// <param name="agentIds"></param>
         /// <returns></returns>
-        public async Task<List<AgentSchedule>> GetSchedules(List<int> agentIds)
+        public async Task<List<AgentSchedule>> GetSchedules(List<string> agentIds)
         {
             var query = Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) &
                 Builders<AgentSchedule>.Filter.Where(i => agentIds.Contains(i.EmployeeId));

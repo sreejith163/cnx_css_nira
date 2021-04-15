@@ -397,7 +397,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 DateTo = new DateTime(toYear, toMonth, toDay),
                 ModifiedBy = "admin",
                 ActivityOrigin = ActivityOrigin.CSS,
-                ModifiedUser = 123
+                ModifiedUser = "123"
             };
 
             mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
@@ -507,7 +507,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 DateTo = new DateTime(toYear, toMonth, toDay),
                 ModifiedBy = "admin",
                 ActivityOrigin = ActivityOrigin.CSS,
-                ModifiedUser = 123
+                ModifiedUser = "123"
             };
 
             mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
@@ -663,7 +663,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 DateTo = new DateTime(toYear, toMonth, toDay),
                 ActivityOrigin = ActivityOrigin.CSS,
                 ModifiedBy = "admin",
-                ModifiedUser = 123
+                ModifiedUser = "123"
             };
 
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(
@@ -709,7 +709,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 DateTo = new DateTime(toYear, toMonth, toDay),
                 ActivityOrigin = ActivityOrigin.CSS,
                 ModifiedBy = "admin",
-                ModifiedUser = 123
+                ModifiedUser = "123"
             };
 
             mockAgentScheduleRepository.Setup(mr => mr.GetAgentSchedule(It.IsAny<AgentScheduleIdDetails>())).ReturnsAsync(

@@ -57,7 +57,7 @@
             <param name="agentAdminId">The agentAdmin identifier.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.GetAgentAdminByEmployeeId(System.Int32)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.GetAgentAdminByEmployeeId(System.String)">
             <summary>
             Gets the agent admin by employee identifier.
             </summary>
@@ -85,13 +85,6 @@
             <returns>
               <br />
             </returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.UpdateAgentCategoryValues(Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.CreateAgentCategoryValue)">
-            <summary>
-            Updates the agent category values.
-            </summary>
-            <param name="agentCategoryValue">The agent category value.</param>
-            <returns></returns>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.DeleteAgentAdmin(System.String)">
             <summary>
@@ -140,7 +133,7 @@
             <param name="agentScheduleManagerChartQueryparameter">The agent schedule manager chart queryparameter.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.GetAgentMySchedule(System.Int32,Css.Api.Scheduling.Models.DTO.Request.MySchedule.MyScheduleQueryParameter)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.GetAgentMySchedule(System.String,Css.Api.Scheduling.Models.DTO.Request.MySchedule.MyScheduleQueryParameter)">
             <summary>Gets the agent my schedule.</summary>
             <param name="agentEmployeeId">The agent employee identifier.</param>
             <param name="myScheduleQueryParameter">My schedule query parameter.</param>
@@ -155,7 +148,7 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.CopyAgentScheduleManagerChart(System.Int32,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.CopyAgentScheduleManager)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.CopyAgentScheduleManagerChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.CopyAgentScheduleManager)">
             <summary>
             Copies the agent schedule.
             </summary>
@@ -233,12 +226,12 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.CopyAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.CopyAgentSchedule)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.CopyAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.MultipleCopyAgentScheduleRequest)">
             <summary>
             Copies the agent schedule chart.
             </summary>
             <param name="agentScheduleId">The agent schedule identifier.</param>
-            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <param name="agentScheduleDetailsList">The list of agent schedule details.</param>
             <returns></returns>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.UpdateAgentScheduleRange(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.UpdateAgentScheduleDateRange)">
@@ -264,7 +257,7 @@
             <param name="agentSchedulingGroupId">The agent schedule chart queryparameter.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.EmployeeScheduleExport(System.Int32)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.EmployeeScheduleExport(System.String)">
             <returns></returns>
         </member>
         <member name="T:Css.Api.Scheduling.Controllers.EntityHierarchyController">
@@ -468,16 +461,6 @@
         </member>
         <member name="M:Css.Api.Scheduling.Validators.Agent.AddAgentAdminValidator.#ctor">
             <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.AddAgentAdminValidator" /> class.</summary>
-        </member>
-        <member name="T:Css.Api.Scheduling.Validators.Agent.CreateAgentCategoryValueValidator">
-            <summary>
-            Validator for handling the validation of create AgentCategoryValue object
-            </summary>
-        </member>
-        <member name="M:Css.Api.Scheduling.Validators.Agent.CreateAgentCategoryValueValidator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.CreateAgentCategoryValueValidator"/> class.
-            </summary>
         </member>
         <member name="T:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator">
             <summary>

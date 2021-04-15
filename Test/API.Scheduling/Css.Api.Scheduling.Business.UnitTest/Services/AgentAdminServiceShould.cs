@@ -22,7 +22,6 @@ using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using System.Collections.Generic;
 using MongoDB.Bson;
-using Css.Api.Scheduling.Models.DTO.Request.AgentCategory;
 
 namespace Css.Api.Scheduling.Business.UnitTest.Services
 {
@@ -73,24 +72,13 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// </summary>
         private readonly Mock<IAgentSchedulingGroupRepository> mockAgentSchedulingGroupRepository;
 
-        /// <summary>
-        /// The mock timezone repository
-        /// </summary>
+        /// <summary>The mock timezone repository</summary>
         private readonly Mock<ITimezoneRepository> mockTimezoneRepository;
 
-        /// <summary>
-        /// The mock activity log repository
-        /// </summary>
+        /// <summary>The mock activity log repository</summary>
         private readonly Mock<IActivityLogRepository> mockActivityLogRepository;
 
-        /// <summary>
-        /// The mock agent category repository
-        /// </summary>
-        private readonly Mock<IAgentCategoryRepository> mockAgentCategoryRepository;
-
-        /// <summary>
-        /// The mock agent scheduling group history repository
-        /// </summary>
+        /// <summary>The mock agent scheduling group history repository</summary>
         private readonly Mock<IAgentSchedulingGroupHistoryRepository> mockAgentSchedulingGroupHistoryRepository;
 
         /// <summary>
@@ -126,7 +114,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             mockAgentSchedulingGroupRepository = new Mock<IAgentSchedulingGroupRepository>();
             mockTimezoneRepository = new Mock<ITimezoneRepository>();
             mockActivityLogRepository = new Mock<IActivityLogRepository>();
-            mockAgentCategoryRepository = new Mock<IAgentCategoryRepository>();
             mockAgentSchedulingGroupHistoryRepository = new Mock<IAgentSchedulingGroupHistoryRepository>();
             var mockUnitWork = new Mock<IUnitOfWork>();
 
@@ -144,7 +131,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 mockAgentSchedulingGroupRepository.Object,
                 mockTimezoneRepository.Object,
                 mockActivityLogRepository.Object,
-                mockAgentCategoryRepository.Object,
                 mockAgentSchedulingGroupHistoryRepository.Object,
                 mapper,
                 mockUnitWork.Object
@@ -257,9 +243,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// </summary>
         /// <param name="employeeId">The employee identifier.</param>
         [Theory]
-        [InlineData(101)]
-        [InlineData(102)]
-        public async void GetAgentAdminByEmployeeIdWithNotFound(int employeeId)
+        [InlineData("101")]
+        [InlineData("102")]
+        public async void GetAgentAdminByEmployeeIdWithNotFound(string employeeId)
         {
             mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
                 (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
@@ -276,9 +262,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// </summary>
         /// <param name="employeeId">The employee identifier.</param>
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void GetAgentAdminByEmployeeId(int employeeId)
+        [InlineData("1")]
+        [InlineData("2")]
+        public async void GetAgentAdminByEmployeeId(string employeeId)
         {
             mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync(
                 (EmployeeIdDetails employeeIdDetails) => mockDataContext.GetAgentAdminByEmployeeId(employeeIdDetails));
@@ -335,7 +321,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             {
                 FirstName = "abc",
                 LastName = "def",
-                EmployeeId = 51,
+                EmployeeId = "51",
                 Sso = "user1@concentrix.com",
                 AgentSchedulingGroupId = agentSchedulingGroupIdDetails.AgentSchedulingGroupId,
                 CreatedBy = "Admin",
@@ -389,7 +375,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             {
                 FirstName = "abc",
                 LastName = "def",
-                EmployeeId = 51,
+                EmployeeId = "51",
                 Sso = "user1@concentrix.com",
                 AgentSchedulingGroupId = agentSchedulingGroupIdDetails.AgentSchedulingGroupId,
                 CreatedBy = "Admin",
@@ -454,7 +440,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             {
                 FirstName = "xyz",
                 LastName = "uvw",
-                EmployeeId = 1,
+                EmployeeId = "1",
                 Sso = "user10@concentrix.com",
                 AgentSchedulingGroupId = 1,
                 ModifiedBy = "admin1",
@@ -514,7 +500,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             {
                 FirstName = "xyz",
                 LastName = "uvw",
-                EmployeeId = 1,
+                EmployeeId = "1",
                 Sso = "user10@concentrix.com",
                 AgentSchedulingGroupId = 1,
                 ModifiedBy = "admin1",
@@ -557,87 +543,6 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
             Assert.Equal(HttpStatusCode.NoContent, result.Code);
 
         }
-        #endregion
-
-        #region UpdateAgentCategoryValues
-
-        /// <summary>
-        /// Gets the agent admin.
-        /// </summary>
-        /// <param name="employeeId">The employee identifier.</param>
-        [Theory]
-        [InlineData(100)]
-        [InlineData(101)]
-        public async void UpdateAgentCategoryValuesWithUnprocessedData(int employeeId)
-        {
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminsByEmployeeIds(It.IsAny<List<int>>())).ReturnsAsync(
-                (List<int> agentAdminEmployeeIdsDetails) => mockDataContext.GetAgentAdminsByEmployeeIds(agentAdminEmployeeIdsDetails));
-
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminsByCategoryId(It.IsAny<List<int>>())).ReturnsAsync(
-                (List<int> agentCategoryDetails) => mockDataContext.GetAgentAdminsByCategoryId(agentCategoryDetails));
-
-            mockAgentCategoryRepository.Setup(mr => mr.GetAgentCategory(It.IsAny<AgentCategoryIdDetails>())).ReturnsAsync(
-                (AgentCategoryIdDetails agentCategoryIdDetails) => mockDataContext.GetAgentCategory(agentCategoryIdDetails));
-
-            CreateAgentCategoryValue agentCategory = new CreateAgentCategoryValue
-            {
-                AgentCategoryDetails = new List<AgentCategoryDetails>()
-                {
-                    new AgentCategoryDetails
-                    {
-                        EmployeeId = employeeId,
-                        CategoryId = 1,
-                        CategoryValue = "1",
-                        StartDate = "20210202"
-                    }
-                }
-            };
-
-            var result = await agentAdminService.UpdateAgentCategoryValues(agentCategory);
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.Value);
-            Assert.Equal(HttpStatusCode.NoContent, result.Code);
-        }
-
-        /// <summary>
-        /// Gets the agent admin.
-        /// </summary>
-        /// <param name="employeeId">The employee identifier.</param>
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void UpdateAgentCategoryValues(int employeeId)
-        {
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminsByEmployeeIds(It.IsAny<List<int>>())).ReturnsAsync(
-                (List<int> agentAdminEmployeeIdsDetails) => mockDataContext.GetAgentAdminsByEmployeeIds(agentAdminEmployeeIdsDetails));
-
-            mockAgentAdminRepository.Setup(mr => mr.GetAgentAdminsByCategoryId(It.IsAny<List<int>>())).ReturnsAsync(
-                (List<int> agentCategoryDetails) => mockDataContext.GetAgentAdminsByCategoryId(agentCategoryDetails));
-
-            mockAgentCategoryRepository.Setup(mr => mr.GetAgentCategory(It.IsAny<AgentCategoryIdDetails>())).ReturnsAsync(
-                (AgentCategoryIdDetails agentCategoryIdDetails) => mockDataContext.GetAgentCategory(agentCategoryIdDetails));
-
-            CreateAgentCategoryValue agentCategory = new CreateAgentCategoryValue
-            {
-                AgentCategoryDetails = new List<AgentCategoryDetails>() 
-                {
-                    new AgentCategoryDetails
-                    {
-                        EmployeeId = employeeId,
-                        CategoryId = 1,
-                        CategoryValue = "1",
-                        StartDate = "20210202"
-                    }
-                }
-            };
-
-            var result = await agentAdminService.UpdateAgentCategoryValues(agentCategory);
-
-            Assert.NotNull(result);
-            Assert.Equal(HttpStatusCode.NoContent, result.Code);
-        }
-
         #endregion
 
         #region DeleteAgentAdmin
@@ -695,9 +600,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// <summary>Creates the agent activity log with not found.</summary>
         /// <param name="employeeId">The employee identifier.</param>
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void CreateAgentActivityLog(int employeeId)
+        [InlineData("1")]
+        [InlineData("2")]
+        public async void CreateAgentActivityLog(string employeeId)
         {           
             var agentAdminEmployeeIdDetails = new EmployeeIdDetails { Id = employeeId };
 

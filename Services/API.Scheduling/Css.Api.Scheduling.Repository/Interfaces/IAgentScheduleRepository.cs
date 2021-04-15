@@ -22,6 +22,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<PagedList<Entity>> GetAgentSchedules(AgentScheduleQueryparameter agentScheduleQueryparameter);
 
         /// <summary>
+        /// Gets the agent schedules by list of employee Ids.
+        /// </summary>
+        /// <param name="employeeIdList">The list of agent employee id.</param>
+        /// <returns></returns>
+        Task<List<AgentSchedule>> GetAgentSchedulesByEmployeeIdList(List<string> employeeIdList);
+
+        /// <summary>
         /// Gets the agent schedule.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
@@ -73,14 +80,14 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
         /// <returns></returns>
-        Task<int> GetEmployeeIdByAgentScheduleId(AgentScheduleIdDetails agentScheduleIdDetails);
+        Task<string> GetEmployeeIdByAgentScheduleId(AgentScheduleIdDetails agentScheduleIdDetails);
 
         /// <summary>
         /// Gets the employee ids by agent schedule group identifier.
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
-        Task<List<int>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
+        Task<List<string>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
 
         /// <summary>
         /// Gets the agent schedule by employee identifier.
@@ -104,7 +111,7 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<List<AgentSchedule>> GetAgentSchedulingGroupExport(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
 
 
-        Task<List<AgentSchedule>> GetEmployeeScheduleExport(int employeeId);
+        Task<List<AgentSchedule>> GetEmployeeScheduleExport(string employeeId);
 
         /// <summary>
         /// Creates the agent schedule.
@@ -145,6 +152,13 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         /// <param name="agentScheduleRange">The agent schedule range.</param>
         void CopyAgentSchedules(EmployeeIdDetails employeeIdDetails, AgentScheduleRange agentScheduleRange);
+
+        /// <summary>
+        /// Copies the multiple agent schedules.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="agentScheduleRange">The agent schedule range.</param>
+        void MultipleCopyAgentScheduleChart(EmployeeIdDetails employeeIdDetails, AgentScheduleRange agentScheduleRange);
 
         /// <summary>
         /// Updates the agent schedule range.

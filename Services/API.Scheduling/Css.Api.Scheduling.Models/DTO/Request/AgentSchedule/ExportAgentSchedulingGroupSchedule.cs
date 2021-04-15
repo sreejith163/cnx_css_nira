@@ -7,7 +7,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
    public class ExportAgentSchedulingGroupSchedule
     {
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
 
         public string StartDate { get; set; }

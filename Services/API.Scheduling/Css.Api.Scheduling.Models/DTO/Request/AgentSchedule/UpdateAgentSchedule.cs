@@ -32,7 +32,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the modified user.
         /// </summary>
-        public int ModifiedUser { get; set; }
+        public string ModifiedUser { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.

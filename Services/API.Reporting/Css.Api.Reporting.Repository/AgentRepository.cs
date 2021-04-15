@@ -28,7 +28,7 @@ namespace Css.Api.Reporting.Repository
         /// </summary>
         /// <param name="ssns"></param>
         /// <returns></returns>
-        public async Task<List<Agent>> GetAgents(List<int> ssns)
+        public async Task<List<Agent>> GetAgents(List<string> ssns)
         {
             var agents = FilterBy(x => !x.IsDeleted && ssns.Contains(x.Ssn));
             return await Task.FromResult(agents.ToList());

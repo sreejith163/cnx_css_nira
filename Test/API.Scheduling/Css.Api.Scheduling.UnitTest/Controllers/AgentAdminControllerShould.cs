@@ -87,9 +87,9 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         /// <summary>Gets the agent admin returns not found result.</summary>
         /// <param name="agentAdminId">The agent admin identifier.</param>
         [Theory]
-        [InlineData(100)]
-        [InlineData(101)]
-        public async void GetAgentAdminByEmployeeId_ReturnsNotFoundResult(int employeeId)
+        [InlineData("100")]
+        [InlineData("101")]
+        public async void GetAgentAdminByEmployeeId_ReturnsNotFoundResult(string employeeId)
         {
             mockAgentAdminService.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync((EmployeeIdDetails employeeIdDetails) =>
                mockAgentAdminData.GetAgentAdminByEmployeeId(new EmployeeIdDetails { Id = employeeId }));
@@ -102,9 +102,9 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         /// <summary>Gets the agent admin returns ok result.</summary>
         /// <param name="agentAdminId">The agent admin identifier.</param>
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void GetAgentAdminByEmployeeId_ReturnsOKResult(int employeeId)
+        [InlineData("1")]
+        [InlineData("2")]
+        public async void GetAgentAdminByEmployeeId_ReturnsOKResult(string employeeId)
         {
             mockAgentAdminService.Setup(mr => mr.GetAgentAdminByEmployeeId(It.IsAny<EmployeeIdDetails>())).ReturnsAsync((EmployeeIdDetails employeeIdDetails) =>
                mockAgentAdminData.GetAgentAdminByEmployeeId(new EmployeeIdDetails { Id = employeeId }));
@@ -241,9 +241,9 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         /// <summary>Creates the agent activity logs not found.</summary>
         /// <param name="employeeId">The employee identifier.</param>
         [Theory]
-        [InlineData(30)]
-        [InlineData(31)]
-        public async void CreateAgentActivityLogs_NotFound(int employeeId)
+        [InlineData("30")]
+        [InlineData("31")]
+        public async void CreateAgentActivityLogs_NotFound(string employeeId)
         {
             CreateAgentActivityLog createAgentActivityLog = new CreateAgentActivityLog
             {
@@ -261,9 +261,9 @@ namespace Css.Api.Scheduling.UnitTest.Controllers
         /// <summary>Creates the agent activity logs created.</summary>
         /// <param name="employeeId">The employee identifier.</param>
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void CreateAgentActivityLogs_Created(int employeeId)
+        [InlineData("1")]
+        [InlineData("2")]
+        public async void CreateAgentActivityLogs_Created(string employeeId)
         {
             CreateAgentActivityLog createAgentActivityLog = new CreateAgentActivityLog
             {

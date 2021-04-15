@@ -1,5 +1,4 @@
-﻿using Css.Api.Scheduling.Models.Enums;
-using System;
+﻿using System;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
 {

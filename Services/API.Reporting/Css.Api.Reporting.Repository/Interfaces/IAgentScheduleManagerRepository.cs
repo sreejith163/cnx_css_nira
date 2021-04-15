@@ -18,7 +18,7 @@ namespace Css.Api.Reporting.Repository.Interfaces
         /// </summary>
         /// <param name="agentIds"></param>
         /// <returns></returns>
-        Task<List<AgentScheduleManager>> GetManagerSchedules(List<int> agentIds);
+        Task<List<AgentScheduleManager>> GetManagerSchedules(List<string> agentIds);
 
         /// <summary>
         /// The method to fetch manager schedules for input employees for the dates
@@ -26,7 +26,7 @@ namespace Css.Api.Reporting.Repository.Interfaces
         /// <param name="agentIds"></param>
         /// <param name="dates"></param>
         /// <returns></returns>
-        Task<List<AgentScheduleManager>> GetManagerSchedules(List<int> agentIds, List<DateTime> dates);
+        Task<List<AgentScheduleManager>> GetManagerSchedules(List<string> agentIds, List<DateTime> dates);
 
         /// <summary>
         /// The method to fetch manager schedules for matching filter details
@@ -41,7 +41,7 @@ namespace Css.Api.Reporting.Repository.Interfaces
         /// <param name="agentId"></param>
         /// <param name="fromDate"></param>
         /// <returns></returns>
-        Task<List<AgentScheduleManager>> GetManagerSchedules(int agentId, DateTime fromDate);
+        Task<List<AgentScheduleManager>> GetManagerSchedules(string agentId, DateTime fromDate);
 
         /// <summary>
         /// The method to update the agent scheduling group for the manager charts of an agent

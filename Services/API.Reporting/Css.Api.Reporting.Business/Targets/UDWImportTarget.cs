@@ -245,9 +245,9 @@ namespace Css.Api.Reporting.Business.Targets
             var schedulingGroups = await _agentSchedulingGroupRepository.GetAgentSchedulingGroups();
             var refIds = schedulingGroups.Select(x => x.RefId).ToList();
 
-            var newAgents = source.NewAgents.Where(x => x.SSN == 0)
+            var newAgents = source.NewAgents.Where(x => string.IsNullOrEmpty(x.SSN))
                             .Union(
-                                (from ag in source.NewAgents.Where(x => x.SSN != 0)
+                                (from ag in source.NewAgents.Where(x => !string.IsNullOrEmpty(x.SSN))
                                     join up in dest on ag.SSN equals up.Ssn
                                     where (ag.SenDate != null && up.SenDate == null)
                                     || (ag.MU == null) 
@@ -258,7 +258,7 @@ namespace Css.Api.Reporting.Business.Targets
             
             var invalidSchedulingGroupNewAgents = source.NewAgents.Where(x => !refIds.Contains(x.MU)).ToList();
             var invalidNewInsertsFromNewAgents = source.NewAgents
-                                                    .Where(x => x.SSN > 0
+                                                    .Where(x => !string.IsNullOrEmpty(x.SSN)
                                                         && !existingAgents.Select(y => y.Ssn).ToList().Contains(x.SSN)
                                                         && (string.IsNullOrWhiteSpace(x.MUString)
                                                             || string.IsNullOrWhiteSpace(x.SSO)
@@ -268,9 +268,9 @@ namespace Css.Api.Reporting.Business.Targets
 
             newAgents = newAgents.Union(invalidSchedulingGroupNewAgents).Union(invalidNewInsertsFromNewAgents).Distinct().ToList();
 
-            var changeAgents = source.ChangedAgents.Where(x => x.SSN == 0)
+            var changeAgents = source.ChangedAgents.Where(x => string.IsNullOrEmpty(x.SSN))
                                 .Union(
-                                    (from ag in source.ChangedAgents.Where(x => x.SSN != 0)
+                                    (from ag in source.ChangedAgents.Where(x => !string.IsNullOrEmpty(x.SSN))
                                     join up in dest on ag.SSN equals up.Ssn
                                     where (ag.SenDate != null && up.SenDate == null)
                                     || (ag.SenExt != null && up.SenExt == null)
@@ -280,7 +280,7 @@ namespace Css.Api.Reporting.Business.Targets
             
             var invalidSchedulingGroupChangeAgents = source.ChangedAgents.Where(x => x.MU.HasValue && !refIds.Contains(x.MU)).ToList();
             var invalidNewInsertsFromChangeAgents = source.ChangedAgents
-                                                    .Where(x => x.SSN > 0 
+                                                    .Where(x => !string.IsNullOrEmpty(x.SSN)
                                                         && !existingAgents.Select(y => y.Ssn).ToList().Contains(x.SSN)
                                                         && (string.IsNullOrWhiteSpace(x.MUString)
                                                             || string.IsNullOrWhiteSpace(x.SSO)
@@ -357,7 +357,7 @@ namespace Css.Api.Reporting.Business.Targets
                                    where d.AgentData.Any()
                                    select new
                                    {
-                                       Ssn = a.Ssn,
+                                       a.Ssn,
                                        AgentData = nData.Union(cData).Union(oData).OrderBy(x => x.Group.Description).ToList()
                                    }).ToList();
             
