@@ -86,6 +86,13 @@
               <br />
             </returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.UpdateAgentCategoryValues(Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.CreateAgentCategoryValue)">
+            <summary>
+            Updates the agent category values.
+            </summary>
+            <param name="agentCategoryValue">The agent category value.</param>
+            <returns></returns>
+        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.DeleteAgentAdmin(System.String)">
             <summary>
             Deletes the agent admin.
@@ -223,7 +230,7 @@
             <summary>
             Updates the agent schedule chart.
             </summary>
-            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <param name="agentScheduleImport">The agent schedule import.</param>
             <returns></returns>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.CopyAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.MultipleCopyAgentScheduleRequest)">
@@ -461,6 +468,16 @@
         </member>
         <member name="M:Css.Api.Scheduling.Validators.Agent.AddAgentAdminValidator.#ctor">
             <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.AddAgentAdminValidator" /> class.</summary>
+        </member>
+        <member name="T:Css.Api.Scheduling.Validators.Agent.CreateAgentCategoryValueValidator">
+            <summary>
+            Validator for handling the validation of create AgentCategoryValue object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.Agent.CreateAgentCategoryValueValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.CreateAgentCategoryValueValidator"/> class.
+            </summary>
         </member>
         <member name="T:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator">
             <summary>
