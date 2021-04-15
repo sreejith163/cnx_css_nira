@@ -2,7 +2,7 @@ import { ExcelData } from '../models/excel-data.model';
 
 export const SchedulingExcelExportData: ExcelData[] = [
     {
-        EmployeeId: 125805,
+        EmployeeId: "125805",
         StartDate: '20201202',
         EndDate: '20201202',
         ActivityCode: 'Open Time',
@@ -10,7 +10,7 @@ export const SchedulingExcelExportData: ExcelData[] = [
         EndTime: '12:00 pm'
     },
     {
-        EmployeeId: 125805,
+        EmployeeId: "125805",
         StartDate: '20201202',
         EndDate: '20201202',
         ActivityCode: 'Lunch',
@@ -18,7 +18,7 @@ export const SchedulingExcelExportData: ExcelData[] = [
         EndTime: '02:00 pm'
     },
     {
-        EmployeeId: 125805,
+        EmployeeId: "125805",
         StartDate: '20201202',
         EndDate: '20201202',
         ActivityCode: 'Open Time',
@@ -26,7 +26,7 @@ export const SchedulingExcelExportData: ExcelData[] = [
         EndTime: '04:00 pm'
     },
     {
-        EmployeeId: 125805,
+        EmployeeId: "125805",
         StartDate: '20201202',
         EndDate: '20201202',
         ActivityCode: 'Break',
@@ -34,7 +34,7 @@ export const SchedulingExcelExportData: ExcelData[] = [
         EndTime: '04:30 pm'
     },
     {
-        EmployeeId: 125805,
+        EmployeeId: "125805",
         StartDate: '20201202',
         EndDate: '20201202',
         ActivityCode: 'Open Time',

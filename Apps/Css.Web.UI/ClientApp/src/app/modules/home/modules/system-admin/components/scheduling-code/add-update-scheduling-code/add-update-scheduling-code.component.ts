@@ -121,28 +121,6 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
     );
   }
 
-  isNumberKey(evt) {
-    const currentValue = this.schedulingCodeForm.controls.priorityNumber?.value;
-    const charCode = (evt.which) ? evt.which : evt.keyCode;
-    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
-    if (isValid) {
-      return false;
-    }
-
-    return true;
-  }
-
-  isNumberKeyRefId(evt) {
-    const currentValue = this.schedulingCodeForm.controls.refId?.value;
-    const charCode = (evt.which) ? evt.which : evt.keyCode;
-    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
-    if (isValid) {
-      return false;
-    }
-
-    return true;
-  }
-
   onCheckboxChange(e) {
     const schedulingTypeCode: FormArray = this.schedulingCodeForm.get('schedulingTypeCode') as FormArray;
     if (e.target.checked) {
@@ -175,7 +153,6 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
 
     this.addSchedulingCodeSubscription = this.schedulingCodeService.addSchedulingCode(addSchedulingCodeModel)
       .subscribe(() => {
-        console.log(addSchedulingCodeModel);
         this.spinnerService.hide(this.spinner);
         this.activeModal.close({ needRefresh: true });
       }, (error) => {
@@ -199,7 +176,6 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
       this.updateSchedulingCodeSubscription = this.schedulingCodeService.updateSchedulingCode
         (this.schedulingCodeData.id, updateSchedulingCodeModel)
         .subscribe(() => {
-          console.log(updateSchedulingCodeModel);
           this.spinnerService.hide(this.spinner);
           this.activeModal.close({ needRefresh: true });
         }, (error) => {

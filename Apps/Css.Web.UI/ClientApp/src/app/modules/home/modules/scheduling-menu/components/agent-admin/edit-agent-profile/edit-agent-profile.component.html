@@ -54,11 +54,12 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="number" class="form-control" (keypress)="isIdNumberKey($event)"
-                    [ngClass]="{'valid-border-error': hasFormControlValidationError('employeeId')}"
-                    formControlName="employeeId" placeholder="{{ 'Employee_id' | translate }}" />
+                  <input employeeid type="text" class="form-control"  formControlName="employeeId" [maxLength]="maxLength" placeholder="{{ 'Employee_id' | translate }}" />
                   <div *ngIf="formSubmitted && agentSchForm.employeeId?.errors?.required" class="valid-error">
                     {{ 'Employee ID is required' | translate }}
+                  </div>
+                  <div *ngIf="formSubmitted && !validateEmployeeId()" class="valid-error">
+                    {{ 'Employee ID is invalid' | translate }}
                   </div>
                   <ng-container *ngIf="formSubmitted && agentSchForm.employeeId?.errors?.max">
                     <div class="valid-error">
@@ -305,9 +306,10 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input [maxLength]="10" type="number" class="form-control" (keypress)="isSupervisorIdNumberKey($event)"
-                    [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorId')}"
-                    formControlName="supervisorId" placeholder="{{ 'Team Lead EID' | translate }}" />
+                  <input employeeid type="text" class="form-control"  formControlName="supervisorId" [maxLength]="maxLength" placeholder="{{ 'Team Lead EID' | translate }}" />
+                  <div *ngIf="formSubmitted && !validateSupervisorId()" class="valid-error">
+                    {{ 'Supervisor ID is invalid' | translate }}
+                  </div>
                   <ng-container *ngIf="formSubmitted && form.supervisorId.invalid">
                     <div *ngIf="form.supervisorId.errors.required" class="valid-error">
                       {{ 'Team Lead EID is required' | translate }}

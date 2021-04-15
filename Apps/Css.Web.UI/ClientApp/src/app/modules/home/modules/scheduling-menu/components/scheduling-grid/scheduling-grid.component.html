@@ -40,7 +40,7 @@
           <thead>
             <tr>
               <th style="width: 5%;"></th>
-              <th  class="sortable-field emp_id_head"  (click)="sort('employeeId', sortBy)">
+              <th class="sortable-field emp_id_head" (click)="sort('employeeId', sortBy)">
                 {{ 'Employee_id' | translate }}
                 <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
@@ -125,7 +125,27 @@
                       class="btn btn-defaulty dropdown-toggle" aria-controls="dropdown-custom-html">
                       {{ getSelectedRange(el) }} <span class="caret"></span>
                     </button>
-                    <ul id="dropdown-custom-html" *dropdownMenu class="dropdown-menu" role="menu"
+
+                    <div class="dropdown">
+                      <div *dropdownMenu class="dropdown-menu pre-scrollable" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item cursor-pointer" *ngFor="let range of el.ranges; let i = index;" (click)="onDateRangeChange(i, el)">
+                          <ng-container [ngSwitch]="range.status">
+                            <ng-container *ngSwitchCase="1">
+                              <span class="badge badge-pill badge-warning">Pending</span>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="2">
+                              <span class="badge badge-pill badge-success">Released</span>
+                            </ng-container>
+                          </ng-container>
+                          <span class="padding-left-15">
+                            <span>{{range.dateFrom | date: 'yyyy-MM-dd'}}</span>
+                            <span *ngIf="range.dateTo"> - </span>
+                            <span>{{ range.dateTo | date: 'yyyy-MM-dd'}}</span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                    <!-- <ul id="dropdown-custom-html" *dropdownMenu class="rangeDropDown dropdown-menu" role="menu"
                       aria-labelledby="button-custom-html">
                       <li *ngFor="let range of el.ranges; let i = index;" role="menuitem">
                         <a class="custom-dropdown dropdown-item cursor-pointer" (click)="onDateRangeChange(i, el)">
@@ -144,7 +164,7 @@
                           </span>
                         </a>
                       </li>
-                    </ul>
+                    </ul> -->
                     <span>
                       <!-- <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1"
                         (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i> -->
@@ -208,7 +228,8 @@
                               <span>
                                 <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true" (click)="toBeginning()"
                                   [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-                                <i class="fa fa-caret-left arrow-icon" aria-hidden="true" (click)="previous()"
+                                <i style="width: 50px;" class="fa fa-caret-left arrow-icon" aria-hidden="true"
+                                  (click)="previous()"
                                   [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
                               </span>
                               <ng-container
@@ -222,7 +243,8 @@
                                     {{ unifiedToNative(code.icon.value) }}</span></i>
                               </ng-container>
                               <span>
-                                <i class="fa fa-caret-right arrow-icon" aria-hidden="true" (click)="next()"
+                                <i style="width: 50px;" class="fa fa-caret-right arrow-icon" aria-hidden="true"
+                                  (click)="next()"
                                   [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
                                 <i class="fa fa-angle-double-right arrow-icon" aria-hidden="true" (click)="toEnd()"
                                   [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>

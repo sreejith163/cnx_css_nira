@@ -1,5 +1,5 @@
 export class ManagerExcelData {
-    EmployeeId: number;
+    EmployeeId: string;
     Date: string;
     ActivityCode: string;
     StartTime: string;

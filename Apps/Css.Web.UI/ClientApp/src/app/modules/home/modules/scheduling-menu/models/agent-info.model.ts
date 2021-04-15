@@ -4,7 +4,7 @@ export class AgentInfo {
     scheduleType: string;
     supervisorName: string;
     supervisorId: string;
-    employeeId: number;
+    employeeId: string;
     hireDate: string;
     productionDate: string;
     termDate: string;

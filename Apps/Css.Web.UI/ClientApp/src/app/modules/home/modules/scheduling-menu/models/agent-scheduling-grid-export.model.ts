@@ -1,6 +1,6 @@
 export class AgentSchedulingGridExport {
 
-    employeeId: number;
+    employeeId: string;
     startDate: string;
     endDate:string;
     activityCode: string;

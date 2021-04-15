@@ -2,7 +2,7 @@ import { ScheduleChart } from './schedule-chart.model';
 
 export class AgentChartResponse {
     id: string;
-    employeeId: number;
+    employeeId: string;
     firstName: string;
     lastName: string;
     agentSchedulingGroupId: number;

@@ -1,5 +1,5 @@
 export class ExcelData {
-    EmployeeId: number;
+    EmployeeId: string;
     StartDate: string;
     EndDate: string;
     ActivityCode: string;

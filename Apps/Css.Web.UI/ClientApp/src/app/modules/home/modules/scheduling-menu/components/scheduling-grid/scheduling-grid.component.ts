@@ -370,15 +370,23 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   previous() {
     if (this.startIcon > 0) {
-      this.startIcon = this.startIcon - 1;
-      this.endIcon = this.endIcon - 1;
+      this.startIcon = this.startIcon - 30;
+      this.endIcon = this.endIcon - 30;
+      if (this.startIcon < 0 ){
+        this.startIcon = 0;
+        this.endIcon = this.iconCount;
+      }
     }
   }
 
   next() {
     if (this.endIcon < this.schedulingCodes.length) {
-      this.startIcon = this.startIcon + 1;
-      this.endIcon = this.endIcon + 1;
+      this.startIcon = this.startIcon + 30;
+      this.endIcon = this.endIcon + 30;
+      if (this.endIcon > this.schedulingCodes.length) {
+        this.startIcon = this.schedulingCodes.length - this.iconCount
+        this.endIcon = this.schedulingCodes.length;
+      }
     }
   }
 
@@ -587,7 +595,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.modalRef.componentInstance.agentScheduleType = AgentScheduleType.Scheduling;
     this.modalRef.componentInstance.fromDate = new Date(this.startDate);
 
-    this.modalRef.result.then((result) => {
+    this.modalRef.result.then((result) => { 
       if (result.needRefresh) {
         this.getModalPopup(MessagePopUpComponent, 'sm');
         this.setComponentMessages('Success', 'The record has been copied!');
@@ -683,7 +691,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         this.exportData = response;
 
-        console.log(this.exportData)
 
 
         const today = new Date();
@@ -732,13 +739,12 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
 
   }
-  exportToExcelByEmployee(employeeId : number) {
+  exportToExcelByEmployee(employeeId : string) {
     this.agentSchedulesService
       .exportAgentSchedulingGridByEmployee(employeeId)
       .subscribe(response => {
         this.exportData = response;
 
-        console.log(this.exportData)
 
 
         const today = new Date();
@@ -805,7 +811,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     const range = new AgentScheduleRange();
     range.dateFrom = this.getFormattedDate(result?.dateFrom);
     range.dateTo = this.getFormattedDate(result?.dateTo);
-    console.log(range)
+    
     range.status = SchedulingStatus['Pending Schedule'];
     range.agentSchedulingGroupId = el.activeAgentSchedulingGroupId;
     range.scheduleCharts = [];
@@ -1133,7 +1139,6 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     updateModel.activityOrigin = ActivityOrigin.CSS;
     updateModel.modifiedUser = +el?.employeeId;
 
-    console.log(updateModel)
 
     const scheduleId = this.totalSchedulingGridData.find(x => x.id === el?.id)?.id;
 

@@ -48,7 +48,7 @@ export class AgentAdminService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
 
-  getAgentInfo(employeeId: number) {
+  getAgentInfo(employeeId: string) {
     const url = `${this.baseURL}/agentAdmins/employees/${employeeId}`;
 
     return this.http.get<AgentInfo>(url)

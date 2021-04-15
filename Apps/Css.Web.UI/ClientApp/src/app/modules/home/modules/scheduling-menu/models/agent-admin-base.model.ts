@@ -2,7 +2,7 @@ import { AgentAdminAgentData } from './agent-admin-agent-data.model';
 
 export class AgentAdminBase {
     id: string;
-    employeeId: number;
+    employeeId: string;
     sso: string;
     skillTagId: number;
     agentSchedulingGroupId: number;

@@ -127,7 +127,7 @@ export class LoginComponent implements OnInit {
     this.cookieService.set('employeeId', userUAT.employeeId, null, environment.settings.cookiePath, null, false, 'Strict');
     this.cookieService.set('uid', userUAT.uid, null, environment.settings.cookiePath, null, false, 'Strict');
     this.cookieService.set('displayName', userUAT.displayName, null, environment.settings.cookiePath, null, false, 'Strict');
-    this.permissionService.getEmployee(+userUAT.employeeId).subscribe((user: EmployeeDetails) => {
+    this.permissionService.getEmployee(userUAT.employeeId).subscribe((user: EmployeeDetails) => {
       this.permissionService.storePermission(user.userRoleId);
 
       this.router.navigate(['home']);

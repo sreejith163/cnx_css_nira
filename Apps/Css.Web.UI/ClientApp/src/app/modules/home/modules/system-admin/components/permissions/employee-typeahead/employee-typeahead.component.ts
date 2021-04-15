@@ -29,7 +29,7 @@ export class EmployeeTypeAheadComponent implements OnInit, OnDestroy {
   typeAheadSubscription: any;
   subscriptions: any[] = [];
 
-  @Input() employeeId: number;
+  @Input() employeeId: string;
   @Input() translationValues: Translation[];
   @Output() employeeSelected: EventEmitter<Permission> = new EventEmitter<Permission>();
   @Output() employeeCleared = new EventEmitter();

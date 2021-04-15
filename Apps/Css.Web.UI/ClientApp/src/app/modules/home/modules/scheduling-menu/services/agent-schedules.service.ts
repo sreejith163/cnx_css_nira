@@ -16,6 +16,7 @@ import { ScheduleDateRangeBase } from '../models/schedule-date-range-base.model'
 import { UpdateScheduleDateRange } from '../models/update-schedule-date-range.model';
 import { DateRangeQueryParms } from '../models/date-range-query-params.model';
 import { AgentSchedulingGridExport } from '../models/agent-scheduling-grid-export.model';
+import { CopyMultipleAgentScheduleChart } from '../models/copy-multiple-agent-schedule-chart.model';
 
 @Injectable()
 export class AgentSchedulesService extends HttpBaseService {
@@ -50,7 +51,7 @@ export class AgentSchedulesService extends HttpBaseService {
     return this.http.get<AgentSchedulingGridExport>(url)
     .pipe(catchError(this.handleError));
   }
-  exportAgentSchedulingGridByEmployee(employeeId: number) {
+  exportAgentSchedulingGridByEmployee(employeeId: string) {
     const url = `${this.baseURL}/AgentSchedules/${employeeId}/employeeexport`;
 
     return this.http.get<AgentSchedulingGridExport>(url)
@@ -103,6 +104,13 @@ export class AgentSchedulesService extends HttpBaseService {
   }
 
   copyAgentScheduleChart(agentScheduleId: string, copyAgentScheduleChart: CopyAgentScheduleChart) {
+    const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/copy`;
+
+    return this.http.put<ApiResponseModel>(url, copyAgentScheduleChart)
+    .pipe(catchError(this.handleError));
+  }
+
+  copyMultipleAgentScheduleChart(agentScheduleId: string, copyAgentScheduleChart: CopyMultipleAgentScheduleChart) {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}/copy`;
 
     return this.http.put<ApiResponseModel>(url, copyAgentScheduleChart)

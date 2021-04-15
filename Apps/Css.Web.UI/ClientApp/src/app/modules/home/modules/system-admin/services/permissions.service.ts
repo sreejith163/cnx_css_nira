@@ -51,14 +51,14 @@ export class PermissionsService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
 
-  getAgentInfo(employeeId: number) {
+  getAgentInfo(employeeId: string) {
     const url = `${this.baseURL}/agentAdmins/employees/${employeeId}`;
 
     return this.http.get<AgentInfo>(url)
       .pipe(catchError(this.handleError));
   }
 
-  getEmployee(employeeId: number) {
+  getEmployee(employeeId: string) {
     const url = `${this.baseURL}/userpermissions/${employeeId}`;
 
     return this.http.get<EmployeeDetails>(url)
@@ -72,7 +72,7 @@ export class PermissionsService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
 
-  userLogging(employeeId: number, userLoginLog: UserLoginLog): Observable<any[]> {
+  userLogging(employeeId: string, userLoginLog: UserLoginLog): Observable<any[]> {
     const userLogApiUrl = `${this.baseURL}/log`;
 
     let userLogResponse = this.http.post<any>(userLogApiUrl, userLoginLog)
@@ -87,7 +87,7 @@ export class PermissionsService extends HttpBaseService {
     return forkJoin([userLogResponse, employeeResponse]);
   }
 
-  deleteEmployee(employeeId: number) {
+  deleteEmployee(employeeId: string) {
     const url = `${this.baseURL}/userpermissions/${employeeId}`;
 
     return this.http.delete<EmployeeDetails>(url)
@@ -109,7 +109,7 @@ export class PermissionsService extends HttpBaseService {
       .pipe(catchError(this.handleError));
   }
 
-  updateUserPermission(employeeId: number, employeeDetails: EmployeeDetails){
+  updateUserPermission(employeeId: string, employeeDetails: EmployeeDetails){
     const url = `${this.baseURL}/userpermissions/${employeeId}`;
 
     return this.http.put<EmployeeDetails>(url, employeeDetails)
@@ -142,7 +142,6 @@ export class PermissionsService extends HttpBaseService {
 
   addUserLog(userLoginLog: UserLoginLog){
     const url = `https://localhost:44318/api/log`;
-    console.log(url, this.convertToHttpParam(userLoginLog));
 
     return this.http.post<any>(url, {
       params: this.convertToHttpParam(userLoginLog),

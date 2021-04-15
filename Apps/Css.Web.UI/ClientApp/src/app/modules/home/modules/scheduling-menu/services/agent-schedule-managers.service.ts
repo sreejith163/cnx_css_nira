@@ -41,7 +41,7 @@ export class AgentScheduleManagersService extends HttpBaseService {
 
   }
 
-  copyAgentScheduleManagerChart(employeeId: number, copyAgentScheduleManagerChart: CopyAgentScheduleManagerChart) {
+  copyAgentScheduleManagerChart(employeeId: string, copyAgentScheduleManagerChart: CopyAgentScheduleManagerChart) {
     const url = `${this.baseURL}/AgentScheduleManagers/${employeeId}/copy`;
 
     return this.http.put<ApiResponseModel>(url, copyAgentScheduleManagerChart)

@@ -29,7 +29,6 @@ export class OnlynumberDirective {
     onPropertyChange(e: KeyboardEvent) {
 
         var reg = /^0+/gi;
-        console.log(this.el.nativeElement.innerText)
         // if (this.el.nativeElement.innerText.match(reg)){
         //     this.el.nativeElement.innerText = this.el.nativeElement.innerText.replace(reg, '');
         // }

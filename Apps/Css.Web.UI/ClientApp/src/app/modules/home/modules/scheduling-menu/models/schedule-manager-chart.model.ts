@@ -12,7 +12,7 @@ export class ScheduleManagerChart {
 
 export class ScheduleManagerAgentChartResponse {
     id: string;
-    employeeId: number;
+    employeeId: string;
     firstName: string;
     lastName: string;
     agentSchedulingGroupId: number;
@@ -40,7 +40,7 @@ export class ScheduleManagerChartDisplay {
 
 export class ScheduleManagerGridChartDisplay {
     id: string;
-    employeeId: number;
+    employeeId: string;
     firstName: string;
     lastName: string;
     agentSchedulingGroupId: number;
@@ -66,7 +66,7 @@ export class ScheduleManagerChartUpdate {
 }
 
 export class ScheduleManagerAgentData {
-    employeeId: number;
+    employeeId: string;
     agentScheduleManagerCharts: ScheduleManagerAgentCharts[];
 
     constructor() {

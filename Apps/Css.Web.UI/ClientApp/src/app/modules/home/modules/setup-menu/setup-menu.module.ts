@@ -18,6 +18,8 @@ import { AddUpdateClientLobGroupComponent } from './components/client-lob-group/
 import { SkillGroupListComponent } from './components/skill-group/skill-group-list/skill-group-list.component';
 import { SkillTagsListComponent } from './components/skill-tags/skill-tags-list/skill-tags-list.component';
 import { AddUpdateSkillTagComponent } from './components/skill-tags/add-update-skill-tag/add-update-skill-tag.component';
+import { SetupMenuIntegerDirective } from 'src/app/shared/directives/setup-menu-integer.directive';
+
 
 const modules = [SharedModule, SetupMenuRoutingModule];
 const components = [
@@ -30,7 +32,8 @@ const components = [
   SkillGroupListComponent,
   AddEditSkillGroupComponent,
   SkillTagsListComponent,
-  AddUpdateSkillTagComponent
+  AddUpdateSkillTagComponent,
+  SetupMenuIntegerDirective
 ];
 
 const providers = [

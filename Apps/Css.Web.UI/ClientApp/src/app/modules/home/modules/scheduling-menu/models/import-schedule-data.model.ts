@@ -1,7 +1,7 @@
 import { ImportAgentScheduleRanges } from './import-agent-schedule-ranges.model';
 
 export class ImportScheduleData {
-    employeeId: number;
+    employeeId: string;
     ranges: ImportAgentScheduleRanges[];
 
     constructor() {

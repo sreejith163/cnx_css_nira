@@ -39,6 +39,7 @@ import { ActivityLogsScheduleManagerComponent } from './components/shared/activi
 import { GetIconForScheduleManagerActivityLogsPipe } from './pipes/get-grid-icon-schedule-manager-activity-logs.pipe';
 import { GetIconSchedulingGridPipe } from './pipes/get-scheduling-grid-icon.pipe';
 import { OnlynumberDirective } from 'src/app/shared/directives/integer-only.directive';
+import { CopyScheduleDateRangeComponent } from './components/shared/copy-schedule-date-range/copy-schedule-date-range.component';
 import { AgentCategoryValueComponent } from './components/agent-category-value/agent-category-value.component';
 
 
@@ -57,10 +58,11 @@ const components =
     EntityHierarchyComponent,
     HorizontalScrollPipe,
     ForecastScreenListComponent,
+    CopyScheduleDateRangeComponent,
     DateRangePopUpComponent,
     ViewOuScreenComponent,
     NumericDirective,
-    OnlynumberDirective,
+    OnlynumberDirective, 
     ActivityLogsComponent,
     MoveAgentsListComponent,
     MoveAgentsSchedulingGroupTypeaheadComponent,

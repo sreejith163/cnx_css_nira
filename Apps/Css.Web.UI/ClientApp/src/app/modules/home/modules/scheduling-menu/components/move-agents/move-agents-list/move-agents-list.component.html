@@ -19,7 +19,7 @@
                         <h3 class="card-title text-xs"><span class="text-bold">{{'Number of agents' | translate }}: </span> <i>Loaded {{ (agentAdmins$ | async)?.length || '0' | number  }} of {{(totalAgentAdminsRecord$ | async) || '0' | number }}</i>
                             <br>
                             <br>
-                            <ng-container *ngIf="listPosition=='left'"><span class="text-bold">Number of highlighted agents: </span><i>{{selectedAgentAdminIds.length || '0' | number }}</i></ng-container> <!-- NO TRANSLATION -->
+                            <ng-container *ngIf="listPosition=='left' && agentSchedulingGroupId > 0"><span class="text-bold">Number of highlighted agents: </span><i>{{selectedAgentAdminIds.length || '0' | number }}</i></ng-container> <!-- NO TRANSLATION -->
                         </h3>                                                                    
                     </div>
                     <div class="col-lg-6">

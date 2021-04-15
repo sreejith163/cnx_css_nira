@@ -19,8 +19,7 @@
                 </label>
               </div>
               <div class="col-md-8">
-                <input type="text" class="form-control" formControlName="refId" [maxLength]="10"
-                 (keypress)="isNumberKeyRefId($event)" onpaste="return false;" />
+                <input type="text" class="form-control" formControlName="refId" [maxLength]="10" integeronly onpaste="return false;" />
               </div>
             </div>
             <br/>

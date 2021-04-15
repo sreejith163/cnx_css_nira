@@ -1,5 +1,5 @@
 export class SchedulingAgents {
-    employeeId: number;
+    employeeId: string;
     firstName: string;
     lastName: string;
     isChecked: boolean;

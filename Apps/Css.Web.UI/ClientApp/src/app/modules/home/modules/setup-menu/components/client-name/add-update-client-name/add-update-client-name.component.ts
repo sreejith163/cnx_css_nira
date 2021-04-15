@@ -86,17 +86,6 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
     return (this.clientDetails.name !== this.clientForm.value.name || this.clientDetails.refId !== this.clientForm.value.refId);
   }
 
-  isNumberKeyRefId(evt) {
-    const currentValue = this.clientForm.controls.refId?.value;
-    const charCode = (evt.which) ? evt.which : evt.keyCode;
-    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
-    if (isValid) {
-      return false;
-    }
-
-    return true;
-  }
-
   isSpecialChar(event)
   {   
     var k;  

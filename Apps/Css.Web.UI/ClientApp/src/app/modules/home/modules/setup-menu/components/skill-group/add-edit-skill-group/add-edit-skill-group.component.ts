@@ -391,17 +391,6 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getSkillGroupSubscription);
   }
 
-  isNumberKeyRefId(evt) {
-    const currentValue = this.skillGroupForm.controls.refId?.value;
-    const charCode = (evt.which) ? evt.which : evt.keyCode;
-    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
-    if (isValid) {
-      return false;
-    }
-
-    return true;
-  }
-
   isSpecialChar(event)
   {   
     var k;  

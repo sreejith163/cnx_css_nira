@@ -34,6 +34,7 @@ import { stringify } from '@angular/compiler/src/util';
 import { trimTrailingNulls } from '@angular/compiler/src/render3/view/util';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import * as moment from 'moment';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-import-schedule',
@@ -71,7 +72,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private datepipe: DatePipe,
     private papa: Papa,
-    private ngxCsvParser: NgxCsvParser,
+    private ngxCsvParser: NgxCsvParser
   ) { }
 
   ngOnInit(): void {
@@ -122,10 +123,10 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
       // if (!this.fileFormatValidation && !this.validateHeading()) {
         
       if (!this.fileFormatValidation) {
-          const employees = new Array<number>();
+          const employees = new Array<string>();
           this.csvData.forEach(data => {
-            if (employees.filter(x => x === +data.EmployeeId).length === 0) {
-              employees.push(+data.EmployeeId);
+            if (employees.filter(x => x === data.EmployeeId).length === 0) {
+              employees.push(data.EmployeeId);
             }
           });
           // console.log(this.jsonData)
@@ -229,7 +230,7 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
           }
         } 
 
-        if (csvJson.StartDate !== '' && csvJson.ActivityCode !== '' && csvJson.EmployeeId > -1
+        if (csvJson.StartDate !== '' && csvJson.ActivityCode !== '' && csvJson.EmployeeId !== ''
         && csvJson.EndDate !== '' && csvJson.endTime !== '' && csvJson.startTime !=='') {
           this.csvData.push(csvJson);
         }
@@ -283,8 +284,6 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
       this.csvData = this.csvData.filter(x=> x.startTime !== x.endTime);
 
-      console.log(this.csvData)
-
     }, (error: NgxCSVParserError) => {
 
       this.modalService.dismissAll();
@@ -300,27 +299,46 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
 
   private importAgentScheduleChart(scheduleResponse: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[], hasMismatch?: boolean) {
     const importModelArray = this.shapeImportModel(schedulingCodes);
-    let importFinalModel = new ShedulingGridImportModel();
-    importFinalModel.agentScheduleImportData = importModelArray;
-    importFinalModel.activityOrigin = ActivityOrigin.CSS;
-    importFinalModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
 
-      this.spinnerService.show(this.spinner, SpinnerOptions);
-      this.importAgentScheduleChartSubscription = this.agentSchedulesService.importAgentScheduleChart(importFinalModel)
-        .subscribe((res) => {
-          this.spinnerService.hide(this.spinner);
-          this.activeModal.close({ partialImport: hasMismatch });
-        }, (error) => {
-          this.spinnerService.hide(this.spinner);
-          const errorMessage = `An error occurred upon importing the file. Please check the following<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time<br>Not recognized Employee ID`;
-          this.showErrorWarningPopUpMessage(errorMessage);
-        });
-      this.subscriptions.push(this.importAgentScheduleChartSubscription);
+    // check if modelArray has value
+    if(importModelArray !== undefined){
+      let importFinalModel = new ShedulingGridImportModel();
+      importFinalModel.agentScheduleImportData = importModelArray;
+      importFinalModel.activityOrigin = ActivityOrigin.CSS;
+      importFinalModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
+
+        this.spinnerService.show(this.spinner, SpinnerOptions);
+        this.importAgentScheduleChartSubscription = this.agentSchedulesService.importAgentScheduleChart(importFinalModel)
+          .subscribe((res:any) => {
+            console.log(res)
+            if (res.type === HttpEventType.Sent) {
+              // This is an upload progress event. Compute and show the % done:
+              const percentDone = Math.round(100 * res.loaded / res.total);
+              console.log(`File is ${percentDone}% uploaded.`);
+            } else if (res instanceof HttpResponse) {
+              console.log('File is completely uploaded!');
+            }
+            
+            this.spinnerService.hide(this.spinner);
+            this.activeModal.close({ partialImport: hasMismatch });
+          }, (error) => {
+            this.spinnerService.hide(this.spinner);
+            const errorMessage = `An error occurred upon importing the file. Please check the following<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time<br>Not recognized Employee ID`;
+            this.showErrorWarningPopUpMessage(errorMessage);
+          });
+        this.subscriptions.push(this.importAgentScheduleChartSubscription);
+    }else{
+      // based on the scheduling code validation,
+      // return activity code error if model is undefined undefined
+      this.spinnerService.hide(this.spinner);
+      const errorMessage = `Invalid Activity Code(s) detected.<br>Please check your file and try again.`;
+      this.showErrorWarningPopUpMessage(errorMessage);
+    }
   }
 
 
 
-  private loadAgentSchedules(employees: number[]) {
+  private loadAgentSchedules(employees: string[]) {
     let agentSchedule;
     let agentManagerSchedule;
     const activityCodes = Array<string>();
@@ -388,19 +406,35 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   private shapeImportModel(schedulingCodes: SchedulingCode[]){
     const importCsvData = this.csvData;
     let importModelArray: ImportScheduleGridData[] = [];
+    
+    // get the original length of the csvData
+    // this will be used for scheduling code validation
+    let csvLength = importCsvData.length;
+
     importCsvData.map(x => {
         let importObj = new ImportScheduleGridData();
         importObj.startDate = x?.StartDate;
         importObj.endDate = x?.EndDate;
         importObj.startTime = x?.startTime;
         importObj.endTime = x?.endTime;
-        importObj.schedulingCodeId = schedulingCodes.find(c => c.description.trim().toLowerCase() === x?.ActivityCode.trim().toLowerCase()).id;
+        // if the activity code provided is invalid, give undefined value as default
+        // then filter the array by valid scheduling code ids
+        const schedCode = schedulingCodes.find(c => c.description.trim().toLowerCase() === x?.ActivityCode.trim().toLowerCase());
+        importObj.schedulingCodeId = schedCode ? schedCode.id : undefined;
         importObj.employeeId = +x?.EmployeeId;
 
         importModelArray.push(importObj);        
       });
+      
+      // filter the array by scheduling code
+      // remove all the items with undefined schedulingCodeId
+      var filtered = importModelArray.filter(x => x.schedulingCodeId !== undefined);
 
-      console.log(importModelArray)
+      // compare the original csvLength with filtered length
+      // if unequal, return undefined
+      if(csvLength !== filtered.length){
+          importModelArray = undefined;
+      }
 
     return importModelArray;
   }

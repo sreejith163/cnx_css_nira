@@ -7,5 +7,6 @@ export class AgentSchedulesQueryParams extends QueryStringParameters {
     dateFrom?: string;
     dateTo?: string;
     excludeConflictSchedule: boolean;
-    employeeIds: number[];
+    employeeIds: string[];
+    excludedEmployeeId?: string;
 }

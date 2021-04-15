@@ -2,7 +2,7 @@ import { AgentScheduleRange } from './agent-schedule-range.model';
 
 export class AgentScheduleBase {
     id: string;
-    employeeId: number;
+    employeeId: string;
     firstName: string;
     lastName: string;
     activeAgentSchedulingGroupId: number;

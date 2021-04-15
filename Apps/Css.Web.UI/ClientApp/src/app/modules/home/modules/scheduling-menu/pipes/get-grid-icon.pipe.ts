@@ -18,7 +18,7 @@ export class GetIconForGridPipe implements PipeTransform {
     public transform(employeeId, managerCharts$: Observable<ScheduleManagerGridChartDisplay[]>, schedulingCodes:SchedulingCode[],  date: string, updated): any {
 
         managerCharts$.subscribe((managerCharts)=>{
-            const chart = managerCharts?.find(x => x?.employeeId === +employeeId);
+            const chart = managerCharts?.find(x => x?.employeeId === employeeId);
             if(chart?.charts?.length > 0){
                 let weekTimeData = chart?.charts?.find(x => this.getTimeStamp(date) >= this.getTimeStamp(x?.startDateTime) &&
                 this.getTimeStamp(date) < this.getTimeStamp(x?.endDateTime));

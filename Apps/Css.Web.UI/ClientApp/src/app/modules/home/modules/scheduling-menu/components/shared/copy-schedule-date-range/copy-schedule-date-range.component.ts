@@ -16,14 +16,15 @@ import { Constants } from 'src/app/shared/util/constants.util';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { NgbDateToIsoStringAdapter } from '../../../helpers/ngb-date-to-iso-string-adapter';
 import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
+import * as moment from 'moment';
 
 @Component({
-  selector: 'app-date-range-pop-up',
-  templateUrl: './date-range-pop-up.component.html',
-  styleUrls: ['./date-range-pop-up.component.scss'],
+  selector: 'app-copy-schedule-date-range',
+  templateUrl: './copy-schedule-date-range.component.html',
+  styleUrls: ['./copy-schedule-date-range.component.scss'],
   providers: [DatePipe, { provide: NgbDateAdapter, useClass: NgbDateToIsoStringAdapter }]
 })
-export class DateRangePopUpComponent implements OnInit, OnDestroy {
+export class CopyScheduleDateRangeComponent implements OnInit, OnDestroy {
 
   hoveredDate: NgbDate | null = null;
   toDate: NgbDate | null = null;
@@ -34,12 +35,8 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   startDate: any;
   endDate: any;
 
-  @Input() agentScheduleId: string;
-  @Input() isEditNewDateRange: boolean;
   @Input() dateFrom: Date;
   @Input() dateTo: Date;
-  @Input() operation: ComponentOperation;
-  @Input() el: AgentSchedulesResponse;
 
   getShceduleDateRangeSubscription: ISubscription;
   updateScheduleDateRangeSubscription: ISubscription;
@@ -48,9 +45,6 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   constructor(
     public activeModal: NgbActiveModal,
     private calendar: NgbCalendar,
-    private agentSchedulesService: AgentSchedulesService,
-    private authService: AuthService,
-    private spinnerService: NgxSpinnerService,
     private modalService: NgbModal,
     private datepipe: DatePipe,
     public formatter: NgbDateParserFormatter,
@@ -60,27 +54,11 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.startDate = this.getFormattedDate(this.dateFrom);
     this.endDate = this.getFormattedDate(this.dateTo);
-    if (this.dateFrom || this.dateTo && this.operation === ComponentOperation.Edit) {
-      this.fromDate = this.convertToNgbDate(this.getFormattedDate(this.dateFrom)) ?? this.today;
-      this.toDate = this.convertToNgbDate(this.getFormattedDate(this.dateTo)) ?? this.today;
-    }
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      if (subscription) {
-        subscription.unsubscribe();
-      }
-    });
-    this.el = undefined;
+
   }
-
-  getTitle() {
-    return ComponentOperation[this.operation];
-  }
-
-
-
 
   onDateSelection(date: NgbDate) {
     const x = this.calendar.getWeekday(date);
@@ -90,8 +68,7 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
 
     this.dateFrom = new Date(`${this.convertNgbToUTCString(this.fromDate)} 00:00`);
     this.dateTo = new Date(`${this.convertNgbToUTCString(this.toDate)} 00:00`);
-
-
+  
   }
 
 
@@ -134,82 +111,15 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
     if (!this.dateFrom || !this.dateTo) {
       this.getModalPopup(ErrorWarningPopUpComponent, 'sm', Constants.DateRangeRequiredMessage);
     } else {
-      if (this.startDate !== this.dateFrom || this.endDate !== this.dateTo) {
-        if (this.operation === ComponentOperation.Edit) {
-          if (this.isEditNewDateRange) {
-            this.addScheduleDateRange();
-          } else {
-            this.updateScheduleDateRange();
-          }
-        } else {
-          this.addScheduleDateRange();
-        }
-      } else {
-        this.activeModal.close({ needRefresh: false });
-      }
+      const rangeModel = new ScheduleDateRangeBase();
+      rangeModel.dateFrom = this.changeToUTCDate(this.dateFrom);
+      rangeModel.dateTo = this.changeToUTCDate(this.dateTo);
+      this.activeModal.close(rangeModel);
     }
-  }
-
-  
-  private addScheduleDateRange() {
-    this.spinnerService.show(this.spinner, SpinnerOptions);
-    const model = new DateRangeQueryParms();
-    model.dateFrom = this.getFormattedDate(this.dateFrom).toISOString();
-    model.dateTo = this.getFormattedDate(this.dateTo).toISOString();
-    this.getShceduleDateRangeSubscription = this.agentSchedulesService.getAgentScheduleRange(this.agentScheduleId, model)
-      .subscribe((response) => {
-        this.spinnerService.hide(this.spinner);
-        if (!response.body) {
-          if(this.el?.ranges.find(x => x.dateFrom >= this.dateFrom && x.dateTo <= this.dateTo) !== undefined){
-            this.getModalPopup(ErrorWarningPopUpComponent, 'sm', Constants.DateRangeConflictMessage);            
-          }else{
-            const rangeModel = new ScheduleDateRangeBase();
-            rangeModel.dateFrom = this.dateFrom;
-            rangeModel.dateTo = this.dateTo;
-            this.activeModal.close(rangeModel);
-          }
-        } else {
-          this.getModalPopup(ErrorWarningPopUpComponent, 'sm', Constants.DateRangeConflictMessage);
-        }
-      }, (error) => {
-        this.spinnerService.hide(this.spinner);
-        this.getModalPopup(ErrorWarningPopUpComponent, 'sm', Constants.DateRangeConflictMessage);
-        console.log(error);
-      });
-    this.subscriptions.push(this.getShceduleDateRangeSubscription);
   }
 
   private changeToUTCDate(date){
     return new Date(new Date(date).toString().replace(/\sGMT.*$/, " GMT+0000"));
-  }
-
-  private updateScheduleDateRange() {
-    this.spinnerService.show(this.spinner, SpinnerOptions);
-    const model = new UpdateScheduleDateRange();
-    model.oldDateFrom = this.startDate;
-    model.oldDateTo = this.endDate;
-    model.newDateFrom = this.changeToUTCDate(this.dateFrom);
-    model.newDateTo = this.changeToUTCDate(this.dateTo);
-
-    console.log(model)
-
-    model.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
-    this.updateScheduleDateRangeSubscription = this.agentSchedulesService.updateAgentScheduleRange(this.agentScheduleId, model)
-      .subscribe((response) => {
-        this.spinnerService.hide(this.spinner);
-        const rangeModel = new ScheduleDateRangeBase();
-        rangeModel.dateFrom = this.dateFrom;
-        rangeModel.dateTo = this.dateTo;
-        this.activeModal.close(rangeModel);
-      }, (error) => {
-        this.spinnerService.hide(this.spinner);
-        if (error.status === 409) {
-          this.getModalPopup(ErrorWarningPopUpComponent, 'sm', Constants.DateRangeConflictMessage);
-        }
-        console.log(error);
-      });
-
-    this.subscriptions.push(this.updateScheduleDateRangeSubscription);
   }
 
   private getModalPopup(component: any, size: string, contentMessage?: string) {
@@ -218,24 +128,6 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
     this.modalRef.componentInstance.headingMessage = 'Error';
     this.modalRef.componentInstance.contentMessage = contentMessage;
     this.modalRef.componentInstance.messageType = ContentType.String;
-  }
-
-  private convertToNgbDate(date: Date) {
-    if (date) {
-      date = new Date(date);
-      const newDate: NgbDate = new NgbDate(date.getUTCFullYear(),
-        date.getUTCMonth() + 1, this.operation === ComponentOperation.Add ? date.getUTCDate() + 1 : date.getUTCDate());
-      return newDate ?? undefined;
-    }
-  }
-
-  private getDateInStringFormat(startDate: any): string {
-    if (!startDate) {
-      return undefined;
-    }
-
-    const date = new Date(startDate);
-    return date.toDateString();
   }
 
 }

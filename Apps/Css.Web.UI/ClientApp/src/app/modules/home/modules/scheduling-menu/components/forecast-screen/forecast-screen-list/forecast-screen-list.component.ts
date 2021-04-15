@@ -199,7 +199,6 @@ export class ForecastScreenListComponent implements OnInit, OnDestroy, OnChanges
   }
 
   convert(objArray) {
-    console.log(objArray);
     this.convertedObj = JSON.stringify(objArray, null, 2);
   }
   onError(err) {

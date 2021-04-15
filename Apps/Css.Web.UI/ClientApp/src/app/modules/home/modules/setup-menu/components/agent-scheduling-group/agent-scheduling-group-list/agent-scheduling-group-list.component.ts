@@ -267,7 +267,6 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
 
   private loadAgentSchedulingGroups() {
     const queryParams = this.getQueryParams();
-    console.log('queryParams', queryParams);
     this.spinnerService.show(this.spinner, SpinnerOptions);
 
     this.getAgentSchedulingGroupsSubscription = this.agentSchedulingGroupSevice.getAgentSchedulingGroups(queryParams)

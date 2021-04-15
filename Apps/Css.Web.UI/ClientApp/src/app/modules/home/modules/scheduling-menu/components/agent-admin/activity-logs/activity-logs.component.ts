@@ -35,7 +35,7 @@ export class ActivityLogsComponent implements OnInit {
   activityLogsData: ActivityLogsResponse[] = [];
   activityLogDetails: ActivityLogsResponse;
   exportFileName = 'AgentAdmin_ActivityLogs_';
-  @Input() employeeId: number;
+  @Input() employeeId: string;
   @Input() activityType: ActivityType;
   @Input() employeeName: string;
   searchKeyword: string;

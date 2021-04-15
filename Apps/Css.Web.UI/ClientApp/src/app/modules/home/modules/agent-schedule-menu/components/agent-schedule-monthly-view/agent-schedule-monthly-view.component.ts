@@ -7,6 +7,7 @@ import { AgentMyScheduleResponse } from '../../models/agent-myschedule-response.
 import { AgentMyScheduleService } from '../../services/agent-myschedule.service';
 import { DatePipe } from '@angular/common';
 import { DAY_MS } from '../../enums/agent-schedule.enum';
+import * as moment from 'moment';
 
 export enum Month {
   January = "January",
@@ -79,12 +80,12 @@ export class AgentScheduleMonthlyViewComponent implements OnInit {
   }
 
   private getCalendarStartDay(date = new Date) {
-    const [year, month] = [date.getFullYear(), date.getMonth()];
+    const [year, month] = [date.getUTCFullYear(), date.getUTCMonth()];
     const firstDayOfMonth = new Date(year, month, 1).getTime();
 
     return this.range(1,7)
       .map(num => new Date(firstDayOfMonth - DAY_MS.util * num))
-      .find(dt => dt.getDay() === 0)
+      .find(dt => dt.getUTCDay() === 0)
   }
 
   private range(start, end, length = end - start + 1) {
@@ -96,9 +97,15 @@ export class AgentScheduleMonthlyViewComponent implements OnInit {
     const calendarStartTime =  this.getCalendarStartDay(date).getTime();
     this.dates = this.range(0, 41)
     .map(num => new Date(calendarStartTime + DAY_MS.util * num));
+    
+    const startMonthDate =  new Date(this.dates[0].getFullYear(), this.dates[0].getMonth(), this.dates[0].getDate());
+    const endMonthDate =  new Date(this.dates[41].getFullYear(), this.dates[41].getMonth(), this.dates[41].getDate());
 
     this.spinnerService.show(this.calendarSpinner, SpinnerOptions);
-    this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, this.dates[0].toISOString(), this.dates[41].toISOString()).subscribe((resp: AgentMyScheduleResponse)=>{
+    this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, startMonthDate.toISOString(), endMonthDate.toISOString()).subscribe((resp)=>{
+        resp.agentMySchedules.map(x =>
+          x.date = x.date.substr(0,10)
+        )
         this.myScheduleMonthly = resp.agentMySchedules;
         this.spinnerService.hide(this.calendarSpinner);
       },error => {

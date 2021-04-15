@@ -22,8 +22,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input type="text" class="form-control" formControlName="refId" [maxLength]="10"
-                (keypress)="isNumberKeyRefId($event)" onpaste="return false;" />
+              <input type="text" class="form-control" formControlName="refId" [maxLength]="10" integeronly onpaste="return false;" />
               <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.refId.invalid">
                 <ng-template #maxLengthError>
                   <div class="valid-error">
@@ -68,7 +67,7 @@
             </div>
             <div class="col-md-8">
               <input type="text" class="form-control" formControlName="priorityNumber" [maxLength]="maxPriority"
-                (keypress)="isNumberKey($event)" onpaste="return false;" />
+              integeronly onpaste="return false;" />
               <ng-container *ngIf="formSubmitted && schedulingCodeForm.controls.priorityNumber.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('priorityNumber'); else maxLengthError">
                   <div *ngIf="hasFormControlValidationError('priorityNumber')" class="valid-error">

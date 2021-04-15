@@ -126,33 +126,37 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
     }
   }
 
+  validateEmployeeId() {
+    this.agentProfileForm.controls.employeeId.setValue(this.agentProfileForm.controls.employeeId.value.toString().replace(/\B[a-zA-Z]/gi,""));
+    this.agentProfileForm.controls.employeeId.setValue(this.agentProfileForm.controls.employeeId.value.toString().replace(/[^A-Za-z0-9]/gi,""));
+    if (this.agentProfileForm.controls.employeeId.value) {
+      if (!isNaN(+this.agentProfileForm.controls.employeeId.value) && +this.agentProfileForm.controls.employeeId.value <= 0) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  validateSupervisorId() {
+    this.agentProfileForm.controls.supervisorId.setValue(this.agentProfileForm.controls.supervisorId.value.toString().replace(/\B[a-zA-Z]/gi,""));
+    this.agentProfileForm.controls.supervisorId.setValue(this.agentProfileForm.controls.supervisorId.value.toString().replace(/[^A-Za-z0-9]/gi,""));
+    if (this.agentProfileForm.controls.supervisorId.value) {
+      if (!isNaN(+this.agentProfileForm.controls.supervisorId.value) && +this.agentProfileForm.controls.supervisorId.value <= 0) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
   saveAgentAdminDetails() {
     this.formSubmitted = true;
     if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId &&
-       this.skillTagId && this.agentSchedulingGroupId && this.validateHireDateFormat()) {
+       this.skillTagId && this.agentSchedulingGroupId && this.validateHireDateFormat() && this.validateEmployeeId() && this.validateSupervisorId()) {
       this.saveAgentProfileDetailsOnModel();
       this.updateAgentAdminProfileDetails();
     }
-  }
-
-  isIdNumberKey(event) {
-    const currentValue = this.agentProfileForm.controls.employeeId?.value == null ? '' : this.agentProfileForm.controls.employeeId?.value;
-    const charCode = (event.which) ? event.which : event.keyCode;
-    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
-    if (isValid) {
-      return false;
-    }
-    return true;
-  }
-
-  isSupervisorIdNumberKey(event) {
-    const currentValue = this.agentProfileForm.controls.supervisorId?.value == null ? '' : this.agentProfileForm.controls.supervisorId?.value;
-    const charCode = (event.which) ? event.which : event.keyCode;
-    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
-    if (isValid) {
-      return false;
-    }
-    return true;
   }
 
   hasFormControlValidationError(control: string) {

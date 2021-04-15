@@ -60,7 +60,6 @@ export class EntityHierarchyComponent implements OnInit {
       let result;
       result = this.entityHierarchyService.getEntityHierarchyDataById(this.clientId)
         .subscribe((response) => {
-          console.log(response);
           this.spinnerService.hide(this.spinnerLeft);
           if (response) {
             this.entityHierarchy = response;

@@ -1,5 +1,5 @@
 export class Permission {
-    employeeId: number;
+    employeeId: string;
     firstName: string;
     lastName: string;
 }

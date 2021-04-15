@@ -140,7 +140,7 @@
                               <tbody>
                                 <tr>
                                   <td width="20%">
-                                    {{ daysCurrentWeek[i].dayName }} &nbsp; {{schedWeek.date | date: 'M/d/yy'}}
+                                    {{ daysCurrentWeek[i].dayName }} &nbsp; {{daysCurrentWeek[i].date | date: 'M/d/yy'}}
                                   </td>
                                   <ng-container *ngIf="schedWeek.firstStartTime !== null && schedWeek.lastEndTime !== null; else dayOff">
                                     <td width="20%">

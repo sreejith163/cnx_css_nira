@@ -60,7 +60,7 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
   subscriptions: ISubscription[] = [];
 
   @Input() activityType: ActivityType;
-  @Input() employeeId: number;
+  @Input() employeeId: string;
   @Input() employeeName: string;
   @Input() startDate: Date;
   @Input() dateFrom: Date;

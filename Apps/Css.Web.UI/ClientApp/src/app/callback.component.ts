@@ -67,7 +67,7 @@ export class CallbackComponent implements OnInit {
 
             // check user's permissions
 
-            this.permissionsService.userLogging(+employeeId, userLogged).subscribe(responseList => {
+            this.permissionsService.userLogging(employeeId, userLogged).subscribe(responseList => {
               
               this.permissionsService.storePermission(responseList[1].userRoleId);
 
