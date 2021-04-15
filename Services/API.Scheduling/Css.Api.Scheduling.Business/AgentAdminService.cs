@@ -327,7 +327,7 @@ namespace Css.Api.Scheduling.Business
             _agentScheduleRepository.CreateAgentSchedule(agentScheduleRequest);
 
             // get the preUpdated details and compare it with the updated details to check changes
-            var fieldDetails = addActivityLogFields(null, agentAdminRequest, "");
+            var fieldDetails = AddActivityLogFields(null, agentAdminRequest, "");
 
             // create activity log based on the changed fields
             var activityLog = new ActivityLog()
@@ -504,7 +504,7 @@ namespace Css.Api.Scheduling.Business
                 _activityLogRepository.UpdateActivityLogsEmployeeId(employeeIdDetails, newEmployeeIdDetails);
             }
 
-            var fieldDetails = addActivityLogFields(preUpdateAgentAdmin, agentAdminRequest, preUpdateAgentAdminHireDate);
+            var fieldDetails = AddActivityLogFields(preUpdateAgentAdmin, agentAdminRequest, preUpdateAgentAdminHireDate);
 
             var activityLog = new ActivityLog()
             {
@@ -532,7 +532,7 @@ namespace Css.Api.Scheduling.Business
         /// <param name="updatedDetails">The updated details.</param>
         /// <param name="preUpdateAgentAdminHireDate">The pre update agent admin hire date.</param>
         /// <returns></returns>
-        private List<FieldDetail> addActivityLogFields(PreUpdateAgentAdmin preUpdateDetails, Agent updatedDetails, string preUpdateAgentAdminHireDate)
+        private List<FieldDetail> AddActivityLogFields(PreUpdateAgentAdmin preUpdateDetails, Agent updatedDetails, string preUpdateAgentAdminHireDate)
         {
             var fielDetails = new List<FieldDetail>();
             var agentUpdatedHireDate = updatedDetails.AgentData.Find(x => x.Group.Description == "Hire Date")?.Group?.Value;

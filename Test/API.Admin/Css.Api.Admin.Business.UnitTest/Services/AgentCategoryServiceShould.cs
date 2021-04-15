@@ -6,6 +6,7 @@ using Css.Api.Admin.Models.DTO.Response.AgentCategory;
 using Css.Api.Admin.Models.Profiles.AgentCategory;
 using Css.Api.Admin.Repository;
 using Css.Api.Admin.Repository.Interfaces;
+using Css.Api.Core.EventBus.Services;
 using Css.Api.Core.Models.Domain;
 using Microsoft.AspNetCore.Http;
 using Moq;
@@ -42,6 +43,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
             });
 
             mapper = new Mapper(mapperConfig);
+            var busService = new Mock<IBusService>();
 
             var context = new DefaultHttpContext();
             Mock<IHttpContextAccessor> mockHttContext = new Mock<IHttpContextAccessor>();
@@ -51,7 +53,7 @@ namespace Css.Api.Admin.Business.UnitTest.Services
 
             repositoryWrapper = new MockRepositoryWrapper(mockAdminContext, mapper);
 
-            agentCategoryService = new AgentCategoryService(repositoryWrapper, mockHttContext.Object, mapper);
+            agentCategoryService = new AgentCategoryService(repositoryWrapper, mockHttContext.Object, mapper, busService.Object);
         }
 
         #region GetAgentCategories
