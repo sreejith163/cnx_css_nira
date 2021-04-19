@@ -11,6 +11,11 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces
     public interface IMongoContext : IDisposable
     {
         /// <summary>
+        /// Disposes the commands amd resets the command list
+        /// </summary>
+        void DisposeCommands();
+
+        /// <summary>
         /// Adds the command.
         /// </summary>
         /// <param name="func">The function.</param>

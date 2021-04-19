@@ -6,5 +6,10 @@
         /// Gets or sets the agent category identifier.
         /// </summary>
         public int AgentCategoryId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent category name.
+        /// </summary>
+        public string AgentCategoryName { get; set; }
     }
 }

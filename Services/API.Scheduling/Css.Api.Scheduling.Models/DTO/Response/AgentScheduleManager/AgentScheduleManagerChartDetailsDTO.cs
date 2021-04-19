@@ -48,6 +48,9 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<AgentScheduleManagerChart> Charts { get; set; }
+
+        public int ChartsCount { get; set; }
+
     }
 }
 

@@ -147,5 +147,14 @@ namespace Css.Api.Scheduling.Repository
 
             return agentSchedulingGroups;
         }
+
+        public async Task<List<AgentSchedulingGroup>> FindSchedulingGroup()
+        {
+            var query = Builders<AgentSchedulingGroup>.Filter.Eq(i => i.IsDeleted, false);
+
+
+            var result = FilterBy(query);
+            return await Task.FromResult(result.ToList());
+        }
     }
 }

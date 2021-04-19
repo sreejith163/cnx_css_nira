@@ -3,6 +3,7 @@ using Css.Api.Core.DataAccess.Repository.UnitOfWork.Interfaces;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Models.Enums;
 using Css.Api.Core.Utilities.Extensions;
+using Css.Api.Reporting.Business.Data;
 using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Business.Services;
 using Css.Api.Reporting.Models.DTO.Processing;
@@ -18,6 +19,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Css.Api.Reporting.Business.Targets
@@ -37,7 +39,7 @@ namespace Css.Api.Reporting.Business.Targets
         /// <summary>
         /// The configuration
         /// </summary>
-        private readonly IConfiguration _configuration;
+        private readonly IConfigurationService _configuration;
 
         /// <summary>
         /// The agent repository
@@ -63,6 +65,11 @@ namespace Css.Api.Reporting.Business.Targets
         /// The agent scheduling group history repository
         /// </summary>
         private readonly IAgentSchedulingGroupHistoryRepository _agentSchedulingGroupHistoryRepository;
+
+        /// <summary>
+        /// The agent category repository
+        /// </summary>
+        private readonly IAgentCategoryRepository _agentCategoryRepository;
 
         /// <summary>
         /// The timezone repository
@@ -101,14 +108,15 @@ namespace Css.Api.Reporting.Business.Targets
         /// <param name="agentSchedulingGroupHistoryRepository"></param>
         /// <param name="agentScheduleRepository"></param>
         /// <param name="agentScheduleManagerRepository"></param>
+        /// <param name="agentCategoryRepository"></param>
         /// <param name="timezoneRepository"></param>
         /// <param name="activityLogRepository"></param>
         /// <param name="uow"></param>
         /// <param name="ftp"></param>
-        public UDWImportTarget(IMapper mapper, IConfiguration configuration, IAgentRepository agentRepository, IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
+        public UDWImportTarget(IMapper mapper, IConfigurationService configuration, IAgentRepository agentRepository, IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
             IAgentSchedulingGroupHistoryRepository agentSchedulingGroupHistoryRepository, IAgentScheduleRepository agentScheduleRepository, 
-            IAgentScheduleManagerRepository agentScheduleManagerRepository, ITimezoneRepository timezoneRepository,
-            IActivityLogRepository activityLogRepository, IUnitOfWork uow, IFTPService ftp) : base(ftp)
+            IAgentScheduleManagerRepository agentScheduleManagerRepository, IAgentCategoryRepository agentCategoryRepository,
+            ITimezoneRepository timezoneRepository, IActivityLogRepository activityLogRepository, IUnitOfWork uow, IFTPService ftp) : base(ftp)
         {
             _mapper = mapper;
             _configuration = configuration;
@@ -117,6 +125,7 @@ namespace Css.Api.Reporting.Business.Targets
             _agentScheduleManagerRepository = agentScheduleManagerRepository;
             _agentSchedulingGroupRepository = agentSchedulingGroupRepository;
             _agentSchedulingGroupHistoryRepository = agentSchedulingGroupHistoryRepository;
+            _agentCategoryRepository = agentCategoryRepository;
             _timezoneRepository = timezoneRepository;
             _activityLogRepository = activityLogRepository;
             _uow = uow;
@@ -156,10 +165,10 @@ namespace Css.Api.Reporting.Business.Targets
 
                 var metadata = await CheckImport(root, agents);
                 agents = metadata.Agents;
-                var activityLogs = metadata.ActivityLogs;
 
                 if(agents.Any())
                 {
+                    var activityLogs = metadata.ActivityLogs;
                     _agentRepository.Upsert(agents);
                     
                     var agentSchedulingGroupHistories = _mapper.Map<List<AgentSchedulingGroupHistory>>(agents).ToList();
@@ -212,86 +221,40 @@ namespace Css.Api.Reporting.Business.Targets
         /// <returns>Returns an instance of AgentMetadata. The property 'Metadata' will be an empty string if it matches, else the serialized array of all the partially imported sources data.</returns>
         private async Task<AgentMetadata> CheckImport(UDWAgentList source, List<Agent> dest)
         {
-            var existingAgents = await _agentRepository.GetAgents(dest.Select(x => x.Ssn).ToList());
-            var defaultMU = _configuration["DefaultMU"];
-            dest = dest.Select(x => 
-                        { 
-                            if(!existingAgents.Select(y => y.Ssn).Contains(x.Ssn) && string.IsNullOrWhiteSpace(x.Mu))
-                            {
-                                source.NewAgents.Where(z => z.SSN == x.Ssn)
-                                                .ToList()
-                                                .ForEach(w =>
-                                                {
-                                                    w.MUString = defaultMU;
-                                                });
-
-                                source.ChangedAgents.Where(z => z.SSN == x.Ssn)
-                                                    .ToList()
-                                                    .ForEach(w =>
-                                                    {
-                                                        w.MUString = defaultMU;
-                                                    });
-
-                                x.Mu = defaultMU;
-                            }
-                            return x; 
-                        })
-                       .ToList();
-            
-            AssignAgentCategories(existingAgents, dest);
-            
             var metadata = string.Empty;
+            var existingAgents = await _agentRepository.GetAgents(dest.Select(x => x.Ssn).ToList());
             
-            var schedulingGroups = await _agentSchedulingGroupRepository.GetAgentSchedulingGroups();
-            var refIds = schedulingGroups.Select(x => x.RefId).ToList();
+            var agentCategoryMismatch = await CheckAgentCategories(source, existingAgents, dest);
 
-            var newAgents = source.NewAgents.Where(x => string.IsNullOrEmpty(x.SSN))
-                            .Union(
-                                (from ag in source.NewAgents.Where(x => !string.IsNullOrEmpty(x.SSN))
-                                    join up in dest on ag.SSN equals up.Ssn
-                                    where (ag.SenDate != null && up.SenDate == null)
-                                    || (ag.MU == null) 
-                                    || (ag.SenExt != null && up.SenExt == null)
-                                    select ag)
-                            )
-                            .ToList();
+            var newAgents = agentCategoryMismatch.NewAgents;
+            var changeAgents = agentCategoryMismatch.ChangedAgents;
+            source.NewAgents.RemoveAll(x => newAgents.Select(y => y.SSN).Contains(x.SSN));
+            source.ChangedAgents.RemoveAll(x => changeAgents.Select(y => y.SSN).Contains(x.SSN));
             
-            var invalidSchedulingGroupNewAgents = source.NewAgents.Where(x => !refIds.Contains(x.MU)).ToList();
-            var invalidNewInsertsFromNewAgents = source.NewAgents
-                                                    .Where(x => !string.IsNullOrEmpty(x.SSN)
-                                                        && !existingAgents.Select(y => y.Ssn).ToList().Contains(x.SSN)
-                                                        && (string.IsNullOrWhiteSpace(x.MUString)
-                                                            || string.IsNullOrWhiteSpace(x.SSO)
-                                                            || (string.IsNullOrWhiteSpace(x.FirstName) && string.IsNullOrWhiteSpace(x.LastName) && string.IsNullOrWhiteSpace(x.Name))
-                                                           ))
-                                                    .ToList();
-
-            newAgents = newAgents.Union(invalidSchedulingGroupNewAgents).Union(invalidNewInsertsFromNewAgents).Distinct().ToList();
-
-            var changeAgents = source.ChangedAgents.Where(x => string.IsNullOrEmpty(x.SSN))
-                                .Union(
-                                    (from ag in source.ChangedAgents.Where(x => !string.IsNullOrEmpty(x.SSN))
-                                    join up in dest on ag.SSN equals up.Ssn
-                                    where (ag.SenDate != null && up.SenDate == null)
-                                    || (ag.SenExt != null && up.SenExt == null)
-                                    select ag)
-                                )
-                                .ToList();
-            
-            var invalidSchedulingGroupChangeAgents = source.ChangedAgents.Where(x => x.MU.HasValue && !refIds.Contains(x.MU)).ToList();
-            var invalidNewInsertsFromChangeAgents = source.ChangedAgents
-                                                    .Where(x => !string.IsNullOrEmpty(x.SSN)
-                                                        && !existingAgents.Select(y => y.Ssn).ToList().Contains(x.SSN)
-                                                        && (string.IsNullOrWhiteSpace(x.MUString)
-                                                            || string.IsNullOrWhiteSpace(x.SSO)
-                                                            || (string.IsNullOrWhiteSpace(x.FirstName) && string.IsNullOrWhiteSpace(x.LastName) && string.IsNullOrWhiteSpace(x.Name))
-                                                           ))
-                                                    .ToList();
-
-
-            changeAgents = changeAgents.Union(invalidSchedulingGroupChangeAgents).Union(invalidNewInsertsFromChangeAgents).Distinct().ToList();
-
             var ignoreAgents = newAgents.Select(x => x.SSN).Union(changeAgents.Select(x => x.SSN)).ToList();
+            dest.RemoveAll(x => ignoreAgents.Contains(x.Ssn));
+
+            if(!dest.Any())
+            {
+                XMLParser<UDWAgentList> parser = new XMLParser<UDWAgentList>();
+                metadata = parser.Serialize(agentCategoryMismatch);
+
+                return new AgentMetadata()
+                {
+                    Agents = dest,
+                    Metadata = metadata
+                };
+            }
+
+            AssignAgentCategories(existingAgents, dest);
+            AssignMUs(source, existingAgents, dest);
+
+            var schedulingGroups = await _agentSchedulingGroupRepository.GetAgentSchedulingGroups();
+
+            newAgents = newAgents.Union(CheckNewAgents(source, existingAgents, dest, schedulingGroups)).Distinct().ToList();
+            changeAgents = changeAgents.Union(CheckChangeAgent(source, existingAgents, dest, schedulingGroups)).Distinct().ToList();
+            
+            ignoreAgents = newAgents.Select(x => x.SSN).Union(changeAgents.Select(x => x.SSN)).ToList();
             dest.RemoveAll(x => ignoreAgents.Contains(x.Ssn));
             
             dest.ForEach(x =>
@@ -329,11 +292,81 @@ namespace Css.Api.Reporting.Business.Targets
             AgentMetadata agentMetadata = new AgentMetadata()
             {
                 Agents = dest,
-                ActivityLogs = GenerateActivityLogs(existingAgents, dest),
+                ActivityLogs = await GenerateActivityLogs(existingAgents, dest),
                 Metadata = metadata
             };
 
             return agentMetadata;
+        }
+
+        /// <summary>
+        /// A helper to check the agent categories received from UDW dump
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="existingAgents"></param>
+        /// <param name="dest"></param>
+        /// <returns></returns>
+        public async Task<UDWAgentList> CheckAgentCategories(UDWAgentList source, List<Agent> existingAgents, List<Agent> dest)
+        {
+            UDWAgentList mismatch = new UDWAgentList()
+            {
+                NewAgents = new List<UDWAgent>(),
+                ChangedAgents = new List<UDWAgentUpdate>()
+            };
+
+            var agentCategories = await _agentCategoryRepository.GetAgentCategories();
+            dest.ForEach(agent =>
+            {
+                AssignSSO(agent);
+                AssignSupervisor(agent, existingAgents);
+                AssignHireDate(agent);
+                
+                if (agent.AgentData.Any())
+                {
+                    List<string> messages = new List<string>();
+                    var invalidCategories = agent.AgentData.Where(x => !agentCategories.Select(y => y.Name.Trim()).Contains(x.Group.Description.Trim())).ToList();
+                    
+                    if (invalidCategories.Any())
+                    {
+                        var categories = string.Join(", ", invalidCategories.Select(x => x.Group.Description.Trim()).ToList());
+                        messages.Add(string.Format(Messages.InvalidAgentCategories, categories));
+                    }
+                    else
+                    {
+                        List<string> errors = new List<string>();
+                        List<AgentCategoryValue> categoryValues = AssignAgentCategoryValues(agent, agentCategories, out errors);
+                        messages.AddRange(errors);
+
+                        if (!messages.Any())
+                        {
+                            agent.AgentCategoryValues = categoryValues;
+                        }
+                    }
+
+                    if (messages.Any())
+                    {
+                        var newAgentMismatch = source.NewAgents.Where(x => x.SSN.Equals(agent.Ssn)).ToList();
+                        var changeAgentMismatch = source.ChangedAgents.Where(x => x.SSN.Equals(agent.Ssn)).ToList();
+
+                        newAgentMismatch = newAgentMismatch.Select(x =>
+                        {
+                            x.Messages = messages;
+                            return x;
+                        }).ToList();
+
+                        changeAgentMismatch = changeAgentMismatch.Select(x =>
+                        {
+                            x.Messages = messages;
+                            return x;
+                        }).ToList();
+
+                        mismatch.NewAgents.AddRange(newAgentMismatch);
+                        mismatch.ChangedAgents.AddRange(changeAgentMismatch);
+                    }  
+                }
+            });
+
+            return mismatch;
         }
 
         /// <summary>
@@ -343,22 +376,24 @@ namespace Css.Api.Reporting.Business.Targets
         /// <returns></returns>
         private void AssignAgentCategories(List<Agent> existingAgents, List<Agent> dest)
         {
+            var currDate = DateTime.UtcNow;
+
             var agentCategories = (from a in existingAgents
                                    join d in dest on a.Ssn equals d.Ssn
-                                   let cData = a.AgentData != null && d.AgentData != null ? (from ad in a.AgentData
-                                                join dd in d.AgentData on ad.Group.Description equals dd.Group.Description
-                                                select dd).ToList() : new List<AgentData>()
-                                   let oData = a.AgentData != null ? (from ad in a.AgentData
-                                                where !cData.Any(x => x.Group.Description.Equals(ad.Group.Description, StringComparison.InvariantCultureIgnoreCase))
-                                                select ad).ToList() : new List<AgentData>()
-                                   let nData = d.AgentData != null ? (from dd in d.AgentData
-                                                where !cData.Any(x => x.Group.Description.Equals(dd.Group.Description, StringComparison.InvariantCultureIgnoreCase))
-                                                select dd).ToList() : new List<AgentData>()
-                                   where d.AgentData.Any()
+                                   let cData = (from ad in a.AgentCategoryValues
+                                                join dd in d.AgentCategoryValues on ad.CategoryId equals dd.CategoryId
+                                                select new AgentCategoryValue { CategoryId = dd.CategoryId, CategoryValue = dd.CategoryValue, StartDate = ad.StartDate }).ToList()
+                                   let oData = (from ad in a.AgentCategoryValues
+                                                where !cData.Any(x => x.CategoryId == ad.CategoryId)
+                                                select ad).ToList()
+                                   let nData = (from dd in d.AgentCategoryValues
+                                                where !cData.Any(x => x.CategoryId == dd.CategoryId)
+                                                select new AgentCategoryValue { CategoryId = dd.CategoryId, CategoryValue = dd.CategoryValue, StartDate = currDate }).ToList()
+                                   where d.AgentCategoryValues.Any()
                                    select new
                                    {
                                        a.Ssn,
-                                       AgentData = nData.Union(cData).Union(oData).OrderBy(x => x.Group.Description).ToList()
+                                       AgentCategoryValues = nData.Union(cData).Union(oData).OrderBy(x => x.CategoryId).ToList()
                                    }).ToList();
             
             var agents = existingAgents.Select(x => x.Ssn).ToList();
@@ -372,11 +407,455 @@ namespace Css.Api.Reporting.Business.Targets
                     var agentCategory = agentCategories.FirstOrDefault(x => x.Ssn == agent.Ssn);
                     if(agentCategory != null)
                     {
-                        agent.AgentData = agentCategory.AgentData;
+                        agent.AgentCategoryValues = agentCategory.AgentCategoryValues;
+                    }
+                }
+                else
+                {
+                    agent.AgentCategoryValues = agent.AgentCategoryValues.Select(x => { x.StartDate = currDate; return x; }).ToList();
+                }
+            });
+
+        }
+
+        /// <summary>
+        /// A helper method to assign agent category values to agent 
+        /// </summary>
+        /// <param name="agent"></param>
+        /// <param name="agentCategories"></param>
+        /// <param name="errors"></param>
+        /// <returns>List of instances of AgentCategoryValue</returns>
+        private List<AgentCategoryValue> AssignAgentCategoryValues(Agent agent, List<AgentCategory> agentCategories, out List<string> errors)
+        {
+            List<AgentCategoryValue> categoryValues = new List<AgentCategoryValue>();
+            List<string> messages = new List<string>();
+            agent.AgentData.ForEach(data =>
+            {
+                if (!string.IsNullOrWhiteSpace(data.Group.Value))
+                {
+                    var category = agentCategories.First(x => x.Name.Trim().Equals(data.Group.Description.Trim(), StringComparison.InvariantCultureIgnoreCase));
+                    List<string> errorMessages = new List<string>();
+                    var agentCategoryValue = CheckAgentCategoryValue(data.Group.Value, category, out errorMessages);
+
+                    if (errorMessages.Any())
+                    {
+                        messages.AddRange(errorMessages);
+                    }
+                    else
+                    {
+                        categoryValues.Add(agentCategoryValue);
                     }
                 }
             });
 
+            errors = messages;
+            return categoryValues;
+        }
+
+        /// <summary>
+        /// A helper method to assign SSO
+        /// </summary>
+        /// <param name="agent"></param>
+        private void AssignSSO(Agent agent)
+        {
+            var ssoGroup = agent.AgentData.FirstOrDefault(x => x.Group.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Sso, StringComparison.InvariantCultureIgnoreCase));
+            agent.Sso = ssoGroup?.Group.Value;
+        }
+
+        /// <summary>
+        /// A helper method to assign supervisor details
+        /// </summary>
+        /// <param name="agent"></param>
+        private void AssignSupervisor(Agent agent, List<Agent> existingAgents)
+        {
+            var supervisorGroup = agent.AgentData.FirstOrDefault(x => x.Group.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Supervisor, StringComparison.InvariantCultureIgnoreCase));
+            if(supervisorGroup != null)
+            {
+                agent.SupervisorSso = string.Empty;
+                agent.SupervisorId = string.Empty;
+                agent.SupervisorName = GetSupervisorName(supervisorGroup.Group.Value.Trim());
+
+                var existingRec = existingAgents.FirstOrDefault(x => x.Ssn.Equals(agent.Ssn));
+                if(existingRec != null && agent.SupervisorName.Equals(existingRec.SupervisorName.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    agent.SupervisorSso = existingRec.SupervisorSso;
+                    agent.SupervisorId = existingRec.SupervisorId;
+                }
+            }
+        }
+
+        /// <summary>
+        /// A helper method to assign hire date
+        /// </summary>
+        /// <param name="agent"></param>
+        private void AssignHireDate(Agent agent)
+        {
+            var hireData = agent.AgentData.FirstOrDefault(x => x.Group.Description.Equals(_configuration.Settings.AgentCategoryFields.Hire));
+            if (agent.HireDate.HasValue)
+            {
+                if (hireData == null)
+                {
+                    (agent.AgentData ?? (agent.AgentData = new List<AgentData>())).Add(new AgentData
+                    {
+                        Group = new AgentGroup
+                        {
+                            Description = _configuration.Settings.AgentCategoryFields.Hire,
+                            Value = agent.HireDate.Value.ToString("yyyyMMdd")
+                        }
+                    });
+                }
+                else
+                {
+                    hireData.Group.Value = agent.HireDate.Value.ToString("yyyyMMdd");
+                }
+            }
+            else if(hireData != null)
+            {
+                DateTime hireDate;
+                var status = DateTime.TryParseExact(hireData.Group.Value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out hireDate);
+                if(status)
+                {
+                    agent.HireDate = hireDate;
+                }
+            }
+        }
+
+        /// <summary>
+        /// A helper method to assign MUs
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="existingAgents"></param>
+        /// <param name="dest"></param>
+        private void AssignMUs(UDWAgentList source, List<Agent> existingAgents, List<Agent> dest)
+        {
+            dest = dest.Select(agent =>
+                        {
+                            var defaultMu = string.Empty;
+
+                            var empTerm = agent.AgentData.FirstOrDefault(y => y.Group.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Term, StringComparison.InvariantCultureIgnoreCase));
+                            if (empTerm != null && !string.IsNullOrWhiteSpace(empTerm.Group.Value))
+                            {
+                                defaultMu = _configuration.Settings.MUs.Termination;
+                            }
+                            else if (!existingAgents.Select(y => y.Ssn).Contains(agent.Ssn) && string.IsNullOrWhiteSpace(agent.Mu))
+                            {
+                                defaultMu = _configuration.Settings.MUs.Default;
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(defaultMu))
+                            {
+                                source.NewAgents.Where(z => z.SSN == agent.Ssn)
+                                                .ToList()
+                                                .ForEach(w =>
+                                                {
+                                                    w.MUString = defaultMu;
+                                                });
+
+                                source.ChangedAgents.Where(z => z.SSN == agent.Ssn)
+                                                    .ToList()
+                                                    .ForEach(w =>
+                                                    {
+                                                        w.MUString = defaultMu;
+                                                    });
+
+                                agent.Mu = defaultMu;
+                            }
+
+                            return agent;
+                        })
+                       .ToList();
+        }
+
+        /// <summary>
+        /// A helper method to validate the SSO
+        /// </summary>
+        /// <param name="agent">The instance of UDWAgent</param>
+        /// <returns>True if valid</returns>
+        private bool ValidateSSO(UDWAgent agent)
+        {
+            var ssoField = agent.AgentData.FirstOrDefault(x => x.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Sso, StringComparison.InvariantCultureIgnoreCase));
+            if (ssoField == null)
+                return false;
+            return ValidateSSO(ssoField.Value);
+        }
+
+        /// <summary>
+        /// A helper method to validate the SSO
+        /// </summary>
+        /// <param name="agent"></param>
+        /// <returns></returns>
+        private bool ValidateSSO(UDWAgentUpdate agent)
+        {
+            var ssoField = agent.AgentData.FirstOrDefault(x => x.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Sso, StringComparison.InvariantCultureIgnoreCase));
+            if (ssoField == null)
+                return false;
+            return ValidateSSO(ssoField.Value);
+        }
+
+        /// <summary>
+        /// A helper method to validate the SSO
+        /// </summary>
+        /// <param name="value">The input string</param>
+        /// <returns>True if valid</returns>
+        private bool ValidateSSO(string value)
+        {
+            var regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            return regex.IsMatch(value);
+        }
+
+        /// <summary>
+        /// A helper method to get the supervisor name
+        /// </summary>
+        /// <param name="fullname"></param>
+        /// <returns></returns>
+        private string GetSupervisorName(string fullname)
+        {
+            var splitName = fullname.Split(',');
+            if (splitName.Length > 1)
+            {
+                return string.Join(" ", splitName[1].Trim(), splitName[0].Trim());
+            }
+            return fullname;
+        }
+
+        /// <summary>
+        /// A helper method to check new agents from UDW dump
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="existingAgents"></param>
+        /// <param name="dest"></param>
+        /// <param name="schedulingGroups"></param>
+        /// <returns></returns>
+        private List<UDWAgent> CheckNewAgents(UDWAgentList source, List<Agent> existingAgents, List<Agent> dest, List<AgentSchedulingGroup> schedulingGroups)
+        {
+            var refIds = schedulingGroups.Select(x => x.RefId).ToList();
+
+            var newAgents = source.NewAgents.Where(x => string.IsNullOrWhiteSpace(x.SSN) || x.SSN.Trim().Equals("0"))
+                            .Union(
+                                (from ag in source.NewAgents.Where(x => !string.IsNullOrWhiteSpace(x.SSN) && !x.SSN.Trim().Equals("0"))
+                                    join up in dest on ag.SSN equals up.Ssn
+                                    where (ag.SenDate != null && up.HireDate == null)
+                                    || (ag.MU == null) 
+                                    || (ag.SenExt != null && up.SenExt == null)
+                                    select ag)
+                            )
+                            .ToList();
+            
+            var invalidSchedulingGroupNewAgents = source.NewAgents.Where(x => !refIds.Contains(x.MU)).ToList();
+            var invalidNewInsertsFromNewAgents = source.NewAgents
+                                                    .Where(x => !string.IsNullOrWhiteSpace(x.SSN)
+                                                        && !existingAgents.Select(y => y.Ssn).ToList().Contains(x.SSN)
+                                                        && (string.IsNullOrWhiteSpace(x.MUString)
+                                                            || (x.SenDate == null || !x.AgentData.Any(x => x.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Hire, StringComparison.InvariantCultureIgnoreCase)))
+                                                            || !ValidateSSO(x)
+                                                            || (string.IsNullOrWhiteSpace(x.FirstName) && string.IsNullOrWhiteSpace(x.LastName) && string.IsNullOrWhiteSpace(x.Name))
+                                                           ))
+                                                    .ToList();
+
+            newAgents = newAgents.Union(invalidSchedulingGroupNewAgents).Union(invalidNewInsertsFromNewAgents).Distinct().ToList();
+
+            return newAgents.Select(x =>
+            {
+                x.Messages = new List<string>();
+                if (string.IsNullOrWhiteSpace(x.SSN) || x.SSN.Trim().Equals("0"))
+                {
+                    x.Messages.Add(Messages.SsnMandatory);
+                }
+                if (x.SenDate != null)
+                {
+                    DateTime dt;
+                    if (x.SenDate.Day == 0 && x.SenDate.Month == 0 && x.SenDate.Year == 0)
+                    {
+                        x.Messages.Add(Messages.InvalidSenDate);
+                    }
+                    else if(!DateTime.TryParse(String.Join('-', x.SenDate.Year, x.SenDate.Month, x.SenDate.Day), CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal, out dt))
+                    {
+                        x.Messages.Add(Messages.InvalidSenDate);
+                    }
+                }
+                if (x.SenExt.HasValue && (x.SenExt.Value <= 0 || x.SenExt.Value >= 10000))
+                {
+                    x.Messages.Add(Messages.InvalidSenExt);
+                }
+                if(!refIds.Contains(x.MU))
+                {
+                    x.Messages.Add(string.Format(Messages.InvalidMU, x.MU));
+                }
+                if (!existingAgents.Select(y => y.Ssn).ToList().Contains(x.SSN))
+                {
+                    if(string.IsNullOrWhiteSpace(x.MUString))
+                    {
+                        x.Messages.Add(Messages.MuMandatory);
+                    }
+                    if(!ValidateSSO(x.AgentData.FirstOrDefault(y => y.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Sso, StringComparison.InvariantCultureIgnoreCase))?.Value))
+                    {
+                        x.Messages.Add(Messages.SsoMandatory);
+                    }
+                    if ((string.IsNullOrWhiteSpace(x.FirstName) && string.IsNullOrWhiteSpace(x.LastName) && string.IsNullOrWhiteSpace(x.Name)))
+                    {
+                        x.Messages.Add(Messages.NameMandatory);
+                    }
+                    
+                    var hireData = x.AgentData.FirstOrDefault(x => x.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Hire, StringComparison.InvariantCultureIgnoreCase));
+                    if (x.SenDate == null || hireData == null)
+                    {
+                        x.Messages.Add(Messages.HireDateMandatory);
+                    }
+                }
+                return x;
+            }).ToList();
+        }
+
+        /// <summary>
+        /// A helper method to check changed agents from UDW dump
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="existingAgents"></param>
+        /// <param name="dest"></param>
+        /// <param name="schedulingGroups"></param>
+        /// <returns></returns>
+        private List<UDWAgentUpdate> CheckChangeAgent(UDWAgentList source, List<Agent> existingAgents, List<Agent> dest, List<AgentSchedulingGroup> schedulingGroups)
+        {
+            var refIds = schedulingGroups.Select(x => x.RefId).ToList();
+
+            var changeAgents = source.ChangedAgents.Where(x => string.IsNullOrWhiteSpace(x.SSN) || x.SSN.Trim().Equals("0"))
+                                .Union(
+                                    (from ag in source.ChangedAgents.Where(x => !string.IsNullOrWhiteSpace(x.SSN) && !x.SSN.Trim().Equals("0"))
+                                    join up in dest on ag.SSN equals up.Ssn
+                                    where (ag.SenDate != null && up.HireDate == null)
+                                    || (ag.SenExt != null && up.SenExt == null)
+                                    select ag)
+                                )
+                                .ToList();
+            
+            var invalidSchedulingGroupChangeAgents = source.ChangedAgents.Where(x => x.MU.HasValue && !refIds.Contains(x.MU)).ToList();
+            var invalidNewInsertsFromChangeAgents = source.ChangedAgents
+                                                    .Where(x => !string.IsNullOrWhiteSpace(x.SSN)
+                                                        && !existingAgents.Select(y => y.Ssn).ToList().Contains(x.SSN)
+                                                        && (string.IsNullOrWhiteSpace(x.MUString)
+                                                            || (x.SenDate == null || !x.AgentData.Any(x => x.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Hire, StringComparison.InvariantCultureIgnoreCase)))
+                                                            || !ValidateSSO(x)
+                                                            || (string.IsNullOrWhiteSpace(x.FirstName) && string.IsNullOrWhiteSpace(x.LastName) && string.IsNullOrWhiteSpace(x.Name))
+                                                           ))
+                                                    .ToList();
+
+            changeAgents = changeAgents.Union(invalidSchedulingGroupChangeAgents).Union(invalidNewInsertsFromChangeAgents).Distinct().ToList();
+
+            return changeAgents.Select(x =>
+            {
+                x.Messages = new List<string>();
+                if (string.IsNullOrWhiteSpace(x.SSN) || x.SSN.Trim().Equals("0"))
+                {
+                    x.Messages.Add(Messages.AgentIdMandatory);
+                }
+                if (x.SenDate != null)
+                {
+                    DateTime dt;
+                    if (x.SenDate.Day == 0 && x.SenDate.Month == 0 && x.SenDate.Year == 0)
+                    {
+                        x.Messages.Add(Messages.InvalidSenDate);
+                    }
+                    else if (!DateTime.TryParse(String.Join('-', x.SenDate.Year, x.SenDate.Month, x.SenDate.Day), CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal, out dt))
+                    {
+                        x.Messages.Add(Messages.InvalidSenDate);
+                    }
+                }
+                if (x.SenExt.HasValue && (x.SenExt.Value <= 0 || x.SenExt.Value >= 10000))
+                {
+                    x.Messages.Add(Messages.InvalidSenExt);
+                }
+                if (x.MU.HasValue && !refIds.Contains(x.MU))
+                {
+                    x.Messages.Add(string.Format(Messages.InvalidMU, x.MU));
+                }
+                if (!existingAgents.Select(y => y.Ssn).ToList().Contains(x.SSN))
+                {
+                    if (string.IsNullOrWhiteSpace(x.MUString))
+                    {
+                        x.Messages.Add(Messages.MuMandatory);
+                    }
+                    if (!ValidateSSO(x.AgentData.FirstOrDefault(y => y.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Sso, StringComparison.InvariantCultureIgnoreCase))?.Value))
+                    {
+                        x.Messages.Add(Messages.SsoMandatory);
+                    }
+                    if ((string.IsNullOrWhiteSpace(x.FirstName) && string.IsNullOrWhiteSpace(x.LastName) && string.IsNullOrWhiteSpace(x.Name)))
+                    {
+                        x.Messages.Add(Messages.NameMandatory);
+                    }
+                    
+                    var hireData = x.AgentData.FirstOrDefault(x => x.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Hire, StringComparison.InvariantCultureIgnoreCase));
+                    if(x.SenDate == null || hireData == null)
+                    {
+                        x.Messages.Add(Messages.HireDateMandatory);
+                    }
+                }
+                return x;
+            }).ToList();
+        }
+
+        /// <summary>
+        /// A helper method to check the agent category value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="agentCategory"></param>
+        /// <param name="errorMessages"></param>
+        /// <returns>An instance of AgentCategoryValue</returns>
+        private AgentCategoryValue CheckAgentCategoryValue(string value, AgentCategory agentCategory, out List<string> errorMessages)
+        {
+            AgentCategoryValue agentCategoryValue = null;
+            List<string> messages = new List<string>();
+
+            if (agentCategory.AgentCategoryType == AgentCategoryType.Date)
+            {
+                DateTime dt;
+                var parseDate = DateTime.TryParseExact(value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt);
+                if (parseDate)
+                {
+                    agentCategoryValue = new AgentCategoryValue()
+                    {
+                        CategoryId = agentCategory.AgentCategoryId,
+                        CategoryValue = dt.ToString("yyyy-MM-dd")
+                    };
+                }
+                else
+                {
+                    messages.Add(string.Format(Messages.InvalidAgentCategoryDate, agentCategory.Name));
+                }
+            }
+            else if(agentCategory.AgentCategoryType == AgentCategoryType.Numeric)
+            {
+                int numericValue, minValue, maxValue;
+                var parseNumeric = int.TryParse(value, out numericValue);
+                if(parseNumeric)
+                {
+                    var parseMaxValue = int.TryParse(agentCategory.DataTypeMaxValue, out maxValue);
+                    var parseMinValue = int.TryParse(agentCategory.DataTypeMinValue, out minValue);
+
+                    if(parseMaxValue && parseMinValue && numericValue >= minValue && numericValue <= maxValue)
+                    {
+                        agentCategoryValue = new AgentCategoryValue()
+                        {
+                            CategoryId = agentCategory.AgentCategoryId,
+                            CategoryValue = numericValue.ToString()
+                        };
+                    }
+                    else
+                    {
+                        messages.Add(string.Format(Messages.InvalidAgentCategoryNumeric, agentCategory.Name, agentCategory.DataTypeMinValue, agentCategory.DataTypeMaxValue));
+                    }
+                }
+            }
+            else
+            {
+                agentCategoryValue = new AgentCategoryValue()
+                {
+                    CategoryId = agentCategory.AgentCategoryId,
+                    CategoryValue = value
+                };
+            }
+            
+            errorMessages = messages;
+            return agentCategoryValue;
         }
 
         /// <summary>
@@ -385,16 +864,17 @@ namespace Css.Api.Reporting.Business.Targets
         /// <param name="currentData"></param>
         /// <param name="newData"></param>
         /// <returns></returns>
-        private List<ActivityLog> GenerateActivityLogs(List<Agent> currentData, List<Agent> newData)
+        private async Task<List<ActivityLog>> GenerateActivityLogs(List<Agent> currentData, List<Agent> newData)
         {
             var currentTime = DateTime.UtcNow;
+            List<AgentCategory> agentCategories = await _agentCategoryRepository.GetAgentCategories();
             List<ActivityLog> activityLogs = new List<ActivityLog>();
             newData.ForEach(agent =>
             {
                 var existingData = currentData.FirstOrDefault(x => x.Ssn == agent.Ssn);
                 if(existingData != null)
                 {
-                    var log = GenerateActivityLogForChangeAgents(existingData, agent);
+                    var log = GenerateActivityLogForChangeAgents(existingData, agent, agentCategories);
                     if(log.FieldDetails.Any())
                     {
                         activityLogs.Add(log);
@@ -402,11 +882,11 @@ namespace Css.Api.Reporting.Business.Targets
                 }
                 else
                 {
-                    activityLogs.Add(GenerateActivityLogForNewAgents(agent));
+                    activityLogs.Add(GenerateActivityLogForNewAgents(agent, agentCategories));
                 }
             });
 
-            return activityLogs;
+            return activityLogs.Select(x => { x.TimeStamp = DateTime.UtcNow; return x; }).ToList();
         }
 
         /// <summary>
@@ -414,7 +894,7 @@ namespace Css.Api.Reporting.Business.Targets
         /// </summary>
         /// <param name="agent"></param>
         /// <returns></returns>
-        private ActivityLog GenerateActivityLogForNewAgents(Agent agent)
+        private ActivityLog GenerateActivityLogForNewAgents(Agent agent, List<AgentCategory> agentCategories)
         {
             ActivityLog activityLog = new ActivityLog()
             {
@@ -458,7 +938,8 @@ namespace Css.Api.Reporting.Business.Targets
                         }
             };
 
-            var hireDateGroup = agent.AgentData.Select(x => x.Group).FirstOrDefault(x => x.Description.Equals("Hire Date"));
+            var hireDateCategory = agentCategories.FirstOrDefault(x => x.Name.Equals(_configuration.Settings.AgentCategoryFields.Hire));
+            var hireDateGroup = agent.AgentCategoryValues.FirstOrDefault(x => x.CategoryId == hireDateCategory?.AgentCategoryId);
 
             if (hireDateGroup != null)
             {
@@ -466,7 +947,7 @@ namespace Css.Api.Reporting.Business.Targets
                 {
                     Name = "Hire Date",
                     OldValue = "",
-                    NewValue = hireDateGroup.Value.ToString()
+                    NewValue = hireDateGroup.CategoryValue.ToString()
                 });
             }
 
@@ -510,6 +991,27 @@ namespace Css.Api.Reporting.Business.Targets
                 });
             }
 
+            if (!string.IsNullOrWhiteSpace(agent.SupervisorName))
+            {
+                activityLog.FieldDetails.Add(new FieldDetail()
+                {
+                    Name = "SupervisorId",
+                    OldValue = "",
+                    NewValue = agent.SupervisorId
+                });
+                activityLog.FieldDetails.Add(new FieldDetail()
+                {
+                    Name = "SupervisorName",
+                    OldValue = "",
+                    NewValue = agent.SupervisorName
+                });
+                activityLog.FieldDetails.Add(new FieldDetail()
+                {
+                    Name = "SupervisorSso",
+                    OldValue = "",
+                    NewValue = agent.SupervisorSso
+                });
+            }
             return activityLog;
         }
 
@@ -519,7 +1021,7 @@ namespace Css.Api.Reporting.Business.Targets
         /// <param name="existingAgent"></param>
         /// <param name="agent"></param>
         /// <returns></returns>
-        private ActivityLog GenerateActivityLogForChangeAgents(Agent existingAgent, Agent agent)
+        private ActivityLog GenerateActivityLogForChangeAgents(Agent existingAgent, Agent agent, List<AgentCategory> agentCategories)
         {
             ActivityLog activityLog = new ActivityLog()
             {
@@ -610,18 +1112,46 @@ namespace Css.Api.Reporting.Business.Targets
                     NewValue = agent.SkillTagId.ToString()
                 });
             }
-            
-            var hireDateGroup = agent.AgentData.Select(x => x.Group).FirstOrDefault(x => x.Description.Equals("Hire Date"));
+
+            if (!string.IsNullOrWhiteSpace(agent.SupervisorName) && !existingAgent.SupervisorName.Equals(agent.SupervisorName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                activityLog.FieldDetails.Add(new FieldDetail()
+                {
+                    Name = "SupervisorId",
+                    OldValue = "",
+                    NewValue = agent.SupervisorId
+                });
+
+                activityLog.FieldDetails.Add(new FieldDetail()
+                {
+                    Name = "SupervisorName",
+                    OldValue = "",
+                    NewValue = agent.SupervisorName
+                });
+                activityLog.FieldDetails.Add(new FieldDetail()
+                {
+                    Name = "SupervisorSso",
+                    OldValue = "",
+                    NewValue = agent.SupervisorSso
+                });
+            }
+
+            var hireDateCategory = agentCategories.FirstOrDefault(x => x.Name.Equals(_configuration.Settings.AgentCategoryFields.Hire));
+            var hireDateGroup = agent.AgentCategoryValues.FirstOrDefault(x => x.CategoryId == hireDateCategory?.AgentCategoryId);
 
             if (hireDateGroup != null)
             {
-                var existingHireGroup = existingAgent.AgentData.Select(x => x.Group).FirstOrDefault(x => x.Description.Equals("Hire Date"));
-                activityLog.FieldDetails.Add(new FieldDetail()
+                var existingHireGroup = existingAgent.AgentCategoryValues.FirstOrDefault(x => x.CategoryId == hireDateCategory?.AgentCategoryId);
+
+                if(hireDateGroup.CategoryValue != existingHireGroup?.CategoryValue)
                 {
-                    Name = "Hire Date",
-                    OldValue = existingHireGroup?.Value.ToString(),
-                    NewValue = hireDateGroup.Value.ToString()
-                });
+                    activityLog.FieldDetails.Add(new FieldDetail()
+                    {
+                        Name = "Hire Date",
+                        OldValue = existingHireGroup?.CategoryValue.ToString(),
+                        NewValue = hireDateGroup.CategoryValue.ToString()
+                    });
+                }
             }
 
             return activityLog;

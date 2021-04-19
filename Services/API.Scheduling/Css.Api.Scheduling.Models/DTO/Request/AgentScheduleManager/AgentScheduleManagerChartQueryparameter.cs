@@ -10,7 +10,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager
         /// </summary>
         public AgentScheduleManagerChartQueryparameter()
         {
-            OrderBy = "CreatedDate";
+            OrderBy = "ChartsCount desc";
         }
 
         /// <summary>

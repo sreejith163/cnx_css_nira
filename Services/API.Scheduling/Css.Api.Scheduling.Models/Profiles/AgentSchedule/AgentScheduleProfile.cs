@@ -31,8 +31,9 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
                 .ReverseMap();
             CreateMap<NoSQL.AgentSchedule, ExportAgentSchedulingGroupSchedule>()
                .ReverseMap();
-           
 
+            CreateMap<NoSQL.AgentSchedule, NoSQL.AgentScheduleRange>()
+         .ReverseMap();
 
         }
     }

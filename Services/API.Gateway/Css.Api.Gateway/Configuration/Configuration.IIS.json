@@ -446,6 +446,7 @@
       "UpstreamPathTemplate": "/api/entityhierarchy/{ClientId}",
       "UpstreamHttpMethod": [ "Get" ]
     },
+
     //********* Agent Admin Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/agentadmins",
@@ -628,7 +629,30 @@
       "UpstreamPathTemplate": "/api/agentschedules/{employeeId}/employeeexport",
       "UpstreamHttpMethod": [ "Get" ]
     },
-
+    {
+      "DownstreamPathTemplate": "/api/v1/AgentSchedules/GetDateRange",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/getdaterange",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/AgentSchedules/BatchRelease",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/batchrelease",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
     //********* Agent Schedule Manager Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/agentschedulemanagers",

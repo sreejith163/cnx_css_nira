@@ -228,7 +228,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 
 
             // get preupdated details
-            var preUpdateAgentAdminHireDate = agentAdmin.AgentData.Find(x => x.Group.Description == "Hire Date")?.Group?.Value?.ToString();
+            var preUpdateAgentAdminHireDate = string.Empty; //agentAdmin.AgentData.Find(x => x.Group.Description == "Hire Date")?.Group?.Value?.ToString();
             var preUpdateAsgId = agentAdmin.AgentSchedulingGroupId;
             var preUpdateAgentAdmin = new PreUpdateAgentAdmin()
             {

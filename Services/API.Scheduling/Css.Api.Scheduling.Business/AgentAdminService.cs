@@ -20,6 +20,7 @@ using Css.Api.Scheduling.Models.DTO.Request.Timezone;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
@@ -102,6 +103,11 @@ namespace Css.Api.Scheduling.Business
         private readonly IAgentSchedulingGroupHistoryRepository _agentSchedulingGroupHistoryRepository;
 
         /// <summary>
+        /// The configuration
+        /// </summary>
+        private readonly IConfiguration _configuration;
+
+        /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
@@ -127,6 +133,7 @@ namespace Css.Api.Scheduling.Business
         /// <param name="activityLogRepository">The activity log repository.</param>
         /// <param name="agentCategoryRepository">The agent category repository.</param>
         /// <param name="agentSchedulingGroupHistoryRepository">The agent scheduling group history repository.</param>
+        /// <param name="configuration">The configuration.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
         public AgentAdminService(
@@ -143,6 +150,7 @@ namespace Css.Api.Scheduling.Business
             IActivityLogRepository activityLogRepository,
             IAgentCategoryRepository agentCategoryRepository,
             IAgentSchedulingGroupHistoryRepository agentSchedulingGroupHistoryRepository,
+            IConfiguration configuration,
             IMapper mapper,
             IUnitOfWork uow)
         {
@@ -159,6 +167,7 @@ namespace Css.Api.Scheduling.Business
             _activityLogRepository = activityLogRepository;
             _agentCategoryRepository = agentCategoryRepository;
             _agentSchedulingGroupHistoryRepository = agentSchedulingGroupHistoryRepository;
+            _configuration = configuration;
             _mapper = mapper;
             _uow = uow;
         }
@@ -321,13 +330,27 @@ namespace Css.Api.Scheduling.Business
             agentAdminRequest.SkillGroupId = agentSchedulingGroup.SkillGroupId;
             agentAdminRequest.SkillTagId = agentSchedulingGroup.SkillTagId;
 
+            var agentCategoryIdDetails = new AgentCategoryIdDetails() { AgentCategoryName = _configuration["AgentCategoryFields:Hire"] };
+            var agentCategory = await _agentCategoryRepository.GetAgentCategory(agentCategoryIdDetails);
+
+            if (agentCategory != null)
+            {
+                var agentCategoryValue = new AgentCategoryValue
+                {
+                    StartDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc),
+                    CategoryId = agentCategory.AgentCategoryId,
+                    CategoryValue = agentAdminDetails.HireDate.ToString("yyyy-MM-dd")
+                };
+                agentAdminRequest.AgentCategoryValues.Add(agentCategoryValue);
+            }
+
             _agentAdminRepository.CreateAgentAdmin(agentAdminRequest);
 
             var agentScheduleRequest = _mapper.Map<AgentSchedule>(agentAdminRequest);
             _agentScheduleRepository.CreateAgentSchedule(agentScheduleRequest);
 
             // get the preUpdated details and compare it with the updated details to check changes
-            var fieldDetails = AddActivityLogFields(null, agentAdminRequest, "");
+            var fieldDetails = await AddActivityLogFields(null, agentAdminRequest, "");
 
             // create activity log based on the changed fields
             var activityLog = new ActivityLog()
@@ -351,7 +374,6 @@ namespace Css.Api.Scheduling.Business
                 StartDate = await GetCurrentDateOfTimezone(agentSchedulingGroup.TimezoneId),
                 EndDate = null,
                 CreatedBy = agentAdminDetails.CreatedBy,
-                //CreatedDate = await GetCurrentTimeOfTimezone(agentSchedulingGroupBasedonSkillTag.TimezoneId),
                 CreatedDate = DateTime.UtcNow,
                 ActivityOrigin = ActivityOrigin.CSS
             };
@@ -378,7 +400,13 @@ namespace Css.Api.Scheduling.Business
             }
 
             // get preupdated details
-            var preUpdateAgentAdminHireDate = agentAdmin.AgentData.Find(x => x.Group.Description == "Hire Date")?.Group?.Value?.ToString();
+            var preUpdateAgentAdminHireDate = string.Empty;
+            var hireDateCategory = await _agentCategoryRepository.GetAgentCategory(new AgentCategoryIdDetails { AgentCategoryName = "Hire Date" });
+            if (hireDateCategory != null)
+            {
+                preUpdateAgentAdminHireDate = agentAdmin.AgentCategoryValues.FirstOrDefault(x => x.CategoryId == hireDateCategory.AgentCategoryId)?.CategoryValue;
+            }
+
             var preUpdateAsgId = agentAdmin.AgentSchedulingGroupId;
             var preUpdateAgentAdmin = new PreUpdateAgentAdmin()
             {
@@ -435,6 +463,28 @@ namespace Css.Api.Scheduling.Business
             agentAdminRequest.ClientLobGroupId = agentSchedulingGroup.ClientLobGroupId;
             agentAdminRequest.SkillGroupId = agentSchedulingGroup.SkillGroupId;
             agentAdminRequest.SkillTagId = agentSchedulingGroup.SkillTagId;
+
+            var agentCategoryIdDetails = new AgentCategoryIdDetails() { AgentCategoryName = _configuration["AgentCategoryFields:Hire"] };
+            var agentCategory = await _agentCategoryRepository.GetAgentCategory(agentCategoryIdDetails);
+
+            if (agentCategory != null)
+            {
+                var existingCategory = agentAdminRequest.AgentCategoryValues?.FirstOrDefault(x => x.CategoryId == agentCategory.AgentCategoryId);
+                if (existingCategory != null)
+                {
+                    existingCategory.CategoryValue = agentAdminDetails.HireDate.ToString("yyyy-MM-dd");
+                }
+                else
+                {
+                    var agentCategoryValue = new AgentCategoryValue
+                    {
+                        StartDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc),
+                        CategoryId = agentCategory.AgentCategoryId,
+                        CategoryValue = agentAdminDetails.HireDate.ToString("yyyy-MM-dd")
+                    };
+                    agentAdminRequest.AgentCategoryValues.Add(agentCategoryValue);
+                }
+            }
 
             _agentAdminRepository.UpdateAgentAdmin(agentAdminRequest);
 
@@ -504,7 +554,7 @@ namespace Css.Api.Scheduling.Business
                 _activityLogRepository.UpdateActivityLogsEmployeeId(employeeIdDetails, newEmployeeIdDetails);
             }
 
-            var fieldDetails = AddActivityLogFields(preUpdateAgentAdmin, agentAdminRequest, preUpdateAgentAdminHireDate);
+            var fieldDetails = await AddActivityLogFields(preUpdateAgentAdmin, agentAdminRequest, preUpdateAgentAdminHireDate);
 
             var activityLog = new ActivityLog()
             {
@@ -532,10 +582,15 @@ namespace Css.Api.Scheduling.Business
         /// <param name="updatedDetails">The updated details.</param>
         /// <param name="preUpdateAgentAdminHireDate">The pre update agent admin hire date.</param>
         /// <returns></returns>
-        private List<FieldDetail> AddActivityLogFields(PreUpdateAgentAdmin preUpdateDetails, Agent updatedDetails, string preUpdateAgentAdminHireDate)
+        private async Task<List<FieldDetail>> AddActivityLogFields(PreUpdateAgentAdmin preUpdateDetails, Agent updatedDetails, string preUpdateAgentAdminHireDate)
         {
             var fielDetails = new List<FieldDetail>();
-            var agentUpdatedHireDate = updatedDetails.AgentData.Find(x => x.Group.Description == "Hire Date")?.Group?.Value;
+            var agentUpdatedHireDate = string.Empty;
+            var hireDateCategory = await _agentCategoryRepository.GetAgentCategory(new AgentCategoryIdDetails { AgentCategoryName = "Hire Date" });
+            if (hireDateCategory != null)
+            {
+                agentUpdatedHireDate = updatedDetails.AgentCategoryValues.FirstOrDefault(x => x.CategoryId == hireDateCategory.AgentCategoryId)?.CategoryValue; 
+            }
 
             if (!string.IsNullOrWhiteSpace(agentUpdatedHireDate))
             {

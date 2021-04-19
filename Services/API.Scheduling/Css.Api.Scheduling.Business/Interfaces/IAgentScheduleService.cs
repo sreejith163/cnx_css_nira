@@ -1,6 +1,7 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Business.Interfaces
@@ -98,6 +99,11 @@ namespace Css.Api.Scheduling.Business.Interfaces
 
         Task<CSSResponse> EmployeeScheduleExport(string employeeId);
 
-        
+
+        Task<CSSResponse> GetDateRange(List<int> asgList);
+
+
+        Task<CSSResponse> BatchRelease(BatchRelease batchRelease);
+
     }
 }

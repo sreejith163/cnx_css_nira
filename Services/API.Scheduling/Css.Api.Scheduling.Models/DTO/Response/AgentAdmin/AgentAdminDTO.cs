@@ -45,6 +45,11 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
         public int? AgentSchedulingGroupId { get; set; }
 
         /// <summary>
+        /// Gets or sets the hire date.
+        /// </summary>
+        public DateTime? HireDate { get; set; }
+
+        /// <summary>
         /// Gets or sets the agent data.
         /// </summary>
         public List<AgentData> AgentData { get; set; }

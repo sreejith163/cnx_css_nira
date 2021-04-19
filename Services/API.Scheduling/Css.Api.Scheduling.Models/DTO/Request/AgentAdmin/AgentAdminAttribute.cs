@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
 {
@@ -43,6 +44,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentAdmin
         /// Gets or sets the supervisor sso.
         /// </summary>
         public string SupervisorSso { get; set; }
+
+        /// <summary>
+        /// Gets or sets the hire date.
+        /// </summary>
+        public DateTime HireDate { get; set; }
 
         /// <summary>
         /// Gets or sets the agent data.

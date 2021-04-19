@@ -4,6 +4,7 @@ using Css.Api.Core.Models.Enums;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -59,7 +60,14 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="dateRange">The date range.</param>
         /// <returns></returns>
         Task<AgentScheduleRange> GetAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
-
+        /// <summary>
+        /// Gets the agent schedule range.
+        /// </summary>
+        /// <param name="releaseRangeDetails">The agent schedule identifier details.</param>
+     
+        /// <returns></returns>
+        Task<List<AgentScheduleRange>> GetAgentScheduleRangeForRelease(ReleaseRangeDetails releaseRangeDetails,  string employeeId);
+        
         /// <summary>
         /// Determines whether [is agent schedule range exist] [the specified agent schedule identifier details].
         /// </summary>
@@ -67,6 +75,9 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="dateRange">The date range.</param>
         /// <returns></returns>
         Task<bool> IsAgentScheduleRangeExist(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
+
+
+        Task<List<AgentSchedule>> CheckAgentScheduleRangeExist(int asg);
 
         /// <summary>
         /// Gets the agent schedule count.
@@ -113,6 +124,10 @@ namespace Css.Api.Scheduling.Repository.Interfaces
 
         Task<List<AgentSchedule>> GetEmployeeScheduleExport(string employeeId);
 
+
+        Task<List<AgentSchedule>> GetDateRange(List<int> asgList);
+
+
         /// <summary>
         /// Creates the agent schedule.
         /// </summary>
@@ -126,6 +141,9 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         void UpdateAgentSchedule(AgentScheduleIdDetails agentScheduleIdDetails, UpdateAgentSchedule agentScheduleDetails);
 
+
+        //void UpdateAgentScheduleRelease(UpdateAgentSchedule agentScheduleDetails);
+        
         /// <summary>
         /// Updates the agent schedule.
         /// </summary>
@@ -174,7 +192,9 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="dateRange">The date range.</param>
         void DeleteAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
 
+        
 
+        void UpdateAgentScheduleRangeRelease(string employeeId,BatchRelease agentScheduleDetails);
         void DeleteAgentScheduleRangeImport(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
 
         /// <summary>
@@ -182,6 +202,8 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="employeeIdDetails">The employee identifier details.</param>
         void DeleteAgentSchedule(EmployeeIdDetails employeeIdDetails);
+
+        Task<List<AgentSchedule>> GetAgentScheduleIdForRelease(ReleaseRangeDetails releaseRangeDetails);
     }
 }
 

@@ -70,6 +70,15 @@ namespace Css.Api.Reporting.Business.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Id is a mandatory field, expected value is a alphanumeric string other than 0.
+        /// </summary>
+        internal static string AgentIdMandatory {
+            get {
+                return ResourceManager.GetString("AgentIdMandatory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Agent id - couldn&apos;t find the agent details in our system.
         /// </summary>
         internal static string AgentNotFound {
@@ -102,6 +111,42 @@ namespace Css.Api.Reporting.Business.Data {
         internal static string ExportNoData {
             get {
                 return ResourceManager.GetString("ExportNoData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hire date is a mandatory field, expected a valid date in the format yyyyMMdd.
+        /// </summary>
+        internal static string HireDateMandatory {
+            get {
+                return ResourceManager.GetString("HireDateMandatory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid agent categories - {0}.
+        /// </summary>
+        internal static string InvalidAgentCategories {
+            get {
+                return ResourceManager.GetString("InvalidAgentCategories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid {0} category value, expected value is a date in the format - yyyyMMdd.
+        /// </summary>
+        internal static string InvalidAgentCategoryDate {
+            get {
+                return ResourceManager.GetString("InvalidAgentCategoryDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid {0} category value, expected value is a numeric value between {1} and {2}.
+        /// </summary>
+        internal static string InvalidAgentCategoryNumeric {
+            get {
+                return ResourceManager.GetString("InvalidAgentCategoryNumeric", resourceCulture);
             }
         }
         
@@ -151,6 +196,15 @@ namespace Css.Api.Reporting.Business.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MU details for {0} is missing in the system.
+        /// </summary>
+        internal static string InvalidMU {
+            get {
+                return ResourceManager.GetString("InvalidMU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid request parameters. Kindly specify atleast one agent id and a valid combination of start &amp; end dates.
         /// </summary>
         internal static string InvalidQueryParamsCNX1 {
@@ -174,6 +228,24 @@ namespace Css.Api.Reporting.Business.Data {
         internal static string InvalidSchedulingCode {
             get {
                 return ResourceManager.GetString("InvalidSchedulingCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid value in senDate, expected value is a valid date combination of day, month and year.
+        /// </summary>
+        internal static string InvalidSenDate {
+            get {
+                return ResourceManager.GetString("InvalidSenDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid value in senExt, expected value is a numeric value between 1 and 9999.
+        /// </summary>
+        internal static string InvalidSenExt {
+            get {
+                return ResourceManager.GetString("InvalidSenExt", resourceCulture);
             }
         }
         
@@ -210,6 +282,24 @@ namespace Css.Api.Reporting.Business.Data {
         internal static string MappingNotFound {
             get {
                 return ResourceManager.GetString("MappingNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MU is a mandatory field, cannot be null or empty for new CSS agents.
+        /// </summary>
+        internal static string MuMandatory {
+            get {
+                return ResourceManager.GetString("MuMandatory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name is a mandatory information for all new CSS agents.
+        /// </summary>
+        internal static string NameMandatory {
+            get {
+                return ResourceManager.GetString("NameMandatory", resourceCulture);
             }
         }
         
@@ -273,6 +363,24 @@ namespace Css.Api.Reporting.Business.Data {
         internal static string ScheduleUpdateNotAllowed {
             get {
                 return ResourceManager.GetString("ScheduleUpdateNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SSN is a mandatory field, expected value is a alphanumeric string other than 0.
+        /// </summary>
+        internal static string SsnMandatory {
+            get {
+                return ResourceManager.GetString("SsnMandatory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SSO is a mandatory field, expected value is a valid email address.
+        /// </summary>
+        internal static string SsoMandatory {
+            get {
+                return ResourceManager.GetString("SsoMandatory", resourceCulture);
             }
         }
     }

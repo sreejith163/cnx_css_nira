@@ -22,6 +22,8 @@ namespace Css.Api.Scheduling.Models.Profiles.AgentSchedule
              .ReverseMap();
             CreateMap<AgentScheduleManagerChartQueryparameter, AgentAdminQueryParameter>()
                 .ReverseMap();
+
+            CreateMap<AgentScheduleManagerChartDetailsDTO, AgentScheduleManagerChartDetailsDTO>().ReverseMap();
         }
     }
 }

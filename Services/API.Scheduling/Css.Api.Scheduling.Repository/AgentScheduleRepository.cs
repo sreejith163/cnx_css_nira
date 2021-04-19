@@ -300,10 +300,10 @@ namespace Css.Api.Scheduling.Repository
             {
                 update = update.Set(x => x.Ranges[-1].Status, agentScheduleDetails.Status);
             }
-
+        
             UpdateOneAsync(query, update);
         }
-
+        
         /// <summary>
         /// Updates the agent schedule.
         /// </summary>
@@ -547,7 +547,6 @@ namespace Css.Api.Scheduling.Repository
             if (!string.IsNullOrWhiteSpace(agentScheduleQueryparameter.SearchKeyword))
             {
                 SchedulingStatus scheduleStatus = SchedulingStatus.Released;
-                int.TryParse(agentScheduleQueryparameter.SearchKeyword.Trim(), out int employeeId);
                 var status = Enum.GetNames(typeof(SchedulingStatus)).FirstOrDefault(e => e.ToLower().Contains(agentScheduleQueryparameter.SearchKeyword.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(status))
@@ -642,6 +641,124 @@ namespace Css.Api.Scheduling.Repository
             var result = FilterBy(query);
             return await Task.FromResult(result.ToList());
         }
+
+        public async Task<List<AgentSchedule>> GetDateRange(List<int> asgList)
+        {
+            var query = Builders<AgentSchedule>.Filter.In(i => i.ActiveAgentSchedulingGroupId, asgList) &
+               Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            var result = FilterBy(query);
+
+            return await Task.FromResult(result.ToList());
+        }
+        /// <summary>
+        /// Determines whether [is agent schedule range exist] [the specified agent schedule identifier details].
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <returns></returns>
+        public async Task<List<AgentSchedule>> CheckAgentScheduleRangeExist(int asg)
+        {
+       
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.ActiveAgentSchedulingGroupId,asg) &
+                Builders<AgentSchedule>.Filter.ElemMatch(i => i.Ranges, range => range.Status.Equals(SchedulingStatus.Pending_Schedule)) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            var result = FilterBy(query);
+            return await Task.FromResult(result.ToList());
+        }
+
+        /// <summary>
+        /// Gets the agent schedule range.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        /// <returns></returns>
+        public async Task<List<AgentScheduleRange>> GetAgentScheduleRangeForRelease(ReleaseRangeDetails releaseRangeDetails, string employeeId)
+        {
+            releaseRangeDetails.DateFrom = new DateTime(releaseRangeDetails.DateFrom.Year, releaseRangeDetails.DateFrom.Month, releaseRangeDetails.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+            releaseRangeDetails.DateTo = new DateTime(releaseRangeDetails.DateTo.Year, releaseRangeDetails.DateTo.Month, releaseRangeDetails.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+
+            var query =
+              Builders<AgentSchedule>.Filter.Eq(x => x.EmployeeId , employeeId) &
+                Builders<AgentSchedule>.Filter.ElemMatch(
+                    i => i.Ranges, range => range.AgentSchedulingGroupId == releaseRangeDetails.AgentSchedulingGroupId && releaseRangeDetails.DateFrom == releaseRangeDetails.DateFrom && range.DateTo == releaseRangeDetails.DateTo) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            //var agentSchedule = awaitFilterBy(query);
+
+            //return agentSchedule?.Ranges.FirstOrDefault(x => x.DateFrom == releaseRangeDetails.DateFrom && x.DateTo == releaseRangeDetails.DateTo);
+
+          
+            
+            var agentSchedule = FilterBy(query);
+            var res = agentSchedule.Select(x => x.Ranges.Where(x => x.DateFrom == releaseRangeDetails.DateFrom && x.DateTo == releaseRangeDetails.DateTo && x.Status == SchedulingStatus.Pending_Schedule)).FirstOrDefault();
+            
+          
+            return await Task.FromResult(res.ToList());
+        }
+
+
+        public async Task<List<AgentSchedule>> GetAgentScheduleIdForRelease(ReleaseRangeDetails releaseRangeDetails)
+        {
+            releaseRangeDetails.DateFrom = new DateTime(releaseRangeDetails.DateFrom.Year, releaseRangeDetails.DateFrom.Month, releaseRangeDetails.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+            releaseRangeDetails.DateTo = new DateTime(releaseRangeDetails.DateTo.Year, releaseRangeDetails.DateTo.Month, releaseRangeDetails.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+
+            var query =
+
+                Builders<AgentSchedule>.Filter.ElemMatch(
+                    i => i.Ranges, range => range.AgentSchedulingGroupId == releaseRangeDetails.AgentSchedulingGroupId && releaseRangeDetails.DateFrom == releaseRangeDetails.DateFrom && range.DateTo == releaseRangeDetails.DateTo) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            //var agentSchedule = awaitFilterBy(query);
+
+            //return agentSchedule?.Ranges.FirstOrDefault(x => x.DateFrom == releaseRangeDetails.DateFrom && x.DateTo == releaseRangeDetails.DateTo);
+
+
+
+            var agentSchedule = FilterBy(query);
+           
+
+
+            return await Task.FromResult(agentSchedule.ToList());
+        }
+
+        /// <summary>
+        /// Update the agent schedule range to release.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
+        /// <param name="dateRange">The date range.</param>
+        public void UpdateAgentScheduleRangeRelease(string employeeId, BatchRelease agentScheduleDetails)
+        {
+            foreach (var item in agentScheduleDetails.BatchReleaseDetails)
+            {
+                item.DateFrom = new DateTime(item.DateFrom.Year, item.DateFrom.Month,
+                                                        item.DateFrom.Day, 0, 0, 0, DateTimeKind.Utc);
+                item.DateTo = new DateTime(item.DateTo.Year, item.DateTo.Month,
+                                                           item.DateTo.Day, 0, 0, 0, DateTimeKind.Utc);
+
+                var query =
+                    Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeId) &
+                    Builders<AgentSchedule>.Filter.ElemMatch(
+                        i => i.Ranges, range => range.DateFrom == item.DateFrom && range.DateTo == item.DateTo) &
+                    Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+                var update = Builders<AgentSchedule>.Update
+                    .Set(x => x.Ranges[-1].Status, SchedulingStatus.Released)
+                    .Set(x => x.ModifiedBy, agentScheduleDetails.ModifiedBy)
+                    .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
+
+                var documentCount = FindCountByIdAsync(query).Result;
+                if (documentCount > 0)
+                {
+                    update = update.Set(x => x.Ranges[-1].Status, SchedulingStatus.Released);
+                }
+
+                UpdateOneAsync(query, update);
+            }
+        }
+
     }
 }
 

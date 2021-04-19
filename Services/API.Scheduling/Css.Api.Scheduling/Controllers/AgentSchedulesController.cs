@@ -1,7 +1,8 @@
-﻿using Css.Api.Scheduling.Business.Interfaces;
+﻿ using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Controllers
@@ -110,7 +111,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <summary>
         /// Updates the agent schedule chart.
         /// </summary>
-        /// <param name="agentScheduleImport">The agent schedule import.</param>
+        /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
         [HttpPut("import")]
         public async Task<IActionResult> ImportAgentScheduleChart([FromBody] AgentScheduleImport agentScheduleImport)
@@ -193,5 +194,30 @@ namespace Css.Api.Scheduling.Controllers
             var result = await _agentScheduleService.EmployeeScheduleExport(employeeId);
             return StatusCode((int)result.Code, result.Value);
         }
+
+        // <param name="employeeId">Get the available date range for the selected agent scheduling group</param>
+        /// <param name="asgList">The asg list parameters.</param>
+        /// <returns></returns>
+        [HttpGet()]
+        [Route("GetDateRange")]
+        public async Task<IActionResult> GetDateRange([FromQuery] List<int> asgList)
+        {
+            var result = await _agentScheduleService.GetDateRange(asgList);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+
+        /// <summary>Release the given asg and date range</summary>
+        /// <param name="batchRelease">the batch release parameter</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        [HttpPut("BatchRelease")]
+        public async Task<IActionResult> BatchRelease([FromBody] BatchRelease batchRelease)
+        {
+            var result = await _agentScheduleService.BatchRelease(batchRelease);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
     }
 }

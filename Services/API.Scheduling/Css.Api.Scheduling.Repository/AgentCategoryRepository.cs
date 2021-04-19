@@ -57,10 +57,20 @@ namespace Css.Api.Scheduling.Repository
         /// <returns></returns>
         public async Task<AgentCategory> GetAgentCategory(AgentCategoryIdDetails agentCategoryIdDetails)
         {
-            var query = Builders<AgentCategory>.Filter.Eq(i => i.IsDeleted, false) &
+            FilterDefinition<AgentCategory> query;
+            if (agentCategoryIdDetails.AgentCategoryId > 0)
+            {
+                query = Builders<AgentCategory>.Filter.Eq(i => i.IsDeleted, false) &
                         Builders<AgentCategory>.Filter.Eq(i => i.AgentCategoryId, agentCategoryIdDetails.AgentCategoryId);
+            }
+            else
+            {
+                query = Builders<AgentCategory>.Filter.Eq(i => i.IsDeleted, false) &
+                        Builders<AgentCategory>.Filter.Eq(i => i.Name, agentCategoryIdDetails.AgentCategoryName);
+            }
 
-            return await FindByIdAsync(query);
+            var result = FilterBy(query);
+            return await Task.FromResult(result.FirstOrDefault());
         }
 
         /// <summary>

@@ -30,7 +30,7 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         /// <summary>
         /// The commands
         /// </summary>
-        private readonly List<Func<Task>> _commands;
+        private List<Func<Task>> _commands;
 
         /// <summary>
         /// The mongo database settings
@@ -75,6 +75,14 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         {
             Session?.Dispose();
             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Disposes the commands amd resets the command list
+        /// </summary>
+        public void DisposeCommands()
+        {
+            _commands = new List<Func<Task>>();
         }
 
         /// <summary>

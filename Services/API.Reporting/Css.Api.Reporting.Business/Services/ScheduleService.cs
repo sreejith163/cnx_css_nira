@@ -420,7 +420,7 @@ namespace Css.Api.Reporting.Business.Services
             }
             
 
-            if(scheduledDate.Date <= DateTime.UtcNow.Add(offset).Date)
+            if(scheduledDate.Date <= DateTime.UtcNow.Add(offset).Date.AddDays(-1))
             {
                 scheduleData.Messages.Add(Messages.ScheduleUpdateNotAllowed);
             }

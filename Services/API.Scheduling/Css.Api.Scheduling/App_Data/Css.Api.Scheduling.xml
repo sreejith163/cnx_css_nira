@@ -230,7 +230,7 @@
             <summary>
             Updates the agent schedule chart.
             </summary>
-            <param name="agentScheduleImport">The agent schedule import.</param>
+            <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.CopyAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.MultipleCopyAgentScheduleRequest)">
@@ -266,6 +266,17 @@
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.EmployeeScheduleExport(System.String)">
             <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.GetDateRange(System.Collections.Generic.List{System.Int32})">
+            <param name="asgList">The asg list parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.BatchRelease(Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.BatchRelease)">
+            <summary>Release the given asg and date range</summary>
+            <param name="batchRelease">the batch release parameter</param>
+            <returns>
+              <br />
+            </returns>
         </member>
         <member name="T:Css.Api.Scheduling.Controllers.EntityHierarchyController">
             <summary>controller for entity hierarchy</summary>

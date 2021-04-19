@@ -103,5 +103,12 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL.Interfaces
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns></returns>
         void DeleteManyAsync(Expression<Func<TDocument, bool>> filterExpression);
+
+        /// <summary>
+        /// Bulk upserts asychronous
+        /// </summary>
+        /// <param name="writeModels">The list of WriteModel</param>
+        /// <param name="bulkWriteOptions">The bulk write options</param>
+        void BulkWriteAsync(List<WriteModel<TDocument>> writeModels, BulkWriteOptions bulkWriteOptions = null);
     }
 }

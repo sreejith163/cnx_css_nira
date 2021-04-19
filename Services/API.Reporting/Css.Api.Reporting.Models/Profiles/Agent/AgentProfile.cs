@@ -20,7 +20,6 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                 .ForMember(x => x.FirstName, opt => opt.MapFrom<AgentFirstNameResolver>())
                 .ForMember(x => x.LastName, opt => opt.MapFrom<AgentLastNameResolver>())
                 .ForMember(x => x.Ssn, opt => opt.MapFrom(o => o.SSN))
-                .ForMember(x => x.Sso, opt => opt.MapFrom(o => o.SSO))
                 .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => "UDW Import"))
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ForMember(x => x.ModifiedBy, opt => opt.Ignore())
@@ -28,7 +27,7 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                 .ForMember(x => x.Mu, opt => opt.MapFrom(o => o.MU))
                 .ForMember(x => x.Origin, opt => opt.MapFrom(o => ActivityOrigin.UDW))
                 .ForMember(x => x.IsDeleted, opt => opt.MapFrom(o => false))
-                .ForMember(x => x.SenDate, opt =>
+                .ForMember(x => x.HireDate, opt =>
                 {
                     opt.PreCondition(o => {
                         DateTime dt;
@@ -55,7 +54,6 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                 .ForMember(x => x.FirstName, opt => opt.MapFrom<AgentFirstNameResolver>())
                 .ForMember(x => x.LastName, opt => opt.MapFrom<AgentLastNameResolver>())
                 .ForMember(x => x.Ssn, opt => opt.MapFrom(o => o.SSN))
-                .ForMember(x => x.Sso, opt => opt.MapFrom(o => o.SSO))
                 .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => "UDW Import"))
                 .ForMember(x => x.CreatedDate, opt => opt.MapFrom(o => DateTime.UtcNow))
                 .ForMember(x => x.ModifiedBy, opt => opt.Ignore())
@@ -63,7 +61,7 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                 .ForMember(x => x.Mu, opt => opt.MapFrom(o => o.MU))
                 .ForMember(x => x.Origin, opt => opt.MapFrom(o => ActivityOrigin.UDW))
                 .ForMember(x => x.IsDeleted, opt => opt.MapFrom(o => false))
-                .ForMember(x => x.SenDate, opt =>
+                .ForMember(x => x.HireDate, opt =>
                 {
                     opt.PreCondition(o => {
                         DateTime dt;

@@ -155,6 +155,7 @@ namespace Css.Api.Reporting.Repository
         /// <param name="agentSchedules">The agents manager schedules to be updated</param>
         public void UpsertAgentScheduleManagers(List<AgentScheduleManager> agentScheduleManagers)
         {
+            var bulkUpsert = new List<WriteModel<AgentScheduleManager>>();
             agentScheduleManagers.ForEach(agentScheduleManagerDetails =>
             {
                 agentScheduleManagerDetails.Date = new DateTime(agentScheduleManagerDetails.Date.Year, agentScheduleManagerDetails.Date.Month,
@@ -177,11 +178,18 @@ namespace Css.Api.Reporting.Repository
                     update = update.Set(x => x.AgentSchedulingGroupId, agentScheduleManagerDetails.AgentSchedulingGroupId);
                 }
 
-                UpdateOneAsync(query, update, new UpdateOptions
+                var updateAgentScheduleManager = new UpdateOneModel<AgentScheduleManager>(query, update)
                 {
                     IsUpsert = true
-                });
+                };
+
+                bulkUpsert.Add(updateAgentScheduleManager);
             });
+
+            if(bulkUpsert.Any())
+            {
+                BulkWriteAsync(bulkUpsert);
+            }
         }
     }
 }

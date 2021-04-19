@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
-    public class DateRange
+  public  class ReleaseRangeDetails
     {
 
-        /// <summary>
-        /// Gets or sets the date from.
-        /// </summary>
+        public int AgentSchedulingGroupId { get; set; }
         public DateTime DateFrom { get; set; }
 
         /// <summary>

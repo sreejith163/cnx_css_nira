@@ -120,6 +120,9 @@
   <data name="AgentExportNotAllowed" xml:space="preserve">
     <value>The export of agent info has been disabled for the requested system. Kindly contact system administrator.</value>
   </data>
+  <data name="AgentIdMandatory" xml:space="preserve">
+    <value>Id is a mandatory field, expected value is a alphanumeric string other than 0</value>
+  </data>
   <data name="AgentNotFound" xml:space="preserve">
     <value>Invalid Agent id - couldn't find the agent details in our system</value>
   </data>
@@ -131,6 +134,18 @@
   </data>
   <data name="ExportNoData" xml:space="preserve">
     <value>No schedules available for the requested date(s)</value>
+  </data>
+  <data name="HireDateMandatory" xml:space="preserve">
+    <value>Hire date is a mandatory field, expected a valid date in the format yyyyMMdd</value>
+  </data>
+  <data name="InvalidAgentCategories" xml:space="preserve">
+    <value>Invalid agent categories - {0}</value>
+  </data>
+  <data name="InvalidAgentCategoryDate" xml:space="preserve">
+    <value>Invalid {0} category value, expected value is a date in the format - yyyyMMdd</value>
+  </data>
+  <data name="InvalidAgentCategoryNumeric" xml:space="preserve">
+    <value>Invalid {0} category value, expected value is a numeric value between {1} and {2}</value>
   </data>
   <data name="InvalidDataSource" xml:space="preserve">
     <value>Invalid data source specified for key - '{0}'</value>
@@ -147,6 +162,9 @@
   <data name="InvalidEndDateTime" xml:space="preserve">
     <value>Invalid end date '{0}' specified for schedule starting at '{1}'</value>
   </data>
+  <data name="InvalidMU" xml:space="preserve">
+    <value>MU details for {0} is missing in the system</value>
+  </data>
   <data name="InvalidQueryParamsCNX1" xml:space="preserve">
     <value>Invalid request parameters. Kindly specify atleast one agent id and a valid combination of start &amp; end dates</value>
   </data>
@@ -155,6 +173,12 @@
   </data>
   <data name="InvalidSchedulingCode" xml:space="preserve">
     <value>Invalid activity code - '{0}'</value>
+  </data>
+  <data name="InvalidSenDate" xml:space="preserve">
+    <value>Invalid value in senDate, expected value is a valid date combination of day, month and year</value>
+  </data>
+  <data name="InvalidSenExt" xml:space="preserve">
+    <value>Invalid value in senExt, expected value is a numeric value between 1 and 9999</value>
   </data>
   <data name="InvalidSource" xml:space="preserve">
     <value>Invalid source specified for key - '{0}'</value>
@@ -167,6 +191,12 @@
   </data>
   <data name="MappingNotFound" xml:space="preserve">
     <value>Mapping not found for key - '{0}'</value>
+  </data>
+  <data name="MuMandatory" xml:space="preserve">
+    <value>MU is a mandatory field, cannot be null or empty for new CSS agents</value>
+  </data>
+  <data name="NameMandatory" xml:space="preserve">
+    <value>Name is a mandatory information for all new CSS agents</value>
   </data>
   <data name="NoAgentsEStartProvisioned" xml:space="preserve">
     <value>Currently no agents are provisioned for EStart</value>
@@ -188,5 +218,11 @@
   </data>
   <data name="ScheduleUpdateNotAllowed" xml:space="preserve">
     <value>Not permitted to update a schedule for a past date</value>
+  </data>
+  <data name="SsnMandatory" xml:space="preserve">
+    <value>SSN is a mandatory field, expected value is a alphanumeric string other than 0</value>
+  </data>
+  <data name="SsoMandatory" xml:space="preserve">
+    <value>SSO is a mandatory field, expected value is a valid email address</value>
   </data>
 </root>

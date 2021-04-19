@@ -21,6 +21,5 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// Gets or sets the category value.
         /// </summary>
         public string CategoryValue { get; set; }
-
     }
 }
