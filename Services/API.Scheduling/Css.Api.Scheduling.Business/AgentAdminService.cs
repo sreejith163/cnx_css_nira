@@ -330,16 +330,47 @@ namespace Css.Api.Scheduling.Business
             agentAdminRequest.SkillGroupId = agentSchedulingGroup.SkillGroupId;
             agentAdminRequest.SkillTagId = agentSchedulingGroup.SkillTagId;
 
-            var agentCategoryIdDetails = new AgentCategoryIdDetails() { AgentCategoryName = _configuration["AgentCategoryFields:Hire"] };
-            var agentCategory = await _agentCategoryRepository.GetAgentCategory(agentCategoryIdDetails);
+            // Hire Date
+            var agentCategoryHireDateDetails = new AgentCategoryIdDetails() { AgentCategoryName = _configuration["AgentCategoryFields:Hire"] };
+            var agentCategoryHireDate = await _agentCategoryRepository.GetAgentCategory(agentCategoryHireDateDetails);
 
-            if (agentCategory != null)
+            if (agentCategoryHireDate != null)
             {
                 var agentCategoryValue = new AgentCategoryValue
                 {
                     StartDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc),
-                    CategoryId = agentCategory.AgentCategoryId,
+                    CategoryId = agentCategoryHireDate.AgentCategoryId,
                     CategoryValue = agentAdminDetails.HireDate.ToString("yyyy-MM-dd")
+                };
+                agentAdminRequest.AgentCategoryValues.Add(agentCategoryValue);
+            }
+
+            // SSO
+            var agentCategorySSODetails = new AgentCategoryIdDetails() { AgentCategoryName = _configuration["AgentCategoryFields:Sso"] };
+            var agentCategorySSO = await _agentCategoryRepository.GetAgentCategory(agentCategorySSODetails);
+
+            if (agentCategorySSO != null)
+            {
+                var agentCategoryValue = new AgentCategoryValue
+                {
+                    StartDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc),
+                    CategoryId = agentCategorySSO.AgentCategoryId,
+                    CategoryValue = agentAdminDetails.Sso
+                };
+                agentAdminRequest.AgentCategoryValues.Add(agentCategoryValue);
+            }
+
+            // Team Lead
+            var agentCategoryTeamLeadDetails = new AgentCategoryIdDetails() { AgentCategoryName = _configuration["AgentCategoryFields:Supervisor"] };
+            var agentCategoryTeamLead = await _agentCategoryRepository.GetAgentCategory(agentCategoryTeamLeadDetails);
+
+            if (agentCategoryTeamLead != null)
+            {
+                var agentCategoryValue = new AgentCategoryValue
+                {
+                    StartDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc),
+                    CategoryId = agentCategoryTeamLead.AgentCategoryId,
+                    CategoryValue = agentAdminDetails.SupervisorName
                 };
                 agentAdminRequest.AgentCategoryValues.Add(agentCategoryValue);
             }
@@ -464,12 +495,13 @@ namespace Css.Api.Scheduling.Business
             agentAdminRequest.SkillGroupId = agentSchedulingGroup.SkillGroupId;
             agentAdminRequest.SkillTagId = agentSchedulingGroup.SkillTagId;
 
-            var agentCategoryIdDetails = new AgentCategoryIdDetails() { AgentCategoryName = _configuration["AgentCategoryFields:Hire"] };
-            var agentCategory = await _agentCategoryRepository.GetAgentCategory(agentCategoryIdDetails);
+            // Hire Date
+            var agentCategoryHireDateDetails = new AgentCategoryIdDetails() { AgentCategoryName = _configuration["AgentCategoryFields:Hire"] };
+            var agentCategoryHireDate = await _agentCategoryRepository.GetAgentCategory(agentCategoryHireDateDetails);
 
-            if (agentCategory != null)
+            if (agentCategoryHireDate != null)
             {
-                var existingCategory = agentAdminRequest.AgentCategoryValues?.FirstOrDefault(x => x.CategoryId == agentCategory.AgentCategoryId);
+                var existingCategory = agentAdminRequest.AgentCategoryValues?.FirstOrDefault(x => x.CategoryId == agentCategoryHireDate.AgentCategoryId);
                 if (existingCategory != null)
                 {
                     existingCategory.CategoryValue = agentAdminDetails.HireDate.ToString("yyyy-MM-dd");
@@ -479,8 +511,54 @@ namespace Css.Api.Scheduling.Business
                     var agentCategoryValue = new AgentCategoryValue
                     {
                         StartDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc),
-                        CategoryId = agentCategory.AgentCategoryId,
+                        CategoryId = agentCategoryHireDate.AgentCategoryId,
                         CategoryValue = agentAdminDetails.HireDate.ToString("yyyy-MM-dd")
+                    };
+                    agentAdminRequest.AgentCategoryValues.Add(agentCategoryValue);
+                }
+            }
+
+            // SSo
+            var agentCategorySSODetails = new AgentCategoryIdDetails() { AgentCategoryName = _configuration["AgentCategoryFields:Sso"] };
+            var agentCategorySSO = await _agentCategoryRepository.GetAgentCategory(agentCategorySSODetails);
+
+            if (agentCategorySSO != null)
+            {
+                var existingCategory = agentAdminRequest.AgentCategoryValues?.FirstOrDefault(x => x.CategoryId == agentCategorySSO.AgentCategoryId);
+                if (existingCategory != null)
+                {
+                    existingCategory.CategoryValue = agentAdminDetails.Sso;
+                }
+                else
+                {
+                    var agentCategoryValue = new AgentCategoryValue
+                    {
+                        StartDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc),
+                        CategoryId = agentCategorySSO.AgentCategoryId,
+                        CategoryValue = agentAdminDetails.Sso
+                    };
+                    agentAdminRequest.AgentCategoryValues.Add(agentCategoryValue);
+                }
+            }
+
+            // Team Lead
+            var agentCategoryTeamLeadDetails = new AgentCategoryIdDetails() { AgentCategoryName = _configuration["AgentCategoryFields:Supervisor"] };
+            var agentCategoryTeamLead = await _agentCategoryRepository.GetAgentCategory(agentCategoryTeamLeadDetails);
+
+            if (agentCategoryTeamLead != null)
+            {
+                var existingCategory = agentAdminRequest.AgentCategoryValues?.FirstOrDefault(x => x.CategoryId == agentCategoryTeamLead.AgentCategoryId);
+                if (existingCategory != null)
+                {
+                    existingCategory.CategoryValue = agentAdminDetails.SupervisorName;
+                }
+                else
+                {
+                    var agentCategoryValue = new AgentCategoryValue
+                    {
+                        StartDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc),
+                        CategoryId = agentCategoryTeamLead.AgentCategoryId,
+                        CategoryValue = agentAdminDetails.SupervisorName
                     };
                     agentAdminRequest.AgentCategoryValues.Add(agentCategoryValue);
                 }
@@ -1116,22 +1194,6 @@ namespace Css.Api.Scheduling.Business
             DateTime currentTime = DateTime.UtcNow.Add(TimezoneHelper.GetOffset(timezone.Abbreviation).Value);
             DateTime currentDateOfTimezone = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, 0, 0, 0, DateTimeKind.Utc);
             return currentDateOfTimezone;
-        }
-
-        /// <summary>Finds the current time of scheduling group.</summary>
-        /// <param name="schedulingGroupId">The scheduling group identifier.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        private async Task<DateTime> FindCurrentTimeOfSchedulingGroup(int schedulingGroupId)
-        {
-            AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails = new AgentSchedulingGroupIdDetails
-            {
-                AgentSchedulingGroupId = schedulingGroupId
-            };
-            AgentSchedulingGroup asg = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(agentSchedulingGroupIdDetails);
-            int timezoneId = asg.TimezoneId;
-            return await GetCurrentTimeOfTimezone(timezoneId);
         }
 
         /// <summary>Gets the current time of timezone.</summary>

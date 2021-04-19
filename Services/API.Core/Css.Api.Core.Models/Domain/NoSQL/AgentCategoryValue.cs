@@ -10,7 +10,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// Gets or sets the start date.
         /// </summary>
         [BsonRepresentation(BsonType.String)]
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
         /// <summary>
         /// Gets or sets the category id.

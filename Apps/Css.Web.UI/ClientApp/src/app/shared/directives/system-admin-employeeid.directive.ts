@@ -16,7 +16,8 @@ export class SystemAdminEmployeeIdDirective {
         if(this.el.nativeElement.value.match(regex)){
             this.el.nativeElement.value = this.el.nativeElement.value.replace(/[^A-Za-z0-9]/gi,"")
             event.preventDefault();
-        } 
+        }
+      
         else if(this.el.nativeElement.value.match(regex2)){
             this.el.nativeElement.value = this.el.nativeElement.value.replace(/\B[a-zA-Z]/gi,"")
             event.preventDefault();
@@ -33,6 +34,7 @@ export class SystemAdminEmployeeIdDirective {
             this.el.nativeElement.value = this.el.nativeElement.value.replace(/[^A-Za-z0-9]/gi,"")
             event.preventDefault();
         } 
+     
         else if(this.el.nativeElement.value.match(regex2)){
             this.el.nativeElement.value = this.el.nativeElement.value.replace(/\B[a-zA-Z]/gi,"")
             event.preventDefault();

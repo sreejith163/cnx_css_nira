@@ -32,6 +32,12 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<List<AgentCategory>> FindAgentCategorys();
 
         /// <summary>
+        /// Get the agent category list.
+        /// </summary>
+        /// <returns></returns>
+        Task<List<AgentCategory>> GetAgentCategoryList();
+
+        /// <summary>
         /// Gets the scheduling codes count by ids.
         /// </summary>
         /// <param name="agentCategorys">The scheduling codes.</param>

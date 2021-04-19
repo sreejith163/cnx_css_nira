@@ -52,7 +52,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
   agentAdminDetails: AgentAdminResponse;
 
   spinner = 'agentAdmin';
-  maxLength = Constants.DefaultTextMaxLength;
+  maxLength = Constants.DefaultEmpTextMaxLength;
 
   clientId: number;
   clientLobGroupId: number;
@@ -327,7 +327,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
 
   private agentFormIntialization() {
     this.agentProfileForm = this.formBuilder.group({
-      employeeId: new FormControl('', Validators.compose([Validators.required, Validators.max(9999999999)])),
+      employeeId: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(45)])),
       sso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
       firstName: new FormControl('',
        Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),

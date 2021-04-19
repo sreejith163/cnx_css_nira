@@ -9,7 +9,6 @@
       <ol class="breadcrumb float-sm-left pl-0">
         <li class="breadcrumb-item"><a>{{ 'Scheduling_menu' | translate }}</a></li>
         <li class="breadcrumb-item active"><b>{{ 'Scheduling_manager_list' | translate }}</b> </li>
-        <!-- NO TRANSLATION -->
       </ol>
     </div>
   </div>
@@ -23,7 +22,7 @@
       <div class="row">
         <div class="col-md-9">
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-4">
               <div class="input-group align-items-center">
                 <div class="input-group-prepend pr-3">
                   <label for="inputEmail3" class=" pb-0 pt-0 mb-0">{{ 'Time Interval' | translate }}</label>
@@ -36,15 +35,15 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-5">
               <div class="input-group align-items-center">
                 <div class="input-group-prepend pr-3">
                   <label for="inputEmail3" class=" pb-0 pt-0 mb-0">{{ 'Start Time Sorting' | translate }}:</label>
-                </div>
+                </div><!-- Commented due to wrong requirement
                 <select class="form-control" (change)="onSortTypeChange($event.target.value)"
                   [(ngModel)]="sortTypeValue">
                   <option *ngFor="let item of sortingType" [value]="item">{{sortType[item]}}</option>
-                </select>
+                </select>-->
               </div>
             </div>
           </div>
@@ -94,14 +93,14 @@
     </span>
   </div>
 </div> -->
-  <div class="col-md-12 m-t-20" #stickyMenu [class.sticky]="sticky">
+  <div class="col-md-12 m-t-20 icons_container" #stickyMenu [class.sticky]="sticky">
     <div class="row">
       <div class="drag-div col-md-12 col-sm-12 align" cdkDropList (cdkDropListDropped)="dragged($event)" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
       unselectable="on">
         <span>
-          <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true" (click)="toBeginning()"
+          <i class="fa fa-angle-double-left arrow-icon float-icon-left" aria-hidden="true" (click)="toBeginning()"
             [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-          <i style="width: 50px;" class="fa fa-caret-left arrow-icon" aria-hidden="true" (click)="previous()"
+          <i style="width: 50px;" class="fa fa-caret-left arrow-icon float-icon-left" aria-hidden="true" (click)="previous()"
             [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
         </span>
         <ng-container
@@ -113,11 +112,11 @@
               {{ unifiedToNative(code.icon.value) }}</span></i>
         </ng-container>
         <span>
-          <i style="width: 50px;" class="fa fa-caret-right arrow-icon" aria-hidden="true" (click)="next()"
+          <i class="fa fa-angle-double-right arrow-icon float-icon-right" aria-hidden="true" (click)="toEnd()"
+          [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
+          <i style="width: 50px;" class="fa fa-caret-right arrow-icon float-icon-right" aria-hidden="true" (click)="next()"
             [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-          <i class="fa fa-angle-double-right arrow-icon" aria-hidden="true" (click)="toEnd()"
-            [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-        </span>
+         </span>
       </div>
     </div>
   </div>

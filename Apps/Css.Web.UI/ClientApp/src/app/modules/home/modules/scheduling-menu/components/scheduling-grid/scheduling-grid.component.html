@@ -196,7 +196,7 @@
                   <td colspan="12">
                     <div class="jsgrid-grid-body">
                       <div class="row">
-                        <div class="col-md-4 col-sm-4 row">
+                        <div class="col-md-5 col-sm-5 row">
                           <p class="float-left">
                             {{ 'Time Interval' | translate }}:
                           </p>
@@ -207,7 +207,7 @@
                             </ng-container>
                           </select>
                         </div>
-                        <div class="col-md-4 col-sm-4">
+                        <!--<div class="col-md-4 col-sm-4"> //removed requested by Project Owner. Reason: redundant details
                           <p class="text-center">
                             {{ 'Agent' | translate }}:
                             {{ selectedGrid.lastName + ' ' + selectedGrid.firstName }}
@@ -218,7 +218,7 @@
                             {{ 'Date' | translate }}:
                             {{ selectedGrid.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="selectedGrid.dateTo">-</span>
                             {{selectedGrid.dateTo | date: 'yyyy-MM-dd'}}</p>
-                        </div>
+                        </div>-->
                       </div>
                       <div class="row">
                         <div class="col-sm-12" cdkDropList (cdkDropListDropped)="dragged($event)">
@@ -227,9 +227,9 @@
                               style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
                               unselectable="on">
                               <span>
-                                <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true" (click)="toBeginning()"
+                                <i class="fa fa-angle-double-left arrow-icon float-icon-left" aria-hidden="true" (click)="toBeginning()"
                                   [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-                                <i style="width: 50px;" class="fa fa-caret-left arrow-icon" aria-hidden="true"
+                                <i style="width: 50px;" class="fa fa-caret-left arrow-icon float-icon-left" aria-hidden="true"
                                   (click)="previous()"
                                   [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
                               </span>
@@ -244,12 +244,13 @@
                                     {{ unifiedToNative(code.icon.value) }}</span></i>
                               </ng-container>
                               <span>
-                                <i style="width: 50px;" class="fa fa-caret-right arrow-icon" aria-hidden="true"
+                                <i class="fa fa-angle-double-right arrow-icon float-icon-right" aria-hidden="true" (click)="toEnd()"
+                                [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
+                           
+                                <i style="width: 50px;" class="fa fa-caret-right arrow-icon float-icon-right" aria-hidden="true"
                                   (click)="next()"
                                   [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-                                <i class="fa fa-angle-double-right arrow-icon" aria-hidden="true" (click)="toEnd()"
-                                  [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-                              </span>
+                                </span>
                             </div>
                           </div>
                           <br>

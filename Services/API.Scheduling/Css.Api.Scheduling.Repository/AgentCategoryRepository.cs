@@ -100,6 +100,19 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
+        /// Finds the agent categorys.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<AgentCategory>> GetAgentCategoryList()
+        {
+            var query = Builders<AgentCategory>.Filter.Eq(i => i.IsDeleted, false);
+
+
+            var result = FilterBy(query);
+            return await Task.FromResult(result.ToList());
+        }
+
+        /// <summary>
         /// Gets the agentCategorys count.
         /// </summary>
         /// <returns></returns>

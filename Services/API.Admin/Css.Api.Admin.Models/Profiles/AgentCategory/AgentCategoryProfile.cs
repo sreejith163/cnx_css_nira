@@ -26,6 +26,8 @@ namespace Css.Api.Admin.Models.Profiles.AgentCategory
             CreateMap<Domain.AgentCategory, AgentCategoryDTO>()
                 .ForMember(x => x.DataTypeLabel, opt => opt.MapFrom(o => o.DataType != null ? o.DataType.Value : ""))
                 .ReverseMap();
+
+          
         }
     }
 }

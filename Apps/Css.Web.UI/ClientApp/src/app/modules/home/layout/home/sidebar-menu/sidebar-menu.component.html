@@ -123,6 +123,13 @@
                             <span>{{ 'Move Agents' | translate }}</span>
                             </a>
                         </li>
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/agent-category-value" routerLinkActive="active"
+                                #schMenu1="routerLinkActive">
+                                <i class="fa fa-circle-o nav-icon"></i>
+                            <span>Agent Category Value</span>
+                            </a>
+                        </li>
                         <li [hidden]="permissionService.isMenuHidden([1,2,3,4],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-grid" routerLinkActive="active"
                                 #schMenu2="routerLinkActive">

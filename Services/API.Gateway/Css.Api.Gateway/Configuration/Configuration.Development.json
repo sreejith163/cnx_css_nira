@@ -506,6 +506,31 @@
       "UpstreamPathTemplate": "/api/agentadmins/agentCategoryValues",
       "UpstreamHttpMethod": [ "Put" ]
     },
+    //********* Agent Category Value Routes ***************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentCategoryValues",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentCategoryValues",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentCategoryValues/import",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cnx-css-api-scheduling",
+          "Port": 4205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentCategoryValues/import",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
     //********* Agent Schedule Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules",

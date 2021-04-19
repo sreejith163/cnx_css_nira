@@ -20,9 +20,11 @@ import { ActivityLogsComponent } from './components/agent-admin/activity-logs/ac
 import { DateRangePopUpComponent } from './components/shared/date-range-pop-up/date-range-pop-up.component';
 import { MoveAgentsListComponent } from './components/move-agents/move-agents-list/move-agents-list.component';
 import { MoveAgentsSchedulingGroupTypeaheadComponent } from './components/move-agents/move-agents-scheduling-group-typeahead/move-agents-scheduling-group-typeahead.component';
+import { AgentCategoryValueComponent } from './components/agent-category-value/agent-category-value.component';
 import { EntityHierarchyComponent } from './components/entity-hierarchy/entity-hierarchy.component';
 
 import { AgentAdminService } from './services/agent-admin.service';
+import { AgentCategoryService } from '../system-admin/services/agent-category.service';
 import { AgentSchedulesService } from './services/agent-schedules.service';
 import { AgentScheduleManagersService } from './services/agent-schedule-managers.service';
 import { EntityHierarchyService } from './services/entity-hierarchy.service';
@@ -42,7 +44,7 @@ import { OnlynumberDirective } from 'src/app/shared/directives/integer-only.dire
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { AngularMultiSelectModule } from 'angular-4-multiselect-dropdown-scroll';
 import { CopyScheduleDateRangeComponent } from './components/shared/copy-schedule-date-range/copy-schedule-date-range.component';
-import { AgentCategoryValueComponent } from './components/agent-category-value/agent-category-value.component';
+import { AgentCategoryValueService } from './services/agent-category-value.service';
 
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule, BsDropdownModule.forRoot(),AngularMultiSelectModule];
@@ -68,16 +70,16 @@ const components =
     ActivityLogsComponent,
     MoveAgentsListComponent,
     MoveAgentsSchedulingGroupTypeaheadComponent,
+    AgentCategoryValueComponent,
     ContenteditableValueAccessor,
     BypassHtmlPipe,
     GetIconForGridPipe,
     GetIconSchedulingGridPipe,
     GetIconForScheduleManagerActivityLogsPipe,
-    ActivityLogsScheduleManagerComponent,
-    AgentCategoryValueComponent
+    ActivityLogsScheduleManagerComponent
   ];
-const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService, AgentScheduleManagersService,
-                   MoveAgentsService];
+const providers = [AgentAdminService, AgentCategoryService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService, AgentScheduleManagersService,
+                   MoveAgentsService, AgentCategoryValueService];
 
 @NgModule({
   declarations: components,

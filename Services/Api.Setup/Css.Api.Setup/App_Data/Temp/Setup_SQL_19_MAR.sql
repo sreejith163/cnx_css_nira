@@ -2,6 +2,8 @@
 ALTER TABLE timezone MODIFY COLUMN display_name VARCHAR(200);
 ALTER TABLE timezone DROP COLUMN offset;
 
+DELETE FROM timezone WHERE id < 107;
+
 
 INSERT INTO timezone(id, name, display_name, abbreviation) VALUES (107, '+00:00(Etc/GMT)', '+00:00(Etc/GMT)', 'Etc/GMT' ) ON DUPLICATE KEY UPDATE id = 107, name = '+00:00(Etc/GMT)', display_name = '+00:00(Etc/GMT)', abbreviation = 'Etc/GMT';
 INSERT INTO timezone(id, name, display_name, abbreviation) VALUES (108, '+00:00(Etc/GMT+O)', '+00:00(Etc/GMT+O)', 'Etc/GMT+0' ) ON DUPLICATE KEY UPDATE id = 108, name = '+00:00(Etc/GMT+O)', display_name = '+00:00(Etc/GMT+O)', abbreviation = 'Etc/GMT+0';

@@ -21,6 +21,9 @@ namespace Css.Api.Admin.Business.Interfaces
         /// <returns></returns>
         Task<CSSResponse> GetAgentCategory(AgentCategoryIdDetails agentCategoryIdDetails);
 
+
+  
+
         /// <summary>
         /// Creates the agent category.
         /// </summary>
@@ -50,5 +53,8 @@ namespace Css.Api.Admin.Business.Interfaces
         /// <param name="agentCategoryIdDetails">The agent category identifier details.</param>
         /// <returns></returns>
         Task<CSSResponse> DeleteAgentCategory(AgentCategoryIdDetails agentCategoryIdDetails);
+
+
+      
     }
 }

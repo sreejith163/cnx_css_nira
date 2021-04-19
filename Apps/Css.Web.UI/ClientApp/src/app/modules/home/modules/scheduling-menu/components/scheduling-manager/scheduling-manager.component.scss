@@ -395,6 +395,13 @@ width: 100%;
   padding-top: 0px;
   padding-bottom: 0;
 }
+
+.icons_container{
+  white-space: nowrap;
+  font-size: 12px !important;
+  overflow: auto;
+}
+
 .schedule_table_body td{
   // height: 50px;
   // width: 61px;

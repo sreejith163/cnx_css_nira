@@ -84,5 +84,7 @@ namespace Css.Api.Admin.Controllers
             var result = await _agentCategoryService.DeleteAgentCategory(new AgentCategoryIdDetails { AgentCategoryId = agentCategoryId });
             return StatusCode((int)result.Code, result.Value);
         }
+
+      
     }
 }

@@ -50,11 +50,6 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
         public DateTime? HireDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent data.
-        /// </summary>
-        public List<AgentData> AgentData { get; set; }
-
-        /// <summary>
         /// Gets or sets the agent category values.
         /// </summary>
         public List<AgentCategoryValue> AgentCategoryValues { get; set; }

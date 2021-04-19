@@ -7,6 +7,7 @@ import { EntityHierarchyComponent } from './components/entity-hierarchy/entity-h
 import { ViewOuScreenComponent } from './components/view-ou-screen/view-ou-screen.component';
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid.component';
 import { SchedulingManagerComponent } from './components/scheduling-manager/scheduling-manager.component';
+import { AgentCategoryValueComponent } from './components/agent-category-value/agent-category-value.component';
 
 
 export const SchedulingMenuRoutes: Routes = [
@@ -27,6 +28,14 @@ export const SchedulingMenuRoutes: Routes = [
         component: MoveAgentsComponent,
         canActivate: [PermissionsGuard],
         data: { permissions: [1, 2, 3] },
+        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
+    },
+    
+    {
+        path: 'agent-category-value',
+        component: AgentCategoryValueComponent,
+        canActivate: [PermissionsGuard],
+        data: { Permissions: [1, 2, 3]},
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     },
     {

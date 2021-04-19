@@ -4,7 +4,6 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Controllers
@@ -56,10 +55,7 @@ namespace Css.Api.Scheduling.Controllers
         {
             var result = await _agentScheduleManagerService.GetAgentMySchedule(new EmployeeIdDetails { Id = agentEmployeeId }, myScheduleQueryParameter);
             return StatusCode((int)result.Code, result.Value);
-        }
-
-
- 
+        } 
 
         /// <summary>
         /// Updates the agent schedule manger chart.

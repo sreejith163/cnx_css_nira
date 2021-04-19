@@ -43,7 +43,6 @@ namespace Css.Api.Scheduling.Controllers
             return StatusCode((int)result.Code, result.Value);
         }
 
-
         /// <summary>
         /// Gets the agent schedule.
         /// </summary>
@@ -111,7 +110,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <summary>
         /// Updates the agent schedule chart.
         /// </summary>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <param name="agentScheduleImport">The agent schedule import.</param>
         /// <returns></returns>
         [HttpPut("import")]
         public async Task<IActionResult> ImportAgentScheduleChart([FromBody] AgentScheduleImport agentScheduleImport)
@@ -143,16 +142,16 @@ namespace Css.Api.Scheduling.Controllers
         public async Task<IActionResult> CopyAgentScheduleChart(string agentScheduleId, [FromBody] MultipleCopyAgentScheduleRequest agentScheduleDetailsList)
         {
             var result = await _agentScheduleService.MultipleCopyAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetailsList);
-            return StatusCode((int) result.Code, result.Value);
+            return StatusCode((int)result.Code, result.Value);
         }
 
-    /// <summary>
-    /// Updates the agent schedule range.
-    /// </summary>
-    /// <param name="agentScheduleId">The agent schedule identifier.</param>
-    /// <param name="dateRangeDetails">The date range details.</param>
-    /// <returns></returns>
-    [HttpPut("{agentScheduleId}/range")]
+        /// <summary>
+        /// Updates the agent schedule range.
+        /// </summary>
+        /// <param name="agentScheduleId">The agent schedule identifier.</param>
+        /// <param name="dateRangeDetails">The date range details.</param>
+        /// <returns></returns>
+        [HttpPut("{agentScheduleId}/range")]
         public async Task<IActionResult> UpdateAgentScheduleRange(string agentScheduleId, [FromBody] UpdateAgentScheduleDateRange dateRangeDetails)
         {
             var result = await _agentScheduleService.UpdateAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
@@ -171,7 +170,6 @@ namespace Css.Api.Scheduling.Controllers
             var result = await _agentScheduleService.DeleteAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
             return StatusCode((int)result.Code, result.Value);
         }
-
 
         /// <summary>
         /// Gets the agent schedule.
@@ -205,7 +203,6 @@ namespace Css.Api.Scheduling.Controllers
             var result = await _agentScheduleService.GetDateRange(asgList);
             return StatusCode((int)result.Code, result.Value);
         }
-
 
         /// <summary>Release the given asg and date range</summary>
         /// <param name="batchRelease">the batch release parameter</param>
