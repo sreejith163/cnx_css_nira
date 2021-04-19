@@ -112,7 +112,7 @@
                                 <td>
                                     {{ getScheduledOpenCount(el.time) }}
                                 </td>
-                                <td [ngClass]="{'negative-uo' : (el.scheduledOpen - el.forecastedReq) < 0}">
+                                <td [ngClass]="{'negative-uo' : (getScheduledOpenCount1(el.time) - el.forecastedReq) < 0}">
                                     {{ getScheduledOpenCount1(el.time) - el.forecastedReq  | number : '1.2-2'}}
                                 </td>
 

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessagePopUpComponent } from 'src/app/shared/popups/message-pop-up/message-pop-up.component';
 
-import { SubscriptionLike as ISubscription } from 'rxjs';
+import { Subject, SubscriptionLike as ISubscription } from 'rxjs';
 import { SchedulingCode } from '../../../system-admin/models/scheduling-code.model';
 import { SchedulingCodeService } from 'src/app/shared/services/scheduling-code.service';
 import { PermissionsService } from '../../../system-admin/services/permissions.service';
@@ -49,8 +49,14 @@ import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { DateRangeQueryParms } from '../../models/date-range-query-params.model';
 import * as moment from 'moment';
 import { AgentSchedulingGridExport } from '../../models/agent-scheduling-grid-export.model';
-
-
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { AgentSchedulingGroupService } from 'src/app/shared/services/agent-scheduling-group.service';
+import { AgentSchedulingGroupBase } from '../../../setup-menu/models/agent-scheduling-group-base.model';
+import { AgentSchedulingGroupQueryParams } from '../../../setup-menu/models/agent-scheduling-group-query-params.model';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { BatchReleaseModel } from '../../models/batch-release.model';
+import { GenericPopUpComponent } from 'src/app/shared/popups/generic-pop-up/generic-pop-up.component';
+import { ToastrService } from 'ngx-toastr';
 declare function setRowCellIndex(cell: string);
 declare function highlightSelectedCells(table: string, cell: string);
 declare function highlightCell(cell: string, className: string);
@@ -137,6 +143,43 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   timeStampUpdate: number;
 
+  dropdownList: Array<any>;
+  selectedItems = [];
+  dropdownSettings = {};
+  dropdown_setting: IDropdownSettings;
+
+
+  pageNumber = 1;
+  agentSchedulingGroupItemsBufferSize = 100;
+  numberOfItemsFromEndBeforeFetchingMore = 10;
+
+  totalItems = 0;
+  totalPages: number;
+  searchKeyWord = '';
+  dropdownSearchKeyWord = '';
+  loading = false;
+
+  itemList = [];
+
+  date_range_model = [];
+  date_ranges = [];
+  date_range_setting = {};
+  settings = {};
+  agentSchedId = [];
+  indices: any;
+  readonly bufferSize: number = 10;
+
+  agentSchedulingGroupItemsBuffer: AgentSchedulingGroupBase[] = [];
+  typeAheadInput$ = new Subject<string>();
+
+  typeAheadValueSubscription: ISubscription;
+  getAgentSchedulingGroupSubscription: ISubscription;
+
+
+  asg: any[] = [];
+  selectedAsg = [];
+  dateRange = [];
+  selectedRange = []
   constructor(
     private calendar: NgbCalendar,
     private modalService: NgbModal,
@@ -151,6 +194,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     private agentSchedulesService: AgentSchedulesService,
     public translate: TranslateService,
     private datepipe: DatePipe,
+    private agentSchedulingGroupService: AgentSchedulingGroupService,
+    private toast: ToastrService
+
   ) {
     this.LoggedUser = this.authService.getLoggedUserInfo();
   }
@@ -162,8 +208,11 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.loadSchedulingCodes();
     this.preLoadTranslations();
     this.loadTranslations();
+    this.subscribeToAgentSchedulingGroups();
     this.subscribeToTranslations();
+    this.batchReleaseLoad();
   }
+
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
@@ -408,6 +457,30 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     return data.split(':')[1] === '00 am' || data.split(':')[1] === '00 pm';
   }
 
+  onRightClick(event) {
+    if (this.selectedGrid?.status === SchedulingStatus.Released) {
+      return;
+    }
+    this.isMouseDown = true;
+    if (this.isMouseDown && !this.icon) {
+      this.isDelete = true;
+      setRowCellIndex(event.currentTarget.id);
+      // call on mouseOver event to simulate the mouseOver event on single icon deleting       
+      this.onMouseOver(event);
+      // call on mouseUp event to simulate the mouseUp event on single icon deleting        
+      this.onMouseUp(event);
+    }
+
+    event.preventDefault();
+
+    return false;
+  }
+
+  
+  disableRightClick(e){
+    e.preventDefault();
+  }
+
   onMouseUp(event) {
     if (this.selectedGrid?.status === SchedulingStatus.Released) {
       return;
@@ -425,25 +498,32 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     if (this.selectedGrid?.status === SchedulingStatus.Released) {
       return;
     }
-    let days;
-    this.isMouseDown = true;
-    const time = event.currentTarget.attributes.time.nodeValue;
-    const meridiem = event.currentTarget.attributes.meridiem.nodeValue;
-    const week = event.currentTarget.attributes.week.nodeValue;
-    days = this.selectedGrid?.agentScheduleCharts.find(x => x?.day === +week);
-    const fromTime = time + ' ' + meridiem;
-    const object = days?.charts.find(x => this.convertToDateFormat(x?.startTime) <= this.convertToDateFormat(fromTime) &&
-      this.convertToDateFormat(x?.endTime) > this.convertToDateFormat(fromTime));
-    if (object) {
-      const code = this.schedulingCodes.find(x => x.id === object?.schedulingCodeId);
-      this.icon = code?.icon?.value ?? undefined;
-      if (this.isMouseDown && this.icon) {
+
+    if (event.button === 0) {
+      let days;
+      this.isMouseDown = true;
+      const time = event.currentTarget.attributes.time.nodeValue;
+      const meridiem = event.currentTarget.attributes.meridiem.nodeValue;
+      const week = event.currentTarget.attributes.week.nodeValue;
+      days = this.selectedGrid?.agentScheduleCharts.find(x => x?.day === +week);
+      const fromTime = time + ' ' + meridiem;
+      const object = days?.charts.find(x => this.convertToDateFormat(x?.startTime) <= this.convertToDateFormat(fromTime) &&
+        this.convertToDateFormat(x?.endTime) > this.convertToDateFormat(fromTime));
+      if (object) {
+        const code = this.schedulingCodes.find(x => x.id === object?.schedulingCodeId);
+        this.icon = code?.icon?.value ?? undefined;
+        if (this.isMouseDown && this.icon) {
+          setRowCellIndex(event.currentTarget.id);
+        }
+      }else{
+        return;
+      }
+    }else if(event.button === 2){
+      this.isMouseDown = true;
+      if (this.isMouseDown && !this.icon) {
+        this.isDelete = true;
         setRowCellIndex(event.currentTarget.id);
       }
-    }
-    if (this.isMouseDown && !this.icon) {
-      this.isDelete = true;
-      setRowCellIndex(event.currentTarget.id);
     }
   }
 
@@ -739,6 +819,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
 
   }
+  
   exportToExcelByEmployee(employeeId : string) {
     this.agentSchedulesService
       .exportAgentSchedulingGridByEmployee(employeeId)
@@ -1416,4 +1497,267 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   private getFormattedDateString(date: Date) {
     return this.datepipe.transform(date.toString().replace("Z", ""), 'yyyy-MM-dd');
   }
+  // batch release
+  openBatchRelease(batchRelease) {
+
+    this.modalService.open(batchRelease, { centered: true, size: 'lg' });
+    this.clearBatchReleaseData();
+
+  }
+
+
+
+
+  private getQueryParamsForAsg(searchkeyword?: string) {
+    const queryParams = new AgentSchedulingGroupQueryParams();
+    queryParams.clientId = undefined;
+    queryParams.clientLobGroupId = undefined;
+    queryParams.skillGroupId = undefined;
+    queryParams.skillTagId = undefined;
+    queryParams.pageSize = this.agentSchedulingGroupItemsBufferSize;
+    queryParams.pageNumber = this.pageNumber;
+    queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
+    queryParams.skipPageSize = false;
+    queryParams.orderBy = 'name';
+    queryParams.sortBy = 'asc';
+    queryParams.fields = 'id, name';
+
+    return queryParams;
+  }
+  private getAgentSchedulingGroups(searchKeyword?: string) {
+    const queryParams = this.getQueryParamsForAsg(searchKeyword);
+    if (this.dropdownSearchKeyWord !== queryParams.searchKeyword) {
+      this.pageNumber = 1;
+      queryParams.pageNumber = 1;
+    }
+    this.dropdownSearchKeyWord = queryParams.searchKeyword;
+    return this.agentSchedulingGroupService.getAgentSchedulingGroups(queryParams);
+  }
+  private subscribeToAgentSchedulingGroups(needBufferAdd?: boolean) {
+    this.loading = true;
+    this.getAgentSchedulingGroupSubscription = this.getAgentSchedulingGroups(this.dropdownSearchKeyWord).subscribe(
+      response => {
+
+        if (response?.body) {
+          this.setPaginationValues(response);
+          this.agentSchedulingGroupItemsBuffer = needBufferAdd ? this.agentSchedulingGroupItemsBuffer.concat(response.body) : response.body;
+          this.asg = this.agentSchedulingGroupItemsBuffer;
+        }
+        this.loading = false;
+      }, err => this.loading = false);
+
+    this.subscriptions.push(this.getAgentSchedulingGroupSubscription);
+  }
+  private setPaginationValues(response: any) {
+    const paging = JSON.parse(response.headers.get('x-pagination'));
+    if (paging) {
+      this.totalItems = paging.totalCount;
+      this.totalPages = paging.totalPages;
+    }
+  }
+  onAgentSchedulingGroupScrollToEnd() {
+    this.fetchMoreAgentSchedulingGroups();
+  }
+
+  onAgentSchedulingGroupScroll({ end }) {
+    if (this.loading || this.agentSchedulingGroupItemsBufferSize <= this.agentSchedulingGroupItemsBuffer.length) {
+      return;
+    }
+
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.agentSchedulingGroupItemsBuffer.length) {
+      this.fetchMoreAgentSchedulingGroups();
+    }
+  }
+  private subscribeToSearching() {
+    this.typeAheadValueSubscription = this.typeAheadInput$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(term => this.getAgentSchedulingGroups(term))
+    ).subscribe(response => {
+      if (response.body) {
+        this.setPaginationValues(response);
+        this.asg = response.body;
+      }
+    }, (error) => {
+      console.log(error);
+    });
+
+    this.subscriptions.push(this.typeAheadValueSubscription);
+  }
+  fetchMoreAgentSchedulingGroups() {
+    if (this.pageNumber < this.totalPages) {
+      this.pageNumber += 1;
+      this.subscribeToAgentSchedulingGroups(true);
+    }
+  }
+  // fetchMore(needBufferAdd?: boolean) {
+
+  //       this.loading = true;
+  //       this.getAgentSchedulingGroupSubscription = this.getAgentSchedulingGroups(this.dropdownSearchKeyWord).subscribe(
+  //         response => {
+
+  //           if (response?.body) {
+  //             this.setPaginationValues(response);
+  //             this.agentSchedulingGroupItemsBuffer = needBufferAdd ? this.agentSchedulingGroupItemsBuffer.concat(response.body) : response.body;
+  //             this.itemList = this.agentSchedulingGroupItemsBuffer;
+  //           }
+
+  //         }, err => this.loading = false);
+  //         this.agentSchedulingGroupService.getAgentSchedulingGroups
+  // }
+  fetchMore(event: any) {
+    this.subscribeToAgentSchedulingGroups();
+  }
+  batchReleaseLoad() {
+
+    // console.log(this.getAgentSchedulingGroupSubscription);
+    this.subscribeToSearching();
+
+    this.itemList = [];
+
+
+    this.settings = {
+      text: "Select Items",
+
+      classes: "agent_multi_select",
+      enableSearchFilter: true,
+      lazyLoading: true,
+      labelKey: 'id',
+      limitSelection: 4,
+      maxHeight: 200,
+
+    };
+    this.date_range_setting = {
+      text: "Select date range",
+      labelKey: 'id',
+      limitSelection: 4,
+      maxHeight: 200,
+      singleSelection: false
+    }
+
+  }
+  asgClose() {
+    this.loadDateRange();
+  }
+  onDateSelect(item: any) {
+
+
+
+
+
+    console.log(item)
+  }
+
+  onItemSelect(item: any) {
+
+
+
+    this.agentSchedId = this.selectedItems.map(a => a.id);
+
+
+  }
+  OnItemDeSelect(item: any) {
+    this.agentSchedId = this.selectedItems.map(a =>
+      a.id,
+    );
+
+
+  }
+  OnDateDeSelect(item: any) {
+    console.log(item)
+  }
+  onSelectAll(items: any) {
+    console.log(items);
+  }
+
+  private loadDateRange() {
+    this.agentSchedulingGroupService.getDateRange(this.selectedAsg).subscribe(data => {
+      data.map(x => {
+        x.fullrange = x.dateFrom + ' - ' + x.dateTo;
+      })
+      this.dateRange = data;
+      // console.log(data)
+
+    }, (error) => {
+      console.log(error)
+      this.date_ranges = [];
+    }
+    )
+  }
+  dateRangeOpen() {
+
+    this.loadDateRange();
+
+  }
+  onClose() {
+    this.loadDateRange();
+  }
+
+  clearBatchReleaseData() {
+    this.selectedAsg = [];
+    this.selectedRange = [];
+  }
+
+  private release() {
+    let pushArr = Array();
+    let releaseObject: any;
+    this.selectedRange.forEach(element => {
+      releaseObject = {
+        agentSchedulingGroupId: element.agentSchedulingGroupId,
+        dateFrom: this.changeToUTCDate(this.getFormattedDate(element.dateFrom)),
+        dateTo: this.changeToUTCDate(this.getFormattedDate(element.dateTo)),
+        activityOrigin: ActivityOrigin.CSS,
+
+      }
+      pushArr.push(releaseObject)
+    });
+
+    let releaseObjArrays: any[];
+    let insertObject: BatchReleaseModel;
+    releaseObjArrays = pushArr;
+    insertObject = {
+      batchReleaseDetails:
+        releaseObjArrays,
+      modifiedUser: +this.authService.getLoggedUserInfo()?.employeeId,
+      modifiedBy: this.authService.getLoggedUserInfo()?.displayName
+    };
+
+    this.agentSchedulesService.batchRelease(insertObject).subscribe(res => {
+      this.modalService.dismissAll();
+      releaseObject = [];
+      insertObject = undefined;
+      pushArr = [];
+      this.selectedAsg = [];
+      this.selectedRange = [];
+      this.toast.success(`${res} Date range release`, "Operation successful");
+      this.loadAgentSchedules();
+    }, (error) =>{
+      console.log(error)
+      this.toast.error(error);
+      this.modalService.dismissAll();
+      this.loadAgentSchedules();
+      releaseObject = [];
+      insertObject = undefined;
+      pushArr = [];
+      this.selectedAsg = [];
+      this.selectedRange = [];
+    });
+
+  }
+  confirmRelease() {
+    // this.getModalPopup(GenericPopUpComponent, 'md');
+    // this.setConfirmDialogMessages(`Are you sure you? You won't be able to revert this!`, ``, `Yes`, `No`);
+    this.getModalPopup(GenericPopUpComponent, 'sm');
+
+
+
+    this.setComponentMessages('Batch Release', "Are you sure ?");
+    this.modalRef.componentInstance.warning = true;
+    this.modalRef.result.then((result) => {
+      if (result && result === true) {
+        this.release();
+      }
+    });
+  }
+
 }

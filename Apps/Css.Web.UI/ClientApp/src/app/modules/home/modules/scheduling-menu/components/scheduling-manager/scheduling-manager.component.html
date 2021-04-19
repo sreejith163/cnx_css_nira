@@ -165,7 +165,7 @@
     <div class="sched-manager-scrollable p-0"
       [ngClass]="[(managerGridDisplay$ | async)?.length > 0 ? 'col-sm-12 col-md-12' : 'col-sm-12 col-md-12']">
       <table (contextmenu)="disableRightClick($event)" class="jsgrid-table table" id="schedulingManagerTable">
-        <ngx-spinner [name]="scheduleSpinner"></ngx-spinner>
+        <ngx-spinner [name]="spinner"></ngx-spinner>
         <thead>
           <tr style="background-color: transparent;">
             <th class="employee_id_header" style="background-color: #dfdfeb;"></th>
@@ -176,12 +176,12 @@
                 'MMM d'}}</th>
             </ng-container>
           </tr>
-          <tr class="jsgrid-header-row second_row">
+          <tr class="jsgrid-header-row second_row">   
             <th style="vertical-align: middle;" class="sortable-field employee_id_header"
-              (click)="sort('ssn', sortBy)">
+              (click)="sort('employeeId', sortBy)">
               {{ 'Employee_id' | translate }}
-              <i *ngIf="orderBy !== 'ssn'" class="fa fa-sort"></i>
-              <i id="sortIcon" *ngIf="orderBy === 'ssn'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+              <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
+              <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                 [class.fa-sort-up]="sortBy === 'asc'">
               </i>
             </th>
@@ -246,11 +246,11 @@
                 class="jsgrid-cell" attr.date="{{openTime?.date}}" attr.startDateTime="{{ openTime?.startDateTime }}"
                 attr.employeeId="{{el.employeeId}}" attr.endDateTime="{{ openTime?.endDateTime }}"
                 (mouseup)="onMouseUp($event)" (contextmenu)="onRightClick($event)" (mouseover)="onMouseOver($event)"
-                (mousedown)="onMouseDown($event,j,i+1)">
+                (mousedown)="onMouseDown($event)">
                 <span
-                  ngbTooltip="{{ (el.employeeId | getIconForGrid: managerGridDisplay$: schedulingCodes: openTime.date: timeStampUpdate)?.description }}">
-                  <i class="font-style-normal">{{ (el.employeeId | getIconForGrid: managerGridDisplay$: schedulingCodes:
-                    openTime.date: timeStampUpdate)?.icon }}<br></i>
+                  ngbTooltip="{{ (timeStampUpdate | getIconForGrid: schedulingCodes: openTime.date: el)?.description }}">
+                  <i class="font-style-normal">{{ ( timeStampUpdate | getIconForGrid: schedulingCodes:
+                    openTime.date: el)?.icon }}<br></i>
                 </span>
               </td>
               <!-- </tr> -->
@@ -402,7 +402,7 @@
                 <td>Accommodated</td>
                 <td>{{agentInfo?.supervisorName}}</td>
                 <td>{{agentInfo?.supervisorId}}</td>
-                <td>{{getAgentHireDate()}}</td>
+                <td>{{agentInfo.hireDate | date: 'yyyy-MM-dd'}}</td>
                 <td>2020-12-14</td>
                 <td></td>
                 <td></td>

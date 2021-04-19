@@ -28,7 +28,7 @@ import { AgentIconFilter } from '../../models/agent-icon-filter.model';
 import { ActivityOrigin } from '../../enums/activity-origin.enum';
 import { ActivityType } from 'src/app/shared/enums/activity-type.enum';
 
-declare function setManagerRowCellIndex(cell, row);
+declare function setManagerRowCellIndex(cell: string);
 declare function highlightManagerSelectedCells(table: string, cell: string);
 declare function highlightCell(cell: string, className: string);
 import * as $ from 'jquery';
@@ -97,7 +97,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   selectedIconId: string;
   startDateTimeFilter: string;
   endDateTimeFilter: string;
-  orderBy = 'createdDate';
+  orderBy = 'chartsCount';
   sortBy = 'desc';
   spinner = 'scheduling-manager';
   selectedCellClassName = 'cell-selected';
@@ -141,6 +141,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   // managerGridDisplay: ScheduleManagerGridChartDisplay[] = [];
   managerGridDisplay$: Observable<Array<ScheduleManagerGridChartDisplay>>;
   managerGridDisplayObj: ScheduleManagerGridChartDisplay[] = [];
+
+  managerGridDisplay: ScheduleManagerGridChartDisplay[] = [];
 
   timeStampUpdate: number;
 
@@ -302,17 +304,16 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
 
 
   exportToExcel() {
-
-    let columnNames = ["EmployeeId", "Date", "Activity Code", "Start DateTime", "End DateTime"];
-    let header = columnNames.join(',');
+    const columnNames = ["EmployeeId", "Date", "Activity Code", "Start DateTime", "End DateTime"];
+    const header = columnNames.join(',');
 
     let csv = header;
     csv += '\r\n';
 
-    let exportData = this.managerCharts;
-    let date = this.startDate;
-    let dateNoSeparators = date.replace(/-/g, '');
-    let fileName = `${this.exportFileName + date}.csv`;
+    const exportData = JSON.parse(JSON.stringify(this.managerCharts));
+    const date = this.startDate;
+    const dateNoSeparators = date.replace(/-/g, '');
+    const fileName = `${this.exportFileName + date}.csv`;
 
     exportData.map(c => {
       c.charts.map(x => {
@@ -324,8 +325,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
           csv += [c.employeeId,
             dateNoSeparators,
           code.description,
-          x.startDateTime,
-          x.endDateTime].join(',');
+          this.getDateTimeInMeridiemTime(x.startDateTime),
+          this.getDateTimeInMeridiemTime(x.endDateTime)].join(',');
           csv += '\r\n';
         }
       });
@@ -465,14 +466,14 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
       this.saveGridItems();
       this.removeHighlightedCells();
     } else {
-      $(event.currentTarget).addClass(this.selectedCellClassName);
-      // highlightCell(event.currentTarget.id, this.selectedCellClassName);
+      // $(event.currentTarget).addClass(this.selectedCellClassName);
+      highlightCell(event.currentTarget.id, this.selectedCellClassName);
       this.saveGridItems();
       this.removeHighlightedCells();
     }
   }
 
-  onMouseDown(event: any, cell: number, row: number) {
+  onMouseDown(event: any) {
     if (event.button === 0) {
       let object;
       // this.removeHighlightedCells();
@@ -484,133 +485,61 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
       object = chart?.charts?.find(x => this.getTimeStamp(dateTime) >= this.getTimeStamp(x?.startDateTime) &&
         this.getTimeStamp(dateTime) < this.getTimeStamp(x?.endDateTime));
 
-      if (object) {
-        // console.log(object)
-        const code = this.schedulingCodes.find(x => x.id === object?.schedulingCodeId);
-        this.icon = code?.icon?.value ?? undefined;
-        if (this.isMouseDown && this.icon) {
-          // console.log(cell, row)
-          // setManagerRowCellIndex(cell, row);
-          $(event.currentTarget).addClass(this.selectedCellClassName);
+        if (object) {
+          // console.log(object)
+          const code = this.schedulingCodes.find(x => x.id === object?.schedulingCodeId);
+          this.icon = code?.icon?.value ?? undefined;
+          if (this.isMouseDown && this.icon) {
+            // console.log(cell, row)
+            setManagerRowCellIndex(event.currentTarget.id);
+            // $(event.currentTarget).addClass(this.selectedCellClassName);
+          }
+        }else{
+          return;
         }
-      }
-      // if (this.isMouseDown && !this.icon) {
-      //   this.isDelete = true;
-      //   // setManagerRowCellIndex(cell, row);
-      //   $(event.currentTarget).addClass(this.selectedCellClassName);
-      // } 
+
+    }else if(event.button === 2){
+      this.isMouseDown = true;
+      // this.removeHighlightedCells();
+      if (this.isMouseDown && !this.icon) {
+        this.isDelete = true;
+        setManagerRowCellIndex(event.currentTarget.id);
+      }          
     }
     return false;
   }
 
 
   onRightClick(event) {
-    const startDateTime = event.currentTarget.attributes.startDateTime.nodeValue;
-    const endDateTime = event.currentTarget.attributes.endDateTime.nodeValue;
-    const employeeId = event.currentTarget.attributes.employeeId.nodeValue;
-    const chart = this.managerGridDisplayObj.find(x => x.employeeId === employeeId);
-
-    // let insertIcon: ScheduleManagerChartDisplay;
-
-
-    // const dateTime = event.currentTarget.attributes.date.nodeValue;
-    // const employeeId = event.currentTarget.attributes.employeeId.nodeValue;
-    // const chart = this.managerGridDisplayObj.find(x => x.employeeId === +employeeId);
-    // itemChart = chart?.charts?.find(x => moment(dateTime).isSameOrAfter(new Date(x.startDateTime).toISOString()) && 
-    //   moment(dateTime).isBefore(new Date(x.endDateTime).toISOString()));
-
-    // if (itemChart.schedulingCodeId !== undefined) {
-    //   itemChart.schedulingCodeId = undefined;
-    //   itemChart.schedulingIcon = '';
-    //   // const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
-    //   // this.modalRef = this.modalService.open(GenericPopUpComponent, options);
-    //   // this.modalRef.componentInstance.headingMessage = '';
-    //   // this.modalRef.componentInstance.contentMessage = 'Are you sure you want to remove this item?';
-
-    //   // this.modalRef.componentInstance.warning = true;
-    //   // this.modalRef.result.then((result) => {
-    //   //   if (result && result === true) {
-    //       // itemChart.schedulingCodeId = undefined;
-    //       // itemChart.schedulingIcon = '';
-    //       // this.getModalPopup(MessagePopUpComponent, 'sm', "Deleted Successfully!");
-    //       // this.modalRef.result.then(() => {
-    //       //   this.loadAgentScheduleManger();
-    //       // });
-    //     // }
-    //   // });
-    // }
-
-
-    // charts?.find(x => {
-    //   if(moment(insertIcon.startDateTime).isSame(x.startDateTime) && 
-    //   moment(insertIcon.endDateTime).isSame(x.endDateTime)){
-    //     x.schedulingCodeId = insertIcon.schedulingCodeId;
-    //     x.schedulingIcon = this.unifiedToNative(insertIcon.schedulingIcon);
-    //   }
-    // });
-
-    chart.charts.find(x => {
-      if (this.getTimeStamp(startDateTime) == this.getTimeStamp(x?.startDateTime) &&
-        this.getTimeStamp(endDateTime) == this.getTimeStamp(x?.endDateTime)) {
-        x.schedulingCodeId = undefined;
-      }
-    });
-
-    const timeDataArray = chart.charts.filter(x => this.getTimeStamp(x.startDateTime) >=
-      this.getTimeStamp(startDateTime) &&
-      this.getTimeStamp(x.endDateTime) <= this.getTimeStamp(endDateTime));
-
-    if (timeDataArray.length > 0) {
-
-      timeDataArray.forEach(ele => {
-        ele.schedulingCodeId = undefined;
-      });
-
-      timeDataArray.filter(ele => {
-        ele.schedulingCodeId !== undefined;
-      });
-
-    }
-
-    // this.agentScheduleMangerService.scheduleMangerChartsGridSubject$.next(this.managerGridDisplayObj);
-
-    // const timeDataArray = weekData.charts.filter(x => this.convertToDateFormat(x.startTime) >=
-    //   this.convertToDateFormat(insertIcon.startTime) &&
-    //   this.convertToDateFormat(x.endTime) <= this.convertToDateFormat(insertIcon.endTime));
-    // if (timeDataArray.length > 0) {
-    //   // timeDataArray.forEach(ele => {
-    //   //   ele.schedulingCodeId = insertIcon.schedulingCodeId;
-    //   // });
-    // } else {
-    //   // const calendarTime = new ScheduleChart(insertIcon.startTime, insertIcon.endTime, insertIcon.schedulingCodeId);
-    //   // weekData.charts.push(calendarTime);
-    // }
-    this.managerCharts = Object.assign(this.managerCharts, this.managerGridDisplayObj);
-
-    this.timeStampUpdate = new Date().getTime();
+    
+    this.isMouseDown = true;
+    // this.removeHighlightedCells();
+    if (this.isMouseDown && !this.icon) {
+      this.isDelete = true;
+      setManagerRowCellIndex(event.currentTarget.id);
+      // call on mouseOver event to simulate the mouseOver event on single icon deleting       
+      this.onMouseOver(event);
+      // call on mouseUp event to simulate the mouseUp event on single icon deleting        
+      this.onMouseUp(event);
+    }          
 
     event.preventDefault();
 
     return false;
   }
 
+  
   disableRightClick(e){
     e.preventDefault();
   }
 
   onMouseOver(event) {
-    // this.removeHighlightedCells();
+    this.removeHighlightedCells();
     if (this.isMouseDown && this.icon) {
-      $(event.currentTarget).addClass(this.selectedCellClassName);
+      highlightManagerSelectedCells(this.tableClassName, event.currentTarget.id);
+    } else if (this.isMouseDown && this.isDelete) {
+      highlightManagerSelectedCells(this.tableClassName, event.currentTarget.id);
     }
-    // else if(this.isMouseDown && this.isDelete){
-    //   $(event.currentTarget).addClass(this.selectedCellClassName);
-    // }
-    // if (this.isMouseDown && this.icon) {
-    //   highlightManagerSelectedCells(this.tableClassName, event.currentTarget.id);
-    // } else if (this.isMouseDown && this.isDelete) {
-    //   highlightManagerSelectedCells(this.tableClassName, event.currentTarget.id);
-    // }
   }
 
   unifiedToNative(unified: string) {
@@ -631,8 +560,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
       if (this.endIcon > this.schedulingCodes.length) {
         this.startIcon = this.schedulingCodes.length - this.iconCount
         this.endIcon = this.schedulingCodes.length;
-      }
     }
+  }
   }
 
   toBeginning() {
@@ -706,22 +635,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     return '';
   }
 
-
-  getAgentHireDate() {
-    if (this.agentInfo?.agentData.length > 0) {
-      let value;
-      for (const item of this.agentInfo?.agentData) {
-        if (item?.group?.description.trim().toLowerCase() === 'hire date') {
-          value = item?.group?.value;
-          break;
-        }
-      }
-      return value;
-    }
-
-    return '';
-  }
-
   openActivityLogs(index: number) {
     this.getModalPopup(ActivityLogsScheduleManagerComponent, 'xl');
     this.modalRef.componentInstance.activityType = ActivityType.SchedulingManagerGrid;
@@ -753,18 +666,21 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.loadAgentScheduleManger();
+    this.managerGridDisplayObj = JSON.parse(JSON.stringify(this.managerGridDisplay));
+    this.reloadAgentScheduleManager();
+    //update pipe transform timestamp
+    this.timeStampUpdate = new Date().getTime();
   }
 
-  removeEmptyGrids(charts: ScheduleManagerChart[]) {
-    return charts.filter(x => x.schedulingCodeId !== null)
-  }
+  // removeEmptyGrids(charts: ScheduleManagerChart[]) {
+  //   return charts.filter(x => x.schedulingCodeId !== null)
+  // }
 
   save() {
     if (this.matchManagerChartDataChanges()) {
       // this.formatTime(true);
       const managerChartModel = new ScheduleManagerChartUpdate();
-      this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
+      this.spinnerService.show(this.spinner, SpinnerOptions);
       for (const item of this.managerCharts) {
         if (JSON.stringify(item.charts) !== JSON.stringify(this.schedulingMangerChart.find(x => x.id === item.id).charts)) {
           let chartsForUpdate: ScheduleManagerChart[];
@@ -791,14 +707,14 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
 
       this.updateAgentManagerChartSubscription = this.agentScheduleMangerService.updateScheduleManagerChart(managerChartModel)
         .subscribe((response) => {
-          this.spinnerService.hide(this.scheduleSpinner);
+          this.spinnerService.hide(this.spinner);
           this.schedulingMangerChart = JSON.parse(JSON.stringify(this.managerCharts));
           this.getModalPopup(MessagePopUpComponent, 'sm', 'The record has been updated!');
           this.modalRef.result.then(() => {
             this.loadAgentScheduleManger();
           });
         }, (error) => {
-          this.spinnerService.hide(this.scheduleSpinner);
+          this.spinnerService.hide(this.spinner);
           console.log(error);
         });
 
@@ -853,7 +769,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     const queryParams = new SchedulingCodeQueryParams();
     queryParams.skipPageSize = true;
     queryParams.fields = 'id, description, icon';
-    this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
+    // this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
 
     this.getSchedulingCodesSubscription = this.schedulingCodeService.getSchedulingCodes(queryParams)
       .subscribe((response) => {
@@ -862,9 +778,9 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
           this.iconCount = (this.schedulingCodes.length <= 30) ? this.schedulingCodes.length : this.maxIconCount;
           this.endIcon = this.iconCount;
         }
-        this.spinnerService.hide(this.scheduleSpinner);
+        // this.spinnerService.hide(this.scheduleSpinner);
       }, (error) => {
-        this.spinnerService.hide(this.scheduleSpinner);
+        // this.spinnerService.hide(this.scheduleSpinner);
         console.log(error);
       });
 
@@ -883,9 +799,9 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     this.getAgentInfoSubscription = this.agentAdminService.getAgentInfo(employeeId)
       .subscribe((response) => {
         this.agentInfo = response;
-        this.spinnerService.hide(this.scheduleSpinner);
+        this.spinnerService.hide(this.spinner);
       }, (error) => {
-        this.spinnerService.hide(this.scheduleSpinner);
+        this.spinnerService.hide(this.spinner);
         console.log(error);
       });
 
@@ -916,7 +832,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     this.clearIconFilters();
     if (this.agentSchedulingGroupId) {
       const queryParams = this.getQueryParams();
-      this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
+      this.spinnerService.show(this.spinner, SpinnerOptions);
         this.getAgentSchedulesSubscription = this.agentScheduleMangerService.getAgentScheduleManagers(queryParams)
           .subscribe((response) => {
             // unsubscribe first
@@ -924,31 +840,35 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
             this.managerGridDisplayObj = [];
             this.managerCharts = response.body;
 
-            this.headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
-            this.totalScheduleMangerRecord = this.headerPaginationValues.totalCount;
+          this.headerPaginationValues = JSON.parse(response.headers.get('x-pagination'));
+          this.totalScheduleMangerRecord = this.headerPaginationValues.totalCount;
 
-            if (this.managerCharts.length > 0) {
-              this.managerGridDisplayObj = Object.assign(this.managerGridDisplayObj, this.managerCharts);
+          if (this.managerCharts.length > 0) {
+            this.managerGridDisplayObj = Object.assign(this.managerGridDisplayObj, this.managerCharts);
 
-              // this.managerGridDisplayObj.map(x => {
-              //   x.charts = this.getGridIconData(x.employeeId);      
-              // });
+            // this.managerGridDisplayObj.map(x => {
+            //   x.charts = this.getGridIconData(x.employeeId);      
+            // });
 
-              this.managerGridDisplayObj.map(x => {
-                if (!x.charts || x.charts.length === 0) {
-                  x.charts = [];
-                }
-              });
+            this.managerGridDisplayObj.map(x => {
+              if (!x.charts || x.charts.length === 0) {
+                x.charts = [];
+              }
+            });
 
-              // console.log(this.managerCharts)
+            // console.log(this.managerCharts)
 
-              this.reloadAgentScheduleManager();
+            this.reloadAgentScheduleManager();
 
-              this.managerCharts = Object.assign(this.managerCharts, this.managerGridDisplayObj);
+            this.managerCharts = Object.assign(this.managerCharts, this.managerGridDisplayObj);
+
+              // store the charts data into another variable without referencing it
+              // this will be used in case the user wants to reset the grid
+              this.managerGridDisplay = JSON.parse(JSON.stringify(this.managerGridDisplayObj));
 
               // this.agentScheduleMangerService.scheduleMangerChartsGridSubject$.next(this.managerGridDisplayObj);
 
-              // this.managerGridDisplay$ = this.agentScheduleMangerService.scheduleMangerChartsGrid$;
+            // this.managerGridDisplay$ = this.agentScheduleMangerService.scheduleMangerChartsGrid$;
 
               // this.formatTime(false);
               this.schedulingMangerChart = JSON.parse(JSON.stringify(this.managerCharts));
@@ -963,13 +883,13 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
               this.agentScheduleMangerService.scheduleMangerChartsGridSubject$.next(undefined);
             }
 
-            this.spinnerService.hide(this.scheduleSpinner);
+            this.spinnerService.hide(this.spinner);
           }, (error) => {
-            this.spinnerService.hide(this.scheduleSpinner);
+            this.spinnerService.hide(this.spinner);
             console.log(error);
           });
 
-        this.subscriptions.push(this.getAgentSchedulesSubscription);
+      this.subscriptions.push(this.getAgentSchedulesSubscription);
     }
   }
 
@@ -1028,9 +948,9 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   private saveGridItems() {
     const table = $('#' + this.tableClassName);
     table.find('.' + this.selectedCellClassName).each((index, elem) => {
-      let chartArray;
+      let chartArray: ScheduleManagerChartDisplay[];
       let employeeId;
-      this.spinnerService.show(this.scheduleSpinner, SpinnerOptions);
+      this.spinnerService.show(this.spinner, SpinnerOptions);
 
       const fromTime = elem.attributes.startDateTime.value;
       const toTime = elem.attributes.endDateTime.value;
@@ -1053,7 +973,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         if (chartArray?.length > 0) {
           this.insertGridIcon(chartArray, iconModel);
         } else {
-          const calendarTime = new ScheduleManagerChart(fromTime, toTime, code?.id);
+          const calendarTime = new ScheduleManagerChartDisplay(fromTime, toTime, code?.id);
           chartArray.push(calendarTime);
         }
       } else if (this.isDelete) {
@@ -1064,14 +984,14 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
           }
         }
       }
-    });
+    });   
     // this.sortSelectedGridCalendarTimes();
     // this.formatTimeValuesInSchedulingGrid();
 
     //update pipe transform timestamp
     this.timeStampUpdate = new Date().getTime();
 
-    this.spinnerService.hide(this.scheduleSpinner);
+    this.spinnerService.hide(this.spinner);
     this.isDelete = false;
     this.icon = undefined;
 
@@ -1102,60 +1022,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     });
   }
 
-
-  private insertGridIcon1(charts: ScheduleManagerChartDisplay[], insertIcon: ScheduleManagerChartDisplay) {
-
-    // charts?.find(x => {
-    //   if(moment(insertIcon.startDateTime).isSame(x.startDateTime) && 
-    //   moment(insertIcon.endDateTime).isSame(x.endDateTime)){
-    //     x.schedulingCodeId = insertIcon.schedulingCodeId;
-    //     x.schedulingIcon = this.unifiedToNative(insertIcon.schedulingIcon);
-    //   }
-    // });
-
-    // charts.map(x =>{
-    //   if(this.getTimeStamp(insertIcon.startDateTime) == this.getTimeStamp(x?.startDateTime) &&
-    //   this.getTimeStamp(insertIcon.endDateTime) == this.getTimeStamp(x?.endDateTime))
-    //   {
-    //     x.schedulingCodeId = insertIcon.schedulingCodeId;
-    //   }else if(this.getTimeStamp(x.startDateTime) >=
-    //   this.getTimeStamp(insertIcon.startDateTime) &&
-    //   this.getTimeStamp(x.endDateTime) <= this.getTimeStamp(insertIcon.endDateTime)
-    //   ){
-    //     x.schedulingCodeId = insertIcon.schedulingCodeId;
-    //   }
-    // });
-
-    const timeDataArray = charts.filter(x => this.getTimeStamp(x.startDateTime) >=
-      this.getTimeStamp(insertIcon.startDateTime) &&
-      this.getTimeStamp(x.endDateTime) <= this.getTimeStamp(insertIcon.endDateTime));
-
-    if (timeDataArray.length > 0) {
-
-      timeDataArray.forEach(ele => {
-        ele.schedulingCodeId = insertIcon.schedulingCodeId;
-      });
-
-    } else {
-      const calendarTime = new ScheduleManagerChartDisplay(insertIcon.startDateTime, insertIcon.endDateTime, insertIcon.schedulingCodeId);
-      charts.push(calendarTime);
-    }
-
-    // this.agentScheduleMangerService.scheduleMangerChartsGridSubject$.next(this.managerGridDisplayObj);
-
-    // const timeDataArray = weekData.charts.filter(x => this.convertToDateFormat(x.startTime) >=
-    //   this.convertToDateFormat(insertIcon.startTime) &&
-    //   this.convertToDateFormat(x.endTime) <= this.convertToDateFormat(insertIcon.endTime));
-    // if (timeDataArray.length > 0) {
-    //   // timeDataArray.forEach(ele => {
-    //   //   ele.schedulingCodeId = insertIcon.schedulingCodeId;
-    //   // });
-    // } else {
-    //   // const calendarTime = new ScheduleChart(insertIcon.startTime, insertIcon.endTime, insertIcon.schedulingCodeId);
-    //   // weekData.charts.push(calendarTime);
-    // }
-    this.managerCharts = Object.assign(this.managerCharts, this.managerGridDisplayObj);
-  }
 
   private insertGridIcon(charts: ScheduleManagerChartDisplay[], insertIcon: ScheduleManagerChartDisplay) {
     if (charts.find(x => this.getTimeStamp(x.startDateTime) === this.getTimeStamp(insertIcon.startDateTime) && this.getTimeStamp(x.endDateTime) === this.getTimeStamp(insertIcon.endDateTime))) {
@@ -1199,15 +1065,13 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
           this.getTimeStamp(insertIcon.endDateTime) < this.getTimeStamp(ele.endDateTime)) {
           const calendarTime = new ScheduleManagerChartDisplay(insertIcon.endDateTime, ele.endDateTime, ele.schedulingCodeId);
           charts.push(calendarTime);
+          console.log(charts, '222')
           ele.endDateTime = insertIcon.startDateTime;
         } else if (this.getTimeStamp(ele.endDateTime) === this.getTimeStamp(insertIcon.endDateTime) &&
           this.getTimeStamp(ele.startDateTime) < this.getTimeStamp(insertIcon.startDateTime)) {
           ele.endDateTime = insertIcon.startDateTime;
         } else if (this.getTimeStamp(ele.startDateTime) > this.getTimeStamp(insertIcon.startDateTime) &&
           this.getTimeStamp(ele.endDateTime) > this.getTimeStamp(insertIcon.endDateTime)) {
-          // const calendarTime = new ScheduleManagerChart(insertIcon.startDateTime, insertIcon.endDateTime, insertIcon.schedulingCodeId);
-          // weekData.charts.push(calendarTime);
-          // ele.startDateTime = insertIcon.endDateTime;
         }
       });
       const timeDataArray = charts.filter(x => this.getTimeStamp(x.startDateTime) >=
@@ -1222,8 +1086,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
         charts.push(calendarTime);
       }
     }
-
-
 
   }
 
@@ -1437,30 +1299,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   }
 
   private getOpenTimes() {
-    // const x = this.timeIntervals;
-    // var times:OpenTimeData[] = [];
-    // let tt = 0;
-
-    // var now = new Date(new Date().setHours(0,0,0,0));
-
-    // if(this.startDate){
-    //   now = new Date(new Date(this.startDate).setHours(0,0,0,0));
-    // }    
-
-    // now = new Date(new Date(now.toString().replace(/\sGMT.*$/, " GMT+0000")).setHours(0,0,0,0));
-
-    // for (let i = 0; tt < 48 * 60; i++) {
-    //   let dateTime = this.datepipe.transform(now, 'hh:mm a').toLowerCase();
-    //   times[i] = new OpenTimeData;
-    //   times[i].time = dateTime;
-
-    //   times[i].date = this.changeToUTCDate(now).toISOString().slice(0,-5)+"Z";
-    //   times[i].dateHeader = this.datepipe.transform(now, 'yyyy-MM-dd');
-    //   now = this.addIntervalDate(now, 'minute', x);
-    //   tt = tt + x;
-    // }
-
-    // return times;
 
     let x = this.timeIntervals;
     var times: OpenTimeData[] = [];
@@ -1474,9 +1312,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     } else {
       now = new Date(new Date().setHours(0, 0, 0, 0));
     }
-
-    // now = new Date(new Date(now.toString().replace(/\sGMT.*$/, " GMT+0000")).setHours(0,0,0,0));
-    // now = new Date(new Date(now.toString().replace(/\sGMT.*$/, " GMT+0000")).setHours(0,0,0,0));
 
     for (let i = 0; tt < 48 * 60; i++) {
       let time = this.datepipe.transform(now, 'hh:mm a').toLowerCase();
@@ -1549,5 +1384,25 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     return ret;
   }
 
+  private getDateTimeInMeridiemTime(dateTime: string) {
+    if (dateTime) {
+      let hourValue;
+      let minuteValue;
+      let hour = +dateTime.split('T')[1].slice(0, 2);
+      const minute = +dateTime.split('T')[1].slice(3, 5);
+      const meridiem = hour >= 12 ? 'pm' : 'am';
+      if (hour >= 12) {
+        hour = hour - 12;
+        hourValue = hour <= 9 ? '0' + hour : hour;
+      } else {
+        hourValue = hour <= 9 ? '0' + hour : hour;
+      }
+      minuteValue = minute <= 9 ? '0' + minute : minute;
+      const time = hourValue + ':' + minuteValue + ' ' + meridiem;
+
+      return time;
+    }
+
+  }
 
 }

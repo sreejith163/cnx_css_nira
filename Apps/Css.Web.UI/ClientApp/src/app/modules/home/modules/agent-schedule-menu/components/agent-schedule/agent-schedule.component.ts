@@ -226,7 +226,7 @@ export class AgentScheduleComponent implements OnInit {
     var startDate = today.toISOString();
     var endDate = isoDate.toISOString();
 
-    this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, startDate, endDate).subscribe((resp: AgentMyScheduleResponse)=>{
+    this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, new Date(this.changeToUTCDate(startDate)).toISOString(), new Date(this.changeToUTCDate(endDate)).toISOString()).subscribe((resp: AgentMyScheduleResponse)=>{
       // get charts based on what day it is locally
       const chartsToday = resp.agentMySchedules.find(x => x.day == new Date().getDay()).charts;
 
@@ -247,6 +247,10 @@ export class AgentScheduleComponent implements OnInit {
       
     });
 
+  }
+
+  private changeToUTCDate(date) {
+    return new Date(date).toString().replace(/\sGMT.*$/, " GMT+0000");
   }
 
   

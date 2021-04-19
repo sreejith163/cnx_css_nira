@@ -391,12 +391,13 @@ avgOU: number;
     const date = new Date(startDate);
     return date.toDateString();
   }
+
   getScheduledOpenCount1(time: string) {
   
   
-    var convertedTime = moment(time, 'hh:mm A').format('HH:mm:ss')
+    //var convertedTime = moment(time, 'hh:mm A').format('HH:mm:ss')
   
-    var chart =  this.scheduledOpenResponse.find(x => x.time === convertedTime.toString());
+    var chart =  this.scheduledOpenResponse.find(x => x.time === time.toString());
     // console.log(chart);
   
       if (chart) {    

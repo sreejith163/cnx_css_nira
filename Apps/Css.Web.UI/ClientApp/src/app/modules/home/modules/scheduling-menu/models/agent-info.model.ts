@@ -1,5 +1,3 @@
-import { AgentAdminAgentData } from './agent-admin-agent-data.model';
-
 export class AgentInfo {
     scheduleType: string;
     supervisorName: string;
@@ -16,9 +14,4 @@ export class AgentInfo {
     operationsManager: string;
     firstName: string;
     lastName: string;
-    agentData: AgentAdminAgentData[];
-
-    constructor() {
-        this.agentData = [];
-    }
 }

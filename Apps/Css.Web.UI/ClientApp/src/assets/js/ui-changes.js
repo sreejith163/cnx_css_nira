@@ -15,10 +15,16 @@ function setRowCellIndex(cellId) {
   startRowIndex = clickedCell.parent().index() + 1;
 }
 
-function setManagerRowCellIndex(cellIndex, rowIndex) {
-  startCellIndex = cellIndex + 2;
-  startRowIndex = rowIndex;
+function setManagerRowCellIndex(cellId) {
+  const clickedCell = $('#' + cellId);
+  startCellIndex = clickedCell.index();
+  startRowIndex = clickedCell.parent().index() + 2;
 }
+
+// function setManagerRowCellIndex(cellIndex, rowIndex) {
+//   startCellIndex = cellIndex;
+//   startRowIndex = rowIndex;
+// }
 
 function highlightSelectedCells(tableId, cellId) {
   const table = $('#' + tableId);
@@ -62,7 +68,7 @@ function highlightManagerSelectedCells(tableId, cellId) {
 
   const row = cell.parent();
   const cellIndex = cell.index();
-  const rowIndex = row.index() + 1;
+  const rowIndex = row.index() + 2;
 
   let rowStart;
   let rowEnd;
@@ -75,6 +81,7 @@ function highlightManagerSelectedCells(tableId, cellId) {
     rowStart = startRowIndex;
     rowEnd = rowIndex;
   }
+
 
   if (cellIndex < startCellIndex) {
     cellStart = cellIndex;

@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -26,8 +27,6 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { CustomValidators } from 'src/app/shared/util/validations.util';
 import { GenericDataService } from '../../../../setup-menu/services/generic-data.service';
 import { AddAgentAdmin } from '../../../models/add-agent-admin.model';
-import { AgentAdminAgentData } from '../../../models/agent-admin-agent-data.model';
-import { AgentAdminAgentGroup } from '../../../models/agent-admin-agent-group.model';
 import { AgentAdminBase } from '../../../models/agent-admin-base.model';
 import { AgentAdminResponse } from '../../../models/agent-admin-response.model';
 import { UpdateAgentAdmin } from '../../../models/update-agent-admin.model';
@@ -38,6 +37,7 @@ import { ActivityLogsComponent } from '../activity-logs/activity-logs.component'
   selector: 'app-add-agent-profile',
   templateUrl: './add-agent-profile.component.html',
   styleUrls: ['./add-agent-profile.component.css'],
+  providers: [DatePipe]
 })
 export class AddAgentProfileComponent implements OnInit, OnDestroy {
   // modal ref
@@ -77,6 +77,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private ngbDateParserFormatter: NgbDateParserFormatter,
     private agentService: AgentAdminService,
+    private datepipe: DatePipe,
     private genericDataService: GenericDataService,
     private authService: AuthService,
     private spinnerService: NgxSpinnerService,
@@ -203,19 +204,13 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
   private saveAgentProfileDetailsOnModel() {
     this.agentProfileModel = new AgentAdminBase();
     this.agentProfileModel = this.agentProfileForm.value;
-    const myDate = this.ngbDateParserFormatter.format(this.agentProfileForm.controls.hireDate.value);
     this.agentProfileModel.skillGroupId = this.skillGroupId;
     this.agentProfileModel.clientId = this.clientId;
     this.agentProfileModel.clientLobGroupId = this.clientLobGroupId;
     this.agentProfileModel.skillTagId = this.skillTagId;
     this.agentProfileModel.agentSchedulingGroupId = this.agentSchedulingGroupId;
-    this.agentProfileModel.agentData = [];
-    const newGroup = new AgentAdminAgentGroup();
-    newGroup.description = 'Hire Date';
-    newGroup.value = myDate;
-    const adminData = new AgentAdminAgentData();
-    adminData.group = newGroup;
-    this.agentProfileModel.agentData.push(adminData);
+    const hireDate = this.agentProfileForm.controls.hireDate.value;
+    this.agentProfileModel.hireDate = this.getFormattedDate(new Date(hireDate.year, hireDate.month - 1, hireDate.day));
   }
 
   private addAgentAdminProfileDetails() {
@@ -280,8 +275,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       this.agentProfileModel.supervisorId !== this.agentAdminDetails.supervisorId ||
       this.agentProfileModel.supervisorName !== this.agentAdminDetails.supervisorName ||
       this.agentProfileModel.supervisorSso !== this.agentAdminDetails.supervisorSso ||
-      this.agentProfileModel.agentData.find(x => x.group.description.trim() === 'Hire Date')?.group.value
-      !== this.agentAdminDetails.agentData.find(x => x.group.description.trim() === 'Hire Date')?.group.value
+      this.agentProfileModel.hireDate !== this.agentAdminDetails.hireDate
     ) {
       return true;
     }
@@ -320,10 +314,8 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       supervisorName: this.agentAdminDetails.supervisorName,
       supervisorSso: this.agentAdminDetails.supervisorSso
     });
-    const dateValue = this.agentAdminDetails.agentData?.find(x => x.group.description.trim() === 'Hire Date');
-    if (dateValue !== undefined) {
-      const dateString = dateValue.group.value;
-      const date = new Date(dateString);
+    if (this.agentAdminDetails.hireDate) {
+      const date = new Date(this.agentAdminDetails.hireDate);
       const ngbDateStruct: NgbDateStruct = {
         day: date.getUTCDate(),
         month: date.getUTCMonth() + 1,
@@ -361,5 +353,10 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
         // this.showSuccessPopUpMessage('The record has been updated!');
       }
     });
+  }
+
+  private getFormattedDate(date: Date) {
+    const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
+    return new Date(transformedDate);
   }
 }

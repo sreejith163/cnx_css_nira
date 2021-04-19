@@ -14,7 +14,7 @@ import { ScheduleManagerChartUpdate, ScheduleManagerGridChartDisplay } from '../
 export class AgentScheduleManagersService extends HttpBaseService {
 
   private baseURL = '';
-  scheduleMangerChartsGridSubject$ = new BehaviorSubject<Array<ScheduleManagerGridChartDisplay>>([]); 
+  scheduleMangerChartsGridSubject$ = new BehaviorSubject<Array<ScheduleManagerGridChartDisplay>>([]);
   scheduleMangerChartsGrid$ = this.scheduleMangerChartsGridSubject$.asObservable();
 
   constructor(

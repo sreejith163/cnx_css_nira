@@ -22,7 +22,7 @@ const modules = [BrowserModule,
   FormsModule, 
   BrowserAnimationsModule,
   ToastrModule.forRoot({
-    timeOut: 2000,
+    timeOut: 3000,
     positionClass: 'toast-top-right'
   }) , CommonModule, HttpClientModule,  NgxCsvParserModule];
 

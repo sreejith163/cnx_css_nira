@@ -476,3 +476,19 @@ td {
     overflow: auto;
   }
 }
+.custom-class-example {
+  color: #ccc;
+}
+
+// .custom-class-example .c-token.ng-star-inserted{
+//   background: #38d574 !important;
+// }
+// .custom-class-example .pure-checkbox label::before {
+//   border-color: #38d574 !important;
+// }
+// .custom-class-example .pure-checkbox input[type="checkbox"]:checked + label[_ngcontent-c1]:before {
+//   background: #38d574 !important;
+// }
+// .selected-list .c-list .c-token:style{
+//   background: #38d574!important;
+// }

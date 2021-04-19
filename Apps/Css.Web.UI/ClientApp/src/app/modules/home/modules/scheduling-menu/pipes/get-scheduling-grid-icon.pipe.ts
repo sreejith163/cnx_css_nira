@@ -17,66 +17,20 @@ export class GetIconSchedulingGridPipe implements PipeTransform {
   public transform(week: number, gridTime: any, selectedGrid: AgentScheduleGridResponse, schedulingCodes: SchedulingCode[], updated): any {
 
       const weekData = selectedGrid?.agentScheduleCharts.find(x => x.day === +week);
-      // const weekDataPrevDay = selectedGrid?.agentScheduleCharts.find(x => x.day === +(week)-1);
       
       if (weekData) {
         const currentDayData = weekData?.charts?.find(x => (this.convertToDateFormat(gridTime) >= this.convertToDateFormat(x?.startTime) &&
           this.convertToDateFormat(gridTime) < this.convertToDateFormat(x?.endTime)));
 
-        // const nextDayOverlap = weekData?.charts.find(x => 
-        //   ((this.convertToDateFormat(gridTime) >= this.convertToDateFormat(x?.startTime)) && 
-        //   (this.convertToDateFormat(x?.startTime) > this.convertToDateFormat(x?.endTime)))
-        // );
-
         if (currentDayData) {
           const code = schedulingCodes.find(x => x.id === currentDayData.schedulingCodeId);
           this.icon = code?.icon?.value;
-          // this.actCode = new actCode;
-          // this.actCode.description = code?.description;
-          // this.actCode.icon = this.unifiedToNative(this.icon);
-          // this.actCode.startTime = weekTimeData.startTime;
-          // this.actCode.endTime = weekTimeData.endTime;
 
           return code ? this.unifiedToNative(code?.icon?.value) : '';
         }
-      //   else if (nextDayOverlap){
-      //     const code = schedulingCodes.find(x => x.id === nextDayOverlap.schedulingCodeId);
-      //     this.icon = code?.icon?.value;
-      //     // this.actCode = new actCode;
-      //     // this.actCode.description = code?.description;
-      //     // this.actCode.icon = this.unifiedToNative(this.icon);
-      //     // this.actCode.startTime = weekTimeData.startTime;
-      //     // this.actCode.endTime = weekTimeData.endTime;
 
-      //     return code ? this.unifiedToNative(code?.icon?.value) : '';
-      //   }
-
-      // }
-
-      // if(weekDataPrevDay){
-      //   const prevDayData = weekDataPrevDay?.charts.find(x => 
-      //     ((this.convertToDateFormat(gridTime) <= this.convertToDateFormat(x?.endTime)) && 
-      //     (this.convertToDateFormat(x?.startTime) > this.convertToDateFormat(x?.endTime)))
-      //   );
-
-      //     if (prevDayData) {
-      //       const code = schedulingCodes.find(x => x.id === prevDayData.schedulingCodeId);
-      //       this.icon = code?.icon?.value;
-      //       // this.actCode = new actCode;
-      //       // this.actCode.description = code?.description;
-      //       // this.actCode.icon = this.unifiedToNative(this.icon);
-      //       // this.actCode.startTime = weekTimeData.startTime;
-      //       // this.actCode.endTime = weekTimeData.endTime;
-  
-      //       return code ? this.unifiedToNative(code?.icon?.value) : '';
-      //     }
-      // }
-
-      // if(this.actCode){
-      //   return this.actCode;
-      }
-      // return;  
       return '';
+    }
   }
 
   private convertToDateFormat(time: string) {

@@ -16,6 +16,7 @@ import { ScheduleDateRangeBase } from '../models/schedule-date-range-base.model'
 import { UpdateScheduleDateRange } from '../models/update-schedule-date-range.model';
 import { DateRangeQueryParms } from '../models/date-range-query-params.model';
 import { AgentSchedulingGridExport } from '../models/agent-scheduling-grid-export.model';
+import { BatchReleaseModel } from '../models/batch-release.model';
 import { CopyMultipleAgentScheduleChart } from '../models/copy-multiple-agent-schedule-chart.model';
 
 @Injectable()
@@ -79,6 +80,13 @@ export class AgentSchedulesService extends HttpBaseService {
     const url = `${this.baseURL}/AgentSchedules/${agentScheduleId}`;
 
     return this.http.put<ApiResponseModel>(url, updateAgent)
+    .pipe(catchError(this.handleError));
+  }
+
+  batchRelease(batchRelease: any) {
+    const url = `${this.baseURL}/AgentSchedules/BatchRelease`;
+
+    return this.http.put<ApiResponseModel>(url, batchRelease)
     .pipe(catchError(this.handleError));
   }
 
