@@ -128,22 +128,12 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
   }
 
   validateEmployeeId() {
-    this.agentProfileForm.controls.employeeId.setValue(this.agentProfileForm.controls.employeeId.value.toString().replace(/\B[a-zA-Z]/gi,""));
-    this.agentProfileForm.controls.employeeId.setValue(this.agentProfileForm.controls.employeeId.value.toString().replace(/[^A-Za-z0-9]/gi,""));
+    this.agentProfileForm.controls.employeeId
+      .setValue(this.agentProfileForm.controls.employeeId.value.toString().replace(/\B[a-zA-Z]/gi, ''));
+    this.agentProfileForm.controls.employeeId
+      .setValue(this.agentProfileForm.controls.employeeId.value.toString().replace(/[^A-Za-z0-9]/gi, ''));
     if (this.agentProfileForm.controls.employeeId.value) {
       if (!isNaN(+this.agentProfileForm.controls.employeeId.value) && +this.agentProfileForm.controls.employeeId.value <= 0) {
-        return false;
-      }
-      return true;
-    }
-    return false;
-  }
-
-  validateSupervisorId() {
-    this.agentProfileForm.controls.supervisorId.setValue(this.agentProfileForm.controls.supervisorId.value.toString().replace(/\B[a-zA-Z]/gi,""));
-    this.agentProfileForm.controls.supervisorId.setValue(this.agentProfileForm.controls.supervisorId.value.toString().replace(/[^A-Za-z0-9]/gi,""));
-    if (this.agentProfileForm.controls.supervisorId.value) {
-      if (!isNaN(+this.agentProfileForm.controls.supervisorId.value) && +this.agentProfileForm.controls.supervisorId.value <= 0) {
         return false;
       }
       return true;
@@ -154,7 +144,7 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
   saveAgentAdminDetails() {
     this.formSubmitted = true;
     if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId &&
-      this.skillTagId && this.agentSchedulingGroupId && this.validateHireDateFormat() && this.validateEmployeeId() && this.validateSupervisorId()) {
+      this.skillTagId && this.agentSchedulingGroupId && this.validateHireDateFormat() && this.validateEmployeeId()) {
       this.saveAgentProfileDetailsOnModel();
       this.operation === ComponentOperation.Edit ? this.updateAgentAdminProfileDetails() : this.addAgentAdminProfileDetails();
     }
@@ -330,27 +320,23 @@ export class AddAgentProfileComponent implements OnInit, OnDestroy {
       employeeId: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(45)])),
       sso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
       firstName: new FormControl('',
-       Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
+        Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
       lastName: new FormControl('',
-       Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
+        Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
       hireDate: new FormControl('', Validators.required),
-      supervisorId: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
+      supervisorId: new FormControl('', Validators.compose([Validators.maxLength(45)])),
       supervisorName: new FormControl('',
-       Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
-      supervisorSso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
+        Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
+      supervisorSso: new FormControl('', Validators.compose([CustomValidators.isValidEmailOptional])),
     }, { validators: [CustomValidators.sameSSO('sso', 'supervisorSso'), CustomValidators.sameEmployeeId('employeeId', 'supervisorId')] });
   }
 
   showActivityLogs() {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'lg' };
     this.modalRef = this.modalService.open(ActivityLogsComponent, options);
-    // this.modalRef.componentInstance.employee = employee;
     this.modalRef.result.then((confirmed) => {
       if (confirmed === true) {
         console.log(closed);
-        // this.currentPage = 1;
-        // this.loadEmployees();
-        // this.showSuccessPopUpMessage('The record has been updated!');
       }
     });
   }

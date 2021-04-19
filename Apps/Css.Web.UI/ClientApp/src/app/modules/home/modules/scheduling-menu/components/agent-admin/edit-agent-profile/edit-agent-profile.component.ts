@@ -128,22 +128,12 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
   }
 
   validateEmployeeId() {
-    this.agentProfileForm.controls.employeeId.setValue(this.agentProfileForm.controls.employeeId.value.toString().replace(/\B[a-zA-Z]/gi,""));
-    this.agentProfileForm.controls.employeeId.setValue(this.agentProfileForm.controls.employeeId.value.toString().replace(/[^A-Za-z0-9]/gi,""));
+    this.agentProfileForm.controls.employeeId
+      .setValue(this.agentProfileForm.controls.employeeId.value.toString().replace(/\B[a-zA-Z]/gi, ''));
+    this.agentProfileForm.controls.employeeId
+      .setValue(this.agentProfileForm.controls.employeeId.value.toString().replace(/[^A-Za-z0-9]/gi, ''));
     if (this.agentProfileForm.controls.employeeId.value) {
       if (!isNaN(+this.agentProfileForm.controls.employeeId.value) && +this.agentProfileForm.controls.employeeId.value <= 0) {
-        return false;
-      }
-      return true;
-    }
-    return false;
-  }
-
-  validateSupervisorId() {
-    this.agentProfileForm.controls.supervisorId.setValue(this.agentProfileForm.controls.supervisorId.value.toString().replace(/\B[a-zA-Z]/gi,""));
-    this.agentProfileForm.controls.supervisorId.setValue(this.agentProfileForm.controls.supervisorId.value.toString().replace(/[^A-Za-z0-9]/gi,""));
-    if (this.agentProfileForm.controls.supervisorId.value) {
-      if (!isNaN(+this.agentProfileForm.controls.supervisorId.value) && +this.agentProfileForm.controls.supervisorId.value <= 0) {
         return false;
       }
       return true;
@@ -154,7 +144,7 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
   saveAgentAdminDetails() {
     this.formSubmitted = true;
     if (this.agentProfileForm.valid && this.clientId && this.clientLobGroupId && this.skillGroupId &&
-       this.skillTagId && this.agentSchedulingGroupId && this.validateHireDateFormat() && this.validateEmployeeId() && this.validateSupervisorId()) {
+      this.skillTagId && this.agentSchedulingGroupId && this.validateHireDateFormat() && this.validateEmployeeId()) {
       this.saveAgentProfileDetailsOnModel();
       this.updateAgentAdminProfileDetails();
     }
@@ -329,9 +319,9 @@ export class EditAgentProfileComponent implements OnInit, OnDestroy {
       firstName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
       lastName: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace])),
       hireDate: new FormControl('', Validators.required),
-      supervisorId: new FormControl('', Validators.compose([Validators.required, CustomValidators.cannotContainSpace, Validators.maxLength(45)])),
+      supervisorId: new FormControl('', Validators.compose([Validators.maxLength(45)])),
       supervisorName: new FormControl('', Validators.required),
-      supervisorSso: new FormControl('', Validators.compose([Validators.required, CustomValidators.isValidEmail])),
+      supervisorSso: new FormControl('', Validators.compose([CustomValidators.isValidEmailOptional])),
       pto: this.formBuilder.group({
         earned: new FormControl(),
         credited: new FormControl(),
