@@ -48,7 +48,6 @@ namespace Css.Api.Admin.EventHandlers.Consumers.SchedulingCode
             };
 
             await _schedulingCodeService.RevertSchedulingCode(schedulingCodeIdDetails, updateSchedulingCode);
-
         }
     }
 }

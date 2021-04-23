@@ -354,6 +354,33 @@
       "UpstreamPathTemplate": "/api/agentcategories/{agentCategoryId}",
       "UpstreamHttpMethod": [ "Get", "Put", "Delete" ]
     },
+    //********* Login Auth For Non SSO ******
+    {
+      "DownstreamPathTemplate": "/api/v1/auth/{username}/key/{password}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44318
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/{username}/key/{password}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* User Log Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/log",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44318
+        }
+      ],
+      "UpstreamPathTemplate": "/api/log",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+
     //********* SchedulingCodes Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/schedulingcodes",
@@ -469,6 +496,43 @@
       "UpstreamPathTemplate": "/api/agentadmins/move",
       "UpstreamHttpMethod": [ "Put" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentadmins/agentCategoryValues",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentadmins/agentCategoryValues",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    //********* Agent Category Value Routes ***************
+    {
+      "DownstreamPathTemplate": "/api/v1/agentCategoryValues",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentCategoryValues",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentCategoryValues/import",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentCategoryValues/import",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
     //********* Agent Schedule Routes *********************
     {
       "DownstreamPathTemplate": "/api/v1/agentschedules",
@@ -555,7 +619,7 @@
       "UpstreamHttpMethod": [ "Put", "Delete" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentEmployeeId}/myschedule",
+      "DownstreamPathTemplate": "/api/v1/AgentScheduleManagers/{agentEmployeeId}/myschedule",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -563,8 +627,56 @@
           "Port": 44393
         }
       ],
-      "UpstreamPathTemplate": "/api/agentschedules/{agentEmployeeId}/myschedule",
+      "UpstreamPathTemplate": "/api/agentschedulemanagers/{agentEmployeeId}/myschedule",
       "UpstreamHttpMethod": [ "Get", "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{agentSchedulingGroupId}/export",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{agentSchedulingGroupId}/export",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/agentschedules/{employeeId}/employeeexport",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/{employeeId}/employeeexport",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/AgentSchedules/GetDateRange",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/getdaterange",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/AgentSchedules/BatchRelease",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44393
+        }
+      ],
+      "UpstreamPathTemplate": "/api/agentschedules/batchrelease",
+      "UpstreamHttpMethod": [ "Put" ]
     },
     //********* Agent Schedule Manager Routes *********************
     {
@@ -676,10 +788,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/forecastscreen/{skillGroupId}/date/{date}",
-      "UpstreamHttpMethod": [ "Put" ]
+      "UpstreamHttpMethod": [ "Get", "Put" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/ForecastScreen/import",
+      "DownstreamPathTemplate": "/api/v1/ForecastScreen/{skillGroupId}/import",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -687,7 +799,7 @@
           "Port": 44393
         }
       ],
-      "UpstreamPathTemplate": "/api/forecastScreen/import",
+      "UpstreamPathTemplate": "/api/forecastScreen/{skillGroupId}/import",
       "UpstreamHttpMethod": [ "Put" ]
     },
     {
@@ -700,7 +812,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/forecastScreen/{skillGroupId}/scheduledopen",
-      "UpstreamHttpMethod": [ "get" ]
+      "UpstreamHttpMethod": [ "Get" ]
     },
 
     //********* Activity Routes *********************
@@ -717,7 +829,7 @@
       "UpstreamPathTemplate": "/api/activity",
       "UpstreamHttpMethod": [ "Post" ],
       "QoSOptions": {
-        "TimeoutValue": 300000
+        "TimeoutValue": 900000
       }
     },
     {
@@ -762,6 +874,19 @@
       ],
       "UpstreamPathTemplate": "/api/activitylogs",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    //********* Dispatch Routes *********************
+    {
+      "DownstreamPathTemplate": "/api/v1/dispatch/{target}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44301
+        }
+      ],
+      "UpstreamPathTemplate": "/api/dispatch/{target}",
+      "UpstreamHttpMethod": [ "Put" ]
     },
     //********* Reporting Routes *********************
     {

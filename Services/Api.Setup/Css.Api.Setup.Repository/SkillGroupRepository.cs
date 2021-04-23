@@ -144,8 +144,8 @@ namespace Css.Api.Setup.Repository
         public async Task<List<SkillGroup>> GetSkillGroupIdsByClientLobIdAndSkillGroupNameOrRefId(SkillGroupAttribute skillGroupAttribute)
         {
             var skillGroups = FindByCondition
-                (x => x.ClientLobGroupId == skillGroupAttribute.ClientLobGroupId && (string.Equals(x.Name.Trim(), skillGroupAttribute.Name.Trim(),
-                      StringComparison.OrdinalIgnoreCase) || x.RefId == (skillGroupAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
+                (x => ((x.ClientLobGroupId == skillGroupAttribute.ClientLobGroupId && string.Equals(x.Name.Trim(), skillGroupAttribute.Name.Trim(),
+                      StringComparison.OrdinalIgnoreCase)) || x.RefId == (skillGroupAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
 
             return await Task.FromResult(skillGroups);
         }

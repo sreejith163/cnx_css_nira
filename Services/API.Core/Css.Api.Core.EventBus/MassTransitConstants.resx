@@ -368,5 +368,47 @@
   </data>
   <data name="SchedulingCodeUpdateSuccessRouteKey" xml:space="preserve">
     <value>css.schedulingcode.events.update.success</value>
-  </data>  
+  </data>
+  <data name="AgentCategoryCommandQueue" xml:space="preserve">
+    <value>css.agentcategory.commands</value>
+  </data>
+  <data name="AgentCategoryCommandQueueBindingPattern" xml:space="preserve">
+    <value>css.agentcategory.commands.#</value>
+  </data>
+  <data name="AgentCategoryCreateCommandRouteKey" xml:space="preserve">
+    <value>css.agentcategory.commands.create.css.agentcategory</value>
+  </data>
+  <data name="AgentCategoryCreateFailedRouteKey" xml:space="preserve">
+    <value>css.agentcategory.events.create.failed</value>
+  </data>
+  <data name="AgentCategoryCreateSuccessRouteKey" xml:space="preserve">
+    <value>css.agentcategory.events.create.success</value>
+  </data>
+  <data name="AgentCategoryDeleteCommandRouteKey" xml:space="preserve">
+    <value>css.agentcategory.commands.delete.css.agentcategory</value>
+  </data>
+  <data name="AgentCategoryDeleteFailedRouteKey" xml:space="preserve">
+    <value>css.agentcategory.events.delete.failed</value>
+  </data>
+  <data name="AgentCategoryDeleteSuccessRouteKey" xml:space="preserve">
+    <value>css.agentcategory.events.delete.success</value>
+  </data>
+  <data name="AgentCategoryEventQueue" xml:space="preserve">
+    <value>css.agentcategory.events</value>
+  </data>
+  <data name="AgentCategoryEventQueueBindingPattern" xml:space="preserve">
+    <value>css.agentcategory.events.#</value>
+  </data>
+  <data name="AgentCategoryExchange" xml:space="preserve">
+    <value>css.agentcategory</value>
+  </data>
+  <data name="AgentCategoryUpdateCommandRouteKey" xml:space="preserve">
+    <value>css.agentcategory.commands.update.css.agentcategory</value>
+  </data>
+  <data name="AgentCategoryUpdateFailedRouteKey" xml:space="preserve">
+    <value>css.agentcategory.events.update.failed</value>
+  </data>
+  <data name="AgentCategoryUpdateSuccessRouteKey" xml:space="preserve">
+    <value>css.agentcategory.events.update.success</value>
+  </data>
 </root>

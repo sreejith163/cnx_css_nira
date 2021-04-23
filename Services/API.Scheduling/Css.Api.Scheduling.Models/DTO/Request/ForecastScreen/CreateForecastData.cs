@@ -18,5 +18,9 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ForecastScreen
         
         public string Date { get; set; }
         public List<ForecastDataAtrribute> ForecastData { get; set; }
+
+      
+
+
     }
 }

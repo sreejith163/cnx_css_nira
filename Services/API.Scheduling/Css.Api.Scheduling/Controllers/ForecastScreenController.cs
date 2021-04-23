@@ -97,10 +97,10 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="importForecastDetails"></param>
         /// <returns></returns>
 
-        [HttpPut("import")]
-        public async Task<IActionResult> ImportForecast([FromBody] ImportForecastDetails importForecastDetails)
+        [HttpPut("{skillGroupId}/import")]
+        public async Task<IActionResult> ImportForecast([FromBody] ImportForecastMain importForecastDetails,int skillGroupId)
         {
-            var result = await _forecastScreenService.ImportForecastData(importForecastDetails);
+            var result = await _forecastScreenService.ImportForecastData(importForecastDetails, skillGroupId);
             return StatusCode((int)result.Code, result.Value);
         }
         /// <summary>

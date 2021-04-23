@@ -57,7 +57,7 @@
             <param name="agentAdminId">The agentAdmin identifier.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.GetAgentAdminByEmployeeId(System.Int32)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.GetAgentAdminByEmployeeId(System.String)">
             <summary>
             Gets the agent admin by employee identifier.
             </summary>
@@ -86,6 +86,13 @@
               <br />
             </returns>
         </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.UpdateAgentCategoryValues(Css.Api.Scheduling.Models.DTO.Request.AgentAdmin.CreateAgentCategoryValue)">
+            <summary>
+            Updates the agent category values.
+            </summary>
+            <param name="agentCategoryValue">The agent category value.</param>
+            <returns></returns>
+        </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.DeleteAgentAdmin(System.String)">
             <summary>
             Deletes the agent admin.
@@ -105,6 +112,28 @@
         <member name="M:Css.Api.Scheduling.Controllers.AgentAdminsController.GetAgentActivityLogs(Css.Api.Scheduling.Models.DTO.Request.ActivityLog.ActivityLogQueryParameter)">
             <summary>Gets the agent activity logs.</summary>
             <param name="activityLogQueryParameter">The activity log query parameter.</param>
+            <returns>
+              <br />
+            </returns>
+        </member>
+        <member name="T:Css.Api.Scheduling.Controllers.AgentCategoryValuesController">
+            <summary>
+            Controller for handling the agent admins resource
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:Css.Api.Scheduling.Controllers.AgentCategoryValuesController._agentCategoryValueService">
+            <summary>The agentCategoryValue service</summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentCategoryValuesController.#ctor(Css.Api.Scheduling.Business.Interfaces.IAgentCategoryValueService)">
+            <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Controllers.AgentCategoryValuesController" /> class.</summary>
+            <param name="agentCategoryValueService">The agentCategoryValue service.</param>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentCategoryValuesController.GetAgentCategoryValues(Css.Api.Scheduling.Models.DTO.Request.AgentCategoryValueView.AgentCategoryValueQueryParameter)">
+            <summary>
+            Gets the agent category values.
+            </summary>
+            <param name="agentCategoryValueQueryParameters">The agentCategoryValue query parameters.</param>
             <returns>
               <br />
             </returns>
@@ -133,7 +162,7 @@
             <param name="agentScheduleManagerChartQueryparameter">The agent schedule manager chart queryparameter.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.GetAgentMySchedule(System.Int32,Css.Api.Scheduling.Models.DTO.Request.MySchedule.MyScheduleQueryParameter)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.GetAgentMySchedule(System.String,Css.Api.Scheduling.Models.DTO.Request.MySchedule.MyScheduleQueryParameter)">
             <summary>Gets the agent my schedule.</summary>
             <param name="agentEmployeeId">The agent employee identifier.</param>
             <param name="myScheduleQueryParameter">My schedule query parameter.</param>
@@ -148,7 +177,7 @@
             <param name="agentScheduleDetails">The agent schedule details.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.CopyAgentScheduleManagerChart(System.Int32,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.CopyAgentScheduleManager)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentScheduleManagersController.CopyAgentScheduleManagerChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.CopyAgentScheduleManager)">
             <summary>
             Copies the agent schedule.
             </summary>
@@ -223,15 +252,15 @@
             <summary>
             Updates the agent schedule chart.
             </summary>
-            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <param name="agentScheduleImport">The agent schedule import.</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.CopyAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.CopyAgentSchedule)">
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.CopyAgentScheduleChart(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.MultipleCopyAgentScheduleRequest)">
             <summary>
             Copies the agent schedule chart.
             </summary>
             <param name="agentScheduleId">The agent schedule identifier.</param>
-            <param name="agentScheduleDetails">The agent schedule details.</param>
+            <param name="agentScheduleDetailsList">The list of agent schedule details.</param>
             <returns></returns>
         </member>
         <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.UpdateAgentScheduleRange(System.String,Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.UpdateAgentScheduleDateRange)">
@@ -249,6 +278,27 @@
             <param name="agentScheduleId">The agent schedule identifier.</param>
             <param name="dateRangeDetails">The date range details.</param>
             <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.AgentSchedulingGroupScheduleExport(System.Int32)">
+            <summary>
+            Gets the agent schedule.
+            </summary>
+            <param name="agentSchedulingGroupId">The agent schedule chart queryparameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.EmployeeScheduleExport(System.String)">
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.GetDateRange(System.Collections.Generic.List{System.Int32})">
+            <param name="asgList">The asg list parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Css.Api.Scheduling.Controllers.AgentSchedulesController.BatchRelease(Css.Api.Scheduling.Models.DTO.Request.AgentSchedule.BatchRelease)">
+            <summary>Release the given asg and date range</summary>
+            <param name="batchRelease">the batch release parameter</param>
+            <returns>
+              <br />
+            </returns>
         </member>
         <member name="T:Css.Api.Scheduling.Controllers.EntityHierarchyController">
             <summary>controller for entity hierarchy</summary>
@@ -313,7 +363,7 @@
                /// <param name="date">Forecast ID</param>
             <returns></returns>
         </member>
-        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.ImportForecast(Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.ImportForecastDetails)">
+        <member name="M:Css.Api.Scheduling.Controllers.ForecastScreenController.ImportForecast(Css.Api.Scheduling.Models.DTO.Request.ForecastScreen.ImportForecastMain,System.Int32)">
             <summary>
             import forecast data
             </summary>
@@ -326,59 +376,6 @@
             </summary>
             <param name="skillGroupId">The agent schedule identifier.</param>
             <param name="date"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Css.Api.Scheduling.Controllers.TimeOffsController">
-            <summary>
-            Controller for handling the Time zones resource
-            </summary>
-            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
-        </member>
-        <member name="F:Css.Api.Scheduling.Controllers.TimeOffsController._timeOffService">
-            <summary>
-            The time off service
-            </summary>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.#ctor(Css.Api.Scheduling.Business.Interfaces.ITimeOffService)">
-            <summary>
-            Initializes a new instance of the <see cref="!:TimeZonesController" /> class.
-            </summary>
-            <param name="timeOffService">The time off service.</param>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.GetTimeOffs(Css.Api.Scheduling.Models.DTO.Request.TimeOff.TimeOffQueryparameter)">
-            <summary>
-            Gets the time offs.
-            </summary>
-            <param name="timeOffQueryparameter">The time off queryparameter.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.GetTimeOff(System.String)">
-            <summary>
-            Gets the time off.
-            </summary>
-            <param name="timeOffId">The time off identifier.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.CreateTimeOff(Css.Api.Scheduling.Models.DTO.Request.TimeOff.CreateTimeOff)">
-            <summary>
-            Creates the time off.
-            </summary>
-            <param name="timeOffDetails">The time off details.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.UpdateTimeOff(System.String,Css.Api.Scheduling.Models.DTO.Request.TimeOff.UpdateTimeOff)">
-            <summary>
-            Updates the time off.
-            </summary>
-            <param name="timeOffId">The time off identifier.</param>
-            <param name="timeOffDetails">The time off details.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Css.Api.Scheduling.Controllers.TimeOffsController.DeleteTimeOff(System.String)">
-            <summary>
-            Deletes the time off.
-            </summary>
-            <param name="timeOffId">The time off identifier.</param>
             <returns></returns>
         </member>
         <member name="T:Css.Api.Scheduling.Extensions.DBContextExtension">
@@ -505,6 +502,16 @@
         <member name="M:Css.Api.Scheduling.Validators.Agent.AddAgentAdminValidator.#ctor">
             <summary>Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.AddAgentAdminValidator" /> class.</summary>
         </member>
+        <member name="T:Css.Api.Scheduling.Validators.Agent.CreateAgentCategoryValueValidator">
+            <summary>
+            Validator for handling the validation of create AgentCategoryValue object
+            </summary>
+        </member>
+        <member name="M:Css.Api.Scheduling.Validators.Agent.CreateAgentCategoryValueValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.CreateAgentCategoryValueValidator"/> class.
+            </summary>
+        </member>
         <member name="T:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator">
             <summary>
             Validator for handling the validation of update AgentSchedulingGroup object
@@ -513,26 +520,6 @@
         <member name="M:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.UpdateAgentAdminValidator"/> class.
-            </summary>
-        </member>
-        <member name="T:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator">
-            <summary>
-            Validator for handling the validation of update AgentSchedulingGroup object
-            </summary>
-        </member>
-        <member name="M:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.CreateTimeOffValidator"/> class.
-            </summary>
-        </member>
-        <member name="T:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator">
-            <summary>
-            Validator for handling the validation of update AgentSchedulingGroup object
-            </summary>
-        </member>
-        <member name="M:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Css.Api.Scheduling.Validators.Agent.UpdateTimeOffValidator"/> class.
             </summary>
         </member>
         <member name="T:Css.Api.Scheduling.Validators.AgentSchedule.AgentScheduleManagerChartValidator`1">

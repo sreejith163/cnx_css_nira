@@ -27,7 +27,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the SSN.
         /// </summary>
-        public int Ssn { get; set; }
+        public string Ssn { get; set; }
 
         /// <summary>
         /// Gets or sets the sso.
@@ -60,10 +60,10 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         public int AgentSchedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the sen date.
+        /// Gets or sets the hire date.
         /// </summary>
         [BsonRepresentation(BsonType.String)]
-        public DateTime? SenDate { get; set; }
+        public DateTime? HireDate { get; set; }
 
         /// <summary>
         /// Gets or sets the sen ext.
@@ -101,10 +101,16 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// </summary>
         public bool IsDeleted { get; set; }
 
+        [BsonIgnore]
         /// <summary>
         /// Gets or sets the agent data.
         /// </summary>
         public List<AgentData> AgentData { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent category values.
+        /// </summary>
+        public List<AgentCategoryValue> AgentCategoryValues { get; set; } = new List<AgentCategoryValue>();
 
         /// <summary>
         /// Gets or sets the created by.

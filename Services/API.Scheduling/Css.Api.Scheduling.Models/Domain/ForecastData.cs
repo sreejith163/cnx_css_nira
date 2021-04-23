@@ -13,24 +13,15 @@ namespace Css.Api.Scheduling.Models.Domain
 
         public string Time { get; set; }
 
-
-
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
-        public decimal ForecastedContact { get; set; }
+        public long ForecastedContact { get; set; }
 
 
         [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal Aht { get; set; }
 
 
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
-        public decimal ForecastedReq { get; set; }
-
-
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
-        public decimal ScheduledOpen { get; set; }
-
-
+    
+        public long ForecastedReq { get; set; }
 
 
     }

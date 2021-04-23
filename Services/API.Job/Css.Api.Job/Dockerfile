@@ -9,9 +9,11 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Services/API.Job/Css.Api.Job/Css.Api.Job.csproj", "Services/API.Job/Css.Api.Job/"]
 COPY ["Services/API.Job/Css.Api.Job.Business/Css.Api.Job.Business.csproj", "Services/API.Job/Css.Api.Job.Business/"]
+COPY ["Services/API.Job/Css.Api.Job.Repository/Css.Api.Job.Repository.csproj", "Services/API.Job/Css.Api.Job.Repository/"]
 COPY ["Services/API.Job/Css.Api.Job.Models/Css.Api.Job.Models.csproj", "Services/API.Job/Css.Api.Job.Models/"]
 COPY ["Services/API.Core/Css.Api.Core.ExceptionHandling/Css.Api.Core.ExceptionHandling.csproj", "Services/API.Core/Css.Api.Core.ExceptionHandling/"]
 COPY ["Services/API.Core/Css.Api.Core.Models/Css.Api.Core.Models.csproj", "Services/API.Core/Css.Api.Core.Models/"]
+COPY ["Services/API.Core/Css.Api.Core.DataAccess/Css.Api.Core.DataAccess.csproj", "Services/API.Core/Css.Api.Core.DataAccess/"]
 COPY ["Services/API.Core/Css.Api.Core.Utilities/Css.Api.Core.Utilities.csproj", "Services/API.Core/Css.Api.Core.Utilities/"]
 RUN dotnet restore "Services/API.Job/Css.Api.Job/Css.Api.Job.csproj"
 COPY . .

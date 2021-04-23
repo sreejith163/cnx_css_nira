@@ -61,10 +61,26 @@ namespace Css.Api.Reporting.Business.Strategies
         /// <returns>A json result</returns>
         public async Task<ActivityApiResponse> Collect()
         {
-            ISource source = _serviceFactory.Map<ISource>();
-            List<DataFeed> feeds = await source.Pull();
-            var responseFeed = feeds.First();
-            return JsonConvert.DeserializeObject<ActivityApiResponse>(Encoding.Default.GetString(responseFeed.Content));
+            try
+            {
+                ISource source = _serviceFactory.Map<ISource>();
+                List<DataFeed> feeds = await source.Pull();
+                var responseFeed = feeds.First();
+                var response = JsonConvert.DeserializeObject<ActivityApiResponse>(Encoding.Default.GetString(responseFeed.Content));
+                if (!string.IsNullOrWhiteSpace(response.Message))
+                {
+                    response.StatusCode = System.Net.HttpStatusCode.UnprocessableEntity;
+                }
+                return response;
+            }
+            catch(Exception ex)
+            {
+                return new ActivityApiResponse()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    Message = ex.Message
+                };
+            }
         }
 
         /// <summary>
@@ -73,9 +89,9 @@ namespace Css.Api.Reporting.Business.Strategies
         /// <returns>A json result</returns>
         public async Task<ActivityApiResponse> Assign()
         {
-            ITarget target = _serviceFactory.Map<ITarget>();
             try
             {
+                ITarget target = _serviceFactory.Map<ITarget>();
                 var dataFeeds = _serviceFactory.GetRequestFeeds();
                 if (!dataFeeds.Any())
                 {

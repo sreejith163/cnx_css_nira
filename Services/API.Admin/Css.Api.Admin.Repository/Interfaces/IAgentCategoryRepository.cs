@@ -29,6 +29,7 @@ namespace Css.Api.Admin.Repository.Interfaces
         /// <returns></returns>
         Task<AgentCategory> GetAgentCategory(AgentCategoryIdDetails agentCategoryIdDetails);
 
+
         /// <summary>
         /// Creates the agentCategory.
         /// </summary>

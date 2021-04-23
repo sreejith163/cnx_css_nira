@@ -4,7 +4,6 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Controllers
@@ -52,14 +51,11 @@ namespace Css.Api.Scheduling.Controllers
         ///   <br />
         /// </returns>
         [HttpGet("{agentEmployeeId}/myschedule")]
-        public async Task<IActionResult> GetAgentMySchedule(int agentEmployeeId, [FromQuery] MyScheduleQueryParameter myScheduleQueryParameter)
+        public async Task<IActionResult> GetAgentMySchedule(string agentEmployeeId, [FromQuery] MyScheduleQueryParameter myScheduleQueryParameter)
         {
             var result = await _agentScheduleManagerService.GetAgentMySchedule(new EmployeeIdDetails { Id = agentEmployeeId }, myScheduleQueryParameter);
             return StatusCode((int)result.Code, result.Value);
-        }
-
-
- 
+        } 
 
         /// <summary>
         /// Updates the agent schedule manger chart.
@@ -80,7 +76,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="agentScheduleDetails">The agent schedule details.</param>
         /// <returns></returns>
         [HttpPut("{employeeId}/copy")]
-        public async Task<IActionResult> CopyAgentScheduleManagerChart(int employeeId, [FromBody] CopyAgentScheduleManager agentScheduleDetails)
+        public async Task<IActionResult> CopyAgentScheduleManagerChart(string employeeId, [FromBody] CopyAgentScheduleManager agentScheduleDetails)
         {
             var result = await _agentScheduleManagerService.CopyAgentScheduleManagerChart(new EmployeeIdDetails { Id = employeeId }, agentScheduleDetails);
             return StatusCode((int)result.Code, result.Value);

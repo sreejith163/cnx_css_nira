@@ -16,7 +16,14 @@ namespace Css.Api.Reporting.Repository.Interfaces
         /// </summary>
         /// <param name="ssns"></param>
         /// <returns></returns>
-        Task<List<Agent>> GetAgents(List<int> ssns);
+        Task<List<Agent>> GetAgents(List<string> ssns);
+
+        /// <summary>
+        /// A method to pull all existing agents in the input agent scheduling group
+        /// </summary>
+        /// <param name="agentSchedulingGroupId"></param>
+        /// <returns></returns>
+        Task<List<Agent>> GetAgents(int agentSchedulingGroupId);
 
         /// <summary>
         /// A method to upsert all input agents to the collection

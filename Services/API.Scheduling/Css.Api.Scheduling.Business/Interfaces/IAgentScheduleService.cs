@@ -1,5 +1,7 @@
 ﻿using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Business.Interfaces
@@ -68,6 +70,14 @@ namespace Css.Api.Scheduling.Business.Interfaces
         Task<CSSResponse> CopyAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, CopyAgentSchedule agentScheduleDetails);
 
         /// <summary>
+        /// Copies Multiple agent schedule charts.
+        /// </summary>
+        /// <param name="agentScheduleIdDetails">The agent schedule source details.</param>
+        /// <param name="agentScheduleDetailsList">The list of multiple agent schedule details.</param>
+        /// <returns></returns>
+        Task<CSSResponse> MultipleCopyAgentScheduleChart(AgentScheduleIdDetails agentScheduleIdDetails, MultipleCopyAgentScheduleRequest agentScheduleDetailsList);
+
+        /// <summary>
         /// Updates the agent schedule range.
         /// </summary>
         /// <param name="agentScheduleIdDetails">The agent schedule identifier details.</param>
@@ -82,5 +92,18 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <param name="dateRange">The date range.</param>
         /// <returns></returns>
         Task<CSSResponse> DeleteAgentScheduleRange(AgentScheduleIdDetails agentScheduleIdDetails, DateRange dateRange);
+
+
+        Task<CSSResponse> AgentSchedulingGroupScheduleExport(int agentSchedulingGroupId);
+
+
+        Task<CSSResponse> EmployeeScheduleExport(string employeeId);
+
+
+        Task<CSSResponse> GetDateRange(List<int> asgList);
+
+
+        Task<CSSResponse> BatchRelease(BatchRelease batchRelease);
+
     }
 }

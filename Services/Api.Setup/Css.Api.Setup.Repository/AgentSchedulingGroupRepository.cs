@@ -131,8 +131,8 @@ namespace Css.Api.Setup.Repository
         /// <returns></returns>
         public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupsCountBySkillTagIdOrRefId(AgentSchedulingGroupAttribute agentSchedulingGroupAttribute)
         {
-            var agentSchedulingGroups = FindByCondition(x => (x.SkillTagId == agentSchedulingGroupAttribute.SkillTagId || string.Equals(x.Name.Trim(), agentSchedulingGroupAttribute.Name.Trim(),
-                      StringComparison.OrdinalIgnoreCase) || x.RefId == (agentSchedulingGroupAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
+            var agentSchedulingGroups = FindByCondition(x => ((x.SkillTagId == agentSchedulingGroupAttribute.SkillTagId && string.Equals(x.Name.Trim(), agentSchedulingGroupAttribute.Name.Trim(),
+                      StringComparison.OrdinalIgnoreCase)) || x.RefId == (agentSchedulingGroupAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
 
             return await Task.FromResult(agentSchedulingGroups);
         }

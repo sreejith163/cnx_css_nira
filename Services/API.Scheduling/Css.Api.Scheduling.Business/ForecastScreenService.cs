@@ -70,7 +70,7 @@ namespace Css.Api.Scheduling.Business
             var forecast = await _forecastScreenRepository.GetForecastScreenBySkillGroupId(forecastIdDetails);
             if (forecast == null)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                return new CSSResponse(HttpStatusCode.OK);
             }
 
             return new CSSResponse(forecast, HttpStatusCode.OK);
@@ -157,190 +157,112 @@ namespace Css.Api.Scheduling.Business
         //    }
         //}
 
-        public async Task<CSSResponse> ImportForecastData(ImportForecastDetails importForecastDetails)
+        public async Task<CSSResponse> ImportForecastData(ImportForecastMain importForecastDetails, int skillGroupId)
         {
-            List<string> forecastDataTime =  new List<string> 
-            { 
-                "12:00 AM", "12:30 AM", "1:00 AM", "1:30 AM", "2:00 AM","2:30 AM","3:00 AM","3:30 AM","4:00 AM","4:30 AM","5:00 AM","5:30 AM","6:00 AM","6:30 AM","7:00 AM","7:30 AM","8:00 AM","8:30 AM","9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM",
-                "12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM","5:30 PM","6:00 PM","6:30 PM","7:00 PM","7:30 PM","8:00 PM","8:30 PM","9:00 PM","9:30 PM","10:00 PM","10:30 PM","11:00 PM","11:30 PM",
-            };
+            //List<string> forecastDataTime =  new List<string> 
+            //{ 
+            //    "12:00 AM", "12:30 AM", "1:00 AM", "1:30 AM", "2:00 AM","2:30 AM","3:00 AM","3:30 AM","4:00 AM","4:30 AM","5:00 AM","5:30 AM","6:00 AM","6:30 AM","7:00 AM","7:30 AM","8:00 AM","8:30 AM","9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM",
+            //    "12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM","5:30 PM","6:00 PM","6:30 PM","7:00 PM","7:30 PM","8:00 PM","8:30 PM","9:00 PM","9:30 PM","10:00 PM","10:30 PM","11:00 PM","11:30 PM",
+            //};
             List<string> errors = new List<string>();
             List<string> success = new List<string>();
             ForecastDataResponse forecastDataResponse = new ForecastDataResponse();
             int importCount = 0;
             int importSuccess = 0;
-            var forecastScreens = importForecastDetails.ForecastScreenDataDetails;
-            List<ForecastScreen> createForecastScreens = new List<ForecastScreen>();
-            var importDuplicates = importForecastDetails.ForecastScreenDataDetails.GroupBy(x => new { x.Date, x.Time })
-                   .Where(x => x.Skip(1).Any()).ToArray();
+            var forecastScreens = importForecastDetails.data;
+            //List<ForecastScreen> createForecastScreens = new List<ForecastScreen>();
+            var validators = new List<ImportForecastDetails>();
+
+            var forecastDataPreCreate = new List<ForecastDataAtrribute>();
+  
+
+            //var importDuplicates = importForecastDetails.data
+            //    .SelectMany(x => x.ForecastData)               
+            //    .GroupBy(x => new { })
+            //    .Where(x => x.Skip(1).Any()).ToArray();
 
 
-            
+
+            //if (importDuplicates.Any())
+            //    {
+            //        foreach (var duplicateList in importDuplicates)
+            //        {
+            //            errors.Add(string.Format("Time={0} has {1} duplicates",
+            //            duplicateList.Key,
+            //            duplicateList.Count() - 1));
+
+            //        }
+            //    }
+
+
+            //else { 
+
             // check first if skillGroup exists
-            var skillGroup = await _skillGroupRepository.GetSkillGroup(new SkillGroupIdDetails { SkillGroupId = importForecastDetails.SkillGroupId });
+            var skillGroup = await _skillGroupRepository.GetSkillGroup(new SkillGroupIdDetails { SkillGroupId = skillGroupId });
             if (skillGroup == null)
             {
-                //List<string> skillGroupError = new List<string>();
-                //skillGroupError.Add($"skillGroupId '{forecastScreen.SkillGroupId}' not found.");
-
-                errors.Add($"skillGroupId '{importForecastDetails.SkillGroupId}' not found.");
-            }
-           
-            else if (importDuplicates.Any())
-            {
-                foreach (var duplicateList in importDuplicates)
-                {
-                    //errors.Add(string.Format("Date={0},Time={1} has {2} duplicates",
-                    //  duplicateList.Key.Date,
-                    //  duplicateList.Key.Time,
-                    //  duplicateList.Count() - 1));
-                    errors.Add(string.Format("Date={0},Time={1} has {2} duplicated row",
-                      duplicateList.Key.Date,
-                      duplicateList.Key.Time,
-                      duplicateList.Count() - 1));
-                   
-                }
-              
+                errors.Add($"skillGroupId '{skillGroupId}' not found.");
             }
             else
             {
-                List<ImportForecastScreenDataDetails> importForecastScreenList = new List<ImportForecastScreenDataDetails>();
-
-                importForecastScreenList.Clear();
-                foreach (ImportForecastScreenDataDetails forecastScreen in forecastScreens)
+                
+                foreach (var forecastItem in forecastScreens)
                 {
                     importCount = importCount + 1;
-                    if (forecastScreen.Date == null)
+                   
+
+                    if (forecastItem.Date == null)
                     {
                         errors.Add("Date is Empty.");
                     }
+                   
                     else
                     {
                         DateTime temp;
-                        if (DateTime.TryParseExact(forecastScreen.Date, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+                        //datetime checking
+                        if (DateTime.TryParseExact(forecastItem.Date, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
                         {
-                            var forecastDate = DateTime.ParseExact(forecastScreen.Date, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                            var forecast = await _forecastScreenRepository.GetForecastScreenBySkillGroupId(new ForecastIdDetails { SkillGroupId = importForecastDetails.SkillGroupId, Date = forecastDate.ToString("yyyy-MM-dd") });
-                            //var forecast = await _forecastScreenRepository.GetForecastDataID(forecastScreen.ForecastId);
-                            if (forecast != null)
-                            {
-                                var forecastData = forecast.ForecastData;
-                                List<string> updateErrors = new List<string>();
-                                var forecastDataUpdate = forecastScreen;
-                                if (forecastData.Exists(x => x.Time == forecastDataUpdate.Time))
-                                {
-                                    var forecastDataDetails = forecastData.Find(x => x.Time == forecastDataUpdate.Time);
-                                    forecastDataDetails.Aht = forecastDataUpdate.Aht;
-                                    forecastDataDetails.ForecastedContact = forecastDataUpdate.ForecastedContact;
-                                    forecastDataDetails.ForecastedReq = forecastDataUpdate.ForecastedReq;
-                                }
-                                else
-                                {
-                                    updateErrors.Add($"Invalid Time Input {forecastDataUpdate.Time}");
-                                }
-                                if (updateErrors.Count > 0)
-                                {
-                                    errors.AddRange(updateErrors);
-                                }
-                                else
-                                {
-                                    var forecastDataMapped = _mapper.Map<List<ForecastDataAtrribute>>(forecastData);
-                                    //update forecast.forecastData from forecastScreen.forecastData
-                                    var updateForecastDetails = new UpdateForecastData
-                                    {
-                                        ForecastData = forecastDataMapped
-                                    };             
-                                    var forecastRequest = _mapper.Map(updateForecastDetails, forecast);
-                                    _forecastScreenRepository.UpdateForecastData(forecastRequest);
-                                    await _uow.Commit();
-                                    success.Add($"'1 forecast data updated.");
-                                    importSuccess = importSuccess + 1;
-                                }
-                            }
-                            // create if does not exists
-                            if (forecast == null)
-                            {
-                                List<string> updateErrors = new List<string>();
-                                updateErrors.Clear();
-                                var forecastPreCreate = new CreateForecastData
-                                {
-                                    Date = forecastDate.ToString("yyyy-MM-dd"),
-                                    SkillGroupId = importForecastDetails.SkillGroupId,
-                                };
-                                var forecastDataPreCreate = new List<ForecastDataAtrribute>();
 
-                              
-                                foreach (var time in forecastDataTime)
-                                {
-                                    var forecastDataDefault = new ForecastDataAtrribute
-                                    {
-                                        Time = time,
-                                        Aht = 0,
-                                        ForecastedContact = 0,
-                                        ForecastedReq = 0,
-                                        ScheduledOpen = 0,
-                                    };
-                                    forecastDataPreCreate.Add(forecastDataDefault);
-                                }
-                                forecastPreCreate.ForecastData = forecastDataPreCreate;
-                                var forecastDataPreCreateRequest = _mapper.Map<ForecastScreen>(forecastPreCreate);
-                                var forecastData = forecastDataPreCreateRequest.ForecastData;
-                                var newForecastData = forecastScreen;
-                                if (forecastData.Exists(x => x.Time == newForecastData.Time))
-                                {
-                                    if(importForecastScreenList.Exists(x => x.Time == newForecastData.Time && x.Date == forecastDataPreCreateRequest.Date))
-                                    {
-                                        updateErrors.Add($"Duplicate Entry for creating {newForecastData.Time}");
-                                    }
-                                    else
-                                    {
-                                        if(importForecastScreenList.Exists(x => x.Date == forecastDataPreCreateRequest.Date))
-                                        {
-                                            // check if a list with the same date exists and append the data
-                                            var appendData = createForecastScreens.Find(x => x.Date == forecastDataPreCreateRequest.Date && x.SkillGroupId == forecastDataPreCreateRequest.SkillGroupId);
-                                            var forecastDataDetails = appendData.ForecastData.Find(x => x.Time == newForecastData.Time);
-                                            forecastDataDetails.Aht = newForecastData.Aht;
-                                            forecastDataDetails.ForecastedContact = newForecastData.ForecastedContact;
-                                            forecastDataDetails.ForecastedReq = newForecastData.ForecastedReq;
-                                            importForecastScreenList.Add(new ImportForecastScreenDataDetails { Date = forecastDataPreCreateRequest.Date, Time = newForecastData.Time });
-                                            success.Add($"{newForecastData.Time} forecast data inserted. {forecastDataPreCreateRequest.Date}");
-                                            importSuccess = importSuccess + 1;
-                                        }
-                                        else
-                                        {
-                                            var forecastDataDetails = forecastData.Find(x => x.Time == newForecastData.Time);
-                                            forecastDataDetails.Aht = newForecastData.Aht;
-                                            forecastDataDetails.ForecastedContact = newForecastData.ForecastedContact;
-                                            forecastDataDetails.ForecastedReq = newForecastData.ForecastedReq;
-                                            importForecastScreenList.Add(new ImportForecastScreenDataDetails { Date = forecastDataPreCreateRequest.Date, Time = newForecastData.Time });
-                                            createForecastScreens.Add(forecastDataPreCreateRequest);
-                                            success.Add($"{newForecastData.Time} forecast data inserted. {forecastDataPreCreateRequest.Date}");
-                                            importSuccess = importSuccess + 1;
-                                        }
-                                    }  
-                                }
-                                else
-                                {
-                                    updateErrors.Add($"Invalid Time Input {newForecastData.Time}");
-                                }                             
-                                if (updateErrors.Count > 0)
-                                {
-                                    errors.AddRange(updateErrors);
-                                }                               
-                            }
+
+
+                            
+                            var forecastDate = DateTime.ParseExact(forecastItem.Date, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                            var forecast = await _forecastScreenRepository.GetForecastScreenBySkillGroupId(new ForecastIdDetails { SkillGroupId = skillGroupId, Date = forecastDate.ToString("yyyy-MM-dd") });
+                            _forecastScreenRepository.DeleteForecast(new ForecastIdDetails { SkillGroupId = skillGroupId, Date = forecastDate.ToString("yyyy-MM-dd") });
+
+                            List<ForecastScreen> createForecastScreens = new List<ForecastScreen>();
+                            var newForecastData = forecastItem.ForecastData.ToList();
+
+                            //List<ForecastDataAtrribute> forecastDataAtrributes = new List<ForecastDataAtrribute>();
+
+                            var forecastPreCreate = new CreateForecastData
+                            {
+                                SkillGroupId = skillGroupId,
+                                Date = forecastDate.ToString("yyyy-MM-dd"),
+                                ForecastData = newForecastData
+
+                            };
+                            var forecastDataPreCreateRequest = _mapper.Map<ForecastScreen>(forecastPreCreate);
+                            createForecastScreens.Add(forecastDataPreCreateRequest);
+                       
+                          
+                                  _forecastScreenRepository.CreateMultipleForecastData(createForecastScreens);
+                                success.Add("Imported");
+                                importSuccess = importSuccess + 1;
+                          
                         }
                         else
                         {
-                            errors.Add($"Invalid Date Format '{forecastScreen.Date}'");
+                            //invalid time error 
+                            errors.Add($"Invalid Date Format '{forecastItem.Date}'");
+
                         }
                     }
                 }
             }
-            if (createForecastScreens.Count > 0)
-            {
-                _forecastScreenRepository.CreateMultipleForecastData(createForecastScreens);
-                await _uow.Commit();
-            }
+            //}
+
+
             string importedDataCount;
             string row_or_rows;
             if(importCount > 1)
@@ -355,9 +277,10 @@ namespace Css.Api.Scheduling.Business
             forecastDataResponse.Errors = errors;
             forecastDataResponse.Success = success;
             forecastDataResponse.ImportStatus = importedDataCount;
+            await _uow.Commit();
             return new CSSResponse(forecastDataResponse, HttpStatusCode.OK);
         }
-
+   
         /// <summary>
         /// Gets the agent my schedule.
         /// </summary>
@@ -395,8 +318,7 @@ namespace Css.Api.Scheduling.Business
                 item1.Charts = item1.Charts.Where(p => numbers.Contains(p.SchedulingCodeId)).ToList();
             }
 
-            int minutes = 30;
-            var interval = new TimeSpan(0, minutes, 0);
+           
             var schedOpen = agentSchedule.SelectMany(x => x.Charts).ToList();
 
             agentSchedule.RemoveAll(x => x.Charts.Count() == 0);
@@ -405,44 +327,66 @@ namespace Css.Api.Scheduling.Business
             var timeList = new List<TimeSpan>();
             var msg = new List<object>();
 
+            var times = new List<TimeSpan>();
+            
+            //TimeSpan start = TimeSpan.Parse("23:55");
+            //TimeSpan end = TimeSpan.Parse("00:10");
+         
+
+
             foreach (var chart in schedOpen)
             {
-                TimeSpan start = chart.StartDateTime.TimeOfDay;
-                TimeSpan end = chart.EndDateTime.TimeOfDay;
-                
-
-                var diffSpan = end - start;
-                var diffMinutes = diffSpan.TotalMinutes > 0 ? diffSpan.TotalMinutes : diffSpan.TotalMinutes + (60 * 24);
-                for (int i = 0; i < diffMinutes + minutes; i += minutes)
+                double interval = 30;
+                DateTime starting = chart.StartDateTime;
+                DateTime ending = chart.EndDateTime;
+                //var dateTimeWithZeroTimeSpan = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+                DateTime dateOfTime = chart.EndDateTime.Date;
+                for (var ts = starting; ts <= ending; ts = ts.AddMinutes(interval))
                 {
-                    DateTime dt = new DateTime() + start;
-                    var scheduleOpen = new ScheduleOpen { Time = dt.ToString("h:mm tt") };
-                    myTimeList.Add(scheduleOpen);
-                    timeList.Add(start);
-                    start = start.Add(interval);
-                    
+                    times.Add(ts.TimeOfDay);
+
+                    DateTime dt = new DateTime() + ts.TimeOfDay;
+                    var scheduledOpen = new ScheduleOpen {
+                        Date = dateOfTime.ToString("yyyy-MM-dd"),
+                        Time = dt.ToString("h:mm tt") 
+                    };
+
+                    msg.Add(scheduledOpen);
+                    myTimeList.Add(scheduledOpen);
                 }
             }
-           
-            var groupedTime = myTimeList
+            var dateString = date.Date.ToString("yyyy-MM-dd");
+            var selectDate = myTimeList
+        
+                .Select(x => new { x.Date, x.Time, x.scheduleOpen })
+                .Where(x => x.Date.Equals(dateString));
+
+                var groupedTime = selectDate
                 .GroupBy(x => x.Time)
                 .Select(
-                    group => new
-                     {
-                       
-                        time = group.Key,
-                        scheduleOpen = group.Count()
-                    }
-                );
+                   group => new
+                   {
+                      
+                       time = group.Key,
+                       scheduleOpen = group.Count()
+                   }
+               );
+                
+            var selectTime = groupedTime
+                .OrderBy(x => x.time)
+                .Select(x => new {x.time, x.scheduleOpen }).
+                Where(a => a.time.Contains(":30") || a.time.Contains(":00"));
 
+         
             if (groupedTime.Count() == 0)
             {
                 string statusMessage;
                 statusMessage = "No scheduled open";
-                return new CSSResponse(statusMessage,HttpStatusCode.OK);
+               return new CSSResponse(statusMessage,HttpStatusCode.OK);
             }
-         
-            return new CSSResponse(groupedTime, HttpStatusCode.OK);
+       
+
+            return new CSSResponse(selectTime, HttpStatusCode.OK);
         }
 
 

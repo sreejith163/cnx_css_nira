@@ -137,6 +137,7 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
             Context.AddCommand(() => Collection.FindOneAndDeleteAsync(filterExpression));
         }
 
+
         /// <summary>
         /// Deletes the one asynchronous.
         /// </summary>
@@ -166,6 +167,16 @@ namespace Css.Api.Core.DataAccess.Repository.NoSQL
         public virtual void DeleteManyAsync(Expression<Func<TDocument, bool>> filterExpression)
         {
             Context.AddCommand(() => Collection.DeleteManyAsync(filterExpression));
+        }
+
+        /// <summary>
+        /// Bulk upserts asychronous
+        /// </summary>
+        /// <param name="writeModels">The list of WriteModel</param>
+        /// <param name="bulkWriteOptions">The bulk write options</param>
+        public void BulkWriteAsync(List<WriteModel<TDocument>> writeModels,BulkWriteOptions bulkWriteOptions = null)
+        {
+            Context.AddCommand(() => Collection.BulkWriteAsync(writeModels, bulkWriteOptions));
         }
 
         /// <summary>

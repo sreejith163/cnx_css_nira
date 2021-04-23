@@ -136,9 +136,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// </summary>
         /// <param name="employeeId">The employee identifier.</param>
         [Theory]
-        [InlineData(100)]
-        [InlineData(101)]
-        public async void GetAgentMyScheduleWithNotFound(int employeeId)
+        [InlineData("100")]
+        [InlineData("101")]
+        public async void GetAgentMyScheduleWithNotFound(string employeeId)
         {
             EmployeeIdDetails employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
 
@@ -164,8 +164,8 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// </summary>
         /// <param name="employeeId">The employee identifier.</param>
         [Theory]
-        [InlineData(1)]
-        public async void GetAgentMySchedule(int employeeId)
+        [InlineData("1")]
+        public async void GetAgentMySchedule(string employeeId)
         {
             EmployeeIdDetails employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
 
@@ -197,9 +197,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// <param name="schedulingCode">The scheduling code.</param>
         /// <param name="employeeId">The employee identifier.</param>
         [Theory]
-        [InlineData(100, 1)]
-        [InlineData(101, 2)]
-        public async void UpdateAgentScheduleMangerChartWithNotFoundForSchedulingCode(int schedulingCode, int employeeId)
+        [InlineData(100, "1")]
+        [InlineData(101, "2")]
+        public async void UpdateAgentScheduleMangerChartWithNotFoundForSchedulingCode(int schedulingCode, string employeeId)
         {
             UpdateAgentScheduleManager agentScheduleManager = new UpdateAgentScheduleManager
             {
@@ -227,7 +227,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                     }
                 },
                 ModifiedBy = "admin",
-                ModifiedUser = 5,
+                ModifiedUser = "5",
                 ActivityOrigin = ActivityOrigin.CSS,
                 IsImport = false
             };
@@ -254,9 +254,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// <param name="schedulingCode">The scheduling code.</param>
         /// <param name="employeeId">The employee identifier.</param>
         [Theory]
-        [InlineData(1, 1)]
-        [InlineData(2, 2)]
-        public async void UpdateAgentScheduleMangerChartWithoutImportFlag(int schedulingCode, int employeeId)
+        [InlineData(1, "1")]
+        [InlineData(2, "2")]
+        public async void UpdateAgentScheduleMangerChartWithoutImportFlag(int schedulingCode, string employeeId)
         {
             UpdateAgentScheduleManager agentScheduleManager = new UpdateAgentScheduleManager
             {
@@ -284,7 +284,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                     }
                 },
                 ModifiedBy = "admin",
-                ModifiedUser = 5,
+                ModifiedUser = "5",
                 ActivityOrigin = ActivityOrigin.CSS,
                 IsImport = false
             };
@@ -311,9 +311,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// <param name="schedulingCode">The scheduling code.</param>
         /// <param name="employeeId">The employee identifier.</param>
         [Theory]
-        [InlineData(1, 1)]
-        [InlineData(2, 2)]
-        public async void UpdateAgentScheduleMangerChartWithImportFlag(int schedulingCode, int employeeId)
+        [InlineData(1, "1")]
+        [InlineData(2, "2")]
+        public async void UpdateAgentScheduleMangerChartWithImportFlag(int schedulingCode, string employeeId)
         {
             UpdateAgentScheduleManager agentScheduleManager = new UpdateAgentScheduleManager
             {
@@ -341,7 +341,7 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                     }
                 },
                 ModifiedBy = "admin",
-                ModifiedUser = 5,
+                ModifiedUser = "5",
                 ActivityOrigin = ActivityOrigin.CSS,
                 IsImport = true
             };
@@ -374,9 +374,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// <param name="month">The month.</param>
         /// <param name="day">The day.</param>
         [Theory]
-        [InlineData(100, 2021, 3, 21)]
-        [InlineData(101, 2021, 3, 22)]
-        public async void CopyAgentScheduleManagerChartWithNotFound(int employeeId, int year, int month, int day)
+        [InlineData("100", 2021, 3, 21)]
+        [InlineData("101", 2021, 3, 22)]
+        public async void CopyAgentScheduleManagerChartWithNotFound(string employeeId, int year, int month, int day)
         {
             EmployeeIdDetails employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
             CopyAgentScheduleManager copyAgentScheduleManager = new CopyAgentScheduleManager
@@ -384,9 +384,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 AgentSchedulingGroupId = 1,
                 Date = new DateTime(year, month, day),
                 ActivityOrigin = ActivityOrigin.CSS,
-                EmployeeIds = new List<int> { 1, 2 },
+                EmployeeIds = new List<string> { "1", "2" },
                 ModifiedBy = "admin",
-                ModifiedUser = 1
+                ModifiedUser = "1"
             };
 
             mockAgentScheduleManagerRepository.Setup(mr => mr.GetAgentScheduleManagerChart(It.IsAny<EmployeeIdDetails>(), It.IsAny<DateDetails>())).ReturnsAsync(
@@ -413,9 +413,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
         /// <param name="month">The month.</param>
         /// <param name="day">The day.</param>
         [Theory]
-        [InlineData(1, 2021, 3, 21)]
-        [InlineData(2, 2021, 3, 22)]
-        public async void CopyAgentScheduleManagerChart(int employeeId, int year, int month, int day)
+        [InlineData("1", 2021, 3, 21)]
+        [InlineData("2", 2021, 3, 22)]
+        public async void CopyAgentScheduleManagerChart(string employeeId, int year, int month, int day)
         {
             EmployeeIdDetails employeeIdDetails = new EmployeeIdDetails { Id = employeeId };
             CopyAgentScheduleManager copyAgentScheduleManager = new CopyAgentScheduleManager
@@ -423,9 +423,9 @@ namespace Css.Api.Scheduling.Business.UnitTest.Services
                 AgentSchedulingGroupId = 1,
                 Date = new DateTime(year, month, day),
                 ActivityOrigin = ActivityOrigin.CSS,
-                EmployeeIds = new List<int>(),
+                EmployeeIds = new List<string>(),
                 ModifiedBy = "admin",
-                ModifiedUser = 1
+                ModifiedUser = "1"
             };
 
             mockAgentScheduleManagerRepository.Setup(mr => mr.GetAgentScheduleManagerChart(It.IsAny<EmployeeIdDetails>(), It.IsAny<DateDetails>())).ReturnsAsync(

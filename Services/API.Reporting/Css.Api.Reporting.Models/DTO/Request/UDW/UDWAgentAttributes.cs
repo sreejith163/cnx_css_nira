@@ -7,9 +7,6 @@ namespace Css.Api.Reporting.Models.DTO.Request.UDW
 {
     public class UDWAgentAttributes
     {
-        [XmlElement(ElementName = "sso")]
-        public string SSO { get; set; }
-
         [XmlElement(ElementName = "UUID")]
         public string UUID { get; set; }
 
@@ -52,5 +49,9 @@ namespace Css.Api.Reporting.Models.DTO.Request.UDW
         [XmlArray(ElementName = "agentData")]
         [XmlArrayItem(ElementName = "group")]
         public List<UDWAgentDataGroup> AgentData { get; set; }
+
+        [XmlArray(ElementName = "cssMessages")]
+        [XmlArrayItem(ElementName = "message")]
+        public List<string> Messages { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Request.AgentCategoryValueView;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Repository.Interfaces;
@@ -132,7 +133,7 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentAdminEmployeeIdsDetails">The agent admin employee ids details.</param>
         /// <returns></returns>
-        public async Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<int> agentAdminEmployeeIdsDetails)
+        public async Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<string> agentAdminEmployeeIdsDetails)
         {
             var query =
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
@@ -143,6 +144,22 @@ namespace Css.Api.Scheduling.Repository
             return await Task.FromResult(agentAdmins.ToList());
         }
 
+        /// <summary>
+        /// Gets the agent admins by category identifier.
+        /// </summary>
+        /// <param name="agentCategoryDetails">The agent category details.</param>
+        /// <returns></returns>
+        public async Task<List<Agent>> GetAgentAdminsByCategoryId(List<int> agentCategoryDetails)
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
+                Builders<Agent>.Filter.ElemMatch(
+                    i => i.AgentCategoryValues, category => agentCategoryDetails.Contains(category.CategoryId));
+
+            var agentAdmins = FilterBy(query);
+
+            return await Task.FromResult(agentAdmins.ToList());
+        }
 
         /// <summary>Gets the agent admins by ids.</summary>
         /// <param name="agentAdminIdsDetails">The agent admin ids details.</param>
@@ -167,7 +184,7 @@ namespace Css.Api.Scheduling.Repository
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
-        public async Task<List<int>> GetEmployeeIdsByAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
+        public async Task<List<string>> GetEmployeeIdsByAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails)
         {
             var query =
                 Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) &
@@ -176,6 +193,32 @@ namespace Css.Api.Scheduling.Repository
             var employees = FilterBy(query);
 
             return await Task.FromResult(employees?.Select(x => x.Ssn).ToList());
+        }
+
+
+        public async Task<List<object>> GetAgentList()
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false) ;
+
+            var msg = new List<object>();
+            var employees = FilterBy(query);
+            foreach (var item in employees)
+            {
+                var x = new AgentList
+                {
+                    EmployeeId = item.Ssn
+
+                };
+                msg.Add(x);
+
+            }
+
+
+
+
+
+            return await Task.FromResult(msg);
         }
 
         /// <summary>
@@ -190,6 +233,126 @@ namespace Css.Api.Scheduling.Repository
                 .Count();
 
             return await Task.FromResult(count);
+        }
+
+        /// <summary>
+        /// Updates the agent category value.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="categoryValue">The category value.</param>
+        public void UpdateAgentCategoryValue(EmployeeIdDetails employeeIdDetails, AgentCategoryValue categoryValue)
+        {            
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.Ssn, employeeIdDetails.Id) & 
+                Builders<Agent>.Filter.ElemMatch(
+                    i => i.AgentCategoryValues, category => category.CategoryId == categoryValue.CategoryId) &
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false);
+
+            var documentCount = FindCountByIdAsync(query).Result;
+            if (documentCount > 0)
+            {
+                var update = Builders<Agent>.Update
+                    .Set(x => x.AgentCategoryValues[-1].StartDate, categoryValue.StartDate)
+                    .Set(x => x.AgentCategoryValues[-1].CategoryValue, categoryValue.CategoryValue);
+
+                UpdateOneAsync(query, update);
+            }
+            else
+            {
+                var update = Builders<Agent>.Update.AddToSet(x => x.AgentCategoryValues, categoryValue);
+                UpdateOneAsync(query, update);
+            }
+        }
+        /// <summary>
+        /// Updates the agent category value.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="categoryValue">The category value.</param>
+        public void ImportUpdateAgentCategoryValue(EmployeeIdDetails employeeIdDetails, AgentCategoryValue categoryValue)
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.Ssn, employeeIdDetails.Id) &
+                Builders<Agent>.Filter.ElemMatch(
+                    i => i.AgentCategoryValues, category => category.CategoryId == categoryValue.CategoryId) &
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false);
+
+            var documentCount = FindCountByIdAsync(query).Result;
+            if (documentCount > 0)
+            {
+                var update = Builders<Agent>.Update
+                    .Set(x => x.AgentCategoryValues[-1].StartDate, categoryValue.StartDate)
+                    .Set(x => x.AgentCategoryValues[-1].CategoryValue, categoryValue.CategoryValue);
+
+                UpdateOneAsync(query, update);
+            }
+            else
+            {
+               var query1 =
+               Builders<Agent>.Filter.Eq(i => i.Ssn, employeeIdDetails.Id) &
+               Builders<Agent>.Filter.Eq(i => i.IsDeleted, false);
+                var update = Builders<Agent>.Update.Push(x => x.AgentCategoryValues, categoryValue);
+                UpdateOneAsync(query1, update);
+            }
+        }
+        public void UpdateHireDate(EmployeeIdDetails employeeIdDetails, DateTime hireDate)
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.Ssn, employeeIdDetails.Id) &
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false);
+            var update = Builders<Agent>.Update
+              .Set(x => x.HireDate, hireDate);
+             
+            UpdateOneAsync(query, update);
+
+        }
+        public void UpdateFirstName(EmployeeIdDetails employeeIdDetails, string firstname)
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.Ssn, employeeIdDetails.Id) &
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false);
+            var update = Builders<Agent>.Update
+              .Set(x => x.FirstName, firstname);
+
+            UpdateOneAsync(query, update);
+
+        }
+        public void UpdateLastName(EmployeeIdDetails employeeIdDetails, string lastname)
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.Ssn, employeeIdDetails.Id) &
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false);
+            var update = Builders<Agent>.Update
+              .Set(x => x.FirstName, lastname);
+
+            UpdateOneAsync(query, update);
+
+        }
+
+        public void UpdateTeamLead(EmployeeIdDetails employeeIdDetails, string teamlead)
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.Ssn, employeeIdDetails.Id) &
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false);
+            var update = Builders<Agent>.Update
+              .Set(x => x.SupervisorName, teamlead);
+
+            UpdateOneAsync(query, update);
+
+        }
+        public void ImportUpdateAgent(EmployeeIdDetails employeeIdDetails, AgentSchedulingUpdateRequest agentSchedulingUpdateRequest)
+        {
+            var query =
+                Builders<Agent>.Filter.Eq(i => i.Ssn, employeeIdDetails.Id) &
+                Builders<Agent>.Filter.Eq(i => i.IsDeleted, false);
+            var update = Builders<Agent>.Update
+                .Set(x => x.Mu, agentSchedulingUpdateRequest.RefId.ToString())
+                .Set(x => x.ClientId, agentSchedulingUpdateRequest.ClientId)
+                .Set(x => x.ClientLobGroupId, agentSchedulingUpdateRequest.ClientLobGroupId)
+                .Set(x => x.SkillGroupId, agentSchedulingUpdateRequest.SkillGroupId)
+                .Set(x => x.SkillTagId, agentSchedulingUpdateRequest.SkillTagId)
+                .Set(x => x.AgentSchedulingGroupId, agentSchedulingUpdateRequest.AgentSchedulingGroupId)
+                .Set(x => x.ModifiedBy, agentSchedulingUpdateRequest.ModifiedBy);
+            UpdateOneAsync(query, update);
         }
 
         /// <summary>

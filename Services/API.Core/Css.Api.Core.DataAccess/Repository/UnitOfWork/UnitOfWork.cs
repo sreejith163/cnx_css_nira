@@ -27,7 +27,7 @@ namespace Css.Api.Core.DataAccess.Repository.UnitOfWork
         public async Task<bool> Commit()
         {
             var changeAmount = await _context.SaveChanges();
-
+            _context.DisposeCommands();
             return changeAmount > 0;
         }
 

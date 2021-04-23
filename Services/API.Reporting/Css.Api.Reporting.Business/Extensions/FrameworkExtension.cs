@@ -65,9 +65,12 @@ namespace Css.Api.Reporting.Business.Extensions
         /// <returns></returns>
         private static IServiceCollection AddBaseServices(this IServiceCollection services)
         {
+            services.AddSingleton<IConfigurationService, ConfigurationService>();
+            services.AddSingleton<IBatchService, BatchService>();
             services.AddScoped<IMapperService, MapperService>();
             services.AddScoped<IFTPService, FTPService>();
             services.AddScoped<IScheduleService, ScheduleService>();
+            services.AddScoped<IDispatchService, DispatchService>();
             services.AddMongoConfiguration();
             return services;
         }
@@ -112,6 +115,7 @@ namespace Css.Api.Reporting.Business.Extensions
         private static IServiceCollection AddStrategies(this IServiceCollection services)
         {
             services.AddScoped<IActivityStrategy, ActivityStrategy>();
+            services.AddScoped<IDispatchStrategy, DispatchStrategy>();
             return services;
         }
 
@@ -146,6 +150,7 @@ namespace Css.Api.Reporting.Business.Extensions
             services.AddScoped<IAgentScheduleRepository, AgentScheduleRepository>();
             services.AddScoped<IAgentScheduleManagerRepository, AgentScheduleManagerRepository>();
             services.AddScoped<ISchedulingCodeRepository, SchedulingCodeRepository>();
+            services.AddScoped<IAgentCategoryRepository, AgentCategoryRepository>();
             services.AddScoped<ITimezoneRepository, TimezoneRepository>();
             services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
             return services;

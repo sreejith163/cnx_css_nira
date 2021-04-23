@@ -280,6 +280,10 @@ namespace Css.Api.Admin.Repository
 
         public IUserLanguageRepository UserLanguage => throw new System.NotImplementedException();
 
+        public ILogRepository Log => throw new System.NotImplementedException();
+
+        public IAuthRepository Auth => throw new System.NotImplementedException();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryWrapper" /> class.
         /// </summary>

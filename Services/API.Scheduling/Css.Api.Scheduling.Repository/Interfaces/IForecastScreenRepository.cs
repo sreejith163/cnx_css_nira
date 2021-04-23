@@ -31,5 +31,8 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="agentAdminRequest">The agent admin request.</param>
         void UpdateForecastData(ForecastScreen forecastDataRequest);
 
+
+        void DeleteForecast(ForecastIdDetails forecastIdDetails);
+
     }
 }

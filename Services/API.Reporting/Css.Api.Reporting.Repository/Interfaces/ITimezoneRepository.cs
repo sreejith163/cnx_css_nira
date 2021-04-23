@@ -19,6 +19,12 @@ namespace Css.Api.Reporting.Repository.Interfaces
         Task<Timezone> GetTimezone(int timezoneId);
 
         /// <summary>
+        /// The method to fetch all the timezones
+        /// </summary>
+        /// <returns>The list of instances of Timezone</returns>
+        Task<List<Timezone>> GetTimezones();
+
+        /// <summary>
         /// The method to fetch all the timezone matching the input timezone ids
         /// </summary>
         /// <param name="timezoneIds"></param>

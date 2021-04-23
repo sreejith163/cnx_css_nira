@@ -262,7 +262,6 @@ namespace Css.Api.Admin.Business
             return new CSSResponse(HttpStatusCode.NoContent);
         }
 
-
         /// <summary>
         /// Deletes the scheduling code.
         /// </summary>

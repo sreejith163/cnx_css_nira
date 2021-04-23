@@ -1,6 +1,5 @@
 using Css.Api.Core.Models.DTO.Request;
 using Css.Api.Core.Models.Enums;
-using Css.Api.Scheduling.Models.Enums;
 using System;
 
 namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
@@ -21,12 +20,12 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ActivityLog
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
-        public int? EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the executed user.
         /// </summary>
-        public int? ExecutedUser { get; set; }
+        public string ExecutedUser { get; set; }
 
         /// <summary>
         /// Gets or sets the executed user.

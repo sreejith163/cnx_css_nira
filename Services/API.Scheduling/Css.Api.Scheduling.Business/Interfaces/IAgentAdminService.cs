@@ -51,6 +51,13 @@ namespace Css.Api.Scheduling.Business.Interfaces
         Task<CSSResponse> MoveAgentAdmins(MoveAgentAdminsDetails moveAgentAdminsDetails);
 
         /// <summary>
+        /// Updates the agent category values.
+        /// </summary>
+        /// <param name="agentCategoryValue">The agent category value.</param>
+        /// <returns></returns>
+        Task<CSSResponse> UpdateAgentCategoryValues(CreateAgentCategoryValue agentCategoryValue);
+
+        /// <summary>
         /// Deletes the Agent Admin.
         /// </summary>
         /// <param name="agentAdminIdDetails">The agentAdmin identifier details.</param>
@@ -70,6 +77,5 @@ namespace Css.Api.Scheduling.Business.Interfaces
         ///   <br />
         /// </returns>
         Task<CSSResponse> GetAgentActivityLogs(ActivityLogQueryParameter agentActivityLogQueryParameter);
-
     }
 }

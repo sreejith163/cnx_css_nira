@@ -1,4 +1,5 @@
-﻿using Css.Api.Core.Utilities.Extensions;
+﻿using Css.Api.Core.Models.Enums;
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Reporting.Business.Data;
 using Css.Api.Reporting.Business.Exceptions;
 using Css.Api.Reporting.Business.Interfaces;
@@ -121,6 +122,23 @@ namespace Css.Api.Reporting.Business.Factories
                 });
             });
             return feeds;
+        }
+
+        /// <summary>
+        /// Return the external target
+        /// </summary>
+        /// <returns></returns>
+        public ActivityOrigin GetTarget()
+        {
+            var key = _mapper.Context.Key;
+            if(key.Equals(ActivityOrigin.EStart.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            {
+                return ActivityOrigin.EStart;
+            }
+            else
+            {
+                throw new MappingException(string.Format(Messages.MappingNotFound, _context.Key));
+            }
         }
         #endregion
     }

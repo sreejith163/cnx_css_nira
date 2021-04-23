@@ -10,13 +10,13 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager
         /// </summary>
         public AgentScheduleManagerChartQueryparameter()
         {
-            OrderBy = "CreatedDate";
+            OrderBy = "ChartsCount desc";
         }
 
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
-        public int? EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the agent scheduling group identifier.

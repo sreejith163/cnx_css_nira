@@ -9,7 +9,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
-        public List<int> EmployeeIds { get; set; }
+        public List<string> EmployeeIds { get; set; }
 
         /// <summary>
         /// Gets or sets the agent scheduling group identifier.
@@ -34,7 +34,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// <summary>
         /// Gets or sets the modified user.
         /// </summary>
-        public int ModifiedUser { get; set; }
+        public string ModifiedUser { get; set; }
 
         /// <summary>
         /// Gets or sets the modified by.
@@ -46,7 +46,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         /// </summary>
         public CopyAgentSchedule()
         {
-            EmployeeIds = new List<int>();
+            EmployeeIds = new List<string>();
         }
     }
 }

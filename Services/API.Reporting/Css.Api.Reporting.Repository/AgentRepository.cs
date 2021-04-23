@@ -28,9 +28,20 @@ namespace Css.Api.Reporting.Repository
         /// </summary>
         /// <param name="ssns"></param>
         /// <returns></returns>
-        public async Task<List<Agent>> GetAgents(List<int> ssns)
+        public async Task<List<Agent>> GetAgents(List<string> ssns)
         {
             var agents = FilterBy(x => !x.IsDeleted && ssns.Contains(x.Ssn));
+            return await Task.FromResult(agents.ToList());
+        }
+
+        /// <summary>
+        /// A method to pull all existing agents in the input agent scheduling group
+        /// </summary>
+        /// <param name="agentSchedulingGroupId"></param>
+        /// <returns></returns>
+        public async Task<List<Agent>> GetAgents(int agentSchedulingGroupId)
+        {
+            var agents = FilterBy(x => !x.IsDeleted && x.AgentSchedulingGroupId == agentSchedulingGroupId);
             return await Task.FromResult(agents.ToList());
         }
 
@@ -40,6 +51,7 @@ namespace Css.Api.Reporting.Repository
         /// <param name="agents"></param>
         public void Upsert(List<Agent> agents)
         {
+            var bulkUpsert = new List<WriteModel<Agent>>();
             agents.ForEach(agent =>
             {
                 var query = Builders<Agent>.Filter.Eq(i => i.Ssn, agent.Ssn);
@@ -55,9 +67,9 @@ namespace Css.Api.Reporting.Repository
                 update = SetBasicInformation(update, agent);
                 update = SetMUInformation(update, agent);
                 
-                if (agent.SenDate != null)
+                if (agent.HireDate != null)
                 {
-                    update = update.Set(x => x.SenDate, agent.SenDate);
+                    update = update.Set(x => x.HireDate, agent.HireDate);
                 }
 
                 if (agent.SenExt != null)
@@ -65,12 +77,18 @@ namespace Css.Api.Reporting.Repository
                     update = update.Set(x => x.SenExt, agent.SenExt);
                 }
 
-                UpdateOneAsync(query, update, new UpdateOptions
-                {
-                    IsUpsert = true
-                });
+                var updateAgent = new UpdateOneModel<Agent>(query, update) 
+                { 
+                    IsUpsert = true 
+                };
 
+                bulkUpsert.Add(updateAgent);
             });
+
+            if(bulkUpsert.Any())
+            {
+                BulkWriteAsync(bulkUpsert);
+            }
         }
         
         /// <summary>
@@ -81,9 +99,9 @@ namespace Css.Api.Reporting.Repository
         /// <returns></returns>
         private UpdateDefinition<Agent> SetBasicInformation(UpdateDefinition<Agent> update, Agent agent)
         {
-            if (agent.AgentData != null && agent.AgentData.Any())
+            if (agent.AgentCategoryValues != null && agent.AgentCategoryValues.Any())
             {
-                update = update.Set(x => x.AgentData, agent.AgentData);
+                update = update.Set(x => x.AgentCategoryValues, agent.AgentCategoryValues);
             }
 
             if (!string.IsNullOrWhiteSpace(agent.Sso))
@@ -106,21 +124,13 @@ namespace Css.Api.Reporting.Repository
                 update = update.Set(x => x.AgentRole, agent.AgentRole);
             }
 
-            if (!string.IsNullOrWhiteSpace(agent.SupervisorId))
-            {
-                update = update.Set(x => x.SupervisorId, agent.SupervisorId);
-            }
-
             if (!string.IsNullOrWhiteSpace(agent.SupervisorName))
             {
-                update = update.Set(x => x.SupervisorName, agent.SupervisorName);
+                update = update.Set(x => x.SupervisorName, agent.SupervisorName)
+                            .Set(x => x.SupervisorId, agent.SupervisorId)
+                            .Set(x => x.SupervisorSso, agent.SupervisorSso);
             }
 
-            if (!string.IsNullOrWhiteSpace(agent.SupervisorSso))
-            {
-                update = update.Set(x => x.SupervisorSso, agent.SupervisorSso);
-            }
-            
             return update;
         }
 

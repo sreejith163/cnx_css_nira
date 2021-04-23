@@ -108,43 +108,63 @@ namespace Css.Api.Scheduling.Business
         /// <returns></returns>
         public async Task<CSSResponse> GetAgentScheduleManagerCharts(AgentScheduleManagerChartQueryparameter agentScheduleManagerChartQueryparameter)
         {
-            var agents = await GetAgents(agentScheduleManagerChartQueryparameter);
-            var mappedAgents = JsonConvert.DeserializeObject<List<AgentAdminDTO>>(JsonConvert.SerializeObject(agents));
+            //// get all agents first from the selected agent scheduling group
+            //// change the skip page size parameter to true for Agent Query
+            //// this is to prevent the mismatch of data pages from the agent repository query and schedule manager query
+            //// we are fetching ALL the data from the agent repository with the given parameters to loop through them and check with mappedAgentScheduleManagers if they have a schedule
+            //agentScheduleManagerChartQueryparameter.SkipPageSize = true;
+            //var agents = await GetAgents(agentScheduleManagerChartQueryparameter);
+            //var mappedAgents = JsonConvert.DeserializeObject<List<AgentAdminDTO>>(JsonConvert.SerializeObject(agents));
+
+
+            //var query = agentScheduleManagerChartQueryparameter;
+            //query.SkipPageSize = true;
+
+            //var agentScheduleManagers = await _agentScheduleManagerRepository.GetAgentScheduleManagerCharts(query);
+
+            //var mappedAgentScheduleManagers = JsonConvert.DeserializeObject<List<AgentScheduleManagerChartDetailsDTO>>(JsonConvert.SerializeObject(agentScheduleManagers));
+
+            //// loop through the agent admins and check from the schedule manager list if the agent has schedule
+            //foreach (var agent in mappedAgents)
+            //{
+            //    var mappedAgentScheduleManager = mappedAgentScheduleManagers.Find(x => x.EmployeeId == agent.EmployeeId);
+
+            //    if (mappedAgentScheduleManager == null)
+            //    {
+            //        // make a schedule placeholder if it doesn't exist
+            //        var scheduleManagerExists = await _agentScheduleManagerRepository.HasAgentScheduleManagerChartByEmployeeId(new EmployeeIdDetails { Id = agent.EmployeeId });
+            //        if (!scheduleManagerExists || !agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
+            //        {
+            //            var agentScheduleManager = new AgentScheduleManagerChartDetailsDTO
+            //            {
+            //                EmployeeId = agent.EmployeeId,
+            //                FirstName = agent.FirstName,
+            //                LastName = agent.LastName,
+            //                AgentSchedulingGroupId = agent.AgentSchedulingGroupId,
+            //                ChartsCount = 0,
+            //            };
+            //            mappedAgentScheduleManagers.Add(agentScheduleManager);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // just map the name if it has a schedule
+            //        mappedAgentScheduleManager.FirstName = agent?.FirstName;
+            //        mappedAgentScheduleManager.LastName = agent?.LastName;
+            //        mappedAgentScheduleManager.ChartsCount = mappedAgentScheduleManager.Charts.Count;
+            //    }
+            //}
+
+            // var schedules = mappedAgentScheduleManagers.AsQueryable().Where(x => x.FirstName != null && x.LastName != null)
+            //    .OrderByDescending(x => x.ChartsCount)
+            //    .Skip((agentScheduleManagerChartQueryparameter.PageNumber - 1) * agentScheduleManagerChartQueryparameter.PageSize)
+            //    .Take(agentScheduleManagerChartQueryparameter.PageSize).ToList();
 
             var agentScheduleManagers = await _agentScheduleManagerRepository.GetAgentScheduleManagerCharts(agentScheduleManagerChartQueryparameter);
 
-            var mappedAgentScheduleManagers = JsonConvert.DeserializeObject<List<AgentScheduleManagerChartDetailsDTO>>(JsonConvert.SerializeObject(agentScheduleManagers));
+            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agentScheduleManagers));
 
-            foreach (var agent in mappedAgents)
-            {
-                var mappedAgentScheduleManager = mappedAgentScheduleManagers.FirstOrDefault(x => x.EmployeeId == agent.EmployeeId);
-                if (mappedAgentScheduleManager == null)
-                {
-                    var scheduleManagerExists = await _agentScheduleManagerRepository.HasAgentScheduleManagerChartByEmployeeId(new EmployeeIdDetails { Id = agent.EmployeeId });
-                    if (!scheduleManagerExists || !agentScheduleManagerChartQueryparameter.ExcludeConflictSchedule)
-                    {
-                        var agentScheduleManager = new AgentScheduleManagerChartDetailsDTO
-                        {
-                            EmployeeId = agent.EmployeeId,
-                            FirstName = agent.FirstName,
-                            LastName = agent.LastName,
-                            AgentSchedulingGroupId = agent.AgentSchedulingGroupId,
-                        };
-                        mappedAgentScheduleManagers.Add(agentScheduleManager);
-                    }
-                }
-                else
-                {
-                    mappedAgentScheduleManager.FirstName = agent?.FirstName;
-                    mappedAgentScheduleManager.LastName = agent?.LastName;
-                }
-            }
-
-            mappedAgentScheduleManagers = mappedAgentScheduleManagers.Where(x => x.FirstName != null && x.LastName != null).ToList();
-
-            _httpContextAccessor.HttpContext.Response.Headers.Add("X-Pagination", PagedList<Entity>.ToJson(agents));
-
-            return new CSSResponse(mappedAgentScheduleManagers.Distinct().ToList(), HttpStatusCode.OK);
+            return new CSSResponse(agentScheduleManagers, HttpStatusCode.OK);
         }
 
 
@@ -156,11 +176,18 @@ namespace Css.Api.Scheduling.Business
         /// </returns>
         public async Task<CSSResponse> GetAgentMySchedule(EmployeeIdDetails employeeIdDetails, MyScheduleQueryParameter myScheduleQueryParameter)
         {
-            var agentSchedules = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails, myScheduleQueryParameter);
-            if (agentSchedules == null || agentSchedules.Count < 1)
+            // Gets agent scheduling group Id, if the AgentSchedulingGroupId is not specified
+            if (myScheduleQueryParameter.AgentSchedulingGroupId == 0)
             {
-                return new CSSResponse(HttpStatusCode.NotFound);
+                var agentAdmin = await _agentAdminRepository.GetAgentAdminByEmployeeId(employeeIdDetails);
+                myScheduleQueryParameter.AgentSchedulingGroupId = agentAdmin.AgentSchedulingGroupId;
             }
+
+            var agentSchedules = await _agentScheduleManagerRepository.GetAgentScheduleManagerChartByEmployeeId(employeeIdDetails, myScheduleQueryParameter);
+            //if (agentSchedules == null || agentSchedules.Count < 1)
+            //{
+            //    return new CSSResponse(HttpStatusCode.NotFound);
+            //}
 
             var agentMyScheduleDetailsDTO = new AgentMyScheduleDetailsDTO
             {
@@ -352,7 +379,7 @@ namespace Css.Api.Scheduling.Business
         /// <param name="executedUser">The executed user.</param>
         /// <param name="activityOrigin">The activity origin.</param>
         /// <returns></returns>
-        private ActivityLog GetActivityLogForSchedulingManager(AgentScheduleManager agentScheduleManagerChart, int employeeId, string executedBy, int executedUser,
+        private ActivityLog GetActivityLogForSchedulingManager(AgentScheduleManager agentScheduleManagerChart, string employeeId, string executedBy, string executedUser,
                                                                ActivityOrigin activityOrigin)
         {
             return new ActivityLog()

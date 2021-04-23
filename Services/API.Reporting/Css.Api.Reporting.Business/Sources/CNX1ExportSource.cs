@@ -6,6 +6,7 @@ using Css.Api.Reporting.Models.DTO.Processing;
 using Css.Api.Reporting.Models.DTO.Request.CNX1;
 using Css.Api.Reporting.Models.DTO.Request.Common;
 using Css.Api.Reporting.Models.DTO.Response;
+using Css.Api.Reporting.Repository.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,11 @@ namespace Css.Api.Reporting.Business.Sources
         /// The schedule service
         /// </summary>
         private readonly IScheduleService _scheduleService;
+
+        /// <summary>
+        /// The agent repository
+        /// </summary>
+        private readonly IAgentRepository _agentRepository;
         #endregion
 
         #region Public Properties
@@ -47,10 +53,12 @@ namespace Css.Api.Reporting.Business.Sources
         /// </summary>
         /// <param name="mapperService"></param>
         /// <param name="scheduleService"></param>
-        public CNX1ExportSource(IMapperService mapperService, IScheduleService scheduleService)
+        /// <param name="agentRepository"></param>
+        public CNX1ExportSource(IMapperService mapperService, IScheduleService scheduleService, IAgentRepository agentRepository)
         {
             _mapperService = mapperService;
             _scheduleService = scheduleService;
+            _agentRepository = agentRepository;
         }
         #endregion
 
@@ -71,16 +79,12 @@ namespace Css.Api.Reporting.Business.Sources
         /// <returns>An instance of ActivityApiResponse</returns>
         public override async Task<ActivityApiResponse> Export()
         {
-            var response = new ActivityApiResponse()
-            {
-                StatusCode = HttpStatusCode.OK
-            };
+            var response = new ActivityApiResponse();
 
             var cnxFilter = await Task.FromResult(_mapperService.GetQueryParams<CNX1Filter>());
 
             if (!(cnxFilter.AgentIds.Any() && cnxFilter.StartDate <= cnxFilter.EndDate && cnxFilter.StartDate != DateTime.MinValue & cnxFilter.EndDate != DateTime.MinValue))
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
                 response.Message = Messages.InvalidQueryParamsCNX1;
                 return response;
             }
@@ -91,11 +95,36 @@ namespace Css.Api.Reporting.Business.Sources
                 StartDate = cnxFilter.StartDate,
                 EndDate = cnxFilter.EndDate
             };
-            
-            List<CalendarChart> calenderCharts = await _scheduleService.GetCalendarChartsUsingIds(filter);
-            List<AgentActivitySchedule> agentActivitySchedulesList =  _scheduleService.GenerateActivityAgentSchedules(calenderCharts);
 
-            response.Data = agentActivitySchedulesList;
+            var agents = await _agentRepository.GetAgents(filter.AgentIds);
+
+            List<AgentActivitySchedule> agentActivitySchedulesList = filter.AgentIds.Where(ag => !agents.Select(x =>x.Ssn).Contains(ag))
+                                                                          .Select(x => new AgentActivitySchedule() 
+                                                                                {
+                                                                                    AgentId = x, 
+                                                                                    Message = Messages.AgentNotFound 
+                                                                                })
+                                                                          .ToList();
+
+            filter.AgentIds.RemoveAll(x => agentActivitySchedulesList.Select(y => y.AgentId).Contains(x));
+            
+            if(filter.AgentIds.Any())
+            {
+                List<CalendarChart> calenderCharts = await _scheduleService.GetCalendarChartsUsingIds(filter);
+                var schedules = _scheduleService.GenerateActivityAgentSchedules(calenderCharts);
+                var missingSchedules = filter.AgentIds
+                                        .Where(x => !schedules.Select(y => y.AgentId).Contains(x))
+                                        .Select(z => new AgentActivitySchedule 
+                                            { 
+                                                AgentId = z, 
+                                                Message = string.Format(Messages.NoSchedulesPresent, filter.StartDate.ToString("yyyy-MM-dd"), filter.EndDate.ToString("yyyy-MM-dd"))
+                                        })
+                                        .ToList();
+                agentActivitySchedulesList.AddRange(schedules);
+                agentActivitySchedulesList.AddRange(missingSchedules);
+            }
+            
+            response.Data = agentActivitySchedulesList.OrderBy(x => x.AgentId).ToList();
 
             return response;
         }

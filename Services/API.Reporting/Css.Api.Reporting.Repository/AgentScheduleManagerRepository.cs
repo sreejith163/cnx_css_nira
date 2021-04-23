@@ -31,7 +31,7 @@ namespace Css.Api.Reporting.Repository
         /// </summary>
         /// <param name="agentIds"></param>
         /// <returns></returns>
-        public async Task<List<AgentScheduleManager>> GetManagerSchedules(List<int> agentIds)
+        public async Task<List<AgentScheduleManager>> GetManagerSchedules(List<string> agentIds)
         {
             var query = Builders<AgentScheduleManager>.Filter.Where(i => agentIds.Contains(i.EmployeeId));
 
@@ -45,12 +45,29 @@ namespace Css.Api.Reporting.Repository
         /// </summary>
         /// <param name="agentIds"></param>
         /// <returns></returns>
-        public async Task<List<AgentScheduleManager>> GetManagerSchedules(List<int> agentIds, List<DateTime> dates)
+        public async Task<List<AgentScheduleManager>> GetManagerSchedules(List<string> agentIds, List<DateTime> dates)
         {
             List<DateTime> schDates = dates.Select(x => { return new DateTime(x.Year, x.Month, x.Day, 0, 0, 0, DateTimeKind.Utc); }).ToList();
 
             var query = Builders<AgentScheduleManager>.Filter.Where(i => agentIds.Contains(i.EmployeeId)) &
                         Builders<AgentScheduleManager>.Filter.Where(i => schDates.Contains(i.Date));
+
+            var schedules = FilterBy(query);
+
+            return await Task.FromResult(schedules.ToList());
+        }
+
+        /// <summary>
+        /// The method to fetch manager schedules for input employee from a specific date
+        /// </summary>
+        /// <param name="agentId"></param>
+        /// <param name="fromDate"></param>
+        /// <returns></returns>
+        public async Task<List<AgentScheduleManager>> GetManagerSchedules(string agentId, DateTime fromDate)
+        {
+            fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0, DateTimeKind.Utc);
+            var query = Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, agentId) &
+                        Builders<AgentScheduleManager>.Filter.Where(i => i.Date >= fromDate);
 
             var schedules = FilterBy(query);
 
@@ -138,6 +155,7 @@ namespace Css.Api.Reporting.Repository
         /// <param name="agentSchedules">The agents manager schedules to be updated</param>
         public void UpsertAgentScheduleManagers(List<AgentScheduleManager> agentScheduleManagers)
         {
+            var bulkUpsert = new List<WriteModel<AgentScheduleManager>>();
             agentScheduleManagers.ForEach(agentScheduleManagerDetails =>
             {
                 agentScheduleManagerDetails.Date = new DateTime(agentScheduleManagerDetails.Date.Year, agentScheduleManagerDetails.Date.Month,
@@ -160,11 +178,18 @@ namespace Css.Api.Reporting.Repository
                     update = update.Set(x => x.AgentSchedulingGroupId, agentScheduleManagerDetails.AgentSchedulingGroupId);
                 }
 
-                UpdateOneAsync(query, update, new UpdateOptions
+                var updateAgentScheduleManager = new UpdateOneModel<AgentScheduleManager>(query, update)
                 {
                     IsUpsert = true
-                });
+                };
+
+                bulkUpsert.Add(updateAgentScheduleManager);
             });
+
+            if(bulkUpsert.Any())
+            {
+                BulkWriteAsync(bulkUpsert);
+            }
         }
     }
 }

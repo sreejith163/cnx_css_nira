@@ -35,6 +35,7 @@ namespace Css.Api.Scheduling.Extensions
                 .Enrich.WithThreadId()
                 .Enrich.FromLogContext()
                 .ReadFrom.Configuration(configuration)
+                .WriteTo.Console()
                 .CreateLogger();
 
             services.AddSingleton(Log.Logger);
@@ -52,6 +53,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IActivityLogService, ActivityLogService>();
             services.AddTransient<IAgentAdminService, AgentAdminService>();
+            services.AddTransient<IAgentCategoryValueService, AgentCategoryValueService>();
             services.AddTransient<IAgentScheduleService, AgentScheduleService>();
             services.AddTransient<IAgentScheduleManagerService, AgentScheduleManagerService>();
             services.AddTransient<IEntityHierarchyService, EntityHierarchyService>();
@@ -60,6 +62,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddTransient<IForecastScreenService, ForecastScreenService>();
             services.AddScoped<ITimezoneRepository, TimezoneRepository>();
             services.AddScoped<IAgentAdminRepository, AgentAdminRepository>();
+            services.AddScoped<IAgentCategoryValueRepository, AgentCategoryValueRepository>();
             services.AddScoped<IAgentScheduleManagerRepository, AgentScheduleManagerRepository>();
             services.AddScoped<IAgentScheduleRepository, AgentScheduleRepository>();
             services.AddScoped<IForecastScreenRepository, ForecastScreenRepository>();
@@ -71,6 +74,7 @@ namespace Css.Api.Scheduling.Extensions
             services.AddScoped<ITimeOffRepository, TimeOffRepository>();
             services.AddScoped<IAgentSchedulingGroupHistoryRepository, AgentSchedulingGroupHistoryRepository>();
             services.AddScoped<ISchedulingCodeRepository, SchedulingCodeRepository>();
+            services.AddScoped<IAgentCategoryRepository, AgentCategoryRepository>();
             services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
 
             return services;

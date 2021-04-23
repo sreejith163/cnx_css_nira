@@ -15,7 +15,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the employee identifier.
         /// </summary>
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the time stamp.
@@ -31,7 +31,7 @@ namespace Css.Api.Core.Models.Domain.NoSQL
         /// <summary>
         /// Gets or sets the executed user.
         /// </summary>
-        public int ExecutedUser { get; set; }
+        public string ExecutedUser { get; set; }
 
         /// <summary>
         /// Gets or sets the activity status.

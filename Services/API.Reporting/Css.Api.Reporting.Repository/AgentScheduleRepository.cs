@@ -51,7 +51,7 @@ namespace Css.Api.Reporting.Repository
         /// </summary>
         /// <param name="agentIds"></param>
         /// <returns></returns>
-        public async Task<List<AgentSchedule>> GetSchedules(List<int> agentIds)
+        public async Task<List<AgentSchedule>> GetSchedules(List<string> agentIds)
         {
             var query = Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) &
                 Builders<AgentSchedule>.Filter.Where(i => agentIds.Contains(i.EmployeeId));
@@ -67,6 +67,7 @@ namespace Css.Api.Reporting.Repository
         /// <param name="agentSchedules">The agents schedules to be updated</param>
         public void InsertAgentSchedules(List<AgentSchedule> agentSchedules)
         {
+            var bulkUpsert = new List<WriteModel<AgentSchedule>>();
             agentSchedules.ForEach(agentScheduleDetails =>
             {
                 var query = Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, agentScheduleDetails.EmployeeId);
@@ -94,11 +95,18 @@ namespace Css.Api.Reporting.Repository
                     update = update.Set(x => x.ActiveAgentSchedulingGroupId, agentScheduleDetails.ActiveAgentSchedulingGroupId);
                 }
 
-                UpdateOneAsync(query, update, new UpdateOptions
-                {
-                    IsUpsert = true
-                });
+                var updateAgentSchedule = new UpdateOneModel<AgentSchedule>(query, update) 
+                { 
+                    IsUpsert = true 
+                };
+
+                bulkUpsert.Add(updateAgentSchedule);
             });
+
+            if (bulkUpsert.Any())
+            {
+                BulkWriteAsync(bulkUpsert);
+            }
         }
 
     }

@@ -1,6 +1,8 @@
-﻿using Css.Api.Scheduling.Business.Interfaces;
+﻿ using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
+using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Css.Api.Scheduling.Controllers
@@ -108,7 +110,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <summary>
         /// Updates the agent schedule chart.
         /// </summary>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <param name="agentScheduleImport">The agent schedule import.</param>
         /// <returns></returns>
         [HttpPut("import")]
         public async Task<IActionResult> ImportAgentScheduleChart([FromBody] AgentScheduleImport agentScheduleImport)
@@ -117,16 +119,29 @@ namespace Css.Api.Scheduling.Controllers
             return StatusCode((int)result.Code, result.Value);
         }
 
+        ///// <summary>
+        ///// Copies the agent schedule chart.
+        ///// </summary>
+        ///// <param name="agentScheduleId">The agent schedule identifier.</param>
+        ///// <param name="agentScheduleDetails">The agent schedule details.</param>
+        ///// <returns></returns>
+        //[HttpPut("{agentScheduleId}/copy")]
+        //public async Task<IActionResult> CopyAgentScheduleChart(string agentScheduleId, [FromBody] CopyAgentSchedule agentScheduleDetails)
+        //{
+        //    var result = await _agentScheduleService.CopyAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
+        //    return StatusCode((int)result.Code, result.Value);
+        //}
+
         /// <summary>
         /// Copies the agent schedule chart.
         /// </summary>
         /// <param name="agentScheduleId">The agent schedule identifier.</param>
-        /// <param name="agentScheduleDetails">The agent schedule details.</param>
+        /// <param name="agentScheduleDetailsList">The list of agent schedule details.</param>
         /// <returns></returns>
         [HttpPut("{agentScheduleId}/copy")]
-        public async Task<IActionResult> CopyAgentScheduleChart(string agentScheduleId, [FromBody] CopyAgentSchedule agentScheduleDetails)
+        public async Task<IActionResult> CopyAgentScheduleChart(string agentScheduleId, [FromBody] MultipleCopyAgentScheduleRequest agentScheduleDetailsList)
         {
-            var result = await _agentScheduleService.CopyAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetails);
+            var result = await _agentScheduleService.MultipleCopyAgentScheduleChart(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, agentScheduleDetailsList);
             return StatusCode((int)result.Code, result.Value);
         }
 
@@ -155,5 +170,51 @@ namespace Css.Api.Scheduling.Controllers
             var result = await _agentScheduleService.DeleteAgentScheduleRange(new AgentScheduleIdDetails { AgentScheduleId = agentScheduleId }, dateRangeDetails);
             return StatusCode((int)result.Code, result.Value);
         }
+
+        /// <summary>
+        /// Gets the agent schedule.
+        /// </summary>
+
+        /// <param name="agentSchedulingGroupId">The agent schedule chart queryparameter.</param>
+        /// <returns></returns>
+        [HttpGet("{agentSchedulingGroupId}/export")]
+        public async Task<IActionResult> AgentSchedulingGroupScheduleExport(int agentSchedulingGroupId)
+        {
+            var result = await _agentScheduleService.AgentSchedulingGroupScheduleExport(agentSchedulingGroupId);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        // <param name="employeeId">The agent schedule chart queryparameter.</param>
+        /// <returns></returns>
+        [HttpGet("{employeeId}/employeeexport")]
+        public async Task<IActionResult> EmployeeScheduleExport(string employeeId)
+        {
+            var result = await _agentScheduleService.EmployeeScheduleExport(employeeId);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        // <param name="employeeId">Get the available date range for the selected agent scheduling group</param>
+        /// <param name="asgList">The asg list parameters.</param>
+        /// <returns></returns>
+        [HttpGet()]
+        [Route("GetDateRange")]
+        public async Task<IActionResult> GetDateRange([FromQuery] List<int> asgList)
+        {
+            var result = await _agentScheduleService.GetDateRange(asgList);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>Release the given asg and date range</summary>
+        /// <param name="batchRelease">the batch release parameter</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        [HttpPut("BatchRelease")]
+        public async Task<IActionResult> BatchRelease([FromBody] BatchRelease batchRelease)
+        {
+            var result = await _agentScheduleService.BatchRelease(batchRelease);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
     }
 }

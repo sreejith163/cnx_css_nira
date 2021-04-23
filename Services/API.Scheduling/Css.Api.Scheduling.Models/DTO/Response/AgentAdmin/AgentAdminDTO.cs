@@ -18,7 +18,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
 
         /// <summary>Gets or sets the employee identifier.</summary>
         /// <value>The employee identifier.</value>
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -45,9 +45,14 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentAdmin
         public int? AgentSchedulingGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the agent data.
+        /// Gets or sets the hire date.
         /// </summary>
-        public List<AgentData> AgentData { get; set; }
+        public DateTime? HireDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the agent category values.
+        /// </summary>
+        public List<AgentCategoryValue> AgentCategoryValues { get; set; }
 
         /// <summary>
         /// Gets or sets the super visor identifier.

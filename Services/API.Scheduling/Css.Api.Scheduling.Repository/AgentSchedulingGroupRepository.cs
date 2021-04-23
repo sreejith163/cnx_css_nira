@@ -89,6 +89,19 @@ namespace Css.Api.Scheduling.Repository
             return await Task.FromResult(result.ToList());
         }
 
+
+        /// <summary>
+        /// Gets the agent scheduling group list.
+        /// </summary>
+   
+        /// <returns></returns>
+        public async Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupList()
+        {
+            var query = Builders<AgentSchedulingGroup>.Filter.Eq(i => i.IsDeleted, false);
+
+            var result = FilterBy(query);
+            return await Task.FromResult(result.ToList());
+        }
         /// <summary>
         /// Creates the agent scheduling group.
         /// </summary>
@@ -146,6 +159,15 @@ namespace Css.Api.Scheduling.Repository
             }
 
             return agentSchedulingGroups;
+        }
+
+        public async Task<List<AgentSchedulingGroup>> FindSchedulingGroup()
+        {
+            var query = Builders<AgentSchedulingGroup>.Filter.Eq(i => i.IsDeleted, false);
+
+
+            var result = FilterBy(query);
+            return await Task.FromResult(result.ToList());
         }
     }
 }

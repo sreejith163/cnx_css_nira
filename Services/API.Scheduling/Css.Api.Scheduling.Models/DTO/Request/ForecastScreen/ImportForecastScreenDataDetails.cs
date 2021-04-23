@@ -11,22 +11,20 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ForecastScreen
     public class ImportForecastScreenDataDetails
     {
 
-        public string Date { get; set; }
 
         public string Time { get; set; }
 
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
-        public decimal ForecastedContact { get; set; }
+        public long ForecastedContact { get; set; }
+
 
         [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal Aht { get; set; }
 
 
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
-        public decimal ForecastedReq { get; set; }
 
+        public long ForecastedReq { get; set; }
 
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
-        public decimal ScheduledOpen { get; set; }
+       
+     
     }
 }

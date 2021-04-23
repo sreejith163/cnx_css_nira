@@ -32,6 +32,9 @@ namespace Css.Api.Setup.Business
         /// </summary>
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// The bus
+        /// </summary>
         private readonly IBusService _bus;
 
         /// <summary>

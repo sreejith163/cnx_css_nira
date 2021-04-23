@@ -83,6 +83,12 @@ namespace Css.Api.Admin.Repository
         /// </value>
         private IRoleRepository _roleRepository { get; set; }
 
+
+        private ILogRepository _logRepository { get; set; }
+
+
+        private IAuthRepository _authRepository { get; set; }
+
         public IUserLanguageRepository UserLanguage
         {
             get
@@ -104,6 +110,30 @@ namespace Css.Api.Admin.Repository
                     _userPermissionRepository = new UserPermissionRepository(_repositoryContext, _mapper);
                 }
                 return _userPermissionRepository;
+            }
+        }
+
+        public ILogRepository Log
+        {
+            get
+            {
+                if (_logRepository == null)
+                {
+                    _logRepository = new LogRepository(_repositoryContext, _mapper);
+                }
+                return _logRepository;
+            }
+        }
+
+        public IAuthRepository Auth
+        {
+            get
+            {
+                if (_authRepository == null)
+                {
+                    _authRepository = new AuthRepository(_repositoryContext, _mapper);
+                }
+                return _authRepository;
             }
         }
 

@@ -67,7 +67,7 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
-        Task<List<int>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
+        Task<List<string>> GetEmployeeIdsByAgentScheduleGroupId(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
 
         /// <summary>
         /// Gets the scheduled open identifier by skillgroup id.

@@ -9,7 +9,7 @@ namespace Css.Api.Job.Models.DTO.Common
         public TimeSpan TimeOfDay { get; set; }
         public int DaysOfData { get; set; }
         public TimeSpan Start => TimeOfDay;
-        public virtual TimeSpan End => TimeOfDay.Add(new TimeSpan(0, 15, 0));
+        public virtual TimeSpan End => TimeOfDay.Add(new TimeSpan(0, 5, 0));
         public List<int> Include { get; set; }
         public List<int> Exclude { get; set; }
 

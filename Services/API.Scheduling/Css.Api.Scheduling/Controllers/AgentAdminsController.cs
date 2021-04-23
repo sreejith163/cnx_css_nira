@@ -58,7 +58,7 @@ namespace Css.Api.Scheduling.Controllers
         /// <param name="employeeId">The employee identifier.</param>
         /// <returns></returns>
         [HttpGet("employees/{employeeId}")]
-        public async Task<IActionResult> GetAgentAdminByEmployeeId(int employeeId)
+        public async Task<IActionResult> GetAgentAdminByEmployeeId(string employeeId)
         {
             var result = await _agentAdminService.GetAgentAdminByEmployeeId(new EmployeeIdDetails { Id = employeeId });
             return StatusCode((int)result.Code, result.Value);
@@ -98,6 +98,18 @@ namespace Css.Api.Scheduling.Controllers
         public async Task<IActionResult> MoveAgentAdmins([FromBody] MoveAgentAdminsDetails moveAgentAdminsDetails)
         {
             var result = await _agentAdminService.MoveAgentAdmins(moveAgentAdminsDetails);
+            return StatusCode((int)result.Code, result.Value);
+        }
+
+        /// <summary>
+        /// Updates the agent category values.
+        /// </summary>
+        /// <param name="agentCategoryValue">The agent category value.</param>
+        /// <returns></returns>
+        [HttpPut("agentCategoryValues")]
+        public async Task<IActionResult> UpdateAgentCategoryValues([FromBody] CreateAgentCategoryValue agentCategoryValue)
+        {
+            var result = await _agentAdminService.UpdateAgentCategoryValues(agentCategoryValue);
             return StatusCode((int)result.Code, result.Value);
         }
 

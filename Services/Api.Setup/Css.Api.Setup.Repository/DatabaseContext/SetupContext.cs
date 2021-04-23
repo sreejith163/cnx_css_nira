@@ -536,11 +536,6 @@ namespace Css.Api.Setup.Repository.DatabaseContext
                     .HasColumnName("name")
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.Property(e => e.UtcOffset)
-                    .IsRequired()
-                    .HasColumnName("utc_offset")
-                    .HasColumnType("TIME");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -3,13 +3,20 @@
 
 
 using IdentityServer4;
+using IdentityServer4.Extensions;
 using IdentityServerHost.Quickstart.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Css.Api.Auth
 {
@@ -34,28 +41,25 @@ namespace Css.Api.Auth
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
-
-                // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
                 options.EmitStaticAudienceClaim = true;
-            })
-                .AddTestUsers(TestUsers.Users);
+            }).AddTestUsers(TestUsers.Users);
 
-            // in-memory, code config
             builder.AddInMemoryIdentityResources(Config.IdentityResources);
             builder.AddInMemoryApiScopes(Config.ApiScopes);
             builder.AddInMemoryClients(Config.Clients);
 
-            // not recommended for production - you need to store your key material somewhere secure
-            builder.AddDeveloperSigningCredential();
+            Log.Logger.Information(Configuration["SigningCredential:Certificate"]);
+            Log.Logger.Information(Configuration["SigningCredential:Password"]);
+
+            var certificatePath = Path.Combine(AppContext.BaseDirectory, Configuration["SigningCredential:Certificate"]);
+            var certificate = new X509Certificate2(certificatePath, Configuration["SigningCredential:Password"]);
+
+            builder.AddSigningCredential(certificate);
 
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-                    // register your IdentityServer with Google at https://console.developers.google.com
-                    // enable the Google+ API
-                    // set the redirect URI to https://localhost:5001/signin-google
                     options.ClientId = "copy client ID from Google here";
                     options.ClientSecret = "copy client secret from Google here";
                 })
@@ -64,9 +68,9 @@ namespace Css.Api.Auth
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     options.SignOutScheme = IdentityServerConstants.SignoutScheme;
 
-                    options.Authority = "https://adfs.concentrix.com/adfs";
-                    options.ClientId = "6c5485e1-da90-4789-81ee-d3a37d8706ea";
-                    options.ClientSecret = "12f8hNIMqE-83exCiNRR36c0Z7E6k1vgtqhXiTDl";
+                    options.Authority = Configuration["ExternalProvider:Provider"];
+                    options.ClientId = Configuration["ExternalProvider:ClientId"];
+                    options.ClientSecret = Configuration["ExternalProvider:ClientSecret"];
                     options.ResponseType = "id_token";
 
                     options.CallbackPath = "/signin-adfs";
@@ -78,6 +82,10 @@ namespace Css.Api.Auth
                         RoleClaimType = "role"
                     };
                 });
+
+            services.AddCors(options => options.AddPolicy("AllowAnyOrigin", p => p.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader()));
         }
 
         public void Configure(IApplicationBuilder app)
@@ -87,7 +95,30 @@ namespace Css.Api.Auth
                 app.UseDeveloperExceptionPage();
             }
 
+            app.Use(async (ctx, next) =>
+            {
+                ctx.SetIdentityServerOrigin(Configuration["IdentityProvider:Authority"]);
+                await next();
+            });
+
+            //--------Trial to fix http discovery doc
+            var forwardOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+                RequireHeaderSymmetry = false
+            };
+
+            forwardOptions.KnownNetworks.Clear();
+            forwardOptions.KnownProxies.Clear();
+
+            //forwardOptions.KnownNetworks.Add(new IPNetwork(xxxx));
+
+
+            app.UseForwardedHeaders(forwardOptions);
+            //---------
+
             app.UseStaticFiles();
+            app.UseCors("AllowAnyOrigin");
 
             app.UseRouting();
             app.UseIdentityServer();

@@ -2,7 +2,9 @@
 using Css.Api.Job.Business.Services;
 using Css.Api.Job.Repository;
 using Css.Api.Job.Repository.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -45,9 +47,17 @@ namespace Css.Api.Job.Business.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddJobFramework(this IServiceCollection services)
+        public static IServiceCollection AddJobFramework(this IServiceCollection services, IConfiguration configuration)
         {
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.WithThreadId()
+                .Enrich.FromLogContext()
+                .ReadFrom.Configuration(configuration)
+                .WriteTo.Console()
+                .CreateLogger();
+
             services
+                .AddSingleton(Log.Logger)
                 .AddHelperServices()
                 .AddRepositories();
 
@@ -61,7 +71,7 @@ namespace Css.Api.Job.Business.Extensions
         /// <returns></returns>
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped<ITimezoneRepository, TimezoneRepository>();
+            services.AddSingleton<ITimezoneRepository, TimezoneRepository>();
 
             return services;
         }
@@ -73,9 +83,9 @@ namespace Css.Api.Job.Business.Extensions
         /// <returns></returns>
         private static IServiceCollection AddHelperServices(this IServiceCollection services)
         {
-            services.AddScoped<ITimeService, TimeService>();
-            services.AddScoped<IHttpService, HttpService>();
-            services.AddScoped<IEStartService, EStartService>();
+            services.AddSingleton<ITimeService, TimeService>();
+            services.AddSingleton<IHttpService, HttpService>();
+            services.AddSingleton<IEStartService, EStartService>();
 
             return services;
         }

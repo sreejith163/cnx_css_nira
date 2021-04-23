@@ -237,7 +237,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             // loop the data from excel model
             foreach (var importData in agentScheduleImport.AgentScheduleImportData)
             {
-                importCount = importCount + 1;
+                importCount++;
 
                 var employeeIdDetails = new EmployeeIdDetails { Id = importData.EmployeeId };
                 //var modifiedUserDetails = new ModifiedUserDetails { ModifiedBy = agentScheduleImport.ModifiedBy };
@@ -322,7 +322,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 
                                                 // success
                                                 success.Add($"'1 Agent Schedule data updated.");
-                                                importSuccess = importSuccess + 1;
+                                                importSuccess++;
 
                                             }
 
@@ -344,7 +344,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 
                                             // success
                                             success.Add($"'1 Agent Schedule data updated.");
-                                            importSuccess = importSuccess + 1;
+                                            importSuccess++;
 
                                         }
                                     }
@@ -366,7 +366,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 
                                     // success
                                     success.Add($"'1 Agent Schedule data updated.");
-                                    importSuccess = importSuccess + 1;
+                                    importSuccess++;
 
                                 }
 
@@ -408,7 +408,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 
                                                 // success
                                                 success.Add($"'1 Agent Schedule data updated.");
-                                                importSuccess = importSuccess + 1;
+                                                importSuccess++;
 
                                             }
                                             else
@@ -435,7 +435,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 
                                             // success
                                             success.Add($"'1 Agent Schedule data updated.");
-                                            importSuccess = importSuccess + 1;
+                                            importSuccess++;
 
                                         }
                                     }
@@ -457,14 +457,14 @@ namespace Css.Api.Scheduling.UnitTest.Mock
 
                                     // success
                                     success.Add($"'1 Agent Schedule data updated.");
-                                    importSuccess = importSuccess + 1;
+                                    importSuccess++;
 
                                 }
                             }
                         }
                         else
                         {
-                            errors.Add($"Date Range {weekRange.DateFrom.ToString("yyyy-MM-dd")} to {weekRange.DateTo.ToString("yyyy-MM-dd")} with {weekRange.EmployeeId} is already approved.");
+                            errors.Add($"Date Range {weekRange.DateFrom:yyyy-MM-dd} to {weekRange.DateTo:yyyy-MM-dd} with {weekRange.EmployeeId} is already approved.");
                         }
                     }
 
@@ -495,7 +495,7 @@ namespace Css.Api.Scheduling.UnitTest.Mock
             }
 
             string importedDataCount;
-            importedDataCount = $"Successfully imported {importSuccess.ToString()} out of {importCount.ToString()} Schedule Data Rows.";
+            importedDataCount = $"Successfully imported {importSuccess} out of {importCount} Schedule Data Rows.";
 
             importAgentScheduleResponse.Errors = errors;
             importAgentScheduleResponse.Success = success;

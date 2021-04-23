@@ -9,6 +9,7 @@ namespace Css.Api.Reporting.Models.DTO.Processing
         public int TimezoneId { get; set; }
         public string Name { get; set; }
         public string TimezoneValue { get; set; }
+        public string TimezoneOffsetValue { get; set; }
         public TimeSpan TimezoneOffset { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace Css.Api.Reporting.Models.DTO.Request.Common
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public List<int> AgentIds { get; set; }
+        public List<string> AgentIds { get; set; }
         public List<int> TimezoneIds { get; set; }
         public List<int> AgentSchedulingGroupIds { get; set; }
         public bool? EstartProvision { get; set; }
@@ -18,7 +18,7 @@ namespace Css.Api.Reporting.Models.DTO.Request.Common
         {
             TimezoneIds = new List<int>();
             AgentSchedulingGroupIds = new List<int>();
-            AgentIds = new List<int>();
+            AgentIds = new List<string>();
         }
     }
 }

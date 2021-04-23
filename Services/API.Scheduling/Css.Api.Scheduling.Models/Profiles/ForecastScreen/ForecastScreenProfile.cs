@@ -30,8 +30,15 @@ namespace Css.Api.Scheduling.Models.Profiles.ForecastScreen
             CreateMap<Domain.ForecastScreen, CreateForecastData>()
             .ReverseMap();
 
+            CreateMap<ForecastDataAtrribute, ImportForecastDetails>()
+            .ReverseMap();
+
+
+
             CreateMap<UpdateForecastData, Domain.ForecastScreen>()
             .ReverseMap();
+
+           
 
         }
 

@@ -25,6 +25,8 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <returns></returns>
         Task<SchedulingCode> GetSchedulingCode(SchedulingCodeIdDetails schedulingCodeIdDetails);
 
+
+        Task<List<SchedulingCode>> FindSchedulingCodes();
         /// <summary>
         /// Gets the scheduling codes count by ids.
         /// </summary>

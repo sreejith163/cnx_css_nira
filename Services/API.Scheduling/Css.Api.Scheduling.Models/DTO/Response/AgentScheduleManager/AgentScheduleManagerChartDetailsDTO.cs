@@ -20,7 +20,7 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
         /// Gets or sets the employee identifier.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         /// <summary>
         /// Gets or sets the first name.
@@ -48,6 +48,13 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<AgentScheduleManagerChart> Charts { get; set; }
+
+        public int ChartsCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the charts.
+        /// </summary>
+        public DateTime ChartsStartDateTime { get; set; }
     }
 }
 

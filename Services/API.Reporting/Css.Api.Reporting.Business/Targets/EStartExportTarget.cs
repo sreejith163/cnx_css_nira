@@ -103,12 +103,23 @@ namespace Css.Api.Reporting.Business.Targets
         {
             ActivityResponse response = new ActivityResponse();
             EStartFilter requestFilter = _mapperService.GetFilterParams<EStartFilter>();
+
+            string destSubFolder;
+            if(requestFilter.UpdatedInPastDays.HasValue)
+            {
+                destSubFolder = _ftp.GetDestinationFolder(requestFilter.StartDate, requestFilter.EndDate,true);
+            }
+            else
+            {
+                destSubFolder = _ftp.GetDestinationFolder(requestFilter.StartDate, requestFilter.EndDate);
+            }
+            
             var timezones = charts.Select(x => x.TimezoneOffset).Distinct().ToList();
 
             timezones.ForEach(async timezone =>
             {
                 var timezoneClocks = charts.Where(x => x.TimezoneOffset.Equals(timezone)).ToList();
-                string fileName = string.Join("_", "CSS", timezone, 
+                string fileName = destSubFolder + string.Join("_", "CSS", timezone, 
                                     requestFilter.StartDate.ToString("yyyyMMdd"), requestFilter.EndDate.ToString("yyyyMMdd")) 
                                 + ".ftp";
                 var exportText = _scheduleClockService.GenerateExportText(timezoneClocks);

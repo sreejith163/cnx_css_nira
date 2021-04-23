@@ -1,8 +1,10 @@
 ﻿using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Request.AgentCategoryValueView;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -53,7 +55,14 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="agentAdminEmployeeIdsDetails">The agent admin employee ids details.</param>
         /// <returns></returns>
-        Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<int> agentAdminEmployeeIdsDetails);
+        Task<List<Agent>> GetAgentAdminsByEmployeeIds(List<string> agentAdminEmployeeIdsDetails);
+
+        /// <summary>
+        /// Gets the agent admins by category identifier.
+        /// </summary>
+        /// <param name="agentCategoryDetails">The agent category details.</param>
+        /// <returns></returns>
+        Task<List<Agent>> GetAgentAdminsByCategoryId(List<int> agentCategoryDetails);
 
         /// <summary>Gets the agent admins by ids.</summary>
         /// <param name="agentAdminIdsDetails">The agent admin ids details.</param>
@@ -63,19 +72,44 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </returns>
         Task<List<Agent>> GetAgentAdminsByIds(List<ObjectId> agentAdminIdsDetails, int sourceSchedulingGroupId);
 
+
+
         /// <summary>
         /// Gets the employee ids by agent scheduling group.
         /// </summary>
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
-        Task<List<int>> GetEmployeeIdsByAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
+        Task<List<string>> GetEmployeeIdsByAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
 
+
+        Task<List<object>> GetAgentList();
         /// <summary>Gets the agent admins count.</summary>
         /// <returns>
         ///   <br />
         /// </returns>
         Task<int> GetAgentAdminsCount();
 
+        /// <summary>
+        /// Updates the agent category values.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="categoryValue">The category valu.</param>
+        void UpdateAgentCategoryValue(EmployeeIdDetails employeeIdDetails, AgentCategoryValue categoryValue);
+
+        /// <summary>
+        /// Updates the agent category values.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="categoryValue">The category valu.</param>
+        void ImportUpdateAgentCategoryValue(EmployeeIdDetails employeeIdDetails, AgentCategoryValue categoryValue);
+
+
+        /// <summary>
+        /// Updates the agent scheduling group values.
+        /// </summary>
+        /// <param name="employeeIdDetails">The employee identifier details.</param>
+        /// <param name="agentSchedulingUpdateRequest">The Agent update request</param>
+        void ImportUpdateAgent(EmployeeIdDetails employeeIdDetails, AgentSchedulingUpdateRequest agentSchedulingUpdateRequest);
         /// <summary>
         /// Creates the agent admin.
         /// </summary>
@@ -87,6 +121,16 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// </summary>
         /// <param name="agentAdminRequest">The agent admin request.</param>
         void UpdateAgentAdmin(Agent agentAdminRequest);
+
+        void UpdateHireDate(EmployeeIdDetails employeeIdDetails, DateTime hireDate);
+
+
+        void UpdateFirstName(EmployeeIdDetails employeeIdDetails, string firstname);
+
+        void UpdateLastName(EmployeeIdDetails employeeIdDetails, string lastname);
+
+
+        void UpdateTeamLead(EmployeeIdDetails employeeIdDetails, string teamlead);
 
         /// <summary>
         /// Deletes the agent admin.

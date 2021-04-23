@@ -77,6 +77,19 @@ namespace Css.Api.Scheduling.Repository
         }
 
         /// <summary>
+        /// Finds the scheduling codes.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<SchedulingCode>> FindSchedulingCodes()
+        {
+            var query = Builders<SchedulingCode>.Filter.Eq(i => i.IsDeleted, false);
+
+
+            var result = FilterBy(query);
+            return await Task.FromResult(result.ToList());
+        }
+
+        /// <summary>
         /// Gets the schedulingCodes count.
         /// </summary>
         /// <returns></returns>

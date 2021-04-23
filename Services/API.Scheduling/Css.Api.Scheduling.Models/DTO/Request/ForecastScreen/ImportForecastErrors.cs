@@ -8,4 +8,5 @@ namespace Css.Api.Scheduling.Models.DTO.Request.ForecastScreen
     {
         public List<string> Messages;
     }
+ 
 }

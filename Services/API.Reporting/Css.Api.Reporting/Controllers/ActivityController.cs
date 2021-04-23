@@ -1,6 +1,7 @@
 ﻿using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Models.DTO.Response;
 using Css.Api.Reporting.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace Css.Api.Reporting.Controllers
     /// Controller for handling the all imports
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
+    [Authorize]
     [Produces("application/json")]
     [Consumes("application/json")]
     [Route("api/v1/[controller]")]

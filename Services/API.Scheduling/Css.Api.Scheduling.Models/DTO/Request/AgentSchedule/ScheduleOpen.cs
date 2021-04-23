@@ -3,6 +3,11 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
 {
     public class ScheduleOpen
     {
+
+        /// <summary>
+        /// Gets or sets the time.
+        /// </summary>
+        public string Date { get; set; }
         /// <summary>
         /// Gets or sets the time.
         /// </summary>

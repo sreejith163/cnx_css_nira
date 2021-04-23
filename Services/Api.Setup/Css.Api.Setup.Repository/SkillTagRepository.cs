@@ -144,8 +144,8 @@ namespace Css.Api.Setup.Repository
         public async Task<List<SkillTag>> GetSkillTagIdBySkillGroupIdAndGroupNameOrRefId(SkillTagAttribute skillTagAttribute)
         {
             var skillTags = FindByCondition
-            (x => x.SkillGroupId == skillTagAttribute.SkillGroupId && (string.Equals(x.Name.Trim(), skillTagAttribute.Name.Trim(),
-                      StringComparison.OrdinalIgnoreCase) || x.RefId == (skillTagAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
+            (x => ((x.SkillGroupId == skillTagAttribute.SkillGroupId && string.Equals(x.Name.Trim(), skillTagAttribute.Name.Trim(),
+                      StringComparison.OrdinalIgnoreCase)) || x.RefId == (skillTagAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
 
             return await Task.FromResult(skillTags);
         }

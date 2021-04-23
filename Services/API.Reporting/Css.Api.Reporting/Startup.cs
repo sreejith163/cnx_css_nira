@@ -2,7 +2,7 @@ using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Core.Utilities.Filters;
 using Css.Api.Reporting.Business.Extensions;
 using Css.Api.Reporting.Extensions;
-using Css.Api.Reporting.Models.DTO.Auth;
+using Css.Api.Reporting.Models.DTO.Identity;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -60,12 +60,12 @@ namespace Css.Api.Reporting
                 .AddDBContextConfiguration(Configuration)
                 .AddControllers();           
 
-            var authSettings = services.BuildServiceProvider().GetRequiredService<IOptions<AuthSettings>>().Value;
+            var identityProvider = Configuration.GetSection("IdentityProvider").Get<IdentityProvider>();
 
             string schemeName = "Bearer";
-            string authorityUrl = authSettings.AuthorityUrl;
+            string authorityUrl = identityProvider.Authority;
             bool isValidateAudience = false;
-            string apiScope = "api_reporting";
+            string apiScope = "api.reporting";
             string policyName = "ApiScope";
 
             services.AddAuthentication(schemeName)

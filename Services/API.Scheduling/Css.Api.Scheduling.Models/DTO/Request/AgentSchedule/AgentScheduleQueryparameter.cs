@@ -13,7 +13,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         public AgentScheduleQueryparameter()
         {
             OrderBy = "CreatedDate";
-            EmployeeIds = new List<int>();
+            EmployeeIds = new List<string>();
         }
 
         /// <summary>
@@ -42,8 +42,13 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentSchedule
         public bool ExcludeConflictSchedule { get; set; }
 
         /// <summary>
+        /// Gets or sets the excluded employee id.
+        /// </summary>
+        public string ExcludedEmployeeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the employee ids.
         /// </summary>
-        public List<int> EmployeeIds { get; set; }
+        public List<string> EmployeeIds { get; set; }
     }
 }

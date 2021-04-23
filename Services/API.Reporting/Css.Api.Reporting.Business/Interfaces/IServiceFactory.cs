@@ -1,4 +1,5 @@
-﻿using Css.Api.Reporting.Models.DTO.Processing;
+﻿using Css.Api.Core.Models.Enums;
+using Css.Api.Reporting.Models.DTO.Processing;
 using Css.Api.Reporting.Models.DTO.Response;
 using System;
 using System.Collections.Generic;
@@ -29,5 +30,11 @@ namespace Css.Api.Reporting.Business.Interfaces
         /// </summary>
         /// <returns>The list of instances of DataFeed</returns>
         List<DataFeed> GetRequestFeeds();
+
+        /// <summary>
+        /// Return the external target
+        /// </summary>
+        /// <returns></returns>
+        ActivityOrigin GetTarget();
     }
 }

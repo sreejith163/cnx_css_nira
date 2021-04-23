@@ -1,5 +1,11 @@
 {
   "Mappers": {
+    "Dispatchers": [
+      {
+        "Key": "EStart",
+        "TargetDataOption": "CSSFTP"
+      }
+    ],
     "Activities": [
       {
         "Key": "UDW-Import",
@@ -38,15 +44,15 @@
         "Key": "CSSMongo",
         "Type": "MongoDB",
         "Options": {
-          "ConnectionString": "mongodb://cssuser:cssuser_DEV@10.87.221.15:27017",
-          "DatabaseName": "css_dev"
+          "ConnectionString": "",
+          "DatabaseName": ""
         }
       },
       {
         "Key": "CSSFTP",
         "Type": "FTP",
         "Options": {
-          "FTPServer": "sftp://cssftp:test@10.87.221.35", // sftp://{username}:{pwd}@{host/ip}
+          "FTPServer": "",
           "FTPInbox": "/ftp/{0}/Inbox",
           "FTPOutbox": "/ftp/{0}/Outbox"
         }

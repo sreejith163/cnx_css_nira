@@ -2,6 +2,7 @@
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Models.DTO.Common;
 using Css.Api.Core.Models.Enums;
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Reporting.Business.Data;
 using Css.Api.Reporting.Business.Interfaces;
 using Css.Api.Reporting.Models.DTO.Processing;
@@ -104,6 +105,7 @@ namespace Css.Api.Reporting.Business.Services
             else
             {
                 schedulingGroups = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsByIds(filter.AgentSchedulingGroupIds, filter.EstartProvision);
+                filter.TimezoneIds = schedulingGroups.Select(x => x.TimezoneId).Distinct().ToList();
             }
             List<CalendarChart> charts = new List<CalendarChart>();
             if (!schedulingGroups.Any())
@@ -145,7 +147,11 @@ namespace Css.Api.Reporting.Business.Services
             if (schedules.Any())
             {
                 var agents = await _agentRepository.GetAgents(filter.AgentIds);
-                var schedulingGroups = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsByIds(agents.Select(x => x.AgentSchedulingGroupId).Distinct().ToList());
+                var asgs = agents.Select(x => x.AgentSchedulingGroupId)
+                                .Union(schedules.Select(x => x.AgentSchedulingGroupId))
+                                .Distinct()
+                                .ToList();
+                var schedulingGroups = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsByIds(asgs);
                 filter.TimezoneIds = schedulingGroups.Select(x => x.TimezoneId).Distinct().ToList();
                 var timezones = await _timezoneRepository.GetTimezones(filter.TimezoneIds);
                 List<TimezoneDetails> timezoneDetails = _mapper.Map<List<TimezoneDetails>>(timezones);
@@ -173,8 +179,8 @@ namespace Css.Api.Reporting.Business.Services
             var schedulingCodes = _schedulingCodeRepository.GetSchedulingCodesByNames(parsedChartList.Select(x => x.ActText).ToList()).Result;
             var empIds = parsedChartList.Select(x =>
                     {
-                        int value;
-                        bool success = int.TryParse(x.EmpNo, out value);
+                        string value = x.EmpNo;
+                        bool success = true;
                         return new { value, success };
                     })
                     .Where(pair => pair.success)
@@ -183,7 +189,7 @@ namespace Css.Api.Reporting.Business.Services
                     .ToList();
 
             var agents = _agentRepository.GetAgents(empIds).Result;
-            Dictionary<int, List<DateTime>> invalidEmpDates = empIds.Distinct()
+            Dictionary<string, List<DateTime>> invalidEmpDates = empIds.Distinct()
                                         .Select(x => {
                                             return new { key = x, value = new List<DateTime>() };
                                         })
@@ -227,7 +233,7 @@ namespace Css.Api.Reporting.Business.Services
             string clockText = "";
             charts.ForEach(x =>
             {
-                clockText += string.Join('|', x.EndDateTime.ToString("yyyyMMdd"), x.ScheduledDate.ToString("yyyyMMdd"), x.EmployeeId, x.ActivityName, x.StartDateTime.ToString("HH:mm"), x.EndDateTime.ToString("HH:mm")) + "\n";
+                clockText += string.Join('|', x.StartDateTime.ToString("yyyyMMdd"), x.ScheduledDate.ToString("yyyyMMdd"), x.EmployeeId, x.ActivityName, x.StartDateTime.ToString("HH:mm"), x.EndDateTime.ToString("HH:mm")) + "\n";
             });
             return clockText;
         }
@@ -314,47 +320,42 @@ namespace Css.Api.Reporting.Business.Services
 
             employees.ForEach(emp =>
             {
-                var timezones = calendarCharts.Where(x => x.EmployeeId == emp).Select(x => x.TimezoneOffset).Distinct().ToList();
-                if (timezones.Any())
+                AgentActivitySchedule agentActivitySchedule = new AgentActivitySchedule()
                 {
-                    timezones.ForEach(timezone =>
+                    AgentId = emp,
+                    BaseSchedule = new List<ActivitySchedule>()
+                };
+                
+                var dates = calendarCharts.Where(x => x.EmployeeId == emp).Select(x => x.ScheduledDate).Distinct().ToList();
+                dates.ForEach(date => 
+                {
+                    var dateCharts = calendarCharts.Where(x => x.EmployeeId == emp && x.ScheduledDate == date).OrderBy(x => x.StartDateTime).ToList();
+                    if(dateCharts.Any())
                     {
-                        AgentActivitySchedule agentActivitySchedule = new AgentActivitySchedule()
+                        var timezone = dateCharts.First().Timezone;
+                        var schedule = new ActivitySchedule()
                         {
-                            AgentId = emp,
-                            BaseSchedule = new List<ActivitySchedule>(),
-                            Timezone = timezone
+                            Timezone = timezone,
+                            ScheduleDetail = new List<ActivityScheduleDetail>(),
+                            ScheduleDate = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)
                         };
-                        var dates = calendarCharts.Where(x => x.EmployeeId == emp && x.TimezoneOffset == timezone).Select(x => x.ScheduledDate).Distinct().ToList();
-                        dates.ForEach(date => {
-                            var dateCharts = calendarCharts.Where(x => x.EmployeeId == emp && x.TimezoneOffset == timezone && x.ScheduledDate == date).OrderBy(x => x.StartDateTime).ToList();
-                            var schedule = new ActivitySchedule()
-                            {
-                                ScheduleDetail = new List<ActivityScheduleDetail>(),
-                                ScheduleDate = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)
-                            };
-                            dateCharts.ForEach(chart =>
-                            {
-                                schedule.ScheduleDetail.Add(new ActivityScheduleDetail()
-                                {
-                                    ActivityDesc = chart.ActivityName,
-                                    StartDateTime = chart.StartDateTime.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
-                                    EndDateTime = chart.EndDateTime.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture)
-                                });
-                            });
-                            if (schedule.ScheduleDetail.Any())
-                            {
-                                agentActivitySchedule.BaseSchedule.Add(schedule);
-                            }
-                        });
-
-                        if (agentActivitySchedule.BaseSchedule.Any())
+                        dateCharts.ForEach(chart =>
                         {
-                            agentActivitySchedules.Add(agentActivitySchedule);
-                        }
-                    });
+                            schedule.ScheduleDetail.Add(new ActivityScheduleDetail()
+                            {
+                                ActivityDesc = chart.ActivityName,
+                                StartDateTime = chart.StartDateTime.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
+                                EndDateTime = chart.EndDateTime.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture)
+                            });
+                        });
+                        agentActivitySchedule.BaseSchedule.Add(schedule);
+                    }
+                });
+                
+                if (agentActivitySchedule.BaseSchedule.Any())
+                {
+                    agentActivitySchedules.Add(agentActivitySchedule);
                 }
-
             });
 
             return agentActivitySchedules;
@@ -379,13 +380,13 @@ namespace Css.Api.Reporting.Business.Services
                 scheduleData.Messages.Add(Messages.InvalidScheduleDate);
             }
 
-            var agentInfo = await _agentRepository.GetAgents(new List<int>() { activityScheduleUpdate.AgentId });
+            var agentInfo = await _agentRepository.GetAgents(new List<string>() { activityScheduleUpdate.AgentId });
             if (!agentInfo.Any())
             {
                 scheduleData.Messages.Add(Messages.AgentNotFound);
             }
 
-            var timeOffset = ParseTimezoneOffset(activityScheduleUpdate.Timezone);
+            var timeOffset = TimezoneHelper.GetOffset(activityScheduleUpdate.Timezone);
             if(!timeOffset.HasValue)
             {
                 scheduleData.Messages.Add(Messages.InvalidTimezone);
@@ -398,12 +399,40 @@ namespace Css.Api.Reporting.Business.Services
 
             scheduledDate = new DateTime(scheduledDate.Year, scheduledDate.Month, scheduledDate.Day, 0, 0, 0, DateTimeKind.Utc);
             var agent = agentInfo.First();
-            var schedulingGroups = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsByIds(agentInfo.Select(x => x.AgentSchedulingGroupId).Distinct().ToList());
-            var agentSchedulingGroup = schedulingGroups.First();
-            var agentTimezone = await _timezoneRepository.GetTimezone(agentSchedulingGroup.TimezoneId);
-            var offsetDiff = agentTimezone.UtcOffset.Subtract(timeOffset.Value);
+            
+            var existingSchedule = await _agentScheduleManagerRepository.GetManagerSchedules(new List<string>() { agent.Ssn }, new List<DateTime> { scheduledDate });
+            TimeSpan offset;
+            var dateTimeNow = DateTime.UtcNow;
+            DateTime? modifiedDate = dateTimeNow;
 
-            ScheduleManagerData scheduleManagerData =  await ParseActivityScheduleUpdateDetail(scheduledDate, activityScheduleUpdate.ScheduleActivities);
+            if (existingSchedule.Any())
+            {
+                var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsById(existingSchedule.First().AgentSchedulingGroupId);
+                var agentTimezone = await _timezoneRepository.GetTimezone(agentSchedulingGroup.TimezoneId);
+                offset = TimezoneHelper.GetOffset(agentTimezone.Abbreviation).Value;
+            }
+            else
+            {
+                var agentSchedulingGroup = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsById(agent.AgentSchedulingGroupId);
+                var agentTimezone = await _timezoneRepository.GetTimezone(agentSchedulingGroup.TimezoneId);
+                offset = TimezoneHelper.GetOffset(agentTimezone.Abbreviation).Value;
+                modifiedDate = null;
+            }
+            
+
+            if(scheduledDate.Date <= DateTime.UtcNow.Add(offset).Date.AddDays(-1))
+            {
+                scheduleData.Messages.Add(Messages.ScheduleUpdateNotAllowed);
+            }
+
+            if (scheduleData.Messages.Any())
+            {
+                return scheduleData;
+            }
+
+            var offsetDiff = offset.Subtract(timeOffset.Value);
+
+            ScheduleManagerData scheduleManagerData =  await ParseActivityScheduleUpdateDetail(agent.Ssn, scheduledDate, activityScheduleUpdate.ScheduleActivities);
             scheduleData.Messages.AddRange(scheduleManagerData.Messages);
 
             if(scheduleData.Messages.Any())
@@ -417,13 +446,8 @@ namespace Css.Api.Reporting.Business.Services
                 chart.EndDateTime = chart.EndDateTime.Add(offsetDiff);
             });
 
-            var existingSchedule = await _agentScheduleManagerRepository.GetManagerSchedules(new List<int>() { agent.Ssn }, new List<DateTime> { scheduledDate });
-            var dateTimeNow = DateTime.UtcNow;
-            DateTime? modifiedDate = dateTimeNow;
-            if(!existingSchedule.Any())
-            {
-                modifiedDate = null;
-            }
+            
+            
 
             scheduleData.Schedule = new AgentScheduleManager()
             {
@@ -457,7 +481,8 @@ namespace Css.Api.Reporting.Business.Services
                     {
                         AgentSchedulingGroupId = s.AgentSchedulingGroupId,
                         TimezoneId = t.TimezoneId,
-                        TimezoneValue = t.TimezoneValue
+                        TimezoneValue = t.TimezoneValue,
+                        TimezoneOffsetValue = t.TimezoneOffsetValue
                     }).ToList();
         }
 
@@ -473,7 +498,7 @@ namespace Css.Api.Reporting.Business.Services
             List<CalendarChart> managerCharts = new List<CalendarChart>();
             agentScheduleManagers.ForEach(agentScheduleManager =>
             {
-                var schedulingGroupDetail = schedulingGroupDetailsList.FirstOrDefault(x => x.AgentSchedulingGroupId == agentScheduleManager.AgentSchedulingGroupId);
+                var schedulingGroupDetail = schedulingGroupDetailsList.First(x => x.AgentSchedulingGroupId == agentScheduleManager.AgentSchedulingGroupId);
 
                 managerCharts.AddRange((from c in agentScheduleManager.Charts
                                           join sc in codes on c.SchedulingCodeId equals sc.SchedulingCodeId
@@ -484,13 +509,31 @@ namespace Css.Api.Reporting.Business.Services
                                               ActivityName = sc.Name,
                                               ScheduledDate = agentScheduleManager.Date,
                                               AgentSchedulingGroupId = agentScheduleManager.AgentSchedulingGroupId,
-                                              TimezoneOffset = schedulingGroupDetail?.TimezoneValue,
+                                              Timezone = schedulingGroupDetail.TimezoneValue,
+                                              TimezoneOffset = schedulingGroupDetail.TimezoneOffsetValue,
                                               StartDateTime = c.StartDateTime,
                                               EndDateTime = c.EndDateTime
                                           }).ToList());
             });
             
-            return managerCharts.OrderBy(x => x.EmployeeId).ThenBy(x => x.ScheduledDate).ThenBy(x => x.StartDateTime).ToList();
+            List<CalendarChart> calendarCharts = new List<CalendarChart>();
+            managerCharts.ForEach(chart =>
+            {
+                var existingRec = calendarCharts.FirstOrDefault(x => x.EmployeeId == chart.EmployeeId
+                                                    && x.ActivityId == chart.ActivityId
+                                                    && x.ScheduledDate == chart.ScheduledDate
+                                                    && x.EndDateTime == chart.StartDateTime);
+                if (existingRec != null)
+                {
+                    existingRec.EndDateTime = chart.EndDateTime;
+                }
+                else
+                {
+                    calendarCharts.Add(chart);
+                }
+            });
+
+            return calendarCharts.OrderBy(x => x.EmployeeId).ThenBy(x => x.ScheduledDate).ThenBy(x => x.StartDateTime).ToList();
         }
 
         /// <summary>
@@ -534,7 +577,7 @@ namespace Css.Api.Reporting.Business.Services
         /// <param name="clocks"></param>
         /// <param name="empIds"></param>
         /// <returns>A list of instances of ScheduleClock</returns>
-        private List<ScheduleClock> ReconcileScheduleClocks(List<ScheduleClock> clocks, List<int> empIds)
+        private List<ScheduleClock> ReconcileScheduleClocks(List<ScheduleClock> clocks, List<string> empIds)
         {
             List<ScheduleClock> reconciledClocks = new List<ScheduleClock>();
 
@@ -730,7 +773,7 @@ namespace Css.Api.Reporting.Business.Services
 
         /// <summary>
         /// A helper method to parse the text based on a pattern of
-        /// 'YYYY-MM-DD|12345|YYYY-MM-DD HH:MM|YYYY-MM-DD HH:MM|Code'
+        /// 'YYYYMMDD|YYYYMMDD|12345|Code|HH:MM|HH:MM'
         /// </summary>
         /// <param name="content"></param>
         /// <returns>A list of instances of CalendarChartData</returns>
@@ -782,13 +825,14 @@ namespace Css.Api.Reporting.Business.Services
         /// <param name="calendarChartDatas"></param>
         /// <param name="schedulingCodes"></param>
         /// <param name="agents"></param>
-        private void ParseCalenderChartData(List<CalendarChartData> calendarChartDatas, List<SchedulingCode> schedulingCodes, List<Agent> agents, Dictionary<int, List<DateTime>> invalidEmpDates)
+        private void ParseCalenderChartData(List<CalendarChartData> calendarChartDatas, List<SchedulingCode> schedulingCodes, List<Agent> agents, Dictionary<string, List<DateTime>> invalidEmpDates)
         {
             calendarChartDatas.ForEach(calendarChartData =>
             {
                 DateTime schDate, startDateTime = DateTime.MinValue, endDateTime = DateTime.MinValue;
                 TimeSpan startTime, endTime;
                 int empNo = 0;
+                string employeeNo = calendarChartData.EmpNo;
                 var code = schedulingCodes.FirstOrDefault(x => x.Name.Equals(calendarChartData.ActText.Trim()));
 
                 bool empStatus = (int.TryParse(calendarChartData.EmpNo, out empNo) || empNo == 0);
@@ -805,19 +849,16 @@ namespace Css.Api.Reporting.Business.Services
                 {
                     bool startStatus = false;
                     bool endStatus = false;
-                    string actStartDateTime = string.Empty;
+                    string actStartDateTime = string.Join(" ", calendarChartData.ActDate, calendarChartData.ActStartTime);
                     string actEndDateTime = string.Join(" ", calendarChartData.ActDate, calendarChartData.ActEndTime);
-                    if (startTime > endTime)
-                    {
-                        actStartDateTime = string.Join(" ", calendarChartData.SchDate, calendarChartData.ActStartTime);
-                    }
-                    else
-                    {
-                        actStartDateTime = string.Join(" ", calendarChartData.ActDate, calendarChartData.ActStartTime);
-                    }
 
                     startStatus = DateTime.TryParseExact(actStartDateTime, "yyyyMMdd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDateTime);
                     endStatus = DateTime.TryParseExact(actEndDateTime, "yyyyMMdd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDateTime);
+
+                    if (startTime > endTime && endStatus)
+                    {
+                        endDateTime = endDateTime.AddDays(1);
+                    }
 
                     if (startStatus && endStatus && startDateTime < endDateTime && ValidateScheduleDateClocks(schDate, startDateTime, endDateTime))
                     {
@@ -825,7 +866,7 @@ namespace Css.Api.Reporting.Business.Services
                     }
                     else
                     {
-                        invalidEmpDates[empNo].Add(schDate);
+                        // invalidEmpDates[empNo].Add(schDate);
                     }
                 }
 
@@ -841,8 +882,8 @@ namespace Css.Api.Reporting.Business.Services
                 { 
                     calendarChartData.Chart = new CalendarChart()
                     {
-                        EmployeeId = empNo,
-                        AgentSchedulingGroupId = agents.First(x => x.Ssn == empNo).AgentSchedulingGroupId,
+                        EmployeeId = employeeNo,
+                        AgentSchedulingGroupId = agents.First(x => x.Ssn == employeeNo).AgentSchedulingGroupId,
                         ScheduledDate = new DateTime(schDate.Year, schDate.Month, schDate.Day, 0, 0, 0, DateTimeKind.Utc),
                         ActivityId = code.SchedulingCodeId,
                         ActivityName = calendarChartData.ActText.Trim(),
@@ -856,10 +897,11 @@ namespace Css.Api.Reporting.Business.Services
         /// <summary>
         /// The helper method to parse schedule update detail for the scheduled date
         /// </summary>
+        /// <param name="agentId"></param>
         /// <param name="scheduledDate"></param>
         /// <param name="activitySchedules"></param>
         /// <returns>An instance of ScheduleManagerData</returns>
-        private async Task<ScheduleManagerData> ParseActivityScheduleUpdateDetail(DateTime scheduledDate, List<ActivityScheduleUpdateDetail> activitySchedules)
+        private async Task<ScheduleManagerData> ParseActivityScheduleUpdateDetail(string agentId, DateTime scheduledDate, List<ActivityScheduleUpdateDetail> activitySchedules)
         {
             ScheduleManagerData scheduleManagerData = new ScheduleManagerData()
             {
@@ -932,7 +974,13 @@ namespace Css.Api.Reporting.Business.Services
                 scheduleManagerData.Messages.Add(string.Format(Messages.OverlappingSchedules, scheduledDate.ToString("yyyy-MM-dd")));
                 scheduleManagerData.ManagerCharts = new List<AgentScheduleManagerChart>();
             }
-            
+
+            List<string> scheduleOverlapsMessages = await CheckOverlapsInExistingSchedules(agentId, scheduledDate, scheduleManagerData.ManagerCharts);
+            if(scheduleOverlapsMessages.Any())
+            {
+                scheduleManagerData.Messages.AddRange(scheduleOverlapsMessages);
+                scheduleManagerData.ManagerCharts = new List<AgentScheduleManagerChart>();
+            }
             return scheduleManagerData;
         }
 
@@ -975,7 +1023,7 @@ namespace Css.Api.Reporting.Business.Services
                             }
                             else
                             {
-                                var adjacentDaySchedules = await _agentScheduleManagerRepository.GetManagerSchedules(new List<int>() { emp }, new List<DateTime>() { day.AddDays(-1), day.AddDays(1) });
+                                var adjacentDaySchedules = await _agentScheduleManagerRepository.GetManagerSchedules(new List<string>() { emp }, new List<DateTime>() { day.AddDays(-1), day.AddDays(1) });
                                 if (empDayClockData.Any(x => CheckIfOverlapSchedulesExists(x.Chart, adjacentDaySchedules)))
                                 {
                                     overlappingClocks.AddRange(empDayClockData);
@@ -1047,12 +1095,52 @@ namespace Css.Api.Reporting.Business.Services
         }
 
         /// <summary>
+        /// A helper method to check if input schedule manager overlaps any other existing schedules for the agent
+        /// </summary>
+        /// <param name="agentId"></param>
+        /// <param name="scheduledDate"></param>
+        /// <param name="agentScheduleManagerCharts"></param>
+        /// <returns></returns>
+        private async Task<List<string>> CheckOverlapsInExistingSchedules(string agentId, DateTime scheduledDate, List<AgentScheduleManagerChart> agentScheduleManagerCharts)
+        {
+            List<string> messages = new List<string>();
+            var prevDay = scheduledDate.Date.AddDays(-1);
+            var nextDay = scheduledDate.Date.AddDays(1);
+            var otherDaySchedules = await _agentScheduleManagerRepository.GetManagerSchedules(new List<string>() { agentId }, new List<DateTime>() { prevDay, nextDay });
+
+            foreach(var chart in agentScheduleManagerCharts)
+            {
+                var dates = Enumerable.Range(0, 1 + (int)(chart.EndDateTime - chart.StartDateTime).TotalMinutes / 5)
+                            .Select(offset => chart.StartDateTime.Add(new TimeSpan(0, offset * 5, 0)))
+                            .ToArray();
+
+                foreach (var schedule in otherDaySchedules)
+                {
+                    foreach (var agentManagerChart in schedule.Charts)
+                    {
+                        var diff = (agentManagerChart.EndDateTime - agentManagerChart.StartDateTime).TotalMinutes;
+                        var mgrDates = Enumerable.Range(0, 1 + (int)(agentManagerChart.EndDateTime - agentManagerChart.StartDateTime).TotalMinutes / 5)
+                                .Select(offset => agentManagerChart.StartDateTime.Add(new TimeSpan(0, offset * 5, 0)))
+                                .ToArray();
+
+                        if (mgrDates.Any(x => dates.Contains(x)))
+                        {
+                            messages.Add(string.Format(Messages.OverlappingExistingSchedules, chart.StartDateTime.ToString("yyyy-MM-dd HH:mm"), chart.EndDateTime.ToString("yyyy-MM-dd HH:mm"), schedule.Date.ToString("yyyy-MM-dd")));
+                        }
+                    }
+                }
+            }
+
+            return messages.Distinct().ToList();
+        }
+
+        /// <summary>
         /// A helper method to check if any overlapping schedule exists
         /// </summary>
         /// <param name="calendarChart"></param>
         /// <param name="agentScheduleManagers"></param>
         /// <returns></returns>
-        public bool CheckIfOverlapSchedulesExists(CalendarChart calendarChart, List<AgentScheduleManager> agentScheduleManagers)
+        private bool CheckIfOverlapSchedulesExists(CalendarChart calendarChart, List<AgentScheduleManager> agentScheduleManagers)
         {
             var dates = Enumerable.Range(0, 1 + (int) (calendarChart.EndDateTime - calendarChart.StartDateTime).TotalMinutes / 5)
                             .Select(offset => calendarChart.StartDateTime.Add(new TimeSpan(0, offset * 5, 0)))
@@ -1083,7 +1171,7 @@ namespace Css.Api.Reporting.Business.Services
         /// <param name="calendarChart"></param>
         /// <param name="otherCalendarCharts"></param>
         /// <returns></returns>
-        public bool CheckIfOverlapSchedulesExists(CalendarChart calendarChart, List<CalendarChart> otherCalendarCharts)
+        private bool CheckIfOverlapSchedulesExists(CalendarChart calendarChart, List<CalendarChart> otherCalendarCharts)
         {
             var dates = Enumerable.Range(0, 1 + (int)(calendarChart.EndDateTime - calendarChart.StartDateTime).TotalMinutes / 5)
                             .Select(offset => calendarChart.StartDateTime.Add(new TimeSpan(0, offset * 5, 0)))

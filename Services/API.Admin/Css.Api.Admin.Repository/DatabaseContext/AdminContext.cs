@@ -41,6 +41,7 @@ namespace Css.Api.Admin.Repository.DatabaseContext
         public virtual DbSet<SchedulingTypeCode> SchedulingTypeCode { get; set; }
         public virtual DbSet<Role> Role { get; set; }
 
+        public virtual DbSet<Log> Log { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -489,6 +490,69 @@ namespace Css.Api.Admin.Repository.DatabaseContext
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_scheduling_type_code_type_code_id");
             });
+
+            modelBuilder.Entity<Log>(entity =>
+            {
+                entity.ToTable("user_logger");
+                
+                entity.Property(e => e.Id)
+                 .HasColumnName("id")
+                 .HasColumnType("int(11)");
+
+                entity.Property(e => e.SSO)
+                    .HasColumnName("sso")
+                    .HasColumnType("varchar(100)");
+
+                entity.Property(e => e.TimeStamp)
+                .HasColumnName("time_stamp");
+
+                entity.Property(e => e.UserAgent)
+               .HasColumnName("user_agent");
+
+
+            });
+
+            modelBuilder.Entity<NonSsoModel>(entity =>
+            {
+                entity.ToTable("non_sso_auth");
+
+                entity.Property(e => e.Id)
+                 .HasColumnName("id")
+                 .HasColumnType("int(11)");
+
+                entity.Property(e => e.EmployeeId)
+                 .HasColumnName("employee_id")
+                 .HasColumnType("varchar(45)");
+
+                entity.Property(e => e.RoleId)
+                .HasColumnName("role_id")
+                .HasColumnType("int(11)");
+
+                entity.Property(e => e.Username)
+                    .HasColumnName("user_name")
+                    .HasColumnType("varchar(45)");
+
+                entity.Property(e => e.Sso)
+                  .HasColumnName("sso")
+                  .HasColumnType("varchar(45)");
+
+                entity.Property(e => e.Firstname)
+                    .HasColumnName("firstname")
+                    .HasColumnType("varchar(45)");
+                entity.Property(e => e.Lastname)
+                 .HasColumnName("lastname")
+                 .HasColumnType("varchar(45)");
+                entity.Property(e => e.Password)
+                 .HasColumnName("password")
+                 .HasColumnType("varchar(45)");
+                entity.Property(e => e.IsDeleted)
+                    .HasColumnName("is_deleted")
+                    .HasColumnType("tinyint(4)");
+
+
+            });
+
+
 
             OnModelCreatingPartial(modelBuilder);
         }

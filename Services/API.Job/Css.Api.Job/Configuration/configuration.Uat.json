@@ -4,7 +4,7 @@
       {
         "Key": "UDWImport",
         "CronExpression": "0 */4 * * *",
-        "Url": "http://cnx-css-api-gateway:4201/api/activity",
+        "Url": "https://css-apig-uat.concentrix.com/api/activity",
         "Method": "POST",
         "Headers": {
           "activity": "UDW-Import"
@@ -15,7 +15,7 @@
       {
         "Key": "EStartImport",
         "CronExpression": "0 */4 * * *",
-        "Url": "http://cnx-css-api-gateway:4201/api/activity",
+        "Url": "https://css-apig-uat.concentrix.com/api/activity",
         "Method": "POST",
         "Headers": {
           "activity": "EStart-Import"
@@ -26,7 +26,7 @@
       {
         "Key": "EStartExport",
         "CronExpression": "*/15 * * * *",
-        "Url": "http://cnx-css-api-gateway:4201/api/activity",
+        "Url": "https://css-apig-uat.concentrix.com/api/activity",
         "Method": "POST",
         "Headers": {
           "activity": "EStart-Export"
@@ -38,7 +38,7 @@
       {
         "Key": "EStartExportIntraDay",
         "CronExpression": "*/5 * * * *",
-        "Url": "http://cnx-css-api-gateway:4201/api/activity",
+        "Url": "https://css-apig-uat.concentrix.com/api/activity",
         "Method": "POST",
         "Headers": {
           "activity": "EStart-Export"
@@ -46,6 +46,14 @@
         "Content": "",
         "TimeZone": "UTC",
         "Filters": "[{\"relativeStartDay\": -1, \"relativeEndDay\": 1, \"include\": [], \"exclude\": [], \"pickRecentlyUpdatedInDays\": 3 }]"
+      },
+      {
+        "Key": "EStartEmpExport",
+        "CronExpression": "*/15 * * * *",
+        "Url": "https://css-apig-uat.concentrix.com/api/dispatch/estart",
+        "Method": "PUT",
+        "Content": "",
+        "TimeZone": "UTC"
       }
     ]
   }

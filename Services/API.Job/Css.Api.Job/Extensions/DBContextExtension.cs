@@ -21,8 +21,8 @@ namespace Css.Api.Job.Extensions
         /// <returns></returns>
         public static IServiceCollection AddDBContextConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IMongoContext, MongoContext>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IMongoContext, MongoContext>();
+            services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
             services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
 

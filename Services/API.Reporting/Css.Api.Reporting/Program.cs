@@ -42,10 +42,6 @@ namespace Css.Api.Reporting
                                      optional: false, reloadOnChange: true)
                                .AddJsonFile(Path.Combine("Mappers", $"mapper.{env.EnvironmentName}.json"),
                                      optional: false, reloadOnChange: true)
-                               .AddJsonFile(Path.Combine("Configuration", "configuration.json"),
-                                     optional: false, reloadOnChange: true)
-                               .AddJsonFile(Path.Combine("Configuration", $"configuration.{env.EnvironmentName}.json"),
-                                     optional: false, reloadOnChange: true)
                                .AddEnvironmentVariables()
                                .Build();
                                

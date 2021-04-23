@@ -27,12 +27,15 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         /// <param name="agentSchedulingGroupIdDetails">The agent scheduling group identifier details.</param>
         /// <returns></returns>
         Task<AgentSchedulingGroup> GetAgentSchedulingGroup(AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails);
+        Task<List<AgentSchedulingGroup>> FindSchedulingGroup();
 
         /// <summary>Gets the agent scheduling groups of skill tag.</summary>
         /// <param name="skillTagIdDetails">The skill tag identifier details.</param>
         /// <returns>
         ///   <br />
         /// </returns>
+        /// 
+
         Task<IQueryable<AgentSchedulingGroup>> GetAgentSchedulingGroupBySkillTag(SkillTagIdDetails skillTagIdDetails);
 
         /// <summary>
@@ -43,7 +46,12 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupBySkillGroupId(int skillGroupId);
 
 
+        /// <summary>
+        /// Gets the agent scheduling group by skill group identifier.
+        /// </summary>
 
+        /// <returns></returns>
+        Task<List<AgentSchedulingGroup>> GetAgentSchedulingGroupList();
         /// <summary>
         /// Creates the agent scheduling group.
         /// </summary>

@@ -1,16 +1,19 @@
 ﻿using Css.Api.Core.EventBus;
+using Css.Api.Core.EventBus.Events.AgentCategory;
 using Css.Api.Core.EventBus.Events.AgentSchedulingGroup;
 using Css.Api.Core.EventBus.Events.Client;
 using Css.Api.Core.EventBus.Events.ClientLOB;
 using Css.Api.Core.EventBus.Events.SchedulingCode;
 using Css.Api.Core.EventBus.Events.SkillGroup;
 using Css.Api.Core.EventBus.Events.SkillTag;
+using Css.Api.Scheduling.EventHandlers.Consumers.AgentCategory;
 using Css.Api.Scheduling.EventHandlers.Consumers.AgentSchedulingGroup;
 using Css.Api.Scheduling.EventHandlers.Consumers.Client;
 using Css.Api.Scheduling.EventHandlers.Consumers.ClientLOB;
 using Css.Api.Scheduling.EventHandlers.Consumers.SchedulingCode;
 using Css.Api.Scheduling.EventHandlers.Consumers.SkillGroup;
 using Css.Api.Scheduling.EventHandlers.Consumers.SkillTag;
+using Css.Api.Scheduling.EventHandlers.Faults.AgentCategory;
 using Css.Api.Scheduling.EventHandlers.Faults.AgentSchedulingGroup;
 using Css.Api.Scheduling.EventHandlers.Faults.Client;
 using Css.Api.Scheduling.EventHandlers.Faults.ClientLOB;
@@ -87,6 +90,15 @@ namespace Css.Api.Scheduling.EventHandlers.Registrations
 
             config.AddConsumer<DeleteSchedulingCodeCommandConsumer>();
             config.AddConsumer<DeleteSchedulingCodeCommandFault>();
+
+            config.AddConsumer<CreateAgentCategoryCommandConsumer>();
+            config.AddConsumer<CreateAgentCategoryCommandFault>();
+
+            config.AddConsumer<UpdateAgentCategoryCommandConsumer>();
+            config.AddConsumer<UpdateAgentCategoryCommandFault>();
+
+            config.AddConsumer<DeleteAgentCategoryCommandConsumer>();
+            config.AddConsumer<DeleteAgentCategoryCommandFault>();
         }
 
         /// <summary>
@@ -158,6 +170,15 @@ namespace Css.Api.Scheduling.EventHandlers.Registrations
 
             cfg.RegisterPublisher<ISchedulingCodeDeleteSuccess>(MassTransitConstants.SchedulingCodeExchange);
             cfg.RegisterPublisher<ISchedulingCodeDeleteFailed>(MassTransitConstants.SchedulingCodeExchange);
+
+            cfg.RegisterPublisher<IAgentCategoryCreateSuccess>(MassTransitConstants.AgentCategoryExchange);
+            cfg.RegisterPublisher<IAgentCategoryCreateFailed>(MassTransitConstants.AgentCategoryExchange);
+
+            cfg.RegisterPublisher<IAgentCategoryUpdateSuccess>(MassTransitConstants.AgentCategoryExchange);
+            cfg.RegisterPublisher<IAgentCategoryUpdateFailed>(MassTransitConstants.AgentCategoryExchange);
+
+            cfg.RegisterPublisher<IAgentCategoryDeleteSuccess>(MassTransitConstants.AgentCategoryExchange);
+            cfg.RegisterPublisher<IAgentCategoryDeleteFailed>(MassTransitConstants.AgentCategoryExchange);
         }
 
         /// <summary>
@@ -214,6 +235,14 @@ namespace Css.Api.Scheduling.EventHandlers.Registrations
                 c.Consumer<CreateSchedulingCodeCommandConsumer>(ctx);
                 c.Consumer<UpdateSchedulingCodeCommandConsumer>(ctx);
                 c.Consumer<DeleteSchedulingCodeCommandConsumer>(ctx);
+            });
+
+            cfg.ReceiveEndpoint(MassTransitConstants.AgentCategoryCommandQueue, c =>
+            {
+                c.RegisterExchange(MassTransitConstants.AgentCategoryExchange, MassTransitConstants.AgentCategoryCommandQueueBindingPattern);
+                c.Consumer<CreateAgentCategoryCommandConsumer>(ctx);
+                c.Consumer<UpdateAgentCategoryCommandConsumer>(ctx);
+                c.Consumer<DeleteAgentCategoryCommandConsumer>(ctx);
             });
         }
     }

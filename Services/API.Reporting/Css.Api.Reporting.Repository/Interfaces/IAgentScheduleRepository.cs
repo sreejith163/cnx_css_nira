@@ -25,7 +25,7 @@ namespace Css.Api.Reporting.Repository.Interfaces
         /// </summary>
         /// <param name="agentIds"></param>
         /// <returns></returns>
-        Task<List<AgentSchedule>> GetSchedules(List<int> agentIds);
+        Task<List<AgentSchedule>> GetSchedules(List<string> agentIds);
 
         // <summary>
         /// The method to insert schedules for agents if it doesn't exist
