@@ -171,6 +171,7 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
   }
 
   private addSkillGroupDetails() {
+    this.skillGroupForm.controls.refId.setValue(this.skillGroupForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
     const addSkillGroupModel = this.skillGroupForm.value as AddSkillGroup;
     addSkillGroupModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
     addSkillGroupModel.clientLobGroupId = this.clientLobGroupId;
@@ -193,6 +194,7 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
   private updateSkillGroupDetails() {
     if (this.hasSkillGroupDetailsMismatch()) {
 
+      this.skillGroupForm.controls.refId.setValue(this.skillGroupForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
       const updateSkillGroupModel = this.skillGroupForm.value as UpdateSkillGroup;
       updateSkillGroupModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
       updateSkillGroupModel.clientLobGroupId = this.clientLobGroupId;

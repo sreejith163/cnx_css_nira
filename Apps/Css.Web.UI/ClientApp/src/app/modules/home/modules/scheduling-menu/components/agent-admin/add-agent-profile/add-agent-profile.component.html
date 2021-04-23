@@ -54,7 +54,7 @@
               </label>
             </div>
             <div class="col-md-8">
-              <input [maxLength]="40" type="text" class="form-control"
+              <input [maxLength]="100" type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('sso')}" formControlName="sso"
                 placeholder="SSO" />
               <ng-container *ngIf="formSubmitted && form.sso.invalid">
@@ -284,7 +284,7 @@
               <label>{{ 'Team Lead SSO' | translate }}</label>
             </div>
             <div class="col-md-8">
-              <input [maxLength]="40" type="text" class="form-control"
+              <input [maxLength]="100" type="text" class="form-control"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorSso')}"
                 formControlName="supervisorSso" placeholder="SSO" />
               <ng-container *ngIf="formSubmitted && form.supervisorSso.invalid">

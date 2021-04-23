@@ -21,6 +21,7 @@ import { AddUpdateSkillTagComponent } from './components/skill-tags/add-update-s
 import { SetupMenuIntegerDirective } from 'src/app/shared/directives/setup-menu-integer.directive';
 
 
+
 const modules = [SharedModule, SetupMenuRoutingModule];
 const components = [
   ClientNameListComponent,

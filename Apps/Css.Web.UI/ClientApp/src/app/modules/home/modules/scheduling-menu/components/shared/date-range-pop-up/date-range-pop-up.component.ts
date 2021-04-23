@@ -16,6 +16,7 @@ import { Constants } from 'src/app/shared/util/constants.util';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { NgbDateToIsoStringAdapter } from '../../../helpers/ngb-date-to-iso-string-adapter';
 import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-date-range-pop-up',
@@ -104,6 +105,18 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
   //   return this.datepipe.transform(date.toString().replace("Z", ""), 'yyyy-MM-dd');
   // }
 
+  private formatDateMoment(date){
+    let dt = new Date(date).toUTCString();
+    const transformedDate = moment(dt).format('YYYY-MM-DD');
+    return transformedDate;
+  }
+
+  private formatStringToDateMoment(date){
+    const transformedDate = moment(date).format('YYYY-MM-DD');
+    return transformedDate;
+  }
+
+
 
 
   convertNgbToUTCString(date) {
@@ -148,8 +161,7 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
         this.activeModal.close({ needRefresh: false });
       }
     }
-  }
-
+  } 
   
   private addScheduleDateRange() {
     this.spinnerService.show(this.spinner, SpinnerOptions);
@@ -160,12 +172,21 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         this.spinnerService.hide(this.spinner);
         if (!response.body) {
-          if(this.el?.ranges.find(x => x.dateFrom >= this.dateFrom && x.dateTo <= this.dateTo) !== undefined){
+
+          let dtFrom = this.formatDateMoment(this.dateFrom);
+          let dtTo = this.formatDateMoment(this.dateTo);
+
+          // check if date range already exists in the list
+          var isExisting = this.el?.ranges.find(x => this.formatStringToDateMoment(x.dateTo) == dtTo && this.formatStringToDateMoment(x.dateFrom) == dtFrom);
+
+          console.log(this.el?.ranges, dtFrom, dtTo)
+
+          if(isExisting !== undefined){
             this.getModalPopup(ErrorWarningPopUpComponent, 'sm', Constants.DateRangeConflictMessage);            
           }else{
             const rangeModel = new ScheduleDateRangeBase();
-            rangeModel.dateFrom = this.dateFrom;
-            rangeModel.dateTo = this.dateTo;
+            rangeModel.dateFrom = dtFrom;
+            rangeModel.dateTo = dtTo;
             this.activeModal.close(rangeModel);
           }
         } else {
@@ -198,8 +219,8 @@ export class DateRangePopUpComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         this.spinnerService.hide(this.spinner);
         const rangeModel = new ScheduleDateRangeBase();
-        rangeModel.dateFrom = this.dateFrom;
-        rangeModel.dateTo = this.dateTo;
+        rangeModel.dateFrom = this.formatDateMoment(this.dateFrom);
+        rangeModel.dateTo = this.formatDateMoment(this.dateTo);
         this.activeModal.close(rangeModel);
       }, (error) => {
         this.spinnerService.hide(this.spinner);

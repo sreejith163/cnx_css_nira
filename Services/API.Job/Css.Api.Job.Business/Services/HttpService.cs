@@ -103,10 +103,12 @@ namespace Css.Api.Job.Business.Services
         /// Method to send the http request message
         /// </summary>
         /// <param name="reqMessage">The request message</param>
+        /// <param name="timeout">The timeout (in min) of the req message. Defaults to 5 min</param>
         /// <returns>The instance of HttpResponseMessage</returns>
-        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage reqMessage)
+        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage reqMessage, int timeout = 5)
         {
             var client = _httpClient.CreateClient();
+            client.Timeout = new TimeSpan(0, timeout, 0);
             client.SetBearerToken(await GetAccessToken());
             var responseMessage = await client.SendAsync(reqMessage);
             client.Dispose();
@@ -117,11 +119,13 @@ namespace Css.Api.Job.Business.Services
         /// Method to send multiple http request messages
         /// </summary>
         /// <param name="reqMessages">List of request messages</param>
+        /// <param name="timeout">The timeout (in min) of the req messages. Defaults to 5 min</param>
         /// <returns>The list of instances of HttpResponseMessage</returns>
-        public async Task<List<HttpResponseMessage>> SendAsync(List<HttpRequestMessage> reqMessages)
+        public async Task<List<HttpResponseMessage>> SendAsync(List<HttpRequestMessage> reqMessages, int timeout = 5)
         {
             List<HttpResponseMessage> responseMessages = new List<HttpResponseMessage>();
             var client = _httpClient.CreateClient();
+            client.Timeout = new TimeSpan(0, timeout, 0);
             client.SetBearerToken(await GetAccessToken());
             foreach(var request in reqMessages)
             {

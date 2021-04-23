@@ -1,4 +1,4 @@
-<ng-select [items]="skillTagItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="{{'All' | translate}}"
+<ng-select [items]="skillTagItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="{{'Select' | translate}}"
   [typeahead]="typeAheadInput$" (scroll)="onSkillTagScroll($event)" (scrollToEnd)="onSkillTagScrollToEnd()"
   (change)="onSkillTagChange($event)" (clear)="clearSkillTagValues()" [(ngModel)]="skillTagId">
   <ng-template ng-header-tmp>

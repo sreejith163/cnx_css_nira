@@ -51,6 +51,10 @@ namespace Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager
 
         public int ChartsCount { get; set; }
 
+        /// <summary>
+        /// Gets or sets the charts.
+        /// </summary>
+        public DateTime ChartsStartDateTime { get; set; }
     }
 }
 

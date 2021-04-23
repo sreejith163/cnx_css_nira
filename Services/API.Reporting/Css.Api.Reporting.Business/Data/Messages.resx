@@ -126,6 +126,9 @@
   <data name="AgentNotFound" xml:space="preserve">
     <value>Invalid Agent id - couldn't find the agent details in our system</value>
   </data>
+  <data name="BatchProcessingError" xml:space="preserve">
+    <value>Batch {0} encountered an error during processing. Details - {1}</value>
+  </data>
   <data name="EmptyFTPDirectory" xml:space="preserve">
     <value>Couldn't find any files to read in the requested directory</value>
   </data>

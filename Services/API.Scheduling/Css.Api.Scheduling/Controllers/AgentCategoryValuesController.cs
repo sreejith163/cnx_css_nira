@@ -41,9 +41,9 @@ namespace Css.Api.Scheduling.Controllers
         }
 
         [HttpPut("import")]
-        public async Task<IActionResult> ImportAgentCategoryValue([FromBody] List<ImportAgentCategoryValue> importAgentCategoryValue)
+        public async Task<IActionResult> ImportAgentCategoryValue([FromBody] List<ImportAgentCategoryValue> importAgentCategoryValue,string modifiedBy)
         {
-            var result = await _agentCategoryValueService.ImportAgentCategoryValue(importAgentCategoryValue);
+            var result = await _agentCategoryValueService.ImportAgentCategoryValue(importAgentCategoryValue,modifiedBy);
             return StatusCode((int)result.Code, result.Value);
         }
 

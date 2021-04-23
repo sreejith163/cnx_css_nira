@@ -62,6 +62,9 @@ import { PaginationSize } from 'src/app/shared/models/pagination-size.model';
 })
 export class SchedulingManagerComponent implements OnInit, OnDestroy {
   startIcon = 0;
+  exportIcon = "fa fa-download";
+  exportDisabled: boolean;
+
   maxIconCount = 30;
   timeIntervals = 15;
   characterSplice = 25;
@@ -128,6 +131,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   managerCharts: ScheduleManagerAgentChartResponse[] = [];
   schedulingMangerChart: ScheduleManagerAgentChartResponse[] = [];
 
+  exportManagerCharts: ScheduleManagerAgentChartResponse[] = [];
+
   getSchedulingCodesSubscription: ISubscription;
   getTranslationSubscription: ISubscription;
   updateAgentManagerChartSubscription: ISubscription;
@@ -179,6 +184,8 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.sortBy = 'asc';
+    this.orderBy = 'chartsStartDateTime';
     this.weekDays = Object.keys(WeekDay).filter(key => isNaN(WeekDay[key]));
     this.sortingType = Object.keys(SortingType).filter(key => isNaN(SortingType[key]));
     this.loadSchedulingCodes();
@@ -304,45 +311,83 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
 
 
   exportToExcel() {
-    const columnNames = ["EmployeeId", "Date", "Activity Code", "Start DateTime", "End DateTime"];
-    const header = columnNames.join(',');
 
-    let csv = header;
-    csv += '\r\n';
+    if (this.agentSchedulingGroupId) {
+      const agentSchedulesQueryParams = new AgentScheduleManagersQueryParams();
+      agentSchedulesQueryParams.agentSchedulingGroupId = this.agentSchedulingGroupId;
+      agentSchedulesQueryParams.date = this.startDate.toString();
+      agentSchedulesQueryParams.searchKeyword = this.searchText ?? '';
+      agentSchedulesQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
+      agentSchedulesQueryParams.fields = '';
+      agentSchedulesQueryParams.employeeId = undefined;
+      agentSchedulesQueryParams.skipPageSize = true;
+        this.agentScheduleMangerService.getAgentScheduleManagers(agentSchedulesQueryParams)
+          .subscribe((response) => {
+            this.exportIcon = "fa fa-spinner fa-spin";
+            this.exportDisabled = true;
 
-    const exportData = JSON.parse(JSON.stringify(this.managerCharts));
-    const date = this.startDate;
-    const dateNoSeparators = date.replace(/-/g, '');
-    const fileName = `${this.exportFileName + date}.csv`;
+            if(response.body){
+              this.exportManagerCharts = response.body;
+  
+              this.exportManagerCharts.map(x => {
+                if (!x.charts || x.charts.length === 0) {
+                  x.charts = [];
+                }
+              });
 
-    exportData.map(c => {
-      c.charts.map(x => {
-        if (x.schedulingCodeId && x.schedulingCodeId !== undefined) {
-          // const startDateTime = moment(x.startDateTime).format('yyyy-MM-DD hh:mm A');
-          // const endDateTime = moment(x.endDateTime).format('yyyy-MM-DD hh:mm A');
+              const columnNames = ["EmployeeId", "Date", "Activity Code", "Start DateTime", "End DateTime"];
+              const header = columnNames.join(',');
+          
+              let csv = header;
+              csv += '\r\n';
+          
+              const exportData = JSON.parse(JSON.stringify(this.exportManagerCharts));
 
-          const code = this.schedulingCodes.find(a => a.id === x?.schedulingCodeId);
-          csv += [c.employeeId,
-            dateNoSeparators,
-          code.description,
-          this.getDateTimeInMeridiemTime(x.startDateTime),
-          this.getDateTimeInMeridiemTime(x.endDateTime)].join(',');
-          csv += '\r\n';
-        }
-      });
-    })
+              console.log(exportData)
+              const date = this.startDate;
+              const dateNoSeparators = date.replace(/-/g, '');
+              const fileName = `${this.exportFileName + date}.csv`;
+          
+              exportData.map(c => {
+                c.charts.map(x => {
+                  if (x.schedulingCodeId && x.schedulingCodeId !== undefined) {
+                    // const startDateTime = moment(x.startDateTime).format('yyyy-MM-DD hh:mm A');
+                    // const endDateTime = moment(x.endDateTime).format('yyyy-MM-DD hh:mm A');
+          
+                    const code = this.schedulingCodes.find(a => a.id === x?.schedulingCodeId);
+                    csv += [c.employeeId,
+                      dateNoSeparators,
+                    code.description,
+                    this.getDateTimeInMeridiemTime(x.startDateTime),
+                    this.getDateTimeInMeridiemTime(x.endDateTime)].join(',');
+                    csv += '\r\n';
+                  }
+                });
+              })
+          
+              var blob = new Blob([csv], { type: "text/csv" });
+          
+              var link = document.createElement("a");
+              if (link.download !== undefined) {
+                var url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", fileName);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }        
 
-    var blob = new Blob([csv], { type: "text/csv" });
+                this.exportDisabled = false;
+                this.exportIcon = "fa fa-download";
 
-    var link = document.createElement("a");
-    if (link.download !== undefined) {
-      var url = URL.createObjectURL(blob);
-      link.setAttribute("href", url);
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+            }
+          }, (error) => {
+                this.exportDisabled = false;
+                this.exportIcon = "fa fa-download";
+            console.log(error);
+          });
     }
+
   }
 
   // exportToExcels() {
@@ -376,7 +421,6 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     if (this.agentSchedulingGroupId) {
       this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
       this.orderBy = columnName;
-
       this.loadAgentScheduleManger();
     }
   }
@@ -576,7 +620,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
 
   onSortTypeChange(value: number) {
     this.sortTypeValue = value;
-    this.openTimes.reverse();
+    this.sort('chartsStartDateTime', value == 1 ? 'desc' : 'asc');
   }
 
   changeTimeInterval(interval: number) {
@@ -640,7 +684,7 @@ export class SchedulingManagerComponent implements OnInit, OnDestroy {
     this.modalRef.componentInstance.activityType = ActivityType.SchedulingManagerGrid;
     this.modalRef.componentInstance.employeeId = this.managerCharts[index]?.employeeId;
     this.modalRef.componentInstance.employeeName = this.agentInfo?.lastName + ', ' + this.agentInfo?.firstName;
-    this.modalRef.componentInstance.startDate = new Date(this.startDate);
+    this.modalRef.componentInstance.startDate = this.startDate;
     this.modalRef.componentInstance.schedulingCodes = this.schedulingCodes;
   }
 

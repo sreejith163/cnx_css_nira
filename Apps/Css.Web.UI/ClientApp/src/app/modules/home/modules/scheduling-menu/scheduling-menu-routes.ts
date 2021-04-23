@@ -42,7 +42,7 @@ export const SchedulingMenuRoutes: Routes = [
         path: 'scheduling-grid',
         component: SchedulingGridComponent,
         canActivate: [PermissionsGuard],
-        data: { permissions: [1, 2, 3, 4] },
+        data: { permissions: [1, 2, 3] },
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     },
     {
@@ -56,7 +56,7 @@ export const SchedulingMenuRoutes: Routes = [
         path: 'view-ou-screen',
         component: ViewOuScreenComponent,
         canActivate: [PermissionsGuard],
-        data: { permissions: [1, 2, 3] },
+        data: { permissions: [1, 2, 3, 4] },
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     },
     {

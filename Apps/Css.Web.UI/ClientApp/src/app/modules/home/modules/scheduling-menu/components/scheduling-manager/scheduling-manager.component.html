@@ -39,11 +39,11 @@
               <div class="input-group align-items-center">
                 <div class="input-group-prepend pr-3">
                   <label for="inputEmail3" class=" pb-0 pt-0 mb-0">{{ 'Start Time Sorting' | translate }}:</label>
-                </div><!-- Commented due to wrong requirement
+                </div>
                 <select class="form-control" (change)="onSortTypeChange($event.target.value)"
                   [(ngModel)]="sortTypeValue">
                   <option *ngFor="let item of sortingType" [value]="item">{{sortType[item]}}</option>
-                </select>-->
+                </select>
               </div>
             </div>
           </div>
@@ -55,8 +55,12 @@
             <li *permission="{rolesPermitted: [1,2,3]}" class="pull-right marign-l-auto ">
               <!-- <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
                 (click)="exportToExcel()"> -->
-              <button *ngIf="agentSchedulingGroupId > 0" [ngbTooltip]="'Export csv'" (click)="exportToExcel()"
-                class="btn btn-primary btn-sm  mr-2"><i class="fa fa-download"></i></button>
+                <ng-container *ngIf="exportDisabled">
+                  Exporting...
+                </ng-container>
+                
+              <button *ngIf="agentSchedulingGroupId > 0" [disabled]="exportDisabled" [ngbTooltip]="'Export csv'" (click)="exportToExcel()"
+                class="btn btn-primary btn-sm  mr-2"><i class="{{ exportIcon }}"></i></button>
               <!-- <img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}"
                class="icon-image float-right padding-2" [ngbTooltip]="'Import'"
                 (click)="openImportSchedule()"> -->
@@ -93,9 +97,9 @@
     </span>
   </div>
 </div> -->
-  <div class="col-md-12 m-t-20 icons_container" #stickyMenu [class.sticky]="sticky">
+  <div class="col-md-12 icons_container" #stickyMenu [class.sticky]="sticky">
     <div class="row">
-      <div class="drag-div col-md-12 col-sm-12 align" cdkDropList (cdkDropListDropped)="dragged($event)" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
+      <div class="drag-div col-md-12 col-sm-12 align"  cdkDropList (cdkDropListDropped)="dragged($event)" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
       unselectable="on">
         <span>
           <i class="fa fa-angle-double-left arrow-icon float-icon-left" aria-hidden="true" (click)="toBeginning()"
@@ -167,8 +171,8 @@
         <ngx-spinner [name]="spinner"></ngx-spinner>
         <thead>
           <tr style="background-color: transparent;">
-            <th class="employee_id_header" style="background-color: #dfdfeb;"></th>
-            <th class="name_header" style="background-color: #dfdfeb;"></th>
+            <th class="employee_id_header border-0" style="background-color: #dfdfeb;"></th>
+            <th class="name_header border-0" style="background-color: #dfdfeb;"></th>
             <ng-container *ngFor="let openTime of openTimes;">
               <th class="text-xs jsgrid-header-cell date_header" style="background-color: #dfdfeb;">{{
                 openTime.dateHeader | date:
@@ -276,7 +280,7 @@
           </ng-container> -->
           <ng-container *ngIf="managerCharts?.length === 0" class="valid-record">
         <tbody>
-          <td>
+          <td class="no_match">
             {{ 'No match records found' | translate }}
           </td>
         </tbody>

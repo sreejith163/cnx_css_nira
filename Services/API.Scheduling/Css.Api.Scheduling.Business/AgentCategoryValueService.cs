@@ -4,6 +4,7 @@ using Css.Api.Core.Models.Domain;
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Models.DTO.Response;
 using Css.Api.Core.Models.Enums;
+using Css.Api.Core.Utilities.Extensions;
 using Css.Api.Scheduling.Business.Interfaces;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Request.AgentCategory;
@@ -13,6 +14,7 @@ using Css.Api.Scheduling.Models.DTO.Request.AgentScheduleManager;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using Css.Api.Scheduling.Models.DTO.Request.MySchedule;
 using Css.Api.Scheduling.Models.DTO.Request.SkillGroup;
+using Css.Api.Scheduling.Models.DTO.Request.Timezone;
 using Css.Api.Scheduling.Models.DTO.Response.AgentAdmin;
 using Css.Api.Scheduling.Models.DTO.Response.AgentCategoryValueView;
 using Css.Api.Scheduling.Models.DTO.Response.AgentScheduleManager;
@@ -20,6 +22,7 @@ using Css.Api.Scheduling.Models.DTO.Response.MySchedule;
 using Css.Api.Scheduling.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -53,6 +56,17 @@ namespace Css.Api.Scheduling.Business
         /// The agent schedule repository
         /// </summary>
         private readonly IAgentScheduleManagerRepository _agentScheduleManagerRepository;
+        
+        
+        /// <summary>
+        /// The timezone repository
+        /// </summary>
+        private readonly ITimezoneRepository _timezoneRepository;
+        /// <summary>
+        /// The agent schedule repository
+        /// </summary>
+
+        private readonly IAgentScheduleRepository _agentScheduleRepository;
 
         /// <summary>
         /// The agent schedule repository
@@ -63,6 +77,11 @@ namespace Css.Api.Scheduling.Business
         /// The agent category value repository
         /// </summary>
         private readonly IAgentSchedulingGroupRepository _agentSchedulingGroupRepository;
+
+        /// <summary>
+        /// The agent sched group value repository
+        /// </summary>
+        private readonly IAgentSchedulingGroupHistoryRepository _agentSchedulingGroupHistoryRepository;
 
         /// <summary>
         /// The agent admin repository
@@ -98,9 +117,13 @@ namespace Css.Api.Scheduling.Business
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         /// <param name="activityLogRepository">The activity log repository.</param>
         /// <param name="agentScheduleManagerRepository">The agent schedule manager repository.</param>
+        /// <param name="agentScheduleRepository">The agent schedule manager repository.</param>
+        /// <param name="timezoneRepository">The timezone repository.</param>
         /// <param name="agentAdminRepository">The agent schedule manager repository.</param>
         /// <param name="agentCategoryValueRepository">The agent category value repository.</param>
-        ///   /// <param name="agentCategoryRepository">The agent category repository.</param>
+        /// <param name="agentSchedulingGroupRepository">The agent category value repository.</param>
+        /// <param name="agentSchedulingGroupHistoryRepository">The agent category value repository.</param>
+        /// <param name="agentCategoryRepository">The agent category repository.</param>
         /// <param name="schedulingCodeRepository">The scheduling code repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="uow">The uow.</param>
@@ -108,11 +131,14 @@ namespace Css.Api.Scheduling.Business
             IHttpContextAccessor httpContextAccessor,
             IActivityLogRepository activityLogRepository,
             IAgentScheduleManagerRepository agentScheduleManagerRepository,
+            IAgentScheduleRepository agentScheduleRepository,
             IAgentCategoryValueRepository agentCategoryValueRepository,
             IAgentCategoryRepository agentCategoryRepository,
+            ITimezoneRepository timezoneRepository,
             IAgentAdminRepository agentAdminRepository,
             ISchedulingCodeRepository schedulingCodeRepository,
             IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
+            IAgentSchedulingGroupHistoryRepository agentSchedulingGroupHistoryRepository,
             IMapper mapper,
             IUnitOfWork uow,
             IConfiguration configuration)
@@ -120,11 +146,14 @@ namespace Css.Api.Scheduling.Business
             _httpContextAccessor = httpContextAccessor;
             _activityLogRepository = activityLogRepository;
             _agentScheduleManagerRepository = agentScheduleManagerRepository;
+            _agentScheduleRepository = agentScheduleRepository;
+            _timezoneRepository = timezoneRepository;
             _agentAdminRepository = agentAdminRepository;
             _agentCategoryValueRepository = agentCategoryValueRepository;
             _agentCategoryRepository = agentCategoryRepository;
             _schedulingCodeRepository = schedulingCodeRepository;
             _agentSchedulingGroupRepository = agentSchedulingGroupRepository;
+            _agentSchedulingGroupHistoryRepository = agentSchedulingGroupHistoryRepository;
             _mapper = mapper;
             _uow = uow;
             _config = configuration;
@@ -152,7 +181,7 @@ namespace Css.Api.Scheduling.Business
             // global function
             
         }
-        public async Task<CSSResponse> ImportAgentCategoryValue(List<ImportAgentCategoryValue> importAgentCategoryValues)
+        public async Task<CSSResponse> ImportAgentCategoryValue(List<ImportAgentCategoryValue> importAgentCategoryValues, string modifiedBy)
         {
             int importSuccess = 0;
 
@@ -197,230 +226,279 @@ namespace Css.Api.Scheduling.Business
                         Globals.dateGlobal = DateTime.ParseExact(item.StartDate, "yyyyMMdd", CultureInfo.InvariantCulture);
                     }
                 }
-             
-         
-
-             var sd = string.IsNullOrWhiteSpace(item.StartDate) ? (DateTime?)null : DateTime.ParseExact(item.StartDate, "yyyyMMdd", CultureInfo.InvariantCulture);
-             
-             
-               
-                if (item.AgentCategory == null || item.AgentCategory == "")
+                    var sd = string.IsNullOrWhiteSpace(item.StartDate) ? (DateTime?)null : DateTime.ParseExact(item.StartDate, "yyyyMMdd", CultureInfo.InvariantCulture);
+                    if (item.AgentCategory == null || item.AgentCategory == "")
                 {
                     return new CSSResponse($"Agent category cannot be null at line {index + 1}", HttpStatusCode.BadRequest);
                 }
-                else if(item.EmployeeId == null || item.EmployeeId == "")
+                    else if(item.EmployeeId == null || item.EmployeeId == "")
                 {
-                    return new CSSResponse($"Employee Id cannot be null at line {index + 1}", HttpStatusCode.BadRequest);
+                    return new CSSResponse($"Employee ID cannot be null at line {index + 1}", HttpStatusCode.BadRequest);
                 }
-                else if (item.Value == null || item.Value == "")
-                {
+                    else if (item.Value == null || item.Value == "")
+                    {
                     return new CSSResponse($"Value cannot be null at line {index + 1}", HttpStatusCode.BadRequest);
-                }
-               
-              
-           
-               
-                else { 
+                    } 
+                    else 
+                    { 
+                        var agentCategory = item.AgentCategory.ToLower();
 
-                var agentCategory = item.AgentCategory.ToLower();
+                        var categoryId = mappedAgentCategoryList.Where(x => agentCategory.Equals(x.Name.ToLower())).Select(x => x.AgentCategoryId).FirstOrDefault();  
 
-                var categoryId = mappedAgentCategoryList.Where(x => agentCategory.Equals(x.Name.ToLower())).Select(x => x.AgentCategoryId).FirstOrDefault();  
+                        var dataType = mappedAgentCategoryList.Where(x => agentCategory.Equals(x.Name.ToLower())).Select(x => x.AgentCategoryType).FirstOrDefault();
 
-                var dataType = mappedAgentCategoryList.Where(x => agentCategory.Equals(x.Name.ToLower())).Select(x => x.AgentCategoryType).FirstOrDefault();
+                        var min = mappedAgentCategoryList.Where(x => agentCategory.Equals(x.Name.ToLower())).Select(x => x.DataTypeMinValue).FirstOrDefault();
 
-                var min = mappedAgentCategoryList.Where(x => agentCategory.Equals(x.Name.ToLower())).Select(x => x.DataTypeMinValue).FirstOrDefault();
+                        var max = mappedAgentCategoryList.Where(x => agentCategory.Equals(x.Name.ToLower())).Select(x => x.DataTypeMaxValue).FirstOrDefault();
 
-                var max = mappedAgentCategoryList.Where(x => agentCategory.Equals(x.Name.ToLower())).Select(x => x.DataTypeMaxValue).FirstOrDefault();
-
-                var employeeIdDetails = new EmployeeIdDetails { Id = item.EmployeeId };
+                        var employeeIdDetails = new EmployeeIdDetails { Id = item.EmployeeId };
 
                                                              
-                if (!mappedAgentCategoryList.Exists(x => x.Name.ToLower() == item.AgentCategory.ToLower()))   
-                {
-                   
-
-                
-                    return new CSSResponse($"Error on line {index + 1} Agent Category is not exist", HttpStatusCode.OK);
-
-                }
-              
-                else if (!mappedEmployee.Exists(x => x.EmployeeId == item.EmployeeId))
-                {
+                        if (!mappedAgentCategoryList.Exists(x => x.Name.ToLower() == item.AgentCategory.ToLower()))   
+                        {
                   
-                    return new CSSResponse($"Error on line {index + 1} Employee Id is not exist", HttpStatusCode.OK);
-                }
-               
-                else
-                {
-                        
+                            return new CSSResponse($"Error on line {index + 1} Agent Category does not exist", HttpStatusCode.BadRequest);
 
-                        if (AgentCategoryType.Date == (AgentCategoryType)dataType)
-                       {
-
-                        var categoryDateValid = DateTime.TryParseExact(item.Value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateFormat);
-                        if (!categoryDateValid)
-                        {
-                         
-                            return new CSSResponse($"Error on line {index + 1} invalid date format", HttpStatusCode.BadRequest);
                         }
-                        else   // update hire date
+              
+                        else if (!mappedEmployee.Exists(x => x.EmployeeId == item.EmployeeId))
                         {
-
-                            var value = dateFormat;
-                            var hireDateDictionary = "hire date";
-                            if (agentCategory.ToLower().Equals(hireDateDictionary.ToLower()))
+                  
+                            return new CSSResponse($"Error on line {index + 1} Employee ID does not exist", HttpStatusCode.BadRequest);
+                        }
+               
+                        else
+                        {
+                                if (AgentCategoryType.Date == (AgentCategoryType)dataType)
                             {
-                                var parsedDate = DateTime.Parse(value.ToString("yyyy-MM-dd"));
-                                var hireDate = new DateTime(parsedDate.Year, parsedDate.Month, parsedDate.Day, 0, 0, 0, DateTimeKind.Utc);
-                                   
 
+                                var categoryDateValid = DateTime.TryParseExact(item.Value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateFormat);
+                                if (!categoryDateValid)
+                                {
+
+                                    return new CSSResponse($"Error on line {index + 1} invalid date format", HttpStatusCode.BadRequest);
+                                }
+                                else   // update hire date
+                                {
+
+                                        var value = dateFormat;
+                                        var hireDateDictionary = "hire date";
+                                    if (agentCategory.ToLower().Equals(hireDateDictionary.ToLower()))
+                                    {
+                                        var parsedDate = DateTime.Parse(value.ToString("yyyy-MM-dd"));
+                                        var hireDate = new DateTime(parsedDate.Year, parsedDate.Month, parsedDate.Day, 0, 0, 0, DateTimeKind.Utc);
+
+
+
+                                        var agentCategoryValue = new AgentCategoryValue
+                                        {
+                                            CategoryId = categoryId,
+                                            CategoryValue = value.ToString("yyyy-MM-dd"),
+                                            StartDate = Globals.dateGlobal
+                                        };
+                                        _agentAdminRepository.UpdateHireDate(employeeIdDetails, hireDate);
+                                        _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
+                                    }
+                                    else //update all category with data type date exept hire date 
+                                    {
+                                        var agentCategoryValue = new AgentCategoryValue
+                                        {
+                                            CategoryId = categoryId,
+                                            CategoryValue = value.ToString("yyyy-MM-dd"),
+
+                                            StartDate = Globals.dateGlobal
+                                        };
+                                        _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
+                                    }
+
+                                }
+
+                            }
+                                else if (AgentCategoryType.Numeric == (AgentCategoryType)dataType)
+                            {
+
+                                int.TryParse(min.Trim(), out int minValue);
+                                int.TryParse(max.Trim(), out int maxValue);
+                                BigInteger number1;
+                                bool succeeded1 = BigInteger.TryParse(item.Value.Trim(), out number1);
+                                if (!succeeded1)
+                                {
+
+
+                                    return new CSSResponse($"Error on line {index + 1} invalid numeric format", HttpStatusCode.BadRequest);
+                                }
+                                else if (item.Value.Length < minValue || item.Value.Length > maxValue)
+                                {
+
+                                    return new CSSResponse($"Error on line {index + 1} invalid numeric length value", HttpStatusCode.BadRequest);
+
+                                }
+                                else
+                                {
 
                                     var agentCategoryValue = new AgentCategoryValue
                                     {
                                         CategoryId = categoryId,
-                                        CategoryValue = value.ToString("yyyy-MM-dd"),
+                                        CategoryValue = item.Value,
                                         StartDate = Globals.dateGlobal
                                     };
-                                _agentAdminRepository.UpdateHireDate(employeeIdDetails, hireDate);
-                                _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
-                            } 
-                            else //update all category with data type date exept hire date 
+                                    _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
+                                }
+
+
+                            }
+                                else if (agentCategory.ToLower().Contains("firstname") || agentCategory.ToLower().Contains("first name")) //update firstname
                             {
+                                var firstname = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Value.ToLower());
+                                var value = item.Value.Trim();
                                 var agentCategoryValue = new AgentCategoryValue
                                 {
                                     CategoryId = categoryId,
-                                    CategoryValue = value.ToString("yyyy-MM-dd"),
+                                    CategoryValue = value,
+                                    StartDate = Globals.dateGlobal
+                                };
+                                _agentAdminRepository.UpdateFirstName(employeeIdDetails, firstname);
+
+                                _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
+                            }
+                                else if (agentCategory.ToLower().Contains("lastname") || agentCategory.ToLower().Contains("last name")) // update lastname
+                                {
+                                        var lastname = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Value.ToLower());
+                                        var value = item.Value.Trim();
+                                        var agentCategoryValue = new AgentCategoryValue
+                                        {
+                                            CategoryId = categoryId,
+                                            CategoryValue = value,
+
+                                            StartDate = Globals.dateGlobal
+                                        };
+                                        _agentAdminRepository.UpdateLastName(employeeIdDetails, lastname);
+                                        _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
+                                }
+                                else if (agentCategory.ToLower().Contains("teamlead") || agentCategory.ToLower().Contains("team lead")) // update lastname
+                            {
+                                var teamleadName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Value.ToLower());
+                                var value = item.Value.Trim();
+                                var agentCategoryValue = new AgentCategoryValue
+                                {
+                                    CategoryId = categoryId,
+                                    CategoryValue = value,
+
+                                    StartDate = Globals.dateGlobal
+                                };
+                                _agentAdminRepository.UpdateTeamLead(employeeIdDetails, teamleadName);
+                                _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
+                            }
+                                else if (agentCategory.ToLower().Contains("asg") || agentCategory.ToLower().Contains("agent scheduling group") || agentCategory.ToLower().Contains("mu") || agentCategory.ToLower().Contains("management unit"))
+                            {
+                                if (mappedAsgList.Exists(x => x.Name.ToLower() == item.Value.ToLower() || x.RefId.ToString() == item.Value)) //check asg if exist and update asg group
+                                {
+
+
+                                    List<AgentScheduleRange> updatedRanges = null;
+                                    var asgFilter = mappedAsgList.Find(x => x.Name.ToLower().Equals(item.Value.ToLower()) || x.RefId.ToString() == item.Value);
+
+                                    //source asg id
+                                    var sourceAsg = mappedAsgList.Where(x => item.Value.ToLower().Equals(x.Name.ToLower()) || x.RefId.ToString() == item.Value).Select(x => x.AgentSchedulingGroupId).FirstOrDefault();
+
+                                    //destination    
+                                    var targetASG = asgFilter.AgentSchedulingGroupId;
+
+                                    AgentSchedule agentSchedule = await _agentScheduleRepository.GetAgentScheduleByEmployeeId(employeeIdDetails);
+
+                                    DateTime movingDate = await FindMovingDateBasedonTimezone(sourceAsg);
+
+                                    if (agentSchedule != null)
+                                    {
+                                        if (agentSchedule.Ranges != null && agentSchedule.Ranges.Count > 0)
+                                        {
+                                            updatedRanges = ScheduleHelper.GenerateAgentScheduleRanges(movingDate, targetASG, agentSchedule.Ranges);
+                                        }
+                                        else
+                                        {
+                                            updatedRanges = new List<AgentScheduleRange>();
+                                        }
+
+                                        var updateAgentScheduleEmployeeDetails = new ImportUpdateAgentSchedule
+                                        {
+                                            EmployeeId = employeeIdDetails.Id,
+
+                                            AgentSchedulingGroupId = targetASG,
+                                            Ranges = updatedRanges,
+                                            ModifiedBy = modifiedBy
+
+                                        };
+
+                                        _agentScheduleRepository.ImportUpdateAgentScheduleWithRanges(employeeIdDetails, updateAgentScheduleEmployeeDetails);
+                                    }
+
+                                    var updateAgentScheduleManagerEmployeeDetails = new UpdateAgentScheduleManagerEmployeeDetails
+                                    {
+                                        EmployeeId = employeeIdDetails.Id,
+                                        AgentSchedulingGroupId = targetASG,
+                                        MovingDate = movingDate,
+                                        ModifiedBy = modifiedBy
+
+                                    };
+                                    _agentScheduleManagerRepository.UpdateAgentScheduleManagerFromMovingDate(employeeIdDetails, updateAgentScheduleManagerEmployeeDetails);
+
+                                    var updateAsgRequest = new AgentSchedulingUpdateRequest
+                                    {
+                                        AgentSchedulingGroupId = asgFilter.AgentSchedulingGroupId,
+                                        ClientId = asgFilter.ClientId,
+                                        ClientLobGroupId = asgFilter.ClientLobGroupId,
+                                        SkillGroupId = asgFilter.SkillGroupId,
+                                        SkillTagId = asgFilter.SkillTagId,
+                                        RefId = asgFilter.RefId,
+                                        ModifiedBy = modifiedBy
+
+                                    };
+                                    AgentSchedulingGroupHistory AgentSchedulingGroupHistory = new AgentSchedulingGroupHistory
+                                    {
+                                        EmployeeId = employeeIdDetails.Id,
+                                        AgentSchedulingGroupId = targetASG,
+                                        StartDate = movingDate,
+                                        EndDate = null,
+                                        CreatedBy = modifiedBy,
+                                        //CreatedDate = await FindCurrentTimeOfSchedulingGroup(movingAgent.AgentSchedulingGroupId),
+                                        CreatedDate = DateTime.UtcNow,
+                                        ActivityOrigin = ActivityOrigin.CSS
+                                    };
+
+                                    _agentSchedulingGroupHistoryRepository.UpdateAgentSchedulingGroupHistory(AgentSchedulingGroupHistory);
+
+                                    var value = item.Value.Trim();
+                                    var agentCategoryValue = new AgentCategoryValue
+                                    {
+                                        CategoryId = categoryId,
+                                        CategoryValue = value,
+                                        StartDate = Globals.dateGlobal
+                                    };
+                                    _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
+                                    _agentAdminRepository.ImportUpdateAgent(employeeIdDetails, updateAsgRequest);
+                                }
+                                else
+                                {
+                                    return new CSSResponse($"Error on line {index + 1} agent scheduling group does not exist", HttpStatusCode.BadRequest);
+                                }
+
+                                }
+                                else
+                            {
+                                var value = item.Value.Trim();
+                                var agentCategoryValue = new AgentCategoryValue
+                                {
+                                    CategoryId = categoryId,
+                                    CategoryValue = value,
 
                                     StartDate = Globals.dateGlobal
                                 };
                                 _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
-                            }
-                            
-                        }
-                     
-                      }
-                      else if(AgentCategoryType.Numeric == (AgentCategoryType)dataType)
-                      {
-                   
-                            int.TryParse(min.Trim(), out int minValue);
-                            int.TryParse(max.Trim(), out int maxValue);
-                            BigInteger number1;
-                            bool succeeded1 = BigInteger.TryParse(item.Value.Trim(), out number1);
-                            if (!succeeded1)
-                            {
-                    
 
-                             return new CSSResponse($"Error on line {index + 1} invalid numeric format", HttpStatusCode.BadRequest);
                             }
-                            else if (item.Value.Length < minValue || item.Value.Length > maxValue)
-                            {
                         
-                                return new CSSResponse($"Error on line {index + 1} invalid numeric length value", HttpStatusCode.BadRequest);
-
-                            }
-                            else
-                            {
-                           
-                            var agentCategoryValue = new AgentCategoryValue
-                            {
-                                CategoryId = categoryId,
-                                CategoryValue = item.Value,
-                                StartDate = Globals.dateGlobal
-                            };
-                            _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
-                            }
-
-                        
-                      }
-                       else if (mappedAsgList.Exists(x => x.Name.ToLower() == item.Value.ToLower())) //check asg if exist and update asg group
-                        {
-                        var asgFilter = mappedAsgList.Find(x => x.Name.ToLower().Equals(item.Value.ToLower()));
-                        var updateAsgRequest = new AgentSchedulingUpdateRequest
-                        {
-                            AgentSchedulingGroupId = asgFilter.AgentSchedulingGroupId,
-                            ClientId = asgFilter.ClientId,
-                            ClientLobGroupId = asgFilter.ClientLobGroupId,
-                            SkillGroupId = asgFilter.SkillGroupId,
-                            SkillTagId = asgFilter.SkillTagId,
-                            RefId = asgFilter.RefId
-
-                        };
-                        var value = item.Value.Trim();
-                        var agentCategoryValue = new AgentCategoryValue
-                        {
-                            CategoryId = categoryId,
-                            CategoryValue = value,
-                            StartDate = Globals.dateGlobal
-                        };
-                        _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
-                        _agentAdminRepository.ImportUpdateAgent(employeeIdDetails, updateAsgRequest);
-                        }
-                        else if(agentCategory.ToLower().Contains("firstname") || agentCategory.ToLower().Contains("first name")) //update firstname
-                        {
-                        var firstname = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Value.ToLower());
-                        var value = item.Value.Trim();
-                        var agentCategoryValue = new AgentCategoryValue
-                        {
-                            CategoryId = categoryId,
-                            CategoryValue = value,
-                            StartDate = Globals.dateGlobal
-                        };
-                        _agentAdminRepository.UpdateFirstName(employeeIdDetails, firstname);
-                        _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
-                      }
-                      else if (agentCategory.ToLower().Contains("lastname") || agentCategory.ToLower().Contains("last name")) // update lastname
-                      {
-                        var lastname = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Value.ToLower());
-                        var value = item.Value.Trim();
-                        var agentCategoryValue = new AgentCategoryValue
-                        {
-                            CategoryId = categoryId,
-                            CategoryValue = value,
-
-                            StartDate = Globals.dateGlobal
-                        };
-                        _agentAdminRepository.UpdateLastName(employeeIdDetails, lastname);
-                        _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
-                     }
-
-                    else if (agentCategory.ToLower().Contains("teamlead") || agentCategory.ToLower().Contains("team lead")) // update lastname
-                    {
-                        var teamleadName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Value.ToLower());
-                        var value = item.Value.Trim();
-                        var agentCategoryValue = new AgentCategoryValue
-                        {
-                            CategoryId = categoryId,
-                            CategoryValue = value,
-
-                            StartDate = Globals.dateGlobal
-                        };
-                        _agentAdminRepository.UpdateTeamLead(employeeIdDetails, teamleadName);
-                        _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
+                         }        
                     }
-                    else
-                      {
-                         if(!mappedAsgList.Exists(x => x.Name.ToLower() == item.Value.ToLower()))
-                        {
-                          
-                                return new CSSResponse($"Error on line {index + 1} agent scheduling group not exist", HttpStatusCode.BadRequest);
-                            }
-
-                        else
-                        {
-                            var value = item.Value.Trim();
-                            var agentCategoryValue = new AgentCategoryValue
-                            {
-                                CategoryId = categoryId,
-                                CategoryValue = value,
-
-                                StartDate = Globals.dateGlobal
-                            };
-                            _agentAdminRepository.ImportUpdateAgentCategoryValue(employeeIdDetails, agentCategoryValue);
-
-                        }
-                        }
-                    }        
-                }
                 importSuccess = importSuccess + 1;
             }
 
@@ -429,119 +507,38 @@ namespace Css.Api.Scheduling.Business
             return new CSSResponse($"{importSuccess} Data Updated", HttpStatusCode.OK);
         }
 
-        /// <summary>
-        /// Processes the agent category values.
-        /// </summary>
-        /// <param name="agentCategoryDetails">The agent category details.</param>
-        /// <returns></returns>
-        private async Task<List<AgentCategoryValueUpdateResponse>> ProcessAgentCategoryValues(List<AgentCategoryDetails> agentCategoryDetails)
+     
+        private async Task<DateTime> FindMovingDateBasedonTimezone(int schedulingGroupId)
         {
-            string[] format = { "yyyyMMdd" };
-            var response = new List<AgentCategoryValueUpdateResponse>();
-            var employeeIds = agentCategoryDetails.Select(x => x.EmployeeId).ToList();
-            var agentCategoryIds = agentCategoryDetails.Select(x => x.CategoryId).ToList();
-
-            var agentsByEmployeeIds = await _agentAdminRepository.GetAgentAdminsByEmployeeIds(employeeIds);
-            var agentsByCategoryIds = await _agentAdminRepository.GetAgentAdminsByCategoryId(agentCategoryIds);
-
-            foreach (var categoryDetails in agentCategoryDetails)
+            AgentSchedulingGroupIdDetails agentSchedulingGroupIdDetails = new AgentSchedulingGroupIdDetails
             {
-                var employeeExists = agentsByEmployeeIds.Exists(x => x.Ssn == categoryDetails.EmployeeId);
-                var categoryExists = agentsByCategoryIds.Exists(x => x.AgentCategoryValues.Exists(x => x.CategoryId == categoryDetails.CategoryId));
-                var categoryTypeValid = IsAgentCatgoryTypeValid(categoryDetails, format);
-                var categoryDateValid = DateTime.TryParseExact(categoryDetails.StartDate, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate);
-
-                if (Enum.IsDefined(typeof(AgentCategoryType), categoryDetails.CategoryId))
-                {
-                    var categoryType = (AgentCategoryType)categoryDetails.CategoryId;
-                    if (categoryType == AgentCategoryType.Numeric)
-                    {
-                        var agentCategoryIdDetails = new AgentCategoryIdDetails { AgentCategoryId = categoryDetails.CategoryId };
-                        var agentCategory = await _agentCategoryRepository.GetAgentCategory(agentCategoryIdDetails);
-                        if (agentCategoryIdDetails != null)
-                        {
-                            bool isValid = int.TryParse(categoryDetails.CategoryValue.Trim(), out int value);
-                            if (isValid)
-                            {
-                                int.TryParse(agentCategory.DataTypeMinValue.Trim(), out int minValue);
-                                int.TryParse(agentCategory.DataTypeMaxValue.Trim(), out int maxValue);
-                                if (value <= minValue || value >= maxValue)
-                                {
-                                    categoryTypeValid = false;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (!employeeExists || !categoryExists || !categoryTypeValid || !categoryDateValid)
-                {
-                    var agentCategoryValueUpdateResponse = new AgentCategoryValueUpdateResponse
-                    {
-                        EmployeeId = categoryDetails.EmployeeId
-                    };
-                    if (!employeeExists)
-                    {
-                        agentCategoryValueUpdateResponse.Messages.Add("Unrecognized Employee ID");
-                    }
-                    if (!categoryExists)
-                    {
-                        agentCategoryValueUpdateResponse.Messages.Add("Unrecognized Agent Category");
-                    }
-                    if (!categoryTypeValid)
-                    {
-                        agentCategoryValueUpdateResponse.Messages.Add("Invalid Date Agent Category Type");
-                    }
-                    if (!categoryDateValid)
-                    {
-                        agentCategoryValueUpdateResponse.Messages.Add("Invalid Date Format (YYYYMMDD)");
-                    }
-
-                    response.Add(agentCategoryValueUpdateResponse);
-                }
-            }
-
-            return response;
+                AgentSchedulingGroupId = schedulingGroupId
+            };
+            AgentSchedulingGroup asg = await _agentSchedulingGroupRepository.GetAgentSchedulingGroup(agentSchedulingGroupIdDetails);
+            int sourceASGTimezoneId = asg.TimezoneId;
+            return await GetCurrentDateOfTimezone(sourceASGTimezoneId);
         }
+
+        private async Task<DateTime> GetCurrentDateOfTimezone(int timezoneId)
+        {
+            TimezoneIdDetails timezoneIdDetails = new TimezoneIdDetails
+            {
+                TimezoneId = timezoneId
+            };
+            Timezone timezone = await _timezoneRepository.GetTimeZone(timezoneIdDetails);
+
+            DateTime currentTime = DateTime.UtcNow.Add(TimezoneHelper.GetOffset(timezone.Abbreviation).Value);
+            DateTime currentDateOfTimezone = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, 0, 0, 0, DateTimeKind.Utc);
+            return currentDateOfTimezone;
+        }
+      
         public class ImportResponse
         {
             public List<string> Errors;
       
 
         }
-        /// <summary>
-        /// Determines whether [is agent catgory type valid] [the specified category details].
-        /// </summary>
-        /// <param name="categoryDetails">The category details.</param>
-        /// <param name="format">The format.</param>
-        /// <returns>
-        ///   <c>true</c> if [is agent catgory type valid] [the specified category details]; otherwise, <c>false</c>.
-        /// </returns>
-        private bool IsAgentCatgoryTypeValid(AgentCategoryDetails categoryDetails, string[] format)
-        {
-            bool isValid = false;
-
-            if (Enum.IsDefined(typeof(AgentCategoryType), categoryDetails.CategoryId))
-            {
-                var categoryType = (AgentCategoryType)categoryDetails.CategoryId;
-                switch (categoryType)
-                {
-                    case AgentCategoryType.Numeric:
-                        isValid = int.TryParse(categoryDetails.CategoryValue.Trim(), out _);
-                        break;
-
-                    case AgentCategoryType.AlphaNumeric:
-                        isValid = true;
-                        break;
-
-                    case AgentCategoryType.Date:
-                        isValid = DateTime.TryParseExact(categoryDetails.CategoryValue.Trim(), format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate);
-                        break;
-                }
-            }
-
-            return isValid;
-        }
+    
 
     }
 }

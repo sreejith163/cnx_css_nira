@@ -88,6 +88,15 @@ namespace Css.Api.Reporting.Business.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Batch {0} encountered an error during processing. Details - {1}.
+        /// </summary>
+        internal static string BatchProcessingError {
+            get {
+                return ResourceManager.GetString("BatchProcessingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t find any files to read in the requested directory.
         /// </summary>
         internal static string EmptyFTPDirectory {

@@ -131,7 +131,7 @@ namespace Css.Api.Reporting.Business.Factories
         public ActivityOrigin GetTarget()
         {
             var key = _mapper.Context.Key;
-            if(key.Equals(ActivityOrigin.EStart.ToString()))
+            if(key.Equals(ActivityOrigin.EStart.ToString(), StringComparison.InvariantCultureIgnoreCase))
             {
                 return ActivityOrigin.EStart;
             }

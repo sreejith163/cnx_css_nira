@@ -30,6 +30,7 @@ namespace Css.Api.Reporting.Business.Services
             Settings = new ConfigSettings();
             configuration.Bind("AgentCategoryFields", Settings.AgentCategoryFields);
             configuration.Bind("MUs", Settings.MUs);
+            configuration.Bind("Batch", Settings.Batch);
         }
         #endregion
     }

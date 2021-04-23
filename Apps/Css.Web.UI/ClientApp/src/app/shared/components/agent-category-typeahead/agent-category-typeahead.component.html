@@ -1,5 +1,5 @@
 <ng-select [items]="agentCategoryItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id"
-  placeholder="{{ 'All' | translate }}" [typeahead]="typeAheadInput$" (scroll)="onAgentCategoryScroll($event)"
+  placeholder="{{ 'Select' | translate }}" [typeahead]="typeAheadInput$" (scroll)="onAgentCategoryScroll($event)"
   (scrollToEnd)="onAgentCategoryScrollToEnd()" (change)="onAgentCategoryChange($event)"
   (clear)="clearAgentCategoryValues()" [(ngModel)]="agentCategoryId">
   <ng-template ng-header-tmp>

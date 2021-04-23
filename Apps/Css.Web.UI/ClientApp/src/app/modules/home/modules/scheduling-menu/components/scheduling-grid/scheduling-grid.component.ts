@@ -273,8 +273,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   editDateRange(el: AgentSchedulesResponse) {
     this.getModalPopup(DateRangePopUpComponent, 'sm');
-    this.modalRef.componentInstance.dateFrom = this.getFormattedDate(el.ranges[el.rangeIndex].dateFrom);
-    this.modalRef.componentInstance.dateTo = this.getFormattedDate(el.ranges[el.rangeIndex].dateTo);
+    this.modalRef.componentInstance.dateFrom = this.formatDateMoment(el.ranges[el.rangeIndex].dateFrom);
+    this.modalRef.componentInstance.dateTo = this.formatDateMoment(el.ranges[el.rangeIndex].dateTo);
     this.modalRef.componentInstance.agentScheduleId = el.id;
     this.modalRef.componentInstance.operation = ComponentOperation.Edit;
     this.modalRef.componentInstance.isEditNewDateRange = this.hasNewDateRangeSelected;
@@ -315,8 +315,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         } else {
           this.spinnerService.show(this.spinner, SpinnerOptions);
           const model = new DateRangeQueryParms();
-          model.dateFrom = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateFrom);
-          model.dateTo = this.getDateInStringFormat(el.ranges[el.rangeIndex].dateTo);
+          model.dateFrom = el.ranges[el.rangeIndex].dateFrom;
+          model.dateTo = el.ranges[el.rangeIndex].dateTo;
           this.deleteScheduleDateRangeSubscription = this.agentSchedulesService.deleteAgentScheduleRange(el.id, model)
             .subscribe((response) => {
               this.spinnerService.hide(this.spinner);
@@ -340,9 +340,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   getSelectedRange(el: AgentSchedulesResponse) {
     let selectedRange = 'Please select a date range';
     if (el.ranges.length && el.ranges[el.rangeIndex]) {
-      const formattedDateFrom = this.getFormattedDateString(el.ranges[el.rangeIndex].dateFrom);
-      const formattedDateTo = this.getFormattedDateString(el.ranges[el.rangeIndex].dateTo); if (el.rangeIndex > -1) {
-        selectedRange = `${formattedDateFrom} - ${formattedDateTo}`;
+      const formattedDateFrom = el.ranges[el.rangeIndex].dateFrom;
+      const formattedDateTo = el.ranges[el.rangeIndex].dateTo; if (el.rangeIndex > -1) {
+        selectedRange = `${formattedDateFrom} — ${formattedDateTo}`;
       }
     }
 
@@ -609,8 +609,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           this.formatendTime(ele.charts, true);
         });
       }
-      chartModel.dateFrom = this.changeToUTCDate(gridData?.dateFrom);
-      chartModel.dateTo = this.changeToUTCDate(gridData?.dateTo);
+      chartModel.dateFrom = gridData?.dateFrom;
+      chartModel.dateTo = gridData?.dateTo;
       chartModel.status = gridData?.status;
       chartModel.agentScheduleCharts = gridData?.agentScheduleCharts;
 
@@ -659,7 +659,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     this.modalRef.componentInstance.activityType = ActivityType.SchedulingGrid;
     this.modalRef.componentInstance.employeeId = el.employeeId;
     this.modalRef.componentInstance.employeeName = this.selectedGrid.lastName + ', ' + this.selectedGrid.firstName;
-    this.modalRef.componentInstance.startDate = new Date(this.startDate);
+    this.modalRef.componentInstance.startDate = this.startDate;
     this.modalRef.componentInstance.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
     this.modalRef.componentInstance.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
     this.modalRef.componentInstance.schedulingCodes = this.schedulingCodes;
@@ -765,6 +765,7 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
       });
     });
   }
+  
   exportToExcel() {
     this.agentSchedulesService
       .exportAgentSchedulingGrid(this.agentSchedulingGroupId)
@@ -890,8 +891,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
 
   private setNewDateRangeInMemory(el: AgentSchedulesResponse, result: ScheduleDateRangeBase) {
     const range = new AgentScheduleRange();
-    range.dateFrom = this.getFormattedDate(result?.dateFrom);
-    range.dateTo = this.getFormattedDate(result?.dateTo);
+    range.dateFrom = result?.dateFrom;
+    range.dateTo = result?.dateTo;
     
     range.status = SchedulingStatus['Pending Schedule'];
     range.agentSchedulingGroupId = el.activeAgentSchedulingGroupId;
@@ -900,6 +901,9 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     el.rangeIndex = el.ranges.length - 1;
     el.modifiedBy = this.authService.getLoggedUserInfo().displayName;
     el.modifiedDate = new Date();
+
+    el.ranges.sort((a, b) => a.dateFrom < b.dateFrom ? -1 : a.dateFrom > b.dateFrom ? 1 : 0);
+
     this.onDateRangeChange(el.rangeIndex, el);
     this.getModalPopup(MessagePopUpComponent, 'sm');
   }
@@ -1181,6 +1185,13 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
     return agentSchedulesQueryParams;
   }
 
+  private formatDateMoment(date) {
+    // let dt = new Date(date).toUTCString();
+    const transformedDate = moment(date).utc().format('YYYY-MM-DD');
+    return transformedDate;
+  }
+
+
   private loadAgentSchedules() {
     const queryParams = this.getQueryParams();
     this.spinnerService.show(this.spinner, SpinnerOptions);
@@ -1191,10 +1202,12 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
         this.totalSchedulingGridData.map(x => {
           x.rangeIndex = 0;
           x.ranges.map(r => {
-            r.dateFrom = this.getFormattedDate(r.dateFrom);
-            r.dateTo = this.getFormattedDate(r.dateTo);
+            r.dateFrom = this.formatDateMoment(r.dateFrom);
+            r.dateTo = this.formatDateMoment(r.dateTo);
           })
+          x.ranges.sort((a, b) => a.dateFrom < b.dateFrom ? -1 : a.dateFrom > b.dateFrom ? 1 : 0);
         });
+
         if (this.selectedGrid) {
           this.setSelectedGrid(this.totalSchedulingGridData.find(x => x.id === this.selectedGrid.id));
         }
@@ -1213,13 +1226,14 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   private updateAgentSchedule(el: AgentSchedulesResponse) {
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const updateModel = new UpdateAgentSchedule();
-    updateModel.dateFrom = this.changeToUTCDate(this.getFormattedDate(el?.ranges[el?.rangeIndex]?.dateFrom));
-    updateModel.dateTo = this.changeToUTCDate(this.getFormattedDate(el?.ranges[el?.rangeIndex]?.dateTo));
+    updateModel.dateFrom = el?.ranges[el?.rangeIndex]?.dateFrom;
+    updateModel.dateTo = el?.ranges[el?.rangeIndex]?.dateTo;
     updateModel.status = el?.ranges[el?.rangeIndex]?.status;
     updateModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     updateModel.activityOrigin = ActivityOrigin.CSS;
     updateModel.modifiedUser = +el?.employeeId;
 
+    console.log(updateModel)
 
     const scheduleId = this.totalSchedulingGridData.find(x => x.id === el?.id)?.id;
 
@@ -1263,8 +1277,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
           this.formatendTime(ele.charts, true);
         });
       }
-      chartModel.dateFrom = this.getFormattedDate(gridData?.dateFrom);
-      chartModel.dateTo = this.getFormattedDate(gridData?.dateTo);
+      chartModel.dateFrom = this.formatDateMoment(gridData?.dateFrom);
+      chartModel.dateTo = this.formatDateMoment(gridData?.dateTo);
       chartModel.status = gridData?.status;
       chartModel.agentScheduleCharts = gridData?.agentScheduleCharts;
       chartModel.activityOrigin = ActivityOrigin.CSS;
@@ -1499,8 +1513,8 @@ export class SchedulingGridComponent implements OnInit, OnDestroy {
   }
   // batch release
   openBatchRelease(batchRelease) {
-
-    this.modalService.open(batchRelease, { centered: true, size: 'lg' });
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'lg' };
+    this.modalService.open(batchRelease, options);
     this.clearBatchReleaseData();
 
   }

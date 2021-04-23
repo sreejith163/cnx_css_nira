@@ -274,6 +274,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
   }
 
   private addAgentSchedulingGroupDetails() {
+    this.agentSchedulingGroupForm.controls.refId.setValue(this.agentSchedulingGroupForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
     const addAgentSchedulingGroup = this.agentSchedulingGroupForm.value as AddAgentSchedulingGroup;
     addAgentSchedulingGroup.skillTagId = this.skillTagId;
     addAgentSchedulingGroup.createdBy = this.authService.getLoggedUserInfo().displayName;
@@ -294,6 +295,7 @@ export class AddEditAgentSchedulingGroupComponent implements OnInit, OnDestroy {
 
   private updateAgentSchedulingGroupDetails() {
     if (this.hasAgentSchedulingGroupDetailsMismatch()) {
+      this.agentSchedulingGroupForm.controls.refId.setValue(this.agentSchedulingGroupForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
       const updateAgentSchedulingGroupModel = this.agentSchedulingGroupForm.value as UpdateAgentSchedulingGroup;
       updateAgentSchedulingGroupModel.skillTagId = this.skillTagId;
       updateAgentSchedulingGroupModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;

@@ -45,6 +45,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { AngularMultiSelectModule } from 'angular-4-multiselect-dropdown-scroll';
 import { CopyScheduleDateRangeComponent } from './components/shared/copy-schedule-date-range/copy-schedule-date-range.component';
 import { AgentCategoryValueService } from './services/agent-category-value.service';
+import { SchedulingMenuEmployeeIdDirective } from 'src/app/shared/directives/scheduling-menu-employeeid.directive';
 
 
 const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule, BsDropdownModule.forRoot(),AngularMultiSelectModule];
@@ -76,6 +77,7 @@ const components =
     GetIconForGridPipe,
     GetIconSchedulingGridPipe,
     GetIconForScheduleManagerActivityLogsPipe,
+    SchedulingMenuEmployeeIdDirective,
     ActivityLogsScheduleManagerComponent
   ];
 const providers = [AgentAdminService, AgentCategoryService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService, AgentScheduleManagersService,

@@ -14,6 +14,6 @@ namespace Css.Api.Scheduling.Business.Interfaces
         /// <returns></returns>
         Task<CSSResponse> GetAgentCategoryValues(AgentCategoryValueQueryParameter agentCategoryValueQueryParameter);
 
-        Task<CSSResponse> ImportAgentCategoryValue(List<ImportAgentCategoryValue> importAgentCategoryValue);
+        Task<CSSResponse> ImportAgentCategoryValue(List<ImportAgentCategoryValue> importAgentCategoryValue, string modifiedBy);
     }
 }

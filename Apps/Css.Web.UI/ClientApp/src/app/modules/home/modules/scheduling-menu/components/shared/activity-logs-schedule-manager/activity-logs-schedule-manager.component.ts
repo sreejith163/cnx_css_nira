@@ -66,7 +66,7 @@ export class ActivityLogsScheduleManagerComponent implements OnInit, OnDestroy {
   @Input() activityType: ActivityType;
   @Input() employeeId: string;
   @Input() employeeName: string;
-  @Input() startDate: Date;
+  @Input() startDate: string;
   // @Input() dateFrom: Date;
   // @Input() dateTo: Date;
   @Input() schedulingCodes: SchedulingCode[] = [];
@@ -317,7 +317,7 @@ export class ActivityLogsScheduleManagerComponent implements OnInit, OnDestroy {
     queryParams.skipPageSize = true;
     queryParams.dateFrom = undefined;
     queryParams.dateto = undefined;
-    queryParams.date = this.activityType === ActivityType.SchedulingManagerGrid ? this.getDateInStringFormat(this.startDate) : undefined;
+    queryParams.date = this.activityType === ActivityType.SchedulingManagerGrid ? this.startDate : undefined;
 
     return queryParams;
   }
@@ -328,6 +328,7 @@ export class ActivityLogsScheduleManagerComponent implements OnInit, OnDestroy {
 
     this.getActivityLogsSubscription = this.activityLogService.getActivityLogs(queryParams)
       .subscribe((response) => {
+        console.log(queryParams.date, response)
         this.activityLogsData = response.body;
         this.formatActivityLogsData();
         this.spinnerService.hide(this.spinner);
@@ -438,41 +439,43 @@ export class ActivityLogsScheduleManagerComponent implements OnInit, OnDestroy {
   }
 
   private getOpenTimes() {
-    const x = this.timeIntervals;
-    var times:OpenTimeData[] = [];
+    let x = this.timeIntervals;
+    var times: OpenTimeData[] = [];
     let tt = 0;
 
-    var now = new Date(new Date().setHours(0,0,0,0));
-    
-    if(this.startDate){
-      now = new Date(new Date(this.startDate).setHours(0,0,0,0));
-    }    
+    var now;
 
-    now = new Date(new Date(now.toString().replace("GMT+0800","GMT+0000")).setHours(0,0,0,0));
-      for (let i = 0; tt < 48 * 60; i++) {
-        let time = this.datepipe.transform(now, 'hh:mm a').toLowerCase();
+    if (this.startDate) {
+      // now = this.changeToUTCDate(this.startDate);
+      now = new Date(`${this.startDate} 00:00`);
+    } else {
+      now = new Date(new Date().setHours(0, 0, 0, 0));
+    }
 
-        times[i] = new OpenTimeData;
-        times[i].time = time;
+    for (let i = 0; tt < 48 * 60; i++) {
+      let time = this.datepipe.transform(now, 'hh:mm a').toLowerCase();
 
-        times[i].date = this.changeToUTCDate(now).toISOString().slice(0,-5)+"Z";
-        times[i].dateHeader = this.datepipe.transform(now, 'yyyy-MM-dd');
+      times[i] = new OpenTimeData;
+      times[i].time = time;
 
-        times[i].startDateTime = this.changeToUTCDate(now).toISOString().slice(0,-5)+"Z";
-        let et = this.addIntervalDate(now, 'minute', x);
-        times[i].endDateTime = this.changeToUTCDate(et).toISOString().slice(0,-5)+"Z";   
-  
-        now = this.addIntervalDate(now, 'minute', x);
-        tt = tt + x;
-      }
+      times[i].date = this.changeToUTCDate(now).toISOString().slice(0, -5) + "Z";
+      times[i].dateHeader = this.datepipe.transform(now, 'yyyy-MM-dd');
 
-    return times;    
+      times[i].startDateTime = this.changeToUTCDate(now).toISOString().slice(0, -5) + "Z";
+      let et = this.addIntervalDate(now, 'minute', x);
+      times[i].endDateTime = this.changeToUTCDate(et).toISOString().slice(0, -5) + "Z";
+
+      now = this.addIntervalDate(now, 'minute', x);
+      tt = tt + x;
+    }
+
+    return times;
 
   }
 
 
   private changeToUTCDate(date){
-    return new Date(new Date(date).toString().replace("GMT+0800","GMT+0000"));
+    return new Date(new Date(date).toString().replace(/\sGMT.*$/, " GMT+0000"));
   }
 
   private addIntervalDate(date, interval, units) {

@@ -1,4 +1,4 @@
-<ng-select [items]="clientLobItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="{{ 'All' | translate }}"
+<ng-select [items]="clientLobItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="{{ 'Select' | translate }}"
   [typeahead]="typeAheadInput$" (scroll)="onClientLobScroll($event)" (scrollToEnd)="onClientLobScrollToEnd()"
   (change)="onClientLobChange($event)" (clear)="clearSelectedValues()" [(ngModel)]="clientLobId">
   <ng-template ng-header-tmp>

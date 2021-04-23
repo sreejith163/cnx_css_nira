@@ -20,7 +20,7 @@
                 <div class="col-md-3 d-flex flex-column">
                     <label><strong>Skill Group</strong></label>
                     <ng-select [items]="skillGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id"
-                        placeholder="{{'All' | translate}}" [typeahead]="typeAheadInput$"
+                        placeholder="{{'Select' | translate}}" [typeahead]="typeAheadInput$"
                         (scroll)="onSkillGroupScroll($event)" (scrollToEnd)="onSkillGroupScrollToEnd()"
                         (change)="onSkillGroupChange($event);change($event)" (clear)="clearSkillGroupValues()">
                         <ng-template ng-header-tmp>

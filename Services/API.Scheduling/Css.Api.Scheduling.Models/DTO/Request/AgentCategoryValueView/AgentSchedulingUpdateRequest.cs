@@ -38,5 +38,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentCategoryValueView
         /// Gets or sets the reference identifier.
         /// </summary>
         public int? RefId { get; set; }
+
+        public string ModifiedBy { get; set; }
     }
 }

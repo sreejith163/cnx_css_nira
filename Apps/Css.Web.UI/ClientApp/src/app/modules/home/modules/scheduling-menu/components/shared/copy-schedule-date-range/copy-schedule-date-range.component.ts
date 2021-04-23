@@ -17,6 +17,7 @@ import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { NgbDateToIsoStringAdapter } from '../../../helpers/ngb-date-to-iso-string-adapter';
 import { AgentSchedulesResponse } from '../../../models/agent-schedules-response.model';
 import * as moment from 'moment';
+import { CopyScheduleDateRangeModel } from '../../../models/copy-schedule-date-range.model';
 
 @Component({
   selector: 'app-copy-schedule-date-range',
@@ -111,15 +112,20 @@ export class CopyScheduleDateRangeComponent implements OnInit, OnDestroy {
     if (!this.dateFrom || !this.dateTo) {
       this.getModalPopup(ErrorWarningPopUpComponent, 'sm', Constants.DateRangeRequiredMessage);
     } else {
-      const rangeModel = new ScheduleDateRangeBase();
-      rangeModel.dateFrom = this.changeToUTCDate(this.dateFrom);
-      rangeModel.dateTo = this.changeToUTCDate(this.dateTo);
+      const rangeModel = new CopyScheduleDateRangeModel();
+      rangeModel.dateFrom = this.dateFrom.toString();
+      rangeModel.dateTo = this.dateTo.toString();
+      console.log(rangeModel)
       this.activeModal.close(rangeModel);
     }
   }
 
-  private changeToUTCDate(date){
-    return new Date(new Date(date).toString().replace(/\sGMT.*$/, " GMT+0000"));
+  // private changeToUTCDate(date){
+  //   return new Date(new Date(date).toString().replace(/\sGMT.*$/, " GMT+0000"));
+  // }
+
+  private changeToUTCDate(date) {
+    return new Date(date).toString().replace(/\sGMT.*$/, " GMT+0000");
   }
 
   private getModalPopup(component: any, size: string, contentMessage?: string) {

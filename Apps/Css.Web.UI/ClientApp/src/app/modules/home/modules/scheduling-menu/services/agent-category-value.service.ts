@@ -37,8 +37,8 @@ export class AgentCategoryValueService extends HttpBaseService {
       observe: 'response'
     }).pipe(catchError(this.handleError));
   }
-  importAgentCategoryValue(agentCategoryList : any){
-    const url = `${this.baseURL}/agentCategoryValues/import`;
+  importAgentCategoryValue(agentCategoryList : any, modifiedBy: string){
+    const url = `${this.baseURL}/agentCategoryValues/import?modifiedBy=${modifiedBy}`;
     return this.http.put<ApiResponseModel>(url, agentCategoryList)
       .pipe(catchError(this.handleError));
   }

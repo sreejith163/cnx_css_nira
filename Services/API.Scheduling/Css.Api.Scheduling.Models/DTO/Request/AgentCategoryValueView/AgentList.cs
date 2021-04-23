@@ -8,5 +8,7 @@ namespace Css.Api.Scheduling.Models.DTO.Request.AgentCategoryValueView
     {
         
         public  string EmployeeId { get; set; }
+
+  
     }
 }

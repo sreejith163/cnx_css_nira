@@ -4,7 +4,7 @@
       <h2 id="page_title">Agent Category Value<!--{{ 'Agent_category_value' | translate }}--></h2>
     </div>
   </div>
-  <div class="row">
+  <div class="row mt-2">
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-left p-0">
         <li class="breadcrumb-item"><a>{{ 'Scheduling_menu' | translate }}</a></li>
@@ -58,16 +58,34 @@
               <!-- <th>
                 Action
               </th> -->
-              <th>Employee ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th class="sortable-field" (click)="sort('ssn', sortBy)">
+                Employee ID
+                <i *ngIf="orderBy !== 'ssn'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'ssn'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('firstName', sortBy)">
+                First Name
+                <i *ngIf="orderBy !== 'firstName'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'firstName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('lastName', sortBy)">
+                Last Name
+                <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
               <th>Start Date</th>
               <th>Value</th>
             </tr>
           </thead>
           <tbody>
               <ng-container *ngIf="agentCategoryValueResponse?.length === 0;else found">
-                <tr><td colspan="4" class="text-center">No Items Found.</td></tr>
+                <tr><td colspan="5" class="text-center">No Items Found.</td></tr>
               </ng-container>
               <ng-template #found>
                 <tr *ngFor="let agentCategoryValue of agentCategoryValueResponse">
@@ -126,7 +144,9 @@
                   #uploads  (change)="onChangeFile(uploads.files)" accept=".csv" multiple
                   value="process"/> -->
                   <input value="process" name="files" #file id="fileLoader" type="file"
-                      (change)="onChangeFile(file.files)" accept=".csv">
+                      (change)="onChangeFile(file.files)" accept=".csv"><br>
+                      
+                      
                   <input (change)="onChangeFile(file.files)" (fileDropped)="onChangeFile(file.files)"
                       class="form-control" placeholder="Choose file..." [(ngModel)]="uploadFile">
               </div>

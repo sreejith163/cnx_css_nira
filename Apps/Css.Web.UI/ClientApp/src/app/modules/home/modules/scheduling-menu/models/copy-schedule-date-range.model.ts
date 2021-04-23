@@ -1,4 +1,4 @@
-export class ScheduleDateRangeBase {
+export class CopyScheduleDateRangeModel {
     dateFrom: string;
     dateTo: string;
 }

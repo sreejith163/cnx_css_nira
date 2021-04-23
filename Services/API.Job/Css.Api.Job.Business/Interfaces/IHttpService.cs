@@ -31,14 +31,16 @@ namespace Css.Api.Job.Business.Interfaces
         /// Method to send the http request message
         /// </summary>
         /// <param name="reqMessage"></param>
+        /// <param name="timeout">The timeout (in min) of the req message. Defaults to 5 min</param>
         /// <returns>The instance of HttpResponseMessage</returns>
-        Task<HttpResponseMessage> SendAsync(HttpRequestMessage reqMessage);
+        Task<HttpResponseMessage> SendAsync(HttpRequestMessage reqMessage, int timeout = 5);
 
         /// <summary>
         /// Method to send multiple http request messages
         /// </summary>
         /// <param name="reqMessages">List of request messages</param>
+        /// <param name="timeout">The timeout (in min) of the req messages. Defaults to 5 min</param>
         /// <returns>The list of instances of HttpResponseMessage</returns>
-        Task<List<HttpResponseMessage>> SendAsync(List<HttpRequestMessage> reqMessages);
+        Task<List<HttpResponseMessage>> SendAsync(List<HttpRequestMessage> reqMessages, int timeout = 5);
     }
 }

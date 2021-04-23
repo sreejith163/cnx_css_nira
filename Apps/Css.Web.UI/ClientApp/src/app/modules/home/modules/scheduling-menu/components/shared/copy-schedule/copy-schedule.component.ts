@@ -28,6 +28,7 @@ import { DateRangePopUpComponent } from '../date-range-pop-up/date-range-pop-up.
 import { CopyScheduleOperation } from 'src/app/shared/enums/copy-schedule-operation.enum';
 import { ContentType } from 'src/app/shared/enums/content-type.enum';
 import { ErrorWarningPopUpComponent } from 'src/app/shared/popups/error-warning-pop-up/error-warning-pop-up.component';
+import { CopyScheduleDateRangeModel } from '../../../models/copy-schedule-date-range.model';
 
 @Component({
   selector: 'app-copy-schedule',
@@ -39,8 +40,8 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   activeTab = 1;
   copyOperation = CopyScheduleOperation;
   modalRef: NgbModalRef;
-  targetDateRangesOfOtherAgents: ScheduleDateRangeBase[] = [];
-  targetDateRangesIndividual: ScheduleDateRangeBase[] = [];
+  targetDateRangesOfOtherAgents: CopyScheduleDateRangeModel[] = [];
+  targetDateRangesIndividual: CopyScheduleDateRangeModel[] = [];
 
   totalAgents: number;
   employeeAgentSchedulingGroupId: number;
@@ -70,8 +71,8 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
   @Input() agentScheduleId: string;
   @Input() agentScheduleType: AgentScheduleType;
   @Input() fromDate: Date;
-  @Input() dateFrom: Date;
-  @Input() dateTo: Date;
+  @Input() dateFrom: string;
+  @Input() dateTo: string;
 
   constructor(
     private calendar: NgbCalendar,
@@ -314,7 +315,7 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     }
   }
 
-  private copyAgentSchedule(copiedAgents: Array<number>, targetDateRangesOfOtherAgents: ScheduleDateRangeBase[]) {
+  private copyAgentSchedule(copiedAgents: Array<number>, targetDateRangesOfOtherAgents: CopyScheduleDateRangeModel[]) {
     console.log(copiedAgents)
     this.spinnerService.show(this.spinner, SpinnerOptions);
     const copyData = new CopyMultipleAgentScheduleChart();
@@ -324,8 +325,8 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     copyData.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
     // if all agents are selected, empty the employee ids array to process it on the backend
     copyData.employeeIds = this.masterSelected ? [] : copiedAgents;
-    copyData.dateFrom = this.getFormattedDate(this.dateFrom);
-    copyData.dateTo = this.getFormattedDate(this.dateTo);
+    copyData.dateFrom = this.dateFrom;
+    copyData.dateTo = this.dateTo;
     copyData.selectedDateRanges = targetDateRangesOfOtherAgents;
 
     this.copyAgentScheduleChartSubscription = this.agentSchedulesService.copyMultipleAgentScheduleChart(this.agentScheduleId, copyData)
@@ -351,15 +352,19 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
       this.getCalendarPopup(CopyScheduleDateRangeComponent, 'sm');
       this.modalRef.componentInstance.operation = ComponentOperation.Add;
       this.modalRef.componentInstance.isEditNewDateRange = false;
-      this.modalRef.result.then((result: ScheduleDateRangeBase) => {
+      this.modalRef.result.then((result: CopyScheduleDateRangeModel) => {
         if(result){
+          result.dateFrom = this.getFormattedDate(result.dateFrom);
+          result.dateTo = this.getFormattedDate(result.dateTo);
+          
           // check if date range already exists in the list
-          var isExisting = this.targetDateRangesOfOtherAgents.find(x => this.getTimeStamp(x.dateFrom) >= this.getTimeStamp(result.dateFrom) && this.getTimeStamp(x.dateTo) <= this.getTimeStamp(result.dateTo));
+          var isExisting = this.targetDateRangesOfOtherAgents.find(x => x.dateTo == result.dateTo && x.dateFrom == result.dateFrom);
+        
           if(isExisting !== undefined){
             this.getModalPopup(ErrorWarningPopUpComponent, 'sm', "Date Range is already in list.");
           }else{
-            result.dateFrom = this.getFormattedDate(result.dateFrom);
-            result.dateTo = this.getFormattedDate(result.dateTo);
+            // result.dateFrom = this.getFormattedDate(result.dateFrom);
+            // result.dateTo = this.getFormattedDate(result.dateTo);
             this.targetDateRangesOfOtherAgents.push(result);
           }          
         }
@@ -368,15 +373,17 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
       this.getCalendarPopup(CopyScheduleDateRangeComponent, 'sm');
       this.modalRef.componentInstance.operation = ComponentOperation.Add;
       this.modalRef.componentInstance.isEditNewDateRange = false;
-      this.modalRef.result.then((result: ScheduleDateRangeBase) => {
+      this.modalRef.result.then((result: CopyScheduleDateRangeModel) => {
         if(result){
+          result.dateFrom = this.getFormattedDate(result.dateFrom);
+          result.dateTo = this.getFormattedDate(result.dateTo);
+
           // check if date range already exists in the list
-          var isExisting = this.targetDateRangesIndividual.find(x => this.getTimeStamp(x.dateFrom) >= this.getTimeStamp(result.dateFrom) && this.getTimeStamp(x.dateTo) <= this.getTimeStamp(result.dateTo));
+          var isExisting = this.targetDateRangesIndividual.find(x => x.dateTo == result.dateTo && x.dateFrom == result.dateFrom);
+        
           if(isExisting !== undefined){
             this.getModalPopup(ErrorWarningPopUpComponent, 'sm', "Date Range is already in list.");
           }else{
-            result.dateFrom = this.getFormattedDate(result.dateFrom);
-            result.dateTo = this.getFormattedDate(result.dateTo);
             this.targetDateRangesIndividual.push(result);
           }          
         }
@@ -467,9 +474,10 @@ export class CopyScheduleComponent implements OnInit, OnDestroy {
     } 
   }
 
-  private getFormattedDate(date: Date) {
-    const transformedDate = this.datepipe.transform(date, 'yyyy-MM-dd');
-    return new Date(transformedDate);
+  private getFormattedDate(date) {
+    let dt = new Date(date).toUTCString();
+    const transformedDate = moment(dt).format('YYYY-MM-DD');
+    return transformedDate;
   }
 
   private getModalPopup(component: any, size: string, contentMessage?: string) {

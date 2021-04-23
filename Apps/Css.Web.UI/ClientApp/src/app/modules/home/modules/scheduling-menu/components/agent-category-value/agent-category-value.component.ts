@@ -55,7 +55,7 @@ export class AgentCategoryValueComponent implements OnInit, OnDestroy {
   agentSchedulingGroupId: number;
   agentCategoryId: number;
   currentPage = 1;
-  pageSize = 3;
+  pageSize = 50;
   characterSplice = 25;
   maxIconCount = 30;
   iconCount: number;
@@ -91,7 +91,7 @@ export class AgentCategoryValueComponent implements OnInit, OnDestroy {
   agentCategoryValueResponse: AgentCategoryValueResponse[] = [];
   modalRef: NgbModalRef;
   scheduleStatus = SchedulingStatus;
-  paginationSize = Constants.schedulingPaginationSize;
+  paginationSize = Constants.agentCategoryValuePaginationSize;
   schedulingIntervals = Constants.schedulingIntervals;
   csvRecords: any[] = [];
   getAgentCategoryValueSubscription: ISubscription;
@@ -183,6 +183,13 @@ export class AgentCategoryValueComponent implements OnInit, OnDestroy {
     this.loadAgentCategoryValues();
   }
 
+  sort(columnName: string, sortBy: string) {
+    this.sortBy = sortBy === 'asc' ? 'desc' : 'asc';
+    this.orderBy = columnName;
+
+    this.loadAgentCategoryValues();
+  }
+
   private subscribeToTranslations() {
     this.getTranslationSubscription = this.languagePreferenceService.userLanguageChanged.subscribe(
       (language) => {
@@ -214,7 +221,7 @@ export class AgentCategoryValueComponent implements OnInit, OnDestroy {
     agentCategoryValueQueryParams.pageNumber = this.currentPage;
     agentCategoryValueQueryParams.pageSize = this.pageSize;
     agentCategoryValueQueryParams.searchKeyword = '';
-    agentCategoryValueQueryParams.orderBy = '';// `${this.orderBy} ${this.sortBy}`;
+    agentCategoryValueQueryParams.orderBy = `${this.orderBy} ${this.sortBy}`;
     agentCategoryValueQueryParams.fields = '';
     agentCategoryValueQueryParams.agentSchedulingGroupId = this.agentSchedulingGroupId;
     agentCategoryValueQueryParams.agentCategoryId = this.agentCategoryId;
@@ -244,7 +251,9 @@ export class AgentCategoryValueComponent implements OnInit, OnDestroy {
 
   }
   openImportModal(content) {
-    this.modalService.open(content, { centered: true, size: 'lg' });
+    const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'lg' };
+  
+    this.modalService.open(content, options);
   }
 
   onChangeFile(files: File[]) {
@@ -295,7 +304,8 @@ export class AgentCategoryValueComponent implements OnInit, OnDestroy {
 
   importAgentCategoryValue() {
     this.spinnerService.show(this.importSpinner, SpinnerOptions);
-    this.agentCategoryValueService.importAgentCategoryValue(this.csvRecords)
+    
+    this.agentCategoryValueService.importAgentCategoryValue(this.csvRecords,this.authService.getLoggedUserInfo()?.displayName)
       .subscribe((response) => {
         this.modalService.dismissAll();
         this.importClear(); 

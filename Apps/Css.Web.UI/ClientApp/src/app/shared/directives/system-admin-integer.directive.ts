@@ -13,14 +13,9 @@ export class SystemAdminIntegerDirective {
     @HostListener('keydown',['$event'])
     onkeydown(event:KeyboardEvent){
         var regex = /[^0-9]/gi;
-        var regex2 = /^0+/gi;
 
         if(this.el.nativeElement.value.match(regex)){
             this.el.nativeElement.value = this.el.nativeElement.value.replace(/[^0-9]/gi,"")
-            event.preventDefault();
-        }
-        else if(this.el.nativeElement.value.match(regex2)){
-            this.el.nativeElement.value = this.el.nativeElement.value.replace(this.el.nativeElement.value.charAt(0),"")
             event.preventDefault();
         }
     }
@@ -29,14 +24,9 @@ export class SystemAdminIntegerDirective {
     @HostListener('keyup',['$event'])
     onkeyup(event:KeyboardEvent){
         var regex = /[^0-9]/gi;
-        var regex2 = /^0+/gi;
 
         if(this.el.nativeElement.value.match(regex)){
             this.el.nativeElement.value = this.el.nativeElement.value.replace(/[^0-9]/gi,"")
-            event.preventDefault();
-        }
-        else if(this.el.nativeElement.value.match(regex2)){
-            this.el.nativeElement.value = this.el.nativeElement.value.replace(this.el.nativeElement.value.charAt(0),"")
             event.preventDefault();
         }
     }

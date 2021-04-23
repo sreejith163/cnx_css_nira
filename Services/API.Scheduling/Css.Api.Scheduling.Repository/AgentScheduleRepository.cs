@@ -17,6 +17,7 @@ using Css.Api.Scheduling.Models.DTO.Response.AgentSchedule;
 using AutoMapper.QueryableExtensions;
 using System.Collections.Generic;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
+using Css.Api.Scheduling.Models.DTO.Request.AgentCategoryValueView;
 
 namespace Css.Api.Scheduling.Repository
 {
@@ -348,6 +349,22 @@ namespace Css.Api.Scheduling.Repository
                 .Set(x => x.ActiveAgentSchedulingGroupId, updateAgentScheduleEmployeeDetails.AgentSchedulingGroupId)
                 .Set(x => x.Ranges, updateAgentScheduleEmployeeDetails.Ranges)
                 .Set(x => x.ModifiedBy, updateAgentScheduleEmployeeDetails.ModifiedBy)
+                .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
+
+            UpdateOneAsync(query, update);
+        }
+
+        public void ImportUpdateAgentScheduleWithRanges(EmployeeIdDetails employeeIdDetails, ImportUpdateAgentSchedule importUpdateAgentSchedule)
+        {
+            var query =
+                Builders<AgentSchedule>.Filter.Eq(i => i.EmployeeId, employeeIdDetails.Id) &
+                Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false);
+
+            var update = Builders<AgentSchedule>.Update
+                .Set(x => x.EmployeeId, importUpdateAgentSchedule.EmployeeId)
+    
+                .Set(x => x.ActiveAgentSchedulingGroupId, importUpdateAgentSchedule.AgentSchedulingGroupId)
+                .Set(x => x.Ranges, importUpdateAgentSchedule.Ranges)
                 .Set(x => x.ModifiedDate, DateTimeOffset.UtcNow);
 
             UpdateOneAsync(query, update);

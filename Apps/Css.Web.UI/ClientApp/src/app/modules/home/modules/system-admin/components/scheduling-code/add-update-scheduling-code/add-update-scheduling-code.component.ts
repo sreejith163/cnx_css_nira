@@ -145,6 +145,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
   }
 
   private addSchedulingCodeDetails() {
+    this.schedulingCodeForm.controls.refId.setValue(this.schedulingCodeForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
     const addSchedulingCodeModel = this.schedulingCodeForm.value as AddSchedulingCode;
     addSchedulingCodeModel.schedulingTypeCode = this.getCodeTypes();
     addSchedulingCodeModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
@@ -169,6 +170,7 @@ export class AddUpdateSchedulingCodeComponent implements OnInit, OnDestroy {
     if (this.hasSchedulingCodeDetailsMismatch()) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
 
+      this.schedulingCodeForm.controls.refId.setValue(this.schedulingCodeForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
       const updateSchedulingCodeModel = this.schedulingCodeForm.value as UpdateSchedulingCode;
       updateSchedulingCodeModel.schedulingTypeCode = this.getCodeTypes();
       updateSchedulingCodeModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;

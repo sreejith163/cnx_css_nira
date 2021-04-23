@@ -19,7 +19,7 @@
     </div>
     <div class="col-md-3">
       {{ 'Client_lob_group' | translate }}
-      <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId" (clientLobSelected)="setClientLob($event)"></app-client-lob-group-typeahead>
+      <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId" [hierarchy]="true" (clientLobSelected)="setClientLob($event)"></app-client-lob-group-typeahead>
     </div>
     <div class="col-md-3 padding-bottom-5">
       <input type="text" class="form-control mt-4 padding-right-35" [(ngModel)]="searchKeyword"

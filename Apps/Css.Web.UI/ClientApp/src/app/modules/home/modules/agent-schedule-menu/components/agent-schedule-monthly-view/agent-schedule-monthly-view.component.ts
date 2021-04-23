@@ -114,8 +114,6 @@ export class AgentScheduleMonthlyViewComponent implements OnInit {
       });
     }
 
-    console.log(this.momentCalendar)
-
     const startMonthDate = new Date(this.momentCalendar?.weeks[0]?.days[0].date);
     const endMonthDate =  new Date(this.momentCalendar?.weeks[5]?.days[6].date);
       

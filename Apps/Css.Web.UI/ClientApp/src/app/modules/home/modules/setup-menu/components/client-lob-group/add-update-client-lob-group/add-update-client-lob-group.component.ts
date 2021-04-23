@@ -114,6 +114,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
   }
 
   private addClientLobGroupDetails() {
+    this.clientLOBGroupForm.controls.refId.setValue(this.clientLOBGroupForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
     const addClientLobGroupModel = this.clientLOBGroupForm.value as AddClientLobGroup;
     addClientLobGroupModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
     addClientLobGroupModel.clientId = this.clientId;
@@ -142,6 +143,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
 
   private updateClientLobGroupDetails() {
     if (this.hasClientLobGroupDetailsMismatch()) {
+      this.clientLOBGroupForm.controls.refId.setValue(this.clientLOBGroupForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
       const updateClientLobGroupModel = this.clientLOBGroupForm.value as UpdateClientLobGroup;
       updateClientLobGroupModel.ModifiedBy = this.authService.getLoggedUserInfo()?.displayName;
       updateClientLobGroupModel.clientId = this.clientId;

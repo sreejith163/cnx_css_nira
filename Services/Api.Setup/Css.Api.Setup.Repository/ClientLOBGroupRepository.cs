@@ -141,8 +141,8 @@ namespace Css.Api.Setup.Repository
         /// <returns></returns>
         public async Task<List<ClientLobGroup>> GetClientLOBGroupsIdByClientIdAndGroupNameOrRefId(ClientLOBGroupAttribute clientLOBGroupAttribute)
         {
-            var clientLOBGroups = FindByCondition(x => x.ClientId == clientLOBGroupAttribute.ClientId && (string.Equals(x.Name.Trim(), clientLOBGroupAttribute.Name.Trim(),
-                      StringComparison.OrdinalIgnoreCase) || x.RefId == (clientLOBGroupAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
+            var clientLOBGroups = FindByCondition(x => ((x.ClientId == clientLOBGroupAttribute.ClientId && string.Equals(x.Name.Trim(), clientLOBGroupAttribute.Name.Trim(),
+                      StringComparison.OrdinalIgnoreCase)) || x.RefId == (clientLOBGroupAttribute.RefId ?? 0)) && x.IsDeleted == false).ToList();
 
             return await Task.FromResult(clientLOBGroups);
         }

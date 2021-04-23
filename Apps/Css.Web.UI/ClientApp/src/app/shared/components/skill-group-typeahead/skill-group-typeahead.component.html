@@ -1,4 +1,4 @@
-<ng-select [items]="skillGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="{{'All' | translate}}"
+<ng-select [items]="skillGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id" placeholder="{{'Select' | translate}}"
   [typeahead]="typeAheadInput$" (scroll)="onSkillGroupScroll($event)" (scrollToEnd)="onSkillGroupScrollToEnd()"
   (change)="onSkillGroupChange($event)" (clear)="clearSkillGroupValues()"
   [(ngModel)]="skillGroupId">

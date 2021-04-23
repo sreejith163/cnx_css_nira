@@ -30,6 +30,8 @@ namespace Css.Api.Reporting.Repository
         /// <returns></returns>
         public void UpdateAgentSchedulingGroupHistory(List<AgentSchedulingGroupHistory> agentSchedulingGroupHistories)
         {
+            var bulkUpsert = new List<WriteModel<AgentSchedulingGroupHistory>>();
+            
             agentSchedulingGroupHistories.ForEach(agentSchedulingGroupHistory =>
             {
                 var query = Builders<AgentSchedulingGroupHistory>.Filter.Eq(i => i.EmployeeId, agentSchedulingGroupHistory.EmployeeId) &
@@ -39,7 +41,7 @@ namespace Css.Api.Reporting.Repository
 
                 if (currentRecord == null)
                 {
-                    InsertOneAsync(agentSchedulingGroupHistory);
+                    bulkUpsert.Add(new InsertOneModel<AgentSchedulingGroupHistory>(agentSchedulingGroupHistory));
                 }
                 else if (currentRecord.AgentSchedulingGroupId != agentSchedulingGroupHistory.AgentSchedulingGroupId) 
                 {
@@ -47,10 +49,15 @@ namespace Css.Api.Reporting.Repository
                                    .Set(x => x.ModifiedBy, agentSchedulingGroupHistory.CreatedBy)
                                    .Set(x => x.ModifiedDate, agentSchedulingGroupHistory.CreatedDate);
 
-                    UpdateOneAsync(query, update);
-                    InsertOneAsync(agentSchedulingGroupHistory);
+                    bulkUpsert.Add(new UpdateOneModel<AgentSchedulingGroupHistory>(query, update));
+                    bulkUpsert.Add(new InsertOneModel<AgentSchedulingGroupHistory>(agentSchedulingGroupHistory));
                 }
             });
+
+            if(bulkUpsert.Any())
+            {
+                BulkWriteAsync(bulkUpsert);
+            }
         }
     }
 }

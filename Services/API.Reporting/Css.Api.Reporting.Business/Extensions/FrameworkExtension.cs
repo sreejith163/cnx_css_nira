@@ -66,6 +66,7 @@ namespace Css.Api.Reporting.Business.Extensions
         private static IServiceCollection AddBaseServices(this IServiceCollection services)
         {
             services.AddSingleton<IConfigurationService, ConfigurationService>();
+            services.AddSingleton<IBatchService, BatchService>();
             services.AddScoped<IMapperService, MapperService>();
             services.AddScoped<IFTPService, FTPService>();
             services.AddScoped<IScheduleService, ScheduleService>();

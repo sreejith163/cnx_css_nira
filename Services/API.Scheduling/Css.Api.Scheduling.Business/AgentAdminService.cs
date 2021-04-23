@@ -327,6 +327,7 @@ namespace Css.Api.Scheduling.Business
 
             agentAdminRequest.ClientId = agentSchedulingGroup.ClientId;
             agentAdminRequest.ClientLobGroupId = agentSchedulingGroup.ClientLobGroupId;
+            agentAdminRequest.Mu = agentSchedulingGroup.RefId.ToString();
             agentAdminRequest.SkillGroupId = agentSchedulingGroup.SkillGroupId;
             agentAdminRequest.SkillTagId = agentSchedulingGroup.SkillTagId;
 
@@ -492,6 +493,7 @@ namespace Css.Api.Scheduling.Business
             var agentAdminRequest = _mapper.Map(agentAdminDetails, agentAdmin);
             agentAdminRequest.ClientId = agentSchedulingGroup.ClientId;
             agentAdminRequest.ClientLobGroupId = agentSchedulingGroup.ClientLobGroupId;
+            agentAdminRequest.Mu = agentSchedulingGroup.RefId.ToString();
             agentAdminRequest.SkillGroupId = agentSchedulingGroup.SkillGroupId;
             agentAdminRequest.SkillTagId = agentSchedulingGroup.SkillTagId;
 
@@ -790,8 +792,8 @@ namespace Css.Api.Scheduling.Business
                         var field = new FieldDetail()
                         {
                             Name = "SupervisorId",
-                            OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorId.ToString() : "",
-                            NewValue = updatedDetails.SupervisorId.ToString()
+                            OldValue = !string.IsNullOrEmpty(preUpdateDetails?.SupervisorId) ? preUpdateDetails.SupervisorId.ToString() : "",
+                            NewValue = updatedDetails?.SupervisorId.ToString()
                         };
                         fielDetails.Add(field);
                     }
@@ -801,8 +803,8 @@ namespace Css.Api.Scheduling.Business
                         var field = new FieldDetail()
                         {
                             Name = "SupervisorSso",
-                            OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorSso.ToString() : "",
-                            NewValue = updatedDetails.SupervisorSso.ToString()
+                            OldValue = !string.IsNullOrEmpty(preUpdateDetails?.SupervisorSso) ? preUpdateDetails.SupervisorSso.ToString() : "",
+                            NewValue = updatedDetails?.SupervisorSso.ToString()
                         };
                         fielDetails.Add(field);
                     }
@@ -812,8 +814,8 @@ namespace Css.Api.Scheduling.Business
                         var field = new FieldDetail()
                         {
                             Name = "SupervisorName",
-                            OldValue = preUpdateDetails != null ? preUpdateDetails.SupervisorName.ToString() : "",
-                            NewValue = updatedDetails.SupervisorName.ToString()
+                            OldValue = !string.IsNullOrEmpty(preUpdateDetails?.SupervisorName) ? preUpdateDetails.SupervisorName.ToString() : "",
+                            NewValue = updatedDetails?.SupervisorName.ToString()
                         };
                         fielDetails.Add(field);
                     }

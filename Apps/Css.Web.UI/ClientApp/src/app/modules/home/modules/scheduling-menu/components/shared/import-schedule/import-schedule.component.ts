@@ -294,7 +294,27 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
   }
 
  
+  exportErrorListFromImport(errorList){
+    if(errorList !== undefined){
+      let csv = "Errors";
+      csv += '\r\n';
+      errorList.forEach(element => {
+        csv += element;
+        csv += '\r\n';
+      });
 
+      var blob = new Blob([csv], { type: "text/csv" });
+      var link = document.createElement("a");
+      if (link.download !== undefined) {
+        var url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "ImportErrorList.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  }
  
 
   private importAgentScheduleChart(scheduleResponse: AgentSchedulesResponse[], schedulingCodes: SchedulingCode[], hasMismatch?: boolean) {
@@ -310,20 +330,13 @@ export class ImportScheduleComponent implements OnInit, OnDestroy {
         this.spinnerService.show(this.spinner, SpinnerOptions);
         this.importAgentScheduleChartSubscription = this.agentSchedulesService.importAgentScheduleChart(importFinalModel)
           .subscribe((res:any) => {
-            console.log(res)
-            if (res.type === HttpEventType.Sent) {
-              // This is an upload progress event. Compute and show the % done:
-              const percentDone = Math.round(100 * res.loaded / res.total);
-              console.log(`File is ${percentDone}% uploaded.`);
-            } else if (res instanceof HttpResponse) {
-              console.log('File is completely uploaded!');
-            }
-            
             this.spinnerService.hide(this.spinner);
             this.activeModal.close({ partialImport: hasMismatch });
           }, (error) => {
             this.spinnerService.hide(this.spinner);
             const errorMessage = `An error occurred upon importing the file. Please check the following<br>Duplicated Record<br>Incorrect Columns<br>Invalid Date Range and Time<br>Not recognized Employee ID`;
+
+            // this.exportErrorListFromImport(error.error);
             this.showErrorWarningPopUpMessage(errorMessage);
           });
         this.subscriptions.push(this.importAgentScheduleChartSubscription);

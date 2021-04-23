@@ -18,6 +18,7 @@ import { PermissionsService } from 'src/app/modules/home/modules/system-admin/se
 import { ErrorPopUpComponent } from 'src/app/shared/popups/error-pop-up/error-pop-up.component';
 import { AuthLogin } from 'src/app/modules/home/modules/system-admin/models/auth-login.model';
 import { ToastrService } from 'ngx-toastr';
+import { env } from 'process';
 
 @Component({
   selector: 'app-login',
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit {
   public uatPassword: any;
   public username: any;
   public password: any;
+  testingButton = true;
   uatLoginForm: FormGroup;
   authLogin: AuthLogin;
   spinner = "spinner";
@@ -49,6 +51,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.uatLoginIntialization();
+    if(environment.production){
+      this.testingButton = false;
+    }
   }
 
   login() {

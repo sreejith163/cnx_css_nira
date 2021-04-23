@@ -350,7 +350,8 @@ namespace Css.Api.Scheduling.Repository
                 .Set(x => x.ClientLobGroupId, agentSchedulingUpdateRequest.ClientLobGroupId)
                 .Set(x => x.SkillGroupId, agentSchedulingUpdateRequest.SkillGroupId)
                 .Set(x => x.SkillTagId, agentSchedulingUpdateRequest.SkillTagId)
-                .Set(x => x.AgentSchedulingGroupId, agentSchedulingUpdateRequest.AgentSchedulingGroupId);
+                .Set(x => x.AgentSchedulingGroupId, agentSchedulingUpdateRequest.AgentSchedulingGroupId)
+                .Set(x => x.ModifiedBy, agentSchedulingUpdateRequest.ModifiedBy);
             UpdateOneAsync(query, update);
         }
 

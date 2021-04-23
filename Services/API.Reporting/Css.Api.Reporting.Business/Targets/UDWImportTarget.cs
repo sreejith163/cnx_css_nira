@@ -37,6 +37,11 @@ namespace Css.Api.Reporting.Business.Targets
         private readonly IMapper _mapper;
 
         /// <summary>
+        /// The batch service
+        /// </summary>
+        private readonly IBatchService _batchService;
+
+        /// <summary>
         /// The configuration
         /// </summary>
         private readonly IConfigurationService _configuration;
@@ -102,6 +107,7 @@ namespace Css.Api.Reporting.Business.Targets
         /// Constructor to initialize all properties
         /// </summary>
         /// <param name="mapper"></param>
+        /// <param name="batchService"></param>
         /// <param name="configuration"></param>
         /// <param name="agentRepository"></param>
         /// <param name="agentSchedulingGroupRepository"></param>
@@ -113,12 +119,13 @@ namespace Css.Api.Reporting.Business.Targets
         /// <param name="activityLogRepository"></param>
         /// <param name="uow"></param>
         /// <param name="ftp"></param>
-        public UDWImportTarget(IMapper mapper, IConfigurationService configuration, IAgentRepository agentRepository, IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
+        public UDWImportTarget(IMapper mapper, IBatchService batchService, IConfigurationService configuration, IAgentRepository agentRepository, IAgentSchedulingGroupRepository agentSchedulingGroupRepository,
             IAgentSchedulingGroupHistoryRepository agentSchedulingGroupHistoryRepository, IAgentScheduleRepository agentScheduleRepository, 
             IAgentScheduleManagerRepository agentScheduleManagerRepository, IAgentCategoryRepository agentCategoryRepository,
             ITimezoneRepository timezoneRepository, IActivityLogRepository activityLogRepository, IUnitOfWork uow, IFTPService ftp) : base(ftp)
         {
             _mapper = mapper;
+            _batchService = batchService;
             _configuration = configuration;
             _agentRepository = agentRepository;
             _agentScheduleRepository = agentScheduleRepository;
@@ -163,35 +170,57 @@ namespace Css.Api.Reporting.Business.Targets
                     .Union(_mapper.Map<List<Agent>>(root.ChangedAgents))
                     .ToList();
 
-                var metadata = await CheckImport(root, agents);
-                agents = metadata.Agents;
-
-                if(agents.Any())
+                var batches = _batchService.GenerateBatches(agents);
+                UDWAgentList unprocessedRecords = new UDWAgentList()
                 {
-                    var activityLogs = metadata.ActivityLogs;
-                    _agentRepository.Upsert(agents);
-                    
-                    var agentSchedulingGroupHistories = _mapper.Map<List<AgentSchedulingGroupHistory>>(agents).ToList();
-                    var agentSchedulingGroups = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsByIds(agentSchedulingGroupHistories.Select(x => x.AgentSchedulingGroupId).ToList());
-                    var timezones = await _timezoneRepository.GetTimezones(agentSchedulingGroups.Select(x => x.TimezoneId).ToList());
+                    NewAgents = new List<UDWAgent>(),
+                    ChangedAgents = new List<UDWAgentUpdate>()
+                };
 
-                    var agentSchedules = _mapper.Map<List<AgentSchedule>>(agents).ToList();
-                    await CheckExistingSchedules(agentSchedules, agentSchedulingGroups, timezones, activityLogs);
-                    _agentScheduleRepository.InsertAgentSchedules(agentSchedules);
+                foreach (var batch in batches)
+                {
+                    var batchSsns = batch.Items.Select(x => x.Ssn).ToList();
+                    UDWAgentList batchData = new UDWAgentList()
+                    {
+                        NewAgents = root.NewAgents.Where(x => batchSsns.Contains(x.SSN)).ToList(),
+                        ChangedAgents = root.ChangedAgents.Where(x => batchSsns.Contains(x.SSN)).ToList()
+                    };
 
-                    ReconcileStartDates(agentSchedulingGroupHistories, agentSchedulingGroups, timezones);
-                    _agentSchedulingGroupHistoryRepository.UpdateAgentSchedulingGroupHistory(agentSchedulingGroupHistories);
-
-                    _activityLogRepository.CreateActivityLogs(activityLogs);
-                    await _uow.Commit();
+                    try
+                    {
+                        var metadata = await ProcessBatch(batchData, batch.Items);
+                        if (metadata.Unprocessed.NewAgents != null && metadata.Unprocessed.NewAgents.Any())
+                        {
+                            unprocessedRecords.NewAgents.AddRange(metadata.Unprocessed.NewAgents);
+                        }
+                        if (metadata.Unprocessed.ChangedAgents != null && metadata.Unprocessed.ChangedAgents.Any())
+                        {
+                            unprocessedRecords.ChangedAgents.AddRange(metadata.Unprocessed.ChangedAgents);
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        string message = string.Format(Messages.BatchProcessingError, batch.BatchId, ex.Message);
+                        batchData.NewAgents.ForEach(x =>
+                        {
+                            x.Messages.Add(message);
+                        });
+                        batchData.ChangedAgents.ForEach(x =>
+                        {
+                            x.Messages.Add(message);
+                        });
+                        unprocessedRecords.NewAgents.AddRange(batchData.NewAgents);
+                        unprocessedRecords.ChangedAgents.AddRange(batchData.ChangedAgents);
+                    }
                 }
 
-                if (!string.IsNullOrWhiteSpace(metadata.Metadata))
+                if (unprocessedRecords.NewAgents.Any() || unprocessedRecords.ChangedAgents.Any())
                 {
+                    XMLParser<UDWAgentList> xmlParser = new XMLParser<UDWAgentList>();
                     return new ActivityDataResponse()
                     {
                         Status = (int)ProcessStatus.Partial,
-                        Metadata = metadata.Metadata
+                        Metadata = xmlParser.Serialize(unprocessedRecords)
                     };
                 }
 
@@ -212,6 +241,39 @@ namespace Css.Api.Reporting.Business.Targets
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// The method to process the batch 
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="agents"></param>
+        /// <returns>An instance of AgentMetadata</returns>
+        private async Task<AgentMetadata> ProcessBatch(UDWAgentList root, List<Agent> agents)
+        {
+            var metadata = await CheckImport(root, agents);
+            agents = metadata.Agents;
+
+            if (agents.Any())
+            {
+                var activityLogs = metadata.ActivityLogs;
+                _agentRepository.Upsert(agents);
+
+                var agentSchedulingGroupHistories = _mapper.Map<List<AgentSchedulingGroupHistory>>(agents).ToList();
+                var agentSchedulingGroups = await _agentSchedulingGroupRepository.GetAgentSchedulingGroupsByIds(agentSchedulingGroupHistories.Select(x => x.AgentSchedulingGroupId).ToList());
+                var timezones = await _timezoneRepository.GetTimezones(agentSchedulingGroups.Select(x => x.TimezoneId).ToList());
+
+                var agentSchedules = _mapper.Map<List<AgentSchedule>>(agents).ToList();
+                await CheckExistingSchedules(agentSchedules, agentSchedulingGroups, timezones, activityLogs);
+                _agentScheduleRepository.InsertAgentSchedules(agentSchedules);
+
+                ReconcileStartDates(agentSchedulingGroupHistories, agentSchedulingGroups, timezones);
+                _agentSchedulingGroupHistoryRepository.UpdateAgentSchedulingGroupHistory(agentSchedulingGroupHistories);
+
+                _activityLogRepository.CreateActivityLogs(activityLogs);
+                await _uow.Commit();
+            }
+            return metadata;
+        }
 
         /// <summary>
         /// The method to check any mismatches in the source and destination data
@@ -242,7 +304,7 @@ namespace Css.Api.Reporting.Business.Targets
                 return new AgentMetadata()
                 {
                     Agents = dest,
-                    Metadata = metadata
+                    Unprocessed = agentCategoryMismatch
                 };
             }
 
@@ -281,19 +343,11 @@ namespace Css.Api.Reporting.Business.Targets
                 mismatch.ChangedAgents = changeAgents;
             }
 
-            if ((mismatch.NewAgents != null && mismatch.NewAgents.Any())
-                || (mismatch.ChangedAgents != null && mismatch.ChangedAgents.Any())
-            )
-            {
-                XMLParser<UDWAgentList> parser = new XMLParser<UDWAgentList>();
-                metadata = parser.Serialize(mismatch);
-            }
-
             AgentMetadata agentMetadata = new AgentMetadata()
             {
                 Agents = dest,
                 ActivityLogs = await GenerateActivityLogs(existingAgents, dest),
-                Metadata = metadata
+                Unprocessed = mismatch
             };
 
             return agentMetadata;
@@ -319,12 +373,12 @@ namespace Css.Api.Reporting.Business.Targets
             {
                 AssignSSO(agent);
                 AssignSupervisor(agent, existingAgents);
-                AssignHireDate(agent);
+                AssignHireDate(agent, source);
                 
                 if (agent.AgentData.Any())
                 {
                     List<string> messages = new List<string>();
-                    var invalidCategories = agent.AgentData.Where(x => !agentCategories.Select(y => y.Name.Trim()).Contains(x.Group.Description.Trim())).ToList();
+                    var invalidCategories = agent.AgentData.Where(x => !agentCategories.Select(y => y.Name.Trim().ToUpper()).Contains(x.Group.Description.Trim().ToUpper())).ToList();
                     
                     if (invalidCategories.Any())
                     {
@@ -488,7 +542,8 @@ namespace Css.Api.Reporting.Business.Targets
         /// A helper method to assign hire date
         /// </summary>
         /// <param name="agent"></param>
-        private void AssignHireDate(Agent agent)
+        /// <param name="source"></param>
+        private void AssignHireDate(Agent agent, UDWAgentList source)
         {
             var hireData = agent.AgentData.FirstOrDefault(x => x.Group.Description.Equals(_configuration.Settings.AgentCategoryFields.Hire));
             if (agent.HireDate.HasValue)
@@ -515,7 +570,17 @@ namespace Css.Api.Reporting.Business.Targets
                 var status = DateTime.TryParseExact(hireData.Group.Value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out hireDate);
                 if(status)
                 {
-                    agent.HireDate = hireDate;
+                    agent.HireDate = new DateTime(hireDate.Year, hireDate.Month, hireDate.Day, 0, 0, 0, DateTimeKind.Utc);
+                    var newAgent = source.NewAgents.FirstOrDefault(x => x.SSN == agent.Ssn);
+                    var changedAgent = source.ChangedAgents.FirstOrDefault(x => x.SSN == agent.Ssn);
+                    if(newAgent != null)
+                    {
+                        newAgent.SenDate = new UDWAgentDate() { Day = agent.HireDate.Value.Day, Month = agent.HireDate.Value.Month, Year = agent.HireDate.Value.Year };
+                    }
+                    else if(changedAgent != null)
+                    {
+                        changedAgent.SenDate = new UDWAgentDate() { Day = agent.HireDate.Value.Day, Month = agent.HireDate.Value.Month, Year = agent.HireDate.Value.Year };
+                    }
                 }
             }
         }
@@ -687,7 +752,7 @@ namespace Css.Api.Reporting.Business.Targets
                     {
                         x.Messages.Add(Messages.MuMandatory);
                     }
-                    if(!ValidateSSO(x.AgentData.FirstOrDefault(y => y.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Sso, StringComparison.InvariantCultureIgnoreCase))?.Value))
+                    if(!ValidateSSO(x.AgentData.FirstOrDefault(y => y.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Sso, StringComparison.InvariantCultureIgnoreCase))?.Value ?? string.Empty))
                     {
                         x.Messages.Add(Messages.SsoMandatory);
                     }
@@ -774,7 +839,7 @@ namespace Css.Api.Reporting.Business.Targets
                     {
                         x.Messages.Add(Messages.MuMandatory);
                     }
-                    if (!ValidateSSO(x.AgentData.FirstOrDefault(y => y.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Sso, StringComparison.InvariantCultureIgnoreCase))?.Value))
+                    if (!ValidateSSO(x.AgentData.FirstOrDefault(y => y.Description.Trim().Equals(_configuration.Settings.AgentCategoryFields.Sso, StringComparison.InvariantCultureIgnoreCase))?.Value ?? string.Empty))
                     {
                         x.Messages.Add(Messages.SsoMandatory);
                     }

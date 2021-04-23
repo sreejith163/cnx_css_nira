@@ -139,9 +139,9 @@
                             </ng-container>
                           </ng-container>
                           <span class="padding-left-15">
-                            <span>{{range.dateFrom | date: 'yyyy-MM-dd'}}</span>
-                            <span *ngIf="range.dateTo"> - </span>
-                            <span>{{ range.dateTo | date: 'yyyy-MM-dd'}}</span>
+                            <span>{{range.dateFrom }}</span>
+                            <span *ngIf="range.dateTo"> — </span>
+                            <span>{{ range.dateTo }}</span>
                           </span>
                         </a>
                       </div>
@@ -412,8 +412,9 @@
           <input style="display: none;" id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.name}}
         </ng-template>
       </ng-select>
-
-     
+      
+      <small class="text-info">MAXIMUM 5 AGENT SCHEDULING GROUP CAN BE INCLUDED FOR BATCH RELEASE.</small>
+     <br>
       <label for="" class="mt-3"><strong>Scheduled Date(s)</strong></label>
       <ng-select groupBy="agentSchedulingGroup" (open)="dateRangeOpen()" placeholder="Select date range" [maxSelectedItems]="5" [items]="dateRange"
         [multiple]="true" bindLabel="fullrange" [closeOnSelect]="false" [(ngModel)]="selectedRange">

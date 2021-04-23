@@ -4158,6 +4158,21 @@ export class Constants {
     },
   ];
 
+  public static readonly agentCategoryValuePaginationSize: PaginationSize[] = [
+    {
+      count: 25,
+      text: '25/Page'
+    },
+    {
+      count: 50,
+      text: '50/Page'
+    },
+    {
+      count: 100,
+      text: '100/Page'
+    }
+  ];
+
   public static readonly schedulingPaginationSize: PaginationSize[] = [
     {
       count: 3,

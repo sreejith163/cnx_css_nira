@@ -42,7 +42,7 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                         }
                         return DateTime.TryParse(String.Join('-', o.SenDate.Year, o.SenDate.Month, o.SenDate.Day), CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal, out dt);
                     });
-                    opt.MapFrom(o => new DateTime(o.SenDate.Year, o.SenDate.Month, o.SenDate.Day));
+                    opt.MapFrom(o => new DateTime(o.SenDate.Year, o.SenDate.Month, o.SenDate.Day, 0, 0, 0, DateTimeKind.Utc));
                 })
                 .ForMember(x => x.SenExt, opt =>
                 {
@@ -76,7 +76,7 @@ namespace Css.Api.Reporting.Models.Profiles.Agent
                         }
                         return DateTime.TryParse(String.Join('-', o.SenDate.Year, o.SenDate.Month, o.SenDate.Day), CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal ,out dt);
                     });
-                    opt.MapFrom(o => new DateTime(o.SenDate.Year, o.SenDate.Month, o.SenDate.Day));
+                    opt.MapFrom(o => new DateTime(o.SenDate.Year, o.SenDate.Month, o.SenDate.Day, 0, 0, 0, DateTimeKind.Utc));
                 })
                 .ForMember(x => x.SenExt, opt =>
                 {

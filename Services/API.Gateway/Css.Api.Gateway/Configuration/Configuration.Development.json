@@ -802,7 +802,7 @@
       "UpstreamPathTemplate": "/api/activity",
       "UpstreamHttpMethod": [ "Post" ],
       "QoSOptions": {
-        "TimeoutValue": 300000
+        "TimeoutValue": 900000
       }
     },
     {

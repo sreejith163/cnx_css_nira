@@ -14,11 +14,18 @@
       padding-top: 3px;
     }
   }
-  
+  .drag-div{
+    padding-top: 40px;
+  }
+  .icons_container{
+    margin-top: -30px!important;
+  }
   .breadcrumb-item.active {
     color: inherit;
   }
-  
+  .text-xs{
+    font-size: 11px!important;
+  }
   .breadcrumb {
     background-color: inherit;
   }
@@ -31,7 +38,7 @@
     background-size: 23px;
     background-position: center;
   }
-  
+
   .icon-style {
     padding: 5px;
     cursor: pointer;
@@ -437,9 +444,12 @@ table {
   position:sticky;
   left:130px;
   z-index:0!important;
-  background-color:#f0f0f0;
+
   min-width: 30%!important;
   max-width: 30%!important;
+  background-color:#f0f0f0;
+	outline: .1px solid #d6d5d5;
+	outline-offset: -1px;
 
 }
 span.name_wrapper{
@@ -451,6 +461,9 @@ span.name_wrapper{
   z-index: 0!important;
 }
 .employee_id_header{
+  background-color:#f0f0f0;
+	outline: .1px solid #d6d5d5;
+	outline-offset: -1px;
   position:sticky;
   left:100px;
   z-index:1!important;
@@ -463,6 +476,8 @@ padding-left: 10px!important;
   position:sticky;
   left:130px;
   z-index:1;
+  outline: .1px solid #d6d5d5;
+	outline-offset: -1px;
   background-color:#f0f0f0;
 width: 205px;
 padding: .35rem!important;
@@ -472,6 +487,8 @@ td:first-child, th:first-child{
   position:sticky;
   left:0;
   z-index:1;
+  outline: .1px solid #d6d5d5;
+	outline-offset: -1px;
   background-color:#f0f0f0;
   min-width: 30%!important;
   max-width: 30%!important;
@@ -517,4 +534,8 @@ th{
 }
 td{
   font-size: 13px!important;
+}
+.no_match{
+  border: 0!important;
+  outline: none!important;
 }

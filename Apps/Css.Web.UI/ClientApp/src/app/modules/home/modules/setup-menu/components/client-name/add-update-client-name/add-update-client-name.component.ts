@@ -94,6 +94,7 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
   }
 
   private addClientDetails() {
+    this.clientForm.controls.refId.setValue(this.clientForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
     const addClientModel = this.clientForm.value as AddClient;
     addClientModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
 
@@ -115,6 +116,7 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
   private updateClientDetails() {
     if (this.hasClientDetailsMismatch()) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
+      this.clientForm.controls.refId.setValue(this.clientForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
       const updateClientModel = this.clientForm.value as UpdateClient;
       updateClientModel.ModifiedBy = this.authService.getLoggedUserInfo()?.displayName;
       this.updateClientSubscription = this.clientService.updateClient(this.clientDetails.id, updateClientModel)

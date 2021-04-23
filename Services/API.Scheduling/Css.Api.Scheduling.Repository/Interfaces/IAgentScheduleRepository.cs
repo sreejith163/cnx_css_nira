@@ -2,6 +2,7 @@
 using Css.Api.Core.Models.Domain.NoSQL;
 using Css.Api.Core.Models.Enums;
 using Css.Api.Scheduling.Models.DTO.Request.AgentAdmin;
+using Css.Api.Scheduling.Models.DTO.Request.AgentCategoryValueView;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedule;
 using Css.Api.Scheduling.Models.DTO.Request.AgentSchedulingGroup;
 using System;
@@ -204,6 +205,9 @@ namespace Css.Api.Scheduling.Repository.Interfaces
         void DeleteAgentSchedule(EmployeeIdDetails employeeIdDetails);
 
         Task<List<AgentSchedule>> GetAgentScheduleIdForRelease(ReleaseRangeDetails releaseRangeDetails);
+
+
+       void ImportUpdateAgentScheduleWithRanges(EmployeeIdDetails employeeIdDetails, ImportUpdateAgentSchedule importUpdateAgentSchedule);
     }
 }
 

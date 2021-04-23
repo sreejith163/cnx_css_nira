@@ -368,7 +368,8 @@ namespace Css.Api.Scheduling.Repository
                                 LastName = agent.LastName,
                                 AgentSchedulingGroupId = agent.AgentSchedulingGroupId,
                                 ChartsCount = 0,
-                            };
+                                ChartsStartDateTime = DateTime.MaxValue
+                        };
                             mappedAgentScheduleManagers.Add(agentScheduleManager);
                         }
                     }
@@ -378,6 +379,7 @@ namespace Css.Api.Scheduling.Repository
                         mappedAgentScheduleManager.FirstName = agent?.FirstName;
                         mappedAgentScheduleManager.LastName = agent?.LastName;
                         mappedAgentScheduleManager.ChartsCount = mappedAgentScheduleManager.Charts.Count;
+                        mappedAgentScheduleManager.ChartsStartDateTime = mappedAgentScheduleManager.Charts.Count != 0 ? mappedAgentScheduleManager.Charts.Min(x => x.StartDateTime) : DateTime.MaxValue;
                     }
                 }
 

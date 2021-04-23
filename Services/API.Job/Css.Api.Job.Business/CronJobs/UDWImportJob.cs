@@ -79,7 +79,7 @@ namespace Css.Api.Job.Business.CronJobs
             try
             {
                 var reqMessage = _httpService.CreateHttpRequestMessage(_job);
-                var responseMessage = await _httpService.SendAsync(reqMessage);
+                var responseMessage = await _httpService.SendAsync(reqMessage, 15);
                 var response = await responseMessage.Content.ReadAsStringAsync();
 
                 if (responseMessage.IsSuccessStatusCode)
