@@ -54,7 +54,7 @@ namespace Css.Api.Reporting.Repository
         public async Task<List<AgentSchedule>> GetSchedules(List<string> agentIds)
         {
             var query = Builders<AgentSchedule>.Filter.Eq(i => i.IsDeleted, false) &
-                Builders<AgentSchedule>.Filter.Where(i => agentIds.Contains(i.EmployeeId));
+                Builders<AgentSchedule>.Filter.In(i => i.EmployeeId, agentIds);
 
             var schedules = FilterBy(query);
 

@@ -91,7 +91,7 @@ namespace Css.Api.Reporting.Business.Sources
 
             ScheduleFilter filter = new ScheduleFilter()
             {
-                AgentIds = cnxFilter.AgentIds,
+                AgentIds = cnxFilter.AgentIds.Select(x => { return x.Trim(); }).ToList(),
                 StartDate = cnxFilter.StartDate,
                 EndDate = cnxFilter.EndDate
             };

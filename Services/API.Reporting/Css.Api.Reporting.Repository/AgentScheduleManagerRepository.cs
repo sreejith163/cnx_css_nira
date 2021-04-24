@@ -34,7 +34,7 @@ namespace Css.Api.Reporting.Repository
         public async Task<List<AgentScheduleManager>> GetManagerSchedules(List<string> agentIds)
         {
             var query = Builders<AgentScheduleManager>.Filter.Where(i => agentIds.Contains(i.EmployeeId));
-
+            
             var schedules = FilterBy(query);
 
             return await Task.FromResult(schedules.ToList());
@@ -48,7 +48,7 @@ namespace Css.Api.Reporting.Repository
         public async Task<List<AgentScheduleManager>> GetManagerSchedules(List<string> agentIds, List<DateTime> dates)
         {
             List<DateTime> schDates = dates.Select(x => { return new DateTime(x.Year, x.Month, x.Day, 0, 0, 0, DateTimeKind.Utc); }).ToList();
-
+            
             var query = Builders<AgentScheduleManager>.Filter.Where(i => agentIds.Contains(i.EmployeeId)) &
                         Builders<AgentScheduleManager>.Filter.Where(i => schDates.Contains(i.Date));
 
@@ -66,6 +66,7 @@ namespace Css.Api.Reporting.Repository
         public async Task<List<AgentScheduleManager>> GetManagerSchedules(string agentId, DateTime fromDate)
         {
             fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0, DateTimeKind.Utc);
+
             var query = Builders<AgentScheduleManager>.Filter.Eq(i => i.EmployeeId, agentId) &
                         Builders<AgentScheduleManager>.Filter.Where(i => i.Date >= fromDate);
 
@@ -120,7 +121,7 @@ namespace Css.Api.Reporting.Repository
                                     updatedAgentSchedulingGroupDetails.StartDate.Month, updatedAgentSchedulingGroupDetails.StartDate.Day,
                                     0, 0, 0, DateTimeKind.Utc);
 
-            var query = Builders<AgentScheduleManager>.Filter.Where(i => i.EmployeeId == updatedAgentSchedulingGroupDetails.EmployeeId
+            var query = Builders<AgentScheduleManager>.Filter.Where(i => i.EmployeeId.Equals(updatedAgentSchedulingGroupDetails.EmployeeId)
                                                                     && i.Date >= updatedAgentSchedulingGroupDetails.StartDate);
             var update = Builders<AgentScheduleManager>.Update
                             .Set(x => x.AgentSchedulingGroupId, updatedAgentSchedulingGroupDetails.CurrentAgentSchedulingGroupId);
@@ -140,7 +141,7 @@ namespace Css.Api.Reporting.Repository
                                     updatedAgentSchedulingGroupDetails.StartDate.Month, updatedAgentSchedulingGroupDetails.StartDate.Day,
                                     0, 0, 0, DateTimeKind.Utc);
 
-                var query = Builders<AgentScheduleManager>.Filter.Where(i => i.EmployeeId == updatedAgentSchedulingGroupDetails.EmployeeId 
+                var query = Builders<AgentScheduleManager>.Filter.Where(i => i.EmployeeId.Equals(updatedAgentSchedulingGroupDetails.EmployeeId) 
                                                                     && i.Date >= updatedAgentSchedulingGroupDetails.StartDate);
                 var update = Builders<AgentScheduleManager>.Update
                                 .Set(x => x.AgentSchedulingGroupId, updatedAgentSchedulingGroupDetails.CurrentAgentSchedulingGroupId);
