@@ -786,7 +786,7 @@ namespace Css.Api.Reporting.Business.Services
             contentLine.ForEach(line =>
             {
                 lineCount++;
-                var pattern = new Regex(@"^(?'actDate'\d{4}((0\d)|(1[012]))(([012]\d)|3[01]))[|](?'schDate'\d{4}((0\d)|(1[012]))(([012]\d)|3[01]))[|](?'empNo'\d+)[|](?'actText'(\w*\s*)*)[|](?'startTime'([01]?[0-9]|2[0-3]):[0-5][0-9])[|](?'endTime'([01]?[0-9]|2[0-3]):[0-5][0-9])$");
+                var pattern = new Regex(@"^(?'actDate'\d{4}((0\d)|(1[012]))(([012]\d)|3[01]))[|](?'schDate'\d{4}((0\d)|(1[012]))(([012]\d)|3[01]))[|](?'empNo'\w+)[|](?'actText'(\w*\s*)*)[|](?'startTime'([01]?[0-9]|2[0-3]):[0-5][0-9])[|](?'endTime'([01]?[0-9]|2[0-3]):[0-5][0-9])$");
                 var match = pattern.Match(line.Trim());
 
                 if (match.Success)
@@ -796,7 +796,7 @@ namespace Css.Api.Reporting.Business.Services
                     {
                         LineNo = lineCount,
                         Data = line,
-                        EmpNo = matchGroups.Where(x => x.Name == "empNo").Select(x => x.Value).FirstOrDefault() ?? "",
+                        EmpNo = (matchGroups.Where(x => x.Name == "empNo").Select(x => x.Value).FirstOrDefault() ?? "").Trim(),
                         ActDate = matchGroups.Where(x => x.Name == "actDate").Select(x => x.Value).FirstOrDefault() ?? "",
                         SchDate = matchGroups.Where(x => x.Name == "schDate").Select(x => x.Value).FirstOrDefault() ?? "",
                         ActText = matchGroups.Where(x => x.Name == "actText").Select(x => x.Value).FirstOrDefault() ?? "",
@@ -831,20 +831,20 @@ namespace Css.Api.Reporting.Business.Services
             {
                 DateTime schDate, startDateTime = DateTime.MinValue, endDateTime = DateTime.MinValue;
                 TimeSpan startTime, endTime;
-                int empNo = 0;
+
                 string employeeNo = calendarChartData.EmpNo;
                 var code = schedulingCodes.FirstOrDefault(x => x.Name.Equals(calendarChartData.ActText.Trim()));
 
-                bool empStatus = (int.TryParse(calendarChartData.EmpNo, out empNo) || empNo == 0);
-                bool empValueStatus = agents.Any(x => x.Ssn.Equals(empNo));
+                bool empStatus = !string.IsNullOrWhiteSpace(employeeNo);
+                bool empValueStatus = agents.Any(x => x.Ssn.Equals(employeeNo));
                 bool actStatus = DateTime.TryParseExact(calendarChartData.ActDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out schDate);
                 bool schStatus = DateTime.TryParseExact(calendarChartData.SchDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out schDate);
                 bool actTextStatus = !string.IsNullOrWhiteSpace(calendarChartData.ActText);
                 bool codeStatus = code != null;
                 bool allDateStatus = false;
-                bool startTimeStatus = TimeSpan.TryParseExact(string.Join(":",calendarChartData.ActStartTime,"00"), "g", CultureInfo.InvariantCulture, out startTime);
-                bool endTimeStatus = TimeSpan.TryParseExact(string.Join(":",calendarChartData.ActEndTime,"00"), "g", CultureInfo.InvariantCulture, out endTime);
-                
+                bool startTimeStatus = TimeSpan.TryParseExact(string.Join(":", calendarChartData.ActStartTime, "00"), "g", CultureInfo.InvariantCulture, out startTime);
+                bool endTimeStatus = TimeSpan.TryParseExact(string.Join(":", calendarChartData.ActEndTime, "00"), "g", CultureInfo.InvariantCulture, out endTime);
+
                 if (empStatus && schStatus && startTimeStatus && endTimeStatus)
                 {
                     bool startStatus = false;
@@ -866,7 +866,7 @@ namespace Css.Api.Reporting.Business.Services
                     }
                     else
                     {
-                        // invalidEmpDates[empNo].Add(schDate);
+                        invalidEmpDates[employeeNo].Add(schDate);
                     }
                 }
 
@@ -875,11 +875,11 @@ namespace Css.Api.Reporting.Business.Services
                 //    invalidEmpDates[empNo].Add(schDate);
                 //}
 
-                bool parseStatus = empStatus && empValueStatus && schStatus && actTextStatus 
+                bool parseStatus = empStatus && empValueStatus && schStatus && actTextStatus
                         && codeStatus && allDateStatus;
 
                 if (parseStatus)
-                { 
+                {
                     calendarChartData.Chart = new CalendarChart()
                     {
                         EmployeeId = employeeNo,

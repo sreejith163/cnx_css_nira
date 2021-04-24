@@ -101,6 +101,8 @@ namespace Css.Api.Reporting.Business.Targets
         {
             var content = Encoding.Default.GetString(feed.Content);
             var scheduleUpdate = JsonConvert.DeserializeObject<ActivityScheduleUpdate>(content);
+            scheduleUpdate.AgentId = scheduleUpdate.AgentId.Trim();
+
             ActivityApiData activityApiData = new ActivityApiData()
             {
                 AgentId = scheduleUpdate.AgentId,
