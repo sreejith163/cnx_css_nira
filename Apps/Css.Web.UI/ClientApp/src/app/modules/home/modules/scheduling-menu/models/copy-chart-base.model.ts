@@ -1,5 +1,5 @@
 export class CopyChartBase {
-    employeeIds: number[];
+    employeeIds: string[];
     agentSchedulingGroupId: number;
     activityOrigin: number;
     modifiedUser: number;

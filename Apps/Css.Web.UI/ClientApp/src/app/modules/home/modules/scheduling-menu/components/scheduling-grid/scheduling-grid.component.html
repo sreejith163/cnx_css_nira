@@ -17,49 +17,52 @@
     (keywordToSearch)="search($event)" (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
   </app-scheduling-filter>
 
-  <div class="card card-primary card-outline card-outline-tabs">
+  <div class="card card-primary card-outline card-outline-tabs mt-3 ">
     <div class="card-header p-0 border-bottom-0">
       <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
         <li class="pull-right marign-l-auto margin-5">
+          <button class="btn btn-success mr-2 btn-sm" (click)="openBatchRelease(batchRelease)">Batch Release</button>
           <!-- <img src="assets/images/Export.jpg" class="icon-image float-right padding-2" [ngbTooltip]="'Export'"
             (click)="exportToExcel()">
           <img src="assets/images/Import.jpg" [ngClass]="{'disable-img': !agentSchedulingGroupId}"
             class="icon-image float-right padding-2" [ngbTooltip]="'Import'" (click)="openImportSchedule()"> -->
-            <button [ngbTooltip]="'Import csv'" *ngIf="agentSchedulingGroupId" (click)="openImportSchedule()" class="btn btn-primary d  mr-2"><i class="fa fa-upload"></i></button>
-            <button [ngbTooltip]="'Export csv'" *ngIf="agentSchedulingGroupId" (click)="exportToExcel()" class="btn btn-primary d  mr-2"><i class="fa fa-download"></i></button>            
+          <button [ngbTooltip]="'Import csv'" *ngIf="agentSchedulingGroupId" (click)="openImportSchedule()"
+            class="btn btn-primary d btn-sm  mr-2"><i class="fa fa-upload"></i></button>
+          <button [ngbTooltip]="'Export csv'" *ngIf="agentSchedulingGroupId" (click)="exportToExcel()"
+            class="btn btn-primary d  mr-2 btn-sm"><i class="fa fa-download"></i></button>
         </li>
       </ul>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12 mt-2 table-responsive">
-      <div class="scrollable-table">
-        <table id="tableSortExample " class="table table-bordered table-striped">
+  <div class="row mt-3">
+    <div class="col-md-12 mt-2">
+      <div class="">
+        <table (contextmenu)="disableRightClick($event)" id="tableSortExample " class="table table-bordered table-striped" style="table-layout: fixed;">
           <thead>
             <tr>
-              <th></th>
-              <th class="sortable-field" (click)="sort('employeeId', sortBy)">
+              <th style="width: 5%;"></th>
+              <th class="sortable-field emp_id_head" (click)="sort('employeeId', sortBy)">
                 {{ 'Employee_id' | translate }}
                 <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field" (click)="sort('lastName', sortBy)">
+              <th style="" class="sortable-field name_head" (click)="sort('lastName', sortBy)">
                 {{ 'Name' | translate }}
                 <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field" (click)="sort('dateFrom', sortBy)">
+              <th style="" class="sortable-field date_range_head" (click)="sort('dateFrom', sortBy)">
                 {{ 'Date_range' | translate }}
                 <i *ngIf="orderBy !== 'dateFrom'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'dateFrom'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field" (click)="sort('status', sortBy)">
+              <th style="" class="sortable-field status_head" (click)="sort('status', sortBy)">
                 {{ 'Status' | translate }}
                 <i *ngIf="orderBy !== 'status'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'status'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
@@ -80,14 +83,14 @@
                 [class.fa-sort-up]="sortBy === 'asc'">
               </i>
             </th> -->
-              <th class="sortable-field" (click)="sort('modifiedBy', sortBy)">
+              <th style="width:15.83333333333333%" class="sortable-field" (click)="sort('modifiedBy', sortBy)">
                 {{ 'Modified_by' | translate }}
                 <i *ngIf="orderBy !== 'modifiedBy'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'modifiedBy'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
                   [class.fa-sort-up]="sortBy === 'asc'">
                 </i>
               </th>
-              <th class="sortable-field" (click)="sort('modifiedDate', sortBy)">
+              <th class="sortable-field modified_head" (click)="sort('modifiedDate', sortBy)">
                 {{ 'Modified_date' | translate }}
                 <i *ngIf="orderBy !== 'modifiedDate'" class="fa fa-sort"></i>
                 <i id="sortIcon" *ngIf="orderBy === 'modifiedDate'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
@@ -104,8 +107,8 @@
             </tr>
             <ng-container *ngFor="let el of totalSchedulingGridData; let i = index">
               <tr class="table-row">
-                <td>
-                  <i class="expand-icon fa padding-5 pointer"
+                <td class="text-center">
+                  <i *ngIf="el.ranges.length > 0" class="expand-icon fa padding-5 pointer"
                     [ngClass]="( selectedGrid?.employeeId === el?.employeeId ) ? 'fa-minus' : 'fa-plus'"
                     (click)="toggleDetails(el)"></i>
                 </td>
@@ -117,12 +120,33 @@
                   </span>
                 </td>
                 <td class="d-flex">
-                  <div class="btn-group" dropdown [placement]="'top'" container="body" [isDisabled]="el.ranges.length === 0">
+                  <div class="btn-group" dropdown [placement]="'top'" container="body"
+                    [isDisabled]="el.ranges.length === 0">
                     <button id="button-custom-html" dropdownToggle type="button"
                       class="btn btn-defaulty dropdown-toggle" aria-controls="dropdown-custom-html">
                       {{ getSelectedRange(el) }} <span class="caret"></span>
                     </button>
-                    <ul id="dropdown-custom-html" *dropdownMenu class="dropdown-menu" role="menu"
+
+                    <div class="dropdown">
+                      <div *dropdownMenu class="dropdown-menu pre-scrollable" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item cursor-pointer" *ngFor="let range of el.ranges; let i = index;" (click)="onDateRangeChange(i, el)">
+                          <ng-container [ngSwitch]="range.status">
+                            <ng-container *ngSwitchCase="1">
+                              <span class="badge badge-pill badge-warning">Pending</span>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="2">
+                              <span class="badge badge-pill badge-success">Released</span>
+                            </ng-container>
+                          </ng-container>
+                          <span class="padding-left-15">
+                            <span>{{range.dateFrom }}</span>
+                            <span *ngIf="range.dateTo"> — </span>
+                            <span>{{ range.dateTo }}</span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                    <!-- <ul id="dropdown-custom-html" *dropdownMenu class="rangeDropDown dropdown-menu" role="menu"
                       aria-labelledby="button-custom-html">
                       <li *ngFor="let range of el.ranges; let i = index;" role="menuitem">
                         <a class="custom-dropdown dropdown-item cursor-pointer" (click)="onDateRangeChange(i, el)">
@@ -136,17 +160,16 @@
                           </ng-container>
                           <span class="padding-left-15">
                             <span>{{range.dateFrom | date: 'yyyy-MM-dd'}}</span>
-                            <span *ngIf="range.dateTo">-</span>
+                            <span *ngIf="range.dateTo"> - </span>
                             <span>{{ range.dateTo | date: 'yyyy-MM-dd'}}</span>
                           </span>
                         </a>
                       </li>
-                    </ul>
+                    </ul> -->
                     <span>
-                      <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1"
-                        (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i>
-                      <i class="fa fa-trash padding-5 pointer m-t-5"
-                        *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1"
+                      <!-- <i class="fa fa-edit padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1"
+                        (click)="editDateRange(el)" [ngbTooltip]="'Edit'"></i> -->
+                      <i class="fa fa-trash padding-5 pointer m-t-5" *ngIf="el?.ranges[getRangeIndex(el)]?.status === 1"
                         (click)="deleteDateRange(el)" [ngbTooltip]="'Delete'"></i>
                       <i class="fa fa-calendar-plus-o float-right padding-5 m-t-5" aria-hidden="true"
                         (click)="addDateRange(el)" [ngbTooltip]="'Add'"></i>
@@ -154,7 +177,7 @@
                   </div>
                 </td>
                 <td>
-                  <select class="form-control" (change)="setSchedulingStatus($event, el)"
+                  <select class="form-control status_drpDown form-control-sm" (change)="setSchedulingStatus($event, el)"
                     [disabled]="hasStatusDisabled(el)">
                     <option *ngIf="!el?.ranges[getRangeIndex(el)]?.status">{{ 'Please select a status' | translate }}
                     </option>
@@ -167,24 +190,24 @@
                 <td>{{el?.ranges[getRangeIndex(el)]?.modifiedBy}}</td>
                 <td>{{el?.ranges[getRangeIndex(el)]?.modifiedDate | date: 'yyyy-MM-dd'}}</td>
               </tr>
-              <ng-container>
+              <ng-container *ngIf="el.ranges.length > 0">
                 <tr class="row-details" *ngIf="selectedGrid?.employeeId === el?.employeeId"
                   [@enterAnimation]="selectedGrid?.employeeId === el?.employeeId">
                   <td colspan="12">
                     <div class="jsgrid-grid-body">
                       <div class="row">
-                        <div class="col-md-4 col-sm-4 row">
+                        <div class="col-md-5 col-sm-5 row">
                           <p class="float-left">
                             {{ 'Time Interval' | translate }}:
                           </p>
-                          <select class="form-control width-sm" [(ngModel)]="timeIntervals"
+                          <select class="form-control width-sm input-sm" [(ngModel)]="timeIntervals"
                             (change)="changeTimeInterval($event.target.value)">
                             <ng-container *ngFor="let interval of schedulingIntervals; let i = index">
                               <option [value]="interval.id">{{ interval.value }}</option>
                             </ng-container>
                           </select>
                         </div>
-                        <div class="col-md-4 col-sm-4">
+                        <!--<div class="col-md-4 col-sm-4"> //removed requested by Project Owner. Reason: redundant details
                           <p class="text-center">
                             {{ 'Agent' | translate }}:
                             {{ selectedGrid.lastName + ' ' + selectedGrid.firstName }}
@@ -195,18 +218,19 @@
                             {{ 'Date' | translate }}:
                             {{ selectedGrid.dateFrom | date: 'yyyy-MM-dd'}} <span *ngIf="selectedGrid.dateTo">-</span>
                             {{selectedGrid.dateTo | date: 'yyyy-MM-dd'}}</p>
-                        </div>
+                        </div>-->
                       </div>
                       <div class="row">
                         <div class="col-sm-12" cdkDropList (cdkDropListDropped)="dragged($event)">
                           <div class="row">
-                            <div class="col-md-12 col-sm-12 align"
+                            <div class="col-md-12 col-sm-12 align icons_container"
                               style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
                               unselectable="on">
                               <span>
-                                <i class="fa fa-angle-double-left arrow-icon" aria-hidden="true" (click)="toBeginning()"
+                                <i class="fa fa-angle-double-left arrow-icon float-icon-left" aria-hidden="true" (click)="toBeginning()"
                                   [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
-                                <i class="fa fa-caret-left arrow-icon" aria-hidden="true" (click)="previous()"
+                                <i style="width: 50px;" class="fa fa-caret-left arrow-icon float-icon-left" aria-hidden="true"
+                                  (click)="previous()"
                                   [ngClass]="(startIcon == 0) ? 'arrow-icon-disabled'  :  'arrow-icon' "></i>
                               </span>
                               <ng-container
@@ -220,97 +244,121 @@
                                     {{ unifiedToNative(code.icon.value) }}</span></i>
                               </ng-container>
                               <span>
-                                <i class="fa fa-caret-right arrow-icon" aria-hidden="true" (click)="next()"
+                                <i class="fa fa-angle-double-right arrow-icon float-icon-right" aria-hidden="true" (click)="toEnd()"
+                                [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
+                           
+                                <i style="width: 50px;" class="fa fa-caret-right arrow-icon float-icon-right" aria-hidden="true"
+                                  (click)="next()"
                                   [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-                                <i class="fa fa-angle-double-right arrow-icon" aria-hidden="true" (click)="toEnd()"
-                                  [ngClass]="(endIcon == schedulingCodes.length) ? 'arrow-icon-disabled' :  'arrow-icon'"></i>
-                              </span>
+                                </span>
                             </div>
                           </div>
                           <br>
-                          <div class="row table-responsive" [style.max-width]="getGridMaxWidth()">
-                            <ngx-spinner [name]="scheduleSpinner"></ngx-spinner>
-                            <div class="col-md-12 col-sm-12">
-                              <table class="jsgrid-table table" id="schedulingGridTable">
+
+                          <ngx-spinner [name]="scheduleSpinner"></ngx-spinner>
+                          <!-- <div class="col-md-1 col-sm-1 p-0">
+                              <table class="jsgrid-table table">
                                 <tbody>
-                                  <tr class="jsgrid-header-row">
-                                    <th class="jsgrid-header-cell jsgrid-header-sortable">
-                                    </th>
-                                    <ng-container *ngFor="let data of openTimes;">
-                                      <ng-container *ngIf="isMainMinute(data); else subMinutes">
-                                        <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
-                                          class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                                          {{ data.split(':')[0] === '00' ? '12' : data.split(':')[0] }}
-                                        </th>
-                                      </ng-container>
-                                      <ng-template #subMinutes>
-                                        <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
-                                          class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
-                                          <sup>{{ data.split(':')[1].split(' ')[0] }}</sup>
-                                        </th>
-                                      </ng-template>
-                                    </ng-container>
+                                  <tr class="jsgrid-row user-select-none">
+                                    <td class="weekDayCell" style="background-color: #ffffff;"></td>
                                   </tr>
                                   <tr class="jsgrid-row user-select-none" *ngFor="let week of weekDays; let i = index">
-                                    <td class="jsgrid-cell-week">
+                                    <td class="text-center jsgrid-cell-week weekDayCell">
                                       {{ weekDay[week] | slice: 0 : 3 }}
-                                    </td>
-                                    <td id="grid_col_{{week}}_{{j}}" class="jsgrid-cell"
-                                      attr.time="{{ openTime.split(' ')[0] }}"
-                                      attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}" [attr.week]="week"
-                                      *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
-                                      (mouseover)="onMouseOver($event)"  (mousedown)="onMouseDown($event)"
-                                      [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
-                                      <!-- <ng-container *ngIf="getIconFromSelectedGrid(week, openTime)?.length"> -->
-                                        <!-- <span ngbTooltip="{{ getIconDescription(week, openTime) }}">
-                                          <i class="font-style-normal">{{ getIconFromSelectedGrid(week, openTime)
-                                            }}</i>
-                                        </span> -->
-                                        <!-- {{ ( week | getIconForSchedulingGrid: openTime: selectedGrid: schedulingCodes: timeStampUpdate)?.startTime }}
-                                        {{ ( week | getIconForSchedulingGrid: openTime: selectedGrid: schedulingCodes: timeStampUpdate)?.endTime }} -->
-                                        <span>
-                                          <i class="font-style-normal">{{ ( week | getIconForSchedulingGrid: openTime: selectedGrid: schedulingCodes: timeStampUpdate) }}</i>
-                                        </span>
-                                      <!-- </ng-container> -->
                                     </td>
                                   </tr>
                                 </tbody>
                               </table>
-                            </div>
+                            </div> -->
+                          <div class="col-md-12 col-sm-12 p-0 grid_table">
+                            <table class="jsgrid-table table " id="schedulingGridTable">
+                              <thead class="">
+                                <tr>
+                                  <th class="weekDayCell" style="background-color: #ffffff;"></th>
+                                  <ng-container *ngFor="let data of openTimes;">
+                                    <ng-container *ngIf="isMainMinute(data); else subMinutes">
+                                      <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                                        class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                                        {{ data.split(':')[0] === '00' ? '12' : data.split(':')[0] }}
+                                      </th>
+                                    </ng-container>
+                                    <ng-template #subMinutes>
+                                      <th [ngClass]="data.split(' ')[1] === 'am' ? 'morning' : 'night'"
+                                        class="jsgrid-header-cell jsgrid-header-sortable user-select-none">
+                                        <sup>{{ data.split(':')[1].split(' ')[0] }}</sup>
+                                      </th>
+                                    </ng-template>
+                                  </ng-container>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <!-- <tr class="jsgrid-header-row">
+
+                                    <th class="jsgrid-header-cell jsgrid-header-sortable">
+                                    </th> 
+
+                                  </tr> -->
+                                <tr class="jsgrid-row user-select-none" *ngFor="let week of weekDays; let i = index">
+                                  <!-- <td class="jsgrid-cell-week">
+                                      {{ weekDay[week] | slice: 0 : 3 }}
+                                    </td> -->
+
+                                  <td class="text-center jsgrid-cell-week weekDayCell text-white"
+                                    style="font-size: 14px;">
+                                    {{ weekDay[week] | slice: 0 : 3 }}
+                                  </td>
+
+                                  <td id="grid_col_{{week}}_{{j}}" class="jsgrid-cell"
+                                    attr.time="{{ openTime.split(' ')[0] }}"
+                                    attr.meridiem="{{ openTime.split(':')[1].split(' ')[1] }}" [attr.week]="week"
+                                    *ngFor="let openTime of openTimes;let j = index" (mouseup)="onMouseUp($event)"
+                                    (mouseover)="onMouseOver($event)" (contextmenu)="onRightClick($event)" (mousedown)="onMouseDown($event)"
+                                    [ngClass]="openTime.split(' ')[1] === 'am' ? 'morning' : ''">
+                                    <span>
+                                      <i class="font-style-normal">{{ ( week | getIconForSchedulingGrid: openTime:
+                                        selectedGrid: schedulingCodes: timeStampUpdate) }}</i>
+                                    </span>
+                                    <!-- </ng-container> -->
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
                           </div>
+
                         </div>
                       </div>
                     </div>
-                    <div class="row padding-10">
-                      <div class="col-md-12 padding-12 row">
-                        <div class="col-s-2 m-b-5">
-                          <button [disabled]="el?.ranges[getRangeIndex(el)]?.scheduleCharts?.length === 0 || !el?.ranges[getRangeIndex(el)]?.scheduleCharts"
-                            class="btn btn-success" id="btn_copy_schedule" (click)="openCopySchedule(el)">
-                            <i class="fa fa-clipboard padding-5 black"></i>{{ 'Copy Schedule' | translate }}
-                          </button>
-                        </div>
-                        <div class="col-md-2 m-b-3">
-                          <button [disabled]="!selectedGrid?.dateFrom" class="btn btn-primary btn-activity"
-                            id="btn_activity_logs" *ngIf="canShowActivityLog()" (click)="openActivityLogs(el)">
-                            {{ 'Activity Logs' | translate }}
-                          </button>
-                        </div>
-                        <div class="col-md-6 m-b-5"></div>
-                        <div class="col-md-1  m-b-5">
-                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 2"
-                            class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="save(el)" id="btn_save">
-                            <i class="fa fa-save padding-5"></i>{{ 'Save' | translate }}
-                          </button>
-                        </div>
-                        <div class="col-s-1  m-b-5">
-                          <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 2"
-                            class="btn btn-primary m-l-6 float-r" data-dismiss="modal" (click)="cancel()"
-                            id="btn_cancel">
-                            <i class="fa fa-times padding-5"></i>{{ 'Cancel' | translate }}
-                          </button>
-                        </div>
+                    <div class="col-lg-12 p-0 mt-3">
+
+
+                      <div class="button-wrapper btn-container-left float-right">
+                        <button
+                          [disabled]="el?.ranges[getRangeIndex(el)]?.scheduleCharts?.length === 0 || !el?.ranges[getRangeIndex(el)]?.scheduleCharts"
+                          class="btn btn-success btn-sm" id="btn_copy_schedule" (click)="openCopySchedule(el)">
+                          <i class="fa fa-copy"></i>&nbsp;{{ 'Copy Schedule' | translate }}
+                        </button>
+                        <button [disabled]="!selectedGrid?.dateFrom" class="btn btn-primary btn-activity btn-sm"
+                          id="btn_activity_logs" *ngIf="canShowActivityLog()" (click)="openActivityLogs(el)">
+                          <i class="fa fa-tasks"></i>&nbsp;
+                          {{ 'Activity Logs' | translate }}
+                        </button>
+                        <button
+                          [disabled]="el?.ranges[getRangeIndex(el)]?.scheduleCharts?.length === 0 || !el?.ranges[getRangeIndex(el)]?.scheduleCharts"
+                          [ngbTooltip]="'Export by employee'" *ngIf="agentSchedulingGroupId"
+                          (click)="exportToExcelByEmployee(el.employeeId)" class="btn btn-primary btn-sm"><i
+                            class="fa fa-download"></i>&nbsp;Export
+                        </button>
+                        <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 2"
+                          class="btn btn-primary  btn-sm" data-dismiss="modal" (click)="save(el)" id="btn_save">
+                          <i class="fa fa-save"></i>&nbsp;{{ 'Save' | translate }}
+                        </button>
+                        <button [disabled]="!selectedGrid?.dateFrom || selectedGrid?.status == 2"
+                          class="btn btn-primary btn-sm" data-dismiss="modal" (click)="cancel()" id="btn_cancel">
+                          <i class="fa fa-times"></i>&nbsp;{{ 'Cancel' | translate }}
+                        </button>
                       </div>
                     </div>
+
                   </td>
                 </tr>
               </ng-container>
@@ -338,3 +386,61 @@
     </div>
   </div>
 </div>
+
+
+<ng-template #batchRelease let-modal class="modal_release">
+
+  <div class="modal-header header-color">
+    <h6 class="modal-title w-100 font-weight-bold header">
+      Batch Release
+
+    </h6>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');clearBatchReleaseData();">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+  <div class="modal-body  modal-style">
+    <div class="col-md-12 m-t-20">
+      <label for="" class=""><strong>Agent Scheduling Group</strong></label>
+      <ng-select [typeahead]="typeAheadInput$" (close)="asgClose()" placeholder="Select scheduling group"
+        [maxSelectedItems]="3" (scroll)="onAgentSchedulingGroupScroll($event)"
+        (scrollToEnd)="onAgentSchedulingGroupScrollToEnd()" [items]="asg" [multiple]="true" bindLabel="name"
+        [selectableGroup]="true" [closeOnSelect]="false" bindValue="id" [(ngModel)]="selectedAsg">
+
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <input style="display: none;" id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.name}}
+        </ng-template>
+      </ng-select>
+      
+      <small class="text-info">MAXIMUM 5 AGENT SCHEDULING GROUP CAN BE INCLUDED FOR BATCH RELEASE.</small>
+     <br>
+      <label for="" class="mt-3"><strong>Scheduled Date(s)</strong></label>
+      <ng-select groupBy="agentSchedulingGroup" (open)="dateRangeOpen()" placeholder="Select date range" [maxSelectedItems]="5" [items]="dateRange"
+        [multiple]="true" bindLabel="fullrange" [closeOnSelect]="false" [(ngModel)]="selectedRange">
+
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <input style="display: none;" id="itemrange-{{index}}" type="checkbox" [ngModel]="item$.selected" />
+          {{item.fullrange}}
+        </ng-template>
+      </ng-select>
+     
+    </div>
+  </div>
+  <div class="modal-footer d-flex justify-content-end header-color">
+    <div class="col-md-12 text-right">
+
+
+
+
+      <button  class="btn btn-danger btn-sm mr-2" data-dismiss="modal"
+        (click)="modal.dismiss('Cross click');clearBatchReleaseData();">Cancel</button>
+      <button [disabled]="selectedRange.length === 0"  class="btn btn-success btn-sm" (click)="confirmRelease()">
+        Release
+      </button>
+
+
+    </div>
+  </div>
+
+</ng-template>

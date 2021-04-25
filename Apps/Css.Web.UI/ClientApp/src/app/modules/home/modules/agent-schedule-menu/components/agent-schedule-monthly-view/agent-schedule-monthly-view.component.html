@@ -15,7 +15,7 @@
                     {{day}}
                 </div>
             </ng-container>
-            <ng-container *ngIf="myScheduleMonthly !== null; else noMonthlySched">
+            <ng-container *ngIf="myScheduleMonthly !== null">
                 <ng-container *ngFor="let schedule of myScheduleMonthly;">
                     <div class="calendarDays"
                     [ngClass]="{grey: !isSameMonth(schedule.date), now: isNow(schedule.date)}"
@@ -31,19 +31,7 @@
                     </ng-template>         
                     </div>
                 </ng-container>
-            </ng-container>
-            <ng-template #noMonthlySched>
-                <ng-container *ngFor="let schedule of dates;">
-                    <div class="calendarDays"
-                    [ngClass]="{grey: !isSameMonth(schedule), now: isNow(schedule)}"
-                    >
-                    <span class="text-right">{{schedule | date:'d'}}</span>
-                        <div class="text-xs">OFF</div>   
-                        <div class="text-xs spaceFiller">&nbsp;&nbsp;</div>            
-                    </div>
-                </ng-container>
-            </ng-template>
-            
+            </ng-container>            
         </div>
     </div>
     

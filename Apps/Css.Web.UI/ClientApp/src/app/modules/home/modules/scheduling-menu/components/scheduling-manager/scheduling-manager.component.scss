@@ -14,11 +14,18 @@
       padding-top: 3px;
     }
   }
-  
+  .drag-div{
+    padding-top: 40px;
+  }
+  .icons_container{
+    margin-top: -30px!important;
+  }
   .breadcrumb-item.active {
     color: inherit;
   }
-  
+  .text-xs{
+    font-size: 11px!important;
+  }
   .breadcrumb {
     background-color: inherit;
   }
@@ -31,7 +38,7 @@
     background-size: 23px;
     background-position: center;
   }
-  
+
   .icon-style {
     padding: 5px;
     cursor: pointer;
@@ -59,11 +66,18 @@
   .jsgrid-cell {
     cursor: pointer;
     background-color: white;
+    height: 30px!important;
+    width: 40px!important;
   }
+  
+  // .managerGridIcon{
+  //   height: 50px;
+  //   width: 61px;
+  // }
   
   .jsgrid-cell:hover {
     cursor: pointer;
-    background-color: lightgrey;
+    background-color: lightgrey !important;
   }
   
   .jsgrid-cell-week {
@@ -72,15 +86,25 @@
   
   .jsgrid-header-cell {
     cursor: pointer;
+    height: 40px!important;
+    width: 40px!important;
+  }
+  .table td {
+    padding: 9px 8px 10px 8px !important;
+  }
+  .jsgrid-row {
+    height: 30px;
   }
   
   .morning {
     background-color: white;
+    padding: 8px 8px 8px 8px;
   }
   
   .night {
     background-color: darkgrey;
     color: white;
+    padding: 8px 8px 8px 8px;
   }
   
   .cell-selected {
@@ -313,3 +337,205 @@
     pointer-events: none;
     cursor: default;
   }
+
+  // .table-container{
+  //   overflow-y: scroll;
+  //   overflow-x: hidden;
+  //   max-height: 400px;
+  // }
+
+  .sched-manager-scrollable{
+    // overflow-y: hidden;
+    overflow-x: scroll;
+    overflow-y:auto;
+    width:100%;
+    min-height: auto;
+    max-height:500px;
+  }
+ 
+  .level-trans{
+ position: fixed;
+ margin-left: 300px;
+ top: 56px;
+  background-color: #fff;
+    z-index: 9999;
+    width: auto;
+    text-align: center;
+    right: 0;
+    left: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.tscroll-fix{
+  background-color: #fff;
+  position: fixed;
+width: 100%;
+  top: 96px;
+
+    margin-left: 3px;
+}
+.sticky{
+  position: fixed;
+  top: 37px;
+  overflow: hidden;
+  z-index: 10;
+  width: auto;
+  left: 0;
+  right: 0;
+  margin-left: 300px;
+  background-color: #fff;
+  border-bottom: 1px solid #ced4da;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.sticky1{
+  position: fixed;
+  top: 44px;
+  overflow: hidden;
+  z-index: 9;
+  width: auto;
+  left: 7px;
+  right: 0;
+  margin-left: 300px;
+  background-color: #fff;
+  border-bottom: 1px solid #ced4da;
+  padding-top: 0px;
+  padding-bottom: 0;
+}
+
+.icons_container{
+  white-space: nowrap;
+  font-size: 12px !important;
+  overflow: auto;
+}
+
+.schedule_table_body td{
+  // height: 50px;
+  // width: 61px;
+}
+// .sticky2{
+//   position: fixed;
+//   top: 44px;
+//   overflow: hidden;
+//   z-index: 9;
+//   width: auto;
+  
+//   margin-left: 300px;
+//   background-color: #fff;
+//   border-bottom: 1px solid #ced4da;
+//   padding-top: 0px;
+//   padding-bottom: 0;
+// }
+// .main-table{
+//   position: relative;
+// }
+
+th {
+
+  width: 100px;
+}
+
+
+table {
+  table-layout: fixed;
+  width:100%;
+}
+.jsgrid-cell-empName{
+  position:sticky;
+  left:130px;
+  z-index:0!important;
+
+  min-width: 30%!important;
+  max-width: 30%!important;
+  background-color:#f0f0f0;
+	outline: .1px solid #d6d5d5;
+	outline-offset: -1px;
+
+}
+span.name_wrapper{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.jsgrid-cell-emp{
+  z-index: 0!important;
+}
+.employee_id_header{
+  background-color:#f0f0f0;
+	outline: .1px solid #d6d5d5;
+	outline-offset: -1px;
+  position:sticky;
+  left:100px;
+  z-index:1!important;
+  background-color:#f0f0f0;
+width: 130px;
+padding: .35rem!important;
+padding-left: 10px!important;
+}
+.name_header{
+  position:sticky;
+  left:130px;
+  z-index:1;
+  outline: .1px solid #d6d5d5;
+	outline-offset: -1px;
+  background-color:#f0f0f0;
+width: 205px;
+padding: .35rem!important;
+padding-left: 10px!important;
+}
+td:first-child, th:first-child{
+  position:sticky;
+  left:0;
+  z-index:1;
+  outline: .1px solid #d6d5d5;
+	outline-offset: -1px;
+  background-color:#f0f0f0;
+  min-width: 30%!important;
+  max-width: 30%!important;
+
+}
+tr.selected .jsgrid-cell-empName,
+tr.selected td:first-child{
+  background-color:#f0f0f0!important;
+}
+thead tr th {
+  position:sticky;
+  top:0;
+}
+.date_header{
+  height: 27px !important;
+  padding: 6px 0px 3px 5px;
+}
+.second_row th{
+  top: 27px!important;
+}
+sup{
+  left: 0px!important;
+}
+.whole{
+  text-align: center;
+}
+.button-wrapper .btn {
+  margin: 20px 0px;
+}
+.btn-container-left>.btn:first-of-type {
+  margin-left: 0;
+}
+.btn-container-left>.btn {
+  margin-left: 6px;
+  margin-right: 6px;
+}
+.agent_details_table th{
+  font-size: 14px;
+  padding: 8px 8px 8px 5px;
+}
+th{
+  font-size: 14px;
+}
+td{
+  font-size: 13px!important;
+}
+.no_match{
+  border: 0!important;
+  outline: none!important;
+}

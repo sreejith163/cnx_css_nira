@@ -15,11 +15,11 @@
   <div class="row m-l-r-10">
     <div class="col-md-2">
       {{ 'Client_name' | translate }}
-      <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
+      <app-client-name-typeahead [clientId]="clientId" (clientSelected)="setClient($event)"></app-client-name-typeahead>
     </div>
     <div class="col-md-3">
       {{ 'Client_lob_group' | translate }}
-      <app-client-lob-group-typeahead (clientLobSelected)="setClientLob($event)"></app-client-lob-group-typeahead>
+      <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId" [hierarchy]="true" (clientLobSelected)="setClientLob($event)"></app-client-lob-group-typeahead>
     </div>
     <div class="col-md-3 padding-bottom-5">
       <input type="text" class="form-control mt-4 padding-right-35" [(ngModel)]="searchKeyword"

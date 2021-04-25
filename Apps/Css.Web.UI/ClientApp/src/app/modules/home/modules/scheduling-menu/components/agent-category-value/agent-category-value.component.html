@@ -1,0 +1,178 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-md-12">
+      <h2 id="page_title">Agent Category Value<!--{{ 'Agent_category_value' | translate }}--></h2>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-left p-0">
+        <li class="breadcrumb-item"><a>{{ 'Scheduling_menu' | translate }}</a></li>
+        <li class="breadcrumb-item active"><b>Agent Category Value<!--{{ 'Agent_category_value_list' | translate }}--></b> </li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- <app-scheduling-filter [agentScheduleType]="0" (startDateSelected)="onSelectStartDate($event)"
+      (agentCategoryGroupSelected)="onAgentCategoryChange($event)" (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
+    </app-scheduling-filter> -->
+
+  <div class="row">
+    <div class="col-md-3 d-flex flex-column">
+      {{ 'Agent_scheduling_group' | translate }}
+      <app-agent-scheduling-group-typeahead [agentSchedulingGroupId]="agentSchedulingGroupId"
+        (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
+      </app-agent-scheduling-group-typeahead>
+    </div>
+    <div class="col-md-3 d-flex flex-column">
+      {{ 'Agent_category' | translate }}
+      <app-agent-category-typeahead [agentCategoryId]="agentCategoryId"
+        (agentCategorySelected)="onAgentCategoryChange($event)">
+      </app-agent-category-typeahead>
+    </div>
+    <div class="col-md-2 col-sm-6">
+      <button class="form-control mt-4" id="btn_search" (click)="search()"><i class="fa fa-search"
+          aria-hidden="true"></i>
+        {{ 'Search' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="card card-primary card-outline card-outline-tabs mt-3">
+    <div class="card-body  border-bottom-0 text-right py-2 px-0">
+
+        
+          <button [ngbTooltip]="'Import csv'"  (click)="openImportModal(content)"
+            class="btn btn-primary btn-sm   mr-2"><i class="fa fa-upload"></i></button>
+          <button [ngbTooltip]="'Export csv'" (click)="exportToExcel()"
+            class="btn btn-primary btn-sm mr-2"><i class="fa fa-download"></i></button>
+     
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 mt-2">
+      <div class="">
+        <table id="tableSortExample " class="table table-bordered table-striped" style="table-layout: fixed;">
+          <thead>
+            <tr>
+              <!-- <th>
+                Action
+              </th> -->
+              <th class="sortable-field" (click)="sort('ssn', sortBy)">
+                Employee ID
+                <i *ngIf="orderBy !== 'ssn'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'ssn'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('firstName', sortBy)">
+                First Name
+                <i *ngIf="orderBy !== 'firstName'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'firstName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th class="sortable-field" (click)="sort('lastName', sortBy)">
+                Last Name
+                <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
+                <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                  [class.fa-sort-up]="sortBy === 'asc'">
+                </i>
+              </th>
+              <th>Start Date</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+              <ng-container *ngIf="agentCategoryValueResponse?.length === 0;else found">
+                <tr><td colspan="5" class="text-center">No Items Found.</td></tr>
+              </ng-container>
+              <ng-template #found>
+                <tr *ngFor="let agentCategoryValue of agentCategoryValueResponse">
+                  <!-- <td></td> -->
+                  <td>{{agentCategoryValue.employeeId}}</td>
+                  <td>{{agentCategoryValue.firstName}}</td>
+                  <td>{{agentCategoryValue.lastName}}</td>
+                  <td>{{getAgentCategoryStartDate(agentCategoryValue.agentCategoryValues)}}</td>
+                  <td>{{getAgentCategoryValue(agentCategoryValue.agentCategoryValues)}}</td>
+                </tr>
+              </ng-template>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end mt-3">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination p-0 float-right">
+          <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalagentCategoryValueRecord" [rotate]="true" [maxSize]="10"
+            (pageChange)="changePage($event)" [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
+          </ngb-pagination>
+          <select class="form-control" (change)="changePageSize($event.target.value)">
+            <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+              {{ x.text | translate }}
+            </option>
+          </select>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  
+</div>
+
+
+<ng-template #content let-modal>
+  <ngx-spinner [name]="importSpinner"></ngx-spinner>
+  <!-- <ngx-spinner [name]="importSpinner"></ngx-spinner> -->
+  <div class="modal-header header-color">
+      <h6 class="modal-title w-100 font-weight-bold header">
+          <p>Import Agent Category Value
+          </p>
+      </h6>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');importClear();">
+          <span aria-hidden="true">&times;</span>
+      </button>
+
+  </div>
+  <div class="modal-body mx-3 modal-style">
+      <div class="col-md-12 m-t-20">
+          <div class="row">
+              <div class="col-md-10 col-sm-10 p-r-0">
+                  <!-- <input  type="file" name="files" class="form-control" 
+                  #uploads  (change)="onChangeFile(uploads.files)" accept=".csv" multiple
+                  value="process"/> -->
+                  <input value="process" name="files" #file id="fileLoader" type="file"
+                      (change)="onChangeFile(file.files)" accept=".csv"><br>
+                      
+                      
+                  <input (change)="onChangeFile(file.files)" (fileDropped)="onChangeFile(file.files)"
+                      class="form-control" placeholder="Choose file..." [(ngModel)]="uploadFile">
+              </div>
+              <div class="col-md-2 col-sm-2 p-l-0">
+                  <button class="btn btn-style" (click)="file.click()">
+                      {{ 'Browse' | translate }}
+                  </button>
+              </div>
+          </div>
+
+      </div>
+  </div>
+  <div class="modal-footer d-flex justify-content-center header-color">
+      <div class="col-md-12">
+          <div class="row">
+              <div class="col-md-8">
+
+              </div>
+              <div class="col-md-4">
+                  <button [disabled]="importBtn == false" (click)="importAgentCategoryValue()"  class="btn btn-primary float-r" data-dismiss="modal"
+                     >
+                      {{ 'Import' | translate }}
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+</ng-template>

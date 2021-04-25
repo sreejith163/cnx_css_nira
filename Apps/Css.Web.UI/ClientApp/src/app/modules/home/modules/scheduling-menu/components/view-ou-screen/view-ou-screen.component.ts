@@ -51,7 +51,7 @@ export class ViewOuScreenComponent implements OnInit {
   pageNumber = 1;
   skillGroupItemsBufferSize = 10;
   numberOfItemsFromEndBeforeFetchingMore = 10;
-  characterSplice = 25;
+  characterSplice = 100;
   totalItems = 0;
   totalPages: number;
   searchKeyWord = '';
@@ -268,9 +268,9 @@ avgOU: number;
       this.sumForecastedReq = response.reduce((a, b) => +a + +b.forecastedReq, 0);
       this.sumScheduledOpen = response.reduce((a, b) => +a + +b.scheduledOpen, 0);
 
-      this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2);
+      // this.sumForecastContact = parseFloat(this.sumForecastContact).toFixed(2);
       this.sumAHT = parseFloat(this.sumAHT).toFixed(2);
-      this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
+      // this.sumForecastedReq = parseFloat(this.sumForecastedReq).toFixed(2);
       this.sumScheduledOpen = parseFloat(this.sumScheduledOpen).toFixed(2);
       this.sumOU = '0.00';
       this.avgAHT = 0;
@@ -367,6 +367,7 @@ avgOU: number;
         var sched_open_length = this.scheduledOpenResponse.length;
         this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / parseFloat(sched_open_length.toString());
         this.avgScheduledOpenValue = parseFloat(this.avgScheduledOpen.toString()).toFixed(2);
+        //console.log(this.avgScheduledOpenValue)
      
       }
       else {
@@ -390,12 +391,13 @@ avgOU: number;
     const date = new Date(startDate);
     return date.toDateString();
   }
+
   getScheduledOpenCount1(time: string) {
   
   
-    var convertedTime = moment(time, 'hh:mm A').format('HH:mm:ss')
+    //var convertedTime = moment(time, 'hh:mm A').format('HH:mm:ss')
   
-    var chart =  this.scheduledOpenResponse.find(x => x.time === convertedTime.toString());
+    var chart =  this.scheduledOpenResponse.find(x => x.time === time.toString());
     // console.log(chart);
   
       if (chart) {    
@@ -475,13 +477,23 @@ avgOU: number;
     this.spinnerService.show(this.forecastSpinner, SpinnerOptions);
     this.getSkillGroupForecast = this.forecastService.getForecastDataById(this.skillGroupBinder?.id, this.convertNgbDateToString(this.dateModel)).subscribe((data) => {
       this.spinnerService.hide(this.forecastSpinner);
-      this.forecastID = data.forecastId;
-      this.forecastForm = this.formBuilder.group({
+     
+      if (data == null || data == undefined) {
+        this.getForecastDefaultValue();
 
-        forecastFormArrays: this.formBuilder.array(data.forecastData.map(datum => this.generateDatumFormGroup(datum))),
+        this.InsertUpdate = true;
+      } else {
+        this.forecastForm = this.formBuilder.group({
 
-      });
+          forecastFormArrays: this.formBuilder.array(data.forecastData.map(datum => this.generateDatumFormGroup(datum))),
+
+        });
     
+
+
+    
+
+      this.dataJson = data.forecastData;
 
 
       this.dataJson = data.forecastData;
@@ -524,11 +536,13 @@ avgOU: number;
       this.avgForecastedReq = parseFloat(this.sumForecastedReq) / nonZeroForecastedReq.length;
       this.avgScheduledOpen = parseFloat(this.sumScheduledOpen) / nonZeroScheduledOpen.length;
 
-      this.avgOU  = parseFloat(this.avgScheduledOpen.toString()) - parseFloat(this.avgForecastedReq.toString());
+
+      this.avgOU  = parseInt(this.avgScheduledOpenValue) - parseFloat(this.avgForecastedReq.toString());
       
       
 
       this.avgOUValue = parseFloat(this.avgOU.toString()).toFixed(2)
+
 
     // parse to string first
     this.avgForecastContactValue = this.avgForecastContact.toString();
@@ -540,7 +554,7 @@ avgOU: number;
     this.avgForecastContactValue = parseFloat(this.avgForecastContactValue).toFixed(2);
     this.avgForecastedReqValue = parseFloat(this.avgForecastedReqValue).toFixed(2);
 
-
+  }
     }, (error) => {
 
       this.spinnerService.hide(this.forecastSpinner);
@@ -651,7 +665,7 @@ avgOU: number;
     queryParams.pageSize = this.skillGroupItemsBufferSize;
     queryParams.pageNumber = this.pageNumber;
     queryParams.searchKeyword = searchkeyword ?? this.searchKeyWord;
-    queryParams.orderBy = undefined;
+    queryParams.orderBy = 'name';
     queryParams.fields = 'id, name';
 
     return queryParams;

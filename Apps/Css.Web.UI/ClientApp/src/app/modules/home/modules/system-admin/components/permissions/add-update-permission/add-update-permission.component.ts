@@ -74,7 +74,7 @@ export class AddUpdatePermissionComponent implements OnInit {
 
   submitUserPermissionForm() {
     this.formSubmitted = true;
-    if (this.userPermissionForm.valid) {
+    if (this.userPermissionForm.valid && this.validateEmployeeId()) {
       this.operation === ComponentOperation.Edit ? this.updateUserPermission() : this.addUserPermission();
     }
   }
@@ -152,6 +152,18 @@ export class AddUpdatePermissionComponent implements OnInit {
       });
   }
 
+  validateEmployeeId() {
+    this.userPermissionForm.controls.employeeId.setValue(this.userPermissionForm.controls.employeeId.value.toString().replace(/\B[a-zA-Z]/gi,""));
+    this.userPermissionForm.controls.employeeId.setValue(this.userPermissionForm.controls.employeeId.value.toString().replace(/[^A-Za-z0-9]/gi,""));
+    if (this.userPermissionForm.controls.employeeId.value) {
+      if (!isNaN(+this.userPermissionForm.controls.employeeId.value) && +this.userPermissionForm.controls.employeeId.value <= 0) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
   // Pop up messages
   private showErrorWarningPopUpMessage(contentMessage: string) {
     const options: NgbModalOptions = { backdrop: 'static', centered: true, size: 'sm' };
@@ -161,17 +173,6 @@ export class AddUpdatePermissionComponent implements OnInit {
     modalRef.componentInstance.messageType = ContentType.String;
 
     return modalRef;
-  }
-
-  isNumberKey(evt) {
-    const currentValue = this.userPermissionForm.controls.employeeId?.value;
-    const charCode = (evt.which) ? evt.which : evt.keyCode;
-    const isValid = currentValue.length <= 0 ? (charCode < 49 || charCode > 57) : (charCode < 48 || charCode > 57);
-    if (isValid) {
-      return false;
-    }
-
-    return true;
   }
 
   private createUserPermissionForm() {

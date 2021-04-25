@@ -3,5 +3,5 @@ import { QueryStringParameters } from 'src/app/shared/models/query-string-parame
 export class AgentMyScheduleQueryParams extends QueryStringParameters {
     agentSchedulingGroupId?: number;
     fromDate?: string;
-    employeeIds: number[];
+    employeeIds: string[];
 }

@@ -19,7 +19,7 @@ import { AgentScheduleChart } from '../../../models/agent-schedule-chart.model';
 import { ExcelService } from 'src/app/shared/services/excel.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ScheduleChart } from '../../../models/schedule-chart.model';
-
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-activity-logs-schedule',
@@ -60,11 +60,11 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
   subscriptions: ISubscription[] = [];
 
   @Input() activityType: ActivityType;
-  @Input() employeeId: number;
+  @Input() employeeId: string;
   @Input() employeeName: string;
-  @Input() startDate: Date;
-  @Input() dateFrom: Date;
-  @Input() dateTo: Date;
+  @Input() startDate: string;
+  @Input() dateFrom: string;
+  @Input() dateTo: string;
   @Input() schedulingCodes: SchedulingCode[] = [];
 
   constructor(
@@ -258,11 +258,18 @@ export class ActivityLogsScheduleComponent implements OnInit, OnDestroy {
     queryParams.fields = undefined;
     queryParams.employeeId = this.employeeId;
     queryParams.skipPageSize = true;
-    queryParams.dateFrom = this.activityType === ActivityType.SchedulingGrid ? this.getDateInStringFormat(this.dateFrom) : undefined;
-    queryParams.dateto = this.activityType === ActivityType.SchedulingGrid ? this.getDateInStringFormat(this.dateTo) : undefined;
-    queryParams.date = this.activityType === ActivityType.SchedulingManagerGrid ? this.getDateInStringFormat(this.startDate) : undefined;
+    queryParams.dateFrom = this.activityType === ActivityType.SchedulingGrid ? this.getFormattedDate(this.dateFrom) : undefined;
+    queryParams.dateto = this.activityType === ActivityType.SchedulingGrid ? this.getFormattedDate(this.dateTo) : undefined;
+    queryParams.date = this.activityType === ActivityType.SchedulingManagerGrid ? this.getFormattedDate(this.startDate) : undefined;
 
     return queryParams;
+  }
+
+  private getFormattedDate(date) {
+    let dt = new Date(date).toUTCString();
+    const transformedDate = moment(dt).format('YYYY-MM-DD');
+    console.log(transformedDate)
+    return transformedDate;
   }
 
   private loadActivityLogs() {

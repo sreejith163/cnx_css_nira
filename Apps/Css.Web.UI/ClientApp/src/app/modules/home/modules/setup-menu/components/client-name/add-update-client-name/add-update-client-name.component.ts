@@ -86,19 +86,15 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
     return (this.clientDetails.name !== this.clientForm.value.name || this.clientDetails.refId !== this.clientForm.value.refId);
   }
 
-  isNumberKey(evt) {
-    if(evt !== null){
-      const charCode = (evt.which) ? evt.which : evt.keyCode;
-      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
-      }
-      return true;
-    }else{
-      return false;
-    }
+  isSpecialChar(event)
+  {   
+    var k;  
+    k = event.charCode;
+    return((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57)); 
   }
 
   private addClientDetails() {
+    this.clientForm.controls.refId.setValue(this.clientForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
     const addClientModel = this.clientForm.value as AddClient;
     addClientModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
 
@@ -120,6 +116,7 @@ export class AddUpdateClientNameComponent implements OnInit, OnDestroy {
   private updateClientDetails() {
     if (this.hasClientDetailsMismatch()) {
       this.spinnerService.show(this.spinner, SpinnerOptions);
+      this.clientForm.controls.refId.setValue(this.clientForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
       const updateClientModel = this.clientForm.value as UpdateClient;
       updateClientModel.ModifiedBy = this.authService.getLoggedUserInfo()?.displayName;
       this.updateClientSubscription = this.clientService.updateClient(this.clientDetails.id, updateClientModel)

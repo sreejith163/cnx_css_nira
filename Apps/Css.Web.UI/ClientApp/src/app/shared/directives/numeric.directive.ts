@@ -7,6 +7,15 @@ export class NumericDirective {
   private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home', 'ArrowLeft', 'ArrowRight', 'Del', 'Delete'];
   constructor(private el: ElementRef) {
   }
+  @HostListener('blur', ['$event'])
+  blur(event: MouseEventInit) {
+      const position = this.el.nativeElement.innerText.length;
+    if(position == ""){
+      this.el.nativeElement.innerText = '0.00';
+    }
+   
+  }
+
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
     // console.log(this.el.nativeElement.value);

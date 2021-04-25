@@ -20,9 +20,11 @@ import { ActivityLogsComponent } from './components/agent-admin/activity-logs/ac
 import { DateRangePopUpComponent } from './components/shared/date-range-pop-up/date-range-pop-up.component';
 import { MoveAgentsListComponent } from './components/move-agents/move-agents-list/move-agents-list.component';
 import { MoveAgentsSchedulingGroupTypeaheadComponent } from './components/move-agents/move-agents-scheduling-group-typeahead/move-agents-scheduling-group-typeahead.component';
+import { AgentCategoryValueComponent } from './components/agent-category-value/agent-category-value.component';
 import { EntityHierarchyComponent } from './components/entity-hierarchy/entity-hierarchy.component';
 
 import { AgentAdminService } from './services/agent-admin.service';
+import { AgentCategoryService } from '../system-admin/services/agent-category.service';
 import { AgentSchedulesService } from './services/agent-schedules.service';
 import { AgentScheduleManagersService } from './services/agent-schedule-managers.service';
 import { EntityHierarchyService } from './services/entity-hierarchy.service';
@@ -38,12 +40,18 @@ import { GetIconForGridPipe } from './pipes/get-grid-icon.pipe';
 import { ActivityLogsScheduleManagerComponent } from './components/shared/activity-logs-schedule-manager/activity-logs-schedule-manager.component';
 import { GetIconForScheduleManagerActivityLogsPipe } from './pipes/get-grid-icon-schedule-manager-activity-logs.pipe';
 import { GetIconSchedulingGridPipe } from './pipes/get-scheduling-grid-icon.pipe';
+import { OnlynumberDirective } from 'src/app/shared/directives/integer-only.directive';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { AngularMultiSelectModule } from 'angular-4-multiselect-dropdown-scroll';
+import { CopyScheduleDateRangeComponent } from './components/shared/copy-schedule-date-range/copy-schedule-date-range.component';
+import { AgentCategoryValueService } from './services/agent-category-value.service';
+import { SchedulingMenuEmployeeIdDirective } from 'src/app/shared/directives/scheduling-menu-employeeid.directive';
 import { TimeOffsListComponent } from './components/time-offs/time-offs-list/time-offs-list.component';
 import { AddUpdateTimeOffsComponent } from './components/time-offs/add-update-time-offs/add-update-time-offs.component';
 import { TimeOffsService } from './services/time-offs.service';
 
 
-const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule, BsDropdownModule.forRoot()];
+const modules = [DragDropModule, SharedModule, SchedulingMenuRoutingModule, BsDropdownModule.forRoot(),AngularMultiSelectModule];
 const components =
   [AgentAdminListComponent,
     AddAgentProfileComponent,
@@ -58,23 +66,27 @@ const components =
     EntityHierarchyComponent,
     HorizontalScrollPipe,
     ForecastScreenListComponent,
+    CopyScheduleDateRangeComponent,
     DateRangePopUpComponent,
     ViewOuScreenComponent,
     NumericDirective,
+    OnlynumberDirective, 
     ActivityLogsComponent,
     MoveAgentsListComponent,
     MoveAgentsSchedulingGroupTypeaheadComponent,
+    AgentCategoryValueComponent,
     ContenteditableValueAccessor,
     BypassHtmlPipe,
     GetIconForGridPipe,
     GetIconSchedulingGridPipe,
     GetIconForScheduleManagerActivityLogsPipe,
+    SchedulingMenuEmployeeIdDirective,
     ActivityLogsScheduleManagerComponent,
     TimeOffsListComponent,
     AddUpdateTimeOffsComponent,
   ];
-const providers = [AgentAdminService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService, AgentScheduleManagersService,
-                   MoveAgentsService, TimeOffsService];
+const providers = [AgentAdminService, AgentCategoryService, AgentSchedulesService, ActivityLogsService, EntityHierarchyService, AgentScheduleManagersService,
+                   MoveAgentsService, AgentCategoryValueService, TimeOffsService];
 
 @NgModule({
   declarations: components,

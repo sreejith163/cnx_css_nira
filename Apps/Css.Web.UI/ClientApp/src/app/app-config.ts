@@ -8,59 +8,56 @@ export interface Config {
     sso: {
         authBaseUrl: string,
         authAppToken: string
-    },
+    };
     services: {
         gatewayService: string
-    },
+    };
     settings: {
         applicationUrl: string,
         sessionName: string,
         cookiePath: string
-    }
+    };
 }
 
 declare var window: any;
 
 @Injectable()
 export class AppConfig {
-    constructor(private readonly http: HttpClient) {}
+    constructor(private readonly http: HttpClient) { }
     public load() {
         return new Promise((resolve, reject) => {
             let request: any = null;
 
-            switch(location.hostname) { 
-                case "localhost": { 
+            switch (location.hostname) {
+                case 'localhost': {
                     request = this.http.get<Config>('assets/config.test.json');
-                    break; 
-                } 
-                case "127.0.0.1": { 
-                    request = this.http.get<Config>('assets/config.test.json');
-                    break; 
+                    break;
                 }
-                
-                case "css-dev.concentrix.com": {
+                case '127.0.0.1': {
+                    request = this.http.get<Config>('assets/config.test.json');
+                    break;
+                }
+
+                case 'css-dev.concentrix.com': {
                     request = this.http.get<Config>('assets/config.dev.json');
-                    break; 
+                    break;
                 }
-                
-                case "css-uat.concentrix.com": {
+
+                case 'css-uat.concentrix.com': {
                     request = this.http.get<Config>('assets/config.uat.json');
-                    break; 
+                    break;
                 }
 
-                default: { 
-                    request = this.http.get<Config>('assets/config.dev.json');
-                    break; 
-                } 
-            } 
+                case 'css.concentrix.com': {
+                    request = this.http.get<Config>('assets/config.prod.json');
+                    break;
+                }
 
-            // // use config.test if on local environment
-            // if (location.hostname === "localhost" || location.hostname === "127.0.0.1"){
-            //     request = this.http.get<Config>('assets/config.test.json');
-            // }else{
-            // // otherwise use the config set on Docker env
-            //     request = this.http.get<Config>('assets/config.json');
-            // }
+                default: {
+                    request = this.http.get<Config>('assets/config.dev.json');
+                    break;
+                }
+            }
 
             // process the request from config.json
             if (request) {

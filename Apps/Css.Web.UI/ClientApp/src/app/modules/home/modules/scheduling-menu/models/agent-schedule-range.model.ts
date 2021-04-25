@@ -3,8 +3,8 @@ import { AgentScheduleChart } from './agent-schedule-chart.model';
 
 export class AgentScheduleRange {
     agentSchedulingGroupId: number;
-    dateFrom: Date;
-    dateTo: Date;
+    dateFrom: string;
+    dateTo: string;
     status: SchedulingStatus;
     scheduleCharts: AgentScheduleChart[];
     createdBy: string;

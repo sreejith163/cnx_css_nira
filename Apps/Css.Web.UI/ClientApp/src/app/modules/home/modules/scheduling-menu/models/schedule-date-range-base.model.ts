@@ -1,4 +1,4 @@
 export class ScheduleDateRangeBase {
-    dateFrom: Date;
-    dateTo: Date;
+    dateFrom: string;
+    dateTo: string;
 }

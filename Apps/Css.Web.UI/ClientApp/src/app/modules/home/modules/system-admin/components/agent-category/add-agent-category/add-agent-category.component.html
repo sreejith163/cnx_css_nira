@@ -63,6 +63,12 @@
                 <div *ngIf="formSubmitted && !numericRangeValidation()" class="valid-error">
                   {{ 'Minimum value should be lesser than Maximum value' | translate }}
                 </div>
+                <div *ngIf="formSubmitted && !aplhaNumericRangeValidation()" class="valid-error">
+                  {{ 'Minimum value should not be the same Maximum value' | translate }}
+                </div>
+                <div *ngIf="formSubmitted && !aplhaNumericMinRangeValidation()" class="valid-error">
+                  {{ 'Minimum value is invalid' | translate }}
+                </div>
               </div>
             </div>
           </div>
@@ -78,6 +84,12 @@
                   maxlength="40" (keypress)="checkValidity($event)" />
                 <div *ngIf="formSubmitted && !numericRangeValidation()" class="valid-error">
                   {{ 'Maximum value should be greater than Minimum value' | translate }}
+                </div>
+                <div *ngIf="formSubmitted && !aplhaNumericRangeValidation()" class="valid-error">
+                  {{ 'Maximum value should not be the same Minimum value' | translate }}
+                </div>
+                <div *ngIf="formSubmitted && !aplhaNumericMaxRangeValidation()" class="valid-error">
+                  {{ 'Maximum value is invalid' | translate }}
                 </div>
               </div>
             </div>

@@ -17,6 +17,8 @@ import { AgentCategoryListComponent } from './components/agent-category/agent-ca
 import { AddAgentCategoryComponent } from './components/agent-category/add-agent-category/add-agent-category.component';
 import { TranslationListComponent } from './components/translation/translation-list/translation-list.component';
 import { AddUpdateTranslationsComponent } from './components/translation/add-update-translations/add-update-translations.component';
+import { SystemAdminEmployeeIdDirective } from 'src/app/shared/directives/system-admin-employeeid.directive';
+import { SystemAdminIntegerDirective } from 'src/app/shared/directives/system-admin-integer.directive';
 
 const modules = [
   SharedModule,
@@ -31,7 +33,10 @@ const components = [
   PermissionsListComponent,
   AddUpdatePermissionComponent,
   EmployeeTypeAheadComponent,
-  AddAgentCategoryComponent];
+  AddAgentCategoryComponent,
+  SystemAdminEmployeeIdDirective,
+  SystemAdminIntegerDirective
+];
 
 const providers = [
   SchedulingCodeTypesService,

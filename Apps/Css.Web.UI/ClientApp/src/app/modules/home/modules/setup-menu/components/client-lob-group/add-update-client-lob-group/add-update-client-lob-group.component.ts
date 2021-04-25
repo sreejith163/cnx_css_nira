@@ -114,6 +114,7 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
   }
 
   private addClientLobGroupDetails() {
+    this.clientLOBGroupForm.controls.refId.setValue(this.clientLOBGroupForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
     const addClientLobGroupModel = this.clientLOBGroupForm.value as AddClientLobGroup;
     addClientLobGroupModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
     addClientLobGroupModel.clientId = this.clientId;
@@ -133,20 +134,16 @@ export class AddUpdateClientLobGroupComponent implements OnInit, OnDestroy {
     this.subscriptionList.push(this.addClientLOBGroupSubscription);
   }
 
-  isNumberKey(evt) {
-    if(evt !== null){
-      const charCode = (evt.which) ? evt.which : evt.keyCode;
-      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
-      }
-      return true;
-    }else{
-      return false;
-    }
+  isSpecialChar(event)
+  {   
+    var k;  
+    k = event.charCode;
+    return((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57)); 
   }
 
   private updateClientLobGroupDetails() {
     if (this.hasClientLobGroupDetailsMismatch()) {
+      this.clientLOBGroupForm.controls.refId.setValue(this.clientLOBGroupForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
       const updateClientLobGroupModel = this.clientLOBGroupForm.value as UpdateClientLobGroup;
       updateClientLobGroupModel.ModifiedBy = this.authService.getLoggedUserInfo()?.displayName;
       updateClientLobGroupModel.clientId = this.clientId;

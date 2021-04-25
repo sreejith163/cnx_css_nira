@@ -171,6 +171,7 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
   }
 
   private addSkillGroupDetails() {
+    this.skillGroupForm.controls.refId.setValue(this.skillGroupForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
     const addSkillGroupModel = this.skillGroupForm.value as AddSkillGroup;
     addSkillGroupModel.createdBy = this.authService.getLoggedUserInfo()?.displayName;
     addSkillGroupModel.clientLobGroupId = this.clientLobGroupId;
@@ -193,6 +194,7 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
   private updateSkillGroupDetails() {
     if (this.hasSkillGroupDetailsMismatch()) {
 
+      this.skillGroupForm.controls.refId.setValue(this.skillGroupForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
       const updateSkillGroupModel = this.skillGroupForm.value as UpdateSkillGroup;
       updateSkillGroupModel.modifiedBy = this.authService.getLoggedUserInfo()?.displayName;
       updateSkillGroupModel.clientLobGroupId = this.clientLobGroupId;
@@ -391,16 +393,11 @@ export class AddEditSkillGroupComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.getSkillGroupSubscription);
   }
 
-  isNumberKey(evt) {
-    if(evt !== null){
-      const charCode = (evt.which) ? evt.which : evt.keyCode;
-      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
-      }
-      return true;
-    }else{
-      return false;
-    }
+  isSpecialChar(event)
+  {   
+    var k;  
+    k = event.charCode;
+    return((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57)); 
   }
 
   private populateFormDetails() {

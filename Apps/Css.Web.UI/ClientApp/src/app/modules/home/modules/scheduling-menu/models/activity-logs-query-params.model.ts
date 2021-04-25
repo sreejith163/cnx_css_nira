@@ -4,7 +4,7 @@ import { QueryStringParameters } from 'src/app/shared/models/query-string-parame
 export class ActivityLogsQueryParams extends QueryStringParameters {
     activityType: ActivityType;
     skipPageSize: boolean;
-    employeeId: number;
+    employeeId: string;
     dateFrom: string;
     dateto: string;
     date: string;

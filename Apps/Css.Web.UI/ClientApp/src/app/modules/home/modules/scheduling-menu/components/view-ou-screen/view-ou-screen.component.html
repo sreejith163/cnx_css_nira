@@ -17,7 +17,7 @@
         <div class="col-md-3 d-flex flex-column">
             <label><strong>Skill Group</strong></label>
             <ng-select [items]="skillGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id"
-                placeholder="{{'All' | translate}}" [typeahead]="typeAheadInput$" (scroll)="onSkillGroupScroll($event)"
+                placeholder="{{'Select' | translate}}" [typeahead]="typeAheadInput$" (scroll)="onSkillGroupScroll($event)"
                 (scrollToEnd)="onSkillGroupScrollToEnd()" (change)="onSkillGroupChange($event);change($event)"
                 (clear)="clearSkillGroupValues()" [(ngModel)]="skillgroupID">
                 <ng-template ng-header-tmp>
@@ -36,7 +36,7 @@
             <div class="input-group">
                 <input (dateSelect)="loadSkillGroup()" class="form-control"
                     placeholder="{{'Select Forecast Date' | translate}}" name="dp" ngbDatepicker [readonly]="true"
-                    [(ngModel)]="dateModel" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
+                    [(ngModel)]="dateModel" [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker" firstDayOfWeek="7">
 
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"></button>
@@ -112,8 +112,8 @@
                                 <td>
                                     {{ getScheduledOpenCount(el.time) }}
                                 </td>
-                                <td [ngClass]="{'negative-uo' : (el.scheduledOpen - el.forecastedReq) < 0}">
-                                    {{ getScheduledOpenCount1(el.time) - el.forecastedReq }}
+                                <td [ngClass]="{'negative-uo' : (getScheduledOpenCount1(el.time) - el.forecastedReq) < 0}">
+                                    {{ getScheduledOpenCount1(el.time) - el.forecastedReq  | number : '1.2-2'}}
                                 </td>
 
                             </tr>

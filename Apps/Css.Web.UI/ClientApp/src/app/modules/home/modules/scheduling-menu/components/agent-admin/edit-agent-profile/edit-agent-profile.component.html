@@ -20,15 +20,16 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    
+
     <!--- TEST -->
     <div class="card card-primary card-outline card-outline-tabs">
       <div class="card-header p-0 border-bottom-0">
         <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="general-tab" data-toggle="pill" href="#general" role="tab"
-              aria-controls="general" aria-selected="true" >General</a>
-          </li><!--
+              aria-controls="general" aria-selected="true">General</a>
+          </li>
+          <!--
           <li class="nav-item">
             <a class="nav-link" id="pto-tab" data-toggle="pill" href="#pto" role="tab"
               aria-controls="pto" aria-selected="false" >PTO</a>
@@ -41,11 +42,11 @@
 
     <!-- TEST-->
     <div class="card-body">
-      
+
       <form [formGroup]="agentProfileForm">
-      <div class="tab-content mt-3">
+        <div class="tab-content mt-3">
           <div class="modal-body mx-3 tab-pane active" id="general" role="tabpanel" aria-labelledby="general-tab">
-          
+
             <div class="col-md-12 m-t-20">
               <div class="row">
                 <div class="col-md-4">
@@ -54,11 +55,13 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="number" class="form-control" (keypress)="isNumberKey($event)"
-                    [ngClass]="{'valid-border-error': hasFormControlValidationError('employeeId')}"
-                    formControlName="employeeId" placeholder="{{ 'Employee_id' | translate }}" />
+                  <input employeeid type="text" class="form-control" formControlName="employeeId"
+                    [maxLength]="maxLength" placeholder="{{ 'Employee_id' | translate }}" />
                   <div *ngIf="formSubmitted && agentSchForm.employeeId?.errors?.required" class="valid-error">
                     {{ 'Employee ID is required' | translate }}
+                  </div>
+                  <div *ngIf="formSubmitted && !validateEmployeeId()" class="valid-error">
+                    {{ 'Employee ID is invalid' | translate }}
                   </div>
                   <ng-container *ngIf="formSubmitted && agentSchForm.employeeId?.errors?.max">
                     <div class="valid-error">
@@ -76,7 +79,7 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input [maxLength]="40" type="text" class="form-control"
+                  <input [maxLength]="100" type="text" class="form-control"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('sso')}" formControlName="sso"
                     placeholder="SSO" />
                   <ng-container *ngIf="formSubmitted && form.sso.invalid">
@@ -171,9 +174,10 @@
                 </div>
                 <div class="col-md-8">
 
-                  <app-agent-scheduling-group-typeahead [agentSchedulingGroupId]="agentSchedulingGroupId" [hierarchy]="true"
-                (agentSchedulingGroupSelected)="setAgentSchedulingGroupId($event)" [skillTagId]="skillTagId">
-              </app-agent-scheduling-group-typeahead>
+                  <app-agent-scheduling-group-typeahead [agentSchedulingGroupId]="agentSchedulingGroupId"
+                    [hierarchy]="true" (agentSchedulingGroupSelected)="setAgentSchedulingGroupId($event)"
+                    [skillTagId]="skillTagId">
+                  </app-agent-scheduling-group-typeahead>
                   <div *ngIf="!agentSchedulingGroupId && formSubmitted" class="valid-error">
                     {{ 'Agent Scheduling Group is required' | translate }}
                   </div>
@@ -205,8 +209,8 @@
                 </div>
                 <div class="col-md-8">
                   <input [maxLength]="45" type="text" class="form-control"
-                    [ngClass]="{'valid-border-error': hasFormControlValidationError('lastName')}" formControlName="lastName"
-                    placeholder="{{ 'Last_name' | translate }}" />
+                    [ngClass]="{'valid-border-error': hasFormControlValidationError('lastName')}"
+                    formControlName="lastName" placeholder="{{ 'Last_name' | translate }}" />
                   <div *ngIf="hasFormControlValidationError('lastName')" class="valid-error">
                     {{ 'Last Name is required' | translate }}
                   </div>
@@ -221,8 +225,8 @@
                 </div>
                 <div class="col-md-8">
                   <div class="input-group">
-                    <input [maxLength]="10" class="form-control" placeholder="{{ 'Select_hire_date' | translate }}" name="dp"
-                       [ngClass]="{'valid-border-error': hasFormControlValidationError('hireDate')}"
+                    <input [maxLength]="10" class="form-control" placeholder="{{ 'Select_hire_date' | translate }}"
+                      name="dp" [ngClass]="{'valid-border-error': hasFormControlValidationError('hireDate')}"
                       formControlName="hireDate" ngbDatepicker [footerTemplate]="footerTemplate"
                       [minDate]="{year: 1990, month: 1, day: 1}" #d="ngbDatepicker">
                     <div class="input-group-append">
@@ -233,14 +237,16 @@
                     <ng-template #footerTemplate>
                       <button class="btn btn-primary btn-sm m-2 float-left" (click)="setHireDateAsToday(); d.close()"
                         id="btn_today">{{ 'Today' | translate }}</button>
-                      <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()" id="btn_close">{{ 'Close'
+                      <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()" id="btn_close">{{
+                        'Close'
                         | translate }}</button>
                     </ng-template>
                   </div>
                   <div *ngIf="hasFormControlValidationError('hireDate')" class="valid-error">
                     {{ 'Hire Date is required' | translate }}
                   </div>
-                  <div *ngIf="formSubmitted && !validateHireDateFormat() && !hasFormControlValidationError('hireDate')" class="valid-error">
+                  <div *ngIf="formSubmitted && !validateHireDateFormat() && !hasFormControlValidationError('hireDate')"
+                    class="valid-error">
                     {{ 'Please enter a valid Hire Date in yyyy-mm-dd format' | translate }}
                   </div>
                 </div>
@@ -268,27 +274,20 @@
             <div class="col-md-12 m-t-20">
               <div class="row">
                 <div class="col-md-4">
-                  <label>{{ 'Team Lead SSO' | translate }}
-                    <span class="required">*</span>
-                  </label>
+                  <label>{{ 'Team Lead SSO' | translate }}</label>
                 </div>
                 <div class="col-md-8">
-                  <input [maxLength]="40" type="text" class="form-control"
+                  <input [maxLength]="100" type="text" class="form-control"
                     [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorSso')}"
                     formControlName="supervisorSso" placeholder="SSO" />
                   <ng-container *ngIf="formSubmitted && form.supervisorSso.invalid">
-                    <ng-container *ngIf="hasFormControlValidationError('supervisorSso');">
-                      <div *ngIf="form.supervisorSso.errors.required" class="valid-error">
-                        {{ 'Team Lead SSO is required' | translate }}
-                      </div>
-                    </ng-container>
                     <ng-container *ngIf="form.supervisorSso.errors.sameSSO">
                       <div class="valid-error">
                         {{ 'Employee SSO and Team Lead SSO should not be the same' | translate }}
                       </div>
                     </ng-container>
-                    
-                    <ng-container *ngIf="!form.supervisorSso.errors.required && form.supervisorSso.errors.invalid">
+
+                    <ng-container *ngIf="form.supervisorSso.errors.invalid">
                       <div class="valid-error">
                         {{ 'Team Lead SSO is invalid' | translate }}
                       </div>
@@ -300,18 +299,12 @@
             <div class="col-md-12 m-t-20">
               <div class="row">
                 <div class="col-md-4">
-                  <label>{{ 'Team Lead EID' | translate }}
-                    <span class="required">*</span>
-                  </label>
+                  <label>{{ 'Team Lead EID' | translate }}</label>
                 </div>
                 <div class="col-md-8">
-                  <input [maxLength]="10" type="number" class="form-control" (keypress)="isNumberKey($event)"
-                    [ngClass]="{'valid-border-error': hasFormControlValidationError('supervisorId')}"
-                    formControlName="supervisorId" placeholder="{{ 'Team Lead EID' | translate }}" />
+                  <input employeeid type="text" class="form-control" formControlName="supervisorId"
+                    [maxLength]="maxLength" placeholder="{{ 'Team Lead EID' | translate }}" />
                   <ng-container *ngIf="formSubmitted && form.supervisorId.invalid">
-                    <div *ngIf="form.supervisorId.errors.required" class="valid-error">
-                      {{ 'Team Lead EID is required' | translate }}
-                    </div>
                     <ng-container *ngIf="form.supervisorId.errors.sameEmployeeId">
                       <div class="valid-error">
                         {{ 'Employee ID and Team Lead ID should not be the same' | translate }}
@@ -327,12 +320,12 @@
               </div>
             </div>
             <!-- End of Team Lead Info -->
-          
+
           </div>
 
-          <!-- PTO content --> 
+          <!-- PTO content -->
           <!-- NO TRANSLATIONS YET -->
-          <div class="modal-body mx-3 tab-pane" id="pto" role="tabpanel" aria-labelledby="pto-tab" formGroupName="pto">  
+          <div class="modal-body mx-3 tab-pane" id="pto" role="tabpanel" aria-labelledby="pto-tab" formGroupName="pto">
             <div class="col-md-12 m-t-20">
               <div class="row">
                 <div class="col-md-4">
@@ -340,9 +333,9 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" 
-                  formControlName="earned" placeholder="{{ 'Earned' | translate }}" />
-                 
+                  <input type="text" class="form-control" formControlName="earned"
+                    placeholder="{{ 'Earned' | translate }}" />
+
                 </div>
               </div>
             </div>
@@ -353,9 +346,9 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" 
-                  formControlName="credited" placeholder="{{ 'Credited' | translate }}" />
-                 
+                  <input type="text" class="form-control" formControlName="credited"
+                    placeholder="{{ 'Credited' | translate }}" />
+
                 </div>
               </div>
             </div>
@@ -366,9 +359,9 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" 
-                  formControlName="cofromlastyear" placeholder="{{ 'CO_from_last_year' | translate }}" />
-                 
+                  <input type="text" class="form-control" formControlName="cofromlastyear"
+                    placeholder="{{ 'CO_from_last_year' | translate }}" />
+
                 </div>
               </div>
             </div>
@@ -379,9 +372,9 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" 
-                  formControlName="planned" placeholder="{{ 'Planned' | translate }}" />
-                 
+                  <input type="text" class="form-control" formControlName="planned"
+                    placeholder="{{ 'Planned' | translate }}" />
+
                 </div>
               </div>
             </div>
@@ -392,9 +385,9 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" 
-                  formControlName="taken" placeholder="{{ 'Taken' | translate }}" />
-                 
+                  <input type="text" class="form-control" formControlName="taken"
+                    placeholder="{{ 'Taken' | translate }}" />
+
                 </div>
               </div>
             </div>
@@ -405,9 +398,9 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" 
-                  formControlName="debited" placeholder="{{ 'Debited' | translate }}" />
-                 
+                  <input type="text" class="form-control" formControlName="debited"
+                    placeholder="{{ 'Debited' | translate }}" />
+
                 </div>
               </div>
             </div>
@@ -418,9 +411,9 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" 
-                  formControlName="cofornextyear" placeholder="{{ 'CO_to_next_year' | translate }}" />
-                 
+                  <input type="text" class="form-control" formControlName="cofornextyear"
+                    placeholder="{{ 'CO_to_next_year' | translate }}" />
+
                 </div>
               </div>
             </div>
@@ -431,14 +424,14 @@
                   </label>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" 
-                  formControlName="remaining" placeholder="{{ 'Remaining' | translate }}" />
-                 
+                  <input type="text" class="form-control" formControlName="remaining"
+                    placeholder="{{ 'Remaining' | translate }}" />
+
                 </div>
               </div>
             </div>
           </div>
-        
+
         </div>
       </form>
       <!-- end of PTO content  -->

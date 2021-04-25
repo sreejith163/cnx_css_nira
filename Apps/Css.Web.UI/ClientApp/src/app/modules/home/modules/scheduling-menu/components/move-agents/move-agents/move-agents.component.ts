@@ -116,7 +116,6 @@ export class MoveAgentsComponent implements OnInit, OnDestroy {
       this.selectedAgentAdminIds.push(agentAdminId);
       // console.log(this.selectedAgentAdminIds);
     }else{
-      console.log(this.selectedAgentAdminIds, "hey");
       const indexId = this.selectedAgentAdminIds.indexOf(agentAdminId,0);
       // remove the ids from the array
       if (indexId > -1 ) {

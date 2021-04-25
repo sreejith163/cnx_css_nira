@@ -7,6 +7,7 @@ import { AgentMyScheduleResponse } from '../../models/agent-myschedule-response.
 import { AgentMyScheduleService } from '../../services/agent-myschedule.service';
 import { DatePipe } from '@angular/common';
 import { DAY_MS } from '../../enums/agent-schedule.enum';
+import * as moment from 'moment';
 
 export enum Month {
   January = "January",
@@ -40,6 +41,7 @@ export class AgentScheduleMonthlyViewComponent implements OnInit {
   calendarSpinner = 'calendarSpinner';
 
   myScheduleMonthly: AgentMyScheduleDetails[];
+  momentCalendar:CalendarModel = new CalendarModel();
 
   constructor(
     private datePipe: DatePipe,
@@ -49,16 +51,18 @@ export class AgentScheduleMonthlyViewComponent implements OnInit {
   ) {
     
     this.LoggedUser = this.authService.getLoggedUserInfo();
-
   }
 
-  ngOnInit(){
-    this.getMonthlySchedule(this.date);    
+  ngOnInit(){ 
+      this.getMonthlySchedule();
   }
 
   jumpToMonth(_month){
-    const [year, month] = [this.date.getFullYear(), _month];
-    this.date = new Date(year, month);
+    // const [year, month] = [this.date.getFullYear(), _month];
+    // this.date = new Date(year, month);
+
+    this.date = new Date(moment(this.date).month(_month).toString());
+    
     this.getMonthlySchedule(this.date);
   }
 
@@ -69,41 +73,58 @@ export class AgentScheduleMonthlyViewComponent implements OnInit {
   }
   
   isSameMonth(scheduleDate) {
-    var date = new Date(scheduleDate);
-    return date.getMonth() === this.date.getMonth();
+    return moment(scheduleDate).isSame(this.date.toUTCString(), 'month');
   }
 
   isNow(scheduleDate) {
-    var date = new Date(scheduleDate);
-    return this.datePipe.transform(date,'yyyy-MM-dd') === this.datePipe.transform(new Date(),'yyyy-MM-dd');
-  }
-
-  private getCalendarStartDay(date = new Date) {
-    const [year, month] = [date.getFullYear(), date.getMonth()];
-    const firstDayOfMonth = new Date(year, month, 1).getTime();
-
-    return this.range(1,7)
-      .map(num => new Date(firstDayOfMonth - DAY_MS.util * num))
-      .find(dt => dt.getDay() === 0)
+    return this.datePipe.transform(scheduleDate,'yyyy-MM-dd') === this.datePipe.transform(new Date(),'yyyy-MM-dd');
   }
 
   private range(start, end, length = end - start + 1) {
     return Array.from({ length }, (_, i) => start + i)
   }
 
-  getMonthlySchedule(date = new Date){
+  private changeToUTCDate(date) {
+    return new Date(date).toString().replace(/\sGMT.*$/, " GMT+0000");
+  }
 
-    const calendarStartTime =  this.getCalendarStartDay(date).getTime();
-    this.dates = this.range(0, 41)
-    .map(num => new Date(calendarStartTime + DAY_MS.util * num));
 
+  getMonthlySchedule(dateInput = new Date){
+
+    const startDay = moment(dateInput.toUTCString()).clone().startOf('month').startOf('week');
+    // const endDay = moment(this.date.toUTCString()).clone().endOf('month').endOf('week');
+
+    let date = startDay.clone().subtract(1, 'day');
+    this.momentCalendar = new CalendarModel();
+
+    for(var i=1; i<=6; i++) {
+      //loop for 6 weeks
+      let daysArray: CalendarDay[] = [];
+      for(var d=1; d<=7; d++){
+        //loop for 7 days
+        const dt = this.changeToUTCDate(date.add(1, 'day').clone().toString())
+          daysArray.push({
+            firsStartTime: '',
+            lastEndTime: '',
+            date: dt
+          })
+      }
+      this.momentCalendar.weeks.push({
+        days: daysArray
+      });
+    }
+
+    const startMonthDate = new Date(this.momentCalendar?.weeks[0]?.days[0].date);
+    const endMonthDate =  new Date(this.momentCalendar?.weeks[5]?.days[6].date);
+      
     this.spinnerService.show(this.calendarSpinner, SpinnerOptions);
-    this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, this.dates[0].toISOString(), this.dates[41].toISOString()).subscribe((resp: AgentMyScheduleResponse)=>{
+    this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, startMonthDate.toISOString(), endMonthDate.toISOString()).subscribe((resp)=>{
+        resp.agentMySchedules.map(x =>
+          x.date = x.date.substr(0,10)
+        )
         this.myScheduleMonthly = resp.agentMySchedules;
         this.spinnerService.hide(this.calendarSpinner);
       },error => {
-        this.myScheduleMonthly = null;
-        // console.log(error);
         this.spinnerService.hide(this.calendarSpinner);
       }
     );
@@ -112,3 +133,16 @@ export class AgentScheduleMonthlyViewComponent implements OnInit {
 }
 
 
+export class CalendarModel{
+  weeks: CalendarWeek[] = [];
+}
+
+export class CalendarWeek{
+  days: CalendarDay[] = [];
+}
+
+export class CalendarDay{
+  date: string;
+  firsStartTime: string;
+  lastEndTime: string;
+}

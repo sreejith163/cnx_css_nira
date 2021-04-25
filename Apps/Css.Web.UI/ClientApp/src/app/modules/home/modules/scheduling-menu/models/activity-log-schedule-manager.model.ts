@@ -14,7 +14,7 @@ export class ActivityLogScheduleManager {
 }
 
 export class ActivityLogsManagerChart extends ActivityLogsBase {
-    // employeeId: number;
+    // employeeId: string;
     id: number;
     agentScheduleChart: AgentScheduleManagerChart;
 }

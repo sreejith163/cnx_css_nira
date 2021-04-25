@@ -168,7 +168,7 @@
                   <span
                   ngbTooltip="{{ el.lastName }}">{{el.lastName | truncate: { sliceStart: 0, sliceEnd: characterSplice, append: '...' } }}</span>
                 </td>
-                <td>{{getHireDateValue(el.agentData)}}</td>
+                <td>{{el.hireDate | date: 'yyyy-MM-dd'}}</td>
                 <td>{{el.createdBy}}</td>
                 <td>{{el.createdDate | date: 'yyyy-MM-dd' }}</td>
                 <td>{{el.modifiedBy}}</td>

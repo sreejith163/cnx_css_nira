@@ -195,11 +195,14 @@ export class SkillTagsListComponent implements OnInit, OnDestroy {
 
   setClient(client: number) {
     this.clientId = client;
+    this.clientLobGroupId = undefined;
+    this.skillGroupId = undefined;
     this.loadSkillTags();
   }
 
   setClientLobgroup(clientLobGroupId: number) {
     this.clientLobGroupId = clientLobGroupId;
+    this.skillGroupId = undefined;
     this.loadSkillTags();
   }
 

@@ -16,6 +16,7 @@ import { SpinnerOptions } from 'src/app/shared/util/spinner-options.util';
 import { WeekDay } from '@angular/common';
 import { NgbCalendar, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
+import * as moment from 'moment';
 
 export class DaysInWeek {
   dayName: String;
@@ -174,7 +175,23 @@ export class AgentScheduleComponent implements OnInit {
   getCurrentWeekSchedule(startDate, endDate){
     this.spinnerService.show(this.weeklyViewSpinner, SpinnerOptions);
     this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, startDate, endDate).subscribe((resp: AgentMyScheduleResponse)=>{
+        for (let index = 0; index < resp.agentMySchedules.length; index++) {
+          const chartsPerDay = resp.agentMySchedules[index].charts;
+          if (chartsPerDay != null){
+            // sort charts by startDateTime
+            chartsPerDay.sort((a, b) => a.startDateTime < b.startDateTime ? -1 : a.startDateTime > b.startDateTime ? 1 : 0);
+
+            // map the dates to display time format only
+            chartsPerDay.map(x =>{
+              x.endDateTime = moment(x.endDateTime.replace('Z', '').replace('T', ' ')).format('hh:mm a'),
+              x.startDateTime = moment(x.startDateTime.replace('Z', '').replace('T', ' ')).format('hh:mm a'),
+              x.schedulingCodeId = x.schedulingCodeId
+            });
+          }
+        }
         this.myScheduleWeek = resp.agentMySchedules;
+        // sort daily schedules by day
+        resp.agentMySchedules.sort((a, b) => a.day < b.day ? -1 : a.day > b.day ? 1 : 0);
         this.spinnerService.hide(this.weeklyViewSpinner);
       },error => {
         this.dates = this.weeklyDateRange(new Date(startDate), new Date(endDate));
@@ -205,15 +222,35 @@ export class AgentScheduleComponent implements OnInit {
 
     this.dateToday = `${year}-${month}-${day}`;
 
-    var startDate = this.dateToday;
-    var endDate = this.dateToday;
+    const isoDate = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate() + 1);
+    var startDate = today.toISOString();
+    var endDate = isoDate.toISOString();
 
-    this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, startDate, endDate).subscribe((resp: AgentMyScheduleResponse)=>{
-      // get the first obj from the array response
-      this.myScheduleChartsToday = resp.agentMySchedules[0].charts;
+    this.agentMyScheduleService.getAgentMySchedule(this.LoggedUser.employeeId, new Date(this.changeToUTCDate(startDate)).toISOString(), new Date(this.changeToUTCDate(endDate)).toISOString()).subscribe((resp: AgentMyScheduleResponse)=>{
+      // get charts based on what day it is locally
+      const chartsToday = resp.agentMySchedules.find(x => x.day == new Date().getDay()).charts;
+
+      if ( chartsToday != null) {
+
+        // sort charts by startDateTime
+        chartsToday.sort((a, b) => a.startDateTime < b.startDateTime ? -1 : a.startDateTime > b.startDateTime ? 1 : 0);
+
+        // map DateTime to Time format
+        chartsToday.map(x =>{
+          x.endDateTime = moment(x.endDateTime.replace('Z', '').replace('T', ' ')).format('hh:mm a'),
+          x.startDateTime = moment(x.startDateTime.replace('Z', '').replace('T', ' ')).format('hh:mm a'),
+          x.schedulingCodeId = x.schedulingCodeId
+        });
+      }
+      
+      this.myScheduleChartsToday = chartsToday;
       
     });
 
+  }
+
+  private changeToUTCDate(date) {
+    return new Date(date).toString().replace(/\sGMT.*$/, " GMT+0000");
   }
 
   
@@ -236,7 +273,10 @@ export class AgentScheduleComponent implements OnInit {
 
     this.toDate = this.calendar.getNext(this.fromDate, 'd', 6);
 
-    this.getCurrentWeekSchedule(this.firstDayOfWeek.date.toISOString(), this.lastDayOfWeek.date.toISOString());
+    const startDate =  new Date(this.firstDayOfWeek.date.getFullYear(), this.firstDayOfWeek.date.getMonth(), this.firstDayOfWeek.date.getDate());
+    const endDate =  new Date(this.lastDayOfWeek.date.getFullYear(), this.lastDayOfWeek.date.getMonth(), this.lastDayOfWeek.date.getDate());
+    
+    this.getCurrentWeekSchedule(startDate.toISOString(), endDate.toISOString());
 
   }
 

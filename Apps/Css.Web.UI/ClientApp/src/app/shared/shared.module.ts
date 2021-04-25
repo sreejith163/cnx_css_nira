@@ -26,6 +26,7 @@ import { TranslationService } from './services/translation.service';
 import { ExcelService } from './services/excel.service';
 
 import { AgentSchedulingGroupTypeaheadComponent } from './components/agent-scheduling-group-typeahead/agent-scheduling-group-typeahead.component';
+import { AgentCategoryTypeaheadComponent } from './components/agent-category-typeahead/agent-category-typeahead.component';
 import { ClientLobGroupTypeaheadComponent } from './components/client-lob-group-typeahead/client-lob-group-typeahead.component';
 import { ClientNameTypeAheadComponent } from './components/client-name-typeahead/client-name-typeahead.component';
 import { SkillGroupTypeaheadComponent } from './components/skill-group-typeahead/skill-group-typeahead.component';
@@ -60,6 +61,7 @@ const components =
     SkillTagTypeaheadComponent,
     SkillGroupTypeaheadComponent,
     AgentSchedulingGroupTypeaheadComponent,
+    AgentCategoryTypeaheadComponent,
     SortDirective,
     TranslationPipe,
     SafeHtmlPipe,

@@ -7,6 +7,7 @@ import { EntityHierarchyComponent } from './components/entity-hierarchy/entity-h
 import { ViewOuScreenComponent } from './components/view-ou-screen/view-ou-screen.component';
 import { SchedulingGridComponent } from './components/scheduling-grid/scheduling-grid.component';
 import { SchedulingManagerComponent } from './components/scheduling-manager/scheduling-manager.component';
+import { AgentCategoryValueComponent } from './components/agent-category-value/agent-category-value.component';
 import { TimeOffsListComponent } from './components/time-offs/time-offs-list/time-offs-list.component';
 
 
@@ -30,11 +31,19 @@ export const SchedulingMenuRoutes: Routes = [
         data: { permissions: [1, 2, 3] },
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     },
+    
+    {
+        path: 'agent-category-value',
+        component: AgentCategoryValueComponent,
+        canActivate: [PermissionsGuard],
+        data: { Permissions: [1, 2, 3]},
+        runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
+    },
     {
         path: 'scheduling-grid',
         component: SchedulingGridComponent,
         canActivate: [PermissionsGuard],
-        data: { permissions: [1, 2, 3, 4] },
+        data: { permissions: [1, 2, 3] },
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     },
     {
@@ -48,7 +57,7 @@ export const SchedulingMenuRoutes: Routes = [
         path: 'view-ou-screen',
         component: ViewOuScreenComponent,
         canActivate: [PermissionsGuard],
-        data: { permissions: [1, 2, 3] },
+        data: { permissions: [1, 2, 3, 4] },
         runGuardsAndResolvers: 'always' as RunGuardsAndResolvers,
     },
     {

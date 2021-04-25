@@ -10,94 +10,172 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="modal-body mx-3 modal-style">
-      <div class="col-md-12 m-t-20">
-        <div class="row">
-          <div class="col-md-4">
-            <label class="my-2">{{ 'Scheduling Group' | translate }}
-              <span class="required">*</span>
-            </label>
-          </div>
-          <div class="col-md-8">
-            <app-agent-scheduling-group-typeahead [agentSchedulingGroupId]="agentSchedulingGroupId"
-              (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
-            </app-agent-scheduling-group-typeahead>
-            <div *ngIf="!agentSchedulingGroupId && formSubmitted" class="valid-error">
-              {{ 'Scheduling Group is required' | translate }}
+
+    <div class="card-body">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" (activeIdChange)="loadTabContent()" class="nav-tabs myscheduleNavTabs">
+        <li [ngbNavItem]="1" [destroyOnHide]="true">
+          <a ngbNavLink class="text-sm text-uppercase mb-4">Copy Individual Schedule</a>
+          <ng-template ngbNavContent>
+            <div class="modal-body mx-3 modal-style">
+              <div class="col-md-12 m-t-20">
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <span>
+                      Target Week(s)
+                      <i class="pointer fa fa-calendar-plus-o padding-5 m-t-5" aria-hidden="true"
+                        (click)="addDateRange(copyOperation.Individual)" [ngbTooltip]="'Add'"></i>
+                    </span>
+                  </div>
+                  <div class="col-md-8">
+                    <ul *ngIf="targetDateRangesIndividual.length > 0" class="targetDateRangeList">
+                      <ng-container *ngFor="let targetRange of targetDateRangesIndividual;">
+                        <li><span><strong>{{targetRange.dateFrom | date: 'yyyy-MM-dd'}}</strong> — <strong>{{targetRange.dateTo | date: 'yyyy-MM-dd'}}</strong></span> <span class="removeTargetRangeButton" (click)="deleteTargetRangeIndividual(targetRange)">×</span></li>
+                      </ng-container>            
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-12 m-t-20">
-        <div class="scrollable-table">
-          <table id="tableSortExample" class="table table-bordered table-striped table-fixed">
-            <thead>
-              <tr>
-                <th>
-                  <input type="checkbox" [disabled]="!agentSchedulingGroupId || agents.length === 0"
-                    [(ngModel)]="masterSelected" (change)="checkUncheckAll($event)">
-                </th>
-                <th>
-                  {{ 'Employee_id' | translate }}
-                </th>
-                <th>
-                  {{ 'Name' | translate }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <ngx-spinner [name]="spinner"></ngx-spinner>
-              <tr *ngIf="agents?.length === 0" class="valid-record">
-                <td colspan="12">
-                  {{ 'No match records found' | translate }}</td>
-              </tr>
-              <tr *ngFor="let x of agents">
-                <td>
-                  <input type="checkbox" [disabled]="masterSelected" [(ngModel)]="x.isChecked" [value]="x.employeeId"
-                    (change)="isAllSelected($event)">
-                </td>
-                <td>{{x.employeeId}}</td>
-                <td>
-                  <span ngbTooltip="{{ x.lastName + ' ' + x.firstName }}">{{x.lastName + ' ' + x.firstName | truncate: { sliceStart: 0, sliceEnd:
-                                  characterSplice, append: '...' } }}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div *ngIf="!hasEmployeeSelected() && formSubmitted && agents.length > 0" class="valid-error">
-          {{ 'Please select an employee' | translate }}
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12 d-flex justify-content-end mt-3">
-        <nav aria-label="Page navigation example" class="m-r-20">
-          <ul class="pagination p-0 float-right">
-            <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalAgents" (pageChange)="changePage($event)" [rotate]="true" [maxSize]="10" 
-              [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
-            </ngb-pagination>
-            <select class="form-control" (change)="changePageSize($event.target.value)">
-              <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
-                {{ x.text | translate }}
-              </option>
-            </select>
-          </ul>
-        </nav>
-      </div>
-    </div>
-    <div class="modal-footer d-flex justify-content-center header-color">
-      <div class="col-md-12">
-        <div class="row">
-          <div class="col-md-10"></div>
-          <div class="col-md-2">
-            <button class="btn btn-primary float-r" data-dismiss="modal" (click)="copySchedule()">
-              {{ 'Copy' | translate }}
-            </button>
-          </div>
-        </div>
-      </div>
+            <div class="modal-footer d-flex justify-content-center header-color">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-10"></div>
+                  <div class="col-md-2">
+                    <button class="btn btn-success float-r" data-dismiss="modal" (click)="copySchedule(copyOperation.Individual)">
+                      <i class="fa fa-copy"></i> 
+                      {{ 'Copy' | translate }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>    
+          </ng-template>
+        </li>
+        <li>
+          <a class="separator"></a>
+        </li>
+        <li [ngbNavItem]="2" [destroyOnHide]="true">
+          <a ngbNavLink class="text-sm text-uppercase mb-4">Copy Schedule To Other Agents</a>
+          <ng-template ngbNavContent>
+            <div class="modal-body mx-3 modal-style">
+              <div class="col-md-12 m-t-20">
+                <div class="row">
+                  <div class="col-md-4">
+                    <label class="my-2">{{ 'Scheduling Group' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                  </div>
+                  <div class="col-md-8">
+                    <app-agent-scheduling-group-typeahead [agentSchedulingGroupId]="agentSchedulingGroupId"
+                      (agentSchedulingGroupSelected)="onSchedulingGroupChange($event)">
+                    </app-agent-scheduling-group-typeahead>
+                    <div *ngIf="!agentSchedulingGroupId && formSubmitted" class="valid-error">
+                      {{ 'Scheduling Group is required' | translate }}
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <span>
+                      Target Week(s)
+                      <i class="pointer fa fa-calendar-plus-o padding-5 m-t-5" aria-hidden="true"
+                        (click)="addDateRange(copyOperation.Other)" [ngbTooltip]="'Add'"></i>
+                    </span>
+                  </div>
+                  <div class="col-md-8">
+                    <ul *ngIf="targetDateRangesOfOtherAgents.length > 0" class="targetDateRangeList">
+                      <ng-container *ngFor="let targetRange of targetDateRangesOfOtherAgents;">
+                        <li><span><strong>{{targetRange.dateFrom | date: 'yyyy-MM-dd'}}</strong> — <strong>{{targetRange.dateTo | date: 'yyyy-MM-dd'}}</strong></span> <span class="removeTargetRangeButton" (click)="deleteTargetRangeOfOtherAgents(targetRange)">×</span></li>
+                      </ng-container>            
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 m-t-20">
+                <div class="scrollable-table">
+                  <table id="tableSortExample" class="table table-bordered table-striped table-fixed">
+                    <thead>
+                      <tr>
+                        <th>
+                          <input type="checkbox" [disabled]="!agentSchedulingGroupId || agents.length === 0"
+                            [(ngModel)]="masterSelected" (change)="checkUncheckAll($event)">
+                        </th>
+                        <th  class="sortable-field emp_id_head"  (click)="sort('employeeId', sortBy)">
+                          {{ 'Employee_id' | translate }}
+                          <i *ngIf="orderBy !== 'employeeId'" class="fa fa-sort"></i>
+                          <i id="sortIcon" *ngIf="orderBy === 'employeeId'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                            [class.fa-sort-up]="sortBy === 'asc'">
+                          </i>
+                        </th>
+                        <th style="" class="sortable-field name_head" (click)="sort('lastName', sortBy)">
+                          {{ 'Name' | translate }}
+                          <i *ngIf="orderBy !== 'lastName'" class="fa fa-sort"></i>
+                          <i id="sortIcon" *ngIf="orderBy === 'lastName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                            [class.fa-sort-up]="sortBy === 'asc'">
+                          </i>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ngx-spinner [name]="spinner"></ngx-spinner>
+                      <tr *ngIf="agents?.length === 0" class="valid-record">
+                        <td colspan="12">
+                          {{ 'No match records found' | translate }}</td>
+                      </tr>
+                      <tr *ngFor="let x of agents">
+                        <td>
+                          <input type="checkbox" [disabled]="masterSelected" [(ngModel)]="x.isChecked" [value]="x.employeeId"
+                            (change)="isAllSelected($event)">
+                        </td>
+                        <td>{{x.employeeId}}</td>
+                        <td>
+                          <span ngbTooltip="{{ x.lastName + ' ' + x.firstName }}">{{x.lastName + ' ' + x.firstName | truncate: { sliceStart: 0, sliceEnd:
+                                          characterSplice, append: '...' } }}
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div *ngIf="!hasEmployeeSelected() && formSubmitted && agents.length > 0" class="valid-error">
+                  {{ 'Please select an employee' | translate }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 d-flex justify-content-end mt-3">
+                <nav aria-label="Page navigation example" class="m-r-20">
+                  <ul class="pagination p-0 float-right">
+                    <ngb-pagination class="p-r-5 pagination" [collectionSize]="totalAgents" (pageChange)="changePage($event)" [rotate]="true" [maxSize]="10" 
+                      [pageSize]="pageSize" [(page)]="currentPage" [boundaryLinks]="true">
+                    </ngb-pagination>
+                    <select class="form-control" (change)="changePageSize($event.target.value)">
+                      <option [selected]="x.count === pageSize" [value]="x.count" *ngFor="let x of paginationSize">
+                        {{ x.text | translate }}
+                      </option>
+                    </select>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center header-color">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-10"></div>
+                  <div class="col-md-2">
+                    <button class="btn btn-success float-r" data-dismiss="modal" (click)="copySchedule(copyOperation.Other)">
+                      <i class="fa fa-copy"></i> 
+                      {{ 'Copy' | translate }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>    
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav"></div>
     </div>
   </div>
 </div>
+

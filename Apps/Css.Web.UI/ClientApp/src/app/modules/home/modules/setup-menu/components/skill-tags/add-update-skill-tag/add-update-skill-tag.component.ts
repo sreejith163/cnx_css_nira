@@ -148,6 +148,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
   }
 
   private addSkillTagDetails() {
+    this.skillTagForm.controls.refId.setValue(this.skillTagForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
     const addSkillTagModel = this.skillTagForm.value as AddSkillTag;
     addSkillTagModel.skillGroupId = this.skillGroupId;
     addSkillTagModel.createdBy = this.authService.getLoggedUserInfo().displayName;
@@ -169,6 +170,7 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
 
   private updateSkillTagDetails() {
     if (this.hasSkillTagDetailsMismatch()) {
+      this.skillTagForm.controls.refId.setValue(this.skillTagForm.controls.refId.value.toString().replace(/[^0-9]/gi,""));
       const updateSkillTagModel = this.skillTagForm.value as UpdateSkillTag;
       updateSkillTagModel.skillGroupId = this.skillGroupId;
       updateSkillTagModel.modifiedBy = this.authService.getLoggedUserInfo().displayName;
@@ -254,16 +256,11 @@ export class AddUpdateSkillTagComponent implements OnInit, OnDestroy {
     }
   }
 
-  isNumberKey(evt) {
-    if(evt !== null){
-      const charCode = (evt.which) ? evt.which : evt.keyCode;
-      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
-      }
-      return true;
-    }else{
-      return false;
-    }
+  isSpecialChar(event)
+  {   
+    var k;  
+    k = event.charCode;
+    return((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57)); 
   }
 
   private populateFormDetails() {

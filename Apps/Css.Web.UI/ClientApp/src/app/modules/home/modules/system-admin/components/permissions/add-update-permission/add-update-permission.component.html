@@ -95,7 +95,10 @@
                <span class="required"> *</span>
             </div>
             <div class="col-md-8">
-              <input (keypress)="isNumberKey($event)" type="text" class="form-control" formControlName="employeeId" [maxLength]="maxLength"/>
+              <input employeeid type="text" class="form-control" formControlName="employeeId" [maxLength]="maxLength"/>
+              <div *ngIf="formSubmitted && !validateEmployeeId()" class="valid-error">
+                {{ 'Employee ID is invalid' | translate }}
+              </div>
               <ng-container *ngIf="formSubmitted && userPermissionForm.controls.employeeId.invalid">
                 <ng-container *ngIf="hasFormControlValidationError('employeeId'); else maxLengthError">
                   <div *ngIf="hasFormControlValidationError('employeeId')" class="valid-error">

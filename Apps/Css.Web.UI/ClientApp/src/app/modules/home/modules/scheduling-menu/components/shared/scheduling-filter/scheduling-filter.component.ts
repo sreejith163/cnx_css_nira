@@ -57,6 +57,7 @@ export class SchedulingFilterComponent implements OnInit {
   }
 
   setCurrentDate() {
+
     const day = this.startDate.day < 10 ? '0' + this.startDate.day : this.startDate.day;
     const month = this.startDate.month < 10 ? '0' + this.startDate.month : this.startDate.month;
 

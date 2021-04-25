@@ -38,7 +38,7 @@ export class MoveAgentsService extends HttpBaseService {
   agentAdminsSubjectLeft$ = new BehaviorSubject<Array<AgentAdminDetails>>([]);
   agentAdminsLeft$ = this.agentAdminsSubjectLeft$.asObservable();
   allAgentAdminsLeft: Array<AgentAdminDetails> = [];
-  orderByLeft = 'employeeId';
+  orderByLeft = 'ssn';
   sortByLeft = 'desc';
   pageNumberLeft = 1;
   totalLeftItems = 0;
@@ -55,7 +55,7 @@ export class MoveAgentsService extends HttpBaseService {
   agentAdminsSubjectRight$ = new BehaviorSubject<Array<AgentAdminDetails>>([]);
   agentAdminsRight$ = this.agentAdminsSubjectRight$.asObservable();
   allAgentAdminsRight: Array<AgentAdminDetails> = [];
-  orderByRight = 'employeeId';
+  orderByRight = 'ssn';
   sortByRight = 'desc';
   pageNumberRight = 1;
   totalRightItems = 0;
@@ -94,7 +94,9 @@ export class MoveAgentsService extends HttpBaseService {
     this.agentAdminsSubjectLeft$.next(null);
   }
 
-  loadAgentAdminsLeft(schedulingGroupId, searchKeyword?){
+  loadAgentAdminsLeft(schedulingGroupId, searchKeyword?, orderBy?, sortBy?){
+    this.orderByLeft = orderBy;
+    this.sortByLeft = sortBy;
     if(this.agentSchedulingGroupIdLeft !== schedulingGroupId){
       this.agentSchedulingGroupIdLeft = schedulingGroupId;
       this.agentSchedulingGroupIdLeftSubject$.next(this.agentSchedulingGroupIdLeft);
@@ -167,7 +169,9 @@ export class MoveAgentsService extends HttpBaseService {
     this.agentAdminsSubjectRight$.next(null);
   }
 
-  loadAgentAdminsRight(schedulingGroupId, searchKeyword?){
+  loadAgentAdminsRight(schedulingGroupId, searchKeyword?, orderBy?, sortBy?){
+    this.orderByRight = orderBy;
+    this.sortByRight = sortBy;
     if(this.agentSchedulingGroupIdRight !== schedulingGroupId){
       this.agentSchedulingGroupIdRight = schedulingGroupId;
       this.agentSchedulingGroupIdRightSubject$.next(this.agentSchedulingGroupIdRight);
@@ -250,9 +254,9 @@ export class MoveAgentsService extends HttpBaseService {
       this.loadAgentAdminsLeft(this.agentSchedulingGroupIdLeft);
       var msg;
       if(moveAgentAdminsParams.agentAdminIds.length > 1){
-          msg = "The agents have been move";       
+          msg = "The agents have been moved";       
       }else if(moveAgentAdminsParams.agentAdminIds.length == 1){
-          msg = "The agent has been move"; 
+          msg = "The agent has been moved"; 
       }
       this.showSuccessPopUpMessage(msg);
       this.selectedAgentAdminIds = [];

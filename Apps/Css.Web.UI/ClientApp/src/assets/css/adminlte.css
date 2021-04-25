@@ -7985,6 +7985,30 @@ button.bg-dark:focus {
   .float-xl-none {
     float: none !important;
   }
+  .float-icon-left {
+    float: none !important;
+  }
+  .float-icon-right {
+    float: none !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .float-xl-left {
+    float: left !important;
+  }
+  .float-xl-right {
+    float: right !important;
+  }
+  .float-xl-none {
+    float: none !important;
+  }
+  .float-icon-left {
+    float: left !important;
+  }
+  .float-icon-right {
+    float: right !important;
+  }
 }
 
 .overflow-auto {

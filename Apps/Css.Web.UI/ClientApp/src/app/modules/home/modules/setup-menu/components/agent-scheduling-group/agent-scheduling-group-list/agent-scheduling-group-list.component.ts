@@ -92,8 +92,8 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.preLoadTranslations();
     this.loadTranslations();
-    this.loadAgentSchedulingGroups();
     this.subscribeToTranslations();
+    this.loadAgentSchedulingGroups();
   }
 
   ngOnDestroy() {
@@ -200,16 +200,22 @@ export class AgentSchedulingGroupListComponent implements OnInit, OnDestroy {
 
   setClient(client: number) {
     this.clientId = client;
+    this.clientLobGroupId = undefined;
+    this.skillGroupId = undefined;
+    this.skillTagId = undefined;
     this.loadAgentSchedulingGroups();
   }
 
   setClientLobgroup(clientLobGroupId: number) {
     this.clientLobGroupId = clientLobGroupId;
+    this.skillGroupId = undefined;
+    this.skillTagId = undefined;
     this.loadAgentSchedulingGroups();
   }
 
   setSkillGroup(skillGroupId: number) {
     this.skillGroupId = skillGroupId;
+    this.skillTagId = undefined;
     this.loadAgentSchedulingGroups();
   }
 

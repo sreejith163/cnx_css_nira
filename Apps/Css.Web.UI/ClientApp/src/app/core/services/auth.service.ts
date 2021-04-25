@@ -72,7 +72,6 @@ export class AuthService {
       }
 
     }
-
   }
 
   login() {

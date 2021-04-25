@@ -13,7 +13,7 @@ export class ImportScheduleChart {
 
 export class ImportScheduleGridData {
 
-    employeeId: number;
+    employeeId: string;
     startDate: string;
     endDate: string;
     schedulingCodeId: number;
@@ -23,7 +23,7 @@ export class ImportScheduleGridData {
 
 
 export class SchedulingGridExcelScheduleData{
-    EmployeeId: number;
+    EmployeeId: string;
     StartDate: string;  
     EndDate: string; 
     startTime: string; 

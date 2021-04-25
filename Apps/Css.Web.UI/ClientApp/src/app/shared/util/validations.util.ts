@@ -31,10 +31,14 @@ export class CustomValidators {
         };
     }
 
-
     static isValidEmail(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
         return (!Constants.EmailRegex.test(String(value).toLowerCase())) ? { invalid: true } : null;
+    }
+
+    static isValidEmailOptional(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        return (!Constants.EmailRegex.test(String(value).toLowerCase())) && value ? { invalid: true } : null;
     }
 
     static fromToDate(fromDateField: string, toDateField: string, errorName: string = 'dateRangeError') {

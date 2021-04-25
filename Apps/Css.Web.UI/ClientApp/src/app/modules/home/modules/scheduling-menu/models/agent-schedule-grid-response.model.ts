@@ -5,7 +5,7 @@ import { AgentScheduleManagerChart } from './agent-schedule-manager-chart.model'
 
 export class AgentScheduleGridResponse extends AgentScheduleBase {
     agentScheduleCharts: AgentScheduleChart[];
-    dateFrom: Date;
-    dateTo: Date;
+    dateFrom: string;
+    dateTo: string;
     status: SchedulingStatus;
 }

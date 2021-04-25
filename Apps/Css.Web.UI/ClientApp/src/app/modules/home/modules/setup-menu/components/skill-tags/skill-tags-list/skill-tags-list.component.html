@@ -17,16 +17,16 @@
   <div class="row m-l-r-10">
     <div class="col-md-3 d-flex flex-column">
       {{ 'Client_name' | translate }}
-      <app-client-name-typeahead (clientSelected)="setClient($event)"></app-client-name-typeahead>
+      <app-client-name-typeahead [clientId]="clientId" (clientSelected)="setClient($event)"></app-client-name-typeahead>
     </div>
     <div class="col-md-3 d-flex flex-column">
       {{ 'Client_lob_group_name' | translate }}
-      <app-client-lob-group-typeahead (clientLobSelected)="setClientLobgroup($event)">
+      <app-client-lob-group-typeahead [clientId]="clientId" [clientLobId]="clientLobGroupId" [hierarchy]="true" (clientLobSelected)="setClientLobgroup($event)">
       </app-client-lob-group-typeahead>
     </div>
     <div class="col-md-3 d-flex flex-column">
       {{ 'Skill_groups' | translate }}
-      <app-skill-group-typeahead (skillGroupSelected)="setSkillGroup($event)"></app-skill-group-typeahead>
+      <app-skill-group-typeahead [clientId]="clientId" [clientLobGroupId]="clientLobGroupId" [skillGroupId]="skillGroupId" [hierarchy]="true" (skillGroupSelected)="setSkillGroup($event)"></app-skill-group-typeahead>
     </div>
     <div class="col-md-3 m-t-25">
       <input id="search" type="text" class="form-control padding-right-35" [(ngModel)]="searchKeyword"

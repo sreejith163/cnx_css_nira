@@ -2,7 +2,7 @@ import { DataType } from '../enum/data-type.enum';
 import { Range } from './range.model';
 
 export class AgentCategory {
-    employeeId: number;
+    employeeId: string;
     descriptionOrName: string;
     dataType: DataType;
     range: Range;

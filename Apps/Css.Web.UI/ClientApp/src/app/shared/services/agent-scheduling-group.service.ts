@@ -58,4 +58,19 @@ export class AgentSchedulingGroupService extends HttpBaseService {
     return this.http.delete<ApiResponseModel>(url)
       .pipe(catchError(this.handleError));
   }
+  getDateRange(agentSchedulingGroupIdList: Array<any>) {
+    let urlParams: any = "";
+  
+    agentSchedulingGroupIdList.map(x => {
+
+      x = `asgList=${x}&`;
+      urlParams += x;
+    }
+    )
+  
+    const url = `${this.baseURL}/agentschedules/getdaterange?${urlParams.slice(0, -1)}`;
+
+    return this.http.get<AgentSchedulingGroupResponse>(url)
+      .pipe(catchError(this.handleError));
+  }
 }

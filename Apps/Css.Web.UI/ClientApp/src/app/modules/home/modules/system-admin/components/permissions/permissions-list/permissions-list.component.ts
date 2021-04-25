@@ -43,7 +43,7 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   totalRecord: number;
   selectedRow: number;
-  employeeId: number;
+  employeeId: string;
   searchKeyword: string;
   orderBy = 'createdDate';
   sortBy = 'desc';

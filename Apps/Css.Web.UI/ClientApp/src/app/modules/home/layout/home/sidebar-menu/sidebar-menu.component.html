@@ -3,6 +3,7 @@
         <img src="assets//images/css-icon.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
             style="opacity: .8" />
         <span class="brand-text font-weight-light">Concentrix Scheduling Solution</span>
+        <div class="brand-text font-weight-light" style="font-size:11px">Release: 1.0.1</div>
     </a>
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex flex-column">
@@ -123,7 +124,14 @@
                             <span>{{ 'Move Agents' | translate }}</span>
                             </a>
                         </li>
-                        <li [hidden]="permissionService.isMenuHidden([1,2,3,4],role?.roleId)" class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
+                            <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/agent-category-value" routerLinkActive="active"
+                                #schMenu1="routerLinkActive">
+                                <i class="fa fa-circle-o nav-icon"></i>
+                            <span>Agent Category Value</span>
+                            </a>
+                        </li>
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/scheduling-grid" routerLinkActive="active"
                                 #schMenu2="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>
@@ -151,7 +159,7 @@
                             <span>{{ 'Forecast_screen' | translate }}</span>
                             </a>
                         </li>
-                        <li [hidden]="permissionService.isMenuHidden([1,2,3],role?.roleId)" class="nav-item">
+                        <li [hidden]="permissionService.isMenuHidden([1,2,3,4],role?.roleId)" class="nav-item">
                             <a class="nav-link d-flex flex-row" routerLink="scheduling-menu/view-ou-screen"
                                 routerLinkActive="active" #schMenu5="routerLinkActive">
                                 <i class="fa fa-circle-o nav-icon"></i>

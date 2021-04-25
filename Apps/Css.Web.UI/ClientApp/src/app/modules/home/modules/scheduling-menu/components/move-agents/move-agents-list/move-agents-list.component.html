@@ -14,22 +14,37 @@
     <div class="card text-sm">
         <ngx-spinner [name]="spinner"></ngx-spinner>
             <div class="card-header">
-                <h3 class="card-title text-xs"><span class="text-bold">{{'Number of agents' | translate }}: </span> <i>Loaded {{ (agentAdmins$ | async)?.length || '0' | number  }} of {{(totalAgentAdminsRecord$ | async) || '0' | number }}</i></h3>
-                <div class="row float-r" *ngIf="agentSchedulingGroupId > 0">
-                    <div class="col-md-8 padding-bottom-5">
-                        <input type="text" class="form-control mt-4 padding-right-35" [(ngModel)]="searchKeyword"
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h3 class="card-title text-xs"><span class="text-bold">{{'Number of agents' | translate }}: </span> <i>Loaded {{ (agentAdmins$ | async)?.length || '0' | number  }} of {{(totalAgentAdminsRecord$ | async) || '0' | number }}</i>
+                            <br>
+                            <br>
+                            <ng-container *ngIf="listPosition=='left' && agentSchedulingGroupId > 0"><span class="text-bold">Number of highlighted agents: </span><i>{{selectedAgentAdminIds.length || '0' | number }}</i></ng-container> <!-- NO TRANSLATION -->
+                        </h3>                                                                    
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="input-group" *ngIf="agentSchedulingGroupId > 0">
+                            <input type="text" class="form-control border-right-0" [(ngModel)]="searchKeyword"
                             placeholder="{{ 'Search' | translate }}" [maxLength]="20" />
-                        <span *ngIf="searchKeyword?.length > 0" class="fa fa-times close-icon pointer" (click)="clearSearchText()"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <button class="form-control mt-4" (click)="search()" id="btn_search"><i class="fa fa-search"
-                            aria-hidden="true"></i>
-                            {{ 'Search' | translate }}
-                        </button>
+                            
+                            <div class="input-group-append border-left-0" *ngIf="searchKeyword?.length > 0" >
+                                <button class="form-control border-left-0 border-right-0 rounded-0" (click)="clearSearchText()"><i class="fa fa-times close-icon pointer m-0"></i></button>
+                            
+                            </div>
+                            <div class="input-group-append border-left-0">
+                                <button class="form-control border-left-0" (click)="search()" id="btn_search"><i class="fa fa-search"
+                                    aria-hidden="true"></i>
+                                    {{ 'Search' | translate }}
+                                </button>
+                            </div>
+                          </div>
+                  
                     </div>
                 </div>
-                <div class="card-tools">
-                </div>
+               
+                
+                <!-- <div class="card-tools">
+                </div> -->
             </div>
             <!-- /.card-header -->
             <ng-container *ngIf="(agentAdmins$ | async)?.length > 0;else noList">                            
@@ -37,10 +52,26 @@
                 <table class="table-hover table table-head-fixed" #agentListTable>
                     <thead>
                     <tr>
-                        <th>{{'Employee ID' | translate }}</th>
-                        <th>{{'Name' | translate }}</th>
-                        <th>{{'Starting' | translate }}</th>
-                        <th>{{'Ending' | translate }}</th>   <!-- END DATE IS EMPTY FOR NOW, FOR ENHANCMENT PURPOSES -->
+                        <th class="sortable-field" (click)="sort('ssn', sortBy)">
+                            {{'Employee ID' | translate }}
+                            <i *ngIf="orderBy !== 'ssn'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'ssn'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                            [class.fa-sort-up]="sortBy === 'asc'">
+                            </i>
+                        </th>
+                        <th class="sortable-field" (click)="sort('firstName', sortBy)">
+                            {{'Name' | translate }}
+                            <i *ngIf="orderBy !== 'firstName'" class="fa fa-sort"></i>
+                            <i id="sortIcon" *ngIf="orderBy === 'firstName'" class="fa" [class.fa-sort-down]="sortBy === 'desc'"
+                            [class.fa-sort-up]="sortBy === 'asc'">
+                            </i>
+                        </th>
+                        <th>
+                            {{'Starting' | translate }}
+                        </th>
+                        <th>
+                            {{'Ending' | translate }}
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -77,9 +108,7 @@
                     </tbody>
                 </table>
                 </div>
-                <div class="card-footer">
-                    <ng-container *ngIf="listPosition=='left'"><h3 class="card-title text-xs float-r"><span class="text-bold">Number of highlighted agents: </span><i>{{selectedAgentAdminIds.length || '0' | number }}</i></h3></ng-container> <!-- NO TRANSLATION -->
-                </div>
+
                 <!-- /.card-body -->
             </ng-container>
             <ng-template #noList>

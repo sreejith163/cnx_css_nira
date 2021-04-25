@@ -28,3 +28,56 @@ input {
 .m-r-20 {
   margin-right: 20px !important;
 }
+
+.targetDateRangeList{
+    list-style: none;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+.targetDateRangeList li{
+  display: inline-block;
+  padding: 5px;
+  background: #007bff;
+  margin-right: 5px;
+  margin-bottom: 2.5px;
+  margin-top: 2.5px;
+  color: #fff;
+}
+
+.removeTargetRangeButton{
+  padding: 5px;
+  cursor: pointer;
+  opacity: .8;
+}
+
+.removeTargetRangeButton:hover{
+  opacity: 1;
+}
+
+.nav-tabs {
+  border-bottom: 1px solid #fff;
+}
+
+.nav-tabs .nav-link {
+  color: rgb(114, 112, 112);
+}
+
+
+.nav-tabs .nav-link.active {
+  color: #495057;
+  background-color: #fff;
+  border-color: #fff;
+  border-bottom: 2px solid #007bff;
+  font-weight: bold;
+}
+
+.nav-tabs .nav-link:hover:not(.active){
+  background-color: #fff;
+  border-color: #fff;
+}
+
+.nav-tabs li .separator {
+  border-left: 2px solid #ccc;
+  line-height: 40px;
+}

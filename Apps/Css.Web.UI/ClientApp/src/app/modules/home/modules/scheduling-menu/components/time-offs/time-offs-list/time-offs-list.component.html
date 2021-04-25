@@ -165,7 +165,7 @@
             <ngx-spinner [name]="spinner"></ngx-spinner>
             <tr *ngIf="timeOffs?.length === 0" class="valid-record">
               <td colspan="20">
-                {{ 'No data to show' | translate }}</td>
+                {{ 'No match records found' | translate }}</td>
             </tr>
             <ng-container *ngFor="let el of timeOffs; let i = index">
               <tr>

@@ -16,7 +16,7 @@
     <div class="row m-b-10">
         <div class="col-md-3 d-flex flex-column">
             <ng-select [items]="skillGroupItemsBuffer" [loading]="loading" bindLabel="name" bindValue="id"
-                placeholder="{{'All' | translate}}" [typeahead]="typeAheadInput$" (scroll)="onSkillGroupScroll($event)"
+                placeholder="{{'Select' | translate}}" [typeahead]="typeAheadInput$" (scroll)="onSkillGroupScroll($event)"
                 (scrollToEnd)="onSkillGroupScrollToEnd()" (change)="onSkillGroupChange($event)"
                 (clear)="clearSkillGroupValues()" [(ngModel)]="skillGroupId">
                 <ng-template ng-header-tmp>

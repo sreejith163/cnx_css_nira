@@ -191,20 +191,6 @@ export class AgentAdminListComponent implements OnInit, OnDestroy {
     });
   }
 
-  getHireDateValue(values: {group: { description: string, value: string}}[]){
-
-    if (values === undefined)
-    {
-      return '';
-    }
-    const hireGroup = values.find(x => x.group.description.trim() === 'Hire Date');
-    if (hireGroup !== undefined)
-    {
-      return hireGroup.group.value;
-    }
-    return '';
-  }
-
   private showSuccessPopUpMessage(contentMessage: string, needRefresh = true) {
     this.getModalPopup(MessagePopUpComponent, 'sm');
     this.setComponentMessages('Success', contentMessage);

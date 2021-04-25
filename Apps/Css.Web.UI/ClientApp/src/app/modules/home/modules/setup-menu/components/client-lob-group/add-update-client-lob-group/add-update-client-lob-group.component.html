@@ -19,8 +19,7 @@
                 </label>
               </div>
               <div class="col-md-8">
-                <input type="text" class="form-control" formControlName="refId" [maxLength]="10"
-                 (keypress)="isNumberKey($event)" onpaste="return false;" />
+                <input type="text" class="form-control" formControlName="refId" [maxLength]="10" integeronly onpaste="return false;" />
               </div>
             </div>
             <br/>
@@ -47,7 +46,7 @@
                 </label>
               </div>
               <div class="col-md-8">
-                <input type="text" class="form-control" [maxLength]="maxLength"
+                <input type="text" class="form-control" [maxLength]="maxLength" (keypress)="isSpecialChar($event)"
                 [ngClass]="{'valid-border-error': hasFormControlValidationError('name')}"
                 formControlName="name" /> 
                 <ng-container *ngIf="formSubmitted && form.name.invalid">

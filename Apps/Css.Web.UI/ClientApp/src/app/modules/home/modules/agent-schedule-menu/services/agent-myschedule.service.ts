@@ -19,9 +19,8 @@ export class AgentMyScheduleService extends HttpBaseService {
     this.baseURL = environment.services.gatewayService;
 }
 
-
-    getAgentMySchedule(employeeId, startDate, endDate){
-        const url = `${this.baseURL}/AgentSchedules/${employeeId}/myschedule?StartDate=${startDate}&EndDate=${endDate}`;
+    getAgentMySchedule(employeeId, startDate, endDate, agentSchedulingGroupId?){
+        const url = `${this.baseURL}/AgentScheduleManagers/${employeeId}/myschedule?StartDate=${startDate}&EndDate=${endDate}&AgentSchedulingGroupId=${agentSchedulingGroupId ?? 0}`;
 
         return this.http.get<AgentMyScheduleResponse>(url)
             .pipe(catchError(this.handleError));
